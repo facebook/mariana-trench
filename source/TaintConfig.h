@@ -48,7 +48,7 @@ class TaintConfig final {
  public:
   explicit TaintConfig(
       const Kind* kind,
-      AccessPath callee_port,
+      const AccessPath* callee_port,
       const Method* MT_NULLABLE callee,
       CallKind call_kind,
       const Position* MT_NULLABLE call_position,
@@ -65,7 +65,7 @@ class TaintConfig final {
       FeatureMayAlwaysSet locally_inferred_features,
       ExtraTraceSet extra_traces)
       : kind_(kind),
-        callee_port_(std::move(callee_port)),
+        callee_port_(callee_port),
         callee_(callee),
         call_kind_(std::move(call_kind)),
         call_position_(call_position),
@@ -90,7 +90,9 @@ class TaintConfig final {
       mt_assert(!output_paths_.is_bottom());
       if (!call_kind_.is_propagation_with_trace()) {
         mt_assert(call_kind_.is_propagation());
-        mt_assert(callee_port_ == AccessPath(propagation_kind->root()));
+        mt_assert(
+            callee_port_ != nullptr &&
+            *callee_port_ == AccessPath(propagation_kind->root()));
       }
     } else {
       mt_assert(output_paths_.is_bottom());
@@ -125,7 +127,7 @@ class TaintConfig final {
     return kind_;
   }
 
-  const AccessPath& callee_port() const {
+  const AccessPath* MT_NULLABLE callee_port() const {
     return callee_port_;
   }
 
@@ -198,7 +200,7 @@ class TaintConfig final {
  private:
   /* Properties that are unique to a `Frame` within `Taint`. */
   const Kind* MT_NULLABLE kind_;
-  AccessPath callee_port_;
+  const AccessPath* MT_NULLABLE callee_port_;
   const Method* MT_NULLABLE callee_;
   CallKind call_kind_;
   const Position* MT_NULLABLE call_position_;

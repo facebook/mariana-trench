@@ -129,7 +129,7 @@ std::unique_ptr<Options> make_default_options() {
 Frame make_taint_frame(const Kind* kind, const FrameProperties& properties) {
   // The following fields should not be specified when making a Frame because
   // they are not stored in the Frame.
-  mt_assert(properties.callee_port.root().is_leaf_port());
+  mt_assert(properties.callee_port == nullptr);
   mt_assert(properties.callee == nullptr);
   mt_assert(properties.call_position == nullptr);
   mt_assert(properties.call_kind.is_declaration());
@@ -189,7 +189,7 @@ TaintConfig make_leaf_taint_config(
     OriginSet origins) {
   return TaintConfig(
       kind,
-      /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
+      /* callee_port */ nullptr,
       /* callee */ nullptr,
       /* call_kind */ CallKind::declaration(),
       /* call_position */ nullptr,
@@ -224,7 +224,8 @@ TaintConfig make_propagation_taint_config(
     FeatureSet user_features) {
   return TaintConfig(
       kind,
-      /* callee_port */ AccessPath(kind->root()),
+      /* callee_port */
+      AccessPathFactory::singleton().get(AccessPath(kind->root())),
       /* callee */ nullptr,
       /* call_kind */ CallKind::propagation(),
       /* call_position */ nullptr,

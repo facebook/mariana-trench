@@ -268,9 +268,10 @@ Taint Taint::update_non_declaration_positions(
   return result;
 }
 
-void Taint::filter_invalid_frames(
-    const std::function<bool(const Method*, const AccessPath&, const Kind*)>&
-        is_valid) {
+void Taint::filter_invalid_frames(const std::function<bool(
+                                      const Method* MT_NULLABLE,
+                                      const AccessPath* MT_NULLABLE,
+                                      const Kind*)>& is_valid) {
   map_.transform([&is_valid](LocalTaint* local_taint) -> void {
     local_taint->filter_invalid_frames(is_valid);
   });
@@ -376,7 +377,8 @@ Taint Taint::propagation_taint(
     FeatureSet user_features) {
   return Taint{TaintConfig(
       /* kind */ kind,
-      /* callee_port */ AccessPath(kind->root()),
+      /* callee_port */
+      AccessPathFactory::singleton().get(AccessPath(kind->root())),
       /* callee */ nullptr,
       /* call_kind */ CallKind::propagation(),
       /* call_position */ nullptr,
@@ -396,36 +398,40 @@ Taint Taint::propagation_taint(
 
 Taint Taint::essential() const {
   Taint result;
-  this->visit_frames([&result](const CallInfo&, const Frame& frame) {
-    auto callee_port = AccessPath(Root(Root::Kind::Return));
-    CallKind call_kind = CallKind::declaration();
+  const auto* return_callee_port =
+      AccessPathFactory::singleton().get(AccessPath(Root(Root::Kind::Return)));
+  this->visit_frames(
+      [&result, return_callee_port](const CallInfo&, const Frame& frame) {
+        const auto* callee_port = return_callee_port;
+        CallKind call_kind = CallKind::declaration();
 
-    // This is required by structure invariants.
-    if (auto* propagation_kind =
-            frame.kind()->discard_transforms()->as<PropagationKind>()) {
-      callee_port = AccessPath(propagation_kind->root());
-      call_kind = CallKind::propagation();
-    }
+        // This is required by structure invariants.
+        if (auto* propagation_kind =
+                frame.kind()->discard_transforms()->as<PropagationKind>()) {
+          callee_port = AccessPathFactory::singleton().get(
+              AccessPath(propagation_kind->root()));
+          call_kind = CallKind::propagation();
+        }
 
-    result.add(TaintConfig(
-        /* kind */ frame.kind(),
-        /* callee_port */ callee_port,
-        /* callee */ nullptr,
-        /* call_kind */ call_kind,
-        /* call_position */ nullptr,
-        /* class_interval_context */ CallClassIntervalContext(),
-        /* distance */ 0,
-        /* origins */ {},
-        /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-        /* user_features */ FeatureSet::bottom(),
-        /* via_type_of_ports */ {},
-        /* via_value_of_ports */ {},
-        /* canonical_names */ {},
-        /* output_paths */ frame.output_paths(),
-        /* local_positions */ {},
-        /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
-        /* extra_traces */ {}));
-  });
+        result.add(TaintConfig(
+            /* kind */ frame.kind(),
+            /* callee_port */ callee_port,
+            /* callee */ nullptr,
+            /* call_kind */ call_kind,
+            /* call_position */ nullptr,
+            /* class_interval_context */ CallClassIntervalContext(),
+            /* distance */ 0,
+            /* origins */ {},
+            /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+            /* user_features */ FeatureSet::bottom(),
+            /* via_type_of_ports */ {},
+            /* via_value_of_ports */ {},
+            /* canonical_names */ {},
+            /* output_paths */ frame.output_paths(),
+            /* local_positions */ {},
+            /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+            /* extra_traces */ {}));
+      });
   return result;
 }
 

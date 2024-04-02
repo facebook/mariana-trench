@@ -872,7 +872,8 @@ TEST_F(JsonTest, TaintConfig) {
       test::make_taint_config(
           /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .callee_port = context.access_path_factory->get(
+                  AccessPath(Root(Root::Kind::Return))),
               .callee = source_one,
               .call_position = context.positions->unknown(),
               .distance = 1,
@@ -891,7 +892,8 @@ TEST_F(JsonTest, TaintConfig) {
       test::make_taint_config(
           /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .callee_port = context.access_path_factory->get(
+                  AccessPath(Root(Root::Kind::Return))),
               .callee = source_one,
               .call_position = context.positions->get("Object.java", 2),
               .distance = 2,
@@ -1135,7 +1137,9 @@ TEST_F(JsonTest, Frame_Crtex) {
           context),
       TaintConfig(
           context.kind_factory->get("TestSource"),
-          /* callee_port */ AccessPath(Root(Root::Kind::Anchor)),
+          /* callee_port */
+          context.access_path_factory->get(
+              AccessPath(Root(Root::Kind::Anchor))),
           /* callee */ nullptr,
           /* call_kind */ CallKind::declaration(),
           /* call_position */ nullptr,
@@ -1158,9 +1162,9 @@ TEST_F(JsonTest, Frame_Crtex) {
   // They are "origins" rather than declarations, and the origins should contain
   // information leading to the next hop (in the CRTEX producer run), i.e. the
   // canonical port and name for the leaf.
-  auto producer_port = AccessPath(
+  const auto* producer_port = context.access_path_factory->get(AccessPath(
       Root(Root::Kind::Producer),
-      Path{PathElement::field("123"), PathElement::field("formal(0)")});
+      Path{PathElement::field("123"), PathElement::field("formal(0)")}));
   auto expected_taint_config = TaintConfig(
       context.kind_factory->get("TestSource"),
       /* callee_port */ producer_port,
@@ -1172,7 +1176,7 @@ TEST_F(JsonTest, Frame_Crtex) {
       /* origins */
       OriginSet{context.origin_factory->crtex_origin(
           /* canonical_name */ "Lcom/android/MyClass;.MyMethod",
-          /* port */ context.access_path_factory->get(producer_port))},
+          /* port */ producer_port)},
       /* inferred_features */ FeatureMayAlwaysSet::bottom(),
       /* user_features */ {},
       /* via_type_of_ports */ {},

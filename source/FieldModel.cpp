@@ -74,7 +74,8 @@ void FieldModel::check_taint_config_consistency(
     FieldModelConsistencyError::raise(fmt::format(
         "Model for field `{}` must have a kind {}.", show(field_), kind));
   }
-  if (!frame.callee_port().root().is_leaf() ||
+  if ((frame.callee_port() != nullptr &&
+       !frame.callee_port()->root().is_leaf()) ||
       frame.call_position() != nullptr || frame.distance() != 0 ||
       !frame.origins().is_bottom() || frame.via_type_of_ports().size() != 0 ||
       frame.canonical_names().size() != 0) {

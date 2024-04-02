@@ -50,14 +50,16 @@ TEST_F(IssueSetTest, Insertion) {
   const auto* position_2 = context.positions->get(std::nullopt, 2);
 
   Scope scope;
-  auto* one = context.methods->create(
+  const auto* one = context.methods->create(
       redex::create_void_method(scope, "LClass;", "one"));
-  auto* two = context.methods->create(
+  const auto* two = context.methods->create(
       redex::create_void_method(scope, "LOther;", "two"));
-  auto* leaf =
+  const auto* leaf =
       context.access_path_factory->get(AccessPath(Root(Root::Kind::Leaf)));
-  auto* one_origin = context.origin_factory->method_origin(one, leaf);
-  auto* two_origin = context.origin_factory->method_origin(two, leaf);
+  const auto* return_port =
+      context.access_path_factory->get(AccessPath(Root(Root::Kind::Return)));
+  const auto* one_origin = context.origin_factory->method_origin(one, leaf);
+  const auto* two_origin = context.origin_factory->method_origin(two, leaf);
 
   IssueSet set = {};
   EXPECT_EQ(set, IssueSet{});
@@ -112,7 +114,7 @@ TEST_F(IssueSetTest, Insertion) {
       /* source */ Taint{test::make_taint_config(
           /* kind */ other_source_kind,
           test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .callee_port = return_port,
               .callee = one,
               .call_position = context.positions->unknown(),
               .distance = 1,
@@ -141,7 +143,7 @@ TEST_F(IssueSetTest, Insertion) {
                   test::make_taint_config(
                       /* kind */ other_source_kind,
                       test::FrameProperties{
-                          .callee_port = AccessPath(Root(Root::Kind::Return)),
+                          .callee_port = return_port,
                           .callee = one,
                           .call_position = context.positions->unknown(),
                           .distance = 1,
@@ -162,7 +164,7 @@ TEST_F(IssueSetTest, Insertion) {
       Taint{test::make_taint_config(
           /* kind */ other_sink_kind,
           test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .callee_port = return_port,
               .callee = two,
               .call_position = context.positions->unknown(),
               .distance = 2,
@@ -190,7 +192,7 @@ TEST_F(IssueSetTest, Insertion) {
                   test::make_taint_config(
                       /* kind */ other_source_kind,
                       test::FrameProperties{
-                          .callee_port = AccessPath(Root(Root::Kind::Return)),
+                          .callee_port = return_port,
                           .callee = one,
                           .call_position = context.positions->unknown(),
                           .distance = 1,
@@ -213,7 +215,7 @@ TEST_F(IssueSetTest, Insertion) {
               Taint{test::make_taint_config(
                   /* kind */ other_sink_kind,
                   test::FrameProperties{
-                      .callee_port = AccessPath(Root(Root::Kind::Return)),
+                      .callee_port = return_port,
                       .callee = two,
                       .call_position = context.positions->unknown(),
                       .distance = 2,
@@ -229,7 +231,7 @@ TEST_F(IssueSetTest, Insertion) {
       /* source */ Taint{test::make_taint_config(
           /* kind */ other_source_kind,
           test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .callee_port = return_port,
               .callee = two,
               .call_position = context.positions->unknown(),
               .distance = 3,
@@ -258,7 +260,7 @@ TEST_F(IssueSetTest, Insertion) {
                   test::make_taint_config(
                       /* kind */ other_source_kind,
                       test::FrameProperties{
-                          .callee_port = AccessPath(Root(Root::Kind::Return)),
+                          .callee_port = return_port,
                           .callee = one,
                           .call_position = context.positions->unknown(),
                           .distance = 1,
@@ -268,7 +270,7 @@ TEST_F(IssueSetTest, Insertion) {
                   test::make_taint_config(
                       /* kind */ other_source_kind,
                       test::FrameProperties{
-                          .callee_port = AccessPath(Root(Root::Kind::Return)),
+                          .callee_port = return_port,
                           .callee = two,
                           .call_position = context.positions->unknown(),
                           .distance = 3,
@@ -291,7 +293,7 @@ TEST_F(IssueSetTest, Insertion) {
               Taint{test::make_taint_config(
                   /* kind */ other_sink_kind,
                   test::FrameProperties{
-                      .callee_port = AccessPath(Root(Root::Kind::Return)),
+                      .callee_port = return_port,
                       .callee = two,
                       .call_position = context.positions->unknown(),
                       .distance = 2,
@@ -334,7 +336,7 @@ TEST_F(IssueSetTest, Insertion) {
                   test::make_taint_config(
                       /* kind */ other_source_kind,
                       test::FrameProperties{
-                          .callee_port = AccessPath(Root(Root::Kind::Return)),
+                          .callee_port = return_port,
                           .callee = one,
                           .call_position = context.positions->unknown(),
                           .distance = 1,
@@ -344,7 +346,7 @@ TEST_F(IssueSetTest, Insertion) {
                   test::make_taint_config(
                       /* kind */ other_source_kind,
                       test::FrameProperties{
-                          .callee_port = AccessPath(Root(Root::Kind::Return)),
+                          .callee_port = return_port,
                           .callee = two,
                           .call_position = context.positions->unknown(),
                           .distance = 3,
@@ -367,7 +369,7 @@ TEST_F(IssueSetTest, Insertion) {
               Taint{test::make_taint_config(
                   /* kind */ other_sink_kind,
                   test::FrameProperties{
-                      .callee_port = AccessPath(Root(Root::Kind::Return)),
+                      .callee_port = return_port,
                       .callee = two,
                       .call_position = context.positions->unknown(),
                       .distance = 2,

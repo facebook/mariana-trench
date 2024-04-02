@@ -45,7 +45,7 @@ std::vector<Model> ArtificialMethods::models(Context& context) const {
       AccessPath(Root(Root::Kind::Argument, 0)),
       TaintConfig(
           array_allocation_kind_,
-          /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
+          /* callee_port */ nullptr,
           /* callee */ nullptr,
           /* call_kind */ CallKind::declaration(),
           /* call_position */ nullptr,

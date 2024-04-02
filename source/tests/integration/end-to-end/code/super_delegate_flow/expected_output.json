@@ -1289,10 +1289,10 @@
             "call_kind" : "Origin",
             "position" : 
             {
-              "end" : 27,
+              "end" : 38,
               "line" : 13,
               "path" : "SourceSinkWebViewClient.java",
-              "start" : 14
+              "start" : 29
             }
           },
           "kinds" : 
@@ -1445,10 +1445,10 @@
             "call_kind" : "Origin",
             "position" : 
             {
-              "end" : 27,
+              "end" : 38,
               "line" : 13,
               "path" : "SourceWebViewClient.java",
-              "start" : 14
+              "start" : 29
             }
           },
           "kinds" : 

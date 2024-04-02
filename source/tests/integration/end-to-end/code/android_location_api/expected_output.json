@@ -1009,10 +1009,10 @@
             "call_kind" : "Origin",
             "position" : 
             {
-              "end" : 30,
+              "end" : 48,
               "line" : 25,
               "path" : "ActivityUsingAndroidLocationManager.java",
-              "start" : 14
+              "start" : 32
             }
           },
           "kinds" : 

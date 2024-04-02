@@ -11,12 +11,13 @@
 
 namespace marianatrench {
 
-AccessPath PropagationConfig::callee_port() const {
+const AccessPath* MT_NULLABLE PropagationConfig::callee_port() const {
   if (call_kind_.is_propagation_with_trace()) {
     mt_assert(call_kind_.is_declaration());
-    return AccessPath(Root(Root::Kind::Leaf));
+    return nullptr;
   } else {
-    return AccessPath(propagation_kind()->root());
+    return AccessPathFactory::singleton().get(
+        AccessPath(propagation_kind()->root()));
   }
 }
 

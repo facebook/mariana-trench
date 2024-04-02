@@ -14,11 +14,12 @@ namespace marianatrench {
 
 namespace {
 
-AccessPath validate_and_infer_crtex_callee_port(
+const AccessPath* validate_and_infer_crtex_callee_port(
     const Json::Value& value,
-    const AccessPath& callee_port,
+    const AccessPath* MT_NULLABLE callee_port,
     const CanonicalNameSetAbstractDomain& canonical_names,
-    const TaggedRootSet& via_type_of_ports) {
+    const TaggedRootSet& via_type_of_ports,
+    Context& context) {
   mt_assert(canonical_names.is_value() && !canonical_names.elements().empty());
 
   // Anchor ports only go with templated canonical names. Producer ports only
@@ -53,25 +54,27 @@ AccessPath validate_and_infer_crtex_callee_port(
     }
   }
 
-  // If callee_port is user-specified and not Leaf, validate it.
-  if (callee_port.root().is_anchor() && is_instantiated) {
-    throw JsonValidationError(
-        value,
-        /* field */ std::nullopt,
-        "`Anchor` callee ports to go with templated canonical names.");
-  } else if (callee_port.root().is_producer() && is_templated) {
-    throw JsonValidationError(
-        value,
-        /* field */ std::nullopt,
-        "`Producer` callee ports to go with instantiated canonical names.");
-  } else if (!callee_port.root().is_leaf_port()) {
-    throw JsonValidationError(
-        value,
-        /* field */ std::nullopt,
-        "`Anchor` or `Producer` callee port for crtex frame with canonical_names defined.");
+  // If callee_port is user-specified (not null), validate it.
+  if (callee_port != nullptr) {
+    if (callee_port->root().is_anchor() && is_instantiated) {
+      throw JsonValidationError(
+          value,
+          /* field */ std::nullopt,
+          "`Anchor` callee ports to go with templated canonical names.");
+    } else if (callee_port->root().is_producer() && is_templated) {
+      throw JsonValidationError(
+          value,
+          /* field */ std::nullopt,
+          "`Producer` callee ports to go with instantiated canonical names.");
+    } else if (!callee_port->root().is_leaf_port()) {
+      throw JsonValidationError(
+          value,
+          /* field */ std::nullopt,
+          "`Anchor` or `Producer` callee port for crtex frame with canonical_names defined.");
+    }
   }
 
-  if (callee_port.root().is_leaf()) {
+  if (callee_port == nullptr || callee_port->root().is_leaf()) {
     if (is_instantiated) {
       throw JsonValidationError(
           value,
@@ -81,9 +84,12 @@ AccessPath validate_and_infer_crtex_callee_port(
 
     // If the callee_port is defaulted to Leaf, it should be updated to an
     // Anchor to enable detection that this comes from a CRTEX producer.
-    return AccessPath(Root(Root::Kind::Anchor));
+    return context.access_path_factory->get(
+        AccessPath(Root(Root::Kind::Anchor)));
   }
 
+  // For CRTEX, the callee port is never nullptr.
+  mt_assert(callee_port != nullptr);
   return callee_port;
 }
 
@@ -110,19 +116,22 @@ TaintConfig TaintConfig::from_json(const Json::Value& value, Context& context) {
   const Kind* kind = Kind::from_config_json(
       value, context, /* check_unexpected_members */ false);
 
-  auto callee_port = AccessPath(Root(Root::Kind::Leaf));
+  const AccessPath* MT_NULLABLE callee_port = nullptr;
   if (value.isMember("callee_port")) {
-    JsonValidation::string(value, /* field */ "callee_port");
-    callee_port = AccessPath::from_json(value["callee_port"]);
+    auto port = JsonValidation::string(value, /* field */ "callee_port");
+    if (port != "Leaf") {
+      callee_port =
+          context.access_path_factory->get(AccessPath::from_json(port));
+    }
   }
 
-  const Method* callee = nullptr;
+  const Method* MT_NULLABLE callee = nullptr;
   if (value.isMember("callee")) {
     callee = Method::from_json(
         JsonValidation::object_or_string(value, /* field */ "callee"), context);
   }
 
-  const Position* call_position = nullptr;
+  const Position* MT_NULLABLE call_position = nullptr;
   if (value.isMember("call_position")) {
     call_position = Position::from_json(
         JsonValidation::object(value, /* field */ "call_position"), context);
@@ -168,19 +177,21 @@ TaintConfig TaintConfig::from_json(const Json::Value& value, Context& context) {
   OriginSet origins;
   if (canonical_names.is_value() && !canonical_names.elements().empty()) {
     callee_port = validate_and_infer_crtex_callee_port(
-        value, callee_port, canonical_names, via_type_of_ports);
+        value, callee_port, canonical_names, via_type_of_ports, context);
     // CRTEX consumer frames (unintuitively identified by "producer" in the
     // port) are treated as origins instead of declaration so that the trace
     // to the producer issue is retained. Declaration frames would be ignored
     // by the JSON parser. The instantiated canonical name(s) and port should
     // be reported in the origins as they indicate the next hop of the trace.
     // This acts like we are propagating the call kind and canonical names.
-    if (callee_port.root().is_producer()) {
+    if (callee_port->root().is_producer()) {
       call_kind = call_kind.propagate();
-      origins.join_with(CanonicalName::propagate(canonical_names, callee_port));
+      origins.join_with(
+          CanonicalName::propagate(canonical_names, *callee_port));
     }
   } else if (
-      callee_port.root().is_anchor() || callee_port.root().is_producer()) {
+      callee_port != nullptr &&
+      (callee_port->root().is_anchor() || callee_port->root().is_producer())) {
     throw JsonValidationError(
         value,
         /* field */ std::nullopt,
@@ -189,7 +200,7 @@ TaintConfig TaintConfig::from_json(const Json::Value& value, Context& context) {
 
   // Sanity checks.
   if (callee == nullptr) {
-    if (!callee_port.root().is_leaf_port()) {
+    if (callee_port != nullptr && !callee_port->root().is_leaf_port()) {
       throw JsonValidationError(
           value,
           /* field */ "callee_port",
@@ -206,7 +217,7 @@ TaintConfig TaintConfig::from_json(const Json::Value& value, Context& context) {
           /* expected */ "a value of 0");
     }
   } else {
-    if (callee_port.root().is_leaf_port()) {
+    if (callee_port == nullptr || callee_port->root().is_leaf_port()) {
       throw JsonValidationError(
           value,
           /* field */ "callee_port",

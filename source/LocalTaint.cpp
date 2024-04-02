@@ -36,13 +36,13 @@ void LocalTaint::add(const TaintConfig& config) {
     call_info_ = CallInfo(
         config.callee(),
         config.call_kind(),
-        AccessPathFactory::singleton().get(config.callee_port()),
+        config.callee_port(),
         config.call_position());
   } else {
     mt_assert(
         call_info_.callee() == config.callee() &&
         call_info_.call_kind() == config.call_kind() &&
-        *call_info_.callee_port() == config.callee_port() &&
+        call_info_.callee_port() == config.callee_port() &&
         call_info_.call_position() == config.call_position());
   }
 
@@ -507,7 +507,7 @@ std::vector<LocalTaint> LocalTaint::update_origin_positions(
       }
 
       const auto* MT_NULLABLE new_call_position = map_call_position(
-          method_origin->method(), callee_port, call_position);
+          method_origin->method(), method_origin->port(), call_position);
       auto new_call_info =
           CallInfo(callee, call_kind, callee_port, new_call_position);
       results.emplace_back(LocalTaint(
@@ -538,10 +538,10 @@ std::vector<LocalTaint> LocalTaint::update_origin_positions(
   return results;
 }
 
-void LocalTaint::filter_invalid_frames(
-    const std::function<
-        bool(const Method* MT_NULLABLE, const AccessPath&, const Kind*)>&
-        is_valid) {
+void LocalTaint::filter_invalid_frames(const std::function<bool(
+                                           const Method* MT_NULLABLE,
+                                           const AccessPath* MT_NULLABLE,
+                                           const Kind*)>& is_valid) {
   if (is_bottom()) {
     return;
   }
@@ -549,7 +549,7 @@ void LocalTaint::filter_invalid_frames(
   frames_.transform([&is_valid,
                      &call_info = call_info_](KindFrames kind_frames) {
     kind_frames.filter_invalid_frames([&is_valid, call_info](const Kind* kind) {
-      return is_valid(call_info.callee(), *call_info.callee_port(), kind);
+      return is_valid(call_info.callee(), call_info.callee_port(), kind);
     });
     return kind_frames;
   });

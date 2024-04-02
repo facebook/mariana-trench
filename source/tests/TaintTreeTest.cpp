@@ -132,7 +132,13 @@ TEST_F(TaintTreeTest, PropagateOnRead) {
 
 TEST_F(TaintTreeTest, Collapse) {
   auto context = test::make_empty_context();
-  const auto kind = context.kind_factory->get("Test");
+  const auto* kind = context.kind_factory->get("Test");
+  const auto* argument1 = context.access_path_factory->get(
+      AccessPath(Root(Root::Kind::Argument, 1)));
+  const auto* argument2 = context.access_path_factory->get(
+      AccessPath(Root(Root::Kind::Argument, 2)));
+  const auto* argument3 = context.access_path_factory->get(
+      AccessPath(Root(Root::Kind::Argument, 3)));
   const Feature broadening = Feature("via-broadening");
   const FeatureMayAlwaysSet features = FeatureMayAlwaysSet({&broadening});
 
@@ -140,22 +146,16 @@ TEST_F(TaintTreeTest, Collapse) {
   const auto y = PathElement::field("y");
 
   auto tree = TaintTree{Taint{test::make_taint_config(
-      kind,
-      test::FrameProperties{
-          .callee_port = AccessPath(Root(Root::Kind::Argument, 1))})}};
+      kind, test::FrameProperties{.callee_port = argument1})}};
   EXPECT_EQ(
       tree.collapse(features),
       Taint{test::make_taint_config(
-          kind,
-          test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Argument, 1))})});
+          kind, test::FrameProperties{.callee_port = argument1})});
 
   tree.write(
       Path{x},
       Taint{test::make_taint_config(
-          kind,
-          test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Argument, 2))})},
+          kind, test::FrameProperties{.callee_port = argument2})},
       UpdateKind::Weak);
   EXPECT_EQ(
       tree.collapse(features),
@@ -163,12 +163,12 @@ TEST_F(TaintTreeTest, Collapse) {
           test::make_taint_config(
               kind,
               test::FrameProperties{
-                  .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
+                  .callee_port = argument1,
               }),
           test::make_taint_config(
               kind,
               test::FrameProperties{
-                  .callee_port = AccessPath(Root(Root::Kind::Argument, 2)),
+                  .callee_port = argument2,
                   .locally_inferred_features = features,
               }),
       }));
@@ -178,7 +178,7 @@ TEST_F(TaintTreeTest, Collapse) {
       (Taint{test::make_taint_config(
           kind,
           test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Argument, 3)),
+              .callee_port = argument3,
           })}),
       UpdateKind::Weak);
   EXPECT_EQ(
@@ -187,18 +187,18 @@ TEST_F(TaintTreeTest, Collapse) {
           test::make_taint_config(
               kind,
               test::FrameProperties{
-                  .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
+                  .callee_port = argument1,
               }),
           test::make_taint_config(
               kind,
               test::FrameProperties{
-                  .callee_port = AccessPath(Root(Root::Kind::Argument, 2)),
+                  .callee_port = argument2,
                   .locally_inferred_features = features,
               }),
           test::make_taint_config(
               kind,
               test::FrameProperties{
-                  .callee_port = AccessPath(Root(Root::Kind::Argument, 3)),
+                  .callee_port = argument3,
                   .locally_inferred_features = features,
               }),
       }));
@@ -208,7 +208,7 @@ TEST_F(TaintTreeTest, Collapse) {
       (Taint{test::make_taint_config(
           kind,
           test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Argument, 3)),
+              .callee_port = argument3,
           })}),
       UpdateKind::Weak);
   EXPECT_EQ(
@@ -217,18 +217,18 @@ TEST_F(TaintTreeTest, Collapse) {
           test::make_taint_config(
               kind,
               test::FrameProperties{
-                  .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
+                  .callee_port = argument1,
               }),
           test::make_taint_config(
               kind,
               test::FrameProperties{
-                  .callee_port = AccessPath(Root(Root::Kind::Argument, 2)),
+                  .callee_port = argument2,
                   .locally_inferred_features = features,
               }),
           test::make_taint_config(
               kind,
               test::FrameProperties{
-                  .callee_port = AccessPath(Root(Root::Kind::Argument, 3)),
+                  .callee_port = argument3,
               }),
       }));
 
@@ -304,7 +304,15 @@ TEST_F(TaintTreeTest, Collapse) {
 
 TEST_F(TaintTreeTest, LimitLeaves) {
   auto context = test::make_empty_context();
-  const auto kind = context.kind_factory->get("Test");
+  const auto* kind = context.kind_factory->get("Test");
+  const auto* argument1 = context.access_path_factory->get(
+      AccessPath(Root(Root::Kind::Argument, 1)));
+  const auto* argument2 = context.access_path_factory->get(
+      AccessPath(Root(Root::Kind::Argument, 2)));
+  const auto* argument3 = context.access_path_factory->get(
+      AccessPath(Root(Root::Kind::Argument, 3)));
+  const auto* argument4 = context.access_path_factory->get(
+      AccessPath(Root(Root::Kind::Argument, 4)));
 
   const Feature broadening = Feature("via-broadening");
   const FeatureMayAlwaysSet features = FeatureMayAlwaysSet({&broadening});
@@ -316,14 +324,14 @@ TEST_F(TaintTreeTest, LimitLeaves) {
   auto tree3 = TaintTree{Taint{test::make_taint_config(
       kind,
       test::FrameProperties{
-          .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
+          .callee_port = argument1,
       })}};
   tree3.write(
       Path{x},
       TaintTree{Taint{test::make_taint_config(
           kind,
           test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Argument, 2)),
+              .callee_port = argument2,
           })}},
       UpdateKind::Weak);
   tree3.write(
@@ -331,7 +339,7 @@ TEST_F(TaintTreeTest, LimitLeaves) {
       TaintTree{Taint{test::make_taint_config(
           kind,
           test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Argument, 3)),
+              .callee_port = argument3,
           })}},
       UpdateKind::Weak);
   tree3.write(
@@ -339,7 +347,7 @@ TEST_F(TaintTreeTest, LimitLeaves) {
       TaintTree{Taint{test::make_taint_config(
           kind,
           test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Argument, 4)),
+              .callee_port = argument4,
           })}},
       UpdateKind::Weak);
   tree3.limit_leaves(2, features);
@@ -351,7 +359,7 @@ TEST_F(TaintTreeTest, LimitLeaves) {
               Taint{test::make_taint_config(
                   kind,
                   test::FrameProperties{
-                      .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
+                      .callee_port = argument1,
                   })},
           },
           {
@@ -359,7 +367,7 @@ TEST_F(TaintTreeTest, LimitLeaves) {
               Taint{test::make_taint_config(
                   kind,
                   test::FrameProperties{
-                      .callee_port = AccessPath(Root(Root::Kind::Argument, 2)),
+                      .callee_port = argument2,
                       .locally_inferred_features = features,
                   })},
           },
@@ -368,7 +376,7 @@ TEST_F(TaintTreeTest, LimitLeaves) {
               Taint{test::make_taint_config(
                   kind,
                   test::FrameProperties{
-                      .callee_port = AccessPath(Root(Root::Kind::Argument, 3)),
+                      .callee_port = argument3,
                       .locally_inferred_features = features,
                   })},
           },
@@ -377,7 +385,7 @@ TEST_F(TaintTreeTest, LimitLeaves) {
               Taint{test::make_taint_config(
                   kind,
                   test::FrameProperties{
-                      .callee_port = AccessPath(Root(Root::Kind::Argument, 4)),
+                      .callee_port = argument4,
                       .locally_inferred_features = features,
                   })},
           }}));

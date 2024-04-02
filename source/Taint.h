@@ -241,10 +241,10 @@ class Taint final : public sparta::AbstractDomain<Taint> {
    * Drops frames that are considered invalid.
    * `is_valid` is given callee (nullptr for leaves), callee_port, kind.
    */
-  void filter_invalid_frames(
-      const std::function<
-          bool(const Method* MT_NULLABLE, const AccessPath&, const Kind*)>&
-          is_valid);
+  void filter_invalid_frames(const std::function<bool(
+                                 const Method* MT_NULLABLE,
+                                 const AccessPath* MT_NULLABLE,
+                                 const Kind*)>& is_valid);
 
   /**
    * Returns true if any frame contains the given kind.

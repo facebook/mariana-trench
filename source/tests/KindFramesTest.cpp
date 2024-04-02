@@ -660,7 +660,8 @@ TEST_F(KindFramesTest, Propagate) {
           test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
-                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+                  .callee_port = context.access_path_factory->get(
+                      AccessPath(Root(Root::Kind::Argument, 0))),
                   .callee = two,
                   .call_position = call_position,
                   .distance = 2,
@@ -688,7 +689,8 @@ TEST_F(KindFramesTest, PropagateIntervals) {
   auto* call_position = context.positions->get("Test.java", 1);
 
   auto caller_class_interval = ClassIntervals::Interval::finite(6, 7);
-  auto callee_port = AccessPath(Root(Root::Kind::Argument, 0));
+  const auto* callee_port = context.access_path_factory->get(
+      AccessPath(Root(Root::Kind::Argument, 0)));
 
   auto interval_2_3_t = CallClassIntervalContext(
       ClassIntervals::Interval::finite(2, 3),
@@ -730,7 +732,7 @@ TEST_F(KindFramesTest, PropagateIntervals) {
             CallInfo(
                 /* callee */ nullptr,
                 CallKind::origin(),
-                context.access_path_factory->get(callee_port),
+                callee_port,
                 call_position),
             /* locally_inferred_features */ FeatureMayAlwaysSet{},
             /* maximum_source_sink_distance */ 100,
@@ -789,11 +791,7 @@ TEST_F(KindFramesTest, PropagateIntervals) {
         frames.propagate(
             /* callee */ two,
             /* propagated_call_info */
-            CallInfo(
-                two,
-                CallKind::callsite(),
-                context.access_path_factory->get(callee_port),
-                call_position),
+            CallInfo(two, CallKind::callsite(), callee_port, call_position),
             /* locally_inferred_features */ FeatureMayAlwaysSet{},
             /* maximum_source_sink_distance */ 100,
             context,
@@ -859,11 +857,7 @@ TEST_F(KindFramesTest, PropagateIntervals) {
         frames.propagate(
             /* callee */ two,
             /* propagated_call_info */
-            CallInfo(
-                two,
-                CallKind::callsite(),
-                context.access_path_factory->get(callee_port),
-                call_position),
+            CallInfo(two, CallKind::callsite(), callee_port, call_position),
             /* locally_inferred_features */ FeatureMayAlwaysSet{},
             /* maximum_source_sink_distance */ 100,
             context,
@@ -905,6 +899,8 @@ TEST_F(KindFramesTest, PropagateCrtex) {
       context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
   auto* leaf =
       context.access_path_factory->get(AccessPath(Root(Root::Kind::Leaf)));
+  auto* anchor =
+      context.access_path_factory->get(AccessPath(Root(Root::Kind::Anchor)));
   auto* one_origin = context.origin_factory->method_origin(one, leaf);
   auto interval_one = ClassIntervals::Interval::finite(2, 3);
   auto interval_two = ClassIntervals::Interval::finite(4, 5);
@@ -918,7 +914,7 @@ TEST_F(KindFramesTest, PropagateCrtex) {
       test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Anchor)),
+              .callee_port = anchor,
               .origins = OriginSet{one_origin},
               .canonical_names = CanonicalNameSetAbstractDomain{CanonicalName(
                   CanonicalName::TemplateValue{"%programmatic_leaf_name%"})},
@@ -926,7 +922,7 @@ TEST_F(KindFramesTest, PropagateCrtex) {
       test::make_taint_config(
           test_kind_one,
           test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Anchor)),
+              .callee_port = anchor,
               .origins = OriginSet{one_origin},
               .canonical_names = CanonicalNameSetAbstractDomain{CanonicalName(
                   CanonicalName::TemplateValue{"constant value"})},
@@ -962,7 +958,7 @@ TEST_F(KindFramesTest, PropagateCrtex) {
           test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
-                  .callee_port = *canonical_callee_port,
+                  .callee_port = canonical_callee_port,
                   .callee = nullptr,
                   .call_position = call_position,
                   .class_interval_context = CallClassIntervalContext(
@@ -985,6 +981,8 @@ TEST_F(KindFramesTest, PropagateCrtex) {
   // Test propagating crtex-like frames (callee port == anchor.<path>),
   // specifically, propagate the propagated frames above again. These frames
   // originate from crtex leaves, but are not themselves the leaves.
+  const auto* argument0 = context.access_path_factory->get(
+      AccessPath(Root(Root::Kind::Argument, 0)));
   EXPECT_EQ(
       propagated_crtex_frames.propagate(
           /* callee */ two,
@@ -992,9 +990,7 @@ TEST_F(KindFramesTest, PropagateCrtex) {
           CallInfo(
               two,
               CallKind::callsite(),
-              /* callee_port */
-              context.access_path_factory->get(
-                  AccessPath(Root(Root::Kind::Argument, 0))),
+              /* callee_port */ argument0,
               call_position),
           /* locally_inferred_featues */ FeatureMayAlwaysSet{feature_two},
           /* maximum_source_sink_distance */ 100,
@@ -1007,7 +1003,7 @@ TEST_F(KindFramesTest, PropagateCrtex) {
           test::make_taint_config(
               test_kind_one,
               test::FrameProperties{
-                  .callee_port = AccessPath(Root(Root::Kind::Argument, 0)),
+                  .callee_port = argument0,
                   .callee = two,
                   .call_position = call_position,
                   .distance = 1,

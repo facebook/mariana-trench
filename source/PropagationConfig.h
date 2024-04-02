@@ -110,7 +110,7 @@ class PropagationConfig final {
     return call_kind_;
   }
 
-  AccessPath callee_port() const;
+  const AccessPath* MT_NULLABLE callee_port() const;
 
   static PropagationConfig from_json(
       const Json::Value& value,

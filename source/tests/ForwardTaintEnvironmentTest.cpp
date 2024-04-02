@@ -47,7 +47,8 @@ TEST_F(ForwardTaintEnvironmentTest, LessOrEqualSuperSet) {
            test::make_taint_config(
                source_kind,
                test::FrameProperties{
-                   .callee_port = AccessPath(Root(Root::Kind::Return)),
+                   .callee_port = context.access_path_factory->get(
+                       AccessPath(Root(Root::Kind::Return))),
                    .callee = method,
                    .distance = 1,
                    .origins = OriginSet{method_origin},
@@ -77,7 +78,8 @@ TEST_F(ForwardTaintEnvironmentTest, LessOrEqualDifferentSources) {
        TaintTree{Taint{test::make_taint_config(
            source_kind,
            test::FrameProperties{
-               .callee_port = AccessPath(Root(Root::Kind::Return)),
+               .callee_port = context.access_path_factory->get(
+                   AccessPath(Root(Root::Kind::Return))),
                .callee = method,
                .call_position = context.positions->unknown(),
                .distance = 1,
@@ -109,7 +111,8 @@ TEST_F(ForwardTaintEnvironmentTest, JoinSuperSet) {
            test::make_taint_config(
                source_kind,
                test::FrameProperties{
-                   .callee_port = AccessPath(Root(Root::Kind::Return)),
+                   .callee_port = context.access_path_factory->get(
+                       AccessPath(Root(Root::Kind::Return))),
                    .callee = method,
                    .call_position = context.positions->unknown(),
                    .distance = 1,
@@ -139,7 +142,8 @@ TEST_F(ForwardTaintEnvironmentTest, JoinTwoDifferent) {
        TaintTree{Taint{test::make_taint_config(
            source_kind,
            test::FrameProperties{
-               .callee_port = AccessPath(Root(Root::Kind::Return)),
+               .callee_port = context.access_path_factory->get(
+                   AccessPath(Root(Root::Kind::Return))),
                .callee = method,
                .call_position = context.positions->unknown(),
                .distance = 1,
@@ -153,7 +157,8 @@ TEST_F(ForwardTaintEnvironmentTest, JoinTwoDifferent) {
            test::make_taint_config(
                source_kind,
                test::FrameProperties{
-                   .callee_port = AccessPath(Root(Root::Kind::Return)),
+                   .callee_port = context.access_path_factory->get(
+                       AccessPath(Root(Root::Kind::Return))),
                    .callee = method,
                    .call_position = context.positions->unknown(),
                    .distance = 1,
@@ -195,7 +200,8 @@ TEST_F(ForwardTaintEnvironmentTest, JoinTwoEnvironmentWithDifferentSources) {
       TaintTree{Taint{test::make_taint_config(
           source_kind,
           test::FrameProperties{
-              .callee_port = AccessPath(Root(Root::Kind::Return)),
+              .callee_port = context.access_path_factory->get(
+                  AccessPath(Root(Root::Kind::Return))),
               .callee = method,
               .call_position = context.positions->unknown(),
               .distance = 1,
@@ -215,7 +221,8 @@ TEST_F(ForwardTaintEnvironmentTest, JoinTwoEnvironmentWithDifferentSources) {
           test::make_taint_config(
               source_kind,
               test::FrameProperties{
-                  .callee_port = AccessPath(Root(Root::Kind::Return)),
+                  .callee_port = context.access_path_factory->get(
+                      AccessPath(Root(Root::Kind::Return))),
                   .callee = method,
                   .call_position = context.positions->unknown(),
                   .distance = 1,

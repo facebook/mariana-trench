@@ -127,17 +127,17 @@ std::size_t Issue::GroupHash::operator()(const Issue& issue) const {
   return seed;
 }
 
-void Issue::filter_sources(
-    const std::function<
-        bool(const Method* MT_NULLABLE, const AccessPath&, const Kind*)>&
-        predicate) {
+void Issue::filter_sources(const std::function<bool(
+                               const Method* MT_NULLABLE,
+                               const AccessPath* MT_NULLABLE,
+                               const Kind*)>& predicate) {
   sources_.filter_invalid_frames(predicate);
 }
 
-void Issue::filter_sinks(
-    const std::function<
-        bool(const Method* MT_NULLABLE, const AccessPath&, const Kind*)>&
-        predicate) {
+void Issue::filter_sinks(const std::function<bool(
+                             const Method* MT_NULLABLE,
+                             const AccessPath* MT_NULLABLE,
+                             const Kind*)>& predicate) {
   sinks_.filter_invalid_frames(predicate);
 }
 

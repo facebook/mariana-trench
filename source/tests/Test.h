@@ -65,7 +65,7 @@ Context make_context(const DexStore& store);
 std::unique_ptr<Options> make_default_options();
 
 struct FrameProperties {
-  AccessPath callee_port = AccessPath(Root(Root::Kind::Leaf));
+  const AccessPath* MT_NULLABLE callee_port = nullptr;
   const Method* MT_NULLABLE callee = nullptr;
   const Position* MT_NULLABLE call_position = nullptr;
   CallClassIntervalContext class_interval_context = CallClassIntervalContext();

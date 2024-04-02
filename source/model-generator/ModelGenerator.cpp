@@ -417,12 +417,13 @@ TaintConfig generator::source(
     user_features.add(context.feature_factory->get(feature));
   }
 
-  const auto* port =
-      context.access_path_factory->get(AccessPath(Root(callee_port)));
+  const auto* MT_NULLABLE port = callee_port == Root::Kind::Leaf
+      ? nullptr
+      : context.access_path_factory->get(AccessPath(Root(callee_port)));
 
   return TaintConfig(
       /* kind */ context.kind_factory->get(kind),
-      /* callee_port */ *port,
+      /* callee_port */ port,
       /* callee */ nullptr,
       /* call_kind */ CallKind::declaration(),
       /* call_position */ nullptr,
@@ -454,12 +455,13 @@ TaintConfig generator::sink(
     user_features.add(context.feature_factory->get(feature));
   }
 
-  const auto* port =
-      context.access_path_factory->get(AccessPath(Root(callee_port)));
+  const auto* MT_NULLABLE port = callee_port == Root::Kind::Leaf
+      ? nullptr
+      : context.access_path_factory->get(AccessPath(Root(callee_port)));
 
   return TaintConfig(
       /* kind */ context.kind_factory->get(kind),
-      /* callee_port */ *port,
+      /* callee_port */ port,
       /* callee */ nullptr,
       /* call_kind */ call_kind,
       /* call_position */ nullptr,
@@ -494,12 +496,13 @@ TaintConfig generator::partial_sink(
     user_features.add(context.feature_factory->get(feature));
   }
 
-  const auto* port =
-      context.access_path_factory->get(AccessPath(Root(callee_port)));
+  const auto* MT_NULLABLE port = callee_port == Root::Kind::Leaf
+      ? nullptr
+      : context.access_path_factory->get(AccessPath(Root(callee_port)));
 
   return TaintConfig(
       /* kind */ context.kind_factory->get_partial(kind, label),
-      /* callee_port */ *port,
+      /* callee_port */ port,
       /* callee */ nullptr,
       /* call_kind */ CallKind::declaration(),
       /* call_position */ nullptr,

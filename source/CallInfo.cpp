@@ -91,13 +91,7 @@ Json::Value CallInfo::to_json() const {
   if (call_position_ != nullptr) {
     call_info["position"] = call_position_->to_json();
   }
-  if (callee_port_ != nullptr && !callee_port_->root().is_leaf()) {
-    // TODO(T176362886): Looks like Leaf port is only serving as a placeholder
-    // and is semantically equivalent to nullptr. Remove it since from_json()
-    // cannot deterministically re-create the exact same structure as it does
-    // not know whether to use nullptr or Leaf. Should not affect anything in
-    // practice, but unit tests doing EXPECT_EQ(from_json(obj.to_json()), obj)
-    // cannot perform the == comparison correctly.
+  if (callee_port_ != nullptr) {
     call_info["port"] = callee_port_->to_json();
   }
 

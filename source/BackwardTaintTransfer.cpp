@@ -660,7 +660,7 @@ void check_flows_to_array_allocation(
       AccessPath(Root(Root::Kind::Argument, 0)));
   auto array_allocation_sink = Taint{TaintConfig(
       /* kind */ context->artificial_methods.array_allocation_kind(),
-      /* callee_port */ *port,
+      /* callee_port */ port,
       /* callee */ nullptr,
       /* call_kind */ CallKind::origin(),
       /* call_position */ position,
