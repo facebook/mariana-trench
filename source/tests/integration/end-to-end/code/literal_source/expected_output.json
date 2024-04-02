@@ -1250,7 +1250,6 @@
           "call_info" : 
           {
             "call_kind" : "Origin",
-            "port" : "Leaf",
             "position" : 
             {
               "line" : 91,
@@ -1560,7 +1559,6 @@
           "call_info" : 
           {
             "call_kind" : "Origin",
-            "port" : "Leaf",
             "position" : 
             {
               "line" : 67,
@@ -1745,7 +1743,6 @@
           "call_info" : 
           {
             "call_kind" : "Origin",
-            "port" : "Leaf",
             "position" : 
             {
               "line" : 49,

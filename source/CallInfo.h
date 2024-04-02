@@ -83,7 +83,7 @@ class CallInfo final {
 
   CallInfo propagate(
       const Method* MT_NULLABLE callee,
-      const AccessPath& callee_port,
+      const AccessPath* MT_NULLABLE callee_port,
       const Position* call_position,
       Context& context) const;
 

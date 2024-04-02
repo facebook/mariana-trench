@@ -139,7 +139,7 @@ Taint propagate_field_or_literal_taint(
     Context& context) {
   return taint.propagate(
       /* callee */ nullptr,
-      /* callee_port */ AccessPath(Root(Root::Kind::Leaf)),
+      /* callee_port */ nullptr,
       call_position,
       options.maximum_source_sink_distance(),
       /* extra_features */ {},

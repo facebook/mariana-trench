@@ -971,7 +971,6 @@
           "call_info" : 
           {
             "call_kind" : "Origin",
-            "port" : "Leaf",
             "position" : 
             {
               "line" : 20,
@@ -1007,7 +1006,6 @@
           "call_info" : 
           {
             "call_kind" : "Origin",
-            "port" : "Leaf",
             "position" : 
             {
               "line" : 18,
@@ -1089,7 +1087,6 @@
           "call_info" : 
           {
             "call_kind" : "Origin",
-            "port" : "Leaf",
             "position" : 
             {
               "line" : 18,
@@ -1168,7 +1165,6 @@
           "call_info" : 
           {
             "call_kind" : "Origin",
-            "port" : "Leaf",
             "position" : 
             {
               "line" : 20,
@@ -1363,7 +1359,6 @@
           "call_info" : 
           {
             "call_kind" : "Origin",
-            "port" : "Leaf",
             "position" : 
             {
               "line" : 17,
@@ -1495,7 +1490,6 @@
           "call_info" : 
           {
             "call_kind" : "Origin",
-            "port" : "Leaf",
             "position" : 
             {
               "line" : 41,
@@ -1864,7 +1858,6 @@
           "call_info" : 
           {
             "call_kind" : "Origin",
-            "port" : "Leaf",
             "position" : 
             {
               "line" : 60,
@@ -2044,7 +2037,6 @@
           "call_info" : 
           {
             "call_kind" : "Origin",
-            "port" : "Leaf",
             "position" : 
             {
               "line" : 50,
@@ -2224,7 +2216,6 @@
           "call_info" : 
           {
             "call_kind" : "Origin",
-            "port" : "Leaf",
             "position" : 
             {
               "line" : 80,
@@ -3009,7 +3000,6 @@
           "call_info" : 
           {
             "call_kind" : "Origin",
-            "port" : "Leaf",
             "position" : 
             {
               "line" : 23,
@@ -3091,7 +3081,6 @@
           "call_info" : 
           {
             "call_kind" : "Origin",
-            "port" : "Leaf",
             "position" : 
             {
               "line" : 23,
@@ -3170,7 +3159,6 @@
           "call_info" : 
           {
             "call_kind" : "Origin",
-            "port" : "Leaf",
             "position" : 
             {
               "line" : 24,
@@ -3249,7 +3237,6 @@
           "call_info" : 
           {
             "call_kind" : "Origin",
-            "port" : "Leaf",
             "position" : 
             {
               "line" : 25,
@@ -3328,7 +3315,6 @@
           "call_info" : 
           {
             "call_kind" : "Origin",
-            "port" : "Leaf",
             "position" : 
             {
               "line" : 27,
@@ -3417,7 +3403,6 @@
           "call_info" : 
           {
             "call_kind" : "Origin",
-            "port" : "Leaf",
             "position" : 
             {
               "line" : 43,
@@ -3453,7 +3438,6 @@
           "call_info" : 
           {
             "call_kind" : "Origin",
-            "port" : "Leaf",
             "position" : 
             {
               "line" : 43,
@@ -3751,7 +3735,6 @@
           "call_info" : 
           {
             "call_kind" : "Origin",
-            "port" : "Leaf",
             "position" : 
             {
               "line" : 13,
@@ -3830,7 +3813,6 @@
           "call_info" : 
           {
             "call_kind" : "Origin",
-            "port" : "Leaf",
             "position" : 
             {
               "line" : 17,
@@ -3909,7 +3891,6 @@
           "call_info" : 
           {
             "call_kind" : "Origin",
-            "port" : "Leaf",
             "position" : 
             {
               "line" : 19,

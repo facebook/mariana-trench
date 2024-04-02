@@ -388,7 +388,7 @@ Model Model::at_callsite(
             callee_port,
             generations.propagate(
                 callee,
-                callee_port,
+                context.access_path_factory->get(callee_port),
                 call_position,
                 maximum_source_sink_distance,
                 extra_features,
@@ -415,7 +415,7 @@ Model Model::at_callsite(
         callee_port,
         sinks.propagate(
             callee,
-            callee_port,
+            context.access_path_factory->get(callee_port),
             call_position,
             maximum_source_sink_distance,
             extra_features,
@@ -442,7 +442,7 @@ Model Model::at_callsite(
                 callee_port,
                 call_effect.propagate(
                     callee,
-                    callee_port,
+                    context.access_path_factory->get(callee_port),
                     call_position,
                     Heuristics::kMaxCallChainSourceSinkDistance,
                     /* extra features */ {},
@@ -474,7 +474,7 @@ Model Model::at_callsite(
             callee_port,
             propagations.propagate(
                 callee,
-                callee_port,
+                context.access_path_factory->get(callee_port),
                 call_position,
                 maximum_source_sink_distance,
                 extra_features,

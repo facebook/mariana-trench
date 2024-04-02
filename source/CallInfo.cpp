@@ -14,7 +14,7 @@ namespace marianatrench {
 
 CallInfo CallInfo::propagate(
     const Method* MT_NULLABLE callee,
-    const AccessPath& callee_port,
+    const AccessPath* MT_NULLABLE callee_port,
     const Position* call_position,
     Context& context) const {
   mt_assert(!call_kind().is_propagation_without_trace());
@@ -25,10 +25,12 @@ CallInfo CallInfo::propagate(
   bool is_crtex_leaf = current_callee_port != nullptr &&
       current_callee_port->root().is_anchor() &&
       current_callee_port->path().size() == 0;
-  // Callee should be present if this is a CRTEX leaf.
-  mt_assert(!is_crtex_leaf || callee != nullptr);
-  auto propagated_callee_port =
-      is_crtex_leaf ? callee_port.canonicalize_for_method(callee) : callee_port;
+  // Callee and port should be present if this is a CRTEX leaf.
+  mt_assert(!is_crtex_leaf || (callee != nullptr && callee_port != nullptr));
+  const auto* propagated_callee_port = is_crtex_leaf
+      ? context.access_path_factory->get(
+            callee_port->canonicalize_for_method(callee))
+      : callee_port;
 
   const auto* propagated_callee = callee;
   if (call_kind().is_declaration()) {
@@ -41,7 +43,7 @@ CallInfo CallInfo::propagate(
   return CallInfo(
       propagated_callee,
       propagated_call_kind,
-      context.access_path_factory->get(propagated_callee_port),
+      propagated_callee_port,
       call_position);
 }
 

@@ -2139,7 +2139,7 @@ TEST_F(TaintTest, Propagate) {
   EXPECT_EQ(
       taint.propagate(
           /* callee */ four,
-          /* callee_port */ *argument2,
+          /* callee_port */ argument2,
           /* call_position */ context.positions->get("Test.java", 1),
           /* maximum_source_sink_distance */ 100,
           /* extra_features */ FeatureMayAlwaysSet{feature_three},
@@ -2231,7 +2231,7 @@ TEST_F(TaintTest, Propagate) {
   EXPECT_EQ(
       non_crtex_frames.propagate(
           /* callee */ method_one,
-          /* callee_port */ *argument1,
+          /* callee_port */ argument1,
           /* call_position */ test_position_two,
           /* maximum_source_sink_distance */ 100,
           /* extra_features */ {},
@@ -2330,7 +2330,7 @@ TEST_F(TaintTest, Propagate) {
   EXPECT_EQ(
       crtex_frames.propagate(
           /* callee */ method_one,
-          /* callee_port */ *argument1,
+          /* callee_port */ argument1,
           /* call_position */ test_position_two,
           /* maximum_source_sink_distance */ 100,
           /* extra_features */ {},
@@ -2425,7 +2425,7 @@ TEST_F(TaintTest, Propagate) {
   EXPECT_EQ(
       taint.propagate(
           /* callee */ method_two,
-          /* callee_port */ *argument0,
+          /* callee_port */ argument0,
           test_position_one,
           /* maximum_source_sink_distance */ 100,
           /* extra_features */ {},
@@ -2501,7 +2501,7 @@ TEST_F(TaintTest, Propagate) {
   EXPECT_EQ(
       taint.propagate(
           /* callee */ method_two,
-          /* callee_port */ *argument0,
+          /* callee_port */ argument0,
           test_position_one,
           /* maximum_source_sink_distance */ 1,
           /* extra_features */ {},
@@ -2535,7 +2535,7 @@ TEST_F(TaintTest, Propagate) {
   EXPECT_EQ(
       taint.propagate(
           /* callee */ method_two,
-          /* callee_port */ *argument0,
+          /* callee_port */ argument0,
           test_position_one,
           /* maximum_source_sink_distance */ 2,
           /* extra_features */ {},
