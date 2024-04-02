@@ -208,6 +208,7 @@ class Taint final : public sparta::AbstractDomain<Taint> {
       const UsedKinds& used_kinds,
       const TransformList* local_transforms) const;
 
+  static Taint from_json(const Json::Value& taint_json, Context& context);
   Json::Value to_json(ExportOriginsMode export_origins_mode) const;
 
   friend std::ostream& operator<<(std::ostream& out, const Taint& taint);

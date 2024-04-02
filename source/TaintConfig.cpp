@@ -103,8 +103,6 @@ TaintConfig TaintConfig::from_json(const Json::Value& value, Context& context) {
        "call_position",
        "distance",
        "features",
-       "may_features",
-       "always_features",
        "via_type_of",
        "via_value_of",
        "canonical_names"});
@@ -134,13 +132,6 @@ TaintConfig TaintConfig::from_json(const Json::Value& value, Context& context) {
   if (value.isMember("distance")) {
     distance = JsonValidation::integer(value, /* field */ "distance");
   }
-
-  // Inferred may_features and always_features. Technically, user-specified
-  // features should go under "user_features", but this gives a way to override
-  // that behavior and specify "may/always" features. Note that local inferred
-  // features cannot be user-specified.
-  auto inferred_features = FeatureMayAlwaysSet::from_json(
-      value, context, /* check_unexpected_members */ false);
 
   // User specified always-features.
   FeatureSet user_features;
@@ -245,7 +236,7 @@ TaintConfig TaintConfig::from_json(const Json::Value& value, Context& context) {
       // Origins are not configurable. They are auto-populated when the config
       // is applied as a model for a specific method/field.
       std::move(origins),
-      std::move(inferred_features),
+      /* inferred_features */ FeatureMayAlwaysSet::bottom(),
       std::move(user_features),
       std::move(via_type_of_ports),
       std::move(via_value_of_ports),

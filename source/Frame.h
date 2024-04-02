@@ -249,6 +249,10 @@ class Frame final : public sparta::AbstractDomain<Frame> {
 
   Frame with_origins(OriginSet origins) const;
 
+  static Frame from_json(
+      const Json::Value& value,
+      const CallInfo& call_info,
+      Context& context);
   Json::Value to_json(
       const CallInfo& call_info,
       ExportOriginsMode export_origins_mode) const;

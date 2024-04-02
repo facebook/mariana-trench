@@ -198,6 +198,21 @@ Taint Taint::update_with_propagation_trace(
   return result;
 }
 
+Taint Taint::from_json(const Json::Value& value, Context& context) {
+  JsonValidation::null_or_array(value);
+
+  Map call_info_to_local_taint;
+  for (const auto& taint_json : value) {
+    auto local_taint = LocalTaint::from_json(taint_json, context);
+    call_info_to_local_taint.update(
+        local_taint.call_info(), [&local_taint](LocalTaint* existing_taint) {
+          existing_taint->join_with(local_taint);
+        });
+  }
+
+  return Taint(call_info_to_local_taint);
+}
+
 Json::Value Taint::to_json(ExportOriginsMode export_origins_mode) const {
   auto taint = Json::Value(Json::arrayValue);
   for (const auto& [_, local_taint] : map_.bindings()) {

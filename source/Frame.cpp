@@ -10,11 +10,15 @@
 #include <Show.h>
 
 #include <mariana-trench/Access.h>
+#include <mariana-trench/CallClassIntervalContext.h>
+#include <mariana-trench/CollapseDepth.h>
 #include <mariana-trench/Constants.h>
 #include <mariana-trench/FeatureFactory.h>
+#include <mariana-trench/FeatureMayAlwaysSet.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/OriginFactory.h>
+#include <mariana-trench/TaggedRootSet.h>
 #include <mariana-trench/UsedKinds.h>
 
 namespace marianatrench {
@@ -317,6 +321,117 @@ Frame Frame::with_origins(OriginSet origins) const {
   return copy;
 }
 
+Frame Frame::from_json(
+    const Json::Value& value,
+    const CallInfo& call_info,
+    Context& context) {
+  JsonValidation::validate_object(value);
+
+  const auto* kind = Kind::from_json(value, context);
+
+  int distance = 0;
+  if (value.isMember("distance")) {
+    distance = JsonValidation::integer(value, "distance");
+  }
+
+  auto origins = OriginSet::bottom();
+  if (value.isMember("origins")) {
+    origins =
+        OriginSet::from_json(JsonValidation::object(value, "origins"), context);
+  }
+
+  // `to_json()` does not differentiate between user and inferred features.
+  // The call kind from `call_info` can be useful for that.
+  // Declaration - JSON came directly from a user-declared model.
+  //   These are all user features.
+  // CallSite - Should not contain any user features. Inferred features only.
+  // Origins - This is tricky. Locally inferred features can result from
+  //   propagations along the flow. User features can result from materialized
+  //   via-value/type-of features or from a propagated Declaration frame. Since
+  //   they cannot be differentiated from the JSON, they are assumed to all be
+  //   inferred features. Practically speaking, when constructing from a
+  //   non-user-config JSON, these can arguably be considered non-user-declared.
+  auto inferred_features = FeatureMayAlwaysSet::bottom();
+  auto user_features = FeatureSet();
+  auto json_features = FeatureMayAlwaysSet::from_json(
+      value,
+      context,
+      /* check_unexpected_members */ false);
+  if (call_info.call_kind().is_declaration()) {
+    if (!json_features.may().empty()) {
+      throw JsonValidationError(
+          value,
+          /* field */ "may_features",
+          /* expected */
+          "empty may_features when CallKind is Declaration");
+    }
+    user_features = json_features.always();
+  } else {
+    inferred_features = std::move(json_features);
+  }
+
+  auto via_type_of_ports = TaggedRootSet();
+  if (value.isMember("via_type_of")) {
+    auto via_type_of_json =
+        JsonValidation::nonempty_array(value, "via_type_of");
+    for (const auto& element : via_type_of_json) {
+      via_type_of_ports.add(TaggedRoot::from_json(element));
+    }
+  }
+
+  auto via_value_of_ports = TaggedRootSet();
+  if (value.isMember("via_value_of")) {
+    auto via_value_of_json =
+        JsonValidation::nonempty_array(value, "via_value_of");
+    for (const auto& element : via_value_of_json) {
+      via_value_of_ports.add(TaggedRoot::from_json(element));
+    }
+  }
+
+  auto canonical_names = CanonicalNameSetAbstractDomain();
+  if (value.isMember("canonical_names")) {
+    auto canonical_names_json =
+        JsonValidation::nonempty_array(value, "canonical_names");
+    for (const auto& element : canonical_names_json) {
+      canonical_names.add(CanonicalName::from_json(element));
+    }
+  }
+
+  auto output_paths = PathTreeDomain::bottom();
+  if (value.isMember("output_paths")) {
+    auto output_paths_json = JsonValidation::object(value, "output_paths");
+    for (const auto& output_path : output_paths_json.getMemberNames()) {
+      auto depth = output_paths_json[output_path].asInt();
+      auto path = Path::from_json(output_path);
+      output_paths.write(path, CollapseDepth(depth), UpdateKind::Weak);
+    }
+  }
+
+  auto class_interval_context = CallClassIntervalContext::from_json(value);
+
+  auto extra_traces = ExtraTraceSet();
+  if (value.isMember("extra_traces")) {
+    auto extra_traces_json =
+        JsonValidation::nonempty_array(value, "extra_traces");
+    for (const auto& extra_trace_json : extra_traces_json) {
+      extra_traces.add(ExtraTrace::from_json(extra_trace_json, context));
+    }
+  }
+
+  return Frame(
+      kind,
+      class_interval_context,
+      distance,
+      origins,
+      inferred_features,
+      user_features,
+      via_type_of_ports,
+      via_value_of_ports,
+      canonical_names,
+      output_paths,
+      extra_traces);
+}
+
 Json::Value Frame::to_json(
     const CallInfo& call_info,
     ExportOriginsMode export_origins_mode) const {
@@ -381,11 +496,9 @@ Json::Value Frame::to_json(
     value["output_paths"] = output_paths_value;
   }
 
-  if (!class_interval_context_.is_default()) {
-    auto interval_json = class_interval_context_.to_json();
-    for (const auto& member : interval_json.getMemberNames()) {
-      value[member] = interval_json[member];
-    }
+  auto interval_json = class_interval_context_.to_json();
+  for (const auto& member : interval_json.getMemberNames()) {
+    value[member] = interval_json[member];
   }
 
   if (extra_traces_.is_value() && !extra_traces_.elements().empty()) {

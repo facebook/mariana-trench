@@ -27,6 +27,11 @@ CallClassIntervalContext::CallClassIntervalContext(const Frame& frame)
 
 Json::Value CallClassIntervalContext::to_json() const {
   auto value = Json::Value(Json::objectValue);
+  if (is_default()) {
+    // Default intervals are not emitted in JSON to reduce verbosity.
+    return value;
+  }
+
   value["callee_interval"] = ClassIntervals::interval_to_json(callee_interval_);
   value["preserves_type_context"] = Json::Value(preserves_type_context_);
   return value;
@@ -35,6 +40,11 @@ Json::Value CallClassIntervalContext::to_json() const {
 CallClassIntervalContext CallClassIntervalContext::from_json(
     const ::Json::Value& value) {
   JsonValidation::validate_object(value);
+  if (!value.isMember("callee_interval")) {
+    // If the interval is absent, return the default interval.
+    return CallClassIntervalContext();
+  }
+
   return CallClassIntervalContext(
       ClassIntervals::interval_from_json(
           JsonValidation::nonempty_array(value, "callee_interval")),

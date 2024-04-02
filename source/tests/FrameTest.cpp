@@ -531,4 +531,164 @@ TEST_F(FrameTest, FrameWithKind) {
   EXPECT_EQ(frame2.kind(), kind_b);
 }
 
+TEST_F(FrameTest, SerializationDeserialization) {
+  Scope scope;
+  DexStore store("stores");
+  store.add_classes(scope);
+  auto context = test::make_context(store);
+
+  const auto* callee = context.methods->create(
+      redex::create_void_method(scope, "LClass;", "callee"));
+  const auto* callee_port =
+      context.access_path_factory->get(AccessPath(Root(Root::Kind::Return)));
+
+  auto declaration_call_info = CallInfo(
+      /* callee */ nullptr,
+      CallKind::declaration(),
+      /* callee_port */ nullptr,
+      /* position */ nullptr);
+  auto origin_call_info = CallInfo(
+      /* callee */ nullptr,
+      CallKind::origin(),
+      /* callee_port */ nullptr,
+      /* position */ nullptr);
+  auto callsite_call_info = CallInfo(
+      callee, CallKind::callsite(), callee_port, /* position */ nullptr);
+
+  {
+    // Default frame
+    auto frame = test::make_taint_frame(
+        context.kind_factory->get("TestKind"),
+        test::FrameProperties{
+            .inferred_features = FeatureMayAlwaysSet::bottom()});
+    auto frame_json =
+        frame.to_json(origin_call_info, ExportOriginsMode::Always);
+    EXPECT_EQ(Frame::from_json(frame_json, origin_call_info, context), frame);
+  }
+
+  {
+    // Frame with inferred and user features.
+    auto frame = test::make_taint_frame(
+        context.kind_factory->get("TestKind"),
+        test::FrameProperties{
+            .inferred_features =
+                FeatureMayAlwaysSet{context.feature_factory->get("FeatureOne")},
+            .user_features =
+                FeatureSet{context.feature_factory->get("FeatureTwo")},
+        });
+
+    // For declaration, all (always) features are considered user features
+    auto frame_json =
+        frame.to_json(declaration_call_info, ExportOriginsMode::Always);
+    EXPECT_EQ(
+        Frame::from_json(frame_json, declaration_call_info, context),
+        test::make_taint_frame(
+            frame.kind(),
+            test::FrameProperties{
+                .inferred_features = FeatureMayAlwaysSet::bottom(),
+                .user_features =
+                    FeatureSet{
+                        context.feature_factory->get("FeatureOne"),
+                        context.feature_factory->get("FeatureTwo"),
+                    },
+            }));
+
+    // For origin (and callsite), all features will be treated as inferred
+    // features.
+    frame_json = frame.to_json(origin_call_info, ExportOriginsMode::Always);
+    EXPECT_EQ(
+        Frame::from_json(frame_json, origin_call_info, context),
+        test::make_taint_frame(
+            frame.kind(),
+            test::FrameProperties{
+                .inferred_features =
+                    FeatureMayAlwaysSet{
+                        context.feature_factory->get("FeatureOne"),
+                        context.feature_factory->get("FeatureTwo"),
+                    },
+            }));
+
+    // For origin (and callsite), features will be treated as inferred features.
+    frame_json = frame.to_json(callsite_call_info, ExportOriginsMode::Always);
+    EXPECT_EQ(
+        Frame::from_json(frame_json, callsite_call_info, context),
+        test::make_taint_frame(
+            frame.kind(),
+            test::FrameProperties{
+                .inferred_features =
+                    FeatureMayAlwaysSet{
+                        context.feature_factory->get("FeatureOne"),
+                        context.feature_factory->get("FeatureTwo"),
+                    },
+            }));
+  }
+
+  {
+    // Frame with user features only
+    auto frame = test::make_taint_frame(
+        context.kind_factory->get("TestKind"),
+        test::FrameProperties{
+            .inferred_features = FeatureMayAlwaysSet::bottom(),
+            .user_features =
+                FeatureSet{context.feature_factory->get("FeatureOne")},
+        });
+
+    // User features are retained for declaration frames.
+    auto frame_json =
+        frame.to_json(declaration_call_info, ExportOriginsMode::Always);
+    EXPECT_EQ(
+        Frame::from_json(frame_json, declaration_call_info, context), frame);
+
+    // For origin (and callsite), features will be treated as inferred features.
+    frame_json = frame.to_json(origin_call_info, ExportOriginsMode::Always);
+    EXPECT_EQ(
+        Frame::from_json(frame_json, origin_call_info, context),
+        test::make_taint_frame(
+            frame.kind(),
+            test::FrameProperties{
+                .inferred_features =
+                    FeatureMayAlwaysSet{
+                        context.feature_factory->get("FeatureOne"),
+                    },
+            }));
+
+    frame_json = frame.to_json(callsite_call_info, ExportOriginsMode::Always);
+    EXPECT_EQ(
+        Frame::from_json(frame_json, callsite_call_info, context),
+        test::make_taint_frame(
+            frame.kind(),
+            test::FrameProperties{
+                .inferred_features =
+                    FeatureMayAlwaysSet{
+                        context.feature_factory->get("FeatureOne"),
+                    },
+            }));
+  }
+
+  {
+    // Frame with inferred may features.
+    auto frame = test::make_taint_frame(
+        context.kind_factory->get("TestKind"),
+        test::FrameProperties{
+            .inferred_features = FeatureMayAlwaysSet::make_may(
+                {context.feature_factory->get("FeatureOne")}),
+        });
+
+    // For declaration, this frame cannot be parsed. May features are not
+    // expected in declarations.
+    auto frame_json =
+        frame.to_json(declaration_call_info, ExportOriginsMode::Always);
+    EXPECT_THROW(
+        Frame::from_json(frame_json, declaration_call_info, context),
+        JsonValidationError);
+
+    // For origin and callsite, the features remain as inferred features.
+    frame_json = frame.to_json(origin_call_info, ExportOriginsMode::Always);
+    EXPECT_EQ(Frame::from_json(frame_json, origin_call_info, context), frame);
+
+    frame_json = frame.to_json(callsite_call_info, ExportOriginsMode::Always);
+    EXPECT_EQ(Frame::from_json(frame_json, callsite_call_info, context), frame);
+  }
+}
+
 } // namespace marianatrench

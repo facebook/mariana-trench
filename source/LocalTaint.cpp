@@ -12,6 +12,8 @@
 #include <mariana-trench/FeatureFactory.h>
 #include <mariana-trench/Heuristics.h>
 #include <mariana-trench/JsonValidation.h>
+#include <mariana-trench/KindFrames.h>
+#include <mariana-trench/LocalPositionSet.h>
 #include <mariana-trench/LocalTaint.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/PathTreeDomain.h>
@@ -603,6 +605,42 @@ void LocalTaint::add(const Frame& frame) {
     frames_copy.add(frame);
     return frames_copy;
   });
+}
+
+LocalTaint LocalTaint::from_json(const Json::Value& value, Context& context) {
+  JsonValidation::validate_object(value);
+  auto call_info = CallInfo::from_json(value, context);
+
+  FramesByKind frames_by_kind;
+  for (const auto& kind_json : JsonValidation::nonempty_array(value, "kinds")) {
+    auto kind_frame =
+        KindFrames(Frame::from_json(kind_json, call_info, context));
+    frames_by_kind.update(
+        kind_frame.kind(), [&kind_frame](const KindFrames& existing_frame) {
+          return existing_frame.join(kind_frame);
+        });
+  }
+
+  auto local_features = FeatureMayAlwaysSet::bottom();
+  if (value.isMember("local_features")) {
+    local_features =
+        FeatureMayAlwaysSet::from_json(value["local_features"], context);
+  }
+
+  // Skip parsing "local_user_features". This information comes from `Frame`
+  // when CallInfo is an Origin and is specially handled in Frame::from_json.
+
+  auto local_positions = LocalPositionSet();
+  if (value.isMember("local_positions")) {
+    local_positions =
+        LocalPositionSet::from_json(value["local_positions"], context);
+  }
+
+  return LocalTaint(
+      call_info,
+      std::move(frames_by_kind),
+      std::move(local_positions),
+      std::move(local_features));
 }
 
 Json::Value LocalTaint::to_json(ExportOriginsMode export_origins_mode) const {

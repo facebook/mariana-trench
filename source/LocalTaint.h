@@ -334,6 +334,7 @@ class LocalTaint final : public sparta::AbstractDomain<LocalTaint> {
 
   FeatureMayAlwaysSet features_joined() const;
 
+  static LocalTaint from_json(const Json::Value& value, Context& context);
   Json::Value to_json(ExportOriginsMode export_origins_mode) const;
 
   friend std::ostream& operator<<(std::ostream& out, const LocalTaint& frames);

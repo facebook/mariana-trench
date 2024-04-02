@@ -3624,4 +3624,84 @@ TEST_F(TaintTest, AttachPosition) {
       }));
 }
 
+TEST_F(TaintTest, SerializationDeserialization) {
+  auto context = test::make_empty_context();
+
+  Scope scope;
+  auto* method_one =
+      context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
+  auto* test_kind_one = context.kind_factory->get("TestSink");
+  auto* test_kind_two = context.kind_factory->get("TestSource");
+  auto* test_position_one = context.positions->get(std::nullopt, 1);
+  auto* feature_one = context.feature_factory->get("FeatureOne");
+
+  {
+    // Empty/bottom taint
+    auto taint = Taint();
+    EXPECT_EQ(
+        Taint::from_json(taint.to_json(ExportOriginsMode::Always), context),
+        taint);
+  }
+
+  {
+    // Simple taint
+    auto taint = Taint{
+        test::make_taint_config(
+            test_kind_one,
+            test::FrameProperties{
+                .callee_port = AccessPath(Root(Root::Kind::Argument, 1)),
+                .call_position = test_position_one,
+                .inferred_features = FeatureMayAlwaysSet::bottom(),
+                .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
+                .call_kind = CallKind::origin()}),
+        test::make_taint_config(
+            test_kind_two,
+            test::FrameProperties{
+                .callee_port = AccessPath(Root(Root::Kind::Return)),
+                .callee = method_one,
+                .call_position = test_position_one,
+                .inferred_features = FeatureMayAlwaysSet::bottom(),
+                .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
+                .call_kind = CallKind::callsite()}),
+    };
+    EXPECT_EQ(
+        Taint::from_json(taint.to_json(ExportOriginsMode::Always), context),
+        taint);
+  }
+
+  {
+    // Taint with local features and positions
+    auto taint = Taint{
+        test::make_taint_config(
+            test_kind_one,
+            test::FrameProperties{
+                .callee_port = AccessPath(Root(Root::Kind::Return)),
+                .inferred_features = FeatureMayAlwaysSet::bottom(),
+                .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
+                .local_positions = LocalPositionSet{test_position_one},
+                .call_kind = CallKind::origin()}),
+    };
+    EXPECT_EQ(
+        Taint::from_json(taint.to_json(ExportOriginsMode::Always), context),
+        taint);
+  }
+
+  {
+    // Taint with user features
+    auto taint = Taint{
+        test::make_taint_config(
+            test_kind_one,
+            test::FrameProperties{
+                .callee_port = AccessPath(Root(Root::Kind::Return)),
+                .inferred_features = FeatureMayAlwaysSet::bottom(),
+                .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
+                .user_features = FeatureSet{feature_one},
+                .call_kind = CallKind::declaration()}),
+    };
+    EXPECT_EQ(
+        Taint::from_json(taint.to_json(ExportOriginsMode::Always), context),
+        taint);
+  }
+}
+
 } // namespace marianatrench
