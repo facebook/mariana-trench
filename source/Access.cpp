@@ -106,8 +106,8 @@ std::string PathElement::to_string() const {
   mt_unreachable();
 }
 
-PathElement PathElement::from_json(const Json::Value& value) {
-  auto path_element = JsonValidation::string(value);
+PathElement PathElement::from_string(std::string_view value) {
+  auto path_element = value;
 
   if (!boost::starts_with(path_element, "[") ||
       !boost::ends_with(path_element, "]")) {
@@ -118,10 +118,11 @@ PathElement PathElement::from_json(const Json::Value& value) {
   path_element = path_element.substr(1, path_element.size() - 2);
   if (path_element.empty()) {
     throw JsonValidationError(
-        value,
+        std::string(value),
         /* field */ std::nullopt,
         fmt::format(
-            "non-empty index for path element, got `{}`", path_element));
+            "non-empty index for path element, got `{}`",
+            std::string(path_element)));
   }
 
   if (path_element == "*") {
@@ -134,15 +135,16 @@ PathElement PathElement::from_json(const Json::Value& value) {
   }
 
   // Trim outer <>
-  auto root = Root::from_json(path_element.substr(1, path_element.size() - 2));
+  auto root = Root::from_json(
+      std::string(path_element.substr(1, path_element.size() - 2)));
 
   if (!root.is_argument()) {
     throw JsonValidationError(
-        value,
+        std::string(value),
         /* field */ std::nullopt,
         fmt::format(
             "`[<Argument(<number>)>]` for value_of path element, got `{}`",
-            path_element));
+            std::string(path_element)));
   }
 
   return PathElement::index_from_value_of(root);
@@ -229,12 +231,96 @@ Path Path::resolve(const std::vector<std::optional<std::string>>&
   return path;
 }
 
+std::vector<std::string> Path::split_path(std::string_view value) {
+  static constexpr std::string_view k_start_delimiters = ".[";
+  static constexpr std::string_view k_end_delimiters = "]";
+
+  // Split the string by delimiters.
+  std::vector<std::string> elements;
+  std::string_view current_string = value;
+  std::string_view current_delimiter = k_start_delimiters;
+  std::string_view current_element;
+
+  if (!current_string.empty() && current_string[0] == '.') {
+    // Trim the leading '.' since '.' is used below to indicate the end of a
+    // field. Note that field path elements are prefixed with a '.' which is
+    // why `value` might start with '.'.
+    current_string = current_string.substr(1);
+  }
+
+  while (!current_string.empty()) {
+    auto position = current_string.find_first_of(current_delimiter);
+    if (position == std::string::npos) {
+      elements.push_back(std::string(current_string));
+      break;
+    }
+
+    switch (current_string.at(position)) {
+      case '.': {
+        if (position == 0) {
+          throw JsonValidationError(
+              std::string(value),
+              /* field */ std::nullopt,
+              "non-empty field for path element");
+        }
+        current_element = current_string.substr(0, position);
+        current_string = current_string.substr(position + 1);
+        current_delimiter = k_start_delimiters;
+      } break;
+
+      case '[': {
+        current_element = current_string.substr(0, position);
+        // Include '[' in the next element
+        current_string = current_string.substr(position);
+        current_delimiter = k_end_delimiters;
+      } break;
+
+      case ']': {
+        // Include ']' in the current element
+        current_element = current_string.substr(0, position + 1);
+
+        current_string = current_string.substr(position + 1);
+        if (!current_string.empty() && current_string.at(0) == '.') {
+          // Lookahead and consume '.'
+          current_string = current_string.substr(1);
+        }
+
+        current_delimiter = k_start_delimiters;
+      } break;
+
+      default:
+        mt_unreachable();
+    }
+
+    if (!current_element.empty()) {
+      elements.push_back(std::string(current_element));
+    }
+  }
+
+  return elements;
+}
+
+Path Path::from_string(std::string_view value) {
+  auto elements = Path::split_path(value);
+
+  Path path;
+  for (const auto& element : elements) {
+    path.append(PathElement::from_string(element));
+  }
+
+  return Path(path);
+}
+
 std::string Path::to_string() const {
   std::string value;
   for (const auto& field : elements_) {
     value.append(field.to_string());
   }
   return value;
+}
+
+Path Path::from_json(const Json::Value& value) {
+  return Path::from_string(JsonValidation::string(value));
 }
 
 Json::Value Path::to_json() const {
@@ -365,72 +451,8 @@ AccessPath AccessPath::canonicalize_for_method(const Method* method) const {
           Root(Root::Kind::Argument, position).to_string())});
 }
 
-std::vector<std::string> AccessPath::split_path(const Json::Value& value) {
-  auto string = JsonValidation::string(value);
-
-  static constexpr std::string_view k_start_delimiters = ".[";
-  static constexpr std::string_view k_end_delimiters = "]";
-
-  // Split the string by delimiters.
-  std::vector<std::string> elements;
-  std::string_view current_string = string;
-  std::string_view current_delimiter = k_start_delimiters;
-  std::string_view current_element;
-
-  while (!current_string.empty()) {
-    auto position = current_string.find_first_of(current_delimiter);
-    if (position == std::string::npos) {
-      elements.push_back(std::string(current_string));
-      break;
-    }
-
-    switch (current_string.at(position)) {
-      case '.': {
-        if (position == 0) {
-          throw JsonValidationError(
-              value,
-              /* field */ std::nullopt,
-              "non-empty field for path element");
-        }
-        current_element = current_string.substr(0, position);
-        current_string = current_string.substr(position + 1);
-        current_delimiter = k_start_delimiters;
-      } break;
-
-      case '[': {
-        current_element = current_string.substr(0, position);
-        // Include '[' in the next element
-        current_string = current_string.substr(position);
-        current_delimiter = k_end_delimiters;
-      } break;
-
-      case ']': {
-        // Include ']' in the current element
-        current_element = current_string.substr(0, position + 1);
-
-        current_string = current_string.substr(position + 1);
-        if (!current_string.empty() && current_string.at(0) == '.') {
-          // Lookahead and consume '.'
-          current_string = current_string.substr(1);
-        }
-
-        current_delimiter = k_start_delimiters;
-      } break;
-
-      default:
-        mt_unreachable();
-    }
-
-    if (!current_element.empty()) {
-      elements.push_back(std::string(current_element));
-    }
-  }
-
-  return elements;
-}
-
 AccessPath AccessPath::from_json(const Json::Value& value) {
-  auto elements = split_path(value);
+  auto elements = Path::split_path(JsonValidation::string(value));
 
   if (elements.empty()) {
     throw JsonValidationError(
@@ -445,7 +467,7 @@ AccessPath AccessPath::from_json(const Json::Value& value) {
   for (auto iterator = std::next(elements.begin()), end = elements.end();
        iterator != end;
        ++iterator) {
-    path.append(PathElement::from_json(*iterator));
+    path.append(PathElement::from_string(JsonValidation::string(*iterator)));
   }
 
   return AccessPath(root, path);

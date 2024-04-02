@@ -98,10 +98,10 @@ TEST_F(JsonTest, PathElementTest) {
 
   const auto any_index = PathElement::any_index();
 
-  EXPECT_EQ(PathElement::from_json("field"), field);
-  EXPECT_EQ(PathElement::from_json("[index]"), index);
-  EXPECT_EQ(PathElement::from_json("[*]"), any_index);
-  EXPECT_EQ(PathElement::from_json("[<Argument(1)>]"), value_of_argument_1);
+  EXPECT_EQ(PathElement::from_string("field"), field);
+  EXPECT_EQ(PathElement::from_string("[index]"), index);
+  EXPECT_EQ(PathElement::from_string("[*]"), any_index);
+  EXPECT_EQ(PathElement::from_string("[<Argument(1)>]"), value_of_argument_1);
 
   // index_from_value_of syntax is `[<` ... `>]`.
   EXPECT_EQ(
@@ -151,6 +151,35 @@ TEST_F(JsonTest, PathElementTest) {
 
   // Invalid syntax for PathElement
   EXPECT_THROW(AccessPath::from_json("Argument(0)]["), JsonValidationError);
+}
+
+TEST_F(JsonTest, Path) {
+  {
+    // Empty path
+    auto path = Path();
+    auto path_json = path.to_json();
+    EXPECT_EQ(path_json.asString(), "");
+    EXPECT_EQ(Path::from_json(path_json), path);
+  }
+
+  {
+    // Simple path with 1 element
+    auto path = Path({PathElement::field("field1")});
+    auto path_json = path.to_json();
+    EXPECT_EQ(path_json.asString(), ".field1");
+    EXPECT_EQ(Path::from_json(path_json), path);
+  }
+
+  {
+    // Path with multiple elements
+    auto path = Path(
+        {PathElement::field("field1"),
+         PathElement::field("field2"),
+         PathElement::any_index()});
+    auto path_json = path.to_json();
+    EXPECT_EQ(path_json.asString(), ".field1.field2[*]");
+    EXPECT_EQ(Path::from_json(path_json), path);
+  }
 }
 
 TEST_F(JsonTest, AccessPath) {

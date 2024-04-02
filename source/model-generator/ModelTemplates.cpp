@@ -105,7 +105,7 @@ AccessPathTemplate::AccessPathTemplate(RootTemplate root, Path path)
     : root_(root), path_(std::move(path)) {}
 
 AccessPathTemplate AccessPathTemplate::from_json(const Json::Value& value) {
-  auto elements = AccessPath::split_path(value);
+  auto elements = Path::split_path(JsonValidation::string(value));
 
   if (elements.empty()) {
     throw JsonValidationError(

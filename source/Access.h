@@ -292,12 +292,11 @@ class PathElement final {
   ParameterPosition parameter_position() const;
 
   std::string to_string() const;
+  static PathElement from_string(std::string_view value);
 
   PathElement resolve_index_from_value_of(
       const std::vector<std::optional<std::string>>& source_constant_arguments)
       const;
-
-  static PathElement from_json(const Json::Value& value);
 
  public:
   static PathElement field(const DexString* name);
@@ -394,7 +393,23 @@ class Path final {
   Path resolve(const std::vector<std::optional<std::string>>&
                    source_constant_arguments) const;
 
+  /**
+   * Split a string into path elements.
+   *
+   * For instance:
+   * ```
+   * >>> split_path(Json::Value(".x.y"));
+   * <<< ["x", "y"]
+   * ```
+   *
+   * Throws a `JsonValidationError` if the format is invalid.
+   */
+  static std::vector<std::string> split_path(std::string_view value);
+
+  static Path from_string(std::string_view value);
   std::string to_string() const;
+
+  static Path from_json(const Json::Value& value);
   Json::Value to_json() const;
 
  private:
@@ -470,19 +485,6 @@ class AccessPath final {
    * stored as the root while "Argument(x)" is stored in the Path.
    */
   AccessPath canonicalize_for_method(const Method* method) const;
-
-  /**
-   * Split a json string into access path elements.
-   *
-   * For instance:
-   * ```
-   * >>> split_path(Json::Value("Return.x.y"));
-   * <<< ["Return", "x", "y"]
-   * ```
-   *
-   * Throws a `JsonValidationError` if the format is invalid.
-   */
-  static std::vector<std::string> split_path(const Json::Value& value);
 
   std::string to_string() const;
 
