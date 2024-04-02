@@ -75,6 +75,7 @@ class ExtraTrace final {
     return call_info_.call_kind();
   }
 
+  static ExtraTrace from_json(const Json::Value& value, Context& context);
   Json::Value to_json() const;
 
   friend std::ostream& operator<<(

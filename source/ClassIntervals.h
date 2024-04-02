@@ -64,6 +64,7 @@ class ClassIntervals final {
   const Interval& get_interval(const DexType* type) const;
 
   static Json::Value interval_to_json(const Interval& interval);
+  static Interval interval_from_json(const Json::Value& value);
 
   Json::Value to_json() const;
 

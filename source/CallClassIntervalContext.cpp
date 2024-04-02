@@ -32,6 +32,15 @@ Json::Value CallClassIntervalContext::to_json() const {
   return value;
 }
 
+CallClassIntervalContext CallClassIntervalContext::from_json(
+    const ::Json::Value& value) {
+  JsonValidation::validate_object(value);
+  return CallClassIntervalContext(
+      ClassIntervals::interval_from_json(
+          JsonValidation::nonempty_array(value, "callee_interval")),
+      JsonValidation::boolean(value, "preserves_type_context"));
+}
+
 std::ostream& operator<<(
     std::ostream& out,
     const CallClassIntervalContext& class_interval_context) {

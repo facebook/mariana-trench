@@ -7,12 +7,43 @@
 
 #include <algorithm>
 
+#include <boost/algorithm/string/predicate.hpp>
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/CallKind.h>
+#include <mariana-trench/JsonValidation.h>
 
 namespace marianatrench {
 
 CallKind::CallKind(Encoding encoding) : encoding_(encoding) {}
+
+CallKind CallKind::from_trace_string(std::string_view trace_string) {
+  Encoding encoding = 0;
+
+  size_t current_position = 0;
+  if (boost::starts_with(trace_string, "PropagationWithTrace:")) {
+    encoding |= CallKind::PropagationWithTrace;
+    current_position += sizeof("PropagationWithTrace:") - 1;
+  }
+
+  auto call_kind = trace_string.substr(current_position);
+  if (call_kind == "Declaration") {
+    encoding |= CallKind::Declaration;
+  } else if (call_kind == "Origin") {
+    encoding |= CallKind::Origin;
+  } else if (call_kind == "CallSite") {
+    encoding |= CallKind::CallSite;
+  } else if (call_kind == "Propagation") {
+    encoding |= CallKind::Propagation;
+    mt_assert(!(encoding & CallKind::PropagationWithTrace));
+  } else {
+    throw JsonValidationError(
+        std::string(trace_string),
+        /* field */ std::nullopt,
+        "CallKind should be a [PropagationWithTrace:][Declaration|Origin|CallSite], or just Propagation");
+  }
+
+  return CallKind(encoding);
+}
 
 std::string CallKind::to_trace_string() const {
   std::string call_kind = "";

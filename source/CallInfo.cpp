@@ -45,6 +45,31 @@ CallInfo CallInfo::propagate(
       call_position);
 }
 
+CallInfo CallInfo::from_json(const Json::Value& value, Context& context) {
+  auto call_info = JsonValidation::object(value, "call_info");
+
+  auto call_kind = CallKind::from_trace_string(
+      JsonValidation::string(call_info, "call_kind"));
+
+  const Method* callee = nullptr;
+  if (call_info.isMember("resolves_to")) {
+    callee = Method::from_json(call_info["resolves_to"], context);
+  }
+
+  const Position* position = nullptr;
+  if (call_info.isMember("position")) {
+    position = Position::from_json(call_info["position"], context);
+  }
+
+  const AccessPath* port = nullptr;
+  if (call_info.isMember("port")) {
+    port = context.access_path_factory->get(
+        AccessPath::from_json(call_info["port"]));
+  }
+
+  return CallInfo(callee, call_kind, port, position);
+}
+
 Json::Value CallInfo::to_json() const {
   auto result = Json::Value(Json::objectValue);
 

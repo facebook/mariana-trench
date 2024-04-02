@@ -9,9 +9,11 @@
 #include <TypeUtil.h>
 
 #include <json/value.h>
+
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/ClassIntervals.h>
 #include <mariana-trench/JsonReaderWriter.h>
+#include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
 
 namespace marianatrench {
@@ -116,6 +118,34 @@ Json::Value ClassIntervals::interval_to_json(const Interval& interval) {
       Json::Value(static_cast<int64_t>(interval.upper_bound())));
 
   return interval_json;
+}
+
+ClassIntervals::Interval ClassIntervals::interval_from_json(
+    const Json::Value& value) {
+  auto bounds = JsonValidation::null_or_array(value);
+  if (bounds.empty()) {
+    return Interval::bottom();
+  }
+
+  if (bounds.size() != 2) {
+    throw JsonValidationError(
+        value, /* field */ std::nullopt, "array of size 2 for class interval");
+  }
+
+  // to_json() converts it to int64_t for Json comparison purposes, but the
+  // underlying type supports only uint32, so it is parsed as that.
+  auto lower_bound = JsonValidation::unsigned_integer(bounds[0]);
+  auto upper_bound = JsonValidation::unsigned_integer(bounds[1]);
+
+  if (lower_bound == Interval::MIN && upper_bound == Interval::MAX) {
+    return Interval::top();
+  } else if (lower_bound == Interval::MIN) {
+    return Interval::bounded_above(upper_bound);
+  } else if (upper_bound == Interval::MAX) {
+    return Interval::bounded_below(lower_bound);
+  }
+
+  return Interval::finite(lower_bound, upper_bound);
 }
 
 Json::Value ClassIntervals::to_json() const {

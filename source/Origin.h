@@ -43,6 +43,7 @@ class Origin {
 
   virtual std::string to_string() const = 0;
   virtual Json::Value to_json() const = 0;
+  static const Origin* from_json(const Json::Value& value, Context& context);
 };
 
 class MethodOrigin final : public Origin {

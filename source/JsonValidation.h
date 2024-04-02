@@ -47,6 +47,8 @@ class JsonValidation final {
       const Json::Value& value,
       const std::string& field);
 
+  static uint32_t unsigned_integer(const Json::Value& value);
+
   static bool boolean(const Json::Value& value);
   static bool boolean(const Json::Value& value, const std::string& field);
 

@@ -87,6 +87,7 @@ class CallInfo final {
       const Position* call_position,
       Context& context) const;
 
+  static CallInfo from_json(const Json::Value& value, Context& context);
   Json::Value to_json() const;
 
   friend bool operator==(const CallInfo& self, const CallInfo& other);

@@ -119,6 +119,16 @@ std::optional<int> JsonValidation::optional_integer(
   return integer.asInt();
 }
 
+uint32_t JsonValidation::unsigned_integer(const Json::Value& value) {
+  if (value.isNull() || !value.isUInt()) {
+    throw JsonValidationError(
+        value,
+        /* field */ std::nullopt,
+        /* expected */ "unsigned integer (32-bit)");
+  }
+  return value.asUInt();
+}
+
 bool JsonValidation::boolean(const Json::Value& value) {
   if (value.isNull() || !value.isBool()) {
     throw JsonValidationError(

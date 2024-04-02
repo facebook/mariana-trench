@@ -68,6 +68,7 @@ class CallKind final {
 
   bool is_propagation_without_trace() const;
 
+  static CallKind from_trace_string(std::string_view trace_string);
   std::string to_trace_string() const;
 
   CallKind propagate() const;

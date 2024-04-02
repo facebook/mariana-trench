@@ -5,9 +5,36 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <mariana-trench/AccessPathFactory.h>
+#include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Origin.h>
+#include <mariana-trench/OriginFactory.h>
 
 namespace marianatrench {
+
+const Origin* Origin::from_json(const Json::Value& value, Context& context) {
+  JsonValidation::validate_object(value);
+  if (value.isMember("method") && value.isMember("port")) {
+    return context.origin_factory->method_origin(
+        Method::from_json(value["method"], context),
+        context.access_path_factory->get(AccessPath::from_json(value["port"])));
+  } else if (value.isMember("field")) {
+    return context.origin_factory->field_origin(
+        Field::from_json(value["field"], context));
+  } else if (value.isMember("canonical_name")) {
+    return context.origin_factory->crtex_origin(
+        JsonValidation::string(value, "canonical_name"),
+        context.access_path_factory->get(AccessPath::from_json(value["port"])));
+  } else if (value.isMember("method")) {
+    return context.origin_factory->string_origin(
+        JsonValidation::string(value, "method"));
+  }
+
+  throw JsonValidationError(
+      value,
+      std::nullopt,
+      "contains one of fields [method|field|canonical_name]");
+}
 
 std::string MethodOrigin::to_string() const {
   return "method=" + method_->show() + ",port=" + port_->to_string();

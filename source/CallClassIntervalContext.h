@@ -63,6 +63,7 @@ class CallClassIntervalContext {
   }
 
   Json::Value to_json() const;
+  static CallClassIntervalContext from_json(const Json::Value& value);
 
   friend std::ostream& operator<<(
       std::ostream& out,

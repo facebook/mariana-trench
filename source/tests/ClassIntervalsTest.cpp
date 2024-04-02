@@ -9,6 +9,7 @@
 
 #include <DexStore.h>
 
+#include <mariana-trench/CallClassIntervalContext.h>
 #include <mariana-trench/ClassIntervals.h>
 #include <mariana-trench/Redex.h>
 #include <mariana-trench/tests/Test.h>
@@ -73,4 +74,54 @@ TEST_F(ClassIntervalsTest, IntervalComputation) {
   auto interval_object =
       context.class_intervals->get_interval(type::java_lang_Object());
   EXPECT_EQ(ClassIntervals::Interval::finite(1, 14), interval_object);
+}
+
+TEST_F(ClassIntervalsTest, ClassIntervalSerializationDeserialization) {
+  {
+    auto interval = ClassIntervals::Interval::bottom();
+    auto interval_json = ClassIntervals::interval_to_json(interval);
+    EXPECT_EQ(ClassIntervals::interval_from_json(interval_json), interval);
+  }
+
+  {
+    auto interval = ClassIntervals::Interval::top();
+    auto interval_json = ClassIntervals::interval_to_json(interval);
+    EXPECT_EQ(ClassIntervals::interval_from_json(interval_json), interval);
+  }
+
+  {
+    auto interval = ClassIntervals::Interval::bounded_below(10);
+    auto interval_json = ClassIntervals::interval_to_json(interval);
+    EXPECT_EQ(ClassIntervals::interval_from_json(interval_json), interval);
+  }
+
+  {
+    auto interval = ClassIntervals::Interval::bounded_above(10);
+    auto interval_json = ClassIntervals::interval_to_json(interval);
+    EXPECT_EQ(ClassIntervals::interval_from_json(interval_json), interval);
+  }
+
+  {
+    auto interval = ClassIntervals::Interval::finite(1, 10);
+    auto interval_json = ClassIntervals::interval_to_json(interval);
+    EXPECT_EQ(ClassIntervals::interval_from_json(interval_json), interval);
+  }
+}
+
+TEST_F(ClassIntervalsTest, CallClassIntervalSerializationDeserialization) {
+  {
+    auto interval_context = CallClassIntervalContext();
+    EXPECT_EQ(
+        CallClassIntervalContext::from_json(interval_context.to_json()),
+        interval_context);
+  }
+
+  {
+    auto interval_context = CallClassIntervalContext(
+        ClassIntervals::Interval::finite(1, 10),
+        /* preserves_type_context */ true);
+    EXPECT_EQ(
+        CallClassIntervalContext::from_json(interval_context.to_json()),
+        interval_context);
+  }
 }

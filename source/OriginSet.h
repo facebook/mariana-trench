@@ -35,6 +35,7 @@ class OriginSet final : public sparta::AbstractDomain<OriginSet> {
   INCLUDE_ABSTRACT_DOMAIN_METHODS(OriginSet, Set, set_)
   INCLUDE_SET_METHODS(OriginSet, Set, set_, const Origin*, iterator)
 
+  static OriginSet from_json(const Json::Value& value, Context& context);
   Json::Value to_json() const;
 
   friend std::ostream& operator<<(std::ostream& out, const OriginSet& methods);

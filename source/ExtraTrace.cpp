@@ -15,10 +15,27 @@
 
 namespace marianatrench {
 
+ExtraTrace ExtraTrace::from_json(const Json::Value& value, Context& context) {
+  auto call_info = CallInfo::from_json(value, context);
+  const auto* kind = Kind::from_json(value, context);
+  return ExtraTrace(
+      kind,
+      call_info.callee(),
+      call_info.call_position(),
+      call_info.callee_port(),
+      call_info.call_kind());
+}
+
 Json::Value ExtraTrace::to_json() const {
   auto extra_trace = call_info_.to_json();
   mt_assert(extra_trace.isObject() && !extra_trace.isNull());
-  extra_trace["kind"] = kind_->to_trace_string();
+
+  auto kind = kind_->to_json();
+  mt_assert(kind.isObject() && !kind.isNull());
+  for (const auto& member : kind.getMemberNames()) {
+    extra_trace[member] = kind[member];
+  }
+
   return extra_trace;
 }
 

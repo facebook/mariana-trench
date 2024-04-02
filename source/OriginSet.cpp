@@ -9,6 +9,17 @@
 
 namespace marianatrench {
 
+OriginSet OriginSet::from_json(const Json::Value& value, Context& context) {
+  auto origins_json = JsonValidation::nonempty_array(value);
+
+  Set origins;
+  for (const auto& origin_json : origins_json) {
+    origins.add(Origin::from_json(origin_json, context));
+  }
+
+  return OriginSet(origins);
+}
+
 Json::Value OriginSet::to_json() const {
   auto origins = Json::Value(Json::arrayValue);
   for (const auto* origin : set_) {
