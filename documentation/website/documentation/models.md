@@ -599,6 +599,29 @@ we could use the following JSON to specifiy a via-value feature that would mater
 
 Note that this only works for numeric and string literals. In cases where the argument is not a constant, the feature will appear as `via-value:unknown`.
 
+Note: `via_type_of` and `via_value_of` allow specifying a tag, which will be provided in the instantiated breadcrumb. For instance `via-foo-value:bar`, for a tag "foo". This can be used to differentiate from other via-value or via-type breadcrumbs.
+```json
+"via_type_of": [
+  {
+    "port": "Argument(1)",
+    "tag": "differentiator"
+  }
+]
+```
+This would create the feature `via-differentiator-type:Lcom/example/Class`.
+
+For backward compatibility, we allow these to be mixed with normal ports in a list
+```json
+"via_value_of": [
+  "Argument(0)",
+  {
+    "port": "Argument(1)",
+    "tag": "error-mode"
+  },
+  "Argument(2)"
+]
+```
+
 ### Taint Broadening
 
 **Taint broadening** (also called **collapsing**) happens when Mariana Trench needs to make an approximation about a taint flow. It is the operation of reducing a **taint tree** into a single element. A **taint tree** is a tree where edges are field names and nodes are taint element. This is how Mariana Trench represents internally which fields (or sequence of fields) are tainted.
