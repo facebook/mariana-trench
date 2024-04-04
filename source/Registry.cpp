@@ -372,19 +372,15 @@ Registry Registry::from_sharded_models_json(
   auto from_json_line = [&](const Json::Value& value) -> void {
     JsonValidation::validate_object(value);
     if (value.isMember("method")) {
-      const auto* method = Method::from_json(value["method"], context);
-      mt_assert(method != nullptr);
-      models.emplace(method, Model::from_json(value, context));
-    } else if (value.isMember("field")) {
-      const auto* field = Field::from_json(value["field"], context);
-      mt_assert(field != nullptr);
-      field_models.emplace(
-          field, FieldModel::from_config_json(field, value, context));
-    } else if (value.isMember("pattern")) {
-      auto pattern = JsonValidation::string(value, "pattern");
-      literal_models.emplace(
-          pattern, LiteralModel::from_config_json(value, context));
+      try {
+        const auto* method = Method::from_json(value["method"], context);
+        mt_assert(method != nullptr);
+        models.emplace(method, Model::from_json(value, context));
+      } catch (const JsonValidationError& e) {
+        WARNING(1, "Unable to parse model `{}`: {}", value, e.what());
+      }
     } else {
+      // TODO(T176362886): Support parsing field and literal models from JSON.
       ERROR(1, "Unrecognized model type in JSON: `{}`", value.asString());
     }
   };
