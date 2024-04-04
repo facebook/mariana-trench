@@ -514,7 +514,7 @@ Json::Value Frame::to_json(
 
 std::ostream& operator<<(std::ostream& out, const Frame& frame) {
   out << "Frame(kind=`" << show(frame.kind_);
-  out << ", class_interval_context=" << show(frame.class_interval_context_);
+  out << "`, class_interval_context=" << show(frame.class_interval_context_);
   if (frame.distance_ != 0) {
     out << ", distance=" << frame.distance_;
   }

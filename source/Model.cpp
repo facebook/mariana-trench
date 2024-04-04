@@ -1632,7 +1632,7 @@ std::ostream& operator<<(std::ostream& out, const Model& model) {
     out << ",\n  modes={";
     for (auto mode : k_all_modes) {
       if (model.modes_.test(mode)) {
-        out << " " << model_mode_to_string(mode);
+        out << model_mode_to_string(mode) << ", ";
       }
     }
     out << "}";
@@ -1641,7 +1641,7 @@ std::ostream& operator<<(std::ostream& out, const Model& model) {
     out << ",\n  freeze={";
     for (auto freeze_kind : k_all_freeze_kinds) {
       if (model.frozen_.test(freeze_kind)) {
-        out << " " << model_freeze_kind_to_string(freeze_kind);
+        out << model_freeze_kind_to_string(freeze_kind) << ", ";
       }
     }
     out << "}";
