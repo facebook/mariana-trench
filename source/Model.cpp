@@ -143,7 +143,10 @@ std::optional<Model::FreezeKind> string_to_freeze_kind(
   }
 }
 
-Model::Model() : method_(nullptr) {}
+Model::Model()
+    : method_(nullptr),
+      inline_as_getter_(AccessPathConstantDomain::bottom()),
+      inline_as_setter_(SetterAccessPathConstantDomain::bottom()) {}
 
 Model::Model(
     const Method* method,
@@ -1401,6 +1404,163 @@ Model Model::from_config_json(
     throw JsonValidationError(
         value, /* field */ std::nullopt, /* expected */ "model without issues");
   }
+
+  return model;
+}
+
+Model Model::from_json(const Json::Value& value, Context& context) {
+  JsonValidation::validate_object(value);
+
+  const Method* MT_NULLABLE method = nullptr;
+  if (value.isMember("method")) {
+    method = Method::from_json(value["method"], context);
+  }
+
+  Modes modes;
+  for (const auto& mode_value :
+       JsonValidation::null_or_array(value, /* field */ "modes")) {
+    auto mode = string_to_model_mode(JsonValidation::string(mode_value));
+    if (!mode) {
+      throw JsonValidationError(value, /* field */ "modes", "valid mode");
+    }
+    modes.set(*mode, true);
+  }
+
+  Frozen frozen;
+  for (const auto& freeze :
+       JsonValidation::null_or_array(value, /* field */ "freeze")) {
+    auto freeze_kind = string_to_freeze_kind(JsonValidation::string(freeze));
+    if (!freeze_kind) {
+      throw JsonValidationError(
+          value, /* field */ "freeze", "valid freeze kind");
+    }
+    frozen.set(*freeze_kind, true);
+  }
+
+  Model model(method, context, modes, frozen);
+
+  for (const auto& generation_value :
+       JsonValidation::null_or_array(value, /* field */ "generations")) {
+    auto port = AccessPath::from_json(generation_value["port"]);
+    auto taint = Taint::from_json(generation_value["taint"], context);
+    model.add_generation(port, taint);
+  }
+
+  for (const auto& parameter_source_value :
+       JsonValidation::null_or_array(value, /* field */ "parameter_sources")) {
+    auto port = AccessPath::from_json(parameter_source_value["port"]);
+    auto taint = Taint::from_json(parameter_source_value["taint"], context);
+    model.add_parameter_source(port, taint);
+  }
+
+  for (const auto& call_effect_source_value :
+       JsonValidation::null_or_array(value, /* field */ "effect_sources")) {
+    auto port = AccessPath::from_json(call_effect_source_value["port"]);
+    auto taint = Taint::from_json(call_effect_source_value["taint"], context);
+    model.add_call_effect_source(port, taint);
+  }
+
+  for (const auto& sink_value :
+       JsonValidation::null_or_array(value, /* field */ "sinks")) {
+    auto port = AccessPath::from_json(sink_value["port"]);
+    auto taint = Taint::from_json(sink_value["taint"], context);
+    model.add_sink(port, taint);
+  }
+
+  for (const auto& call_effect_sink_value :
+       JsonValidation::null_or_array(value, /* field */ "effect_sinks")) {
+    auto port = AccessPath::from_json(call_effect_sink_value["port"]);
+    auto taint = Taint::from_json(call_effect_sink_value["taint"], context);
+    model.add_call_effect_sink(port, taint);
+  }
+
+  for (const auto& propagation_value :
+       JsonValidation::null_or_array(value, /* field */ "propagation")) {
+    auto input_path = AccessPath::from_json(propagation_value["input"]);
+    auto output_taint = Taint::from_json(propagation_value["output"], context);
+    model.add_propagation(input_path, output_taint);
+  }
+
+  for (const auto& sanitizer_value :
+       JsonValidation::null_or_array(value, /* field */ "sanitizers")) {
+    JsonValidation::validate_object(sanitizer_value);
+    auto sanitizer = Sanitizer::from_json(sanitizer_value, context);
+    if (sanitizer_value.isMember("port")) {
+      // This is a port sanitizer.
+      auto port = Root::from_json(sanitizer_value["port"]);
+      model.add_port_sanitizers(SanitizerSet{sanitizer}, port);
+    } else {
+      model.add_global_sanitizer(sanitizer);
+    }
+  }
+
+  for (const auto& attach_to_source_value :
+       JsonValidation::null_or_array(value, /* field */ "attach_to_sources")) {
+    JsonValidation::validate_object(attach_to_source_value);
+    auto port = Root::from_json(attach_to_source_value["port"]);
+    auto features =
+        FeatureSet::from_json(attach_to_source_value["features"], context);
+    model.add_attach_to_sources(port, features);
+  }
+
+  for (const auto& attach_to_sink_value :
+       JsonValidation::null_or_array(value, /* field */ "attach_to_sinks")) {
+    JsonValidation::validate_object(attach_to_sink_value);
+    auto port = Root::from_json(attach_to_sink_value["port"]);
+    auto features =
+        FeatureSet::from_json(attach_to_sink_value["features"], context);
+    model.add_attach_to_sinks(port, features);
+  }
+
+  for (const auto& attach_to_propagation_value : JsonValidation::null_or_array(
+           value, /* field */ "attach_to_propagations")) {
+    JsonValidation::validate_object(attach_to_propagation_value);
+    auto port = Root::from_json(attach_to_propagation_value["port"]);
+    auto features =
+        FeatureSet::from_json(attach_to_propagation_value["features"], context);
+    model.add_attach_to_propagations(port, features);
+  }
+
+  for (const auto& add_features_to_argument_value :
+       JsonValidation::null_or_array(
+           value, /* field */ "add_features_to_arguments")) {
+    JsonValidation::validate_object(add_features_to_argument_value);
+    auto port = Root::from_json(add_features_to_argument_value["port"]);
+    if (add_features_to_argument_value.isMember("via_value_of")) {
+      TaggedRootSet via_value_of_ports;
+      for (const auto& add_feature_value :
+           JsonValidation::null_or_array(value, /* field */ "via_value_of")) {
+        via_value_of_ports.add(TaggedRoot::from_json(add_feature_value));
+      }
+      model.add_add_via_value_of_features_to_arguments(
+          port, via_value_of_ports);
+    } else {
+      auto features = FeatureSet::from_json(
+          add_features_to_argument_value["features"], context);
+      model.add_add_features_to_arguments(port, features);
+    }
+  }
+
+  if (value.isMember("inline_as_getter")) {
+    model.set_inline_as_getter(AccessPathConstantDomain(
+        AccessPath::from_json(value["inline_as_getter"])));
+  }
+
+  if (value.isMember("inline_as_setter")) {
+    model.set_inline_as_setter(SetterAccessPathConstantDomain(
+        SetterAccessPath::from_json(value["inline_as_setter"])));
+  }
+
+  for (const auto& model_generator_value :
+       JsonValidation::null_or_array(value, /* field */ "model_generators")) {
+    model.add_model_generator(
+        ModelGeneratorName::from_json(model_generator_value, context));
+  }
+
+  // Intentionally skip parsing "issues". Model::from_json is used to read
+  // cached data from another (dependent) analysis. If those issues are of
+  // interest, they should be processed during that analysis instead of in
+  // every subsequent analysis that depends on it.
 
   return model;
 }

@@ -338,11 +338,18 @@ class Model final {
    */
   std::unordered_set<const Transform*> local_transform_kinds() const;
 
+  /**
+   * Parses the JSON from a user's configuration. The input JSON schema is not
+   * symmetrical to `to_json`, even if it looks somewhat similar. Use
+   * `from_json()` if symmetry is expected.
+   */
   static Model from_config_json(
       const Method* MT_NULLABLE method,
       const Json::Value& value,
       Context& context,
       bool check_unexpected_members = true);
+
+  static Model from_json(const Json::Value& value, Context& context);
   Json::Value to_json(ExportOriginsMode export_origins_mode) const;
 
   /* Export the model to json and include the method position. */

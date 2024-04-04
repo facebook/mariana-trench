@@ -15,6 +15,7 @@
 #include <mariana-trench/Model.h>
 #include <mariana-trench/Redex.h>
 #include <mariana-trench/SourceSinkRule.h>
+#include <mariana-trench/model-generator/ModelGeneratorNameFactory.h>
 #include <mariana-trench/tests/Test.h>
 
 namespace marianatrench {
@@ -1270,6 +1271,116 @@ TEST_F(ModelTest, PropagationTransforms) {
   EXPECT_THAT(
       model_with_transforms.local_transform_kinds(),
       testing::UnorderedElementsAre(transform1));
+}
+
+TEST_F(ModelTest, SerializationDeserialization) {
+  Scope scope;
+  DexStore store("stores");
+  store.add_classes(scope);
+  auto context = test::make_context(store);
+
+  const auto* method = context.methods->create(
+      redex::create_void_method(scope, "LClass;", "method"));
+  const auto* source_kind = context.kind_factory->get("TestSource");
+  const auto* sink_kind = context.kind_factory->get("TestSink");
+
+  {
+    // Empty model
+    auto model = Model();
+    EXPECT_EQ(
+        Model::from_json(model.to_json(ExportOriginsMode::Always), context),
+        model);
+  }
+
+  {
+    // Simple almost-empty model (with method, modes, and frozen)
+    auto model = Model(
+        method,
+        context,
+        /* modes */ Model::Mode::AddViaObscureFeature,
+        /* frozen */ Model::FreezeKind::Generations);
+    EXPECT_EQ(
+        Model::from_json(model.to_json(ExportOriginsMode::Always), context),
+        model);
+  }
+
+  {
+    // Simple model with sources/sinks
+    auto model = Model(
+        method,
+        context,
+        /* modes */ {},
+        /* frozen */ {},
+        /* generations */
+        {{AccessPath(Root(Root::Kind::Argument, 0)),
+          test::make_leaf_taint_config(source_kind)}},
+        /* parameter_sources */ {},
+        /* sinks */
+        {{AccessPath(Root(Root::Kind::Argument, 0)),
+          test::make_leaf_taint_config(sink_kind)}});
+    EXPECT_EQ(
+        Model::from_json(model.to_json(ExportOriginsMode::Always), context),
+        model);
+  }
+
+  {
+    // Model with all fields populated
+    const auto* local_return_kind = context.kind_factory->local_return();
+    const auto* transform_kind1 = context.kind_factory->transform_kind(
+        /* base_kind */ local_return_kind,
+        /* local_transforms */
+        context.transforms_factory->create({"Transform1"}, context),
+        /* global_transforms */ nullptr);
+    const auto input_path = AccessPath(Root(Root::Kind::Argument, 0));
+    const auto output_path = AccessPath(Root(Root::Kind::Return));
+    const auto* feature = context.feature_factory->get("Feature");
+
+    auto model = Model(
+        method,
+        context,
+        /* modes */ Model::Mode::AddViaObscureFeature,
+        /* frozen */ {},
+        /* generations */
+        {{AccessPath(Root(Root::Kind::Argument, 0)),
+          test::make_leaf_taint_config(source_kind)}},
+        /* parameter_sources */
+        {{AccessPath(Root(Root::Kind::Argument, 0)),
+          test::make_leaf_taint_config(source_kind)}},
+        /* sinks */
+        {{AccessPath(Root(Root::Kind::Argument, 0)),
+          test::make_leaf_taint_config(sink_kind)}},
+        /* propagations */
+        {test::make_propagation_config(
+            transform_kind1, input_path, output_path)},
+        /* global_sanitizers */
+        {Sanitizer(SanitizerKind::Sources, KindSetAbstractDomain::top())},
+        /* port_sanitizers */
+        {{Root(Root::Kind::Return),
+          SanitizerSet(Sanitizer(
+              SanitizerKind::Sources, KindSetAbstractDomain({source_kind})))}},
+        /* attach_to_sources */
+        {{Root(Root::Kind::Argument, 0), FeatureSet{feature}}},
+        /* attach_to_sinks */
+        {{Root(Root::Kind::Argument, 0), FeatureSet{feature}}},
+        /* attach_to_propagations */
+        {{Root(Root::Kind::Argument, 0), FeatureSet{feature}}},
+        /* add_features_to_arguments */
+        {{Root(Root::Kind::Argument, 0), FeatureSet{feature}}},
+        /* inline_as_getter */
+        AccessPathConstantDomain(AccessPath(Root(Root::Kind::Argument, 0))),
+        /* inline_as_setter */
+        SetterAccessPathConstantDomain(SetterAccessPath(
+            /* target */ AccessPath(Root(Root::Kind::Argument, 0)),
+            /* value */ AccessPath(Root(Root::Kind::Argument, 0)))),
+        /* model_generators */
+        ModelGeneratorNameSet{
+            context.model_generator_name_factory->create("TestModelGenerator")},
+        /* issues - intentionally empty. These are not deserialized */ {});
+
+    EXPECT_EQ(
+        Model::from_json(model.to_json(ExportOriginsMode::Always), context),
+        model);
+  }
 }
 
 } // namespace marianatrench

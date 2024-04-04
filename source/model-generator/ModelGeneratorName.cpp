@@ -7,7 +7,9 @@
 
 #include <fmt/format.h>
 
+#include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/model-generator/ModelGeneratorName.h>
+#include <mariana-trench/model-generator/ModelGeneratorNameFactory.h>
 
 namespace marianatrench {
 
@@ -18,6 +20,19 @@ ModelGeneratorName::ModelGeneratorName(
 
 bool ModelGeneratorName::operator==(const ModelGeneratorName& other) const {
   return identifier_ == other.identifier_ && part_ == other.part_;
+}
+
+const ModelGeneratorName* ModelGeneratorName::from_json(
+    const Json::Value& value,
+    Context& context) {
+  auto name = JsonValidation::string(value);
+  auto separator = name.find(':');
+  if (separator != std::string::npos) {
+    auto identifier = name.substr(0, separator);
+    auto part = name.substr(separator + 1);
+    return context.model_generator_name_factory->create(identifier, part);
+  }
+  return context.model_generator_name_factory->create(name);
 }
 
 Json::Value ModelGeneratorName::to_json() const {

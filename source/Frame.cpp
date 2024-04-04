@@ -336,8 +336,8 @@ Frame Frame::from_json(
 
   auto origins = OriginSet::bottom();
   if (value.isMember("origins")) {
-    origins =
-        OriginSet::from_json(JsonValidation::object(value, "origins"), context);
+    origins = OriginSet::from_json(
+        JsonValidation::nonempty_array(value, "origins"), context);
   }
 
   // `to_json()` does not differentiate between user and inferred features.
@@ -358,14 +358,16 @@ Frame Frame::from_json(
       context,
       /* check_unexpected_members */ false);
   if (call_info.call_kind().is_declaration()) {
-    if (!json_features.may().empty()) {
-      throw JsonValidationError(
-          value,
-          /* field */ "may_features",
-          /* expected */
-          "empty may_features when CallKind is Declaration");
+    if (!json_features.is_bottom()) {
+      if (!json_features.may().empty()) {
+        throw JsonValidationError(
+            value,
+            /* field */ "may_features",
+            /* expected */
+            "empty may_features when CallKind is Declaration");
+      }
+      user_features = json_features.always();
     }
-    user_features = json_features.always();
   } else {
     inferred_features = std::move(json_features);
   }

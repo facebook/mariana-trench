@@ -13,6 +13,7 @@
 #include <boost/functional/hash.hpp>
 #include <json/json.h>
 
+#include <mariana-trench/Context.h>
 #include <mariana-trench/IncludeMacros.h>
 
 namespace marianatrench {
@@ -39,6 +40,9 @@ class ModelGeneratorName final {
     return part_;
   }
 
+  static const ModelGeneratorName* from_json(
+      const Json::Value& value,
+      Context& context);
   Json::Value to_json() const;
 
  private:

@@ -363,6 +363,8 @@ void Registry::to_sharded_models_json(
 Registry Registry::from_sharded_models_json(
     Context& context,
     const std::filesystem::path& path) {
+  LOG(1, "Reading models from sharded JSON files...");
+
   ConcurrentMap<const Method*, Model> models;
   ConcurrentMap<const Field*, FieldModel> field_models;
   ConcurrentMap<std::string, LiteralModel> literal_models;
@@ -372,7 +374,7 @@ Registry Registry::from_sharded_models_json(
     if (value.isMember("method")) {
       const auto* method = Method::from_json(value["method"], context);
       mt_assert(method != nullptr);
-      models.emplace(method, Model::from_config_json(method, value, context));
+      models.emplace(method, Model::from_json(value, context));
     } else if (value.isMember("field")) {
       const auto* field = Field::from_json(value["field"], context);
       mt_assert(field != nullptr);
