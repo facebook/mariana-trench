@@ -20,9 +20,6 @@ namespace marianatrench {
 
 namespace {
 
-static std::unordered_map<std::string, ParameterPosition> intent_class_setters =
-    constants::get_intent_class_setters();
-
 using RoutedIntents = PatriciaTreeSetAbstractDomain<
     const DexType*,
     /* bottom_is_empty */ true,
