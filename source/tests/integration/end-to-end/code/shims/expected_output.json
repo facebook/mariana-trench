@@ -4052,59 +4052,6 @@
               "via-shim:Lcom/facebook/marianatrench/integrationtests/BroadcastReceiverBuilder;.addActionReceiver:(Lcom/facebook/marianatrench/integrationtests/ActionReceiver;Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;Ljava/lang/Object;)V"
             ]
           }
-        },
-        {
-          "call_info" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(2)",
-            "position" : 
-            {
-              "end" : 0,
-              "line" : 47,
-              "path" : "WithParameterOverrides.java",
-              "start" : 0
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides$1;.onReceive:(Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;Ljava/lang/Object;)V"
-          },
-          "kinds" : 
-          [
-            {
-              "distance" : 3,
-              "kind" : "Sink",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-                  "port" : "Argument(0)"
-                }
-              ]
-            },
-            {
-              "callee_interval" : 
-              [
-                45,
-                46
-              ],
-              "distance" : 1,
-              "kind" : "Sink",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-                  "port" : "Argument(0)"
-                }
-              ],
-              "preserves_type_context" : false
-            }
-          ],
-          "local_features" : 
-          {
-            "always_features" : 
-            [
-              "via-shim:Lcom/facebook/marianatrench/integrationtests/BroadcastReceiverBuilder;.addActionReceiver:(Lcom/facebook/marianatrench/integrationtests/ActionReceiver;Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;Ljava/lang/Object;)V"
-            ]
-          }
         }
       ],
       "sources" : 

@@ -29,9 +29,13 @@ class TypeValue final {
 
   explicit TypeValue(
       const DexType* singleton_type,
-      const SmallSetDexTypeDomain& small_set_dex_types);
+      std::unordered_set<const DexType*> small_set_dex_types);
 
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(TypeValue)
+
+  void set_singleton_type(const DexType* singleton_type) {
+    singleton_type_ = singleton_type;
+  }
 
   void set_local_extends(std::unordered_set<const DexType*> dex_types) {
     local_extends_ = std::move(dex_types);
@@ -108,6 +112,15 @@ class Types final {
    */
   const DexType* MT_NULLABLE
   receiver_type(const Method* method, const IRInstruction* instruction) const;
+
+  /**
+   * Get local_extends for receiver type of an invoke instruction.
+   *
+   * Returns empty set if not found.
+   */
+  const std::unordered_set<const DexType*>& receiver_local_extends(
+      const Method* method,
+      const IRInstruction* instruction) const;
 
   /**
    * Get the resolved DexType for reflection arguments.

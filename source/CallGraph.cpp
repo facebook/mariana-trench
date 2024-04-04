@@ -312,9 +312,12 @@ void process_shim_target(
   const auto& method_spec = shim_target.method_spec();
 
   const DexType* receiver_type = nullptr;
+  const std::unordered_set<const DexType*>* receiver_local_extends = nullptr;
   if (auto receiver_register = shim_target.receiver_register(instruction)) {
     receiver_type =
         types.register_type(caller, instruction, *receiver_register);
+    receiver_local_extends =
+        &types.register_local_extends(caller, instruction, *receiver_register);
   }
   if (receiver_type == nullptr) {
     receiver_type = method_spec.cls;
@@ -360,6 +363,7 @@ void process_shim_target(
           method,
           call_index,
           receiver_type,
+          receiver_local_extends,
           class_hierarchies,
           override_factory),
       /* root_registers */ root_registers,
@@ -422,6 +426,7 @@ void process_shim_reflection(
           reflection_method,
           call_index,
           reflection_type,
+          /* receiver_local_extends */ nullptr,
           class_hierarchies,
           override_factory),
       /* root_registers */ root_registers,
@@ -763,14 +768,17 @@ CallTarget::CallTarget(
     const Method* MT_NULLABLE resolved_base_callee,
     TextualOrderIndex call_index,
     const DexType* MT_NULLABLE receiver_type,
-    const std::unordered_set<const Method*>* MT_NULLABLE overrides,
-    const std::unordered_set<const DexType*>* MT_NULLABLE receiver_extends)
+    const std::unordered_set<const DexType*>* MT_NULLABLE
+        receiver_local_extends,
+    const std::unordered_set<const DexType*>* MT_NULLABLE receiver_extends,
+    const std::unordered_set<const Method*>* MT_NULLABLE overrides)
     : instruction_(instruction),
       resolved_base_callee_(resolved_base_callee),
       call_index_(call_index),
       receiver_type_(receiver_type),
-      overrides_(overrides),
-      receiver_extends_(receiver_extends) {}
+      receiver_local_extends_(receiver_local_extends),
+      receiver_extends_(receiver_extends),
+      overrides_(overrides) {}
 
 CallTarget CallTarget::static_call(
     const IRInstruction* instruction,
@@ -793,8 +801,9 @@ CallTarget CallTarget::direct_call(
       /* resolved_base_callee */ callee,
       /* call_index */ call_index,
       /* receiver_type */ receiver_type,
-      /* overrides */ nullptr,
-      /* receiver_extends */ nullptr);
+      /* receiver_local_extends */ nullptr,
+      /* receiver_extends */ nullptr,
+      /* overrides */ nullptr);
 }
 
 CallTarget CallTarget::virtual_call(
@@ -802,6 +811,8 @@ CallTarget CallTarget::virtual_call(
     const Method* MT_NULLABLE resolved_base_callee,
     TextualOrderIndex call_index,
     const DexType* MT_NULLABLE receiver_type,
+    const std::unordered_set<const DexType*>* MT_NULLABLE
+        receiver_local_extends,
     const ClassHierarchies& class_hierarchies,
     const Overrides& override_factory) {
   // All overrides are potential callees.
@@ -838,8 +849,9 @@ CallTarget CallTarget::virtual_call(
       resolved_base_callee,
       call_index,
       receiver_type,
-      overrides,
-      receiver_extends);
+      receiver_local_extends,
+      receiver_extends,
+      overrides);
 }
 
 CallTarget CallTarget::from_call_instruction(
@@ -860,6 +872,7 @@ CallTarget CallTarget::from_call_instruction(
         resolved_base_callee,
         call_index,
         types.receiver_type(caller, instruction),
+        &types.receiver_local_extends(caller, instruction),
         class_hierarchies,
         override_factory);
   } else {
@@ -879,11 +892,16 @@ CallTarget::OverridesRange CallTarget::overrides() const {
   mt_assert(resolved());
   mt_assert(is_virtual());
 
+  const auto* extends = receiver_extends_;
+  if (receiver_local_extends_ && receiver_local_extends_->size() > 0) {
+    extends = receiver_local_extends_;
+  }
+
   return boost::make_iterator_range(
       boost::make_filter_iterator(
-          FilterOverrides{receiver_extends_}, overrides_->cbegin()),
+          FilterOverrides{extends}, overrides_->cbegin()),
       boost::make_filter_iterator(
-          FilterOverrides{receiver_extends_}, overrides_->cend()));
+          FilterOverrides{extends}, overrides_->cend()));
 }
 
 bool CallTarget::operator==(const CallTarget& other) const {
@@ -891,8 +909,9 @@ bool CallTarget::operator==(const CallTarget& other) const {
       resolved_base_callee_ == other.resolved_base_callee_ &&
       call_index_ == other.call_index_ &&
       receiver_type_ == other.receiver_type_ &&
-      overrides_ == other.overrides_ &&
-      receiver_extends_ == other.receiver_extends_;
+      receiver_local_extends_ == other.receiver_local_extends_ &&
+      receiver_extends_ == other.receiver_extends_ &&
+      overrides_ == other.overrides_;
 }
 
 std::ostream& operator<<(std::ostream& out, const CallTarget& call_target) {

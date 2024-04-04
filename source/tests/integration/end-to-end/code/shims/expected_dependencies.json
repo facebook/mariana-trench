@@ -315,8 +315,7 @@
   ],
   "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides$1;.onReceive:(Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;Ljava/lang/Object;)V" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides;.testShimOnAnonymousClass:()V",
-    "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides;.testShimWithAnonymousClassArgument:()V"
+    "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides;.testShimOnAnonymousClass:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides$2;.<init>:()V" : 
   [

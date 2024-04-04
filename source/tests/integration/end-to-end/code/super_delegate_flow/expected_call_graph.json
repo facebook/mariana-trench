@@ -231,7 +231,6 @@
     "virtual" : 
     [
       "Landroid/webkit/WebViewClient;.onPageFinished:(Ljava/lang/String;)V",
-      "Lcom/facebook/marianatrench/integrationtests/FacebookWebViewClient;.onPageFinished:(Ljava/lang/String;)V",
       "Lcom/facebook/marianatrench/integrationtests/SinkWebViewClient;.onPageFinished:(Ljava/lang/String;)V"
     ]
   },
@@ -261,9 +260,7 @@
   {
     "virtual" : 
     [
-      "Landroid/webkit/WebViewClient;.onPageFinished:(Ljava/lang/String;)V",
-      "Lcom/facebook/marianatrench/integrationtests/FacebookWebViewClient;.onPageFinished:(Ljava/lang/String;)V",
-      "Lcom/facebook/marianatrench/integrationtests/SinkWebViewClient;.onPageFinished:(Ljava/lang/String;)V"
+      "Landroid/webkit/WebViewClient;.onPageFinished:(Ljava/lang/String;)V"
     ]
   },
   "Lcom/facebook/marianatrench/integrationtests/SinkWebViewClient;.<init>:()V" : 

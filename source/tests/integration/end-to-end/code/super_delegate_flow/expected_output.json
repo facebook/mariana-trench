@@ -1125,51 +1125,7 @@
   {
     "line" : 20,
     "path" : "SecureWebViewClient.java"
-  },
-  "sinks" : 
-  [
-    {
-      "port" : "Argument(1)",
-      "taint" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "end" : 44,
-              "line" : 21,
-              "path" : "SecureWebViewClient.java",
-              "start" : 42
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/SinkWebViewClient;.onPageFinished:(Ljava/lang/String;)V"
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                28,
-                29
-              ],
-              "distance" : 1,
-              "kind" : "Sink",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-                  "port" : "Argument(0)"
-                }
-              ],
-              "preserves_type_context" : false
-            }
-          ]
-        }
-      ]
-    }
-  ]
+  }
 }
 {
   "method" : "Lcom/facebook/marianatrench/integrationtests/SinkWebViewClient;.<init>:()V",
@@ -1394,80 +1350,6 @@
   }
 }
 {
-  "issues" : 
-  [
-    {
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/SecureWebViewClient;.onPageFinished:(Ljava/lang/String;)V",
-      "position" : 
-      {
-        "line" : 14,
-        "path" : "SourceWebViewClient.java"
-      },
-      "rule" : 1,
-      "sink_index" : "0",
-      "sinks" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "end" : 27,
-              "line" : 14,
-              "path" : "SourceWebViewClient.java",
-              "start" : 25
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/SecureWebViewClient;.onPageFinished:(Ljava/lang/String;)V"
-          },
-          "kinds" : 
-          [
-            {
-              "distance" : 2,
-              "kind" : "Sink",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-                  "port" : "Argument(0)"
-                }
-              ]
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Origin",
-            "position" : 
-            {
-              "end" : 38,
-              "line" : 13,
-              "path" : "SourceWebViewClient.java",
-              "start" : 29
-            }
-          },
-          "kinds" : 
-          [
-            {
-              "kind" : "Source",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/SourceWebViewClient;.onPageFinished:(Ljava/lang/String;)V",
-                  "port" : "Argument(1)"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ],
   "method" : "Lcom/facebook/marianatrench/integrationtests/SourceWebViewClient;.onPageFinished:(Ljava/lang/String;)V",
   "parameter_sources" : 
   [
@@ -1501,45 +1383,7 @@
   {
     "line" : 13,
     "path" : "SourceWebViewClient.java"
-  },
-  "sinks" : 
-  [
-    {
-      "port" : "Argument(1)",
-      "taint" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "end" : 27,
-              "line" : 14,
-              "path" : "SourceWebViewClient.java",
-              "start" : 25
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/SecureWebViewClient;.onPageFinished:(Ljava/lang/String;)V"
-          },
-          "kinds" : 
-          [
-            {
-              "distance" : 2,
-              "kind" : "Sink",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-                  "port" : "Argument(0)"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
+  }
 }
 {
   "method" : "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V",

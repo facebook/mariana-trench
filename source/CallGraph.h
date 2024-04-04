@@ -74,6 +74,8 @@ class CallTarget final {
       const Method* MT_NULLABLE resolved_base_callee,
       TextualOrderIndex call_index,
       const DexType* MT_NULLABLE receiver_type,
+      const std::unordered_set<const DexType*>* MT_NULLABLE
+          receiver_local_extends,
       const ClassHierarchies& class_hierarchies,
       const Overrides& override_factory);
 
@@ -153,16 +155,21 @@ class CallTarget final {
       const Method* MT_NULLABLE resolved_base_callee,
       TextualOrderIndex call_index,
       const DexType* MT_NULLABLE receiver_type,
-      const std::unordered_set<const Method*>* MT_NULLABLE overrides,
-      const std::unordered_set<const DexType*>* MT_NULLABLE receiver_extends);
+      const std::unordered_set<const DexType*>* MT_NULLABLE
+          receiver_local_extends,
+      const std::unordered_set<const DexType*>* MT_NULLABLE receiver_extends,
+      const std::unordered_set<const Method*>* MT_NULLABLE overrides);
 
  private:
   const IRInstruction* instruction_;
   const Method* MT_NULLABLE resolved_base_callee_;
   TextualOrderIndex call_index_;
   const DexType* MT_NULLABLE receiver_type_;
-  const std::unordered_set<const Method*>* MT_NULLABLE overrides_;
+  // Precise types that the receiver can be assigned at this callsite.
+  const std::unordered_set<const DexType*>* MT_NULLABLE receiver_local_extends_;
+  // All possible types that extend the receiver.
   const std::unordered_set<const DexType*>* MT_NULLABLE receiver_extends_;
+  const std::unordered_set<const Method*>* MT_NULLABLE overrides_;
 };
 
 } // namespace marianatrench
@@ -175,8 +182,9 @@ struct std::hash<marianatrench::CallTarget> {
     boost::hash_combine(seed, call_target.resolved_base_callee_);
     boost::hash_combine(seed, call_target.call_index_);
     boost::hash_combine(seed, call_target.receiver_type_);
-    boost::hash_combine(seed, call_target.overrides_);
+    boost::hash_combine(seed, call_target.receiver_local_extends_);
     boost::hash_combine(seed, call_target.receiver_extends_);
+    boost::hash_combine(seed, call_target.overrides_);
     return seed;
   }
 };

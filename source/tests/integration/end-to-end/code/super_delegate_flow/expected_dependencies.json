@@ -47,11 +47,6 @@
   [
     "Lcom/facebook/marianatrench/integrationtests/SinkWebViewClient;.<init>:()V"
   ],
-  "Lcom/facebook/marianatrench/integrationtests/FacebookWebViewClient;.onPageFinished:(Ljava/lang/String;)V" : 
-  [
-    "Lcom/facebook/marianatrench/integrationtests/InsecureWebViewClient;.onPageFinished:(Ljava/lang/String;)V",
-    "Lcom/facebook/marianatrench/integrationtests/SecureWebViewClient;.onPageFinished:(Ljava/lang/String;)V"
-  ],
   "Lcom/facebook/marianatrench/integrationtests/InsecureWebViewClient;.<init>:()V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/SourceSinkWebViewClient;.<init>:()V"
@@ -78,8 +73,7 @@
   ],
   "Lcom/facebook/marianatrench/integrationtests/SinkWebViewClient;.onPageFinished:(Ljava/lang/String;)V" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/InsecureWebViewClient;.onPageFinished:(Ljava/lang/String;)V",
-    "Lcom/facebook/marianatrench/integrationtests/SecureWebViewClient;.onPageFinished:(Ljava/lang/String;)V"
+    "Lcom/facebook/marianatrench/integrationtests/InsecureWebViewClient;.onPageFinished:(Ljava/lang/String;)V"
   ],
   "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V" : 
   [

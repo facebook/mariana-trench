@@ -286,6 +286,7 @@ TEST_F(CallGraphTest, ShimCallIndices) {
               shimmed_method1,
               /* call_index */ 0,
               /* receiver_type */ shimmed_method1->parameter_type(0),
+              /* receiver_local_extends */ nullptr,
               *context.class_hierarchies,
               *context.overrides),
           CallTarget::static_call(
@@ -297,6 +298,7 @@ TEST_F(CallGraphTest, ShimCallIndices) {
               shimmed_method1,
               /* call_index */ 1,
               /* receiver_type */ shimmed_method1->parameter_type(0),
+              /* receiver_local_extends */ nullptr,
               *context.class_hierarchies,
               *context.overrides),
           CallTarget::static_call(

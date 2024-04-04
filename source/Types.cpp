@@ -8,8 +8,10 @@
 #include <algorithm>
 #include <optional>
 
+#include <boost/iterator/filter_iterator.hpp>
 #include <fmt/format.h>
 
+#include <DexTypeEnvironment.h>
 #include <ReflectionAnalysis.h>
 #include <Show.h>
 #include <TypeInference.h>
@@ -169,103 +171,105 @@ std::string show_globally_inferred_types(
   return types_string;
 }
 
+std::string show_smallset_dex_types_selection(
+    const SmallSetDexTypeDomain& small_set_dex_domain,
+    const std::unordered_set<const DexType*>& included_types) {
+  std::string small_set_types = "";
+
+  if (small_set_dex_domain.kind() != sparta::AbstractValueKind::Value) {
+    return small_set_types;
+  }
+
+  for (const auto* type : small_set_dex_domain.get_types()) {
+    small_set_types.append(fmt::format(
+        "\n  {} {}",
+        show(type),
+        included_types.find(type) == included_types.end() ? "skipped!"
+                                                          : "added!"));
+  }
+  return small_set_types;
+}
+
 /**
- * Select the more precise type between local_type and globally_inferred_type
- * to as a singleton type representation at the ir_register for instruction in
- * caller.
+ * Select the more precise/narrower type between locally_inferred_type and
+ * globally_inferred_type.
+ * Returns nullptr if the two types are incompatible.
  */
 const DexType* MT_NULLABLE select_precise_singleton_type(
-    const DexType* MT_NULLABLE local_type,
-    const DexType* MT_NULLABLE globally_inferred_type,
-    const Method* caller,
-    const IRInstruction* instruction,
-    Register ir_register,
-    bool log_method) {
-  if (local_type == globally_inferred_type) {
-    if (local_type == nullptr) {
-      WARNING(
-          2,
-          "Both Local type analysis and global type analysis could not determine the type for register {} in instruction {} of method {}",
-          std::to_string(ir_register),
-          show(instruction),
-          caller->show());
-    }
-
-    return local_type;
+    const DexType* locally_inferred_type,
+    const DexType* MT_NULLABLE globally_inferred_type) {
+  if (locally_inferred_type == globally_inferred_type ||
+      globally_inferred_type == nullptr) {
+    return locally_inferred_type;
   }
-
-  if (local_type == nullptr) {
-    return globally_inferred_type;
-  } else if (globally_inferred_type == nullptr) {
-    return local_type;
-  }
-
-  mt_assert(local_type != nullptr && globally_inferred_type != nullptr);
 
   if (type::check_cast(
-          /* type */ local_type, /* base_type */ globally_inferred_type)) {
-    LOG(log_method ? 0 : 5,
-        "Local type analysis inferred a narrower type {} than global type analysis {} for register {} in instruction {} of method {}",
-        local_type->str(),
-        globally_inferred_type->str(),
-        std::to_string(ir_register),
-        show(instruction),
-        caller->show());
-
-    return local_type;
+          /* type */ locally_inferred_type,
+          /* base_type */ globally_inferred_type)) {
+    // Local type analysis inferred a narrower type.
+    return locally_inferred_type;
   } else if (!type::check_cast(
                  /* type */ globally_inferred_type,
-                 /* base_type */ local_type)) {
-    LOG(log_method ? 0 : 5,
-        "Local type analysis inferred unrelated type `{}` from global type analysis `{}` for register {} in instruction {} of method {}.",
-        local_type->str(),
-        globally_inferred_type->str(),
-        std::to_string(ir_register),
-        show(instruction),
-        caller->show());
-
-    return local_type;
+                 /* base_type */ locally_inferred_type)) {
+    // Failed to cast local to global or global to local types.
+    // Two types are incompatible with each other.
+    return nullptr;
   }
 
-  LOG(log_method ? 0 : 5,
-      "Global type analysis inferred a narrower type {} than local type analysis {} for register {} in instruction {} of method {}",
-      local_type->str(),
-      globally_inferred_type->str(),
-      std::to_string(ir_register),
-      show(instruction),
-      caller->show());
-
+  // Global type analysis inferred a narrower type.
   return globally_inferred_type;
+}
+
+std::unordered_set<const DexType*> get_small_set_dex_types(
+    const DexType* locally_inferred_type,
+    const DexType* MT_NULLABLE globally_inferred_type,
+    const SmallSetDexTypeDomain& small_set_dex_domain) {
+  std::unordered_set<const DexType*> result{};
+
+  if (small_set_dex_domain.kind() != sparta::AbstractValueKind::Value) {
+    return result;
+  }
+
+  const auto& types = small_set_dex_domain.get_types();
+  if (types.size() == 0) {
+    // SmallSetDexTypeDomain can be empty for a Value kind when
+    // initializing a DexTypeDomain with Nullness::IS_NULL.
+    // See DexTypeDomain::null().
+    return result;
+  }
+
+  const DexType* singleton_type = globally_inferred_type != nullptr
+      ? globally_inferred_type
+      : locally_inferred_type;
+
+  mt_assert(singleton_type != nullptr);
+
+  auto is_valid_type = [singleton_type](const DexType* type) {
+    // Global types analysis ends up storing sibling types in the
+    // SmallSetDexTypeDomain in some cases, usually when generic interfaces are
+    // involved. We only consider the 'type' in SmallSetDexTypeDomain as valid
+    // if it is derived from singleton_type.
+    return type::check_cast(type, /* base_type */ singleton_type);
+  };
+
+  result.insert(
+      boost::make_filter_iterator(is_valid_type, types.begin()),
+      boost::make_filter_iterator(is_valid_type, types.end()));
+
+  return result;
 }
 
 } // namespace
 
 TypeValue::TypeValue(const DexType* singleton_type)
-    : singleton_type_(singleton_type) {
-  mt_assert(singleton_type != nullptr);
-}
+    : TypeValue(singleton_type, /* local extends */ {}) {}
 
 TypeValue::TypeValue(
     const DexType* singleton_type,
-    const SmallSetDexTypeDomain& small_set_dex_types)
-    : singleton_type_(singleton_type) {
+    std::unordered_set<const DexType*> local_extends)
+    : singleton_type_(singleton_type),
+      local_extends_(std::move(local_extends)) {
   mt_assert(singleton_type != nullptr);
-  mt_assert(small_set_dex_types.kind() == sparta::AbstractValueKind::Value);
-
-  const auto& types = small_set_dex_types.get_types();
-  if (types.size() == 0) {
-    // SmallSetDexTypeDomain can be empty for a Value kind when creating a
-    // initializing a DexTypeDomain with Nullness::IS_NULL.
-    // See DexTypeDomain::null().
-    WARNING(
-        2,
-        "Empty SmallSetDexTypeDomain for singleton_type: {}",
-        singleton_type->str());
-    return;
-  }
-
-  local_extends_ =
-      std::unordered_set<const DexType*>(types.begin(), types.end());
 }
 
 std::ostream& operator<<(std::ostream& out, const TypeValue& value) {
@@ -414,6 +418,7 @@ std::unique_ptr<TypeEnvironments> Types::infer_types_for_method(
   if (global_type_analyzer_ == nullptr) {
     return environments;
   }
+
   auto per_method_global_type_analyzer =
       global_type_analyzer_->get_replayable_local_analysis(
           method->dex_method());
@@ -422,7 +427,7 @@ std::unique_ptr<TypeEnvironments> Types::infer_types_for_method(
     auto current_state =
         per_method_global_type_analyzer->get_entry_state_at(block);
     for (auto& entry : InstructionIterable(block)) {
-      auto* instruction = entry.insn;
+      const auto* instruction = entry.insn;
       per_method_global_type_analyzer->analyze_instruction(
           instruction, &current_state);
 
@@ -444,7 +449,7 @@ std::unique_ptr<TypeEnvironments> Types::infer_types_for_method(
           show_locally_inferred_types(environment_at_instruction),
           show_globally_inferred_types(instruction, global_type_environment));
 
-      for (auto& ir_register : instruction->srcs()) {
+      for (auto ir_register : instruction->srcs()) {
         const auto& globally_inferred_type_domain =
             global_type_environment.get(ir_register);
 
@@ -455,49 +460,63 @@ std::unique_ptr<TypeEnvironments> Types::infer_types_for_method(
           continue;
         }
 
-        const DexType* globally_inferred_type = nullptr;
-        if (auto result = globally_inferred_type_domain.get_dex_type()) {
-          globally_inferred_type = *result;
-        }
-
-        const DexType* local_type = nullptr;
-        if (auto result = environment_at_instruction.find(ir_register);
-            result != environment_at_instruction.end()) {
-          local_type = result->second.singleton_type();
-        }
-
-        const auto* singleton_type = select_precise_singleton_type(
-            local_type,
-            globally_inferred_type,
-            method,
-            instruction,
-            ir_register,
-            log_method);
-
-        if (singleton_type == nullptr) {
+        // Find local type to refine.
+        auto result = environment_at_instruction.find(ir_register);
+        if (result == environment_at_instruction.end()) {
           continue;
         }
 
-        std::optional<TypeValue> type_value = std::nullopt;
-        const auto& small_set_domain =
-            globally_inferred_type_domain.get_set_domain();
-        if (small_set_domain.kind() == sparta::AbstractValueKind::Value) {
-          type_value = TypeValue(singleton_type, small_set_domain);
-        } else if (singleton_type != local_type) {
-          type_value = TypeValue(singleton_type);
+        TypeValue* result_type_value = &result->second;
+        const DexType* locally_inferred_type =
+            result_type_value->singleton_type();
+
+        const DexType* globally_inferred_type = nullptr;
+        if (auto dex_type = globally_inferred_type_domain.get_dex_type()) {
+          globally_inferred_type = *dex_type;
         }
 
-        if (type_value) {
+        // Select the more precise of the two available types.
+        const auto* precise_singleton_type = select_precise_singleton_type(
+            locally_inferred_type, globally_inferred_type);
+
+        if (precise_singleton_type == nullptr) {
+          // Two available types are incompatible. Keep the local type.
           LOG(log_method ? 0 : 5,
-              "Replacing locally inferred type {} with globally inferred: {} for register {} in instruction {} of method {}",
-              local_type ? local_type->str() : "unknown",
-              *type_value,
+              "Global type analysis inferred incompatible type `{}` compared to local type analysis `{}` for register {} in instruction {} of method {}.",
+              show(locally_inferred_type),
+              show(globally_inferred_type),
               std::to_string(ir_register),
               show(instruction),
               method->show());
-          environment_at_instruction.insert_or_assign(
-              ir_register, std::move(*type_value));
+          continue;
         }
+
+        // Collect all compatible types for ir_register from global type
+        // analysis.
+        auto small_set_dex_types = get_small_set_dex_types(
+            locally_inferred_type,
+            globally_inferred_type,
+            globally_inferred_type_domain.get_set_domain());
+
+        // Refine the TypeValue if possible.
+        if (!small_set_dex_types.empty()) {
+          if (globally_inferred_type != nullptr) {
+            result_type_value->set_singleton_type(globally_inferred_type);
+          }
+          result_type_value->set_local_extends(std::move(small_set_dex_types));
+        } else if (precise_singleton_type != locally_inferred_type) {
+          result_type_value->set_singleton_type(precise_singleton_type);
+        }
+
+        LOG(log_method ? 0 : 5,
+            "Refined types in: Caller: {} \nInstruction: {}\nReg {}\n  Singleton Type : {}\n  Local extends: {}",
+            method->show(),
+            show(instruction),
+            std::to_string(ir_register),
+            show(result_type_value->singleton_type()),
+            show_smallset_dex_types_selection(
+                globally_inferred_type_domain.get_set_domain(),
+                result_type_value->local_extends()));
       }
     }
   }
@@ -603,6 +622,19 @@ const DexType* MT_NULLABLE Types::receiver_type(
   }
 
   return source_type(method, instruction, /* source_position */ 0);
+}
+
+const std::unordered_set<const DexType*>& Types::receiver_local_extends(
+    const Method* method,
+    const IRInstruction* instruction) const {
+  mt_assert(opcode::is_an_invoke(instruction->opcode()));
+
+  if (opcode::is_invoke_static(instruction->opcode())) {
+    return empty_local_extends;
+  }
+
+  return register_local_extends(
+      method, instruction, instruction->src(/* source_position */ 0));
 }
 
 const DexType* MT_NULLABLE Types::register_const_class_type(

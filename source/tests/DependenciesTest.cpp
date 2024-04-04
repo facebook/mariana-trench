@@ -585,10 +585,7 @@ TEST_F(DependenciesTest, VirtualCallResolution) {
   EXPECT_THAT(
       dependencies.dependencies(override_two),
       testing::UnorderedElementsAre(caller));
-  // FP:
-  EXPECT_THAT(
-      dependencies.dependencies(override_three),
-      testing::UnorderedElementsAre(caller));
+  EXPECT_TRUE(dependencies.dependencies(override_three).empty());
   EXPECT_TRUE(dependencies.dependencies(caller).empty());
 }
 
