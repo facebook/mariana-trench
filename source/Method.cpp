@@ -142,13 +142,7 @@ ParameterPosition Method::first_parameter_index() const {
 const Method* Method::from_json(const Json::Value& value, Context& context) {
   if (value.isString()) {
     // Simpler form, less verbose.
-    auto* dex_method = redex::get_method(value.asString());
-    if (!dex_method) {
-      throw JsonValidationError(
-          value,
-          /* field */ std::nullopt,
-          /* expected */ "existing method name");
-    }
+    const auto* dex_method = redex::get_or_make_method(value.asString());
     return context.methods->create(dex_method);
   }
 
@@ -162,11 +156,7 @@ const Method* Method::from_json(const Json::Value& value, Context& context) {
 
   auto method_name = JsonValidation::string(value, "name");
 
-  auto* dex_method = redex::get_method(method_name);
-  if (!dex_method) {
-    throw JsonValidationError(
-        value, /* field */ "name", /* expected */ "existing method name");
-  }
+  const auto* dex_method = redex::get_or_make_method(method_name);
 
   ParameterTypeOverrides parameter_type_overrides;
   for (auto parameter_type_override :

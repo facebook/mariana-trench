@@ -36,6 +36,12 @@ DexClass* MT_NULLABLE get_class(std::string_view class_name);
 
 DexMethod* MT_NULLABLE get_method(std::string_view signature);
 
+/**
+ * Returns the `DexMethod*` if a method matching the corresponding signature
+ * exists. Otherwise, creates a `DexMethod*` and marks it as "external".
+ */
+DexMethod* get_or_make_method(std::string_view signature);
+
 DexFieldRef* MT_NULLABLE get_field(std::string_view field);
 
 DexType* MT_NULLABLE get_type(std::string_view type);

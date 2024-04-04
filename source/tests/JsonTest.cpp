@@ -242,15 +242,7 @@ TEST_F(JsonTest, Method) {
   EXPECT_THROW(
       Method::from_json(test::parse_json(R"(1)"), context),
       JsonValidationError);
-  EXPECT_THROW(
-      Method::from_json(
-          test::parse_json(R"("LData;.non_existing:()V")"), context),
-      JsonValidationError);
   EXPECT_JSON_EQ(Method, R"("LData;.method:(LData;LData;)V")", method, context);
-  EXPECT_THROW(
-      Method::from_json(
-          test::parse_json(R"({"name": "LData;.non_existing:()V"})"), context),
-      JsonValidationError);
   EXPECT_EQ(
       Method::from_json(
           test::parse_json(R"({"name": "LData;.method:(LData;LData;)V"})"),
@@ -360,6 +352,16 @@ TEST_F(JsonTest, Method) {
           {{0, redex::get_type("LString;")},
            {1, redex::get_type("LInteger;")}}),
       context);
+
+  const auto* non_existant_method = Method::from_json(
+      test::parse_json(R"("LData;.non_existing:()V")"), context);
+  EXPECT_EQ(non_existant_method->dex_method()->is_external(), true);
+  EXPECT_EQ(1, non_existant_method->number_of_parameters());
+
+  non_existant_method = Method::from_json(
+      test::parse_json(R"({"name": "LData;.non_existing:()V"})"), context);
+  EXPECT_EQ(non_existant_method->dex_method()->is_external(), true);
+  EXPECT_EQ(1, non_existant_method->number_of_parameters());
 }
 
 TEST_F(JsonTest, Field) {

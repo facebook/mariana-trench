@@ -96,6 +96,19 @@ DexMethod* redex::get_method(std::string_view signature) {
   return method_reference->as_def();
 }
 
+DexMethod* redex::get_or_make_method(std::string_view signature) {
+  auto* dex_method = get_method(signature);
+  if (!dex_method) {
+    // `make_method` creates a `DexMethod*` but returns `DexMethodDef*`.
+    // `->as_def()` only works if the method is concrete/external, which isn't
+    // the case for newly created methods, hence the need to cast.
+    dex_method = static_cast<DexMethod*>(DexMethod::make_method(signature));
+    dex_method->set_external();
+  }
+
+  return dex_method;
+}
+
 DexFieldRef* redex::get_field(std::string_view field) {
   return DexField::get_field(field);
 }
