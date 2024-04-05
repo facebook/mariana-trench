@@ -38,6 +38,19 @@ elseif (LINK_TYPE STREQUAL "Shared")
   endif()
 endif()
 
+option(SANITIZER "Enable address and undefined sanitizers" OFF)
+if (SANITIZER)
+    add_compile_options(
+        "$<$<CONFIG:DEBUG>:-fsanitize=address>"
+        "$<$<CONFIG:DEBUG>:-fsanitize=undefined>"
+        "$<$<CONFIG:DEBUG>:-fno-omit-frame-pointer>"
+    )
+    add_link_options(
+        "$<$<CONFIG:DEBUG>:-fsanitize=address>"
+        "$<$<CONFIG:DEBUG>:-fsanitize=undefined>"
+    )
+endif()
+
 message(STATUS "Install prefix: ${CMAKE_INSTALL_PREFIX}")
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 message(STATUS "Link type: ${LINK_TYPE}")
@@ -137,7 +150,7 @@ target_link_libraries(mariana-trench-unit-tests PUBLIC
                       GTest::gmock
                       GTest::gtest_main)
 add_dependencies(build-tests mariana-trench-unit-tests)
-gtest_discover_tests(mariana-trench-unit-tests)
+gtest_discover_tests(mariana-trench-unit-tests PROPERTIES DISCOVERY_TIMEOUT 600)
 
 file(GLOB model_generator_test_sources "source/model-generator/tests/*.cpp")
 add_executable(mariana-trench-model-generator-tests EXCLUDE_FROM_ALL ${model_generator_test_sources})
@@ -146,7 +159,7 @@ target_link_libraries(mariana-trench-model-generator-tests PUBLIC
                       GTest::gmock
                       GTest::gtest_main)
 add_dependencies(build-tests mariana-trench-model-generator-tests)
-gtest_discover_tests(mariana-trench-model-generator-tests)
+gtest_discover_tests(mariana-trench-model-generator-tests PROPERTIES DISCOVERY_TIMEOUT 600)
 
 add_executable(mariana-trench-integration-test-models EXCLUDE_FROM_ALL
                "source/tests/integration/models/IntegrationTest.cpp")
@@ -155,7 +168,7 @@ target_link_libraries(mariana-trench-integration-test-models PUBLIC
                       GTest::gmock
                       GTest::gtest_main)
 add_dependencies(build-tests mariana-trench-integration-test-models)
-gtest_discover_tests(mariana-trench-integration-test-models)
+gtest_discover_tests(mariana-trench-integration-test-models PROPERTIES DISCOVERY_TIMEOUT 600)
 
 find_package(Java)
 find_package(AndroidSDK)
@@ -223,7 +236,7 @@ else()
       add_dependencies(mariana-trench-integration-test-${directory} "java-dex-${directory}-${name}")
       list(APPEND test_properties ENVIRONMENT "${name}=java-dex-${directory}-${name}.dex")
     endforeach()
-    gtest_discover_tests(mariana-trench-integration-test-${directory} PROPERTIES "${test_properties}")
+    gtest_discover_tests(mariana-trench-integration-test-${directory} PROPERTIES "${test_properties}" PROPERTIES DISCOVERY_TIMEOUT 600)
   endfunction()
 
   generate_integration_test(end-to-end)
