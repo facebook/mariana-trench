@@ -210,10 +210,15 @@ else()
       message(STATUS "USING D8 ${name}")
       add_custom_command(OUTPUT java-dex-${name}.dex
                         COMMAND
+                          mkdir java-dex-${name}-tmp
+                        COMMAND
                           ${ANDROID_D8}
                           $<TARGET_PROPERTY:java-class-${name},JAR_FILE>
+                          --output java-dex-${name}-tmp/
                         COMMAND
-                          mv classes.dex java-dex-${name}.dex
+                          mv java-dex-${name}-tmp/classes.dex java-dex-${name}.dex
+                        COMMAND
+                          rm -r java-dex-${name}-tmp
                         DEPENDS java-class-${name})
     endif()
     add_custom_target(java-dex-${name} DEPENDS java-dex-${name}.dex)
