@@ -23,6 +23,27 @@
       "where": [
         {
           "constraint": "signature_match",
+          "parents": [
+            "Lcom/android/webview/chromium/WebViewChromium;",
+            "Lorg/chromium/android_webview/AwContents;"
+          ],
+          "name": "evaluateJavascript"
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "ExecuteJavascript",
+            "port": "Argument(1)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
           "extends": "Landroid/webkit/WebView;",
           "name": "loadUrl"
         }
