@@ -225,15 +225,6 @@ bool ClassProperties::is_dfa_public(std::string_view class_name) const {
       dfa_public_scheme_classes_.count(outer_class) > 0;
 }
 
-FeatureMayAlwaysSet ClassProperties::propagate_features(
-    const Method* caller,
-    const Method* /*callee*/,
-    const FeatureFactory& feature_factory) const {
-  FeatureSet features;
-
-  return FeatureMayAlwaysSet::make_always(features);
-}
-
 FeatureMayAlwaysSet ClassProperties::issue_features(
     const Method* method,
     std::unordered_set<const Kind*> kinds) const {

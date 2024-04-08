@@ -348,8 +348,7 @@ Model Model::at_callsite(
 
   // Add special features that cannot be done in model generators.
   mt_assert(context.feature_factory != nullptr);
-  auto extra_features = context.class_properties->propagate_features(
-      caller, callee, *context.feature_factory);
+  FeatureMayAlwaysSet extra_features{};
 
   auto narrowed_class_interval_context = class_interval_context;
   if (class_interval_context.preserves_type_context()) {

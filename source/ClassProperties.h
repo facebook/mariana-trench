@@ -57,12 +57,6 @@ class ClassProperties final {
       const NamedKind* kind) const;
 
  public:
-  /* A set of features to add to sources propagated from callee to caller. */
-  FeatureMayAlwaysSet propagate_features(
-      const Method* caller,
-      const Method* callee,
-      const FeatureFactory& feature_factory) const;
-
   /* A set of features to add on issues found in the given method. */
   FeatureMayAlwaysSet issue_features(
       const Method* method,
