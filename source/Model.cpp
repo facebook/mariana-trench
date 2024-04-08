@@ -346,9 +346,8 @@ Model Model::at_callsite(
   auto maximum_source_sink_distance =
       context.options->maximum_source_sink_distance();
 
-  // Add special features that cannot be done in model generators.
+  // To add special features that cannot be done in model generators.
   mt_assert(context.feature_factory != nullptr);
-  FeatureMayAlwaysSet extra_features{};
 
   auto narrowed_class_interval_context = class_interval_context;
   if (class_interval_context.preserves_type_context()) {
@@ -379,7 +378,6 @@ Model Model::at_callsite(
        callee,
        call_position,
        maximum_source_sink_distance,
-       &extra_features,
        &context,
        &source_register_types,
        &source_constant_arguments,
@@ -393,7 +391,6 @@ Model Model::at_callsite(
                 context.access_path_factory->get(callee_port),
                 call_position,
                 maximum_source_sink_distance,
-                extra_features,
                 context,
                 source_register_types,
                 source_constant_arguments,
@@ -406,7 +403,6 @@ Model Model::at_callsite(
                 callee,
                 call_position,
                 maximum_source_sink_distance,
-                &extra_features,
                 &context,
                 &source_register_types,
                 &source_constant_arguments,
@@ -420,7 +416,6 @@ Model Model::at_callsite(
             context.access_path_factory->get(callee_port),
             call_position,
             maximum_source_sink_distance,
-            extra_features,
             context,
             source_register_types,
             source_constant_arguments,
@@ -447,7 +442,6 @@ Model Model::at_callsite(
                     context.access_path_factory->get(callee_port),
                     call_position,
                     Heuristics::kMaxCallChainSourceSinkDistance,
-                    /* extra features */ {},
                     context,
                     /* source register types */ {},
                     /* source constant arguments */ {},
@@ -465,7 +459,6 @@ Model Model::at_callsite(
        callee,
        call_position,
        maximum_source_sink_distance,
-       &extra_features,
        &context,
        &source_register_types,
        &source_constant_arguments,
@@ -479,7 +472,6 @@ Model Model::at_callsite(
                 context.access_path_factory->get(callee_port),
                 call_position,
                 maximum_source_sink_distance,
-                extra_features,
                 context,
                 source_register_types,
                 source_constant_arguments,

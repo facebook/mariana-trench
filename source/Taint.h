@@ -167,7 +167,6 @@ class Taint final : public sparta::AbstractDomain<Taint> {
       const AccessPath* MT_NULLABLE callee_port,
       const Position* call_position,
       int maximum_source_sink_distance,
-      const FeatureMayAlwaysSet& extra_features,
       Context& context,
       const std::vector<const DexType * MT_NULLABLE>& source_register_types,
       const std::vector<std::optional<std::string>>& source_constant_arguments,

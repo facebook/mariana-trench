@@ -2086,7 +2086,6 @@ TEST_F(TaintTest, Propagate) {
 
   const auto* feature_one = context.feature_factory->get("FeatureOne");
   const auto* feature_two = context.feature_factory->get("FeatureTwo");
-  const auto* feature_three = context.feature_factory->get("FeatureThree");
   const auto* user_feature_one = context.feature_factory->get("UserFeatureOne");
   const auto* user_feature_two = context.feature_factory->get("UserFeatureTwo");
   const auto* leaf =
@@ -2142,7 +2141,6 @@ TEST_F(TaintTest, Propagate) {
           /* callee_port */ argument2,
           /* call_position */ context.positions->get("Test.java", 1),
           /* maximum_source_sink_distance */ 100,
-          /* extra_features */ FeatureMayAlwaysSet{feature_three},
           /* context */ context,
           /* source_register_types */ {},
           /* source_constant_arguments */ {},
@@ -2158,8 +2156,7 @@ TEST_F(TaintTest, Propagate) {
                   .distance = 1,
                   .origins = OriginSet{one_origin},
                   .inferred_features = FeatureMayAlwaysSet{user_feature_one},
-                  .locally_inferred_features =
-                      FeatureMayAlwaysSet{feature_three},
+                  .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
                   .call_kind = CallKind::callsite(),
               }),
           test::make_taint_config(
@@ -2174,8 +2171,7 @@ TEST_F(TaintTest, Propagate) {
                       /* may */ FeatureSet{user_feature_two, feature_two},
                       /* always */
                       FeatureSet{user_feature_one, feature_one}),
-                  .locally_inferred_features =
-                      FeatureMayAlwaysSet{feature_three},
+                  .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
                   .call_kind = CallKind::callsite()}),
       }));
 
@@ -2234,7 +2230,6 @@ TEST_F(TaintTest, Propagate) {
           /* callee_port */ argument1,
           /* call_position */ test_position_two,
           /* maximum_source_sink_distance */ 100,
-          /* extra_features */ {},
           context,
           /* source_register_types */ {},
           /* source_constant_arguments */ {},
@@ -2333,7 +2328,6 @@ TEST_F(TaintTest, Propagate) {
           /* callee_port */ argument1,
           /* call_position */ test_position_two,
           /* maximum_source_sink_distance */ 100,
-          /* extra_features */ {},
           context,
           /* source_register_types */ {},
           /* source_constant_arguments */ {},
@@ -2428,7 +2422,6 @@ TEST_F(TaintTest, Propagate) {
           /* callee_port */ argument0,
           test_position_one,
           /* maximum_source_sink_distance */ 100,
-          /* extra_features */ {},
           context,
           /* source_register_types */ {},
           /* source_constant_arguments */ {},
@@ -2504,7 +2497,6 @@ TEST_F(TaintTest, Propagate) {
           /* callee_port */ argument0,
           test_position_one,
           /* maximum_source_sink_distance */ 1,
-          /* extra_features */ {},
           context,
           /* source_register_types */ {},
           /* source_constant_arguments */ {},
@@ -2538,7 +2530,6 @@ TEST_F(TaintTest, Propagate) {
           /* callee_port */ argument0,
           test_position_one,
           /* maximum_source_sink_distance */ 2,
-          /* extra_features */ {},
           context,
           /* source_register_types */ {},
           /* source_constant_arguments */ {},

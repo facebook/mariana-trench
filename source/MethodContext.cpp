@@ -142,7 +142,6 @@ Taint propagate_field_or_literal_taint(
       /* callee_port */ nullptr,
       call_position,
       options.maximum_source_sink_distance(),
-      /* extra_features */ {},
       context,
       /* source_register_types */ {},
       /* source_constant_arguments */ {},
