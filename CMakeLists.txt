@@ -241,7 +241,7 @@ else()
       add_dependencies(mariana-trench-integration-test-${directory} "java-dex-${directory}-${name}")
       list(APPEND test_properties ENVIRONMENT "${name}=java-dex-${directory}-${name}.dex")
     endforeach()
-    gtest_discover_tests(mariana-trench-integration-test-${directory} PROPERTIES "${test_properties}" PROPERTIES DISCOVERY_TIMEOUT 600)
+    gtest_discover_tests(mariana-trench-integration-test-${directory} PROPERTIES "${test_properties}" DISCOVERY_TIMEOUT 600)
   endfunction()
 
   generate_integration_test(end-to-end)
