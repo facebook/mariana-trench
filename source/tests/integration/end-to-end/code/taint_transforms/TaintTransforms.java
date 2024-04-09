@@ -26,7 +26,7 @@ public class TaintTransforms {
 
   static Object transformT1(Object o) {
     // Declared propagation: Argument(0) -> `T1@LocalReturn`
-    // Expect inferred propagation to: Argument(0) -> `LocalReturn`
+    // Expect inferred propagation: Argument(0) -> `LocalReturn`
     return o;
   }
 
@@ -48,7 +48,8 @@ public class TaintTransforms {
   }
 
   static Object transformUnused(Object o) {
-    // Declared frozen propagation: Argument(0) -> `Unused@LocalReturn`
+    // Declared propagation: Argument(0) -> `Unused@LocalReturn`
+    // Expect inferred propagation: Argument(0) -> `LocalReturn`
     return o;
   }
 
@@ -60,16 +61,16 @@ public class TaintTransforms {
 
   static Object propagateWithTransformT1(Object o) {
     // Expect inferred propagations:
-    //   Argument(0) -> `T1@LocalReturn`
+    //   Argument(0) -> `T1:LocalReturn`
     //               -> `LocalReturn`
     return transformT1(o);
   }
 
   static Data propagateAlternateTransforms(Data d) {
     // Expect inferred propagations:
-    //   Argument(0).foo -> `T1@LocalReturn`.baz
+    //   Argument(0).foo -> `T1:LocalReturn`.baz
     //                   -> `LocalReturn`.baz
-    //   Argument(0).bar -> `T2@LocalReturn`.foo
+    //   Argument(0).bar -> `T2:LocalReturn`.foo
     //   Argument(0).baz -> `LocalReturn`.bar
     int rand = new Random().nextInt(2);
     Data result = new Data();
@@ -86,13 +87,15 @@ public class TaintTransforms {
   }
 
   static Data propagateWithTransformT3WithSource(Data d) {
-    // Expect inferred propagation: Argument(0) -> `T3@LocalReturn`
+    // Expect inferred propagation: Argument(0) -> `T3:LocalReturn`
     // Expect inferred generation: Return.baz -> `NewSource`
     return transformT3WithSource(d);
   }
 
   static Object propagateWithTransformsT1Unused(Object o) {
-    // Expect inferred propagation: Argument(0) -> `T1@LocalReturn`
+    // Expect inferred propagations:
+    //   Argument(0) -> `T1:LocalReturn`
+    //               -> `LocalReturn`
     Object t1 = transformT1(o);
     return transformUnused(t1);
   }
@@ -116,13 +119,13 @@ public class TaintTransforms {
 
   static Object hopSourceWithTransformsT1T2() {
     // Expect inferred generations:
-    //   Return -> `T2@T1:Source`
+    //   Return -> `T2:T1@Source`
     //          -> `T2@Source`
     Object sourceT1 = sourceWithTransformT1();
     return transformT2(sourceT1);
   }
 
-  static Object noSourceWithTransformUnused() {
+  static Object sourceWithoutTransformUnused() {
     // Expect inferred generation:
     //   Return -> Source
     return transformUnused(Origin.source());
@@ -153,14 +156,14 @@ public class TaintTransforms {
   }
 
   static void hopSinkWithTransformsT1T2(Object o) {
-    // Expect inferred generations:
+    // Expect inferred sinks:
     //   Argument(0) -> `T1@T2:Sink`
-    //               -> `T2@Sink`
+    //               -> `T2:Sink`
     Object t = transformT1(o);
     sinkWithTransformT2(t);
   }
 
-  static void noSinkWithTransformUnused(Object o) {
+  static void sinkWithoutTransformUnused(Object o) {
     // Expect inferred sinks:
     //   Argument(0) -> `Sink`
     Origin.sink(transformUnused(o));
@@ -177,7 +180,9 @@ public class TaintTransforms {
   }
 
   public static void testSinkWithTransformIssue() {
-    // Expect issue for rule: Source -> T1 -> Sink
+    // Expect issue for rules:
+    //   Source -> T1 -> Sink
+    //   Source -> Sink
     sinkWithTransformT1(Origin.source());
   }
 
@@ -264,5 +269,19 @@ public class TaintTransforms {
     //   Source -> T1 -> T2 -> Sink
     Object source = transformForAllParameters(new Data(), Origin.source());
     sinkWithTransformT2(source);
+  }
+
+  public static void testUnusedTransforms() {
+    // Unused transform is not part of any rule, so is not applied.
+    // Only returns Source.
+    Object source = sourceWithoutTransformUnused();
+    Object stillJustSource = transformUnused(source);
+    // Unused is excluded, but T1 is still applied.
+    Object sourceT1 = propagateWithTransformsT1Unused(stillJustSource);
+    // Unused is excluded, but Sink still exists.
+    // Expect issue for rules:
+    //   Source -> Sink
+    //   Source -> T1 -> Sink
+    sinkWithoutTransformUnused(sourceT1);
   }
 }

@@ -104,9 +104,6 @@
         }
       ],
       "model": {
-        "freeze": [
-          "propagation"
-        ],
         "propagation": [
           {
             "input": "Argument(0)",
