@@ -1370,8 +1370,7 @@ Model Model::from_config_json(
       TaggedRootSet via_value_of_ports;
       for (const auto& tagged_root : JsonValidation::nonempty_array(
                add_features_to_arguments_value, "via_value_of")) {
-        via_value_of_ports.add(
-            TaggedRoot::from_json(JsonValidation::string(tagged_root)));
+        via_value_of_ports.add(TaggedRoot::from_json(tagged_root));
       }
       model.add_add_via_value_of_features_to_arguments(
           root, std::move(via_value_of_ports));
