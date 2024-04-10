@@ -215,6 +215,16 @@ TargetTemplate::TargetTemplate(
       parameter_map_(std::move(parameter_map)) {}
 
 TargetTemplate TargetTemplate::from_json(const Json::Value& callee) {
+  JsonValidation::check_unexpected_members(
+      callee,
+      {"type_of",
+       "static",
+       "reflected_type_of",
+       "method_name",
+       "lifecycle_name",
+       "parameters_map",
+       "infer_parameters_from_types"});
+
   const auto& parameters_map =
       JsonValidation::null_or_object(callee, "parameters_map");
   auto parameter_map = ShimParameterMapping::from_json(
@@ -300,6 +310,7 @@ ShimTemplate::ShimTemplate(std::vector<shim::TargetTemplate> targets)
 ShimTemplate ShimTemplate::from_json(const Json::Value& shim_json) {
   using namespace shim;
   std::vector<TargetTemplate> target_templates;
+  JsonValidation::check_unexpected_members(shim_json, {"callees"});
 
   for (const auto& callee :
        JsonValidation::null_or_array(shim_json, "callees")) {

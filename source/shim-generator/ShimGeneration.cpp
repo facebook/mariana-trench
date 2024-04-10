@@ -27,6 +27,8 @@ std::vector<ShimGenerator> get_shim_generators(
 
   for (const auto& shim_definition :
        JsonValidation::null_or_array(shim_definitions)) {
+    JsonValidation::check_unexpected_members(
+        shim_definition, {"find", "where", "shim"});
     std::string find_name = JsonValidation::string(shim_definition, "find");
     if (find_name == "methods") {
       std::vector<std::unique_ptr<MethodConstraint>> shim_constraints;
