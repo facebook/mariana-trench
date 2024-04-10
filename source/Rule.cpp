@@ -23,9 +23,6 @@ std::unique_ptr<Rule> Rule::from_json(
   auto description = JsonValidation::string(value, /* field */ "description");
 
   // This uses the presence of specific keys to determine the rule kind.
-  // Unfortunately, it means users can write ambiguous nonsense without being
-  // warned that a certain field is meaningless, such as:
-  //   "sources": [...], "sinks": [...], "partial_sinks": [...]
   if (value.isMember("sources") && value.isMember("sinks")) {
     return SourceSinkRule::from_json(name, code, description, value, context);
   } else if (
@@ -36,7 +33,7 @@ std::unique_ptr<Rule> Rule::from_json(
     throw JsonValidationError(
         value,
         std::nullopt,
-        "keys: sources+sinks or multi_sources+partial_sinks");
+        "keys: sources+[transforms+]sinks or multi_sources+partial_sinks");
   }
 }
 

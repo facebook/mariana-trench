@@ -25,6 +25,9 @@ namespace marianatrench {
 /**
  * Represents the typical source -> sink rule
  * e.g. UserControlled -> LaunchIntent
+ * Optionally, transforms can be specified as a part of the rule which specifies
+ * an ordered list of transform kinds that the source and/or sink goes through.
+ * e.g. UserControlled -> T1 -> ... Tn -> LaunchIntent
  */
 class SourceSinkRule final : public Rule {
  public:
