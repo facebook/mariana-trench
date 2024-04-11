@@ -1135,7 +1135,9 @@
               ],
               "via_value_of" : 
               [
-                "Argument(1)"
+                {
+                  "port" : "Argument(1)"
+                }
               ]
             }
           ]
@@ -3119,7 +3121,9 @@
               ],
               "via_value_of" : 
               [
-                "Argument(1)"
+                {
+                  "port" : "Argument(1)"
+                }
               ]
             }
           ]

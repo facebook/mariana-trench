@@ -154,7 +154,9 @@
               ],
               "via_type_of" : 
               [
-                "Return"
+                {
+                  "port" : "Return"
+                }
               ]
             }
           ]
@@ -323,7 +325,9 @@
               ],
               "via_type_of" : 
               [
-                "Argument(0)"
+                {
+                  "port" : "Argument(0)"
+                }
               ]
             }
           ]
@@ -352,7 +356,9 @@
               ],
               "via_type_of" : 
               [
-                "Argument(0)"
+                {
+                  "port" : "Argument(0)"
+                }
               ]
             }
           ]

@@ -985,7 +985,9 @@
       "port" : "Argument(1)",
       "via_value_of" : 
       [
-        "Argument(2)"
+        {
+          "port" : "Argument(2)"
+        }
       ]
     }
   ],

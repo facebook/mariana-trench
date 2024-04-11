@@ -1249,7 +1249,9 @@
               ],
               "via_type_of" : 
               [
-                "Argument(1)"
+                {
+                  "port" : "Argument(1)"
+                }
               ]
             }
           ]
@@ -1671,7 +1673,9 @@
               ],
               "via_type_of" : 
               [
-                "Argument(1)"
+                {
+                  "port" : "Argument(1)"
+                }
               ]
             }
           ]

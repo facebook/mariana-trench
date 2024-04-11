@@ -127,7 +127,7 @@ TEST_P(JsonModelGeneratorIntegrationTest, CompareModels) {
 
   if (expected_output != actual_output) {
     filesystem::save_string_file(
-        directory / "/expected_output.json.actual", actual_output);
+        directory / "expected_output.json.actual", actual_output);
   }
   EXPECT_TRUE(actual_output == expected_output);
 }
