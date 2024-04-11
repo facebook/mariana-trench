@@ -240,7 +240,7 @@ def _build_apk_from_jar(jar_path: Path) -> Path:
     LOG.info(f"Running d8 on `{jar_path}`...")
     output = subprocess.run(
         [
-            "/opt/android/sdk_DEFAULT/build-tools/33.0.0/d8",
+            configuration.get_d8_path(),
             "-JXmx8G",
             jar_path,
             "--output",
