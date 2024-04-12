@@ -961,7 +961,9 @@ void testRegexSourceGoogleApiKey() {
 
 Mariana Trench allows for dynamic model specifications. This allows a user to specify models of methods before running the analysis. This is used to specify sources, sinks, propagation and modes.
 
-Model generators are specified in a generator configuration file, specified by the `--generator-configuration-path` parameter. By default, we use [`default_generator_config.json`](https://github.com/facebook/mariana-trench/blob/main/configuration/default_generator_config.json).
+The model generator files must have the extension `.models`. The locations to search for these files must be provided using the `--model-generator-search-paths` argument.
+
+Model generators to use during analysis are listed in a *model generator configuration file* and specified using the `--model-generator-configuration-paths` argument. By default, we use [`default_generator_config.json`](https://github.com/facebook/mariana-trench/blob/main/configuration/default_generator_config.json). Any other `.models` files found in the search paths but not listed in the configuration file are ignored.
 
 ### Example
 
