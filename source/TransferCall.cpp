@@ -24,7 +24,7 @@ void log_instruction(
 std::vector<const DexType * MT_NULLABLE> get_source_register_types(
     const MethodContext* context,
     const IRInstruction* instruction) {
-  std::vector<const DexType* MT_NULLABLE> register_types = {};
+  std::vector<const DexType * MT_NULLABLE> register_types = {};
   for (auto source_register : instruction->srcs()) {
     const auto* register_type = context->types.register_type(
         context->method(), instruction, source_register);

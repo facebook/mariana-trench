@@ -50,7 +50,7 @@ class Statistics final {
   // Recorded times for each step of the analysis.
   std::unordered_map<std::string, double> times_;
 
-  // Sorted list of slowest methods to analyze (from slowest to fastest).
+  //  Sorted list of slowest methods to analyze (from slowest to fastest).
   std::vector<std::pair<const Method*, double>> slowest_methods_;
 };
 

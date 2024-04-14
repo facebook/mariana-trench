@@ -170,8 +170,7 @@ void JsonWriter::write_sharded_json_files(
           return;
         }
 
-        batch_stream << "// @"
-                     << "generated\n";
+        batch_stream << "// @" << "generated\n";
 
         // Write the current batch of models to file.
         auto writer = JsonWriter::compact_writer();
