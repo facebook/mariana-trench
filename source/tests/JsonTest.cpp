@@ -305,20 +305,20 @@ TEST_F(JsonTest, Method) {
               })"),
           context),
       JsonValidationError);
-  EXPECT_THROW(
-      Method::from_json(
-          test::parse_json(
-              R"({
-                "name": "LData;.method:(LData;LData;)V",
-                "parameter_type_overrides": [
-                  {
-                    "parameter": 1,
-                    "type": "LNonExisting;"
-                  }
-                ]
-              })"),
-          context),
-      JsonValidationError);
+  EXPECT_JSON_EQ(
+      Method,
+      R"({
+        "name": "LData;.method:(LData;LData;)V",
+        "parameter_type_overrides": [
+          {
+            "parameter": 1,
+            "type": "LNonExisting;"
+          }
+        ]
+      })",
+      context.methods->create(
+          dex_method, {{1, redex::get_type("LNonExisting;")}}),
+      context);
   EXPECT_JSON_EQ(
       Method,
       R"({

@@ -117,6 +117,10 @@ DexType* redex::get_type(std::string_view type) {
   return DexType::get_type(type);
 }
 
+DexType* redex::get_or_make_type(std::string_view type) {
+  return DexType::make_type(type);
+}
+
 void redex::process_proguard_configurations(
     const Options& options,
     const DexStoresVector& stores) {

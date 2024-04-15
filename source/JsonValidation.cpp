@@ -218,54 +218,6 @@ const Json::Value& JsonValidation::object_or_string(
   return attribute;
 }
 
-DexType* JsonValidation::dex_type(const Json::Value& value) {
-  auto type_name = JsonValidation::string(value);
-  auto* type = redex::get_type(type_name);
-  if (!type) {
-    throw JsonValidationError(
-        value,
-        /* field */ std::nullopt,
-        /* expected */ "existing type name");
-  }
-  return type;
-}
-
-DexType* JsonValidation::dex_type(
-    const Json::Value& value,
-    const std::string& field) {
-  auto type_name = JsonValidation::string(value, field);
-  auto* type = redex::get_type(type_name);
-  if (!type) {
-    throw JsonValidationError(
-        value,
-        field,
-        /* expected */ "existing type name");
-  }
-  return type;
-}
-
-DexFieldRef* JsonValidation::dex_field(const Json::Value& value) {
-  auto field_name = JsonValidation::string(value);
-  auto* dex_field = redex::get_field(field_name);
-  if (!dex_field) {
-    throw JsonValidationError(
-        value, /* field */ std::nullopt, /* expected */ "existing field name");
-  }
-  return dex_field;
-}
-
-DexFieldRef* JsonValidation::dex_field(
-    const Json::Value& value,
-    const std::string& field) {
-  auto field_name = JsonValidation::string(value, field);
-  auto* dex_field = redex::get_field(field_name);
-  if (!dex_field) {
-    throw JsonValidationError(
-        value, field, /* expected */ "existing field name");
-  }
-  return dex_field;
-}
-
 void JsonValidation::update_object(
     Json::Value& left,
     const Json::Value& right) {

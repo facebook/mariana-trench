@@ -46,6 +46,12 @@ DexFieldRef* MT_NULLABLE get_field(std::string_view field);
 
 DexType* MT_NULLABLE get_type(std::string_view type);
 
+/**
+ * Similar to `get_or_make_method` but with types, there's no notion of
+ * "external".
+ */
+DexType* get_or_make_type(std::string_view type);
+
 void process_proguard_configurations(
     const Options& options,
     const DexStoresVector& stores);

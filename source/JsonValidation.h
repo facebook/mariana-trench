@@ -70,14 +70,6 @@ class JsonValidation final {
       const Json::Value& value,
       const std::string& field);
 
-  static DexType* dex_type(const Json::Value& value);
-  static DexType* dex_type(const Json::Value& value, const std::string& field);
-
-  static DexFieldRef* dex_field(const Json::Value& value);
-  static DexFieldRef* dex_field(
-      const Json::Value& value,
-      const std::string& field);
-
   /**
    * Add (key, value) pairs from the given `right` object into the given `left`
    * object, in place.

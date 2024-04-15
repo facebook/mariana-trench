@@ -165,7 +165,8 @@ const Method* Method::from_json(const Json::Value& value, Context& context) {
         parameter_type_override, {"parameter", "type"});
     auto parameter =
         JsonValidation::integer(parameter_type_override, "parameter");
-    auto* type = JsonValidation::dex_type(parameter_type_override, "type");
+    auto* type = redex::get_or_make_type(
+        JsonValidation::string(parameter_type_override, "type"));
     parameter_type_overrides.emplace(parameter, type);
   }
 
