@@ -514,7 +514,11 @@ void check_sources_sinks_flows(
     return;
   }
 
-  auto sources_by_kind = sources.partition_by_kind();
+  // Note: We use a sorted partition for source kinds. Deterministic
+  // iteration order is required to produce stable results for multi-source
+  // rules where both the source kinds are found within the context of the
+  // current method.
+  auto sources_by_kind = sources.sorted_partition_by_kind();
   auto sinks_by_kind = sinks.partition_by_kind();
   for (auto& [source_kind, source_taint] : sources_by_kind) {
     for (auto& [sink_kind, sink_taint] : sinks_by_kind) {

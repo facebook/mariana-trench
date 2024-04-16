@@ -257,6 +257,12 @@ class Taint final : public sparta::AbstractDomain<Taint> {
   std::unordered_map<const Kind*, Taint> partition_by_kind() const;
 
   /**
+   * Similar to `partition_by_kind()` but the result is a vector sorted by the
+   * string representation of the Kind.
+   */
+  std::vector<std::pair<const Kind*, Taint>> sorted_partition_by_kind() const;
+
+  /**
    * Similar to `partition_by_kind()` but caller gets to decide what value of
    * type `Key` each kind maps to.
    */

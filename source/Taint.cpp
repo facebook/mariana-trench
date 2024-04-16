@@ -5,6 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <algorithm>
+#include <iterator>
 #include <unordered_set>
 
 #include <mariana-trench/Constants.h>
@@ -286,6 +288,23 @@ bool Taint::contains_kind(const Kind* kind) const {
 
 std::unordered_map<const Kind*, Taint> Taint::partition_by_kind() const {
   return partition_by_kind<const Kind*>([](const Kind* kind) { return kind; });
+}
+
+std::vector<std::pair<const Kind*, Taint>> Taint::sorted_partition_by_kind()
+    const {
+  auto partitioned_by_kind =
+      partition_by_kind<const Kind*>([](const Kind* kind) { return kind; });
+
+  std::vector<std::pair<const Kind*, Taint>> result{
+      std::make_move_iterator(partitioned_by_kind.begin()),
+      std::make_move_iterator(partitioned_by_kind.end())};
+
+  std::sort(
+      result.begin(), result.end(), [](const auto& left, const auto& right) {
+        return left.first->to_trace_string() < right.first->to_trace_string();
+      });
+
+  return result;
 }
 
 void Taint::intersect_intervals_with(const Taint& other) {
