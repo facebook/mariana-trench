@@ -13,6 +13,7 @@ class ExitCode(enum.IntEnum):
     BUCK_ERROR = 101
     CONFIGURATION_ERROR = 102
     JAVA_TARGET_ERROR = 103
+    APK_ERROR = 104
 
 
 class ClientError(Exception):

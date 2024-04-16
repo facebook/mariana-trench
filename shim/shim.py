@@ -16,6 +16,7 @@ import tempfile
 import traceback
 from pathlib import Path
 from typing import Any, List, Optional
+from zipfile import BadZipFile
 
 from pyre_extensions import none_throws, safe_json
 
@@ -824,10 +825,17 @@ def main() -> None:
             sys.exit(output.returncode)
     except (ClientError, ConfigurationError) as error:
         LOG.fatal(f"{type(error).__name__}: {error.args[0]}")
-        LOG.fatal(error.exit_code)
+        LOG.fatal(f"Exiting with error code: {error.exit_code}")
         sys.exit(error.exit_code)
+    except BadZipFile as error:
+        LOG.fatal(
+            f"APKError: Failed to extract APK due to {type(error).__name__}: {error.args[0]}"
+        )
+        LOG.fatal(f"Exiting with error code: {ExitCode.APK_ERROR}")
+        sys.exit(ExitCode.APK_ERROR)
     except Exception:
         LOG.fatal(f"Unexpected error:\n{traceback.format_exc()}")
+        LOG.fatal(f"Exiting with error code: {ExitCode.ERROR}")
         sys.exit(ExitCode.ERROR)
     finally:
         try:
