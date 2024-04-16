@@ -94,8 +94,6 @@ class Model final {
  public:
   /**
    * A `Mode` describes a specific behavior of a model.
-   *
-   * Note that enumeration values must be a power of 2, see `Flags`.
    */
   enum class Mode : unsigned {
     // Skip the analysis of this method.
@@ -323,6 +321,7 @@ class Model final {
   }
 
   bool is_frozen(FreezeKind freeze_kind) const;
+  void freeze(FreezeKind freeze_kind);
 
   bool leq(const Model& other) const;
   void join_with(const Model& other);

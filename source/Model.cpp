@@ -1028,6 +1028,10 @@ bool Model::is_frozen(Model::FreezeKind freeze_kind) const {
   return frozen_.test(freeze_kind);
 }
 
+void Model::freeze(Model::FreezeKind freeze_kind) {
+  frozen_.set(freeze_kind);
+}
+
 bool Model::leq(const Model& other) const {
   return modes_.is_subset_of(other.modes_) &&
       frozen_.is_subset_of(other.frozen_) &&

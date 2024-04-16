@@ -375,7 +375,19 @@ Registry Registry::from_sharded_models_json(
       try {
         const auto* method = Method::from_json(value["method"], context);
         mt_assert(method != nullptr);
-        models.emplace(method, Model::from_json(value, context));
+
+        // These sharded input models are meant to be the analysis output of
+        // an obscure .jar. Their models are inferred from actual code and
+        // should be a source of truth. User-defined propagations are typically
+        // heuristics for obscure methods. Freeze propagations on the sharded
+        // models to avoid user-defined propagations overridding them. If the
+        // user wishes to override them, they may specify the models as frozen.
+        // Sources/sinks should not be frozen since these are not approximated
+        // in user-defined models. Inferred sources/sinks in the sharded output
+        // should be joined with user-defined sources/sinks.
+        auto model = Model::from_json(value, context);
+        model.freeze(Model::FreezeKind::Propagations);
+        models.emplace(method, model);
       } catch (const JsonValidationError& e) {
         WARNING(1, "Unable to parse model `{}`: {}", value, e.what());
       }
