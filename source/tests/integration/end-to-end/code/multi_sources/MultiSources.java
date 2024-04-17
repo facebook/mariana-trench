@@ -17,6 +17,10 @@ public class MultiSources {
     return new Object();
   }
 
+  public static Object sourceBWithViaValue(String path) {
+    return new Object();
+  }
+
   public static Object sourceD() {
     return new Object();
   }
@@ -49,6 +53,14 @@ public class MultiSources {
       source = MultiSources.sourceD();
     }
     MultiSources.sink(object, source);
+  }
+
+  public void triggeredSinkAWithViaValue(Object object) {
+    MultiSources.sink(object, MultiSources.sourceBWithViaValue("test-path"));
+  }
+
+  public void issueViaTriggeredSinkAWithViaValue() {
+    triggeredSinkAWithViaValue(MultiSources.sourceA());
   }
 
   public void noSinks() {

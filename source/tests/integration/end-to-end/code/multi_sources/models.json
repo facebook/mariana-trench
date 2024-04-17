@@ -24,6 +24,21 @@
     ]
   },
   {
+    "method": "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sourceBWithViaValue:(Ljava/lang/String;)Ljava/lang/Object;",
+    "generations": [
+      {
+        "kind": "TestSourceB",
+        "port": "Return",
+        "via_value_of": [
+          {
+            "port": "Argument(0)",
+            "tag": "apipath"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "method": "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sourceD:()Ljava/lang/Object;",
     "generations": [
       {

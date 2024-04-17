@@ -244,6 +244,17 @@
       "Lcom/facebook/marianatrench/integrationtests/MultiSources;.triggeredSinkA:(Ljava/lang/Object;)V"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/MultiSources;.issueViaTriggeredSinkAWithViaValue:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sourceA:()Ljava/lang/Object;"
+    ],
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/MultiSources;.triggeredSinkAWithViaValue:(Ljava/lang/Object;)V"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/MultiSources;.issueViaTriggeredSinkB:()V" : 
   {
     "static" : 
@@ -279,6 +290,13 @@
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sourceBWithViaValue:(Ljava/lang/String;)Ljava/lang/Object;" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sourceD:()Ljava/lang/Object;" : 
   {
     "static" : 
@@ -293,6 +311,14 @@
       "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sink:(Ljava/lang/Object;Ljava/lang/Object;)V",
       "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sourceB:()Ljava/lang/Object;",
       "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sourceD:()Ljava/lang/Object;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/MultiSources;.triggeredSinkAWithViaValue:(Ljava/lang/Object;)V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sink:(Ljava/lang/Object;Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/MultiSources;.sourceBWithViaValue:(Ljava/lang/String;)Ljava/lang/Object;"
     ]
   },
   "Lcom/facebook/marianatrench/integrationtests/MultiSources;.triggeredSinkB:(Ljava/lang/Object;)V" : 
