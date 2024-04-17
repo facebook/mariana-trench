@@ -1182,7 +1182,8 @@
         "sink-a",
         "sink-b",
         "source-a",
-        "source-b"
+        "source-b",
+        "source-d"
       ],
       "callee" : "Lcom/facebook/marianatrench/integrationtests/MultiSources;.triggeredSinkA:(Ljava/lang/Object;)V",
       "position" : 
@@ -1215,7 +1216,8 @@
               [
                 "sink-a",
                 "sink-b",
-                "source-b"
+                "source-b",
+                "source-d"
               ],
               "callee_interval" : 
               [
@@ -1848,6 +1850,15 @@
               "triggered_rule" : 3
             }
           ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "sink-b",
+              "source-b",
+              "source-d"
+            ]
+          },
           "local_user_features" : 
           {
             "always_features" : 
@@ -1912,6 +1923,14 @@
               "triggered_rule" : 1
             }
           ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "sink-b",
+              "via-apipath-value:test-path"
+            ]
+          },
           "local_user_features" : 
           {
             "always_features" : 
@@ -1976,6 +1995,14 @@
               "triggered_rule" : 1
             }
           ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "sink-a",
+              "source-a"
+            ]
+          },
           "local_user_features" : 
           {
             "always_features" : 
@@ -2276,6 +2303,14 @@
               "triggered_rule" : 2
             }
           ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "sink-b",
+              "source-b"
+            ]
+          },
           "local_positions" : 
           [
             {
@@ -2345,6 +2380,15 @@
               "triggered_rule" : 2
             }
           ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "sink-a",
+              "source-a",
+              "via-issue-broadening"
+            ]
+          },
           "local_user_features" : 
           {
             "always_features" : 

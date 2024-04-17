@@ -9,6 +9,7 @@
 #include <mariana-trench/BackwardTaintTransfer.h>
 #include <mariana-trench/CallGraph.h>
 #include <mariana-trench/FeatureFactory.h>
+#include <mariana-trench/FeatureMayAlwaysSet.h>
 #include <mariana-trench/Heuristics.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/OriginFactory.h>
@@ -527,6 +528,9 @@ void check_call_flows(
     auto path_resolved = port.path().resolve(source_constant_arguments);
 
     auto new_sinks = sinks;
+    // Collect all fulfilled sink features to add as locally inferred features
+    // so that they are discoverable on the current frame in the UI.
+    FeatureMayAlwaysSet locally_inferred_fulfilled_sink_features{};
     new_sinks.transform_kind_with_features(
         [context, &fulfilled_partial_sinks](
             const Kind* sink_kind) -> std::vector<const Kind*> {
@@ -538,10 +542,17 @@ void check_call_flows(
           return fulfilled_partial_sinks.make_triggered_counterparts(
               /* unfulfilled_kind */ partial_sink, context->kind_factory);
         },
-        [&fulfilled_partial_sinks](const Kind* new_kind) {
-          return get_fulfilled_sink_features(fulfilled_partial_sinks, new_kind);
+        [&fulfilled_partial_sinks,
+         &locally_inferred_fulfilled_sink_features](const Kind* new_kind) {
+          auto fulfilled_sink_features =
+              get_fulfilled_sink_features(fulfilled_partial_sinks, new_kind);
+          locally_inferred_fulfilled_sink_features.add(fulfilled_sink_features);
+          return fulfilled_sink_features;
         });
-    new_sinks.add_locally_inferred_features(extra_features);
+
+    locally_inferred_fulfilled_sink_features.add(extra_features);
+    new_sinks.add_locally_inferred_features(
+        locally_inferred_fulfilled_sink_features);
 
     LOG_OR_DUMP(
         context,
