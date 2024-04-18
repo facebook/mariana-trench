@@ -82,7 +82,7 @@ jobs:
           cd ../..
           mkdir build
           cd build
-          cmake -DREDEX_ROOT="../redex/install" -Dfmt_ROOT="../fmt/install" -DFMT_DEPRECATED_OSTREAM=ON -DEXCLUDE_INTEGRATION_TESTS="check_cast_types;multi_sources" -DCMAKE_INSTALL_PREFIX="../install" ..
+          cmake -DREDEX_ROOT="../redex/install" -Dfmt_ROOT="../fmt/install" -DFMT_DEPRECATED_OSTREAM=ON -DEXCLUDE_INTEGRATION_TESTS="check_cast_types" -DCMAKE_INSTALL_PREFIX="../install" ..
           make -j$(nproc)
           make install
           make check -j$(nproc)
