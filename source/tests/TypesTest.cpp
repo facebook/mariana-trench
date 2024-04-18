@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <cstdio>
 #include <optional>
 
 #include <gtest/gtest.h>
@@ -42,8 +43,10 @@ class TypesTest : public test::Test {
 
 std::string create_proguard_configuration_file(
     const std::string& directory,
-    const std::string& file_name,
+    const std::string& extension,
     const std::string& contents) {
+  auto file_name =
+      fmt::format("{}{}", std::tmpnam(/* filename */ nullptr), extension);
   auto configuration_file = std::filesystem::path(directory) / file_name;
   marianatrench::filesystem::save_string_file(configuration_file, contents);
   return configuration_file.native();
@@ -287,7 +290,7 @@ TEST_F(TypesTest, GlobalInvokeVirtualTypes) {
     }
   )";
   auto proguard_configuration_file = create_proguard_configuration_file(
-      this->temporary_directory(), "proguard.pro", proguard_configuration);
+      this->temporary_directory(), ".pro", proguard_configuration);
 
   auto context = test_types(scope, proguard_configuration_file);
   assert(!root(dex_callee));
