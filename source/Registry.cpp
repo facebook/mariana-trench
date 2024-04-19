@@ -28,6 +28,7 @@
 #include <mariana-trench/Rules.h>
 #include <mariana-trench/RulesCoverage.h>
 #include <mariana-trench/Statistics.h>
+#include <mariana-trench/model-generator/ModelGeneratorNameFactory.h>
 
 namespace marianatrench {
 
@@ -369,12 +370,19 @@ Registry Registry::from_sharded_models_json(
   ConcurrentMap<const Field*, FieldModel> field_models;
   ConcurrentMap<std::string, LiteralModel> literal_models;
 
-  auto from_json_line = [&](const Json::Value& value) -> void {
+  // A path with no redundant directory separators, current directory (dot) or
+  // parent directory (dot-dot) elements.
+  auto directory_name = std::filesystem::canonical(path.string()).filename();
+
+  auto from_json_line =
+      [&context, &directory_name, &models](const Json::Value& value) -> void {
     JsonValidation::validate_object(value);
     if (value.isMember("method")) {
       try {
         const auto* method = Method::from_json(value["method"], context);
         mt_assert(method != nullptr);
+
+        auto model = Model::from_json(value, context);
 
         // These sharded input models are meant to be the analysis output of
         // an obscure .jar. Their models are inferred from actual code and
@@ -385,8 +393,12 @@ Registry Registry::from_sharded_models_json(
         // Sources/sinks should not be frozen since these are not approximated
         // in user-defined models. Inferred sources/sinks in the sharded output
         // should be joined with user-defined sources/sinks.
-        auto model = Model::from_json(value, context);
         model.freeze(Model::FreezeKind::Propagations);
+        // Indicate that the source of these models is
+        // `Options::sharded_models_directory()`
+        model.make_sharded_model_generators(
+            /* identifier */ directory_name.string());
+
         models.emplace(method, model);
       } catch (const JsonValidationError& e) {
         WARNING(1, "Unable to parse model `{}`: {}", value, e.what());

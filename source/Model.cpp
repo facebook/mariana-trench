@@ -25,6 +25,7 @@
 #include <mariana-trench/Model.h>
 #include <mariana-trench/Overrides.h>
 #include <mariana-trench/Positions.h>
+#include <mariana-trench/model-generator/ModelGeneratorNameFactory.h>
 
 namespace marianatrench {
 
@@ -973,6 +974,26 @@ void Model::add_model_generator_if_empty(
   }
 
   model_generators_.add(model_generator);
+}
+
+void Model::make_sharded_model_generators(const std::string& identifier) {
+  ModelGeneratorNameSet new_model_generator_names;
+  for (const auto* model_generator : model_generators_) {
+    new_model_generator_names.add(
+        ModelGeneratorNameFactory::singleton().create_sharded(
+            identifier, model_generator));
+  }
+
+  if (new_model_generator_names.empty()) {
+    // If there are no existing model generators, add an empty "sharded" one
+    // to indicate that the entire model came from a "sharded" source.
+    new_model_generator_names.add(
+        ModelGeneratorNameFactory::singleton().create_sharded(
+            identifier,
+            /* original_generator */ nullptr));
+  }
+
+  model_generators_ = std::move(new_model_generator_names);
 }
 
 const SetterAccessPathConstantDomain& Model::inline_as_setter() const {

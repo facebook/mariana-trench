@@ -26,7 +26,8 @@ class ModelGeneratorName final {
  public:
   explicit ModelGeneratorName(
       std::string identifier,
-      std::optional<std::string> part);
+      std::optional<std::string> part,
+      bool is_sharded);
 
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ModelGeneratorName)
 
@@ -38,6 +39,10 @@ class ModelGeneratorName final {
 
   const std::optional<std::string>& part() const {
     return part_;
+  }
+
+  bool is_sharded() const {
+    return is_sharded_;
   }
 
   static const ModelGeneratorName* from_json(
@@ -54,6 +59,7 @@ class ModelGeneratorName final {
  private:
   std::string identifier_;
   std::optional<std::string> part_;
+  bool is_sharded_;
 };
 
 } // namespace marianatrench
@@ -66,6 +72,7 @@ struct std::hash<marianatrench::ModelGeneratorName> {
     if (name.part_) {
       boost::hash_combine(seed, *name.part_);
     }
+    boost::hash_combine(seed, name.is_sharded_);
     return seed;
   }
 };

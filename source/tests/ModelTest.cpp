@@ -1383,4 +1383,43 @@ TEST_F(ModelTest, SerializationDeserialization) {
   }
 }
 
+TEST_F(ModelTest, MakeShardedModelGenerators) {
+  auto context = test::make_empty_context();
+
+  const auto* test_model_generator =
+      context.model_generator_name_factory->create("TestModelGenerator");
+  const auto* sharded_test_model_generator =
+      context.model_generator_name_factory->create_sharded(
+          "sample_dir", test_model_generator);
+  const auto* sharded_model_generator =
+      context.model_generator_name_factory->create_sharded(
+          "sample_dir", nullptr);
+
+  {
+    // If model generators are non-empty, make_sharded_model_generators() should
+    // convert them to a sharded version of itself.
+    Model model;
+    model.add_model_generator(test_model_generator);
+    model.make_sharded_model_generators("sample_dir");
+
+    Model expected_model;
+    expected_model.add_model_generator(sharded_test_model_generator);
+
+    EXPECT_EQ(model, expected_model);
+  }
+
+  {
+    // If model generators are empty, make_sharded_model_generators() should
+    // add a model generator that indicates the model originated from the
+    // sharded input.
+    Model model;
+    model.make_sharded_model_generators("sample_dir");
+
+    Model expected_model;
+    expected_model.add_model_generator(sharded_model_generator);
+
+    EXPECT_EQ(model, expected_model);
+  }
+}
+
 } // namespace marianatrench

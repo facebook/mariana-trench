@@ -30,6 +30,20 @@ class ModelGeneratorNameFactory final {
   const ModelGeneratorName* create(const std::string& identifier, int part)
       const;
 
+  // A "sharded" model generator name refers to models that were created as a
+  // result of reading in models from `Options::sharded_models_directory()`.
+  // An empty `original_generator` refers to the model being parsed from the
+  // sharded models directory but not necesarily originating from any
+  // user-defined model generator, i.e. it could have been an inferred model.
+  const ModelGeneratorName* create_sharded(
+      const std::string& identifier,
+      const ModelGeneratorName* original_generator) const;
+
+  const ModelGeneratorName* create(
+      const std::string& identifier,
+      std::optional<std::string> part,
+      bool is_sharded) const;
+
   const ModelGeneratorName* MT_NULLABLE
   get(const std::string& identifier) const;
 

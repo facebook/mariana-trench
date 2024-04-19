@@ -298,6 +298,12 @@ class Model final {
   void add_model_generator(const ModelGeneratorName* model_generator);
   void add_model_generator_if_empty(const ModelGeneratorName* model_generator);
 
+  // Converts all existing model generator (names) into their "sharded"
+  // equivalent. Used when loading from `Options::sharded_model_generators` to
+  // indicate that the original model generators are indirectly responsible for
+  // this model. The `identifier` is the directory name containing the models.
+  void make_sharded_model_generators(const std::string& identifier);
+
   void add_issue(Issue issue);
   const IssueSet& issues() const {
     return issues_;
