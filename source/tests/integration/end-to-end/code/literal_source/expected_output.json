@@ -1278,7 +1278,7 @@
       ]
     }
   ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceGoogleApiKeyIssue:()V",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceGoogleApiKeyIssue:(Ljava/lang/String;)V",
   "position" : 
   {
     "line" : 90,
@@ -1587,7 +1587,7 @@
       ]
     }
   ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringBuilderAciFirstIssue:()V",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringBuilderAciFirstIssue:(Ljava/lang/String;)V",
   "position" : 
   {
     "line" : 66,
@@ -1771,7 +1771,7 @@
       ]
     }
   ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringConcatAciFirstIssue:()V",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringConcatAciFirstIssue:(Ljava/lang/String;)V",
   "position" : 
   {
     "line" : 48,

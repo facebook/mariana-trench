@@ -43,10 +43,10 @@ public class RegexSource {
     String query = prefix + aci;
   }
 
-  public static void testRegexSourceStringConcatAciFirstIssue() {
+  public static void testRegexSourceStringConcatAciFirstIssue(String bogus) {
     // Expect issue for rules:
     //   (ACI, REGEX) -> Sink
-    String prefix = "SELECT * FROM USERS WHERE id = ";
+    String prefix = bogus == null ? null : "SELECT * FROM USERS WHERE id = ";
     String aci = getAttackerControlledInput();
     @SuppressWarnings("unused")
     String query = aci + prefix;
@@ -61,10 +61,10 @@ public class RegexSource {
     query.append(prefix).append(aci);
   }
 
-  public static void testRegexSourceStringBuilderAciFirstIssue() {
+  public static void testRegexSourceStringBuilderAciFirstIssue(String bogus) {
     // Expect issue for rules:
     //   (ACI, REGEX) -> Sink
-    String prefix = "SELECT * FROM USERS WHERE id = ";
+    String prefix = bogus == null ? null : "SELECT * FROM USERS WHERE id = ";
     String aci = getAttackerControlledInput();
     StringBuilder query = new StringBuilder();
     query.append(aci).append(prefix);
@@ -85,10 +85,10 @@ public class RegexSource {
     MessageFormat.format("SELECT * FROM USERS WHERE id = {}", aci);
   }
 
-  public static void testRegexSourceGoogleApiKeyIssue() {
+  public static void testRegexSourceGoogleApiKeyIssue(String bogus) {
     // Expect issue for rules:
     //   GoogleAPIKey -> Logging
-    String secret = "AIABCD1234EFGH5678";
+    String secret = bogus == null ? null : "AIABCD1234EFGH5678";
     Origin.sink(secret);
   }
 }

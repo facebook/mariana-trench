@@ -27,8 +27,8 @@ public class Flow {
 
   static Object propagate(Object x) {
     Object[] array = new Object[2];
-    array[0] = x;
-    return array[0];
+    array[x == null ? 0 : 1] = x;
+    return array[x == null ? 0 : 1];
   }
 
   private static class Tree {
