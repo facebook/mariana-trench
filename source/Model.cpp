@@ -1398,65 +1398,67 @@ Model Model::from_config_json(
   return model;
 }
 
+/**
+ * Helper to read a category of taint config values from a given JSON \p value.
+ * This is effectively an extract of the common logic shared by all steps of
+ * \p Model::read_taint_configs_from_json in order to simplify it.
+ * 
+ * @param output Output container to which to append the extracted taint config
+ * values.
+ * @param value JSON config to parse.
+ * @param field Field in \p value to parse.
+ * @param taint_config_filter Only taint configs in \p field matching this
+ * filter will be processed.
+ * @param root_filter Only taint configs relating to roots matching this filter
+ * will be processed.
+ * @param allow_default_port if \p true, we assume \p Root::Kind::Return as
+ * default port if none is configured.
+ */
+static void read_taint_configs(
+    std::vector<std::pair<AccessPath, Json::Value>>& output,
+    const Json::Value& value, const std::string& field,
+    bool (*taint_config_filter)(const Json::Value& value),
+    bool (*root_filter)(const Root&),
+    const bool allow_default_port = false) {
+  for (auto config_value : JsonValidation::null_or_array(value, field) |
+                                   boost::adaptors::filtered(taint_config_filter)) {
+    auto port = AccessPath(Root(Root::Kind::Return));
+    if (config_value.isMember("port")) {
+      port = AccessPath::from_json(config_value["port"]);
+    } else if (config_value.isMember("caller_port") || !allow_default_port) {
+      port = AccessPath::from_json(config_value["caller_port"]);
+    }
+
+    if (root_filter(port.root())) {
+      output.emplace_back(std::move(port), std::move(config_value));
+    }
+  }
+}
+
+/** Filter matching every \p Root. */
+static bool all_roots(const Root&) { return true; }
+
+/** Filter matching only argument roots. */
+static bool argument_roots_only(const Root& root) { return root.is_argument(); }
+
+/** Filter matching only non-argument roots. */
+static bool no_argument_roots(const Root& root) { return !root.is_argument(); }
+
 void Model::read_taint_configs_from_json(
     const Json::Value& value,
     std::vector<std::pair<AccessPath, Json::Value>>& generation_values,
     std::vector<std::pair<AccessPath, Json::Value>>& parameter_source_values,
     std::vector<std::pair<AccessPath, Json::Value>>& sink_values,
     bool (*predicate)(const Json::Value& value)) {
-
-  for (auto generation_value :
-       JsonValidation::null_or_array(value, /* field */ "generations") |
-       boost::adaptors::filtered(predicate)) {
-    auto port = AccessPath(Root(Root::Kind::Return));
-    if (generation_value.isMember("port")) {
-      JsonValidation::string(generation_value, /* field */ "port");
-      port = AccessPath::from_json(generation_value["port"]);
-    } else if (generation_value.isMember("caller_port")) {
-      JsonValidation::string(generation_value, /* field */ "caller_port");
-      port = AccessPath::from_json(generation_value["caller_port"]);
-    }
-    generation_values.emplace_back(std::move(port), std::move(generation_value));
-  }
-
-  for (auto parameter_source_value : 
-       JsonValidation::null_or_array(value, /* field */ "parameter_sources") |
-       boost::adaptors::filtered(predicate)) {
-    std::string port_field =
-        parameter_source_value.isMember("port") ? "port" : "caller_port";
-    JsonValidation::string(parameter_source_value, /* field */ port_field);
-    auto port = AccessPath::from_json(parameter_source_value[port_field]);
-    parameter_source_values.emplace_back(std::move(port), std::move(parameter_source_value));
-  }
-
-  for (const auto& source_value :
-       JsonValidation::null_or_array(value, /* field */ "sources") |
-       boost::adaptors::filtered(predicate)) {
-    auto port = AccessPath(Root(Root::Kind::Return));
-    if (source_value.isMember("port")) {
-      JsonValidation::string(source_value, /* field */ "port");
-      port = AccessPath::from_json(source_value["port"]);
-    } else if (source_value.isMember("caller_port")) {
-      JsonValidation::string(source_value, /* field */ "caller_port");
-      port = AccessPath::from_json(source_value["caller_port"]);
-    }
-
-    if (port.root().is_argument()) {
-      parameter_source_values.emplace_back(std::move(port), std::move(source_value));
-    } else {
-      generation_values.emplace_back(std::move(port), std::move(source_value));
-    }
-  }
-
-  for (const auto& sink_value :
-       JsonValidation::null_or_array(value, /* field */ "sinks") |
-       boost::adaptors::filtered(predicate)) {
-    std::string port_field =
-        sink_value.isMember("port") ? "port" : "caller_port";
-    JsonValidation::string(sink_value, /* field */ port_field);
-    auto port = AccessPath::from_json(sink_value[port_field]);
-    sink_values.emplace_back(std::move(port), std::move(sink_value));
-  }
+  read_taint_configs(generation_values, value, "generations", predicate,
+                     all_roots, true);
+  read_taint_configs(parameter_source_values, value, "parameter_sources",
+                     predicate, all_roots, false);
+  read_taint_configs(parameter_source_values, value, "sources", predicate,
+                     argument_roots_only, true);
+  read_taint_configs(generation_values, value, "sources", predicate,
+                     no_argument_roots, true);
+  read_taint_configs(sink_values, value, "sinks", predicate, all_roots, false);
 }
 
 Model Model::from_json(const Json::Value& value, Context& context) {
