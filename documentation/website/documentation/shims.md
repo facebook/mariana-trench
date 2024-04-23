@@ -49,7 +49,7 @@ class MyFragment extends Fragment {
 }
 ```
 
-In this case, we can define a shim on `FragmentTrasaction`'s `add()`  to
+In this case, we can define a shim on `FragmentTransaction`'s `add()`  to
 _trigger_ the lifecycle wrapper method of it's `Fragment` argument to mimic the
 android's lifecycle management to catch this flow.
 
