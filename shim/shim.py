@@ -215,21 +215,27 @@ def _desugar_jar_file(jar_path: Path) -> Path:
     LOG.info(f"Desugaring `{jar_path}`...")
     desugar_tool = _build_target(none_throws(configuration.DESUGAR_BUCK_TARGET))
     desugared_jar_file = jar_path.parent / (jar_path.stem + "-desugared.jar")
-    output = subprocess.run(
-        [
-            "java",
-            "-jar",
-            desugar_tool,
-            os.fspath(jar_path),
-            os.fspath(desugared_jar_file),
-        ],
-        stderr=subprocess.PIPE,
-    )
-    if output.returncode != 0:
-        raise ClientError(
-            message=f"Error while desugaring jar file, aborting.\nstderr: {output.stderr.decode()}",
-            exit_code=ExitCode.JAVA_TARGET_ERROR,
+
+    with tempfile.NamedTemporaryFile() as temp_file:
+        for skipped_class in configuration.get_skipped_classes():
+            temp_file.write(f"{skipped_class}\n".encode())
+        temp_file.flush()
+        output = subprocess.run(
+            [
+                "java",
+                "-jar",
+                desugar_tool,
+                os.fspath(jar_path),
+                os.fspath(desugared_jar_file),
+                os.fspath(temp_file.name),
+            ],
+            stderr=subprocess.PIPE,
         )
+        if output.returncode != 0:
+            raise ClientError(
+                message=f"Error while desugaring jar file, aborting.\nstderr: {output.stderr.decode()}",
+                exit_code=ExitCode.JAVA_TARGET_ERROR,
+            )
 
     LOG.info(f"Desugared jar file: `{desugared_jar_file}`.")
     return desugared_jar_file

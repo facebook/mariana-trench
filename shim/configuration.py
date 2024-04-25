@@ -5,7 +5,7 @@
 
 import os
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Set
 
 from .exit_codes import ConfigurationError
 
@@ -49,3 +49,7 @@ def get_d8_path() -> str:
     # Typically, on MacOS:
     # /Users/<user>/Library/Android/sdk/build-tools/<sdk version>/d8
     raise NotImplementedError("No default D8 path.")
+
+
+def get_skipped_classes() -> Set[str]:
+    raise NotImplementedError("Skipped classes used with internal desugaring only.")

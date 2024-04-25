@@ -12,6 +12,7 @@ import static org.objectweb.asm.Opcodes.BIPUSH;
 import static org.objectweb.asm.Opcodes.INVOKEVIRTUAL;
 import static org.objectweb.asm.Opcodes.POP;
 
+import java.util.ArrayList;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
@@ -20,9 +21,11 @@ import org.objectweb.asm.signature.SignatureVisitor;
 
 public class MethodHandleVisitor extends ClassVisitor {
   private boolean mSkipMethodForClass = false;
+  private ArrayList<String> mSkippedClasses;
 
-  public MethodHandleVisitor(ClassVisitor next) {
+  public MethodHandleVisitor(ClassVisitor next, ArrayList<String> skippedClasses) {
     super(ASM9, next);
+    mSkippedClasses = skippedClasses;
   }
 
   @Override
@@ -33,12 +36,25 @@ public class MethodHandleVisitor extends ClassVisitor {
       String signature,
       String superName,
       String[] interfaces) {
-    if (name.contains("io/micrometer/")) {
-      // D8 does not run cleanly on this package. Needs further investigation.
-      // Meanwhile, remove methods in it.
+    for (String skippedClass : mSkippedClasses) {
+      // D8 does not run cleanly in some cases. These cases are passed in
+      // through a separate configuration. Needs further investigation.
+      // Meanwhile, methods in these classes are emptied out to avoid errors
+      // in D8.
+      if (name.startsWith(skippedClass)) {
+        System.out.println("Skipping methods in class: " + name);
+        mSkipMethodForClass = true;
+      }
+    }
+
+    if (!mSkipMethodForClass && name.contains("io/micrometer/")) {
+      // For backward compatibility until shim.py, which is responsible for
+      // passing in mSkippedClasses as an argument (and should include
+      // "io/micrometer/"), is released.
       System.out.println("Skipping methods in class: " + name);
       mSkipMethodForClass = true;
     }
+
     super.visit(version, access, name, signature, superName, interfaces);
   }
 

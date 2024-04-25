@@ -9,6 +9,7 @@ package com.facebook.marianatrench;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.ArrayList;
 import org.junit.Test;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
@@ -19,7 +20,8 @@ public class MethodHandlerVisitorTest {
     byte[] inputClass = BytecodeProcessing.readBytecode(MethodHandlerVisitorTestClass.class);
     ClassReader reader = new ClassReader(inputClass);
     ClassWriter writer = new ClassWriter(0);
-    MethodHandleVisitor methodHandleVisitor = new MethodHandleVisitor(writer);
+    MethodHandleVisitor methodHandleVisitor =
+        new MethodHandleVisitor(writer, /* skipped classes */ new ArrayList<String>());
     reader.accept(methodHandleVisitor, 0);
 
     String inputClassString = BytecodeProcessing.bytecodeMethodsToString(inputClass);
