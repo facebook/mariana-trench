@@ -31,6 +31,9 @@ class FeatureFactory final {
   const Feature* get_via_value_of_feature(
       const std::optional<std::string_view>& value,
       const DexString* MT_NULLABLE tag) const;
+  const Feature* get_via_annotation_feature(
+      std::string_view value,
+      const DexString* MT_NULLABLE tag) const;
   const Feature* get_via_shim_feature(const Method* MT_NULLABLE method) const;
 
   /**

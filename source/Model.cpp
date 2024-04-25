@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <boost/range/adaptor/filtered.hpp>
 #include <fmt/format.h>
 
 #include <Show.h>
@@ -26,6 +27,7 @@
 #include <mariana-trench/Overrides.h>
 #include <mariana-trench/Positions.h>
 #include <mariana-trench/model-generator/ModelGeneratorNameFactory.h>
+#include <mariana-trench/model-generator/TaintConfigTemplate.h>
 
 namespace marianatrench {
 
@@ -1250,54 +1252,27 @@ Model Model::from_config_json(
 
   Model model(method, context, modes, frozen);
 
-  for (auto generation_value :
-       JsonValidation::null_or_array(value, /* field */ "generations")) {
-    auto port = AccessPath(Root(Root::Kind::Return));
-    if (generation_value.isMember("port")) {
-      JsonValidation::string(generation_value, /* field */ "port");
-      port = AccessPath::from_json(generation_value["port"]);
-    } else if (generation_value.isMember("caller_port")) {
-      JsonValidation::string(generation_value, /* field */ "caller_port");
-      port = AccessPath::from_json(generation_value["caller_port"]);
-    }
+  std::vector<std::pair<AccessPath, Json::Value>> generation_values;
+  std::vector<std::pair<AccessPath, Json::Value>> parameter_source_values;
+  std::vector<std::pair<AccessPath, Json::Value>> sink_values;
+  read_taint_configs_from_json(
+      value,
+      generation_values,
+      parameter_source_values,
+      sink_values,
+      TaintConfigTemplate::is_concrete);
+
+  for (const auto& [port, generation_value] : generation_values) {
     model.add_generation(
         port, TaintConfig::from_json(generation_value, context));
   }
 
-  for (auto parameter_source_value :
-       JsonValidation::null_or_array(value, /* field */ "parameter_sources")) {
-    std::string port_field =
-        parameter_source_value.isMember("port") ? "port" : "caller_port";
-    JsonValidation::string(parameter_source_value, /* field */ port_field);
-    auto port = AccessPath::from_json(parameter_source_value[port_field]);
+  for (const auto& [port, parameter_source_value] : parameter_source_values) {
     model.add_parameter_source(
         port, TaintConfig::from_json(parameter_source_value, context));
   }
 
-  for (auto source_value :
-       JsonValidation::null_or_array(value, /* field */ "sources")) {
-    auto port = AccessPath(Root(Root::Kind::Return));
-    if (source_value.isMember("port")) {
-      JsonValidation::string(source_value, /* field */ "port");
-      port = AccessPath::from_json(source_value["port"]);
-    } else if (source_value.isMember("caller_port")) {
-      JsonValidation::string(source_value, /* field */ "caller_port");
-      port = AccessPath::from_json(source_value["caller_port"]);
-    }
-    auto source = TaintConfig::from_json(source_value, context);
-    if (port.root().is_argument()) {
-      model.add_parameter_source(port, source);
-    } else {
-      model.add_generation(port, source);
-    }
-  }
-
-  for (auto sink_value :
-       JsonValidation::null_or_array(value, /* field */ "sinks")) {
-    std::string port_field =
-        sink_value.isMember("port") ? "port" : "caller_port";
-    JsonValidation::string(sink_value, /* field */ port_field);
-    auto port = AccessPath::from_json(sink_value[port_field]);
+  for (const auto& [port, sink_value] : sink_values) {
     model.add_sink(port, TaintConfig::from_json(sink_value, context));
   }
 
@@ -1421,6 +1396,86 @@ Model Model::from_config_json(
   }
 
   return model;
+}
+
+/**
+ * Helper to read a category of taint config values from a given JSON \p value.
+ * This is effectively an extract of the common logic shared by all steps of
+ * \p Model::read_taint_configs_from_json in order to simplify it.
+ *
+ * @param output Output container to which to append the extracted taint config
+ * values.
+ * @param value JSON config to parse.
+ * @param field Field in \p value to parse.
+ * @param taint_config_filter Only taint configs in \p field matching this
+ * filter will be processed.
+ * @param root_filter Only taint configs relating to roots matching this filter
+ * will be processed.
+ * @param allow_default_port if \p true, we assume \p Root::Kind::Return as
+ * default port if none is configured.
+ */
+static void read_taint_configs(
+    std::vector<std::pair<AccessPath, Json::Value>>& output,
+    const Json::Value& value,
+    const std::string& field,
+    bool (*taint_config_filter)(const Json::Value& value),
+    bool (*root_filter)(const Root&),
+    const bool allow_default_port = false) {
+  for (auto config_value : JsonValidation::null_or_array(value, field) |
+           boost::adaptors::filtered(taint_config_filter)) {
+    auto port = AccessPath(Root(Root::Kind::Return));
+    if (config_value.isMember("port")) {
+      port = AccessPath::from_json(config_value["port"]);
+    } else if (config_value.isMember("caller_port") || !allow_default_port) {
+      port = AccessPath::from_json(config_value["caller_port"]);
+    }
+
+    if (root_filter(port.root())) {
+      output.emplace_back(std::move(port), std::move(config_value));
+    }
+  }
+}
+
+/** Filter matching every \p Root. */
+static bool all_roots(const Root&) {
+  return true;
+}
+
+/** Filter matching only argument roots. */
+static bool argument_roots_only(const Root& root) {
+  return root.is_argument();
+}
+
+/** Filter matching only non-argument roots. */
+static bool no_argument_roots(const Root& root) {
+  return !root.is_argument();
+}
+
+void Model::read_taint_configs_from_json(
+    const Json::Value& value,
+    std::vector<std::pair<AccessPath, Json::Value>>& generation_values,
+    std::vector<std::pair<AccessPath, Json::Value>>& parameter_source_values,
+    std::vector<std::pair<AccessPath, Json::Value>>& sink_values,
+    bool (*predicate)(const Json::Value& value)) {
+  read_taint_configs(
+      generation_values, value, "generations", predicate, all_roots, true);
+  read_taint_configs(
+      parameter_source_values,
+      value,
+      "parameter_sources",
+      predicate,
+      all_roots,
+      false);
+  read_taint_configs(
+      parameter_source_values,
+      value,
+      "sources",
+      predicate,
+      argument_roots_only,
+      true);
+  read_taint_configs(
+      generation_values, value, "sources", predicate, no_argument_roots, true);
+  read_taint_configs(sink_values, value, "sinks", predicate, all_roots, false);
 }
 
 Model Model::from_json(const Json::Value& value, Context& context) {

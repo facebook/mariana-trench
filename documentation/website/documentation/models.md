@@ -622,6 +622,122 @@ For backward compatibility, we allow these to be mixed with normal ports in a li
 ]
 ```
 
+#### Annotation Features
+
+In model generators we can also use annotation features, which translate to regular user features based on annotation parameter values. This feature is also compatible with `for_all_parameters`.
+
+Config example:
+```json
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;",
+          "name": "getSourceWithMethodAnnotation"
+        }
+      ],
+      "model": {
+        "generations": [
+          {
+            "kind": "Source",
+            "port": "Return",
+            "via_annotation": [
+              {
+                "type": "Lcom/facebook/marianatrench/integrationtests/Path;",
+                "target": "Return"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;",
+          "name": "getSourceWithParameterAnnotation"
+        }
+      ],
+      "model": {
+        "generations": [
+          {
+            "kind": "Source",
+            "port": "Return",
+            "via_annotation": [
+              {
+                "type": "Lcom/facebook/marianatrench/integrationtests/QueryParam;",
+                "target": "Argument(1)"
+              },
+              {
+                "type": "Lcom/facebook/marianatrench/integrationtests/OtherQueryParam;",
+                "target": "Argument(2)",
+                "tag": "ParameterNameLabel",
+                "annotation_parameter": "description"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
+```
+
+Java class with annotations:
+```java
+public class AnnotationFeature {
+
+  @Path("/issue_1")
+  Object getSourceWithMethodAnnotation() {
+    return new Object();
+  }
+
+  Object getSourceWithParameterAnnotation(@QueryParam("query_param_name") String value, @OtherQueryParam(value = "other_query_param_name", description = "other_query_param_name_description") String description) {
+    return "unrelated";
+  }
+
+  void testSourceWithMethodAnnotation() {
+    Object source = getSourceWithMethodAnnotation();
+    Origin.sink(source);
+  }
+
+  void testSourceWithParameterAnnotation() {
+    Object source = getSourceWithParameterAnnotation("argument_value");
+    Origin.sink(source);
+  }
+}
+```
+
+Resulting issues:
+
+```json
+{
+  "issues" :
+  [
+    {
+      "always_features" :
+      [
+        "via-annotation:/issue_1"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+...
+{
+  "issues" :
+  [
+    {
+      "always_features" :
+      [
+        "via-ParameterNameLabel-annotation:description_instead_of_value"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+...
+```
+
 ### Taint Broadening
 
 **Taint broadening** (also called **collapsing**) happens when Mariana Trench needs to make an approximation about a taint flow. It is the operation of reducing a **taint tree** into a single element. A **taint tree** is a tree where edges are field names and nodes are taint element. This is how Mariana Trench represents internally which fields (or sequence of fields) are tainted.

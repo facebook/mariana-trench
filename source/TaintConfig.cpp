@@ -109,6 +109,8 @@ TaintConfig TaintConfig::from_json(const Json::Value& value, Context& context) {
        "call_position",
        "distance",
        "features",
+       "via_annotation", // Only when called from
+                         // `TaintConfigTemplate::from_json`
        "via_type_of",
        "via_value_of",
        "canonical_names"});
@@ -256,6 +258,10 @@ TaintConfig TaintConfig::from_json(const Json::Value& value, Context& context) {
       /* local_positions */ {},
       /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
       /* extra_traces */ {});
+}
+
+void TaintConfig::add_user_feature_set(const FeatureSet& feature_set) {
+  user_features_.join_with(feature_set);
 }
 
 } // namespace marianatrench

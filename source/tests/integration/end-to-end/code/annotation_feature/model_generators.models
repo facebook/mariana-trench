@@ -1,0 +1,163 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;",
+          "name": "getSourceWithMethodAnnotation"
+        }
+      ],
+      "model": {
+        "generations": [
+          {
+            "kind": "Source",
+            "port": "Return",
+            "via_annotation": [
+              {
+                "type": "Lcom/facebook/marianatrench/integrationtests/Path;",
+                "target": "Method"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;",
+          "name": "getSourceWithParameterAnnotation"
+        }
+      ],
+      "model": {
+        "generations": [
+          {
+            "kind": "Source",
+            "port": "Return",
+            "via_annotation": [
+              {
+                "type": "Lcom/facebook/marianatrench/integrationtests/QueryParam;",
+                "target": "Argument(1)"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;",
+          "name": "parameterSourceWithLabel"
+        }
+      ],
+      "model": {
+        "parameter_sources": [
+          {
+            "kind": "Source",
+            "port": "Argument(1)",
+            "via_annotation": [
+              {
+                "type": "Lcom/facebook/marianatrench/integrationtests/Path;",
+                "target": "Method",
+                "tag": "MyPathLabel"
+              },
+              {
+                "type": "Lcom/facebook/marianatrench/integrationtests/QueryParam;",
+                "target": "Argument(1)"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;",
+          "name": "parameterSourceWithClassAnnotation"
+        }
+      ],
+      "model": {
+        "parameter_sources": [
+          {
+            "kind": "Source",
+            "port": "Argument(1)",
+            "via_annotation": [
+              {
+                "type": "Lcom/facebook/marianatrench/integrationtests/Path;",
+                "target": "Class",
+                "tag": "BasePath"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;",
+          "name": "forAllParameterSourceWithLabel"
+        }
+      ],
+      "model": {
+        "for_all_parameters": [
+          {
+            "variable": "name",
+            "where": [
+              {
+                "constraint": "not",
+                "inner": {
+                  "constraint": "any_of",
+                  "inners": [
+                    {
+                      "constraint": "name",
+                      "pattern": "Ljava/lang/Boolean;"
+                    }
+                  ]
+                }
+              }
+            ],
+            "parameter_sources": [
+              {
+                "kind": "Source",
+                "port": "Argument(name)",
+                "features": [
+                  "via-authentication:Unauthenticated"
+                ],
+                "via_annotation": [
+                  {
+                    "type": "Lcom/facebook/marianatrench/integrationtests/Path;",
+                    "target": "Method",
+                    "tag": "EndpointPathLabel"
+                  },
+                  {
+                    "type": "Lcom/facebook/marianatrench/integrationtests/OtherQueryParam;",
+                    "target": "Argument(name)",
+                    "tag": "ParameterNameLabel",
+                    "annotation_parameter": "description"
+                  },
+                  {
+                    "type": "Lcom/facebook/marianatrench/integrationtests/TypeThatDoesnNotExist;",
+                    "target": "Argument(name)"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

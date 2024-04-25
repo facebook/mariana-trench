@@ -674,7 +674,7 @@ void check_flows_to_array_allocation(
           context->origin_factory.method_origin(array_allocation_method, port)},
       /* inferred features */ {},
       /* locally_inferred_features */ {},
-      /* user features */ {},
+      /* user_features */ {},
       /* via_type_of_ports */ {},
       /* via_value_of_ports */ {},
       /* canonical_names */ {},

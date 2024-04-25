@@ -195,6 +195,12 @@ class TaintConfig final {
     return callee_ == nullptr;
   }
 
+  /**
+   * Adds additional user features. Used at annotation feature instantiation to
+   * add additional user features from a normally created taint config.
+   */
+  void add_user_feature_set(const FeatureSet& feature_set);
+
   static TaintConfig from_json(const Json::Value& value, Context& context);
 
  private:

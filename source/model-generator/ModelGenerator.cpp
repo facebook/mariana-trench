@@ -431,7 +431,7 @@ TaintConfig generator::source(
       /* distance */ 0,
       /* origins */ {},
       /* inferred features */ FeatureMayAlwaysSet::bottom(),
-      /* user features */ user_features,
+      /* user_features */ user_features,
       /* via_type_of_ports */ via_type_of_ports,
       /* via_value_of_ports */ via_value_of_ports,
       /* canonical_names */ {},

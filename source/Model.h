@@ -354,6 +354,32 @@ class Model final {
       Context& context,
       bool check_unexpected_members = true);
 
+  /**
+   * Helper to read all generations, parameter_sources and sinks type taint
+   * configs from the given JSON \p value. Only the configs which match
+   * \p predicate are extracted and inserted into \p generations,
+   * \p parameter_sources, and \p sinks respectively.
+   *
+   * @param value Model configuration JSON value.
+   * @param generations All extracted generations JSON taint configs.
+   * @param parameter_sources All extracted parameter_sources JSON taint
+   * configs.
+   * @param sinks All extracted sinks JSON taint configs.
+   * @param json_sources \see Model::from_json
+   * @param json_sinks \see Model::from_json
+   * @param predicate indicates which JSON config objects to extract. At the
+   * moment this is either TaintConfigTemplate::is_concrete to extract all JSON
+   * configs which can be directly added to the model, or
+   * TaintConfigTemplate::is_template to extract the taint configs which need
+   * to be stored in ModelTemplate for later instantiation.
+   */
+  static void read_taint_configs_from_json(
+      const Json::Value& model,
+      std::vector<std::pair<AccessPath, Json::Value>>& generations,
+      std::vector<std::pair<AccessPath, Json::Value>>& parameter_sources,
+      std::vector<std::pair<AccessPath, Json::Value>>& sinks,
+      bool (*predicate)(const Json::Value& value));
+
   static Model from_json(const Json::Value& value, Context& context);
   Json::Value to_json(ExportOriginsMode export_origins_mode) const;
 

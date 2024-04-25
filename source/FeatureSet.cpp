@@ -9,6 +9,7 @@
 
 #include <mariana-trench/FeatureSet.h>
 #include <mariana-trench/JsonValidation.h>
+#include <mariana-trench/Show.h>
 
 namespace marianatrench {
 
@@ -29,16 +30,7 @@ Json::Value FeatureSet::to_json() const {
 }
 
 std::ostream& operator<<(std::ostream& out, const FeatureSet& features) {
-  out << "{";
-  for (auto iterator = features.begin(), end = features.end();
-       iterator != end;) {
-    out << "`" << show(*iterator) << "`";
-    ++iterator;
-    if (iterator != end) {
-      out << ", ";
-    }
-  }
-  return out << "}";
+  return show_set(out, features);
 }
 
 } // namespace marianatrench

@@ -31,25 +31,21 @@
     "Landroid/content/Intent;.getBundleExtra:(Ljava/lang/String;)Landroid/os/Bundle;",
     "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.getSourceWithMethodAnnotation:()Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.testSourceWithMethodAnnotation:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.getSourceWithParameterAnnotation:(Ljava/lang/String;)Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.testSourceWithParameterAnnotation:()V"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceGoogleApiKeyIssue:(Ljava/lang/String;)V"
-  ],
-  "Lcom/facebook/marianatrench/integrationtests/RegexSource;.getAttackerControlledInput:()Ljava/lang/String;" : 
-  [
-    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceIssue:()V",
-    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceMessageFormatIssue:()V",
-    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceNoMatchNoIssue:()V",
-    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringBuilderAciFirstIssue:(Ljava/lang/String;)V",
-    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringBuilderIssue:()V",
-    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringConcatAciFirstIssue:(Ljava/lang/String;)V",
-    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringConcatIssue:()V",
-    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringFormatIssue:()V"
-  ],
-  "Lcom/facebook/marianatrench/integrationtests/RegexSource;.sink:(Ljava/lang/String;Ljava/lang/String;)V" : 
-  [
-    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceIssue:()V",
-    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceNoMatchNoIssue:()V"
+    "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.forAllParameterSourceWithLabel:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V",
+    "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.parameterSourceWithClassAnnotation:(Ljava/lang/String;)V",
+    "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.parameterSourceWithLabel:(Ljava/lang/String;)V",
+    "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.testSourceWithMethodAnnotation:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.testSourceWithParameterAnnotation:()V"
   ],
   "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V" : 
   [
@@ -91,9 +87,10 @@
     "Lcom/facebook/auth/datastore/LoggedInUserAuthDataStore;.<init>:()V",
     "Lcom/facebook/base/activity/FragmentBaseActivityUtil;.<init>:()V",
     "Lcom/facebook/content/SecureContextHelper;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.getSourceWithMethodAnnotation:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.<init>:()V",
     "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V",
     "Lcom/facebook/secure/context/SecureContextHelperV2;.<init>:()V",
     "Lcom/facebook/user/model/User;.<init>:()V",
@@ -106,11 +103,6 @@
     "Ljava/text/MessageFormat;.<init>:()V",
     "Ljava/util/TreeMap;.<init>:()V"
   ],
-  "Ljava/lang/Object;.toString:()Ljava/lang/String;" : 
-  [
-    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringConcatAciFirstIssue:(Ljava/lang/String;)V",
-    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringConcatIssue:()V"
-  ],
   "Ljava/lang/Runnable;.run:()V" : 
   [
     "Ljava/lang/Thread;.run:()V"
@@ -119,34 +111,12 @@
   [
     "Landroid/net/Uri;.toString:()Ljava/lang/String;"
   ],
-  "Ljava/lang/String;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;" : 
-  [
-    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringFormatIssue:()V"
-  ],
   "Ljava/lang/String;.isEmpty:()Z" : 
   [
     "Ljava/lang/String;.concat:(Ljava/lang/String;)Ljava/lang/String;"
   ],
-  "Ljava/lang/StringBuilder;.<init>:()V" : 
-  [
-    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringBuilderAciFirstIssue:(Ljava/lang/String;)V",
-    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringBuilderIssue:()V",
-    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringConcatAciFirstIssue:(Ljava/lang/String;)V",
-    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringConcatIssue:()V"
-  ],
-  "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;" : 
-  [
-    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringBuilderAciFirstIssue:(Ljava/lang/String;)V",
-    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringBuilderIssue:()V",
-    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringConcatAciFirstIssue:(Ljava/lang/String;)V",
-    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceStringConcatIssue:()V"
-  ],
   "Ljava/lang/Thread;.run:()V" : 
   [
     "Ljava/lang/Thread;.run:()V"
-  ],
-  "Ljava/text/MessageFormat;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;" : 
-  [
-    "Lcom/facebook/marianatrench/integrationtests/RegexSource;.testRegexSourceMessageFormatIssue:()V"
   ]
 }

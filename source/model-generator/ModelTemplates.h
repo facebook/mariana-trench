@@ -11,9 +11,10 @@
 #include <mariana-trench/Context.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Model.h>
-#include <mariana-trench/TaintConfig.h>
 #include <mariana-trench/TransformList.h>
 #include <mariana-trench/model-generator/ModelGenerator.h>
+#include <mariana-trench/model-generator/ParameterPositionTemplate.h>
+#include <mariana-trench/model-generator/TaintConfigTemplate.h>
 
 namespace marianatrench {
 class TemplateVariableMapping final {
@@ -27,43 +28,6 @@ class TemplateVariableMapping final {
 
  private:
   std::unordered_map<std::string, ParameterPosition> map_;
-};
-
-/* Store either an integer typed parameter position, or a string typed parameter
- * position (which is its name and can be instantiated when given a mapping from
- * variable names to variable indices) */
-class ParameterPositionTemplate final {
- public:
-  explicit ParameterPositionTemplate(ParameterPosition parameter_position);
-  explicit ParameterPositionTemplate(std::string parameter_position);
-
-  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ParameterPositionTemplate)
-
-  ParameterPosition instantiate(
-      const TemplateVariableMapping& parameter_positions) const;
-  std::string to_string() const;
-
- private:
-  std::variant<ParameterPosition, std::string> parameter_position_;
-};
-
-class RootTemplate final {
- public:
-  explicit RootTemplate(
-      Root::Kind kind,
-      std::optional<ParameterPositionTemplate> parameter_position =
-          std::nullopt);
-
-  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(RootTemplate)
-
-  bool is_argument() const;
-
-  Root instantiate(const TemplateVariableMapping& parameter_positions) const;
-  std::string to_string() const;
-
- private:
-  Root::Kind kind_;
-  std::optional<ParameterPositionTemplate> parameter_position_;
 };
 
 class AccessPathTemplate final {
@@ -139,23 +103,27 @@ class PortSanitizerTemplate final {
 
 class SinkTemplate final {
  public:
-  explicit SinkTemplate(TaintConfig sink, AccessPathTemplate port);
+  explicit SinkTemplate(TaintConfigTemplate sink, AccessPathTemplate port);
 
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(SinkTemplate)
 
   static SinkTemplate from_json(const Json::Value& value, Context& context);
   void instantiate(
+      const Method* method,
+      Context& context,
       const TemplateVariableMapping& parameter_positions,
       Model& model) const;
 
  private:
-  TaintConfig sink_;
+  TaintConfigTemplate sink_;
   AccessPathTemplate port_;
 };
 
 class ParameterSourceTemplate final {
  public:
-  explicit ParameterSourceTemplate(TaintConfig source, AccessPathTemplate port);
+  explicit ParameterSourceTemplate(
+      TaintConfigTemplate source,
+      AccessPathTemplate port);
 
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ParameterSourceTemplate)
 
@@ -163,17 +131,21 @@ class ParameterSourceTemplate final {
       const Json::Value& value,
       Context& context);
   void instantiate(
+      const Method* method,
+      Context& context,
       const TemplateVariableMapping& parameter_positions,
       Model& model) const;
 
  private:
-  TaintConfig source_;
+  TaintConfigTemplate source_;
   AccessPathTemplate port_;
 };
 
 class GenerationTemplate final {
  public:
-  explicit GenerationTemplate(TaintConfig source, AccessPathTemplate port);
+  explicit GenerationTemplate(
+      TaintConfigTemplate source,
+      AccessPathTemplate port);
 
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(GenerationTemplate)
 
@@ -181,11 +153,13 @@ class GenerationTemplate final {
       const Json::Value& value,
       Context& context);
   void instantiate(
+      const Method* method,
+      Context& context,
       const TemplateVariableMapping& parameter_positions,
       Model& model) const;
 
  private:
-  TaintConfig source_;
+  TaintConfigTemplate source_;
   AccessPathTemplate port_;
 };
 
@@ -284,7 +258,7 @@ class AddFeaturesToArgumentsTemplate final {
 class ForAllParameters final {
  public:
   explicit ForAllParameters(
-      std::unique_ptr<AllOfParameterConstraint> constraints,
+      std::unique_ptr<class AllOfParameterConstraint> constraints,
       std::string variable,
       std::vector<SinkTemplate> sink_templates = {},
       std::vector<ParameterSourceTemplate> parameter_source_templates = {},
@@ -336,7 +310,10 @@ class ModelTemplate final {
   /* The given `model` must not be associated with a method. */
   ModelTemplate(
       const Model& model,
-      std::vector<ForAllParameters> for_all_parameters);
+      std::vector<ForAllParameters> for_all_parameters,
+      std::vector<std::pair<AccessPath, TaintConfigTemplate>> generations,
+      std::vector<std::pair<AccessPath, TaintConfigTemplate>> parameter_sources,
+      std::vector<std::pair<AccessPath, TaintConfigTemplate>> sinks);
 
   ModelTemplate(const ModelTemplate& other) = delete;
   ModelTemplate(ModelTemplate&& other) = default;
@@ -357,5 +334,8 @@ class ModelTemplate final {
  private:
   Model model_;
   std::vector<ForAllParameters> for_all_parameters_;
+  std::vector<std::pair<AccessPath, TaintConfigTemplate>> generations_;
+  std::vector<std::pair<AccessPath, TaintConfigTemplate>> parameter_sources_;
+  std::vector<std::pair<AccessPath, TaintConfigTemplate>> sinks_;
 };
 } // namespace marianatrench
