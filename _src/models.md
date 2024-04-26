@@ -104,7 +104,7 @@ Examples:
 - `Argument(1)[*]` corresponds to _any index_ of the dictionary like second parameter;
 - `Argument(1)[<Argument(2)>]` corresponds to an _index_ of the dictionary like second parameter whose value is resolved from the third parameter;
 - `Return` corresponds to the returned value;
-- `Return.x` correpsonds to the field `x` of the returned value;
+- `Return.x` corresponds to the field `x` of the returned value;
 
 ### Kinds
 
@@ -527,7 +527,7 @@ activitySubclassInstance.startActivityForResult(intent, requestCode);
 
 ```
 
-we could use the following JSON to specifiy a via-type feature that would materialize as `via-type:ActivitySubclass`:
+we could use the following JSON to specify a via-type feature that would materialize as `via-type:ActivitySubclass`:
 
 ```json
 {
@@ -571,7 +571,7 @@ log(Constants.MODE, "error message");
 
 ```
 
-we could use the following JSON to specifiy a via-value feature that would materialize as `via-value:M1`:
+we could use the following JSON to specify a via-value feature that would materialize as `via-value:M1`:
 
 ```json
 {
@@ -874,7 +874,7 @@ These can be specified in model generators as follows -
 }
 ```
 
-Note, if there are any user-specificed sources, sinks or propagations on the model, sanitizers will not affect them, but it will prevent them from being propagated outward to callsites.
+Note, if there are any user-specified sources, sinks or propagations on the model, sanitizers will not affect them, but it will prevent them from being propagated outward to callsites.
 
 #### Kind-specific Sanitizers
 
@@ -1266,7 +1266,7 @@ Each "rule" defines a "filter" (which uses "constraints" to specify methods for 
       - `features`\*: A list of features/breadcrumbs names;
     - `sinks`\*: A list of sinks the field should hold. A sink has the following key/values:
       - `kind`: The sink name;
-      - `features`\*: A list of features/breadcrumds names;
+      - `features`\*: A list of features/breadcrumbs names;
 
 In the above bullets,
 
