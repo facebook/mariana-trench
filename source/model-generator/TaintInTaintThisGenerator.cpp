@@ -45,7 +45,7 @@ std::vector<Model> TaintInTaintThisGenerator::visit_method(
   if (method->is_abstract() || method->is_interface()) {
     const auto& overrides = context_.overrides->get(method);
     if (!overrides.empty() &&
-        overrides.size() < Heuristics::kJoinOverrideThreshold &&
+        overrides.size() < options_.heuristics().k_join_override_threshold() &&
         !context_.overrides->has_obscure_override_for(method)) {
       return {};
     }

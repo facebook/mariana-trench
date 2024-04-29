@@ -172,7 +172,8 @@ class SourceTemplate final {
   static SourceTemplate from_json(const Json::Value& value, Context& context);
   void instantiate(
       const TemplateVariableMapping& parameter_positions,
-      Model& model) const;
+      Model& model,
+      const Heuristics& heuristics) const;
 
  private:
   TaintConfig source_;

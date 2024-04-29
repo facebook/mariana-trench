@@ -284,7 +284,8 @@ void generator::add_propagation_to_return(
       /* output_paths */ PathTreeDomain{{Path{}, collapse_depth}},
       /* inferred_features */ FeatureMayAlwaysSet::bottom(),
       /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
-      /* user_features */ user_features));
+      /* user_features */ user_features),
+      context.options->heuristics());
 }
 
 void generator::add_propagation_to_parameter(
@@ -307,7 +308,8 @@ void generator::add_propagation_to_parameter(
       /* output_paths */ PathTreeDomain{{Path{}, collapse_depth}},
       /* inferred_features */ FeatureMayAlwaysSet::bottom(),
       /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
-      /* user_features */ user_features));
+      /* user_features */ user_features),
+      context.options->heuristics());
 }
 
 void generator::add_propagation_to_self(

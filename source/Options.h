@@ -16,6 +16,7 @@
 #include <json/json.h>
 
 #include <mariana-trench/ExportOriginsMode.h>
+#include <mariana-trench/Heuristics.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/model-generator/ModelGeneratorConfiguration.h>
 
@@ -43,7 +44,8 @@ class Options final {
       const std::string& source_root_directory = ".",
       bool enable_cross_component_analysis = false,
       ExportOriginsMode export_origins_mode = ExportOriginsMode::Always,
-      bool propagate_across_arguments = false);
+      bool propagate_across_arguments = false,
+      const Heuristics& heuristics = Heuristics());
 
   explicit Options(const boost::program_options::variables_map& variables);
 
@@ -122,6 +124,8 @@ class Options final {
   ExportOriginsMode export_origins_mode() const;
   bool propagate_across_arguments() const;
 
+  const Heuristics& heuristics() const;
+
  private:
   std::vector<std::string> models_paths_;
   std::vector<std::string> field_models_paths_;
@@ -180,6 +184,8 @@ class Options final {
   bool enable_cross_component_analysis_;
   ExportOriginsMode export_origins_mode_;
   bool propagate_across_arguments_;
+
+  Heuristics heuristics_;
 };
 
 } // namespace marianatrench

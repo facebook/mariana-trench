@@ -48,6 +48,9 @@ class JsonValidation final {
       const std::string& field);
 
   static uint32_t unsigned_integer(const Json::Value& value);
+  static uint32_t unsigned_integer(
+      const Json::Value& value,
+      const std::string& field);
 
   static bool boolean(const Json::Value& value);
   static bool boolean(const Json::Value& value, const std::string& field);
@@ -69,6 +72,10 @@ class JsonValidation final {
   static const Json::Value& object_or_string(
       const Json::Value& value,
       const std::string& field);
+
+  static bool has_field(
+    const Json::Value& value,
+    const std::string& field);
 
   /**
    * Add (key, value) pairs from the given `right` object into the given `left`

@@ -435,7 +435,10 @@ void create_issue(
   });
 
   source.add_locally_inferred_features(
-      context->class_properties.issue_features(context->method(), kinds));
+      context->class_properties.issue_features(
+        context->method(),
+        kinds,
+        context->options.heuristics()));
 
   sink.add_locally_inferred_features(extra_features);
   auto issue = Issue(
@@ -810,7 +813,7 @@ void apply_call_effects(MethodContext* context, const CalleeModel& callee) {
 
         auto sinks_copy = sinks;
         context->new_model.add_inferred_call_effect_sinks(
-            port, std::move(sinks_copy));
+            port, std::move(sinks_copy), context->options.heuristics());
 
       } break;
       case Root::Kind::CallEffectIntent:
@@ -1243,7 +1246,8 @@ void infer_output_taint(
         std::move(generation),
         /* widening_features */
         FeatureMayAlwaysSet{
-            context->feature_factory.get_widen_broadening_feature()});
+            context->feature_factory.get_widen_broadening_feature()},
+        context->options.heuristics());
   }
 }
 

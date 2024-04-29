@@ -194,7 +194,9 @@ class Model final {
 
   void collapse_invalid_paths(Context& context);
 
-  void approximate(const FeatureMayAlwaysSet& widening_features);
+  void approximate(
+      const FeatureMayAlwaysSet& widening_features,
+      const Heuristics& heuristics);
 
   bool empty() const;
 
@@ -209,13 +211,17 @@ class Model final {
 
   void add_taint_in_taint_this(Context& context);
 
-  void add_generation(const AccessPath& port, TaintConfig generation);
+  void add_generation(
+      const AccessPath& port,
+      TaintConfig generation,
+      const Heuristics& heuristics);
 
   /* Add generations after applying sanitizers */
   void add_inferred_generations(
       AccessPath port,
       Taint generations,
-      const FeatureMayAlwaysSet& widening_features);
+      const FeatureMayAlwaysSet& widening_features,
+      const Heuristics& heuristics);
   const TaintAccessPathTree& generations() const {
     return generations_;
   }
@@ -223,7 +229,10 @@ class Model final {
     generations_ = std::move(generations);
   }
 
-  void add_parameter_source(const AccessPath& port, TaintConfig source);
+  void add_parameter_source(
+      const AccessPath& port,
+      TaintConfig source,
+      const Heuristics& heuristics);
   const TaintAccessPathTree& parameter_sources() const {
     return parameter_sources_;
   }
@@ -231,13 +240,17 @@ class Model final {
     parameter_sources_ = std::move(parameter_sources);
   }
 
-  void add_sink(const AccessPath& port, TaintConfig sink);
+  void add_sink(
+      const AccessPath& port,
+      TaintConfig sink,
+      const Heuristics& heuristics);
 
   /* Add sinks after applying sanitizers */
   void add_inferred_sinks(
       AccessPath port,
       Taint sinks,
-      const FeatureMayAlwaysSet& widening_features);
+      const FeatureMayAlwaysSet& widening_features,
+      const Heuristics& heuristics);
   const TaintAccessPathTree& sinks() const {
     return sinks_;
   }
@@ -248,24 +261,37 @@ class Model final {
   const TaintAccessPathTree& call_effect_sources() const {
     return call_effect_sources_;
   }
-  void add_call_effect_source(AccessPath port, TaintConfig source);
+  void add_call_effect_source(
+      AccessPath port,
+      TaintConfig source,
+      const Heuristics& heuristics);
 
   const TaintAccessPathTree& call_effect_sinks() const {
     return call_effect_sinks_;
   }
-  void add_call_effect_sink(AccessPath port, TaintConfig sink);
-  void add_inferred_call_effect_sinks(AccessPath port, Taint sink);
+  void add_call_effect_sink(
+      AccessPath port,
+      TaintConfig sink,
+      const Heuristics& heuristics);
   void add_inferred_call_effect_sinks(
       AccessPath port,
       Taint sink,
-      const FeatureMayAlwaysSet& widening_features);
+      const Heuristics& heuristics);
+  void add_inferred_call_effect_sinks(
+      AccessPath port,
+      Taint sink,
+      const FeatureMayAlwaysSet& widening_features,
+      const Heuristics& heuristics);
 
-  void add_propagation(PropagationConfig propagation);
+  void add_propagation(
+      PropagationConfig propagation,
+      const Heuristics& heuristics);
   /* Add a propagation after applying sanitizers */
   void add_inferred_propagations(
       AccessPath input_path,
       Taint local_taint,
-      const FeatureMayAlwaysSet& widening_features);
+      const FeatureMayAlwaysSet& widening_features,
+      const Heuristics& heuristics);
   const TaintAccessPathTree& propagations() const {
     return propagations_;
   }
@@ -423,12 +449,30 @@ class Model final {
   // `Model` object. This guarantees that it was constructed using a
   // `TaintConfig` in `Model`'s constructor, and has passed other verification
   // checks in the `add_*(AccessPath, TaintConfig)` methods.
-  void add_generation(AccessPath port, Taint generation);
-  void add_parameter_source(AccessPath port, Taint source);
-  void add_sink(AccessPath port, Taint sink);
-  void add_call_effect_source(AccessPath port, Taint source);
-  void add_call_effect_sink(AccessPath port, Taint sink);
-  void add_propagation(AccessPath input_path, Taint output);
+  void add_generation(
+      AccessPath port,
+      Taint generation,
+      const Heuristics& heuristics);
+  void add_parameter_source(
+      AccessPath port,
+      Taint source,
+      const Heuristics& heuristics);
+  void add_sink(
+      AccessPath port,
+      Taint sink,
+      const Heuristics& heuristics);
+  void add_call_effect_source(
+      AccessPath port,
+      Taint source,
+      const Heuristics& heuristics);
+  void add_call_effect_sink(
+      AccessPath port,
+      Taint sink,
+      const Heuristics& heuristics);
+  void add_propagation(
+      AccessPath input_path,
+      Taint output,
+      const Heuristics& heuristics);
 
  private:
   const Method* MT_NULLABLE method_;
