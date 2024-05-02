@@ -72,8 +72,9 @@ class MockAndroidResources : public AndroidResources {
   void collect_layout_classes_and_attributes_for_file(
       const std::string&,
       const std::unordered_set<std::string>&,
-      std::unordered_set<std::string>*,
-      std::unordered_multimap<std::string, std::string>*) override {}
+      resources::StringOrReferenceSet*,
+      std::unordered_multimap<std::string, resources::StringOrReference>*)
+      override {}
 
   size_t remap_xml_reference_attributes(
       const std::string&,
