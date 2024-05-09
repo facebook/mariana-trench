@@ -956,7 +956,8 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.<init>:()V",
   "position" : 
   {
-    "line" : 31
+    "line" : 30,
+    "path" : "AnnotationFeature.java"
   }
 }
 {
@@ -972,7 +973,8 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 46
+        "line" : 49,
+        "path" : "AnnotationFeature.java"
       },
       "rule" : 1,
       "sink_index" : "0",
@@ -985,7 +987,10 @@
             "port" : "Argument(0)",
             "position" : 
             {
-              "line" : 46
+              "end" : 31,
+              "line" : 49,
+              "path" : "AnnotationFeature.java",
+              "start" : 16
             }
           },
           "kinds" : 
@@ -1017,7 +1022,10 @@
             "call_kind" : "Origin",
             "position" : 
             {
-              "line" : 45
+              "end" : 0,
+              "line" : 48,
+              "path" : "AnnotationFeature.java",
+              "start" : 0
             }
           },
           "kinds" : 
@@ -1153,7 +1161,8 @@
   ],
   "position" : 
   {
-    "line" : 45
+    "line" : 48,
+    "path" : "AnnotationFeature.java"
   },
   "sinks" : 
   [
@@ -1168,7 +1177,10 @@
             "port" : "Argument(0)",
             "position" : 
             {
-              "line" : 46
+              "end" : 31,
+              "line" : 49,
+              "path" : "AnnotationFeature.java",
+              "start" : 16
             }
           },
           "kinds" : 
@@ -1235,7 +1247,8 @@
   ],
   "position" : 
   {
-    "line" : 35
+    "line" : 34,
+    "path" : "AnnotationFeature.java"
   }
 }
 {
@@ -1278,7 +1291,8 @@
   ],
   "position" : 
   {
-    "line" : 54
+    "line" : 57,
+    "path" : "AnnotationFeature.java"
   }
 }
 {
@@ -1292,7 +1306,8 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 51
+        "line" : 54,
+        "path" : "AnnotationFeature.java"
       },
       "rule" : 1,
       "sink_index" : "0",
@@ -1305,7 +1320,10 @@
             "port" : "Argument(0)",
             "position" : 
             {
-              "line" : 51
+              "end" : 20,
+              "line" : 54,
+              "path" : "AnnotationFeature.java",
+              "start" : 16
             }
           },
           "kinds" : 
@@ -1337,7 +1355,10 @@
             "call_kind" : "Origin",
             "position" : 
             {
-              "line" : 50
+              "end" : 82,
+              "line" : 53,
+              "path" : "AnnotationFeature.java",
+              "start" : 42
             }
           },
           "kinds" : 
@@ -1407,7 +1428,8 @@
   ],
   "position" : 
   {
-    "line" : 50
+    "line" : 53,
+    "path" : "AnnotationFeature.java"
   },
   "sinks" : 
   [
@@ -1422,7 +1444,10 @@
             "port" : "Argument(0)",
             "position" : 
             {
-              "line" : 51
+              "end" : 20,
+              "line" : 54,
+              "path" : "AnnotationFeature.java",
+              "start" : 16
             }
           },
           "kinds" : 
@@ -1461,7 +1486,8 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 41
+        "line" : 40,
+        "path" : "AnnotationFeature.java"
       },
       "rule" : 1,
       "sink_index" : "0",
@@ -1474,7 +1500,10 @@
             "port" : "Argument(0)",
             "position" : 
             {
-              "line" : 41
+              "end" : 22,
+              "line" : 40,
+              "path" : "AnnotationFeature.java",
+              "start" : 16
             }
           },
           "kinds" : 
@@ -1506,7 +1535,10 @@
             "call_kind" : "Origin",
             "position" : 
             {
-              "line" : 40
+              "end" : 77,
+              "line" : 39,
+              "path" : "AnnotationFeature.java",
+              "start" : 32
             }
           },
           "kinds" : 
@@ -1579,7 +1611,8 @@
   ],
   "position" : 
   {
-    "line" : 40
+    "line" : 39,
+    "path" : "AnnotationFeature.java"
   },
   "sinks" : 
   [
@@ -1594,7 +1627,10 @@
             "port" : "Argument(0)",
             "position" : 
             {
-              "line" : 41
+              "end" : 22,
+              "line" : 40,
+              "path" : "AnnotationFeature.java",
+              "start" : 16
             }
           },
           "kinds" : 
@@ -1632,7 +1668,8 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 60
+        "line" : 63,
+        "path" : "AnnotationFeature.java"
       },
       "rule" : 1,
       "sink_index" : "0",
@@ -1645,7 +1682,10 @@
             "port" : "Argument(0)",
             "position" : 
             {
-              "line" : 60
+              "end" : 21,
+              "line" : 63,
+              "path" : "AnnotationFeature.java",
+              "start" : 16
             }
           },
           "kinds" : 
@@ -1678,7 +1718,10 @@
             "port" : "Return",
             "position" : 
             {
-              "line" : 59
+              "end" : 48,
+              "line" : 62,
+              "path" : "AnnotationFeature.java",
+              "start" : 20
             }
           },
           "kinds" : 
@@ -1718,7 +1761,8 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.testSourceWithMethodAnnotation:()V",
   "position" : 
   {
-    "line" : 58
+    "line" : 61,
+    "path" : "AnnotationFeature.java"
   }
 }
 {
@@ -1732,7 +1776,8 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 65
+        "line" : 68,
+        "path" : "AnnotationFeature.java"
       },
       "rule" : 1,
       "sink_index" : "0",
@@ -1745,7 +1790,10 @@
             "port" : "Argument(0)",
             "position" : 
             {
-              "line" : 65
+              "end" : 21,
+              "line" : 68,
+              "path" : "AnnotationFeature.java",
+              "start" : 16
             }
           },
           "kinds" : 
@@ -1778,7 +1826,10 @@
             "port" : "Return",
             "position" : 
             {
-              "line" : 64
+              "end" : 51,
+              "line" : 67,
+              "path" : "AnnotationFeature.java",
+              "start" : 20
             }
           },
           "kinds" : 
@@ -1818,7 +1869,8 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;.testSourceWithParameterAnnotation:()V",
   "position" : 
   {
-    "line" : 63
+    "line" : 66,
+    "path" : "AnnotationFeature.java"
   }
 }
 {
