@@ -317,7 +317,7 @@ TEST_F(JsonTest, Method) {
         ]
       })",
       context.methods->create(
-          dex_method, {{1, redex::get_type("LNonExisting;")}}),
+          dex_method, {{1, redex::get_or_make_type("LNonExisting;")}}),
       context);
   EXPECT_JSON_EQ(
       Method,
