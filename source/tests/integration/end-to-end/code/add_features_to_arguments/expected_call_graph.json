@@ -241,6 +241,27 @@
       "Lcom/facebook/marianatrench/integrationtests/Flow;.applyFeature:(Ljava/lang/Object;Ljava/lang/Object;)V"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/Flow;.sinkWithFeatureHop:(Ljava/lang/Object;)V" : 
+  {
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Flow;.sinkWithFeature:(Ljava/lang/Object;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Flow;.sourceWithFeature:()Ljava/lang/Object;" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Flow;.sourceWithFeatureHop:()Ljava/lang/Object;" : 
+  {
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Flow;.sourceWithFeature:()Ljava/lang/Object;"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/Flow;.testViaValueOf:()V" : 
   {
     "static" : 

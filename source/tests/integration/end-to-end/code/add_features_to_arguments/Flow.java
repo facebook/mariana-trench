@@ -41,4 +41,18 @@ public class Flow {
     applyViaValueOf(expect_feature, "apply-via-value-of");
     Origin.sink(expect_feature);
   }
+
+  Object sourceWithFeature() {
+    return new Object();
+  }
+
+  Object sourceWithFeatureHop() {
+    return sourceWithFeature();
+  }
+
+  void sinkWithFeature(Object argument) {}
+
+  void sinkWithFeatureHop(Object argument) {
+    sinkWithFeature(argument);
+  }
 }

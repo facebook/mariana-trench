@@ -1272,6 +1272,194 @@
   }
 }
 {
+  "add_features_to_arguments" : 
+  [
+    {
+      "features" : 
+      [
+        "sink-with-feature"
+      ],
+      "port" : "Argument(1)"
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.sinkWithFeature:(Ljava/lang/Object;)V",
+  "position" : 
+  {
+    "line" : 52,
+    "path" : "Flow.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(1)",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.sinkWithFeature:(Ljava/lang/Object;)V",
+                  "port" : "Argument(1)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.sinkWithFeatureHop:(Ljava/lang/Object;)V",
+  "position" : 
+  {
+    "line" : 55,
+    "path" : "Flow.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(1)",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(1)",
+            "position" : 
+            {
+              "line" : 56,
+              "path" : "Flow.java"
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                34,
+                35
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.sinkWithFeature:(Ljava/lang/Object;)V",
+                  "port" : "Argument(1)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "add_features_to_arguments" : 
+  [
+    {
+      "features" : 
+      [
+        "source-with-feature"
+      ],
+      "port" : "Return"
+    }
+  ],
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "Source",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.sourceWithFeature:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.sourceWithFeature:()Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 45,
+    "path" : "Flow.java"
+  }
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "line" : 50,
+              "path" : "Flow.java"
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                34,
+                35
+              ],
+              "kind" : "Source",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.sourceWithFeature:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.sourceWithFeatureHop:()Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 49,
+    "path" : "Flow.java"
+  }
+}
+{
   "issues" : 
   [
     {

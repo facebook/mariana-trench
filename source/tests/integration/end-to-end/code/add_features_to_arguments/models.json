@@ -38,5 +38,39 @@
         "port": "Argument(1)"
       }
     ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Flow;.sourceWithFeature:()Ljava/lang/Object;",
+    "add_features_to_arguments": [
+      {
+        "features": [
+          "source-with-feature"
+        ],
+        "port": "Return"
+      }
+    ],
+    "generations": [
+      {
+        "kind": "Source",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Flow;.sinkWithFeature:(Ljava/lang/Object;)V",
+    "add_features_to_arguments": [
+      {
+        "features": [
+          "sink-with-feature"
+        ],
+        "port": "Argument(1)"
+      }
+    ],
+    "sinks": [
+      {
+        "kind": "Sink",
+        "port": "Argument(1)"
+      }
+    ]
   }
 ]

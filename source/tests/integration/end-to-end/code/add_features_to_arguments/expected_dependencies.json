@@ -48,6 +48,14 @@
   [
     "Lcom/facebook/marianatrench/integrationtests/Flow;.flow:()V"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/Flow;.sinkWithFeature:(Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/Flow;.sinkWithFeatureHop:(Ljava/lang/Object;)V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/Flow;.sourceWithFeature:()Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/Flow;.sourceWithFeatureHop:()Ljava/lang/Object;"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/Flow;.flow:()V",
@@ -100,6 +108,7 @@
     "Lcom/facebook/content/SecureContextHelper;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Flow;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Flow;.hop2:(Ljava/lang/Object;)V",
+    "Lcom/facebook/marianatrench/integrationtests/Flow;.sourceWithFeature:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
     "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V",
