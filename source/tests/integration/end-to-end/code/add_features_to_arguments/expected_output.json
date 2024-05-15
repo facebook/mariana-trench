@@ -1277,6 +1277,92 @@
     {
       "features" : 
       [
+        "propagation-with-feature"
+      ],
+      "port" : "Argument(1)"
+    }
+  ],
+  "inline_as_getter" : "Argument(1)",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.propagationWithFeature:(Ljava/lang/Object;)Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 59,
+    "path" : "Flow.java"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(1)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.propagationWithFeatureHop:(Ljava/lang/Object;)Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 63,
+    "path" : "Flow.java"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(1)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "propagation-with-feature"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
+{
+  "add_features_to_arguments" : 
+  [
+    {
+      "features" : 
+      [
         "sink-with-feature"
       ],
       "port" : "Argument(1)"

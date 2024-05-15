@@ -55,4 +55,12 @@ public class Flow {
   void sinkWithFeatureHop(Object argument) {
     sinkWithFeature(argument);
   }
+
+  Object propagationWithFeature(Object argument) {
+    return argument;
+  }
+
+  Object propagationWithFeatureHop(Object argument) {
+    return propagationWithFeature(argument);
+  }
 }

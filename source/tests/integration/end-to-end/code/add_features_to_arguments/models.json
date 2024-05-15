@@ -72,5 +72,16 @@
         "port": "Argument(1)"
       }
     ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Flow;.propagationWithFeature:(Ljava/lang/Object;)Ljava/lang/Object;",
+    "add_features_to_arguments": [
+      {
+        "features": [
+          "propagation-with-feature"
+        ],
+        "port": "Argument(1)"
+      }
+    ]
   }
 ]

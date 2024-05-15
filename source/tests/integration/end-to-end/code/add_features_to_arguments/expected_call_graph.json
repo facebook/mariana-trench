@@ -241,6 +241,13 @@
       "Lcom/facebook/marianatrench/integrationtests/Flow;.applyFeature:(Ljava/lang/Object;Ljava/lang/Object;)V"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/Flow;.propagationWithFeatureHop:(Ljava/lang/Object;)Ljava/lang/Object;" : 
+  {
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Flow;.propagationWithFeature:(Ljava/lang/Object;)Ljava/lang/Object;"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/Flow;.sinkWithFeatureHop:(Ljava/lang/Object;)V" : 
   {
     "virtual" : 
