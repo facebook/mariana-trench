@@ -23,6 +23,7 @@
 #include <mariana-trench/LocalTaint.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/PropagationConfig.h>
+#include <mariana-trench/RootPatriciaTreeAbstractPartition.h>
 #include <mariana-trench/TaintConfig.h>
 
 namespace marianatrench {
@@ -171,7 +172,9 @@ class Taint final : public sparta::AbstractDomain<Taint> {
       const std::vector<const DexType * MT_NULLABLE>& source_register_types,
       const std::vector<std::optional<std::string>>& source_constant_arguments,
       const CallClassIntervalContext& class_interval_context,
-      const ClassIntervals::Interval& caller_class_interval) const;
+      const ClassIntervals::Interval& caller_class_interval,
+      const RootPatriciaTreeAbstractPartition<FeatureSet>&
+          add_features_to_arguments) const;
 
   /* Return the set of leaf frames with the given position. */
   Taint attach_position(const Position* position) const;

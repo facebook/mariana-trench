@@ -129,7 +129,9 @@ Taint Taint::propagate(
     const std::vector<const DexType * MT_NULLABLE>& source_register_types,
     const std::vector<std::optional<std::string>>& source_constant_arguments,
     const CallClassIntervalContext& class_interval_context,
-    const ClassIntervals::Interval& caller_class_interval) const {
+    const ClassIntervals::Interval& caller_class_interval,
+    const RootPatriciaTreeAbstractPartition<FeatureSet>&
+        add_features_to_arguments) const {
   Taint result;
   for (const auto& [_, local_taint] : map_.bindings()) {
     if (local_taint.call_kind().is_propagation_without_trace()) {
@@ -147,7 +149,8 @@ Taint Taint::propagate(
         source_register_types,
         source_constant_arguments,
         class_interval_context,
-        caller_class_interval);
+        caller_class_interval,
+        add_features_to_arguments);
     if (propagated.is_bottom()) {
       continue;
     }

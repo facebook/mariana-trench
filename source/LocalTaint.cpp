@@ -254,7 +254,9 @@ LocalTaint LocalTaint::propagate(
     const std::vector<const DexType * MT_NULLABLE>& source_register_types,
     const std::vector<std::optional<std::string>>& source_constant_arguments,
     const CallClassIntervalContext& class_interval_context,
-    const ClassIntervals::Interval& caller_class_interval) const {
+    const ClassIntervals::Interval& caller_class_interval,
+    const RootPatriciaTreeAbstractPartition<FeatureSet>&
+        add_features_to_arguments) const {
   if (is_bottom()) {
     return LocalTaint::bottom();
   }
@@ -288,11 +290,21 @@ LocalTaint LocalTaint::propagate(
     return LocalTaint::bottom();
   }
 
+  auto locally_inferred_features = FeatureMayAlwaysSet::bottom();
+  const auto* propagated_callee_port = propagated_call_info.callee_port();
+  if (propagated_callee_port != nullptr) {
+    const auto& features_for_argument =
+        add_features_to_arguments.get(propagated_callee_port->root());
+    if (!features_for_argument.is_bottom()) {
+      locally_inferred_features.add_always(features_for_argument);
+    }
+  }
+
   return LocalTaint(
       propagated_call_info,
       propagated_frames_by_kind,
       /* local_positions */ {},
-      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom());
+      locally_inferred_features);
 }
 
 LocalTaint LocalTaint::update_with_propagation_trace(

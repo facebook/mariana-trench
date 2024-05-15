@@ -2145,7 +2145,8 @@ TEST_F(TaintTest, Propagate) {
           /* source_register_types */ {},
           /* source_constant_arguments */ {},
           CallClassIntervalContext(),
-          ClassIntervals::Interval::top()),
+          ClassIntervals::Interval::top(),
+          /* add_features_to_arguments */ {}),
       (Taint{
           test::make_taint_config(
               /* kind */ context.kind_factory->get("TestSource"),
@@ -2234,7 +2235,8 @@ TEST_F(TaintTest, Propagate) {
           /* source_register_types */ {},
           /* source_constant_arguments */ {},
           CallClassIntervalContext(),
-          ClassIntervals::Interval::top()),
+          ClassIntervals::Interval::top(),
+          /* add_features_to_arguments */ {}),
       (Taint{
           test::make_taint_config(
               test_kind_one,
@@ -2332,7 +2334,8 @@ TEST_F(TaintTest, Propagate) {
           /* source_register_types */ {},
           /* source_constant_arguments */ {},
           CallClassIntervalContext(),
-          ClassIntervals::Interval::top()),
+          ClassIntervals::Interval::top(),
+          /* add_features_to_arguments */ {}),
       (Taint{
           test::make_taint_config(
               test_kind_one,
@@ -2426,7 +2429,8 @@ TEST_F(TaintTest, Propagate) {
           /* source_register_types */ {},
           /* source_constant_arguments */ {},
           CallClassIntervalContext(),
-          ClassIntervals::Interval::top()),
+          ClassIntervals::Interval::top(),
+          /* add_features_to_arguments */ {}),
       (Taint{
           test::make_taint_config(
               test_kind_one,
@@ -2501,7 +2505,8 @@ TEST_F(TaintTest, Propagate) {
           /* source_register_types */ {},
           /* source_constant_arguments */ {},
           CallClassIntervalContext(),
-          ClassIntervals::Interval::top()),
+          ClassIntervals::Interval::top(),
+          /* add_features_to_arguments */ {}),
       Taint::bottom());
 
   // One of the two frames will be ignored during propagation because its
@@ -2534,7 +2539,8 @@ TEST_F(TaintTest, Propagate) {
           /* source_register_types */ {},
           /* source_constant_arguments */ {},
           CallClassIntervalContext(),
-          ClassIntervals::Interval::top()),
+          ClassIntervals::Interval::top(),
+          /* add_features_to_arguments */ {}),
       (Taint{
           test::make_taint_config(
               test_kind_two,
@@ -2544,6 +2550,93 @@ TEST_F(TaintTest, Propagate) {
                   .call_position = test_position_one,
                   .distance = 2,
                   .inferred_features = FeatureMayAlwaysSet{user_feature_two},
+                  .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
+                  .call_kind = CallKind::callsite()}),
+      }));
+
+  // add_features_to_arguments will result in locally inferred features if
+  // a callee port's root has taint.
+  const auto* argument1_with_path = context.access_path_factory->get(
+      AccessPath(Root(Root::Kind::Argument, 1), Path{PathElement::field("x")}));
+  auto add_features_to_arguments =
+      RootPatriciaTreeAbstractPartition<FeatureSet>{
+          {Root(Root::Kind::Argument, 1), FeatureSet{feature_one}}};
+
+  taint = Taint{
+      test::make_taint_config(
+          test_kind_one,
+          test::FrameProperties{
+              .callee_port = argument0,
+              .callee = method_one,
+              .distance = 2,
+              .call_kind = CallKind::callsite()}),
+  };
+  EXPECT_EQ(
+      taint.propagate(
+          /* callee */ method_two,
+          /* callee_port */ argument1,
+          test_position_one,
+          /* maximum_source_sink_distance */ 100,
+          context,
+          /* source_register_types */ {},
+          /* source_constant_arguments */ {},
+          CallClassIntervalContext(),
+          ClassIntervals::Interval::top(),
+          add_features_to_arguments),
+      (Taint{
+          test::make_taint_config(
+              test_kind_one,
+              test::FrameProperties{
+                  .callee_port = argument1,
+                  .callee = method_two,
+                  .call_position = test_position_one,
+                  .distance = 3,
+                  .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
+                  .call_kind = CallKind::callsite()}),
+      }));
+  EXPECT_EQ(
+      taint.propagate(
+          /* callee */ method_two,
+          /* callee_port */ argument1_with_path,
+          test_position_one,
+          /* maximum_source_sink_distance */ 100,
+          context,
+          /* source_register_types */ {},
+          /* source_constant_arguments */ {},
+          CallClassIntervalContext(),
+          ClassIntervals::Interval::top(),
+          add_features_to_arguments),
+      (Taint{
+          test::make_taint_config(
+              test_kind_one,
+              test::FrameProperties{
+                  .callee_port = argument1_with_path,
+                  .callee = method_two,
+                  .call_position = test_position_one,
+                  .distance = 3,
+                  .locally_inferred_features = FeatureMayAlwaysSet{feature_one},
+                  .call_kind = CallKind::callsite()}),
+      }));
+  EXPECT_EQ(
+      taint.propagate(
+          /* callee */ method_two,
+          /* callee_port */ argument0,
+          test_position_one,
+          /* maximum_source_sink_distance */ 100,
+          context,
+          /* source_register_types */ {},
+          /* source_constant_arguments */ {},
+          CallClassIntervalContext(),
+          ClassIntervals::Interval::top(),
+          add_features_to_arguments),
+      (Taint{
+          test::make_taint_config(
+              test_kind_one,
+              test::FrameProperties{
+                  .callee_port = argument0,
+                  .callee = method_two,
+                  .call_position = test_position_one,
+                  .distance = 3,
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
                   .call_kind = CallKind::callsite()}),
       }));

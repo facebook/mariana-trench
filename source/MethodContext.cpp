@@ -146,7 +146,8 @@ Taint propagate_field_or_literal_taint(
       /* source_register_types */ {},
       /* source_constant_arguments */ {},
       /* class_interval_context */ CallClassIntervalContext(),
-      /* caller_class_interval */ ClassIntervals::Interval::top());
+      /* caller_class_interval */ ClassIntervals::Interval::top(),
+      /* add_features_to_arguments */ {});
 }
 
 } // namespace

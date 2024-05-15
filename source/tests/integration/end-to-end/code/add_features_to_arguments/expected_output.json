@@ -1445,7 +1445,14 @@
               ],
               "preserves_type_context" : true
             }
-          ]
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "sink-with-feature"
+            ]
+          }
         }
       ]
     }
@@ -1533,7 +1540,14 @@
               ],
               "preserves_type_context" : true
             }
-          ]
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "source-with-feature"
+            ]
+          }
         }
       ]
     }

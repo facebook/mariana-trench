@@ -352,6 +352,30 @@ Model Model::at_callsite(
   // To add special features that cannot be done in model generators.
   mt_assert(context.feature_factory != nullptr);
 
+  model.add_features_to_arguments_ = add_features_to_arguments_;
+  // Materialize via_value_of_ports into features and add them to
+  // add_features_to_arguments
+  for (const auto& [root, via_value_of_ports] :
+       add_via_value_of_features_to_arguments_) {
+    FeatureSet root_features{};
+    for (const auto& tagged_root : via_value_of_ports.elements()) {
+      if (!tagged_root.root().is_argument() ||
+          tagged_root.root().parameter_position() >=
+              source_constant_arguments.size()) {
+        ERROR(
+            1,
+            "Invalid port {} provided for add_via_value_of_features_to_arguments_ ports of method {}",
+            tagged_root,
+            callee->show());
+        continue;
+      }
+      root_features.add(context.feature_factory->get_via_value_of_feature(
+          source_constant_arguments[tagged_root.root().parameter_position()],
+          tagged_root.tag()));
+    }
+    model.add_add_features_to_arguments(root, std::move(root_features));
+  }
+
   auto narrowed_class_interval_context = class_interval_context;
   if (class_interval_context.preserves_type_context()) {
     // When it is a "this.*" call, `callee`'s class is within the class
@@ -398,7 +422,8 @@ Model Model::at_callsite(
                 source_register_types,
                 source_constant_arguments,
                 narrowed_class_interval_context,
-                caller_class_interval),
+                caller_class_interval,
+                model.add_features_to_arguments_),
             UpdateKind::Weak);
       });
 
@@ -423,7 +448,8 @@ Model Model::at_callsite(
             source_register_types,
             source_constant_arguments,
             narrowed_class_interval_context,
-            caller_class_interval),
+            caller_class_interval,
+            model.add_features_to_arguments_),
         UpdateKind::Weak);
   });
 
@@ -449,7 +475,8 @@ Model Model::at_callsite(
                     /* source register types */ {},
                     /* source constant arguments */ {},
                     narrowed_class_interval_context,
-                    caller_class_interval),
+                    caller_class_interval,
+                    model.add_features_to_arguments_),
                 UpdateKind::Weak);
           } break;
           default:
@@ -479,33 +506,10 @@ Model Model::at_callsite(
                 source_register_types,
                 source_constant_arguments,
                 narrowed_class_interval_context,
-                caller_class_interval),
+                caller_class_interval,
+                model.add_features_to_arguments_),
             UpdateKind::Weak);
       });
-
-  model.add_features_to_arguments_ = add_features_to_arguments_;
-  // Materialize via_value_of_ports into features and add them to
-  // add_features_to_arguments
-  for (const auto& [root, via_value_of_ports] :
-       add_via_value_of_features_to_arguments_) {
-    FeatureSet root_features{};
-    for (const auto& tagged_root : via_value_of_ports.elements()) {
-      if (!tagged_root.root().is_argument() ||
-          tagged_root.root().parameter_position() >=
-              source_constant_arguments.size()) {
-        ERROR(
-            1,
-            "Invalid port {} provided for add_via_value_of_features_to_arguments_ ports of method {}",
-            tagged_root,
-            callee->show());
-        continue;
-      }
-      root_features.add(context.feature_factory->get_via_value_of_feature(
-          source_constant_arguments[tagged_root.root().parameter_position()],
-          tagged_root.tag()));
-    }
-    model.add_add_features_to_arguments(root, std::move(root_features));
-  }
 
   model.inline_as_getter_ = inline_as_getter_;
   model.inline_as_setter_ = inline_as_setter_;

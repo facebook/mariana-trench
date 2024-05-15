@@ -21,6 +21,7 @@
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/KindFrames.h>
+#include <mariana-trench/RootPatriciaTreeAbstractPartition.h>
 #include <mariana-trench/TaintConfig.h>
 
 namespace marianatrench {
@@ -240,7 +241,9 @@ class LocalTaint final : public sparta::AbstractDomain<LocalTaint> {
       const std::vector<const DexType * MT_NULLABLE>& source_register_types,
       const std::vector<std::optional<std::string>>& source_constant_arguments,
       const CallClassIntervalContext& class_interval_context,
-      const ClassIntervals::Interval& caller_class_interval) const;
+      const ClassIntervals::Interval& caller_class_interval,
+      const RootPatriciaTreeAbstractPartition<FeatureSet>&
+          add_features_to_arguments) const;
 
   /**
    * Propagate the taint from the callee to the caller to track the next hops
