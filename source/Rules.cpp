@@ -135,7 +135,7 @@ const std::vector<const Rule*>& Rules::rules(
     const Kind* source_kind,
     const Kind* sink_kind) const {
   LOG(4,
-      "Searching for transform rules matching source: {} -> sink: {}",
+      "Searching for rules matching source: {} -> sink: {}",
       source_kind->to_trace_string(),
       sink_kind->to_trace_string());
 
