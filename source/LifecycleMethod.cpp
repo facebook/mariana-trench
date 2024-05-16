@@ -10,6 +10,7 @@
 #include <Creators.h>
 #include <DexAccess.h>
 #include <Resolver.h>
+#include <Show.h>
 
 #include <mariana-trench/ClassHierarchies.h>
 #include <mariana-trench/JsonValidation.h>
@@ -32,7 +33,7 @@ LifecycleMethodCall LifecycleMethodCall::from_json(const Json::Value& value) {
 }
 
 DexMethodRef* MT_NULLABLE
-LifecycleMethodCall::get_dex_method(DexType* klass) const {
+LifecycleMethodCall::get_dex_method(DexClass* klass) const {
   const auto* return_type =
       DexType::get_type(DexString::make_string(return_type_));
   if (return_type == nullptr) {
@@ -45,10 +46,8 @@ LifecycleMethodCall::get_dex_method(DexType* klass) const {
     return nullptr;
   }
 
-  const auto* dex_klass = type_class(klass);
-  mt_assert(dex_klass != nullptr);
   return resolve_method(
-      /* type */ dex_klass,
+      /* type */ klass,
       /* name */ DexString::make_string(method_name_),
       /* proto */
       DexProto::make_proto(return_type, argument_types),
@@ -210,9 +209,12 @@ const DexMethod* MT_NULLABLE LifecycleMethod::create_dex_method(
   auto* main_block = method.get_main_block();
   mt_assert(main_block != nullptr);
 
+  auto* dex_klass = type_class(klass);
+  mt_assert(dex_klass != nullptr);
+
   int callee_count = 0;
   for (const auto& callee : callees_) {
-    auto* dex_method = callee.get_dex_method(klass);
+    auto* dex_method = callee.get_dex_method(dex_klass);
     if (!dex_method) {
       WARNING(
           1,
@@ -244,7 +246,7 @@ const DexMethod* MT_NULLABLE LifecycleMethod::create_dex_method(
     WARNING(
         1,
         "Skipped creating life-cycle method for class `{}`. Reason: Insufficient callees.",
-        klass->str());
+        show(dex_klass));
     return nullptr;
   }
 
@@ -254,7 +256,14 @@ const DexMethod* MT_NULLABLE LifecycleMethod::create_dex_method(
   IRCode* code = new_method->get_code();
   code->build_cfg();
   code->cfg().calculate_exit_block();
-  LOG(5, "Created life-cycle method `{}`", new_method->str());
+
+  // Add method to the class
+  dex_klass->add_method(new_method);
+
+  LOG(5,
+      "Created life-cycle method `{}` for class: `{}`",
+      show(new_method),
+      show(klass));
 
   return new_method;
 }

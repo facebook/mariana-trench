@@ -43,7 +43,7 @@ class LifecycleMethodCall {
    * if `klass` does not override this method, or if its definition is invalid,
    * e.g. unrecognized types.
    */
-  DexMethodRef* MT_NULLABLE get_dex_method(DexType* klass) const;
+  DexMethodRef* MT_NULLABLE get_dex_method(DexClass* klass) const;
 
   const DexTypeList* MT_NULLABLE get_argument_types() const;
 
