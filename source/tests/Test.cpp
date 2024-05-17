@@ -34,21 +34,21 @@ ContextGuard::ContextGuard()
  */
 std::unique_ptr<Options> make_empty_options() {
   return std::make_unique<Options>(
-      std::vector<std::string>(),
-      std::vector<std::string>(),
-      std::vector<std::string>(),
-      std::vector<std::string>(),
-      std::vector<std::string>(),
-      std::vector<std::string>(),
-      ".",
-      std::vector<std::string>(),
-      true,
-      true,
-      true,
-      std::vector<ModelGeneratorConfiguration>(),
-      std::vector<std::string>(),
-      true,
-      true
+      /* models_path */ std::vector<std::string>(),
+      /* field_models_paths */ std::vector<std::string>(),
+      /* literal_models_paths */ std::vector<std::string>(),
+      /* rules_paths */ std::vector<std::string>(),
+      /* lifecycles_paths */ std::vector<std::string>(),
+      /* shims_paths */ std::vector<std::string>(),
+      /* graphql_metadata_paths */ ".",
+      /* proguard_configuration_paths */ std::vector<std::string>(),
+      /* sequential */ true,
+      /* skip_source_indexing */ true,
+      /* skip_analysis */true,
+      /* model_generators_configuration */ std::vector<ModelGeneratorConfiguration>(),
+      /* model_generator_search_paths */ std::vector<std::string>(),
+      /* remove_unreachable_code */ true,
+      /* emit_all_via_cast_features */ true
     );
 }
 
