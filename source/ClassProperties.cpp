@@ -391,7 +391,7 @@ FeatureSet ClassProperties::compute_transitive_class_features(
       continue;
     }
 
-    if (depth == heuristics.k_max_depth_class_properties()) {
+    if (depth == heuristics.max_depth_class_properties()) {
       continue;
     }
 

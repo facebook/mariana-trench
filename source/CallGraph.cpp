@@ -484,7 +484,7 @@ void process_shim_lifecycle(
         caller->show());
     return;
   } else if (
-      target_lifecycle_methods.size() >= heuristics.k_join_override_threshold()) {
+      target_lifecycle_methods.size() >= heuristics.join_override_threshold()) {
     // Although this is not a join, shimming to the derived life-cycle methods
     // simulates the joining the models of these as if they were virtual
     // overrides. Besides, if there is a large number of overrides, there will
@@ -497,7 +497,7 @@ void process_shim_lifecycle(
         target_lifecycle_methods.size(),
         show(instruction),
         caller->show(),
-        heuristics.k_join_override_threshold());
+        heuristics.join_override_threshold());
     return;
   }
 

@@ -196,7 +196,7 @@ void Interprocedural::run_analysis(Context& context, Registry& registry) {
         methods_to_analyze->size(),
         resident_set_size);
 
-    if (iteration > context.options->heuristics().k_max_number_iterations()) {
+    if (iteration > context.options->heuristics().max_number_iterations()) {
       ERROR(1, "Too many iterations");
       std::string message = "Unstable methods are:";
       for (const auto* method : *methods_to_analyze) {

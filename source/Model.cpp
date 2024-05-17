@@ -453,8 +453,8 @@ Model Model::at_callsite(
         UpdateKind::Weak);
   });
 
-  std::size_t k_max_call_chain_source_sink_distance =
-    context.options->heuristics().k_max_call_chain_source_sink_distance();
+  std::size_t max_call_chain_source_sink_distance =
+    context.options->heuristics().max_call_chain_source_sink_distance();
   call_effect_sinks_.visit(
       [&model,
        callee,
@@ -462,7 +462,7 @@ Model Model::at_callsite(
        &context,
        &narrowed_class_interval_context,
        &caller_class_interval,
-       k_max_call_chain_source_sink_distance](
+       max_call_chain_source_sink_distance](
           const AccessPath& callee_port, const Taint& call_effect) {
         switch (callee_port.root().kind()) {
           case Root::Kind::CallEffectCallChain:
@@ -473,7 +473,7 @@ Model Model::at_callsite(
                     callee,
                     context.access_path_factory->get(callee_port),
                     call_position,
-                    k_max_call_chain_source_sink_distance,
+                    max_call_chain_source_sink_distance,
                     context,
                     /* source register types */ {},
                     /* source constant arguments */ {},
@@ -621,27 +621,27 @@ void Model::approximate(
 
   generations_.shape_with(make_mold, widening_features);
   generations_.limit_leaves(
-      heuristics.k_generation_max_output_path_leaves(), widening_features);
+      heuristics.generation_max_output_path_leaves(), widening_features);
 
   parameter_sources_.shape_with(make_mold, widening_features);
   parameter_sources_.limit_leaves(
-      heuristics.k_parameter_source_max_output_path_leaves(), widening_features);
+      heuristics.parameter_source_max_output_path_leaves(), widening_features);
 
   sinks_.shape_with(make_mold, widening_features);
   sinks_.limit_leaves(
-    heuristics.k_sink_max_input_path_leaves(), widening_features);
+    heuristics.sink_max_input_path_leaves(), widening_features);
 
   call_effect_sources_.shape_with(make_mold, widening_features);
   call_effect_sources_.limit_leaves(
-      heuristics.k_call_effect_source_max_output_path_leaves(), widening_features);
+      heuristics.call_effect_source_max_output_path_leaves(), widening_features);
 
   call_effect_sinks_.shape_with(make_mold, widening_features);
   call_effect_sinks_.limit_leaves(
-      heuristics.k_call_effect_sink_max_input_path_leaves(), widening_features);
+      heuristics.call_effect_sink_max_input_path_leaves(), widening_features);
 
   propagations_.shape_with(make_mold, widening_features);
   propagations_.limit_leaves(
-      heuristics.k_propagation_max_input_path_leaves(), widening_features);
+      heuristics.propagation_max_input_path_leaves(), widening_features);
 }
 
 bool Model::empty() const {
@@ -807,7 +807,7 @@ void Model::add_inferred_generations(
     update_taint_tree(
         generations_,
         std::move(port),
-        heuristics.k_generation_max_port_size(),
+        heuristics.generation_max_port_size(),
         std::move(sanitized_generations),
         widening_features);
   }
@@ -846,7 +846,7 @@ void Model::add_inferred_sinks(
     update_taint_tree(
         sinks_,
         std::move(port),
-        heuristics.k_sink_max_port_size(),
+        heuristics.call_effect_sink_max_port_size(),
         std::move(sanitized_sinks),
         widening_features);
   }
@@ -892,7 +892,7 @@ void Model::add_inferred_call_effect_sinks(
     update_taint_tree(
         call_effect_sinks_,
         std::move(port),
-        heuristics.k_call_effect_sink_max_port_size(),
+        heuristics.call_effect_sink_max_port_size(),
         std::move(sanitized_sinks),
         widening_features);
   }
@@ -922,7 +922,7 @@ void Model::add_inferred_propagations(
   update_taint_tree(
       propagations_,
       std::move(input_path),
-      heuristics.k_propagation_max_input_path_size(),
+      heuristics.propagation_max_input_path_size(),
       std::move(local_taint),
       widening_features);
 }
@@ -2306,15 +2306,15 @@ void Model::add_generation(
     return;
   }
 
-  if (port.path().size() > heuristics.k_generation_max_port_size()) {
+  if (port.path().size() > heuristics.generation_max_port_size()) {
     WARNING(
         1,
         "Truncating user-defined generation {} down to path length {} for method {}",
         port,
-        heuristics.k_generation_max_port_size(),
+        heuristics.generation_max_port_size(),
         method_ ? method_->get_name() : "nullptr");
   }
-  port.truncate(heuristics.k_generation_max_port_size());
+  port.truncate(heuristics.generation_max_port_size());
   generations_.write(port, std::move(source), UpdateKind::Weak);
 }
 
@@ -2333,15 +2333,15 @@ void Model::add_parameter_source(
     return;
   }
 
-  if (port.path().size() > heuristics.k_parameter_source_max_port_size()) {
+  if (port.path().size() > heuristics.parameter_source_max_port_size()) {
     WARNING(
         1,
         "Truncating user-defined parameter source {} down to path length {} for method {}",
         port,
-        heuristics.k_parameter_source_max_port_size(),
+        heuristics.parameter_source_max_port_size(),
         method_ ? method_->get_name() : "nullptr");
   }
-  port.truncate(heuristics.k_parameter_source_max_port_size());
+  port.truncate(heuristics.parameter_source_max_port_size());
   parameter_sources_.write(port, Taint{std::move(source)}, UpdateKind::Weak);
 }
 
@@ -2355,15 +2355,15 @@ void Model::add_sink(AccessPath port, Taint sink, const Heuristics& heuristics) 
     return;
   }
 
-  if (port.path().size() > heuristics.k_sink_max_port_size()) {
+  if (port.path().size() > heuristics.call_effect_sink_max_port_size()) {
     WARNING(
         1,
         "Truncating user-defined sink {} down to path length {} for method {}",
         port,
-        heuristics.k_sink_max_port_size(),
+        heuristics.call_effect_sink_max_port_size(),
         method_ ? method_->get_name() : "nullptr");
   }
-  port.truncate(heuristics.k_sink_max_port_size());
+  port.truncate(heuristics.call_effect_sink_max_port_size());
   sinks_.write(port, Taint{std::move(sink)}, UpdateKind::Weak);
 }
 
@@ -2381,16 +2381,16 @@ void Model::add_call_effect_source(AccessPath port, Taint source, const Heuristi
     return;
   }
 
-  if (port.path().size() > heuristics.k_call_effect_source_max_port_size()) {
+  if (port.path().size() > heuristics.call_effect_source_max_port_size()) {
     WARNING(
         1,
         "Truncating user-defined call effect source port {} down to path length {} for method {}",
         port,
-        heuristics.k_call_effect_source_max_port_size(),
+        heuristics.call_effect_source_max_port_size(),
         method_ ? method_->get_name() : "nullptr");
   }
 
-  port.truncate(heuristics.k_call_effect_source_max_port_size());
+  port.truncate(heuristics.call_effect_source_max_port_size());
   call_effect_sources_.write(port, std::move(source), UpdateKind::Weak);
 }
 
@@ -2408,16 +2408,16 @@ void Model::add_call_effect_sink(AccessPath port, Taint sink, const Heuristics& 
     return;
   }
 
-  if (port.path().size() > heuristics.k_call_effect_sink_max_port_size()) {
+  if (port.path().size() > heuristics.call_effect_sink_max_port_size()) {
     WARNING(
         1,
         "Truncating user-defined call effect sink port {} down to path length {} for method {}",
         port,
-        heuristics.k_call_effect_sink_max_port_size(),
+        heuristics.call_effect_sink_max_port_size(),
         method_ ? method_->get_name() : "nullptr");
   }
 
-  port.truncate(heuristics.k_call_effect_sink_max_port_size());
+  port.truncate(heuristics.call_effect_sink_max_port_size());
   call_effect_sinks_.write(port, std::move(sink), UpdateKind::Weak);
 }
 
@@ -2434,15 +2434,15 @@ void Model::add_propagation(
         method_, AccessPathFactory::singleton().get(input_path));
   }
 
-  if (input_path.path().size() > heuristics.k_propagation_max_input_path_size()) {
+  if (input_path.path().size() > heuristics.propagation_max_input_path_size()) {
     WARNING(
         1,
         "Truncating user-defined propagation {} down to path length {} for method {}",
         input_path.path(),
-        heuristics.k_propagation_max_input_path_size(),
+        heuristics.propagation_max_input_path_size(),
         method_ ? method_->get_name() : "nullptr");
   }
-  input_path.truncate(heuristics.k_propagation_max_input_path_size());
+  input_path.truncate(heuristics.propagation_max_input_path_size());
   propagations_.write(input_path, output, UpdateKind::Weak);
 }
 

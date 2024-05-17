@@ -70,9 +70,9 @@ Dependencies::Dependencies(
             return;
           }
 
-          if (options.heuristics().k_warn_override_threshold() &&
+          if (options.heuristics().warn_override_threshold() &&
               overrides.get(call_target.resolved_base_callee()).size() >=
-                  *(options.heuristics().k_warn_override_threshold())) {
+                  *(options.heuristics().warn_override_threshold())) {
             warn_many_overrides.insert(call_target.resolved_base_callee());
           }
 
