@@ -5,53 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#pragma once
-
 #include <mariana-trench/Heuristics.h>
 #include <mariana-trench/JsonValidation.h>
 
 namespace marianatrench {
-
-// Names of the heuristics parameters that can be set
-inline static const std::string join_override_threshold_attribute =
-    "join_override_threshold";
-inline static const std::string android_join_override_threshold_attribute =
-    "android_join_override_threshold";
-inline static const std::string warn_override_threshold_attribute =
-    "warn_override_threshold";
-inline static const std::string generation_max_port_size_attribute =
-    "generation_max_port_size";
-static inline const std::string generation_max_output_path_leaves_attribute =
-    "generation_max_output_path_leaves";
-static inline const std::string parameter_source_max_port_size_attribute =
-    "parameter_source_max_port_size";
-static inline const std::string
-    parameter_source_max_output_path_leaves_attribute =
-        "parameter_source_max_output_path_leaves";
-static inline const std::string sink_max_port_size_attribute =
-    "sink_max_port_size";
-static inline const std::string sink_max_input_path_leaves_attribute =
-    "sink_max_input_path_leaves";
-static inline const std::string call_effect_source_max_port_size_attribute =
-    "call_effect_source_max_port_size";
-static inline const std::string
-    call_effect_source_max_output_path_leaves_attribute =
-        "call_effect_source_max_output_path_leaves";
-static inline const std::string call_effect_sink_max_port_size_attribute =
-    "call_effect_sink_max_port_size";
-static inline const std::string
-    call_effect_sink_max_input_path_leaves_attribute =
-        "call_effect_sink_max_input_path_leaves";
-static inline const std::string max_number_iterations_attribute =
-    "max_number_iterations";
-static inline const std::string max_depth_class_properties_attribute =
-    "max_depth_class_properties";
-static inline const std::string max_call_chain_source_sink_distance_attribute =
-    "max_call_chain_source_sink_distance";
-static inline const std::string propagation_max_input_path_size_attribute =
-    "propagation_max_input_path_size";
-static inline const std::string propagation_max_input_path_leaves_attribute =
-    "propagation_max_input_path_leaves";
 
 Heuristics::Heuristics(std::size_t join_override_threshold,
                        std::size_t android_join_override_threshold,
@@ -99,134 +56,132 @@ Heuristics Heuristics::from_json(const Json::Value &value) {
   JsonValidation::validate_object(value);
   JsonValidation::check_unexpected_members(
       value,
-      {join_override_threshold_attribute,
-       android_join_override_threshold_attribute,
-       warn_override_threshold_attribute, generation_max_port_size_attribute,
-       generation_max_output_path_leaves_attribute,
-       parameter_source_max_port_size_attribute,
-       parameter_source_max_output_path_leaves_attribute,
-       sink_max_port_size_attribute, sink_max_input_path_leaves_attribute,
-       call_effect_source_max_port_size_attribute,
-       call_effect_source_max_output_path_leaves_attribute,
-       call_effect_sink_max_port_size_attribute,
-       call_effect_sink_max_input_path_leaves_attribute,
-       max_number_iterations_attribute, max_depth_class_properties_attribute,
-       max_call_chain_source_sink_distance_attribute,
-       propagation_max_input_path_size_attribute,
-       propagation_max_input_path_leaves_attribute});
+      {"join_override_threshold", "android_join_override_threshold",
+       "warn_override_threshold", "generation_max_port_size",
+       "generation_max_output_path_leaves",
+       "parameter_source_max_port_size",
+       "parameter_source_max_output_path_leaves",
+       "sink_max_port_size", "sink_max_input_path_leaves",
+       "call_effect_source_max_port_size",
+       "call_effect_source_max_output_path_leaves",
+       "call_effect_sink_max_port_size",
+       "call_effect_sink_max_input_path_leaves",
+       "max_number_iterations", "max_depth_class_properties",
+       "max_call_chain_source_sink_distance",
+       "propagation_max_input_path_size",
+       "propagation_max_input_path_leaves"});
 
   // Set the heuristics parameters that are specified in the JSON document.
 
-  if (JsonValidation::has_field(value, join_override_threshold_attribute)) {
-    heuristics.set_join_override_threshold(JsonValidation::unsigned_integer(
-        value, join_override_threshold_attribute));
+  if (JsonValidation::has_field(value, "join_override_threshold")) {
+    heuristics.set_join_override_threshold(
+        JsonValidation::unsigned_integer(value, "join_override_threshold"));
   }
 
-  if (JsonValidation::has_field(value,
-                                android_join_override_threshold_attribute)) {
+  if (JsonValidation::has_field(value, "android_join_override_threshold")) {
     heuristics.set_android_join_override_threshold(
-        JsonValidation::unsigned_integer(
-            value, android_join_override_threshold_attribute));
+        JsonValidation::unsigned_integer(value,
+                                         "android_join_override_threshold"));
   }
 
-  if (JsonValidation::has_field(value, warn_override_threshold_attribute)) {
-    heuristics.set_warn_override_threshold(JsonValidation::unsigned_integer(
-        value, warn_override_threshold_attribute));
+  if (JsonValidation::has_field(value, "warn_override_threshold")) {
+    heuristics.set_warn_override_threshold(
+        JsonValidation::unsigned_integer(value, "warn_override_threshold"));
   }
 
-  if (JsonValidation::has_field(value, generation_max_port_size_attribute)) {
-    heuristics.set_generation_max_port_size(JsonValidation::unsigned_integer(
-        value, generation_max_port_size_attribute));
+  if (JsonValidation::has_field(value, "generation_max_port_size")) {
+    heuristics.set_generation_max_port_size(
+        JsonValidation::unsigned_integer(value, "generation_max_port_size"));
   }
 
   if (JsonValidation::has_field(value,
-                                generation_max_output_path_leaves_attribute)) {
+                                "generation_max_output_path_leaves")) {
     heuristics.set_generation_max_output_path_leaves(
         JsonValidation::unsigned_integer(
-            value, generation_max_output_path_leaves_attribute));
+            value, "generation_max_output_path_leaves"));
   }
 
   if (JsonValidation::has_field(value,
-                                parameter_source_max_port_size_attribute)) {
+                                "parameter_source_max_port_size")) {
     heuristics.set_parameter_source_max_port_size(
         JsonValidation::unsigned_integer(
-            value, parameter_source_max_port_size_attribute));
+            value, "parameter_source_max_port_size"));
   }
 
   if (JsonValidation::has_field(
-          value, parameter_source_max_output_path_leaves_attribute)) {
+          value, "parameter_source_max_output_path_leaves")) {
     heuristics.set_parameter_source_max_output_path_leaves(
         JsonValidation::unsigned_integer(
-            value, parameter_source_max_output_path_leaves_attribute));
+            value, "parameter_source_max_output_path_leaves"));
   }
 
-  if (JsonValidation::has_field(value, sink_max_port_size_attribute)) {
+  if (JsonValidation::has_field(value, "sink_max_port_size")) {
     heuristics.set_sink_max_port_size(
-        JsonValidation::unsigned_integer(value, sink_max_port_size_attribute));
+        JsonValidation::unsigned_integer(value, "sink_max_port_size"));
   }
 
-  if (JsonValidation::has_field(value, sink_max_input_path_leaves_attribute)) {
+  if (JsonValidation::has_field(value, "sink_max_input_path_leaves")) {
     heuristics.set_sink_max_input_path_leaves(JsonValidation::unsigned_integer(
-        value, sink_max_input_path_leaves_attribute));
+        value, "sink_max_input_path_leaves"));
   }
 
   if (JsonValidation::has_field(value,
-                                call_effect_source_max_port_size_attribute)) {
+                                "call_effect_source_max_port_size")) {
     heuristics.set_call_effect_source_max_port_size(
         JsonValidation::unsigned_integer(
-            value, call_effect_source_max_port_size_attribute));
+            value, "call_effect_source_max_port_size"));
   }
 
   if (JsonValidation::has_field(
-          value, call_effect_source_max_output_path_leaves_attribute)) {
+          value, "call_effect_source_max_output_path_leaves")) {
     heuristics.set_call_effect_source_max_output_path_leaves(
         JsonValidation::unsigned_integer(
-            value, call_effect_source_max_output_path_leaves_attribute));
+            value, "call_effect_source_max_output_path_leaves"));
   }
 
   if (JsonValidation::has_field(value,
-                                call_effect_sink_max_port_size_attribute)) {
+                                "call_effect_sink_max_port_size")) {
     heuristics.set_call_effect_sink_max_port_size(
         JsonValidation::unsigned_integer(
-            value, call_effect_sink_max_port_size_attribute));
+            value, "call_effect_sink_max_port_size"));
   }
 
   if (JsonValidation::has_field(
-          value, call_effect_sink_max_input_path_leaves_attribute)) {
+          value, "call_effect_sink_max_input_path_leaves")) {
     heuristics.set_call_effect_sink_max_input_path_leaves(
         JsonValidation::unsigned_integer(
-            value, call_effect_sink_max_input_path_leaves_attribute));
+            value, "call_effect_sink_max_input_path_leaves"));
   }
 
-  if (JsonValidation::has_field(value, max_number_iterations_attribute)) {
+  if (JsonValidation::has_field(value, "max_number_iterations")) {
     heuristics.set_max_number_iterations(JsonValidation::unsigned_integer(
-        value, max_number_iterations_attribute));
+        value, "max_number_iterations"));
   }
 
-  if (JsonValidation::has_field(value, max_depth_class_properties_attribute)) {
+  if (JsonValidation::has_field(value, "max_depth_class_properties")) {
     heuristics.set_max_depth_class_properties(JsonValidation::unsigned_integer(
-        value, max_depth_class_properties_attribute));
+        value, "max_depth_class_properties"));
   }
 
   if (JsonValidation::has_field(
-          value, max_call_chain_source_sink_distance_attribute)) {
+          value, "max_call_chain_source_sink_distance")) {
     heuristics.set_max_call_chain_source_sink_distance(
         JsonValidation::unsigned_integer(
-            value, max_call_chain_source_sink_distance_attribute));
+            value, "max_call_chain_source_sink_distance"));
   }
 
   if (JsonValidation::has_field(value,
-                                propagation_max_input_path_size_attribute)) {
+                                "propagation_max_input_path_size")) {
     heuristics.set_propagation_max_input_path_size(
         JsonValidation::unsigned_integer(
-            value, propagation_max_input_path_size_attribute));
+            value, "propagation_max_input_path_size"));
   }
 
   if (JsonValidation::has_field(value,
-                                propagation_max_input_path_leaves_attribute)) {
+                                "propagation_max_input_path_leaves")) {
     heuristics.set_propagation_max_input_path_leaves(
         JsonValidation::unsigned_integer(
-            value, propagation_max_input_path_leaves_attribute));
+            value, "propagation_max_input_path_leaves"));
   }
 
   return heuristics;
