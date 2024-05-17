@@ -60,7 +60,6 @@ public:
    */
   std::size_t join_override_threshold() const;
   constexpr static std::size_t join_override_threshold_default = 40;
-  void set_join_override_threshold(std::size_t join_override_threshold);
 
   /**
    * When an android/java/google method has a set of overrides and greater than
@@ -68,8 +67,6 @@ public:
    */
   std::size_t android_join_override_threshold() const;
   constexpr static std::size_t android_join_override_threshold_default = 10;
-  void set_android_join_override_threshold(
-      std::size_t android_join_override_threshold);
 
   /**
    * When a method which has a set of overrides greater than this threshold that
@@ -79,8 +76,6 @@ public:
   const std::optional<std::size_t> warn_override_threshold() const;
   constexpr static std::optional<std::size_t> warn_override_threshold_default =
       std::nullopt;
-  void set_warn_override_threshold(std::size_t warn_override_threshold);
-
   /**
    * Maximum height of a taint (source or sink) tree after widening.
    *
@@ -94,8 +89,6 @@ public:
    */
   std::size_t generation_max_port_size() const;
   constexpr static std::size_t generation_max_port_size_default = 4;
-  void set_generation_max_port_size(std::size_t generation_max_port_size);
-
   /**
    * Maximum number of leaves in the tree of output paths of generations.
    *
@@ -103,16 +96,12 @@ public:
    */
   std::size_t generation_max_output_path_leaves() const;
   constexpr static std::size_t generation_max_output_path_leaves_default = 20;
-  void set_generation_max_output_path_leaves(
-      std::size_t generation_max_output_path_leaves);
 
   /**
    * Maximum size of the port of a parameter source.
    */
   std::size_t parameter_source_max_port_size() const;
   constexpr static std::size_t parameter_source_max_port_size_default = 4;
-  void set_parameter_source_max_port_size(
-      std::size_t parameter_source_max_port_size);
 
   /**
    * Maximum number of leaves in the tree of output paths of parameter sources.
@@ -122,15 +111,12 @@ public:
   std::size_t parameter_source_max_output_path_leaves() const;
   constexpr static std::size_t parameter_source_max_output_path_leaves_default =
       20;
-  void set_parameter_source_max_output_path_leaves(
-      std::size_t parameter_source_max_output_path_leaves);
 
   /**
    * Maximum size of the port of a sink.
    */
   std::size_t sink_max_port_size() const;
   constexpr static std::size_t sink_max_port_size_default = 4;
-  void set_sink_max_port_size(std::size_t sink_max_port_size);
 
   /**
    * Maximum number of leaves in the tree of input paths of sinks.
@@ -139,15 +125,12 @@ public:
    */
   std::size_t sink_max_input_path_leaves() const;
   constexpr static std::size_t sink_max_input_path_leaves_default = 20;
-  void set_sink_max_input_path_leaves(std::size_t sink_max_input_path_leaves);
 
   /**
    * Maximum size of the port of a call effect source.
    */
   std::size_t call_effect_source_max_port_size() const;
   constexpr static std::size_t call_effect_source_max_port_size_default = 4;
-  void set_call_effect_source_max_port_size(
-      std::size_t call_effect_source_max_port_size);
 
   /**
    * Maximum number of leaves in the tree of output paths of call effect
@@ -158,16 +141,12 @@ public:
   std::size_t call_effect_source_max_output_path_leaves() const;
   constexpr static std::size_t
       call_effect_source_max_output_path_leaves_default = 20;
-  void set_call_effect_source_max_output_path_leaves(
-      std::size_t call_effect_source_max_output_path_leaves);
 
   /**
    * Maximum size of the port of a call effect sink.
    */
   std::size_t call_effect_sink_max_port_size() const;
   constexpr static std::size_t call_effect_sink_max_port_size_default = 4;
-  void set_call_effect_sink_max_port_size(
-      std::size_t call_effect_sink_max_port_size);
 
   /**
    * Maximum number of leaves in the tree of input paths of call effect sinks.
@@ -177,15 +156,12 @@ public:
   std::size_t call_effect_sink_max_input_path_leaves() const;
   constexpr static std::size_t call_effect_sink_max_input_path_leaves_default =
       20;
-  void set_call_effect_sink_max_input_path_leaves(
-      std::size_t call_effect_sink_max_input_path_leaves);
 
   /**
    * Maximum number of global iterations before we abort the analysis.
    */
   std::size_t max_number_iterations() const;
   constexpr static std::size_t max_number_iterations_default = 150;
-  void set_max_number_iterations(std::size_t max_number_iterations);
 
   /**
    * Maximum number of local positions per frame.
@@ -199,23 +175,18 @@ public:
    */
   std::size_t max_depth_class_properties() const;
   constexpr static std::size_t max_depth_class_properties_default = 10;
-  void set_max_depth_class_properties(std::size_t max_depth_class_properties);
 
   /**
    * Maximum number of hops that can be tracked for a call chain issue.
    */
   std::size_t max_call_chain_source_sink_distance() const;
   constexpr static std::size_t max_call_chain_source_sink_distance_default = 10;
-  void set_max_call_chain_source_sink_distance(
-      std::size_t max_call_chain_source_sink_distance);
 
   /**
    * Maximum size of the input access path of a propagation.
    */
   std::size_t propagation_max_input_path_size() const;
   constexpr static std::size_t propagation_max_input_path_size_default = 4;
-  void set_propagation_max_input_path_size(
-      std::size_t propagation_max_input_path_size);
 
   /**
    * Maximum size of the output access path of a propagation.
@@ -227,8 +198,6 @@ public:
    */
   std::size_t propagation_max_input_path_leaves() const;
   constexpr static std::size_t propagation_max_input_path_leaves_default = 4;
-  void set_propagation_max_input_path_leaves(
-      std::size_t propagation_max_input_path_leaves);
 
   /**
    * Maximum number of leaves in the tree of output paths of propagations.
