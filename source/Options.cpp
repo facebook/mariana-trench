@@ -298,9 +298,9 @@ Options::Options(const boost::program_options::variables_map& variables) {
       variables.count("propagate-across-arguments") > 0;
 
   if (!variables["heuristics"].empty()) {
-    std::string heuristics_path =
+    auto heuristics_path =
         check_path_exists(variables["heuristics"].as<std::string>()) ;
-    Json::Value json = JsonReader::parse_json_file(heuristics_path);
+    auto json = JsonReader::parse_json_file(heuristics_path);
     heuristics_ = Heuristics::from_json(json);
   }
 }
