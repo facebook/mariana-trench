@@ -200,6 +200,13 @@ class Model final {
 
   void add_mode(Model::Mode mode, Context& context);
   void add_taint_in_taint_out(Context& context);
+
+  // Intended to be used for methods whose concrete definition is unknown,
+  // i.e. `dex_method_reference->is_def() == false`.
+  void add_taint_in_taint_out(
+      Context& context,
+      const IRInstruction* instruction);
+
   void add_taint_in_taint_this(Context& context);
 
   void add_generation(const AccessPath& port, TaintConfig generation);

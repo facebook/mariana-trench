@@ -63,6 +63,13 @@ class FeatureFactory final {
    */
   const Feature* get_invalid_path_broadening() const;
 
+  /**
+   * This feature is added to propagations which are created on methods that
+   * are not concrete or external/from jars. These methods do not have an
+   * underlying DexMethod*.
+   */
+  const Feature* get_missing_method() const;
+
   static const FeatureFactory& singleton();
 
  private:

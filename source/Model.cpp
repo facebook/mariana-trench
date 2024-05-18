@@ -666,6 +666,30 @@ void Model::add_mode(Model::Mode mode, Context& context) {
   }
 }
 
+namespace {
+
+void add_taint_in_taint_out_propagation(
+    Model& model,
+    Context& context,
+    const FeatureSet& user_features,
+    ParameterPosition number_of_parameters) {
+  for (ParameterPosition parameter_position = 0;
+       parameter_position < number_of_parameters;
+       parameter_position++) {
+    model.add_propagation(PropagationConfig(
+        /* input_path */ AccessPath(
+            Root(Root::Kind::Argument, parameter_position)),
+        /* kind */ context.kind_factory->local_return(),
+        /* output_paths */
+        PathTreeDomain{{Path{}, CollapseDepth::zero()}},
+        /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+        /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+        user_features));
+  }
+}
+
+} // namespace
+
 void Model::add_taint_in_taint_out(Context& context) {
   modes_ |= Model::Mode::TaintInTaintOut;
 
@@ -680,19 +704,55 @@ void Model::add_taint_in_taint_out(Context& context) {
         context.feature_factory->get("via-obscure-taint-in-taint-out"));
   }
 
-  for (ParameterPosition parameter_position = 0;
-       parameter_position < method_->number_of_parameters();
-       parameter_position++) {
-    add_propagation(PropagationConfig(
-        /* input_path */ AccessPath(
-            Root(Root::Kind::Argument, parameter_position)),
-        /* kind */ context.kind_factory->local_return(),
-        /* output_paths */
-        PathTreeDomain{{Path{}, CollapseDepth::zero()}},
-        /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-        /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
-        user_features));
+  add_taint_in_taint_out_propagation(
+      *this, context, user_features, method_->number_of_parameters());
+}
+
+void Model::add_taint_in_taint_out(
+    Context& context,
+    const IRInstruction* instruction) {
+  modes_ |= Model::Mode::TaintInTaintOut;
+
+  // Not intended to be used for methods that have a concrete DexMethod*.
+  mt_assert(method_ == nullptr);
+  const auto* dex_method_reference = instruction->get_method();
+  if (dex_method_reference->is_def()) {
+    // If this happens, it means methods were created after call graph
+    // construction. They would not have been defined in the APK, so it should
+    // not impact analysis results, but this is non-ideal behavior. Methods
+    // should be created by the time call-graph construction takes place.
+    WARNING(
+        3,
+        "Model::add_taint_in_taint_out called with def DexMethodReference: `{}`. Current model: `{}`",
+        show(dex_method_reference),
+        *this);
+    method_ = context.methods->create(dex_method_reference->as_def());
+    add_taint_in_taint_out(context);
+    return;
   }
+
+  if (dex_method_reference->get_proto()->get_rtype() == type::_void()) {
+    return;
+  }
+
+  auto user_features =
+      FeatureSet{context.feature_factory->get_missing_method()};
+  if (modes_.test(Model::Mode::AddViaObscureFeature)) {
+    user_features.add(context.feature_factory->get("via-obscure"));
+  }
+
+  auto number_of_parameters =
+      dex_method_reference->get_proto()->get_args()->size();
+  if (!opcode::is_invoke_static(instruction->opcode())) {
+    ++number_of_parameters; // add 1 for "this" argument
+  }
+  // The number of registers given to the invoke instruction is the number of
+  // parameters. If assertion fails, the computation for number of parameters
+  // above is wrong which means we might be seeing invoke static on non-static
+  // methods or vice versa.
+  mt_assert(number_of_parameters == instruction->srcs_size());
+  add_taint_in_taint_out_propagation(
+      *this, context, user_features, number_of_parameters);
 }
 
 void Model::add_taint_in_taint_this(Context& context) {

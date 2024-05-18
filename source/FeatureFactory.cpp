@@ -86,6 +86,10 @@ const Feature* FeatureFactory::get_invalid_path_broadening() const {
   return factory_.create("via-invalid-path-broadening");
 }
 
+const Feature* FeatureFactory::get_missing_method() const {
+  return factory_.create("via-missing-method");
+}
+
 const FeatureFactory& FeatureFactory::singleton() {
   // Thread-safe global variable, initialized on first call.
   static FeatureFactory instance;

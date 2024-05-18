@@ -63,11 +63,12 @@ Model MethodContext::model_at_callsite(
       show(call_target.resolved_base_callee()));
 
   if (!call_target.resolved()) {
-    return Model(
+    auto model = Model(
         /* method */ nullptr,
         context_,
-        Model::Mode::SkipAnalysis | Model::Mode::AddViaObscureFeature |
-            Model::Mode::TaintInTaintOut);
+        Model::Mode::SkipAnalysis | Model::Mode::AddViaObscureFeature);
+    model.add_taint_in_taint_out(context_, call_target.instruction());
+    return model;
   }
 
   if (call_target.is_virtual()) {
