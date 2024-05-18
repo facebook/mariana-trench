@@ -24,7 +24,7 @@ class Overrides final {
  public:
   explicit Overrides(
       const Options& options,
-      const Methods& methods,
+      Methods& methods,
       const DexStoresVector& stores);
 
   DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Overrides)
@@ -47,6 +47,9 @@ class Overrides final {
   bool has_obscure_override_for(const Method* method) const;
 
   Json::Value to_json() const;
+
+  static std::unordered_map<const Method*, std::unordered_set<const Method*>>
+  from_json(const Json::Value& value, Methods& methods);
 
  private:
   UniquePointerConcurrentMap<const Method*, std::unordered_set<const Method*>>

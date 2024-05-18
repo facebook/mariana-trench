@@ -595,6 +595,14 @@ const std::optional<std::filesystem::path> Options::sharded_models_directory()
   return sharded_models_directory_;
 }
 
+const std::optional<std::filesystem::path> Options::overrides_input_path()
+    const {
+  if (!sharded_models_directory_.has_value()) {
+    return std::nullopt;
+  }
+  return *sharded_models_directory_ / "overrides.json";
+}
+
 bool Options::sequential() const {
   return sequential_;
 }
