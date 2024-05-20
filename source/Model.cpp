@@ -682,7 +682,8 @@ void add_taint_in_taint_out_propagation(
   for (ParameterPosition parameter_position = 0;
        parameter_position < number_of_parameters;
        parameter_position++) {
-    model.add_propagation(PropagationConfig(
+    model.add_propagation(
+      PropagationConfig(
         /* input_path */ AccessPath(
             Root(Root::Kind::Argument, parameter_position)),
         /* kind */ context.kind_factory->local_return(),
@@ -690,7 +691,8 @@ void add_taint_in_taint_out_propagation(
         PathTreeDomain{{Path{}, CollapseDepth::zero()}},
         /* inferred_features */ FeatureMayAlwaysSet::bottom(),
         /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
-        user_features));
+        user_features),
+      context.options->heuristics());
   }
 }
 
