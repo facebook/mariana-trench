@@ -42,7 +42,8 @@ Model create_model(
         AccessPath(Root(Root::Kind::Argument, argument.first)),
         generator::source(
             context,
-            /* kind */ "ProviderUserInput"));
+            /* kind */ "ProviderUserInput"),
+        context.options->heuristics());
   }
   auto return_type = generator::get_return_type_string(method);
   if (!return_type) {
@@ -53,7 +54,8 @@ Model create_model(
         AccessPath(Root(Root::Kind::Return)),
         generator::sink(
             context,
-            /* kind */ "ProviderExitNode"));
+            /* kind */ "ProviderExitNode"),
+        context.options->heuristics());
   }
   return model;
 }

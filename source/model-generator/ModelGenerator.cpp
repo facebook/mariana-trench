@@ -277,14 +277,16 @@ void generator::add_propagation_to_return(
   for (const auto& feature : features) {
     user_features.add(context.feature_factory->get(feature));
   }
-  model.add_propagation(PropagationConfig(
-      /* input_path */ AccessPath(
-          Root(Root::Kind::Argument, parameter_position)),
-      /* kind */ context.kind_factory->local_return(),
-      /* output_paths */ PathTreeDomain{{Path{}, collapse_depth}},
-      /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
-      /* user_features */ user_features));
+  model.add_propagation(
+      PropagationConfig(
+          /* input_path */ AccessPath(
+              Root(Root::Kind::Argument, parameter_position)),
+          /* kind */ context.kind_factory->local_return(),
+          /* output_paths */ PathTreeDomain{{Path{}, collapse_depth}},
+          /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* user_features */ user_features),
+      context.options->heuristics());
 }
 
 void generator::add_propagation_to_parameter(
@@ -301,13 +303,15 @@ void generator::add_propagation_to_parameter(
   for (const auto& feature : features) {
     user_features.add(context.feature_factory->get(feature));
   }
-  model.add_propagation(PropagationConfig(
-      /* input_path */ AccessPath(Root(Root::Kind::Argument, from)),
-      /* kind */ context.kind_factory->local_argument(to),
-      /* output_paths */ PathTreeDomain{{Path{}, collapse_depth}},
-      /* inferred_features */ FeatureMayAlwaysSet::bottom(),
-      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
-      /* user_features */ user_features));
+  model.add_propagation(
+      PropagationConfig(
+          /* input_path */ AccessPath(Root(Root::Kind::Argument, from)),
+          /* kind */ context.kind_factory->local_argument(to),
+          /* output_paths */ PathTreeDomain{{Path{}, collapse_depth}},
+          /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+          /* user_features */ user_features),
+      context.options->heuristics());
 }
 
 void generator::add_propagation_to_self(

@@ -129,6 +129,19 @@ uint32_t JsonValidation::unsigned_integer(const Json::Value& value) {
   return value.asUInt();
 }
 
+uint32_t JsonValidation::unsigned_integer(
+    const Json::Value& value,
+    const std::string& field) {
+  validate_object(
+      value,
+      fmt::format("non-null object with unsigned integer field `{}`", field));
+  const auto& integer = value[field];
+  if (integer.isNull() || !integer.isUInt()) {
+    throw JsonValidationError(value, field, /* expected */ "unsigned integer");
+  }
+  return integer.asUInt();
+}
+
 bool JsonValidation::boolean(const Json::Value& value) {
   if (value.isNull() || !value.isBool()) {
     throw JsonValidationError(
@@ -216,6 +229,13 @@ const Json::Value& JsonValidation::object_or_string(
     throw JsonValidationError(value, field, /* expected */ "object or string");
   }
   return attribute;
+}
+
+bool JsonValidation::has_field(
+    const Json::Value& value,
+    const std::string& field) {
+  const auto& attribute = value[field];
+  return !attribute.isNull();
 }
 
 void JsonValidation::update_object(

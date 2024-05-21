@@ -60,7 +60,8 @@ std::vector<Model> ArtificialMethods::models(Context& context) const {
           /* output_paths */ {},
           /* local_positions */ {},
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
-          /* extra_traces */ {}));
+          /* extra_traces */ {}),
+      context.options->heuristics());
   models.push_back(model);
 
   return models;

@@ -169,13 +169,15 @@ void PropagationTemplate::instantiate(
         /* global_transforms */ nullptr);
   }
 
-  model.add_propagation(PropagationConfig(
-      input_port,
-      kind,
-      PathTreeDomain{{output_port.path(), collapse_depth_}},
-      inferred_features_,
-      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
-      user_features_));
+  model.add_propagation(
+      PropagationConfig(
+          input_port,
+          kind,
+          PathTreeDomain{{output_port.path(), collapse_depth_}},
+          inferred_features_,
+          /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+          user_features_),
+      context.options->heuristics());
 }
 
 PortSanitizerTemplate::PortSanitizerTemplate(
@@ -239,7 +241,8 @@ void SinkTemplate::instantiate(
     Model& model) const {
   model.add_sink(
       port_.instantiate(parameter_positions),
-      sink_.instantiate(method, context, parameter_positions));
+      sink_.instantiate(method, context, parameter_positions),
+      context.options->heuristics());
 }
 
 ParameterSourceTemplate::ParameterSourceTemplate(
@@ -265,7 +268,8 @@ void ParameterSourceTemplate::instantiate(
     Model& model) const {
   model.add_parameter_source(
       port_.instantiate(parameter_positions),
-      source_.instantiate(method, context, parameter_positions));
+      source_.instantiate(method, context, parameter_positions),
+      context.options->heuristics());
 }
 
 GenerationTemplate::GenerationTemplate(
@@ -291,7 +295,8 @@ void GenerationTemplate::instantiate(
     Model& model) const {
   model.add_generation(
       port_.instantiate(parameter_positions),
-      source_.instantiate(method, context, parameter_positions));
+      source_.instantiate(method, context, parameter_positions),
+      context.options->heuristics());
 }
 
 SourceTemplate::SourceTemplate(TaintConfig source, AccessPathTemplate port)
@@ -310,11 +315,14 @@ SourceTemplate SourceTemplate::from_json(
 
 void SourceTemplate::instantiate(
     const TemplateVariableMapping& parameter_positions,
-    Model& model) const {
+    Model& model,
+    const Heuristics& heuristics) const {
   if (port_.root().is_argument()) {
-    model.add_parameter_source(port_.instantiate(parameter_positions), source_);
+    model.add_parameter_source(
+        port_.instantiate(parameter_positions), source_, heuristics);
   } else {
-    model.add_generation(port_.instantiate(parameter_positions), source_);
+    model.add_generation(
+        port_.instantiate(parameter_positions), source_, heuristics);
   }
 }
 
@@ -631,7 +639,8 @@ bool ForAllParameters::instantiate(
         updated = true;
       }
       for (const auto& source_template : source_templates_) {
-        source_template.instantiate(variable_mapping, model);
+        source_template.instantiate(
+            variable_mapping, model, context.options->heuristics());
         updated = true;
       }
       for (const auto& propagation_template : propagation_templates_) {
@@ -701,14 +710,21 @@ std::optional<Model> ModelTemplate::instantiate(
 
   for (const auto& [port, taint_config_template] : generations_) {
     model.add_generation(
-        port, taint_config_template.instantiate(method, context));
+        port,
+        taint_config_template.instantiate(method, context),
+        context.options->heuristics());
   }
   for (const auto& [port, taint_config_template] : parameter_sources_) {
     model.add_parameter_source(
-        port, taint_config_template.instantiate(method, context));
+        port,
+        taint_config_template.instantiate(method, context),
+        context.options->heuristics());
   }
   for (const auto& [port, taint_config_template] : sinks_) {
-    model.add_sink(port, taint_config_template.instantiate(method, context));
+    model.add_sink(
+        port,
+        taint_config_template.instantiate(method, context),
+        context.options->heuristics());
   }
 
   // An instantiated model can be nonempty even when it is instantiated from

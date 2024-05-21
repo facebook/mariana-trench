@@ -138,7 +138,8 @@ Model analyze(
   new_model.approximate(/* widening_features */
                         FeatureMayAlwaysSet{
                             global_context.feature_factory
-                                ->get_widen_broadening_feature()});
+                                ->get_widen_broadening_feature()},
+                        global_context.options->heuristics());
 
   LOG_OR_DUMP(
       &method_context,
@@ -195,7 +196,7 @@ void Interprocedural::run_analysis(Context& context, Registry& registry) {
         methods_to_analyze->size(),
         resident_set_size);
 
-    if (iteration > Heuristics::kMaxNumberIterations) {
+    if (iteration > context.options->heuristics().max_number_iterations()) {
       ERROR(1, "Too many iterations");
       std::string message = "Unstable methods are:";
       for (const auto* method : *methods_to_analyze) {

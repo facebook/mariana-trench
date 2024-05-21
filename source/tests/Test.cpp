@@ -29,10 +29,34 @@ Test::Test() : global_redex_context_(/* allow_class_duplicates */ false){};
 ContextGuard::ContextGuard()
     : global_redex_context_(/* allow_class_duplicates */ false){};
 
+/**
+ * Empty options. Useful to initialize an empty context.
+ */
+std::unique_ptr<Options> make_empty_options() {
+  return std::make_unique<Options>(
+      /* models_path */ std::vector<std::string>(),
+      /* field_models_paths */ std::vector<std::string>(),
+      /* literal_models_paths */ std::vector<std::string>(),
+      /* rules_paths */ std::vector<std::string>(),
+      /* lifecycles_paths */ std::vector<std::string>(),
+      /* shims_paths */ std::vector<std::string>(),
+      /* graphql_metadata_paths */ ".",
+      /* proguard_configuration_paths */ std::vector<std::string>(),
+      /* sequential */ true,
+      /* skip_source_indexing */ true,
+      /* skip_analysis */ true,
+      /* model_generators_configuration */
+      std::vector<ModelGeneratorConfiguration>(),
+      /* model_generator_search_paths */ std::vector<std::string>(),
+      /* remove_unreachable_code */ true,
+      /* emit_all_via_cast_features */ true);
+}
+
 Context make_empty_context() {
   Context context;
   context.methods = std::make_unique<Methods>();
   context.positions = std::make_unique<Positions>();
+  context.options = make_empty_options();
   return context;
 }
 

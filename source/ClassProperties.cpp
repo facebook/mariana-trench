@@ -227,7 +227,8 @@ bool ClassProperties::is_dfa_public(std::string_view class_name) const {
 
 FeatureMayAlwaysSet ClassProperties::issue_features(
     const Method* method,
-    std::unordered_set<const Kind*> kinds) const {
+    std::unordered_set<const Kind*> kinds,
+    const Heuristics& heuristics) const {
   FeatureSet features;
   auto clazz = method->get_class()->str();
 
@@ -246,7 +247,7 @@ FeatureMayAlwaysSet ClassProperties::issue_features(
         !kind_features.contains(
             feature_factory_.get("via-caller-unexported"))) {
       kind_features.join_with(
-          compute_transitive_class_features(method, named_kind));
+          compute_transitive_class_features(method, named_kind, heuristics));
     }
     features.join_with(kind_features);
   }
@@ -350,7 +351,8 @@ ClassProperties::get_service_from_stub(const DexClass* clazz) {
 
 FeatureSet ClassProperties::compute_transitive_class_features(
     const Method* callee,
-    const NamedKind* kind) const {
+    const NamedKind* kind,
+    const Heuristics& heuristics) const {
   // Check cache
   if (const auto* target_method = via_dependencies_.get(callee, nullptr)) {
     return get_class_features(
@@ -388,7 +390,7 @@ FeatureSet ClassProperties::compute_transitive_class_features(
       continue;
     }
 
-    if (depth == Heuristics::kMaxDepthClassProperties) {
+    if (depth == heuristics.max_depth_class_properties()) {
       continue;
     }
 

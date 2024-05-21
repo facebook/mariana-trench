@@ -125,7 +125,8 @@ Model MethodContext::model_at_callsite(
   }
 
   model.approximate(
-      FeatureMayAlwaysSet{feature_factory.get_widen_broadening_feature()});
+      FeatureMayAlwaysSet{feature_factory.get_widen_broadening_feature()},
+      context_.options->heuristics());
 
   callsite_model_cache_.emplace(CacheKey{call_target, position}, model);
   return model;

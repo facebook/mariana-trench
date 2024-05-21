@@ -15,7 +15,7 @@ import sys
 import tempfile
 import traceback
 from pathlib import Path
-from typing import Any, List, Optional
+from typing import Any, Dict, List, Optional
 from zipfile import BadZipFile
 
 from pyre_extensions import none_throws, safe_json
@@ -75,12 +75,25 @@ def _system_jar_configuration_path(input: str) -> str:
                 return ";".join(paths)
             except safe_json.InvalidJson:
                 raise argparse.ArgumentTypeError(
-                    f"`{path} must contain a list of strings"
+                    f"`{path}` must contain a list of strings"
                 )
 
     # Validation deferred to backend if we pass `;` separated list of paths
     # because they are allowed to not exist.
     return input
+
+
+def _heuristics_json_config_exists(input: str) -> str:
+    path = _path_exists(input)
+    with open(path) as file:
+        try:
+            # Heuristics are a list of key-value pairs.
+            safe_json.load(file, Dict[str, Any])
+            return path
+        except safe_json.InvalidJson:
+            raise argparse.ArgumentTypeError(
+                f"`{path}` must be a valid JSON file with key-value pairs"
+            )
 
 
 class ExtractJexException(ClientError):
@@ -462,6 +475,15 @@ def _add_configuration_arguments(parser: argparse.ArgumentParser) -> None:
             "method invocations for all other object type arguments as well."
         ),
     )
+    configuration_arguments.add_argument(
+        "--heuristics",
+        type=_heuristics_json_config_exists,
+        help=(
+            "Path to JSON configuration file which specifies heuristics "
+            "parameters to use during the analysis. See the documentation for "
+            "available heuristics parameters."
+        ),
+    )
 
 
 def _add_analysis_arguments(parser: argparse.ArgumentParser) -> None:
@@ -666,6 +688,10 @@ def _get_command_options(
     if arguments.allow_via_cast_feature:
         for feature in arguments.allow_via_cast_feature:
             options.append("--allow-via-cast-feature=%s" % feature.strip())
+
+    if arguments.heuristics:
+        options.append("--heuristics")
+        options.append(arguments.heuristics)
 
     if arguments.sequential:
         options.append("--sequential")

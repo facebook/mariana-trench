@@ -16,7 +16,7 @@ std::vector<Model> JoinOverrideGenerator::visit_method(
 
   // Do not join models at call sites for methods with too many overrides.
   const auto& overrides = context_.overrides->get(method);
-  if (overrides.size() >= Heuristics::kJoinOverrideThreshold) {
+  if (overrides.size() >= options_.heuristics().join_override_threshold()) {
     models.push_back(
         Model(method, context_, Model::Mode::NoJoinVirtualOverrides));
   } else {
@@ -25,7 +25,8 @@ std::vector<Model> JoinOverrideGenerator::visit_method(
          boost::starts_with(class_name, "Lcom/google") ||
          boost::starts_with(class_name, "Lkotlin/") ||
          boost::starts_with(class_name, "Ljava")) &&
-        overrides.size() >= Heuristics::kAndroidJoinOverrideThreshold) {
+        overrides.size() >=
+            options_.heuristics().android_join_override_threshold()) {
       models.push_back(
           Model(method, context_, Model::Mode::NoJoinVirtualOverrides));
     }

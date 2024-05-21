@@ -43,7 +43,8 @@ Model source_first_argument(
       AccessPath(Root(Root::Kind::Argument, 1)),
       generator::source(
           context,
-          /* kind */ "ServiceUserInput"));
+          /* kind */ "ServiceUserInput"),
+      context.options->heuristics());
   return model;
 }
 

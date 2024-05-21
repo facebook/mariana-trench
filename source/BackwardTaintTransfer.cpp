@@ -155,10 +155,16 @@ void infer_input_taint(
       LOG_OR_DUMP(context, 4, "Inferred sink for port {}: {}", port, sinks);
       if (port.root().is_call_effect()) {
         context->new_model.add_inferred_call_effect_sinks(
-            std::move(port), std::move(sinks), widening_features);
+            std::move(port),
+            std::move(sinks),
+            widening_features,
+            context->options.heuristics());
       } else {
         context->new_model.add_inferred_sinks(
-            std::move(port), std::move(sinks), widening_features);
+            std::move(port),
+            std::move(sinks),
+            widening_features,
+            context->options.heuristics());
       }
     }
 
@@ -208,7 +214,10 @@ void infer_input_taint(
           port,
           propagations);
       context->new_model.add_inferred_propagations(
-          std::move(port), std::move(propagations), widening_features);
+          std::move(port),
+          std::move(propagations),
+          widening_features,
+          context->options.heuristics());
     }
   }
 }

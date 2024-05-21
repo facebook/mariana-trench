@@ -446,7 +446,8 @@ void process_shim_lifecycle(
     const FeatureFactory& feature_factory,
     std::unordered_map<std::string, TextualOrderIndex>&
         sink_textual_order_index,
-    std::vector<ArtificialCallee>& artificial_callees) {
+    std::vector<ArtificialCallee>& artificial_callees,
+    const Heuristics& heuristics) {
   const auto& method_name = shim_lifecycle.method_name();
   auto receiver_register = shim_lifecycle.receiver_register(instruction);
 
@@ -483,7 +484,7 @@ void process_shim_lifecycle(
         caller->show());
     return;
   } else if (
-      target_lifecycle_methods.size() >= Heuristics::kJoinOverrideThreshold) {
+      target_lifecycle_methods.size() >= heuristics.join_override_threshold()) {
     // Although this is not a join, shimming to the derived life-cycle methods
     // simulates the joining the models of these as if they were virtual
     // overrides. Besides, if there is a large number of overrides, there will
@@ -496,7 +497,7 @@ void process_shim_lifecycle(
         target_lifecycle_methods.size(),
         show(instruction),
         caller->show(),
-        Heuristics::kJoinOverrideThreshold);
+        heuristics.join_override_threshold());
     return;
   }
 
@@ -527,7 +528,8 @@ std::vector<ArtificialCallee> shim_artificial_callees(
     const FeatureFactory& feature_factory,
     const Shim& shim,
     std::unordered_map<std::string, TextualOrderIndex>&
-        sink_textual_order_index) {
+        sink_textual_order_index,
+    const Heuristics& heuristics) {
   std::vector<ArtificialCallee> artificial_callees;
 
   for (const auto& shim_target : shim.targets()) {
@@ -572,7 +574,8 @@ std::vector<ArtificialCallee> shim_artificial_callees(
         class_hierarchies,
         feature_factory,
         sink_textual_order_index,
-        artificial_callees);
+        artificial_callees,
+        heuristics);
   }
 
   for (const auto& shim_target : shim.intent_routing_targets()) {
@@ -702,7 +705,8 @@ InstructionCallGraphInformation process_instruction(
         class_hierarchies,
         feature_factory,
         *shim,
-        sink_textual_order_index);
+        sink_textual_order_index,
+        options.heuristics());
   }
 
   auto call_index =
