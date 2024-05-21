@@ -62,6 +62,15 @@ void Statistics::log_time(const Method* method, const Timer& timer) {
       record);
 }
 
+void Statistics::log_unable_to_resolve_call(const DexMethodRef* method) {
+  std::lock_guard<std::mutex> lock(mutex_);
+  unresolved_methods_.insert(method);
+}
+
+const std::unordered_set<const DexMethodRef*>& Statistics::unresolved_methods() const {
+  return unresolved_methods_;
+}
+
 namespace {
 
 double round(double x, int digits) {
@@ -77,6 +86,8 @@ Json::Value Statistics::to_json() const {
       Json::Value(static_cast<Json::UInt64>(number_iterations_));
   value["rss"] = Json::Value(round(max_resident_set_size_, 6));
   value["cores"] = Json::Value(sparta::parallel::default_num_threads());
+  value["unresolved_methods"] =
+    Json::Value(static_cast<Json::UInt64>(unresolved_methods_.size()));
 
   auto times_value = Json::Value(Json::objectValue);
   for (const auto& record : times_) {

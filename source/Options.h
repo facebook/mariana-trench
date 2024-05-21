@@ -85,6 +85,7 @@ class Options final {
   const std::filesystem::path models_output_path() const;
   const std::filesystem::path methods_output_path() const;
   const std::filesystem::path call_graph_output_path() const;
+  const std::filesystem::path unresolved_methods_output_path() const;
   const std::filesystem::path class_hierarchies_output_path() const;
   const std::filesystem::path class_intervals_output_path() const;
   const std::filesystem::path overrides_output_path() const;
@@ -115,6 +116,7 @@ class Options final {
   bool dump_class_intervals() const;
   bool dump_overrides() const;
   bool dump_call_graph() const;
+  bool dump_unresolved_methods() const;
   bool dump_dependencies() const;
   bool dump_methods() const;
   bool dump_coverage_info() const;
@@ -176,6 +178,7 @@ class Options final {
   bool dump_class_intervals_;
   bool dump_overrides_;
   bool dump_call_graph_;
+  bool dump_unresolved_methods_;
   bool dump_dependencies_;
   bool dump_methods_;
   bool dump_coverage_info_;

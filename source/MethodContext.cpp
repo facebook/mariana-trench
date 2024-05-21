@@ -44,6 +44,7 @@ MethodContext::MethodContext(
       memory_factory(previous_model.method()),
       previous_model(previous_model),
       new_model(new_model),
+      statistics(*context.statistics),
       context_(context),
       dump_(previous_model.method()->should_be_logged(options)) {}
 

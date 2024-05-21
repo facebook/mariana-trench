@@ -55,7 +55,8 @@ CalleeModel get_callee(
     const DexPosition* MT_NULLABLE position,
     const std::vector<const DexType * MT_NULLABLE>& source_register_types,
     const std::vector<std::optional<std::string>>& source_constant_arguments,
-    bool is_this_call);
+    bool is_this_call,
+    Statistics& statistics);
 
 CalleeModel get_callee(
     const MethodContext* context,

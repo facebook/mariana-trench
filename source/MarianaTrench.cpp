@@ -484,6 +484,18 @@ void MarianaTrench::run(const program_options::variables_map& variables) {
         rule_coverage_timer.duration_in_seconds());
   }
 
+  if (options.dump_unresolved_methods()) {
+    Timer dump_unresolved_methods_timer;
+    auto unresolved_methods_output_path = options.unresolved_methods_output_path();
+    LOG(1, "Writing unresolved methods to `{}`.", unresolved_methods_output_path.native());
+    registry.dump_unresolved_methods(unresolved_methods_output_path);
+    context.statistics->log_time(
+        "dump_unresolved_methods", dump_unresolved_methods_timer);
+    LOG(1,
+        "Wrote unresolved methods list in {:.2f}s.",
+        dump_unresolved_methods_timer.duration_in_seconds());
+  }
+
   auto metadata_path = options.metadata_output_path();
   LOG(1, "Writing metadata to `{}`.", metadata_path.native());
   registry.dump_metadata(/* path */ metadata_path);

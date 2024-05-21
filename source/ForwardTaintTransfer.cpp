@@ -910,7 +910,8 @@ bool ForwardTaintTransfer::analyze_invoke(
       aliasing.position(),
       get_source_register_types(context, instruction),
       source_constant_arguments,
-      get_is_this_call(aliasing.register_memory_locations_map(), instruction));
+      get_is_this_call(aliasing.register_memory_locations_map(), instruction),
+      context->statistics);
 
   const ForwardTaintEnvironment previous_environment = *environment;
 

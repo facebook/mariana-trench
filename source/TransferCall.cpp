@@ -12,6 +12,7 @@
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Positions.h>
 #include <mariana-trench/TransferCall.h>
+#include <mariana-trench/Statistics.h>
 
 namespace marianatrench {
 
@@ -149,11 +150,13 @@ CalleeModel get_callee(
     const DexPosition* MT_NULLABLE dex_position,
     const std::vector<const DexType * MT_NULLABLE>& source_register_types,
     const std::vector<std::optional<std::string>>& source_constant_arguments,
-    bool is_this_call) {
+    bool is_this_call,
+    Statistics& statistics) {
   mt_assert(opcode::is_an_invoke(instruction->opcode()));
 
   auto call_target = context->call_graph.callee(context->method(), instruction);
   if (!call_target.resolved()) {
+    statistics.log_unable_to_resolve_call(instruction->get_method());
     WARNING_OR_DUMP(
         context,
         3,

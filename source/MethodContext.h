@@ -88,6 +88,7 @@ class MethodContext final {
   FulfilledPartialKindResults fulfilled_partial_sinks;
   const Model& previous_model;
   Model& new_model;
+  Statistics& statistics;
 
  private:
   struct CacheKey {
