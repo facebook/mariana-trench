@@ -382,16 +382,6 @@ Registry Registry::from_sharded_models_json(
 
         auto model = Model::from_json(value, context);
 
-        // These sharded input models are meant to be the analysis output of
-        // an obscure .jar. Their models are inferred from actual code and
-        // should be a source of truth. User-defined propagations are typically
-        // heuristics for obscure methods. Freeze propagations on the sharded
-        // models to avoid user-defined propagations overridding them. If the
-        // user wishes to override them, they may specify the models as frozen.
-        // Sources/sinks should not be frozen since these are not approximated
-        // in user-defined models. Inferred sources/sinks in the sharded output
-        // should be joined with user-defined sources/sinks.
-        model.freeze(Model::FreezeKind::Propagations);
         // Indicate that the source of these models is
         // `Options::sharded_models_directory()`
         model.make_sharded_model_generators(
