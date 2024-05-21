@@ -123,12 +123,6 @@ Registry Registry::load(
         JsonReader::parse_json_file(literal_models_path)));
   }
 
-  if (options.sharded_models_directory().has_value()) {
-    // Create registry from any cached input.
-    registry.join_with(Registry::from_sharded_models_json(
-        context, *options.sharded_models_directory()));
-  }
-
   // Add a default model for methods that don't have one
   registry.add_default_models();
 
