@@ -12,6 +12,7 @@
 
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Model.h>
+#include <mariana-trench/Registry.h>
 #include <mariana-trench/model-generator/ModelGenerator.h>
 #include <mariana-trench/model-generator/ModelGeneratorName.h>
 
@@ -26,11 +27,14 @@ class ModelGeneration {
  public:
   static ModelGeneratorResult run(
       Context& context,
+      const std::optional<Registry>& preloaded_models,
       const MethodMappings& method_mappings);
 
   static std::
       unordered_map<const ModelGeneratorName*, std::unique_ptr<ModelGenerator>>
-      make_builtin_model_generators(Context& context);
+      make_builtin_model_generators(
+          const std::optional<Registry>& preloaded_models,
+          Context& context);
 };
 
 } // namespace marianatrench

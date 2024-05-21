@@ -27,6 +27,11 @@ std::vector<Model> TaintInTaintOutGenerator::visit_method(
     return {};
   }
 
+  if (preloaded_models_ && preloaded_models_->has_model(method)) {
+    // Do not overwrite preloaded models with taint-in-taint-out.
+    return {};
+  }
+
   if (method->is_abstract() || method->is_interface()) {
     const auto& overrides = context_.overrides->get(method);
     if (!overrides.empty() &&

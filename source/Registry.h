@@ -68,6 +68,9 @@ class Registry final {
   FieldModel get(const Field* field) const;
 
   /* This is thread-safe. */
+  bool has_model(const Method* method) const;
+
+  /* This is thread-safe. */
   void set(const Model& model);
 
   /*

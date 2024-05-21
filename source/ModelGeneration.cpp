@@ -37,9 +37,12 @@ namespace marianatrench {
 namespace {
 
 std::unordered_map<const ModelGeneratorName*, std::unique_ptr<ModelGenerator>>
-make_model_generators(Context& context) {
+make_model_generators(
+    const std::optional<Registry>& preloaded_models,
+    Context& context) {
   std::unordered_map<const ModelGeneratorName*, std::unique_ptr<ModelGenerator>>
-      generators = ModelGeneration::make_builtin_model_generators(context);
+      generators = ModelGeneration::make_builtin_model_generators(
+          preloaded_models, context);
   // Find JSON model generators in search path.
   for (const auto& path : context.options->model_generator_search_paths()) {
     LOG(3, "Searching for model generators in `{}`...", path);
@@ -132,6 +135,7 @@ ModelGeneration::make_builtin_model_generators(Context& context) {
 
 ModelGeneratorResult ModelGeneration::run(
     Context& context,
+    const std::optional<Registry>& preloaded_models,
     const MethodMappings& method_mappings) {
   const auto& options = *context.options;
 
@@ -151,7 +155,7 @@ ModelGeneratorResult ModelGeneration::run(
     }
   }
 
-  auto generator_definitions = make_model_generators(context);
+  auto generator_definitions = make_model_generators(preloaded_models, context);
   std::vector<std::unique_ptr<ModelGenerator>> model_generators;
   const auto& configuration_entries = options.model_generators_configuration();
 

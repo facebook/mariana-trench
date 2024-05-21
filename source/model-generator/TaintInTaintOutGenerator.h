@@ -7,16 +7,23 @@
 
 #pragma once
 
+#include <mariana-trench/Registry.h>
 #include <mariana-trench/model-generator/ModelGenerator.h>
 
 namespace marianatrench {
 
 class TaintInTaintOutGenerator : public MethodVisitorModelGenerator {
  public:
-  explicit TaintInTaintOutGenerator(Context& context)
-      : MethodVisitorModelGenerator("taint_in_taint_out", context) {}
+  explicit TaintInTaintOutGenerator(
+      const std::optional<Registry>& preloaded_models,
+      Context& context)
+      : MethodVisitorModelGenerator("taint_in_taint_out", context),
+        preloaded_models_(preloaded_models) {}
 
   std::vector<Model> visit_method(const Method* method) const override;
+
+ private:
+  const std::optional<Registry>& preloaded_models_;
 };
 
 } // namespace marianatrench

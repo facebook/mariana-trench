@@ -141,6 +141,10 @@ void Registry::add_default_models() {
   queue.run_all();
 }
 
+bool Registry::has_model(const Method* method) const {
+  return models_.find(method) != models_.end();
+}
+
 Model Registry::get(const Method* method) const {
   if (!method) {
     throw std::runtime_error("Trying to get model for the `null` method");

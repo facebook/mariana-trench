@@ -249,7 +249,7 @@ Registry MarianaTrench::analyze(Context& context) {
     Timer generation_timer;
     LOG(1, "Generating models...");
     auto model_generator_result =
-        ModelGeneration::run(context, method_mappings);
+        ModelGeneration::run(context, sharded_models_registry, method_mappings);
     generated_models = model_generator_result.method_models;
     generated_field_models = model_generator_result.field_models;
     context.statistics->log_time("models_generation", generation_timer);
