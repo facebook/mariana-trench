@@ -63,3 +63,89 @@ A `;` separated search path where Mariana Trench will try to find the model gene
 
 #### `--maximum-source-sink-distance MAXIMUM_SOURCE_SINK_DISTANCE`
 For performance reasons it can be useful to limit the maximum length of a trace Mariana Trench tries to find (note that longer traces also tend to be harder to interpret). Due to the modular nature of the analysis the value specified here limits the maximum length from the trace root to the source, and from the trace root to the sink. This means found traces can have length of `2 x MAXIMUM_SOURCE_SINK_DISTANCE`.
+
+#### `--heuristics HEURISTICS_FILE_PATH`
+Mariana Trench uses various heuristics parameters during the analysis. It is possible to set some of them with a JSON configuration file. The complete list of configurable parameters is reported in the [heuristics parameters section](#heuristics-parameters). It is optional to specify a configuration for the heuristics parameters, and the the parameters that are not specified are set to a default value.
+
+## Heuristics Parameters
+
+#### `join_override_threshold INT`
+When a method has a set of overrides greater than this threshold, Mariana Trench does not join all overrides at call sites.
+
+#### `android_join_override_threshold INT`
+When an android/java/google method has a set of overrides which is greater than this threshold, Mariana Trench does not join all overrides at call sites.
+
+#### `warn_override_threshold INT`
+When a method which has a set of overrides greater than this threshold that is not marked with `NoJoinVirtualOverrides` is called at least once, Mariana Trench prints a warning.
+
+#### `generation_max_port_size INT`
+Maximum size of the port of a generation.
+
+#### `generation_max_output_path_leaves INT`
+Maximum number of leaves in the tree of output paths of generations. When reaching the maximum, Mariana Trench collapses all the subtrees into a single node.
+
+#### `parameter_source_max_port_size INT`
+Maximum size of the port of a parameter source.
+
+#### `parameter_source_max_output_path_leaves INT`
+Maximum number of leaves in the tree of output paths of parameter sources. When reaching the maximum, Mariana Trench collapses all the subtrees into a single node.
+
+#### `sink_max_port_size INT`
+Maximum size of the port of a sink.
+
+#### `sink_max_input_path_leaves INT`
+Maximum number of leaves in the tree of input paths of sinks. When reaching the maximum, Mariana Trench collapses all the subtrees into a single node.
+
+#### `call_effect_source_max_port_size INT`
+Maximum size of the port of a call effect source.
+
+#### `call_effect_source_max_output_path_leaves INT`
+Maximum number of leaves in the tree of output paths of call effect sources. When reaching the maximum, Mariana Trench collapses all the subtrees into a single node.
+
+#### `call_effect_sink_max_port_size INT`
+Maximum size of the port of a call effect sink.
+
+#### `call_effect_sink_max_input_path_leaves INT`
+Maximum number of leaves in the tree of input paths of call effect sinks. When reaching the maximum, Mariana Trench collapses all the subtrees into a single node.
+
+#### `max_number_iterations INT`
+Maximum number of global iterations before Mariana Trench aborts the analysis.
+
+#### `max_depth_class_properties INT`
+Maximum depth of dependency graph traversal to find class properties.
+
+#### `max_call_chain_source_sink_distance INT`
+Maximum number of hops that can be tracked for a call chain issue.
+
+#### `propagation_max_input_path_size INT`
+Maximum size of the input access path of a propagation.
+
+#### `propagation_max_input_path_leaves INT`
+Maximum number of leaves in the tree of input paths of propagations.
+
+### Heuristics Parameter Configuration Example
+
+The following JSON document is a valid configuration file for the heuristics parameters.
+It improves the precision of the analysis by sacrificing some performance.
+```json
+{
+    "join_override_threshold": 100,
+    "android_join_override_threshold": 100,
+    "warn_override_threshold": 100,
+    "generation_max_port_size": 10,
+    "generation_max_output_path_leaves": 30,
+    "parameter_source_max_port_size": 10,
+    "parameter_source_max_output_path_leaves": 30,
+    "sink_max_port_size": 10,
+    "sink_max_input_path_leaves": 30,
+    "call_effect_source_max_port_size": 10,
+    "call_effect_source_max_output_path_leaves": 30,
+    "call_effect_sink_max_port_size": 10,
+    "call_effect_sink_max_input_path_leaves": 30,
+    "max_number_iterations": 300,
+    "max_depth_class_properties": 30,
+    "max_call_chain_source_sink_distance": 30,
+    "propagation_max_input_path_size": 10,
+    "propagation_max_input_path_leaves": 10
+}
+```
