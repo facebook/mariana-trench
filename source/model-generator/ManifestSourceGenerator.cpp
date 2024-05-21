@@ -87,7 +87,8 @@ std::vector<Model> ManifestSourceGenerator::emit_method_models(
           AccessPath(Root(Root::Kind::CallEffectCallChain)),
           generator::source(
               context_,
-              /* kind */ "ExportedActivity"));
+              /* kind */ "ExportedActivity"),
+          context_.options->heuristics());
       models.push_back(model);
     }
   }
