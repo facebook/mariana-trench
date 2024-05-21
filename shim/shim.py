@@ -83,21 +83,16 @@ def _system_jar_configuration_path(input: str) -> str:
     return input
 
 def _heuristics_json_config_exists(input: str) -> str:
-    if input.endswith(".json"):
-        path = _path_exists(input)
-        with open(path) as file:
-            try:
-                # Heuristics are a list of key-value pairs.
-                safe_json.load(file, Dict[str, Any])
-                return path
-            except safe_json.InvalidJson:
-                raise argparse.ArgumentTypeError(
-                    f"`{path}` must be a valid JSON file with key-value pairs"
-                )
-    else:
-        raise argparse.ArgumentTypeError(
-            f"`{input}` must be a JSON file"
-        )
+    path = _path_exists(input)
+    with open(path) as file:
+        try:
+            # Heuristics are a list of key-value pairs.
+            safe_json.load(file, Dict[str, Any])
+            return path
+        except safe_json.InvalidJson:
+            raise argparse.ArgumentTypeError(
+                f"`{path}` must be a valid JSON file with key-value pairs"
+            )
 
 class ExtractJexException(ClientError):
     pass
