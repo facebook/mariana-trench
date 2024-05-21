@@ -10,45 +10,52 @@
 
 namespace marianatrench {
 
-Heuristics::Heuristics(std::size_t join_override_threshold,
-                       std::size_t android_join_override_threshold,
-                       std::optional<std::size_t> warn_override_threshold,
-                       std::size_t generation_max_port_size,
-                       std::size_t generation_max_output_path_leaves,
-                       std::size_t parameter_source_max_port_size,
-                       std::size_t parameter_source_max_output_path_leaves,
-                       std::size_t sink_max_port_size,
-                       std::size_t sink_max_input_path_leaves,
-                       std::size_t call_effect_source_max_port_size,
-                       std::size_t call_effect_source_max_output_path_leaves,
-                       std::size_t call_effect_sink_max_port_size,
-                       std::size_t call_effect_sink_max_input_path_leaves,
-                       std::size_t max_number_iterations,
-                       std::size_t max_depth_class_properties,
-                       std::size_t max_call_chain_source_sink_distance,
-                       std::size_t propagation_max_input_path_size,
-                       std::size_t propagation_max_input_path_leaves)
-    : join_override_threshold_(join_override_threshold),
-      android_join_override_threshold_(android_join_override_threshold),
-      warn_override_threshold_(warn_override_threshold),
-      generation_max_port_size_(generation_max_port_size),
-      generation_max_output_path_leaves_(generation_max_output_path_leaves),
-      parameter_source_max_port_size_(parameter_source_max_port_size),
+// Default values for heuristics parameters.
+constexpr std::size_t join_override_threshold_default = 40;
+constexpr std::size_t android_join_override_threshold_default = 10;
+constexpr std::optional<std::size_t> warn_override_threshold_default = std::nullopt;
+constexpr std::size_t generation_max_port_size_default = 4;
+constexpr std::size_t generation_max_output_path_leaves_default = 20;
+constexpr std::size_t parameter_source_max_port_size_default = 4;
+constexpr std::size_t parameter_source_max_output_path_leaves_default = 20;
+constexpr std::size_t sink_max_port_size_default = 4;
+constexpr std::size_t sink_max_input_path_leaves_default = 20;
+constexpr std::size_t call_effect_source_max_port_size_default = 4;
+constexpr std::size_t call_effect_source_max_output_path_leaves_default = 20;
+constexpr std::size_t call_effect_sink_max_port_size_default = 4;
+constexpr std::size_t call_effect_sink_max_input_path_leaves_default = 20;
+constexpr std::size_t max_number_iterations_default = 150;
+constexpr std::size_t max_depth_class_properties_default = 10;
+constexpr std::size_t max_call_chain_source_sink_distance_default = 10;
+constexpr std::size_t propagation_max_input_path_size_default = 4;
+constexpr std::size_t propagation_max_input_path_leaves_default = 4;
+
+Heuristics::Heuristics()
+    : join_override_threshold_(join_override_threshold_default),
+      android_join_override_threshold_(android_join_override_threshold_default),
+      warn_override_threshold_(warn_override_threshold_default),
+      generation_max_port_size_(generation_max_port_size_default),
+      generation_max_output_path_leaves_(
+          generation_max_output_path_leaves_default),
+      parameter_source_max_port_size_(parameter_source_max_port_size_default),
       parameter_source_max_output_path_leaves_(
-          parameter_source_max_output_path_leaves),
-      sink_max_port_size_(sink_max_port_size),
-      sink_max_input_path_leaves_(sink_max_input_path_leaves),
-      call_effect_source_max_port_size_(call_effect_source_max_port_size),
+          parameter_source_max_output_path_leaves_default),
+      sink_max_port_size_(sink_max_port_size_default),
+      sink_max_input_path_leaves_(sink_max_input_path_leaves_default),
+      call_effect_source_max_port_size_(
+          call_effect_source_max_port_size_default),
       call_effect_source_max_output_path_leaves_(
-          call_effect_source_max_output_path_leaves),
-      call_effect_sink_max_port_size_(call_effect_sink_max_port_size),
+          call_effect_source_max_output_path_leaves_default),
+      call_effect_sink_max_port_size_(call_effect_sink_max_port_size_default),
       call_effect_sink_max_input_path_leaves_(
-          call_effect_sink_max_input_path_leaves),
-      max_number_iterations_(max_number_iterations),
-      max_depth_class_properties_(max_depth_class_properties),
-      max_call_chain_source_sink_distance_(max_call_chain_source_sink_distance),
-      propagation_max_input_path_size_(propagation_max_input_path_size),
-      propagation_max_input_path_leaves_(propagation_max_input_path_leaves) {}
+          call_effect_sink_max_input_path_leaves_default),
+      max_number_iterations_(max_number_iterations_default),
+      max_depth_class_properties_(max_depth_class_properties_default),
+      max_call_chain_source_sink_distance_(
+          max_call_chain_source_sink_distance_default),
+      propagation_max_input_path_size_(propagation_max_input_path_size_default),
+      propagation_max_input_path_leaves_(
+          propagation_max_input_path_leaves_default) {}
 
 Heuristics Heuristics::from_json(const Json::Value &value) {
   // Create an `Heuristics` object with the default values.
