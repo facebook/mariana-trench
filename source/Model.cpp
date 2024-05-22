@@ -737,7 +737,8 @@ void Model::add_taint_in_taint_out(
         "Model::add_taint_in_taint_out called with def DexMethodReference: `{}`. Current model: `{}`",
         show(dex_method_reference),
         *this);
-    method_ = context.methods->create(dex_method_reference->as_def());
+    method_ = context.methods->get(dex_method_reference->as_def());
+    mt_assert_log(method_ != nullptr, "Expected method to have been created.");
     add_taint_in_taint_out(context);
     return;
   }
