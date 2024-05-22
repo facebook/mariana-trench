@@ -110,7 +110,7 @@ class Registry final {
  private:
   Context& context_;
 
-  mutable ConcurrentMap<const Method*, Model> models_;
+  ConcurrentMap<const Method*, Model> models_;
   ConcurrentMap<const Field*, FieldModel> field_models_;
   ConcurrentMap<std::string, LiteralModel> literal_models_;
 };
