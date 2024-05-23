@@ -142,6 +142,14 @@ TEST_P(IntegrationTest, CompareFlows) {
   auto literal_models_file = directory / "literal_models.json";
   bool propagate_across_arguments = "propagation_via_arg" == name.string();
 
+  auto heuristics_file = directory / "heuristics.json";
+  Heuristics heuristics;
+  if (std::filesystem::exists(heuristics_file)) {
+    LOG(3, "Found heuristics configuration.");
+    Json::Value json = JsonReader::parse_json_file(heuristics_file);
+    heuristics = Heuristics::from_json(json);
+  }
+
   // Read the configuration for this test case.
   context.options = std::make_unique<Options>(
       /* models_paths */
@@ -171,7 +179,8 @@ TEST_P(IntegrationTest, CompareFlows) {
       /* source_root_directory */ directory.string(),
       /* enable_cross_component_analysis */ true,
       /* export_origins_mode */ ExportOriginsMode::Always,
-      propagate_across_arguments);
+      propagate_across_arguments,
+      heuristics);
 
   // Load test Java classes
   std::filesystem::path dex_path = test::find_dex_path(directory);
