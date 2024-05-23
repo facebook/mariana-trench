@@ -228,7 +228,7 @@
   {
     "static" : 
     [
-      "Lcom/facebook/marianatrench/integrationtests/Test;.<init>:(Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;)V"
+      "Lcom/facebook/marianatrench/integrationtests/Test;.<init>:(Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;)V"
     ]
   },
   "Lcom/facebook/marianatrench/integrationtests/Test;.<init>:()V" : 
@@ -238,7 +238,7 @@
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/Test;.<init>:(Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;)V" : 
+  "Lcom/facebook/marianatrench/integrationtests/Test;.<init>:(Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;Lcom/facebook/marianatrench/integrationtests/Test;)V" : 
   {
     "static" : 
     [
@@ -258,25 +258,7 @@
       "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/Test;",
       "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.setA:(Lcom/facebook/marianatrench/integrationtests/Test;)Lcom/facebook/marianatrench/integrationtests/Test$Builder;",
       "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.setB:(Lcom/facebook/marianatrench/integrationtests/Test;)Lcom/facebook/marianatrench/integrationtests/Test$Builder;",
-      "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.setC:(Lcom/facebook/marianatrench/integrationtests/Test;)Lcom/facebook/marianatrench/integrationtests/Test$Builder;",
-      "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.setD:(Lcom/facebook/marianatrench/integrationtests/Test;)Lcom/facebook/marianatrench/integrationtests/Test$Builder;",
-      "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.setE:(Lcom/facebook/marianatrench/integrationtests/Test;)Lcom/facebook/marianatrench/integrationtests/Test$Builder;",
-      "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.setF:(Lcom/facebook/marianatrench/integrationtests/Test;)Lcom/facebook/marianatrench/integrationtests/Test$Builder;",
-      "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.setG:(Lcom/facebook/marianatrench/integrationtests/Test;)Lcom/facebook/marianatrench/integrationtests/Test$Builder;",
-      "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.setH:(Lcom/facebook/marianatrench/integrationtests/Test;)Lcom/facebook/marianatrench/integrationtests/Test$Builder;",
-      "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.setI:(Lcom/facebook/marianatrench/integrationtests/Test;)Lcom/facebook/marianatrench/integrationtests/Test$Builder;",
-      "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.setJ:(Lcom/facebook/marianatrench/integrationtests/Test;)Lcom/facebook/marianatrench/integrationtests/Test$Builder;",
-      "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.setK:(Lcom/facebook/marianatrench/integrationtests/Test;)Lcom/facebook/marianatrench/integrationtests/Test$Builder;",
-      "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.setL:(Lcom/facebook/marianatrench/integrationtests/Test;)Lcom/facebook/marianatrench/integrationtests/Test$Builder;",
-      "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.setM:(Lcom/facebook/marianatrench/integrationtests/Test;)Lcom/facebook/marianatrench/integrationtests/Test$Builder;",
-      "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.setN:(Lcom/facebook/marianatrench/integrationtests/Test;)Lcom/facebook/marianatrench/integrationtests/Test$Builder;",
-      "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.setO:(Lcom/facebook/marianatrench/integrationtests/Test;)Lcom/facebook/marianatrench/integrationtests/Test$Builder;",
-      "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.setP:(Lcom/facebook/marianatrench/integrationtests/Test;)Lcom/facebook/marianatrench/integrationtests/Test$Builder;",
-      "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.setQ:(Lcom/facebook/marianatrench/integrationtests/Test;)Lcom/facebook/marianatrench/integrationtests/Test$Builder;",
-      "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.setR:(Lcom/facebook/marianatrench/integrationtests/Test;)Lcom/facebook/marianatrench/integrationtests/Test$Builder;",
-      "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.setS:(Lcom/facebook/marianatrench/integrationtests/Test;)Lcom/facebook/marianatrench/integrationtests/Test$Builder;",
-      "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.setT:(Lcom/facebook/marianatrench/integrationtests/Test;)Lcom/facebook/marianatrench/integrationtests/Test$Builder;",
-      "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.setU:(Lcom/facebook/marianatrench/integrationtests/Test;)Lcom/facebook/marianatrench/integrationtests/Test$Builder;"
+      "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.setC:(Lcom/facebook/marianatrench/integrationtests/Test;)Lcom/facebook/marianatrench/integrationtests/Test$Builder;"
     ]
   },
   "Lcom/facebook/marianatrench/integrationtests/Test;.differentSource:()Ljava/lang/Object;" : 
