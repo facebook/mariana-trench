@@ -87,6 +87,8 @@ std::string model_mode_to_string(Model::Mode mode) {
       return "alias-memory-location-on-invoke";
     case Model::Mode::StrongWriteOnPropagation:
       return "strong-write-on-propagation";
+    case Model::Mode::NoCollapseOnApproximate:
+      return "no-collapse-on-approximate";
     case Model::Mode::_Count:
       mt_unreachable();
   }
@@ -110,6 +112,8 @@ std::optional<Model::Mode> string_to_model_mode(const std::string& mode) {
     return Model::Mode::AliasMemoryLocationOnInvoke;
   } else if (mode == "strong-write-on-propagation") {
     return Model::Mode::StrongWriteOnPropagation;
+  } else if (mode == "no-collapse-on-approximate") {
+    return Model::Mode::NoCollapseOnApproximate;
   } else {
     return std::nullopt;
   }
@@ -1148,6 +1152,10 @@ bool Model::alias_memory_location_on_invoke() const {
 
 bool Model::strong_write_on_propagation() const {
   return modes_.test(Model::Mode::StrongWriteOnPropagation);
+}
+
+bool Model::no_collapse_on_approximate() const {
+  return modes_.test(Model::Mode::NoCollapseOnApproximate);
 }
 
 bool Model::is_frozen(Model::FreezeKind freeze_kind) const {

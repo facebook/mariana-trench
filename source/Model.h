@@ -120,6 +120,9 @@ class Model final {
     // Perform a strong write on propagation
     StrongWriteOnPropagation,
 
+    // Do not collapse when applying approximations
+    NoCollapseOnApproximate,
+
     _Count,
   };
 
@@ -355,6 +358,7 @@ class Model final {
   bool no_collapse_on_propagation() const;
   bool alias_memory_location_on_invoke() const;
   bool strong_write_on_propagation() const;
+  bool no_collapse_on_approximate() const;
   Modes modes() const {
     return modes_;
   }
@@ -508,7 +512,7 @@ inline Model::Frozen operator|(
 std::string model_mode_to_string(Model::Mode mode);
 std::optional<Model::Mode> string_to_model_mode(const std::string& mode);
 
-constexpr std::array<Model::Mode, 8> k_all_modes = {
+constexpr std::array<Model::Mode, 9> k_all_modes = {
     Model::Mode::SkipAnalysis,
     Model::Mode::AddViaObscureFeature,
     Model::Mode::TaintInTaintOut,
@@ -517,6 +521,7 @@ constexpr std::array<Model::Mode, 8> k_all_modes = {
     Model::Mode::NoCollapseOnPropagation,
     Model::Mode::AliasMemoryLocationOnInvoke,
     Model::Mode::StrongWriteOnPropagation,
+    Model::Mode::NoCollapseOnApproximate,
 };
 
 constexpr std::array<Model::FreezeKind, 4> k_all_freeze_kinds = {
