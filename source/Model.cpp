@@ -625,28 +625,35 @@ void Model::approximate(
     const Heuristics& heuristics) {
   const auto make_mold = [](Taint taint) { return taint.essential(); };
 
+  // Shape the taint trees with mold
   generations_.shape_with(make_mold, widening_features);
+  parameter_sources_.shape_with(make_mold, widening_features);
+  sinks_.shape_with(make_mold, widening_features);
+  call_effect_sources_.shape_with(make_mold, widening_features);
+  call_effect_sinks_.shape_with(make_mold, widening_features);
+  propagations_.shape_with(make_mold, widening_features);
+
+  if (no_collapse_on_approximate()) {
+    return;
+  }
+  // Limit the number of leaves in each taint tree when
+  // Mode::NoCollapseOnApproximate is not set
   generations_.limit_leaves(
       heuristics.generation_max_output_path_leaves(), widening_features);
 
-  parameter_sources_.shape_with(make_mold, widening_features);
   parameter_sources_.limit_leaves(
       heuristics.parameter_source_max_output_path_leaves(), widening_features);
 
-  sinks_.shape_with(make_mold, widening_features);
   sinks_.limit_leaves(
       heuristics.sink_max_input_path_leaves(), widening_features);
 
-  call_effect_sources_.shape_with(make_mold, widening_features);
   call_effect_sources_.limit_leaves(
       heuristics.call_effect_source_max_output_path_leaves(),
       widening_features);
 
-  call_effect_sinks_.shape_with(make_mold, widening_features);
   call_effect_sinks_.limit_leaves(
       heuristics.call_effect_sink_max_input_path_leaves(), widening_features);
 
-  propagations_.shape_with(make_mold, widening_features);
   propagations_.limit_leaves(
       heuristics.propagation_max_input_path_leaves(), widening_features);
 }

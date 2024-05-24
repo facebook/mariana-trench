@@ -76,6 +76,15 @@ public class Test {
     return (new Builder()).setA((Test) Origin.source()).setB((Test) Test.differentSource()).build();
   }
 
+  public static Test noCollapseOnApproximateBuilder() {
+    // Still the 3-field pattern, but with "no-collapse-on-approximate" enabled
+    return (new Builder())
+        .setA((Test) Origin.source())
+        .setB((Test) Test.differentSource())
+        .setC((Test) Origin.source())
+        .build();
+  }
+
   public static void testCollapseOnBuilder() {
     Test output = collapseOnBuilder();
 
@@ -92,6 +101,20 @@ public class Test {
 
   public static void testNoCollapseOnBuilder() {
     Test output = noCollapseOnBuilder();
+
+    // issue: a has "Source" and b has "DifferentSource"
+    Origin.sink(output.a);
+    Test.differentSink(output.b);
+
+    // no issue, since no collapsing occurs
+    Test.differentSink(output.a);
+    Origin.sink(output.b);
+    Origin.sink(output.d);
+    Test.differentSink(output.d);
+  }
+
+  public static void testNoCollapseOnApproximateBuilder() {
+    Test output = noCollapseOnApproximateBuilder();
 
     // issue: a has "Source" and b has "DifferentSource"
     Origin.sink(output.a);
