@@ -15,6 +15,7 @@
 #include <RedexContext.h>
 
 #include <mariana-trench/ArtificialMethods.h>
+#include <mariana-trench/CachedModelsContext.h>
 #include <mariana-trench/ClassHierarchies.h>
 #include <mariana-trench/ClassIntervals.h>
 #include <mariana-trench/ClassProperties.h>
@@ -122,10 +123,20 @@ Registry MarianaTrench::analyze(Context& context) {
       types_timer.duration_in_seconds(),
       resident_set_size_in_gb());
 
+  Timer cached_models_context_timer;
+  LOG(1, "Loading cached models...");
+  CachedModelsContext cached_models_context(context, *context.options);
+  context.statistics->log_time(
+      "cached_models_context_init", cached_models_context_timer);
+  LOG(1,
+      "Loaded models from input directory in {:.2f}s. Memory used, RSS: {:.2f}GB",
+      cached_models_context_timer.duration_in_seconds(),
+      resident_set_size_in_gb());
+
   Timer class_hierarchies_timer;
   LOG(1, "Building class hierarchies...");
-  context.class_hierarchies =
-      std::make_unique<ClassHierarchies>(*context.options, context.stores);
+  context.class_hierarchies = std::make_unique<ClassHierarchies>(
+      *context.options, context.stores, cached_models_context);
   context.statistics->log_time("class_hierarchies", class_hierarchies_timer);
   LOG(1,
       "Built class hierarchies in {:.2f}s. Memory used, RSS: {:.2f}GB",
@@ -145,7 +156,10 @@ Registry MarianaTrench::analyze(Context& context) {
   Timer overrides_timer;
   LOG(1, "Building override graph...");
   context.overrides = std::make_unique<Overrides>(
-      *context.options, *context.methods, context.stores);
+      *context.options,
+      *context.methods,
+      context.stores,
+      cached_models_context);
   context.statistics->log_time("overrides", overrides_timer);
   LOG(1,
       "Built override graph in {:.2f}s. Memory used, RSS: {:.2f}GB",
@@ -161,22 +175,6 @@ Registry MarianaTrench::analyze(Context& context) {
       "Computed class intervals in {:.2f}s. Memory used, RSS: {:.2f}GB",
       class_intervals_timer.duration_in_seconds(),
       resident_set_size_in_gb());
-
-  std::optional<Registry> sharded_models_registry = std::nullopt;
-  if (auto sharded_models_directory =
-          context.options->sharded_models_directory()) {
-    Timer sharded_models_registry_timer;
-    LOG(1, "Loading sharded models...");
-    sharded_models_registry.emplace(
-        Registry::from_sharded_models_json(context, *sharded_models_directory));
-    context.statistics->log_time(
-        "sharded_models_registry_init", sharded_models_registry_timer);
-    LOG(1,
-        "Loaded {} models from input directory in {:.2f}s. Memory used, RSS: {:.2f}GB",
-        sharded_models_registry->models_size(),
-        sharded_models_registry_timer.duration_in_seconds(),
-        resident_set_size_in_gb());
-  }
 
   std::vector<Model> generated_models;
   std::vector<FieldModel> generated_field_models;
@@ -248,8 +246,8 @@ Registry MarianaTrench::analyze(Context& context) {
 
     Timer generation_timer;
     LOG(1, "Generating models...");
-    auto model_generator_result =
-        ModelGeneration::run(context, sharded_models_registry, method_mappings);
+    auto model_generator_result = ModelGeneration::run(
+        context, cached_models_context.models(), method_mappings);
     generated_models = model_generator_result.method_models;
     generated_field_models = model_generator_result.field_models;
     context.statistics->log_time("models_generation", generation_timer);
@@ -275,10 +273,11 @@ Registry MarianaTrench::analyze(Context& context) {
   Timer registry_timer;
   LOG(1, "Initializing models...");
   auto registry = Registry::load(
-      context, *context.options, generated_models, generated_field_models);
-  if (sharded_models_registry.has_value()) {
-    registry.join_with(*sharded_models_registry);
-  }
+      context,
+      *context.options,
+      generated_models,
+      generated_field_models,
+      cached_models_context.models());
   context.statistics->log_time("registry_init", registry_timer);
   LOG(1,
       "Initialized {} models and {} field models in {:.2f}s. Memory used, RSS: {:.2f}GB",
@@ -286,6 +285,9 @@ Registry MarianaTrench::analyze(Context& context) {
       registry.field_models_size(),
       registry_timer.duration_in_seconds(),
       resident_set_size_in_gb());
+
+  // Cache is no longer used. Free up memory
+  cached_models_context.clear();
 
   Timer rules_timer;
   LOG(1, "Initializing rules...");

@@ -13,6 +13,7 @@
 
 #include <DexStore.h>
 
+#include <mariana-trench/CachedModelsContext.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Method.h>
 #include <mariana-trench/Options.h>
@@ -25,7 +26,8 @@ class Overrides final {
   explicit Overrides(
       const Options& options,
       Methods& methods,
-      const DexStoresVector& stores);
+      const DexStoresVector& stores,
+      const CachedModelsContext& cached_models_context);
 
   DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Overrides)
 

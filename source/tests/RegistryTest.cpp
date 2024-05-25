@@ -33,6 +33,7 @@ TEST_F(RegistryTest, remove_kinds) {
   DexStore store("stores");
   store.add_classes(scope);
   auto context = test::make_context(store);
+  CachedModelsContext cached_models_context(context, *context.options);
 
   auto registry = Registry::load(
       context,
@@ -40,7 +41,8 @@ TEST_F(RegistryTest, remove_kinds) {
       /* generated_models */
       context.artificial_methods->models(
           context), // used to make sure we get ArrayAllocation
-      /* generated_field_models */ {});
+      /* generated_field_models */ {},
+      cached_models_context.models());
   context.rules =
       std::make_unique<Rules>(Rules::load(context, *context.options));
   context.used_kinds = std::make_unique<UsedKinds>(

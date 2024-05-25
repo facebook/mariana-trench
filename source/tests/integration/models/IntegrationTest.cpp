@@ -481,6 +481,7 @@ TEST_P(IntegrationTest, ReturnsExpectedModel) {
       /* emit_all_via_cast_features */ false,
       /* remove_unreachable_code */ false);
   const auto& options = *context.options;
+  CachedModelsContext cached_models_context(context, options);
 
   DexStore store("test_store");
   store.add_classes(scope);
@@ -496,12 +497,15 @@ TEST_P(IntegrationTest, ReturnsExpectedModel) {
   context.control_flow_graphs =
       std::make_unique<ControlFlowGraphs>(context.stores);
   context.types = std::make_unique<Types>(options, context.stores);
-  context.class_hierarchies =
-      std::make_unique<ClassHierarchies>(*context.options, context.stores);
+  context.class_hierarchies = std::make_unique<ClassHierarchies>(
+      *context.options, context.stores, cached_models_context);
   context.field_cache =
       std::make_unique<FieldCache>(*context.class_hierarchies, context.stores);
   context.overrides = std::make_unique<Overrides>(
-      *context.options, *context.methods, context.stores);
+      *context.options,
+      *context.methods,
+      context.stores,
+      cached_models_context);
   context.call_graph = std::make_unique<CallGraph>(
       *context.options,
       *context.types,

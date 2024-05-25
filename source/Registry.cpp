@@ -91,7 +91,8 @@ Registry Registry::load(
     Context& context,
     const Options& options,
     const std::vector<Model>& generated_models,
-    const std::vector<FieldModel>& generated_field_models) {
+    const std::vector<FieldModel>& generated_field_models,
+    const std::optional<Registry>& cached_registry) {
   // Create a registry with the generated models
   Registry registry(context, generated_models, generated_field_models);
 
@@ -121,6 +122,10 @@ Registry Registry::load(
         /* field_models_value */ Json::Value(Json::arrayValue),
         /* literal_models_value */
         JsonReader::parse_json_file(literal_models_path)));
+  }
+
+  if (cached_registry.has_value()) {
+    registry.join_with(*cached_registry);
   }
 
   // Add a default model for methods that don't have one

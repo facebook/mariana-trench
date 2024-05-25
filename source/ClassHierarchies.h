@@ -13,6 +13,7 @@
 
 #include <DexStore.h>
 
+#include <mariana-trench/CachedModelsContext.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Options.h>
 #include <mariana-trench/UniquePointerConcurrentMap.h>
@@ -23,7 +24,8 @@ class ClassHierarchies final {
  public:
   explicit ClassHierarchies(
       const Options& options,
-      const DexStoresVector& stores);
+      const DexStoresVector& stores,
+      const CachedModelsContext& cached_models_context);
 
   DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ClassHierarchies)
 

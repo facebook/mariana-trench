@@ -81,6 +81,7 @@ Context make_context(const DexStore& store) {
       /* model_generators_search_path */ std::vector<std::string>{},
       /* remove_unreachable_code */ false,
       /* emit_all_via_cast_features */ false);
+  CachedModelsContext cached_models_context(context, *context.options);
   context.stores = {store};
   context.artificial_methods = std::make_unique<ArtificialMethods>(
       *context.kind_factory, context.stores);
@@ -91,10 +92,13 @@ Context make_context(const DexStore& store) {
   context.control_flow_graphs =
       std::make_unique<ControlFlowGraphs>(context.stores);
   context.types = std::make_unique<Types>(*context.options, context.stores);
-  context.class_hierarchies =
-      std::make_unique<ClassHierarchies>(*context.options, context.stores);
+  context.class_hierarchies = std::make_unique<ClassHierarchies>(
+      *context.options, context.stores, cached_models_context);
   context.overrides = std::make_unique<Overrides>(
-      *context.options, *context.methods, context.stores);
+      *context.options,
+      *context.methods,
+      context.stores,
+      cached_models_context);
   MethodMappings method_mappings{*context.methods};
   auto intent_routing_analyzer = IntentRoutingAnalyzer::run(
       *context.methods, *context.types, *context.options);

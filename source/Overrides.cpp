@@ -25,23 +25,8 @@ namespace marianatrench {
 Overrides::Overrides(
     const Options& options,
     Methods& method_factory,
-    const DexStoresVector& stores) {
-  std::unordered_map<const Method*, std::unordered_set<const Method*>>
-      overrides_input;
-  if (options.overrides_input_path().has_value()) {
-    auto overrides_input_path = *options.overrides_input_path();
-    if (!std::filesystem::exists(overrides_input_path)) {
-      throw std::runtime_error(
-          "Overrides file must exist when sharded input models are provided.");
-    }
-    LOG(1,
-        "Including overrides from `{}`",
-        options.overrides_input_path()->native());
-    // Include overrides any input path.
-    auto overrides_json = JsonReader::parse_json_file(overrides_input_path);
-    overrides_input = Overrides::from_json(overrides_json, method_factory);
-  }
-
+    const DexStoresVector& stores,
+    const CachedModelsContext& cached_models_context) {
   // Compute overrides.
   std::vector<std::unique_ptr<const method_override_graph::Graph>>
       method_override_graphs;
@@ -50,30 +35,35 @@ Overrides::Overrides(
   }
 
   // Record overrides.
+  const auto& cached_overrides = cached_models_context.overrides();
   for (const auto& scope : DexStoreClassesIterator(stores)) {
-    walk::parallel::methods(scope, [&](const DexMethod* dex_method) {
-      std::unordered_set<const Method*> method_overrides;
-      const auto* method = method_factory.get(dex_method);
-      for (const auto& graph : method_override_graphs) {
-        auto overrides_in_scope = method_override_graph::get_overriding_methods(
-            *graph, dex_method, /* include_interfaces */ true);
-        for (const auto* override : overrides_in_scope) {
-          method_overrides.insert(method_factory.get(override));
-        }
+    walk::parallel::methods(
+        scope,
+        [&method_factory, &method_override_graphs, &cached_overrides, this](
+            const DexMethod* dex_method) {
+          std::unordered_set<const Method*> method_overrides;
+          const auto* method = method_factory.get(dex_method);
+          for (const auto& graph : method_override_graphs) {
+            auto overrides_in_scope =
+                method_override_graph::get_overriding_methods(
+                    *graph, dex_method, /* include_interfaces */ true);
+            for (const auto* override : overrides_in_scope) {
+              method_overrides.insert(method_factory.get(override));
+            }
 
-        // Include any overrides in the input json
-        auto from_input = overrides_input.find(method);
-        if (from_input != overrides_input.end()) {
-          method_overrides.insert(
-              from_input->second.begin(), from_input->second.end());
-        }
-      }
-      set(method, std::move(method_overrides));
-    });
+            // Include any overrides in the input json
+            auto from_input = cached_overrides.find(method);
+            if (from_input != cached_overrides.end()) {
+              method_overrides.insert(
+                  from_input->second.begin(), from_input->second.end());
+            }
+          }
+          set(method, std::move(method_overrides));
+        });
   }
 
   // Merge overrides for remaining methods.
-  for (const auto& [method, overrides] : overrides_input) {
+  for (const auto& [method, overrides] : cached_overrides) {
     const auto* overridden = overrides_.get(method, nullptr);
     if (overridden == nullptr) {
       set(method, overrides);

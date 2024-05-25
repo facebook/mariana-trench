@@ -60,25 +60,8 @@ class Graph {
 
 ClassHierarchies::ClassHierarchies(
     const Options& options,
-    const DexStoresVector& stores) {
-  std::unordered_map<const DexType*, std::unordered_set<const DexType*>>
-      class_hierarchies_input;
-  if (auto class_hierarchies_input_path =
-          options.class_hierarchies_input_path()) {
-    if (!std::filesystem::exists(*class_hierarchies_input_path)) {
-      throw std::runtime_error(
-          "Class hierarchies file must exist when sharded input models are provided.");
-    }
-    LOG(1,
-        "Including class hierarchies from `{}`",
-        class_hierarchies_input_path->native());
-
-    auto class_hierarchies_json =
-        JsonReader::parse_json_file(*class_hierarchies_input_path);
-    class_hierarchies_input =
-        ClassHierarchies::from_json(class_hierarchies_json);
-  }
-
+    const DexStoresVector& stores,
+    const CachedModelsContext& cached_models_context) {
   Graph graph;
 
   // Compute the class hierarchy graph.
@@ -95,15 +78,16 @@ ClassHierarchies::ClassHierarchies(
   }
 
   // Record the results.
+  const auto& cached_hierarchy = cached_models_context.class_hierarchy();
   for (const auto& scope : DexStoreClassesIterator(stores)) {
     walk::parallel::classes(
-        scope, [&graph, &class_hierarchies_input, this](const DexClass* klass) {
+        scope, [&graph, &cached_hierarchy, this](const DexClass* klass) {
           const auto* class_type = klass->get_type();
           auto extends = graph.extends(class_type);
 
           // Include class hierarchies from json input.
-          auto existing_hierarchy = class_hierarchies_input.find(class_type);
-          if (existing_hierarchy != class_hierarchies_input.end()) {
+          auto existing_hierarchy = cached_hierarchy.find(class_type);
+          if (existing_hierarchy != cached_hierarchy.end()) {
             extends.insert(
                 existing_hierarchy->second.begin(),
                 existing_hierarchy->second.end());
@@ -119,7 +103,7 @@ ClassHierarchies::ClassHierarchies(
   }
 
   // Include hierarchy information for remaining classes.
-  for (const auto& [class_type, hierarchy] : class_hierarchies_input) {
+  for (const auto& [class_type, hierarchy] : cached_hierarchy) {
     const auto* found = extends_.get(class_type, nullptr);
     if (found == nullptr) {
       extends_.emplace(

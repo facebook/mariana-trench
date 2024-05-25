@@ -59,7 +59,8 @@ class Registry final {
       Context& context,
       const Options& options,
       const std::vector<Model>& generated_models,
-      const std::vector<FieldModel>& generated_field_models);
+      const std::vector<FieldModel>& generated_field_models,
+      const std::optional<Registry>& cached_registry);
 
   void add_default_models();
 
