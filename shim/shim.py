@@ -794,6 +794,10 @@ def main() -> None:
                     for path in configuration.get_default_generator_search_paths()
                 )
             )
+        if arguments.lifecycles_paths is None:
+            arguments.lifecycles_paths = _separated_paths_exist(
+                os.fspath(configuration.get_path("lifecycles.json"))
+            )
         if (
             configuration.FACEBOOK_SHIM
             and arguments.java_target is not None
