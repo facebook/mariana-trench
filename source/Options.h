@@ -94,6 +94,8 @@ class Options final {
 
   const std::optional<std::filesystem::path> sharded_models_directory() const;
   const std::optional<std::filesystem::path> overrides_input_path() const;
+  const std::optional<std::filesystem::path> class_hierarchies_input_path()
+      const;
 
   bool sequential() const;
   bool skip_source_indexing() const;

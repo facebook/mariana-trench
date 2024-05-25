@@ -94,3 +94,50 @@ TEST_F(ClassHierarchiesTest, ClassHierarchies) {
   EXPECT_TRUE(
       class_hierarchies.extends(dex_child_one_child->get_class()).empty());
 }
+
+TEST_F(ClassHierarchiesTest, JsonSerializationDeserialization) {
+  Scope scope;
+
+  auto* dex_parent = redex::create_void_method(scope, "LParent;", "f");
+  auto* dex_child_one = redex::create_void_method(
+      scope,
+      "LChildOne;",
+      "f",
+      /* parameter_types */ "",
+      /* return_type */ "V",
+      /* super */ dex_parent->get_class());
+  auto* dex_child_two = redex::create_void_method(
+      scope,
+      "LChildTwo;",
+      "f",
+      /* parameter_types */ "",
+      /* return_type */ "V",
+      /* super */ dex_parent->get_class());
+  auto* dex_child_one_child = redex::create_void_method(
+      scope,
+      "LChildOneChild;",
+      "f",
+      /* parameter_types */ "",
+      /* return_type */ "V",
+      /* super */ dex_child_one->get_class());
+
+  auto context = test_class_hierarchies(scope);
+  auto class_hierarchy_json = context.class_hierarchies->to_json();
+  auto class_hierarchy_map = ClassHierarchies::from_json(class_hierarchy_json);
+
+  EXPECT_THAT(
+      class_hierarchy_map[dex_parent->get_class()],
+      testing::UnorderedElementsAre(
+          dex_child_one->get_class(),
+          dex_child_two->get_class(),
+          dex_child_one_child->get_class()));
+  EXPECT_THAT(
+      class_hierarchy_map[dex_child_one->get_class()],
+      testing::UnorderedElementsAre(dex_child_one_child->get_class()));
+  EXPECT_EQ(
+      class_hierarchy_map.find(dex_child_two->get_class()),
+      class_hierarchy_map.end());
+  EXPECT_EQ(
+      class_hierarchy_map.find(dex_child_one_child->get_class()),
+      class_hierarchy_map.end());
+}

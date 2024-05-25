@@ -11,7 +11,9 @@
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/ClassHierarchies.h>
 #include <mariana-trench/JsonReaderWriter.h>
+#include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
+#include <mariana-trench/Redex.h>
 
 namespace marianatrench {
 
@@ -59,6 +61,24 @@ class Graph {
 ClassHierarchies::ClassHierarchies(
     const Options& options,
     const DexStoresVector& stores) {
+  std::unordered_map<const DexType*, std::unordered_set<const DexType*>>
+      class_hierarchies_input;
+  if (auto class_hierarchies_input_path =
+          options.class_hierarchies_input_path()) {
+    if (!std::filesystem::exists(*class_hierarchies_input_path)) {
+      throw std::runtime_error(
+          "Class hierarchies file must exist when sharded input models are provided.");
+    }
+    LOG(1,
+        "Including class hierarchies from `{}`",
+        class_hierarchies_input_path->native());
+
+    auto class_hierarchies_json =
+        JsonReader::parse_json_file(*class_hierarchies_input_path);
+    class_hierarchies_input =
+        ClassHierarchies::from_json(class_hierarchies_json);
+  }
+
   Graph graph;
 
   // Compute the class hierarchy graph.
@@ -76,16 +96,36 @@ ClassHierarchies::ClassHierarchies(
 
   // Record the results.
   for (const auto& scope : DexStoreClassesIterator(stores)) {
-    walk::parallel::classes(scope, [&graph, this](const DexClass* klass) {
-      auto extends = graph.extends(klass->get_type());
+    walk::parallel::classes(
+        scope, [&graph, &class_hierarchies_input, this](const DexClass* klass) {
+          const auto* class_type = klass->get_type();
+          auto extends = graph.extends(class_type);
 
-      if (!extends.empty()) {
-        extends_.emplace(
-            klass->get_type(),
-            std::make_unique<std::unordered_set<const DexType*>>(
-                std::move(extends)));
-      }
-    });
+          // Include class hierarchies from json input.
+          auto existing_hierarchy = class_hierarchies_input.find(class_type);
+          if (existing_hierarchy != class_hierarchies_input.end()) {
+            extends.insert(
+                existing_hierarchy->second.begin(),
+                existing_hierarchy->second.end());
+          }
+
+          if (!extends.empty()) {
+            extends_.emplace(
+                klass->get_type(),
+                std::make_unique<std::unordered_set<const DexType*>>(
+                    std::move(extends)));
+          }
+        });
+  }
+
+  // Include hierarchy information for remaining classes.
+  for (const auto& [class_type, hierarchy] : class_hierarchies_input) {
+    const auto* found = extends_.get(class_type, nullptr);
+    if (found == nullptr) {
+      extends_.emplace(
+          class_type,
+          std::make_unique<std::unordered_set<const DexType*>>(hierarchy));
+    }
   }
 
   if (options.dump_class_hierarchies()) {
@@ -121,6 +161,33 @@ Json::Value ClassHierarchies::to_json() const {
   auto value = Json::Value(Json::objectValue);
   value["extends"] = extends_value;
   return value;
+}
+
+std::unordered_map<const DexType*, std::unordered_set<const DexType*>>
+ClassHierarchies::from_json(const Json::Value& value) {
+  auto extends_value = JsonValidation::object(value, "extends");
+  std::unordered_map<const DexType*, std::unordered_set<const DexType*>> result;
+
+  // When reading from JSON, some types might not exist in the current APK
+  // or loaded JARs (i.e. not defined in them). The full type information, such
+  // as class hierarchy information, is not known, which is why they are being
+  // loaded here. The DexType will be created if it does not exist. In general,
+  // the analysis should rely on `ClassHierarchies` rather than `DexType` to
+  // determine class hierarchy.
+  for (const auto& type_name : extends_value.getMemberNames()) {
+    const auto* dex_type = redex::get_or_make_type(type_name);
+    std::unordered_set<const DexType*> extends;
+
+    for (const auto& extends_json : extends_value[type_name]) {
+      auto extends_type_name = JsonValidation::string(extends_json);
+      const auto* extends_type = redex::get_or_make_type(extends_type_name);
+      extends.insert(extends_type);
+    }
+
+    result[dex_type] = std::move(extends);
+  }
+
+  return result;
 }
 
 } // namespace marianatrench

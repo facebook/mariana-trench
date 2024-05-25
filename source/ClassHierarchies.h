@@ -32,6 +32,9 @@ class ClassHierarchies final {
 
   Json::Value to_json() const;
 
+  static std::unordered_map<const DexType*, std::unordered_set<const DexType*>>
+  from_json(const Json::Value& value);
+
  private:
   UniquePointerConcurrentMap<const DexType*, std::unordered_set<const DexType*>>
       extends_;

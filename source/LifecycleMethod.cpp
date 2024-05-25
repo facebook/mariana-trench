@@ -125,7 +125,12 @@ void LifecycleMethod::create_methods(
     if (!grandchildren.empty()) {
       continue;
     }
-    if (!::is_abstract(type_class(child))) {
+    // `type` can be `nullptr` if child type is not defined in the current
+    // APK, i.e. type information not available. In such cases, the class also
+    // does not exist in the current APK and there is no need to create a
+    // life-cycle method for it.
+    const auto* type = type_class(child);
+    if (type && !::is_abstract(type)) {
       final_children.insert(child);
     }
   }
