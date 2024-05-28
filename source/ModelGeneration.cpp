@@ -108,16 +108,18 @@ ModelGeneratorError::ModelGeneratorError(const std::string& message)
 
 #ifndef MARIANA_TRENCH_FACEBOOK_BUILD
 std::unordered_map<const ModelGeneratorName*, std::unique_ptr<ModelGenerator>>
-ModelGeneration::make_builtin_model_generators(Context& context) {
+ModelGeneration::make_builtin_model_generators(
+    const std::optional<Registry>& preloaded_models,
+    Context& context) {
   std::vector<std::unique_ptr<ModelGenerator>> builtin_generators;
   builtin_generators.push_back(
       std::make_unique<ContentProviderGenerator>(context));
   builtin_generators.push_back(
       std::make_unique<ServiceSourceGenerator>(context));
   builtin_generators.push_back(
-      std::make_unique<TaintInTaintThisGenerator>(context));
+      std::make_unique<TaintInTaintThisGenerator>(preloaded_models, context));
   builtin_generators.push_back(
-      std::make_unique<TaintInTaintOutGenerator>(context));
+      std::make_unique<TaintInTaintOutGenerator>(preloaded_models, context));
   builtin_generators.push_back(
       std::make_unique<BuilderPatternGenerator>(context));
   builtin_generators.push_back(
