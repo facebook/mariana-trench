@@ -101,3 +101,50 @@ TEST_F(OverridesTest, Overrides) {
       testing::UnorderedElementsAre(indirect_override));
   EXPECT_TRUE(overrides.get(indirect_override).empty());
 }
+
+TEST_F(OverridesTest, JsonSerializationDeserialization) {
+  Scope scope;
+
+  auto* dex_callee = redex::create_void_method(scope, "LCallee;", "callee");
+  auto* dex_override_one = redex::create_void_method(
+      scope,
+      "LSubclassOne;",
+      "callee",
+      /* parameter_types */ "",
+      /* return_type */ "V",
+      /* super */ dex_callee->get_class());
+  auto* dex_override_two = redex::create_void_method(
+      scope,
+      "LSubclassTwo;",
+      "callee",
+      /* parameter_types */ "",
+      /* return_type */ "V",
+      /* super */ dex_callee->get_class());
+  auto* dex_indirect_override = redex::create_void_method(
+      scope,
+      "LIndirectSubclass;",
+      "callee",
+      /* parameter_types */ "",
+      /* return_type */ "V",
+      /* super */ dex_override_two->get_class());
+
+  auto context = test_overrides(scope);
+  auto overrides_json = context.overrides->to_json();
+
+  auto overrides_map = Overrides::from_json(overrides_json, *context.methods);
+
+  auto* callee = context.methods->get(dex_callee);
+  auto* override_one = context.methods->get(dex_override_one);
+  auto* override_two = context.methods->get(dex_override_two);
+  auto* indirect_override = context.methods->get(dex_indirect_override);
+
+  EXPECT_THAT(
+      overrides_map[callee],
+      testing::UnorderedElementsAre(
+          override_one, override_two, indirect_override));
+  EXPECT_TRUE(overrides_map[override_one].empty());
+  EXPECT_THAT(
+      overrides_map[override_two],
+      testing::UnorderedElementsAre(indirect_override));
+  EXPECT_TRUE(overrides_map[indirect_override].empty());
+}
