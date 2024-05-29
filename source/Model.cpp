@@ -1112,6 +1112,33 @@ void Model::make_sharded_model_generators(const std::string& identifier) {
   model_generators_ = std::move(new_model_generator_names);
 }
 
+void Model::collapse_class_intervals() {
+  generations_.transform([](Taint taint) {
+    taint.collapse_class_intervals();
+    return taint;
+  });
+  parameter_sources_.transform([](Taint taint) {
+    taint.collapse_class_intervals();
+    return taint;
+  });
+  sinks_.transform([](Taint taint) {
+    taint.collapse_class_intervals();
+    return taint;
+  });
+  call_effect_sources_.transform([](Taint taint) {
+    taint.collapse_class_intervals();
+    return taint;
+  });
+  call_effect_sinks_.transform([](Taint taint) {
+    taint.collapse_class_intervals();
+    return taint;
+  });
+  propagations_.transform([](Taint taint) {
+    taint.collapse_class_intervals();
+    return taint;
+  });
+}
+
 const SetterAccessPathConstantDomain& Model::inline_as_setter() const {
   return inline_as_setter_;
 }

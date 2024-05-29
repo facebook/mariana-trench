@@ -369,6 +369,13 @@ std::unordered_set<const Kind*> Taint::kinds() const {
   return result;
 }
 
+void Taint::collapse_class_intervals() {
+  transform_kind_frames([](KindFrames kind_frames) {
+    kind_frames.collapse_class_intervals();
+    return kind_frames;
+  });
+}
+
 Taint Taint::propagation(PropagationConfig propagation) {
   return Taint{TaintConfig(
       /* kind */ propagation.kind(),

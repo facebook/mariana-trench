@@ -384,7 +384,6 @@ Registry Registry::from_sharded_models_json(
       try {
         const auto* method = Method::from_json(value["method"], context);
         mt_assert(method != nullptr);
-
         auto model = Model::from_json(value, context);
 
         // Indicate that the source of these models is
@@ -392,6 +391,7 @@ Registry Registry::from_sharded_models_json(
         model.make_sharded_model_generators(
             /* identifier */ directory_name.string());
 
+        model.collapse_class_intervals();
         models.emplace(method, model);
       } catch (const JsonValidationError& e) {
         WARNING(1, "Unable to parse model `{}`: {}", value, e.what());

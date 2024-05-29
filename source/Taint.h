@@ -67,6 +67,17 @@ class Taint final : public sparta::AbstractDomain<Taint> {
 
   void difference_with(const Taint& other);
 
+  template <typename Function> // KindFrames(KindFrames)
+  void transform_kind_frames(Function&& f) {
+    static_assert(
+        std::is_same_v<decltype(f(std::declval<KindFrames&&>())), KindFrames>);
+
+    map_.transform(
+        [f = std::forward<Function>(f)](LocalTaint* local_taint) -> void {
+          local_taint->transform_kind_frames(f);
+        });
+  }
+
   template <typename Function> // Frame(Frame)
   void transform_frames(Function&& f) {
     static_assert(std::is_same_v<decltype(f(std::declval<Frame&&>())), Frame>);
@@ -309,6 +320,11 @@ class Taint final : public sparta::AbstractDomain<Taint> {
    * Returns all kinds used.
    */
   std::unordered_set<const Kind*> kinds() const;
+
+  /**
+   * Remove all class interval information by collapsing it into top()
+   */
+  void collapse_class_intervals();
 
   /**
    * Return the taint representing the given propagation.

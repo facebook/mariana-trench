@@ -224,8 +224,11 @@ class Frame final : public sparta::AbstractDomain<Frame> {
 
   void narrow_with(const Frame& other);
 
-  /* Return frame with the given kind (and every other field kept the same) */
+  /* Returns frame with the given kind (every other field kept the same) */
   Frame with_kind(const Kind* kind) const;
+
+  /* Returns frame with the given interval (every other field kept the same) */
+  Frame with_interval(const CallClassIntervalContext& interval) const;
 
   Frame update_with_propagation_trace(const Frame& propagation_frame) const;
 

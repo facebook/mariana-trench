@@ -160,6 +160,8 @@ class KindFrames final : public sparta::AbstractDomain<KindFrames> {
 
   void add_inferred_features(const FeatureMayAlwaysSet& features);
 
+  void collapse_class_intervals();
+
   friend std::ostream& operator<<(std::ostream& out, const KindFrames& frames);
 
  private:

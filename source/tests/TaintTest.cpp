@@ -3783,6 +3783,57 @@ TEST_F(TaintTest, AttachPosition) {
       }));
 }
 
+TEST_F(TaintTest, CollapseClassIntervals) {
+  auto context = test::make_empty_context();
+
+  Scope scope;
+  const auto* method_one =
+      context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
+  const auto* return_port =
+      context.access_path_factory->get(AccessPath(Root(Root::Kind::Return)));
+  const auto* feature_one = context.feature_factory->get("FeatureOne");
+  const auto* feature_two = context.feature_factory->get("FeatureTwo");
+
+  auto taint = Taint{
+      test::make_taint_config(
+          /* kind */ context.kind_factory->get("TestSource"),
+          test::FrameProperties{
+              .callee_port = return_port,
+              .callee = method_one,
+              .class_interval_context = CallClassIntervalContext(
+                  ClassIntervals::Interval::finite(2, 6),
+                  /* preserves_type_context*/ true),
+              .inferred_features = FeatureMayAlwaysSet{feature_one},
+              .call_kind = CallKind::callsite(),
+          }),
+      test::make_taint_config(
+          /* kind */ context.kind_factory->get("TestSource"),
+          test::FrameProperties{
+              .callee_port = return_port,
+              .callee = method_one,
+              .class_interval_context = CallClassIntervalContext(
+                  ClassIntervals::Interval::finite(4, 5),
+                  /* preserves_type_context*/ false),
+              .inferred_features = FeatureMayAlwaysSet{feature_two},
+              .call_kind = CallKind::callsite(),
+          })};
+
+  taint.collapse_class_intervals();
+  EXPECT_EQ(
+      taint,
+      (Taint{
+          test::make_taint_config(
+              /* kind */ context.kind_factory->get("TestSource"),
+              test::FrameProperties{
+                  .callee_port = return_port,
+                  .callee = method_one,
+                  .inferred_features =
+                      FeatureMayAlwaysSet::make_may({feature_one, feature_two}),
+                  .call_kind = CallKind::callsite(),
+              }),
+      }));
+}
+
 TEST_F(TaintTest, SerializationDeserialization) {
   auto context = test::make_empty_context();
 

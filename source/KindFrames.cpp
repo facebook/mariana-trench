@@ -455,6 +455,20 @@ void KindFrames::add_inferred_features(const FeatureMayAlwaysSet& features) {
   });
 }
 
+void KindFrames::collapse_class_intervals() {
+  FramesByInterval new_frames;
+  CallClassIntervalContext default_class_interval;
+
+  // Join all the frames and set class interval to default (top).
+  Frame new_frame;
+  for (const auto& [_interval, frame] : frames_.bindings()) {
+    new_frame.join_with(frame.with_interval(default_class_interval));
+  }
+
+  new_frames.set(default_class_interval, new_frame);
+  frames_ = std::move(new_frames);
+}
+
 std::ostream& operator<<(std::ostream& out, const KindFrames& frames) {
   mt_assert(!frames.frames_.is_top());
   out << "KindFrames(frames=[";

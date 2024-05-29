@@ -158,6 +158,16 @@ class LocalTaint final : public sparta::AbstractDomain<LocalTaint> {
 
   void difference_with(const LocalTaint& other);
 
+  template <typename Function> // KindFrames(KindFrames)
+  void transform_kind_frames(Function&& f) {
+    static_assert(
+        std::is_same_v<decltype(f(std::declval<KindFrames&&>())), KindFrames>);
+    frames_.transform(f);
+    if (frames_.is_bottom()) {
+      set_to_bottom();
+    }
+  }
+
   template <typename Function> // Frame(Frame)
   void transform_frames(Function&& f) {
     static_assert(std::is_same_v<decltype(f(std::declval<Frame&&>())), Frame>);

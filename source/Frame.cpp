@@ -169,6 +169,12 @@ Frame Frame::with_kind(const Kind* kind) const {
   return new_frame;
 }
 
+Frame Frame::with_interval(const CallClassIntervalContext& interval) const {
+  Frame new_frame(*this);
+  new_frame.class_interval_context_ = interval;
+  return new_frame;
+}
+
 Frame Frame::update_with_propagation_trace(
     const Frame& propagation_frame) const {
   return Frame(

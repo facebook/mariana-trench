@@ -340,6 +340,11 @@ class Model final {
   // this model. The `identifier` is the directory name containing the models.
   void make_sharded_model_generators(const std::string& identifier);
 
+  // When cached/sharded models are read, their class intervals are relative to
+  // the run in which they were generated. They are not compatible with the
+  // current run. Collapse/over-approximate all of them to top().
+  void collapse_class_intervals();
+
   void add_issue(Issue issue);
   const IssueSet& issues() const {
     return issues_;
