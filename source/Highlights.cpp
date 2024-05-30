@@ -11,6 +11,7 @@
 
 #include <DexUtil.h>
 
+#include <mariana-trench/FrameType.h>
 #include <mariana-trench/Highlights.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Methods.h>
@@ -23,7 +24,6 @@ namespace marianatrench {
 namespace {
 using Bounds = Highlights::Bounds;
 using FileLines = Highlights::FileLines;
-enum class FrameType { Source, Sink };
 
 /*
  * Given a line and column that is assumed not to be a whitespace's position,
@@ -324,9 +324,9 @@ void get_frames_files_to_methods(
           }
 
           Taint taint;
-          if (frame_type == FrameType::Source) {
+          if (frame_type == FrameType::source()) {
             taint = callee_model.generations().raw_read(*callee_port).root();
-          } else if (frame_type == FrameType::Sink) {
+          } else if (frame_type == FrameType::sink()) {
             taint = callee_model.sinks().raw_read(*callee_port).root();
           }
           taint.visit_local_taint([&seen_frames, &new_frames_to_check](
@@ -397,9 +397,9 @@ get_issue_files_to_methods(const Context& context, const Registry& registry) {
   queue.run_all();
 
   get_frames_files_to_methods(
-      issue_files_to_methods, sources, context, registry, FrameType::Source);
+      issue_files_to_methods, sources, context, registry, FrameType::source());
   get_frames_files_to_methods(
-      issue_files_to_methods, sinks, context, registry, FrameType::Sink);
+      issue_files_to_methods, sinks, context, registry, FrameType::sink());
   return issue_files_to_methods;
 }
 
