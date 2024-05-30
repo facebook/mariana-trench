@@ -64,8 +64,6 @@ UsedKinds UsedKinds::from_rules(
     const TransformsFactory& transforms_factory) {
   UsedKinds used_kinds(transforms_factory);
 
-  std::unordered_map<const Kind*, std::unordered_set<const TransformKind*>>
-      source_to_sink{};
   for (const auto& [source, sink_to_rules] : rules.source_to_sink_rules()) {
     for (const auto& [rule_sink, _] : sink_to_rules) {
       const auto* sink_transform_kind = rule_sink->as<TransformKind>();
