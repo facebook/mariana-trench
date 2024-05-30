@@ -8,6 +8,7 @@
 #pragma once
 
 #include <mariana-trench/CallInfo.h>
+#include <mariana-trench/FrameType.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Kind.h>
 
@@ -23,9 +24,17 @@ class ExtraTrace final {
       const Method* MT_NULLABLE callee,
       const Position* position,
       const AccessPath* callee_port,
-      CallKind call_kind)
-      : kind_(kind), call_info_(callee, call_kind, callee_port, position) {
-    mt_assert(call_info_.call_kind().is_propagation_with_trace());
+      CallKind call_kind,
+      FrameType frame_type)
+      : kind_(kind),
+        frame_type_(frame_type),
+        call_info_(callee, call_kind, callee_port, position) {
+    mt_assert(!call_info_.call_kind().is_propagation_without_trace());
+    mt_assert(!call_info_.call_kind().is_declaration());
+    // propagation-with-trace is always a sink trace.
+    mt_assert(
+        !call_info_.call_kind().is_propagation_with_trace() ||
+        frame_type == FrameType::sink());
     mt_assert(kind_ != nullptr);
     mt_assert(call_info_.call_position() != nullptr);
 
@@ -53,6 +62,10 @@ class ExtraTrace final {
 
   const Kind* kind() const {
     return kind_;
+  }
+
+  const FrameType& frame_type() const {
+    return frame_type_;
   }
 
   const CallInfo& call_info() const {
@@ -84,6 +97,7 @@ class ExtraTrace final {
 
  private:
   const Kind* kind_;
+  const FrameType frame_type_;
   CallInfo call_info_;
 };
 
@@ -95,6 +109,8 @@ struct std::hash<marianatrench::ExtraTrace> {
     std::size_t seed = 0;
 
     boost::hash_combine(seed, extra_trace.kind());
+    boost::hash_combine(
+        seed, std::hash<marianatrench::FrameType>()(extra_trace.frame_type()));
     boost::hash_combine(seed, extra_trace.position());
     boost::hash_combine(seed, extra_trace.call_kind().encode());
     if (extra_trace.callee() != nullptr) {

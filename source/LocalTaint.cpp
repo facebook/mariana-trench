@@ -333,7 +333,8 @@ LocalTaint LocalTaint::update_with_propagation_trace(
               propagation_call_info.callee(),
               propagation_call_info.call_position(),
               propagation_call_info.callee_port(),
-              call_kind));
+              call_kind,
+              FrameType::sink()));
           return frame;
         });
 

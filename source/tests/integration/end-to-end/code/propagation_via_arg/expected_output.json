@@ -1915,6 +1915,7 @@
                     },
                     "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/propagateViaArg;.nestedUnsafeAppendAndTransform:(Ljava/lang/StringBuilder;Ljava/lang/String;)V"
                   },
+                  "frame_type" : "sink",
                   "kind" : "Validators-Regex:LocalArgument(1)"
                 }
               ],
@@ -2145,6 +2146,7 @@
                     },
                     "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/propagateViaArg;.indirectTransform:(Ljava/lang/String;)V"
                   },
+                  "frame_type" : "sink",
                   "kind" : "Validators-Regex:LocalArgument(0)"
                 }
               ],
@@ -2560,6 +2562,7 @@
                     },
                     "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/propagateViaArg;.unsafeAppendAndTransform:(Ljava/lang/StringBuilder;Ljava/lang/String;)V"
                   },
+                  "frame_type" : "sink",
                   "kind" : "Validators-Regex:LocalArgument(1)"
                 }
               ],
@@ -2689,6 +2692,7 @@
                     },
                     "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/propagateViaArg;.nestedUnsafeAppendAndTransform:(Ljava/lang/StringBuilder;Ljava/lang/String;)V"
                   },
+                  "frame_type" : "sink",
                   "kind" : "Validators-Regex:LocalArgument(1)"
                 }
               ],

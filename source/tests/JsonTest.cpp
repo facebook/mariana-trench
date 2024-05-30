@@ -10,6 +10,7 @@
 #include <mariana-trench/Access.h>
 #include <mariana-trench/CanonicalName.h>
 #include <mariana-trench/Constants.h>
+#include <mariana-trench/ExtraTrace.h>
 #include <mariana-trench/Field.h>
 #include <mariana-trench/FieldModel.h>
 #include <mariana-trench/Fields.h>
@@ -3053,6 +3054,132 @@ TEST_F(JsonTest, CallEffectModel) {
       ],
       "method": "LEntry;.method:()V"
     })#"));
+}
+
+TEST_F(JsonTest, ExtraTraceTest) {
+  Scope scope;
+  DexStore store("stores");
+  store.add_classes(scope);
+  auto context = test::make_context(store);
+
+  const auto* kind = context.kind_factory->get("TestKind");
+  const auto* callee = context.methods->create(
+      redex::create_void_method(scope, "LClass;", "one"));
+  mt_assert(callee != nullptr);
+  const auto* call_position = context.positions->get("ExtraTrace.java", 1);
+  const auto* callee_port = context.access_path_factory->get(
+      AccessPath(Root(Root::Kind::Argument, 0)));
+
+  // extra-trace for propagation-with-trace
+  EXPECT_JSON_EQ(
+      ExtraTrace,
+      R"#({
+                  "call_info" :
+                  {
+                    "call_kind" : "PropagationWithTrace:CallSite",
+                    "port" : "Argument(0)",
+                    "position" : {
+                        "line" : 1, "path" : "ExtraTrace.java"
+                    },
+                    "resolves_to" : "LClass;.one:()V"
+                  },
+                  "frame_type" : "sink",
+                  "kind" : "TestKind"
+      })#",
+      ExtraTrace(
+          kind,
+          callee,
+          call_position,
+          callee_port,
+          CallKind::propagation_with_trace(CallKind::callsite().encode()),
+          FrameType::sink()),
+      context);
+
+  // extra-trace for call-site of a source trace
+  EXPECT_JSON_EQ(
+      ExtraTrace,
+      R"#({
+                  "call_info" :
+                  {
+                    "call_kind" : "CallSite",
+                    "port" : "Argument(0)",
+                    "position" : {
+                        "line" : 1, "path" : "ExtraTrace.java"
+                    },
+                    "resolves_to" : "LClass;.one:()V"
+                  },
+                  "frame_type" : "source",
+                  "kind" : "TestKind"
+      })#",
+      ExtraTrace(
+          kind,
+          callee,
+          call_position,
+          callee_port,
+          CallKind::callsite(),
+          FrameType::source()),
+      context);
+
+  // extra-trace for a origin of a sink trace
+  EXPECT_JSON_EQ(
+      ExtraTrace,
+      R"#({
+                  "call_info" :
+                  {
+                    "call_kind" : "Origin",
+                    "port" : "Argument(0)",
+                    "position" : {
+                        "line" : 1, "path" : "ExtraTrace.java"
+                    }
+                  },
+                  "frame_type" : "sink",
+                  "kind" : "TestKind"
+      })#",
+      ExtraTrace(
+          kind,
+          /* callee */ nullptr,
+          call_position,
+          callee_port,
+          CallKind::origin(),
+          FrameType::sink()),
+      context);
+
+  // extra-trace json without frame_type
+  EXPECT_THROW(
+      ExtraTrace::from_json(
+          test::parse_json(R"#({
+                  "call_info" :
+                  {
+                    "call_kind" : "CallSite",
+                    "port" : "Argument(0)",
+                    "position" : {
+                        "line" : 1, "path" : "ExtraTrace.java"
+                    },
+                    "resolves_to" : "LClass;.one:()V"
+                  },
+                  "kind" : "TestKind"
+      })#"),
+          context),
+      JsonValidationError);
+
+  // propagation-with-trace cannot have frame type source
+  EXPECT_THROW(
+      ExtraTrace::from_json(
+          test::parse_json(R"#({
+                  "call_info" :
+                  {
+                    "call_kind" : "PropagationWithTrace:CallSite",
+                    "port" : "Argument(0)",
+                    "position" : {
+                        "line" : 1, "path" : "ExtraTrace.java"
+                    },
+                    "resolves_to" : "LClass;.one:()V"
+                  },
+                  "frame_type" : "source",
+                  "kind" : "TestKind"
+      })#"),
+          context),
+      boost::exception_detail::error_info_injector<RedexException>);
 }
 
 } // namespace marianatrench

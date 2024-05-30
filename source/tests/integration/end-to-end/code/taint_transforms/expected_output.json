@@ -1117,6 +1117,7 @@
                       "path" : "ExtraTraces.java"
                     }
                   },
+                  "frame_type" : "sink",
                   "kind" : "T2:LocalReturn"
                 }
               ],
@@ -1148,6 +1149,7 @@
                       "path" : "ExtraTraces.java"
                     }
                   },
+                  "frame_type" : "sink",
                   "kind" : "T2:LocalReturn"
                 }
               ],
@@ -1544,6 +1546,7 @@
                       "path" : "ExtraTraces.java"
                     }
                   },
+                  "frame_type" : "sink",
                   "kind" : "T2:LocalReturn"
                 }
               ],
@@ -1578,6 +1581,7 @@
                     },
                     "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ExtraTraces;.hopToTransformT1:(Ljava/lang/Object;)Ljava/lang/Object;"
                   },
+                  "frame_type" : "sink",
                   "kind" : "T1:LocalReturn"
                 }
               ],
@@ -1777,6 +1781,7 @@
                       "path" : "ExtraTraces.java"
                     }
                   },
+                  "frame_type" : "sink",
                   "kind" : "T1:LocalReturn"
                 },
                 {
@@ -1791,6 +1796,7 @@
                     },
                     "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ExtraTraces;.hopToTransformT1:(Ljava/lang/Object;)Ljava/lang/Object;"
                   },
+                  "frame_type" : "sink",
                   "kind" : "T1:LocalReturn"
                 }
               ],
@@ -2019,6 +2025,7 @@
                       "path" : "ExtraTraces.java"
                     }
                   },
+                  "frame_type" : "sink",
                   "kind" : "T1:LocalReturn"
                 },
                 {
@@ -2033,6 +2040,7 @@
                     },
                     "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ExtraTraces;.hopPropagation1:(Ljava/lang/Object;)Ljava/lang/Object;"
                   },
+                  "frame_type" : "sink",
                   "kind" : "T2:T2:LocalReturn"
                 }
               ],
@@ -2291,6 +2299,7 @@
                       "path" : "TaintTransforms.java"
                     }
                   },
+                  "frame_type" : "sink",
                   "kind" : "T1:LocalReturn"
                 }
               ],
@@ -2361,6 +2370,7 @@
                       "path" : "TaintTransforms.java"
                     }
                   },
+                  "frame_type" : "sink",
                   "kind" : "T2:LocalReturn"
                 }
               ],
@@ -2394,6 +2404,7 @@
                       "path" : "TaintTransforms.java"
                     }
                   },
+                  "frame_type" : "sink",
                   "kind" : "T2:LocalReturn"
                 }
               ],
@@ -2862,6 +2873,7 @@
                       "path" : "TaintTransforms.java"
                     }
                   },
+                  "frame_type" : "sink",
                   "kind" : "T1:LocalReturn"
                 }
               ],
@@ -2936,6 +2948,7 @@
                       "path" : "TaintTransforms.java"
                     }
                   },
+                  "frame_type" : "sink",
                   "kind" : "T2:LocalReturn"
                 }
               ],
@@ -3010,6 +3023,7 @@
                       "path" : "TaintTransforms.java"
                     }
                   },
+                  "frame_type" : "sink",
                   "kind" : "T2:LocalReturn"
                 }
               ],
@@ -3042,6 +3056,7 @@
                       "path" : "TaintTransforms.java"
                     }
                   },
+                  "frame_type" : "sink",
                   "kind" : "T1:LocalReturn"
                 },
                 {
@@ -3055,6 +3070,7 @@
                       "path" : "TaintTransforms.java"
                     }
                   },
+                  "frame_type" : "sink",
                   "kind" : "T2:LocalReturn"
                 }
               ],
@@ -3202,6 +3218,7 @@
                       "path" : "TaintTransforms.java"
                     }
                   },
+                  "frame_type" : "sink",
                   "kind" : "T1:LocalReturn"
                 }
               ],
@@ -3276,6 +3293,7 @@
                       "path" : "TaintTransforms.java"
                     }
                   },
+                  "frame_type" : "sink",
                   "kind" : "T2:LocalReturn"
                 }
               ],
@@ -3308,6 +3326,7 @@
                       "path" : "TaintTransforms.java"
                     }
                   },
+                  "frame_type" : "sink",
                   "kind" : "T1:LocalReturn"
                 },
                 {
@@ -3321,6 +3340,7 @@
                       "path" : "TaintTransforms.java"
                     }
                   },
+                  "frame_type" : "sink",
                   "kind" : "T2:LocalReturn"
                 }
               ],
@@ -3503,6 +3523,7 @@
                       "path" : "TaintTransforms.java"
                     }
                   },
+                  "frame_type" : "sink",
                   "kind" : "T1:LocalReturn"
                 }
               ],
@@ -3714,6 +3735,7 @@
                     },
                     "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.propagateWithTransformT3WithSource:(Lcom/facebook/marianatrench/integrationtests/Data;)Lcom/facebook/marianatrench/integrationtests/Data;"
                   },
+                  "frame_type" : "sink",
                   "kind" : "T3:LocalReturn"
                 }
               ],
@@ -4829,6 +4851,7 @@
                     },
                     "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.propagateAlternateTransforms:(Lcom/facebook/marianatrench/integrationtests/Data;)Lcom/facebook/marianatrench/integrationtests/Data;"
                   },
+                  "frame_type" : "sink",
                   "kind" : "T1:LocalReturn"
                 }
               ],
@@ -5513,6 +5536,7 @@
                     },
                     "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.propagateWithTransformsT1Unused:(Ljava/lang/Object;)Ljava/lang/Object;"
                   },
+                  "frame_type" : "sink",
                   "kind" : "T1:LocalReturn"
                 }
               ],

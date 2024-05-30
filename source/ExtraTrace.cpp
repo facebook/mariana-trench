@@ -18,12 +18,15 @@ namespace marianatrench {
 ExtraTrace ExtraTrace::from_json(const Json::Value& value, Context& context) {
   auto call_info = CallInfo::from_json(value, context);
   const auto* kind = Kind::from_json(value, context);
+  auto frame_type =
+      FrameType::from_trace_string(JsonValidation::string(value, "frame_type"));
   return ExtraTrace(
       kind,
       call_info.callee(),
       call_info.call_position(),
       call_info.callee_port(),
-      call_info.call_kind());
+      call_info.call_kind(),
+      frame_type);
 }
 
 Json::Value ExtraTrace::to_json() const {
@@ -36,11 +39,14 @@ Json::Value ExtraTrace::to_json() const {
     extra_trace[member] = kind[member];
   }
 
+  extra_trace["frame_type"] = frame_type_.to_trace_string();
+
   return extra_trace;
 }
 
 std::ostream& operator<<(std::ostream& out, const ExtraTrace& extra_trace) {
   return out << "ExtraTrace(kind=" << show(extra_trace.kind())
+             << ", frame_type=" << show(extra_trace.frame_type())
              << ", position=" << show(extra_trace.position())
              << ", callee=" << show(extra_trace.callee())
              << ", callee_port=" << show(extra_trace.callee_port())
