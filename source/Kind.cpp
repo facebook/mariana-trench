@@ -38,13 +38,21 @@ std::ostream& operator<<(std::ostream& out, const Kind& kind) {
 }
 
 const Kind* Kind::from_json(const Json::Value& value, Context& context) {
-  const auto leaf_kind = JsonValidation::string(value, /* field */ "kind");
-  if (value.isMember("partial_label")) {
-    return context.kind_factory->get_partial(
-        leaf_kind, JsonValidation::string(value, /* field */ "partial_label"));
+  const auto leaf_kind =
+      JsonValidation::object_or_string(value, /* field */ "kind");
+
+  // An object means it's a TransformKind.
+  if (leaf_kind.isObject()) {
+    return TransformKind::from_json(leaf_kind, context);
   }
 
-  return Kind::from_trace_string(leaf_kind, context);
+  if (value.isMember("partial_label")) {
+    return context.kind_factory->get_partial(
+        leaf_kind.asString(),
+        JsonValidation::string(value, /* field */ "partial_label"));
+  }
+
+  return Kind::from_trace_string(leaf_kind.asString(), context);
 }
 
 const Kind* Kind::from_config_json(
@@ -79,10 +87,11 @@ const Kind* Kind::from_trace_string(const std::string& kind, Context& context) {
         kind,
         /* expected */ "Non-Partial Kind");
   } else if (kind.find_first_of(":@") != std::string::npos) {
-    // This case must come after the partial/triggered partial checks above
-    // because ':' is part of a [Triggered]PartialKind string but those are not
-    // TransformKinds.
-    return TransformKind::from_trace_string(kind, context);
+    // Note that parsing transform kinds from the JSON is supported, but it
+    // no longer uses the old string representation.
+    throw KindNotSupportedError(
+        kind,
+        /* expected */ "Non-Transform Kind");
   }
 
   // Defaults to NamedKind.

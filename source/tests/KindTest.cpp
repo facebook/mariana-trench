@@ -66,9 +66,6 @@ TEST_F(KindTest, SerializationDeserialization) {
         /* global_transforms */ nullptr);
     EXPECT_EQ(
         Kind::from_json(transform_kind->to_json(), context), transform_kind);
-    EXPECT_EQ(
-        Kind::from_trace_string(transform_kind->to_trace_string(), context),
-        transform_kind);
   }
 
   {
@@ -80,9 +77,6 @@ TEST_F(KindTest, SerializationDeserialization) {
         context.transforms_factory->create({"GlobalTransform1"}, context));
     EXPECT_EQ(
         Kind::from_json(transform_kind->to_json(), context), transform_kind);
-    EXPECT_EQ(
-        Kind::from_trace_string(transform_kind->to_trace_string(), context),
-        transform_kind);
   }
 
   {
@@ -95,9 +89,6 @@ TEST_F(KindTest, SerializationDeserialization) {
         context.transforms_factory->create({"GlobalTransform1"}, context));
     EXPECT_EQ(
         Kind::from_json(transform_kind->to_json(), context), transform_kind);
-    EXPECT_EQ(
-        Kind::from_trace_string(transform_kind->to_trace_string(), context),
-        transform_kind);
   }
 
   {
@@ -112,9 +103,6 @@ TEST_F(KindTest, SerializationDeserialization) {
             {"GlobalTransform1", "GlobalTransform2"}, context));
     EXPECT_EQ(
         Kind::from_json(transform_kind->to_json(), context), transform_kind);
-    EXPECT_EQ(
-        Kind::from_trace_string(transform_kind->to_trace_string(), context),
-        transform_kind);
   }
 
   // Deserializing Partial and Triggered Kinds are not currently supported.

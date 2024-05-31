@@ -1098,7 +1098,11 @@
           "kinds" : 
           [
             {
-              "kind" : "Validators-Regex:LocalArgument(0)",
+              "kind" : 
+              {
+                "base" : "LocalArgument(0)",
+                "global" : "Validators-Regex"
+              },
               "origins" : 
               [
                 {
@@ -1214,7 +1218,11 @@
           [
             {
               "distance" : 1,
-              "kind" : "Validators-Regex:LocalArgument(1)",
+              "kind" : 
+              {
+                "base" : "LocalArgument(1)",
+                "global" : "Validators-Regex"
+              },
               "origins" : 
               [
                 {
@@ -1229,7 +1237,11 @@
             },
             {
               "distance" : 1,
-              "kind" : "Validators-Regex:LocalArgument(2)",
+              "kind" : 
+              {
+                "base" : "LocalArgument(2)",
+                "global" : "Validators-Regex"
+              },
               "origins" : 
               [
                 {
@@ -1916,10 +1928,18 @@
                     "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/propagateViaArg;.nestedUnsafeAppendAndTransform:(Ljava/lang/StringBuilder;Ljava/lang/String;)V"
                   },
                   "frame_type" : "sink",
-                  "kind" : "Validators-Regex:LocalArgument(1)"
+                  "kind" : 
+                  {
+                    "base" : "LocalArgument(1)",
+                    "global" : "Validators-Regex"
+                  }
                 }
               ],
-              "kind" : "Validators-Regex@Source",
+              "kind" : 
+              {
+                "base" : "Source",
+                "local" : "Validators-Regex"
+              },
               "origins" : 
               [
                 {
@@ -2147,10 +2167,18 @@
                     "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/propagateViaArg;.indirectTransform:(Ljava/lang/String;)V"
                   },
                   "frame_type" : "sink",
-                  "kind" : "Validators-Regex:LocalArgument(0)"
+                  "kind" : 
+                  {
+                    "base" : "LocalArgument(0)",
+                    "global" : "Validators-Regex"
+                  }
                 }
               ],
-              "kind" : "Validators-Regex@Source",
+              "kind" : 
+              {
+                "base" : "Source",
+                "local" : "Validators-Regex"
+              },
               "origins" : 
               [
                 {
@@ -2563,10 +2591,18 @@
                     "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/propagateViaArg;.unsafeAppendAndTransform:(Ljava/lang/StringBuilder;Ljava/lang/String;)V"
                   },
                   "frame_type" : "sink",
-                  "kind" : "Validators-Regex:LocalArgument(1)"
+                  "kind" : 
+                  {
+                    "base" : "LocalArgument(1)",
+                    "global" : "Validators-Regex"
+                  }
                 }
               ],
-              "kind" : "Validators-Regex@Source",
+              "kind" : 
+              {
+                "base" : "Source",
+                "local" : "Validators-Regex"
+              },
               "origins" : 
               [
                 {
@@ -2693,10 +2729,18 @@
                     "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/propagateViaArg;.nestedUnsafeAppendAndTransform:(Ljava/lang/StringBuilder;Ljava/lang/String;)V"
                   },
                   "frame_type" : "sink",
-                  "kind" : "Validators-Regex:LocalArgument(1)"
+                  "kind" : 
+                  {
+                    "base" : "LocalArgument(1)",
+                    "global" : "Validators-Regex"
+                  }
                 }
               ],
-              "kind" : "Validators-Regex@Source",
+              "kind" : 
+              {
+                "base" : "Source",
+                "local" : "Validators-Regex"
+              },
               "origins" : 
               [
                 {
@@ -2928,7 +2972,11 @@
           "kinds" : 
           [
             {
-              "kind" : "Validators-Regex@LocalArgument(0)",
+              "kind" : 
+              {
+                "base" : "LocalArgument(0)",
+                "local" : "Validators-Regex"
+              },
               "origins" : 
               [
                 {
@@ -3008,7 +3056,11 @@
           "kinds" : 
           [
             {
-              "kind" : "Validators-Regex:LocalArgument(1)",
+              "kind" : 
+              {
+                "base" : "LocalArgument(1)",
+                "global" : "Validators-Regex"
+              },
               "origins" : 
               [
                 {
@@ -3022,7 +3074,11 @@
               }
             },
             {
-              "kind" : "Validators-Regex:LocalArgument(2)",
+              "kind" : 
+              {
+                "base" : "LocalArgument(2)",
+                "global" : "Validators-Regex"
+              },
               "origins" : 
               [
                 {

@@ -40,14 +40,13 @@ class TransformKind final : public Kind {
 
   void show(std::ostream&) const override;
 
+  Json::Value to_json() const override;
+
   static const TransformKind* from_json(
       const Json::Value& value,
       Context& context);
 
   std::string to_trace_string() const override;
-  static const TransformKind* from_trace_string(
-      const std::string& kind,
-      Context& context);
 
   const Kind* base_kind() const {
     return base_kind_;

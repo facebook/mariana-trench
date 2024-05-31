@@ -997,7 +997,11 @@
           [
             {
               "distance" : 1,
-              "kind" : "T2:LocalReturn",
+              "kind" : 
+              {
+                "base" : "LocalReturn",
+                "global" : "T2"
+              },
               "origins" : 
               [
                 {
@@ -1012,7 +1016,11 @@
             },
             {
               "distance" : 3,
-              "kind" : "T2:T1:LocalReturn",
+              "kind" : 
+              {
+                "base" : "LocalReturn",
+                "global" : "T2:T1"
+              },
               "origins" : 
               [
                 {
@@ -1027,7 +1035,11 @@
             },
             {
               "distance" : 3,
-              "kind" : "T2:T2:LocalReturn",
+              "kind" : 
+              {
+                "base" : "LocalReturn",
+                "global" : "T2:T2"
+              },
               "origins" : 
               [
                 {
@@ -1073,7 +1085,11 @@
           "kinds" : 
           [
             {
-              "kind" : "T2:LocalReturn",
+              "kind" : 
+              {
+                "base" : "LocalReturn",
+                "global" : "T2"
+              },
               "origins" : 
               [
                 {
@@ -1118,10 +1134,19 @@
                     }
                   },
                   "frame_type" : "sink",
-                  "kind" : "T2:LocalReturn"
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "T2"
+                  }
                 }
               ],
-              "kind" : "T2@T1:LocalReturn",
+              "kind" : 
+              {
+                "base" : "LocalReturn",
+                "global" : "T1",
+                "local" : "T2"
+              },
               "origins" : 
               [
                 {
@@ -1150,10 +1175,19 @@
                     }
                   },
                   "frame_type" : "sink",
-                  "kind" : "T2:LocalReturn"
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "T2"
+                  }
                 }
               ],
-              "kind" : "T2@T2:LocalReturn",
+              "kind" : 
+              {
+                "base" : "LocalReturn",
+                "global" : "T2",
+                "local" : "T2"
+              },
               "origins" : 
               [
                 {
@@ -1218,7 +1252,11 @@
           [
             {
               "distance" : 1,
-              "kind" : "T1:LocalReturn",
+              "kind" : 
+              {
+                "base" : "LocalReturn",
+                "global" : "T1"
+              },
               "origins" : 
               [
                 {
@@ -1233,7 +1271,11 @@
             },
             {
               "distance" : 1,
-              "kind" : "T2:LocalReturn",
+              "kind" : 
+              {
+                "base" : "LocalReturn",
+                "global" : "T2"
+              },
               "origins" : 
               [
                 {
@@ -1296,7 +1338,11 @@
           "kinds" : 
           [
             {
-              "kind" : "T1:LocalReturn",
+              "kind" : 
+              {
+                "base" : "LocalReturn",
+                "global" : "T1"
+              },
               "origins" : 
               [
                 {
@@ -1325,7 +1371,11 @@
           "kinds" : 
           [
             {
-              "kind" : "T2:LocalReturn",
+              "kind" : 
+              {
+                "base" : "LocalReturn",
+                "global" : "T2"
+              },
               "origins" : 
               [
                 {
@@ -1386,7 +1436,11 @@
             },
             {
               "distance" : 3,
-              "kind" : "T1:Sink",
+              "kind" : 
+              {
+                "base" : "Sink",
+                "global" : "T1"
+              },
               "origins" : 
               [
                 {
@@ -1397,7 +1451,11 @@
             },
             {
               "distance" : 3,
-              "kind" : "T2:Sink",
+              "kind" : 
+              {
+                "base" : "Sink",
+                "global" : "T2"
+              },
               "origins" : 
               [
                 {
@@ -1454,7 +1512,11 @@
             },
             {
               "distance" : 2,
-              "kind" : "T1:Sink",
+              "kind" : 
+              {
+                "base" : "Sink",
+                "global" : "T1"
+              },
               "origins" : 
               [
                 {
@@ -1465,7 +1527,11 @@
             },
             {
               "distance" : 2,
-              "kind" : "T2:Sink",
+              "kind" : 
+              {
+                "base" : "Sink",
+                "global" : "T2"
+              },
               "origins" : 
               [
                 {
@@ -1547,10 +1613,18 @@
                     }
                   },
                   "frame_type" : "sink",
-                  "kind" : "T2:LocalReturn"
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "T2"
+                  }
                 }
               ],
-              "kind" : "T2@Sink",
+              "kind" : 
+              {
+                "base" : "Sink",
+                "local" : "T2"
+              },
               "origins" : 
               [
                 {
@@ -1582,10 +1656,18 @@
                     "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ExtraTraces;.hopToTransformT1:(Ljava/lang/Object;)Ljava/lang/Object;"
                   },
                   "frame_type" : "sink",
-                  "kind" : "T1:LocalReturn"
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "T1"
+                  }
                 }
               ],
-              "kind" : "T1@Sink",
+              "kind" : 
+              {
+                "base" : "Sink",
+                "local" : "T1"
+              },
               "origins" : 
               [
                 {
@@ -1700,7 +1782,11 @@
             },
             {
               "distance" : 2,
-              "kind" : "T1:NewSource",
+              "kind" : 
+              {
+                "base" : "NewSource",
+                "global" : "T1"
+              },
               "origins" : 
               [
                 {
@@ -1782,7 +1868,11 @@
                     }
                   },
                   "frame_type" : "sink",
-                  "kind" : "T1:LocalReturn"
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "T1"
+                  }
                 },
                 {
                   "call_info" : 
@@ -1797,10 +1887,18 @@
                     "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ExtraTraces;.hopToTransformT1:(Ljava/lang/Object;)Ljava/lang/Object;"
                   },
                   "frame_type" : "sink",
-                  "kind" : "T1:LocalReturn"
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "T1"
+                  }
                 }
               ],
-              "kind" : "T1@NewSource",
+              "kind" : 
+              {
+                "base" : "NewSource",
+                "local" : "T1"
+              },
               "origins" : 
               [
                 {
@@ -1929,7 +2027,11 @@
           "kinds" : 
           [
             {
-              "kind" : "T1:LocalReturn",
+              "kind" : 
+              {
+                "base" : "LocalReturn",
+                "global" : "T1"
+              },
               "origins" : 
               [
                 {
@@ -1980,7 +2082,11 @@
           [
             {
               "distance" : 4,
-              "kind" : "T2:Sink",
+              "kind" : 
+              {
+                "base" : "Sink",
+                "global" : "T2"
+              },
               "origins" : 
               [
                 {
@@ -2026,7 +2132,11 @@
                     }
                   },
                   "frame_type" : "sink",
-                  "kind" : "T1:LocalReturn"
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "T1"
+                  }
                 },
                 {
                   "call_info" : 
@@ -2041,10 +2151,19 @@
                     "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ExtraTraces;.hopPropagation1:(Ljava/lang/Object;)Ljava/lang/Object;"
                   },
                   "frame_type" : "sink",
-                  "kind" : "T2:T2:LocalReturn"
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "T2:T2"
+                  }
                 }
               ],
-              "kind" : "T2:T2:T1@T1:NewSource",
+              "kind" : 
+              {
+                "base" : "NewSource",
+                "global" : "T1",
+                "local" : "T2:T2:T1"
+              },
               "origins" : 
               [
                 {
@@ -2269,7 +2388,11 @@
                 41
               ],
               "distance" : 1,
-              "kind" : "T2:Sink",
+              "kind" : 
+              {
+                "base" : "Sink",
+                "global" : "T2"
+              },
               "origins" : 
               [
                 {
@@ -2300,10 +2423,19 @@
                     }
                   },
                   "frame_type" : "sink",
-                  "kind" : "T1:LocalReturn"
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "T1"
+                  }
                 }
               ],
-              "kind" : "T1@T2:Sink",
+              "kind" : 
+              {
+                "base" : "Sink",
+                "global" : "T2",
+                "local" : "T1"
+              },
               "origins" : 
               [
                 {
@@ -2371,10 +2503,18 @@
                     }
                   },
                   "frame_type" : "sink",
-                  "kind" : "T2:LocalReturn"
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "T2"
+                  }
                 }
               ],
-              "kind" : "T2@Source",
+              "kind" : 
+              {
+                "base" : "Source",
+                "local" : "T2"
+              },
               "origins" : 
               [
                 {
@@ -2405,10 +2545,19 @@
                     }
                   },
                   "frame_type" : "sink",
-                  "kind" : "T2:LocalReturn"
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "T2"
+                  }
                 }
               ],
-              "kind" : "T2@T1:Source",
+              "kind" : 
+              {
+                "base" : "Source",
+                "global" : "T1",
+                "local" : "T2"
+              },
               "origins" : 
               [
                 {
@@ -2500,7 +2649,11 @@
           "kinds" : 
           [
             {
-              "kind" : "T2:LocalReturn",
+              "kind" : 
+              {
+                "base" : "LocalReturn",
+                "global" : "T2"
+              },
               "origins" : 
               [
                 {
@@ -2575,7 +2728,11 @@
           "kinds" : 
           [
             {
-              "kind" : "T1:LocalReturn",
+              "kind" : 
+              {
+                "base" : "LocalReturn",
+                "global" : "T1"
+              },
               "origins" : 
               [
                 {
@@ -2638,7 +2795,11 @@
           "kinds" : 
           [
             {
-              "kind" : "T1:LocalReturn",
+              "kind" : 
+              {
+                "base" : "LocalReturn",
+                "global" : "T1"
+              },
               "origins" : 
               [
                 {
@@ -2728,7 +2889,11 @@
           "kinds" : 
           [
             {
-              "kind" : "T3:LocalReturn",
+              "kind" : 
+              {
+                "base" : "LocalReturn",
+                "global" : "T3"
+              },
               "origins" : 
               [
                 {
@@ -2791,7 +2956,11 @@
           "kinds" : 
           [
             {
-              "kind" : "T1:LocalReturn",
+              "kind" : 
+              {
+                "base" : "LocalReturn",
+                "global" : "T1"
+              },
               "origins" : 
               [
                 {
@@ -2874,10 +3043,18 @@
                     }
                   },
                   "frame_type" : "sink",
-                  "kind" : "T1:LocalReturn"
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "T1"
+                  }
                 }
               ],
-              "kind" : "T1@Sink",
+              "kind" : 
+              {
+                "base" : "Sink",
+                "local" : "T1"
+              },
               "origins" : 
               [
                 {
@@ -2949,10 +3126,18 @@
                     }
                   },
                   "frame_type" : "sink",
-                  "kind" : "T2:LocalReturn"
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "T2"
+                  }
                 }
               ],
-              "kind" : "T2@Sink",
+              "kind" : 
+              {
+                "base" : "Sink",
+                "local" : "T2"
+              },
               "origins" : 
               [
                 {
@@ -3024,10 +3209,18 @@
                     }
                   },
                   "frame_type" : "sink",
-                  "kind" : "T2:LocalReturn"
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "T2"
+                  }
                 }
               ],
-              "kind" : "T2@Sink",
+              "kind" : 
+              {
+                "base" : "Sink",
+                "local" : "T2"
+              },
               "origins" : 
               [
                 {
@@ -3057,7 +3250,11 @@
                     }
                   },
                   "frame_type" : "sink",
-                  "kind" : "T1:LocalReturn"
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "T1"
+                  }
                 },
                 {
                   "call_info" : 
@@ -3071,10 +3268,18 @@
                     }
                   },
                   "frame_type" : "sink",
-                  "kind" : "T2:LocalReturn"
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "T2"
+                  }
                 }
               ],
-              "kind" : "T1:T2@Sink",
+              "kind" : 
+              {
+                "base" : "Sink",
+                "local" : "T1:T2"
+              },
               "origins" : 
               [
                 {
@@ -3219,10 +3424,18 @@
                     }
                   },
                   "frame_type" : "sink",
-                  "kind" : "T1:LocalReturn"
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "T1"
+                  }
                 }
               ],
-              "kind" : "T1@Source",
+              "kind" : 
+              {
+                "base" : "Source",
+                "local" : "T1"
+              },
               "origins" : 
               [
                 {
@@ -3294,10 +3507,18 @@
                     }
                   },
                   "frame_type" : "sink",
-                  "kind" : "T2:LocalReturn"
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "T2"
+                  }
                 }
               ],
-              "kind" : "T2@Source",
+              "kind" : 
+              {
+                "base" : "Source",
+                "local" : "T2"
+              },
               "origins" : 
               [
                 {
@@ -3327,7 +3548,11 @@
                     }
                   },
                   "frame_type" : "sink",
-                  "kind" : "T1:LocalReturn"
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "T1"
+                  }
                 },
                 {
                   "call_info" : 
@@ -3341,10 +3566,18 @@
                     }
                   },
                   "frame_type" : "sink",
-                  "kind" : "T2:LocalReturn"
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "T2"
+                  }
                 }
               ],
-              "kind" : "T2:T1@Source",
+              "kind" : 
+              {
+                "base" : "Source",
+                "local" : "T2:T1"
+              },
               "origins" : 
               [
                 {
@@ -3474,7 +3707,11 @@
                 41
               ],
               "distance" : 1,
-              "kind" : "T2:Sink",
+              "kind" : 
+              {
+                "base" : "Sink",
+                "global" : "T2"
+              },
               "origins" : 
               [
                 {
@@ -3524,10 +3761,18 @@
                     }
                   },
                   "frame_type" : "sink",
-                  "kind" : "T1:LocalReturn"
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "T1"
+                  }
                 }
               ],
-              "kind" : "T1@Source",
+              "kind" : 
+              {
+                "base" : "Source",
+                "local" : "T1"
+              },
               "origins" : 
               [
                 {
@@ -3736,10 +3981,18 @@
                     "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.propagateWithTransformT3WithSource:(Lcom/facebook/marianatrench/integrationtests/Data;)Lcom/facebook/marianatrench/integrationtests/Data;"
                   },
                   "frame_type" : "sink",
-                  "kind" : "T3:LocalReturn"
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "T3"
+                  }
                 }
               ],
-              "kind" : "T3@Source",
+              "kind" : 
+              {
+                "base" : "Source",
+                "local" : "T3"
+              },
               "origins" : 
               [
                 {
@@ -3818,7 +4071,11 @@
                 41
               ],
               "distance" : 1,
-              "kind" : "T2:Sink",
+              "kind" : 
+              {
+                "base" : "Sink",
+                "global" : "T2"
+              },
               "origins" : 
               [
                 {
@@ -3902,7 +4159,11 @@
                 41
               ],
               "distance" : 1,
-              "kind" : "T1:T2:Sink",
+              "kind" : 
+              {
+                "base" : "Sink",
+                "global" : "T1:T2"
+              },
               "origins" : 
               [
                 {
@@ -3992,7 +4253,11 @@
           [
             {
               "distance" : 2,
-              "kind" : "T2:Sink",
+              "kind" : 
+              {
+                "base" : "Sink",
+                "global" : "T2"
+              },
               "origins" : 
               [
                 {
@@ -4070,7 +4335,11 @@
           [
             {
               "distance" : 2,
-              "kind" : "T1:T2:Sink",
+              "kind" : 
+              {
+                "base" : "Sink",
+                "global" : "T1:T2"
+              },
               "origins" : 
               [
                 {
@@ -4200,7 +4469,11 @@
                 41
               ],
               "distance" : 1,
-              "kind" : "T2:Source",
+              "kind" : 
+              {
+                "base" : "Source",
+                "global" : "T2"
+              },
               "origins" : 
               [
                 {
@@ -4284,7 +4557,11 @@
                 41
               ],
               "distance" : 1,
-              "kind" : "T2:T1:Source",
+              "kind" : 
+              {
+                "base" : "Source",
+                "global" : "T2:T1"
+              },
               "origins" : 
               [
                 {
@@ -4374,7 +4651,11 @@
           [
             {
               "distance" : 2,
-              "kind" : "T2:Source",
+              "kind" : 
+              {
+                "base" : "Source",
+                "global" : "T2"
+              },
               "origins" : 
               [
                 {
@@ -4452,7 +4733,11 @@
           [
             {
               "distance" : 2,
-              "kind" : "T2:T1:Source",
+              "kind" : 
+              {
+                "base" : "Source",
+                "global" : "T2:T1"
+              },
               "origins" : 
               [
                 {
@@ -4510,7 +4795,11 @@
                 41
               ],
               "distance" : 1,
-              "kind" : "T2:Sink",
+              "kind" : 
+              {
+                "base" : "Sink",
+                "global" : "T2"
+              },
               "origins" : 
               [
                 {
@@ -4596,7 +4885,11 @@
                 41
               ],
               "distance" : 1,
-              "kind" : "T2:Sink",
+              "kind" : 
+              {
+                "base" : "Sink",
+                "global" : "T2"
+              },
               "origins" : 
               [
                 {
@@ -4634,7 +4927,11 @@
                 41
               ],
               "distance" : 1,
-              "kind" : "T1:Source",
+              "kind" : 
+              {
+                "base" : "Source",
+                "global" : "T1"
+              },
               "origins" : 
               [
                 {
@@ -4852,10 +5149,18 @@
                     "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.propagateAlternateTransforms:(Lcom/facebook/marianatrench/integrationtests/Data;)Lcom/facebook/marianatrench/integrationtests/Data;"
                   },
                   "frame_type" : "sink",
-                  "kind" : "T1:LocalReturn"
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "T1"
+                  }
                 }
               ],
-              "kind" : "T1@Source",
+              "kind" : 
+              {
+                "base" : "Source",
+                "local" : "T1"
+              },
               "origins" : 
               [
                 {
@@ -5018,7 +5323,11 @@
                 41
               ],
               "distance" : 1,
-              "kind" : "T1:Sink",
+              "kind" : 
+              {
+                "base" : "Sink",
+                "global" : "T1"
+              },
               "origins" : 
               [
                 {
@@ -5241,7 +5550,11 @@
                 41
               ],
               "distance" : 1,
-              "kind" : "T1:Source",
+              "kind" : 
+              {
+                "base" : "Source",
+                "global" : "T1"
+              },
               "origins" : 
               [
                 {
@@ -5295,7 +5608,11 @@
           [
             {
               "distance" : 2,
-              "kind" : "T1:T2:Sink",
+              "kind" : 
+              {
+                "base" : "Sink",
+                "global" : "T1:T2"
+              },
               "origins" : 
               [
                 {
@@ -5327,7 +5644,11 @@
           [
             {
               "distance" : 2,
-              "kind" : "T2:T1:Source",
+              "kind" : 
+              {
+                "base" : "Source",
+                "global" : "T2:T1"
+              },
               "origins" : 
               [
                 {
@@ -5537,10 +5858,18 @@
                     "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.propagateWithTransformsT1Unused:(Ljava/lang/Object;)Ljava/lang/Object;"
                   },
                   "frame_type" : "sink",
-                  "kind" : "T1:LocalReturn"
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "T1"
+                  }
                 }
               ],
-              "kind" : "T1@Source",
+              "kind" : 
+              {
+                "base" : "Source",
+                "local" : "T1"
+              },
               "origins" : 
               [
                 {
@@ -5605,7 +5934,11 @@
           "kinds" : 
           [
             {
-              "kind" : "T1@LocalReturn",
+              "kind" : 
+              {
+                "base" : "LocalReturn",
+                "local" : "T1"
+              },
               "origins" : 
               [
                 {
@@ -5650,7 +5983,11 @@
           "kinds" : 
           [
             {
-              "kind" : "T1@LocalReturn",
+              "kind" : 
+              {
+                "base" : "LocalReturn",
+                "local" : "T1"
+              },
               "origins" : 
               [
                 {
@@ -5716,7 +6053,11 @@
           "kinds" : 
           [
             {
-              "kind" : "T1:T2@LocalReturn",
+              "kind" : 
+              {
+                "base" : "LocalReturn",
+                "local" : "T1:T2"
+              },
               "origins" : 
               [
                 {
@@ -5765,7 +6106,11 @@
           "kinds" : 
           [
             {
-              "kind" : "T2@LocalReturn",
+              "kind" : 
+              {
+                "base" : "LocalReturn",
+                "local" : "T2"
+              },
               "origins" : 
               [
                 {
@@ -5863,7 +6208,11 @@
           "kinds" : 
           [
             {
-              "kind" : "T3@LocalReturn",
+              "kind" : 
+              {
+                "base" : "LocalReturn",
+                "local" : "T3"
+              },
               "origins" : 
               [
                 {
@@ -5908,7 +6257,11 @@
           "kinds" : 
           [
             {
-              "kind" : "Unused@LocalReturn",
+              "kind" : 
+              {
+                "base" : "LocalReturn",
+                "local" : "Unused"
+              },
               "origins" : 
               [
                 {
