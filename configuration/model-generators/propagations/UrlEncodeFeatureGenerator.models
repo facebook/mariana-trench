@@ -1,0 +1,31 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parents": [
+            "Ljava/net/URLEncoder;",
+            "Landroid/net/Uri;"
+          ],
+          "name": "encode"
+        }
+      ],
+      "model": {
+        "freeze": [
+          "propagation"
+        ],
+        "propagation": [
+          {
+            "input": "Argument(0)",
+            "output": "Return",
+            "features": [
+              "via-url-encode"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
