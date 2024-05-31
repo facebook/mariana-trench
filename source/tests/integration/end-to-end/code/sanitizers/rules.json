@@ -31,5 +31,27 @@
     "sinks": [
       "Sink"
     ]
+  },
+  {
+    "name": "FlowRCE",
+    "code": 4,
+    "description": "",
+    "sources": [
+      "Source"
+    ],
+    "sinks": [
+      "SinkRCE"
+    ]
+  },
+  {
+    "name": "FlowSSRF",
+    "code": 5,
+    "description": "",
+    "sources": [
+      "Source"
+    ],
+    "sinks": [
+      "SinkSSRF"
+    ]
   }
 ]

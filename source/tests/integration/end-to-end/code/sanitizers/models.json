@@ -130,5 +130,23 @@
         "port": "Argument(1)"
       }
     ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/KindSpecificSanitizers;.sinkRCE:(Ljava/lang/Object;)V",
+    "sinks": [
+      {
+        "kind": "SinkRCE",
+        "port": "Argument(0)"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/KindSpecificSanitizers;.sinkSSRF:(Ljava/lang/Object;)V",
+    "sinks": [
+      {
+        "kind": "SinkSSRF",
+        "port": "Argument(0)"
+      }
+    ]
   }
 ]

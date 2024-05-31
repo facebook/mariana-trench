@@ -82,9 +82,27 @@
     "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSanitizedKindSink:(Ljava/lang/Object;)V",
     "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSinkPortAndKind:(Ljava/lang/Object;Ljava/lang/Object;)V"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/KindSpecificSanitizers;.parseInt:(Ljava/lang/String;)I" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/KindSpecificSanitizers;.no_err1:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/KindSpecificSanitizers;.sinkRCE:(Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/KindSpecificSanitizers;.err3:()V",
+    "Lcom/facebook/marianatrench/integrationtests/KindSpecificSanitizers;.err4:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/KindSpecificSanitizers;.sinkSSRF:(Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/KindSpecificSanitizers;.no_err2:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/KindSpecificSanitizers;.uriEncodeWrapper:(Ljava/lang/String;)Ljava/lang/String;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/KindSpecificSanitizers;.err4:()V"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.toSink:(Ljava/lang/Object;)V",
+    "Lcom/facebook/marianatrench/integrationtests/KindSpecificSanitizers;.no_err1:()V",
     "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedFlows:()V",
     "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSinkPortAndKind:(Ljava/lang/Object;Ljava/lang/Object;)V"
   ],
@@ -92,6 +110,10 @@
   [
     "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSanitizedSource:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSource:()Ljava/lang/Object;",
+    "Lcom/facebook/marianatrench/integrationtests/KindSpecificSanitizers;.err3:()V",
+    "Lcom/facebook/marianatrench/integrationtests/KindSpecificSanitizers;.err4:()V",
+    "Lcom/facebook/marianatrench/integrationtests/KindSpecificSanitizers;.no_err1:()V",
+    "Lcom/facebook/marianatrench/integrationtests/KindSpecificSanitizers;.no_err2:()V",
     "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedFlows:()V",
     "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSourcePort:()Ljava/lang/Object;"
   ],
@@ -149,6 +171,7 @@
     "Lcom/facebook/content/SecureContextHelper;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/GlobalSanitizers;.getSourceB:()Ljava/lang/Object;",
+    "Lcom/facebook/marianatrench/integrationtests/KindSpecificSanitizers;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.<init>:()V",
