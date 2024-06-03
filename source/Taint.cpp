@@ -201,6 +201,31 @@ Taint Taint::update_with_propagation_trace(
   return result;
 }
 
+void Taint::update_with_extra_trace(
+    const Taint& extra_trace_taint,
+    FrameType frame_type) {
+  // Collect all extra-trace frames to add.
+  std::vector<ExtraTrace> extra_traces{};
+  extra_trace_taint.visit_frames(
+      [&extra_traces, frame_type](
+          const CallInfo& source_call_info, const Frame& source_frame) {
+        extra_traces.push_back(ExtraTrace(
+            source_frame.kind(),
+            source_call_info.callee(),
+            source_call_info.call_position(),
+            source_call_info.callee_port(),
+            source_call_info.call_kind(),
+            frame_type));
+      });
+
+  map_.transform([&extra_traces](LocalTaint* local_taint) -> void {
+    local_taint->transform_frames([&extra_traces](Frame frame) {
+      frame.add_extra_traces(extra_traces);
+      return frame;
+    });
+  });
+}
+
 Taint Taint::from_json(const Json::Value& value, Context& context) {
   JsonValidation::null_or_array(value);
 

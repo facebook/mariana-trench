@@ -73,6 +73,10 @@ void Frame::add_extra_trace(ExtraTrace&& extra_trace) {
   extra_traces_.add(std::move(extra_trace));
 }
 
+void Frame::add_extra_traces(const std::vector<ExtraTrace>& extra_traces) {
+  extra_traces_.add(extra_traces.begin(), extra_traces.end());
+}
+
 bool Frame::leq(const Frame& other) const {
   if (is_bottom()) {
     return true;

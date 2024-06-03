@@ -63,6 +63,7 @@ TaintTree apply_propagation(
 
 Taint apply_source_as_transform_to_sink(
     MethodContext* context,
+    const Taint& source_taint,
     const TransformList* source_as_transform,
     Taint& sink_taint) {
   auto transformed_sink_taint = sink_taint.apply_transform(
@@ -74,6 +75,10 @@ Taint apply_source_as_transform_to_sink(
   // Add additional features
   transformed_sink_taint.add_locally_inferred_features(
       FeatureMayAlwaysSet{context->feature_factory.get_exploitability_root()});
+
+  // Add extra trace to source frame here:
+  transformed_sink_taint.update_with_extra_trace(
+      source_taint, FrameType::source());
 
   return transformed_sink_taint;
 }
