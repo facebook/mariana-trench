@@ -70,6 +70,8 @@ class FeatureFactory final {
    */
   const Feature* get_missing_method() const;
 
+  const Feature* get_exploitability_root() const;
+
   static const FeatureFactory& singleton();
 
  private:

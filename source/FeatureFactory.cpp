@@ -90,6 +90,10 @@ const Feature* FeatureFactory::get_missing_method() const {
   return factory_.create("via-missing-method");
 }
 
+const Feature* FeatureFactory::get_exploitability_root() const {
+  return factory_.create("exploitability-root-callable");
+}
+
 const FeatureFactory& FeatureFactory::singleton() {
   // Thread-safe global variable, initialized on first call.
   static FeatureFactory instance;

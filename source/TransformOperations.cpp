@@ -6,6 +6,7 @@
  */
 
 #include <mariana-trench/Assert.h>
+#include <mariana-trench/FeatureFactory.h>
 #include <mariana-trench/KindFactory.h>
 #include <mariana-trench/TransformOperations.h>
 #include <mariana-trench/TransformsFactory.h>
@@ -58,6 +59,23 @@ TaintTree apply_propagation(
       propagation_call_info, propagation_frame);
 
   return output_taint_tree;
+}
+
+Taint apply_source_as_transform_to_sink(
+    MethodContext* context,
+    const TransformList* source_as_transform,
+    Taint& sink_taint) {
+  auto transformed_sink_taint = sink_taint.apply_transform(
+      context->kind_factory,
+      context->transforms_factory,
+      context->used_kinds,
+      source_as_transform);
+
+  // Add additional features
+  transformed_sink_taint.add_locally_inferred_features(
+      FeatureMayAlwaysSet{context->feature_factory.get_exploitability_root()});
+
+  return transformed_sink_taint;
 }
 
 } // namespace transforms

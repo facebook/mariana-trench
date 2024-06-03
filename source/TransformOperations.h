@@ -21,5 +21,10 @@ TaintTree apply_propagation(
     const Frame& propagation_frame,
     TaintTree input_taint_tree);
 
+Taint apply_source_as_transform_to_sink(
+    MethodContext* context,
+    const TransformList* source_as_transform,
+    Taint& sink_taint);
+
 } // namespace transforms
 } // namespace marianatrench
