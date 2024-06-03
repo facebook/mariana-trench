@@ -10,6 +10,7 @@
 #include <mariana-trench/MultiSourceMultiSinkRule.h>
 #include <mariana-trench/Rule.h>
 #include <mariana-trench/SourceSinkRule.h>
+#include <mariana-trench/SourceSinkWithExploitabilityRule.h>
 
 namespace marianatrench {
 
@@ -23,7 +24,10 @@ std::unique_ptr<Rule> Rule::from_json(
   auto description = JsonValidation::string(value, /* field */ "description");
 
   // This uses the presence of specific keys to determine the rule kind.
-  if (value.isMember("sources") && value.isMember("sinks")) {
+  if (value.isMember("effect_sources")) {
+    return SourceSinkWithExploitabilityRule::from_json(
+        name, code, description, value, context);
+  } else if (value.isMember("sources") && value.isMember("sinks")) {
     return SourceSinkRule::from_json(name, code, description, value, context);
   } else if (
       value.isMember("multi_sources") && value.isMember("partial_sinks")) {
@@ -33,7 +37,7 @@ std::unique_ptr<Rule> Rule::from_json(
     throw JsonValidationError(
         value,
         std::nullopt,
-        "keys: sources+[transforms+]sinks or multi_sources+partial_sinks");
+        "keys: sources+[transforms+]sinks or multi_sources+partial_sinks or effect_sources+sources+sinks");
   }
 }
 

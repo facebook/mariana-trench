@@ -15,6 +15,7 @@
 #include <mariana-trench/Options.h>
 #include <mariana-trench/Rules.h>
 #include <mariana-trench/SourceSinkRule.h>
+#include <mariana-trench/SourceSinkWithExploitabilityRule.h>
 
 namespace marianatrench {
 
@@ -125,6 +126,32 @@ void Rules::add(Context& context, std::unique_ptr<Rule> rule) {
         }
       }
     }
+  } else if (
+      const auto* exploitability_rule =
+          rule_pointer->as<SourceSinkWithExploitabilityRule>()) {
+    for (const auto* source_kind : exploitability_rule->source_kinds()) {
+      for (const auto* sink_kind : exploitability_rule->sink_kinds()) {
+        // Create normal source to sink rule for initial matching.
+        source_to_sink_to_rules_[source_kind][sink_kind].push_back(
+            rule_pointer);
+
+        // Create rule for effect-source to sink as a transform kind with
+        // source-as-transform local transforms for final matching.
+        const auto* source_sink_transform_kind =
+            context.kind_factory->transform_kind(
+                sink_kind,
+                /* local transforms */
+                exploitability_rule->source_as_transform(source_kind),
+                /* global transforms */ nullptr);
+        for (const auto* effect_source_kind :
+             exploitability_rule->effect_source_kinds()) {
+          source_to_sink_to_rules_[effect_source_kind]
+                                  [source_sink_transform_kind]
+                                      .push_back(rule_pointer);
+        }
+      }
+    }
+
   } else {
     // Unreachable code. Did we add a new type of rule?
     mt_unreachable();
