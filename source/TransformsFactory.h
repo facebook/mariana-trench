@@ -10,6 +10,9 @@
 #include <ConcurrentContainers.h>
 
 #include <mariana-trench/Context.h>
+#include <mariana-trench/Kind.h>
+#include <mariana-trench/NamedTransform.h>
+#include <mariana-trench/SourceAsTransform.h>
 #include <mariana-trench/TransformList.h>
 #include <mariana-trench/UniquePointerFactory.h>
 
@@ -35,7 +38,9 @@ class TransformsFactory final {
     return transform_lists_.size();
   }
 
-  const Transform* create_transform(const std::string& name) const;
+  const NamedTransform* create_transform(const std::string& name) const;
+
+  const SourceAsTransform* create_source_as_transform(const Kind* kind) const;
 
   // Use for testing only
   const TransformList* create(
@@ -60,7 +65,8 @@ class TransformsFactory final {
   static const TransformsFactory& singleton();
 
  private:
-  UniquePointerFactory<std::string, Transform> transform_;
+  UniquePointerFactory<std::string, NamedTransform> transform_;
+  UniquePointerFactory<const Kind*, SourceAsTransform> source_as_transform_;
   mutable InsertOnlyConcurrentSet<TransformList> transform_lists_;
 };
 

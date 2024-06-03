@@ -406,6 +406,10 @@ TEST_F(RuleTest, SourceSinkWithExploitabilityRuleTest) {
   auto context = test::make_empty_context();
   auto* source_a = context.kind_factory->get("A");
   auto* source_b = context.kind_factory->get("B");
+  auto* source_a_as_transform = context.transforms_factory->create(
+      TransformList::from_kind(source_a, context));
+  auto* source_b_as_transform = context.transforms_factory->create(
+      TransformList::from_kind(source_b, context));
   auto* effect_source_e = context.kind_factory->get("E");
   auto* sink_x = context.kind_factory->get("X");
   auto* sink_y = context.kind_factory->get("Y");
@@ -416,7 +420,10 @@ TEST_F(RuleTest, SourceSinkWithExploitabilityRuleTest) {
       /* description */ "Test rule 1",
       /* effect_source_kinds */ Rule::KindSet{effect_source_e},
       /* source_kinds */ Rule::KindSet{source_a},
-      /* sink_kinds */ Rule::KindSet{sink_x});
+      /* sink_kinds */ Rule::KindSet{sink_x},
+      /* source_as_transforms */
+      SourceSinkWithExploitabilityRule::KindToTransformsMap{
+          {source_a, source_a_as_transform}});
   EXPECT_TRUE(rule1->uses(effect_source_e));
   EXPECT_TRUE(rule1->uses(source_a));
   EXPECT_FALSE(rule1->uses(source_b));
@@ -429,7 +436,12 @@ TEST_F(RuleTest, SourceSinkWithExploitabilityRuleTest) {
       /* description */ "Test rule 2",
       /* effect_source_kinds */ Rule::KindSet{effect_source_e},
       /* source_kinds */ Rule::KindSet{source_a, source_b},
-      /* sink_kinds */ Rule::KindSet{sink_x, sink_y});
+      /* sink_kinds */
+      Rule::KindSet{sink_x, sink_y},
+      /* source_as_transforms */
+      SourceSinkWithExploitabilityRule::KindToTransformsMap{
+          {source_a, source_a_as_transform},
+          {source_b, source_b_as_transform}});
   EXPECT_TRUE(rule2->uses(effect_source_e));
   EXPECT_TRUE(rule2->uses(source_a));
   EXPECT_TRUE(rule2->uses(source_b));

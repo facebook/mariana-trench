@@ -8,22 +8,10 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/find_iterator.hpp>
 
-#include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/KindFactory.h>
 #include <mariana-trench/TransformList.h>
 
 namespace marianatrench {
-
-const Transform* Transform::from_json(
-    const Json::Value& value,
-    Context& context) {
-  auto name = JsonValidation::string(value);
-  return context.transforms_factory->create_transform(name);
-}
-
-std::string Transform::to_trace_string() const {
-  return name_;
-}
 
 TransformList::TransformList(
     const std::vector<std::string>& transforms,
@@ -71,7 +59,7 @@ TransformList TransformList::from_trace_string(
        iterator != string_split_iterator();
        ++iterator) {
     auto transform = std::string(iterator->begin(), iterator->end());
-    result.push_back(context.transforms_factory->create_transform(transform));
+    result.push_back(Transform::from_trace_string(transform, context));
   }
 
   return TransformList(result);
@@ -90,6 +78,11 @@ TransformList TransformList::from_json(
   }
 
   return TransformList(std::move(transforms));
+}
+
+TransformList TransformList::from_kind(const Kind* kind, Context& context) {
+  return TransformList(
+      List{context.transforms_factory->create_source_as_transform(kind)});
 }
 
 } // namespace marianatrench
