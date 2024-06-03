@@ -19,6 +19,7 @@
 #include <mariana-trench/PartialKind.h>
 #include <mariana-trench/Positions.h>
 #include <mariana-trench/Rules.h>
+#include <mariana-trench/SourceSinkWithExploitabilityRule.h>
 #include <mariana-trench/TransferCall.h>
 #include <mariana-trench/TransformOperations.h>
 #include <mariana-trench/TriggeredPartialKind.h>
@@ -493,6 +494,62 @@ void check_multi_source_multi_sink_rules(
   }
 }
 
+void check_exploitability_rules(
+    MethodContext* context,
+    const Kind* source_kind,
+    Taint& source_taint,
+    const Kind* sink_kind,
+    Taint& sink_taint,
+    const SourceSinkWithExploitabilityRule* exploitability_rule,
+    const Position* position,
+    TextualOrderIndex sink_index,
+    std::string_view callee,
+    const FeatureMayAlwaysSet& extra_features) {
+  if (const auto* source_as_transform =
+          exploitability_rule->source_as_transform(source_kind)) {
+    // For an exploitability rule, when we find a flow from "source" to "sink"
+    // as defined in the rule, there is an associated transform corresponding to
+    // the source kind. In this case, we apply the source-as-transform to the
+    // sink kind and add an inferred call-chain sink to the callable where this
+    // flow is found.
+    auto transformed_sink_with_extra_trace =
+        transforms::apply_source_as_transform_to_sink(
+            context, source_taint, source_as_transform, sink_taint);
+
+    LOG_OR_DUMP(
+        context,
+        4,
+        "Fulfilled source->sink portion of the exploitability rule: {}. Creating call-effect-sink with source as transform: {}",
+        exploitability_rule->code(),
+        transformed_sink_with_extra_trace);
+
+    // Add an inferred call effect sink
+    context->new_model.add_inferred_call_effect_sinks(
+        AccessPath(Root(Root::Kind::CallEffectCallChain)),
+        std::move(transformed_sink_with_extra_trace),
+        context->options.heuristics());
+  } else {
+    // For an exploitability rule, when we find a flow from "effect_source" to
+    // "sink" with a SourceAsTransform transformation, we will emit an issue.
+    mt_assert(sink_kind->as<TransformKind>());
+    LOG_OR_DUMP(
+        context,
+        4,
+        "Fulfilled exploitability rule: {}. Creating issue with: Source: {}, Sink: {}",
+        exploitability_rule->code(),
+        source_kind->to_trace_string(),
+        sink_kind->to_trace_string());
+    create_issue(
+        context,
+        source_taint,
+        sink_taint,
+        exploitability_rule,
+        position,
+        sink_index,
+        callee,
+        extra_features);
+  }
+}
 // Checks if the given sources/sinks fulfill any rule. If so, create an issue.
 //
 // If fulfilled_partial_sinks is non-null, also checks for multi-source rules
@@ -531,15 +588,30 @@ void check_sources_sinks_flows(
       // Check if this satisfies any rule. If so, create the issue.
       const auto& rules = context->rules.rules(source_kind, sink_kind);
       for (const auto* rule : rules) {
-        create_issue(
-            context,
-            source_taint,
-            sink_taint,
-            rule,
-            position,
-            sink_index,
-            callee,
-            extra_features);
+        if (const auto* exploitability_rule =
+                rule->as<SourceSinkWithExploitabilityRule>()) {
+          check_exploitability_rules(
+              context,
+              source_kind,
+              source_taint,
+              sink_kind,
+              sink_taint,
+              exploitability_rule,
+              position,
+              sink_index,
+              callee,
+              extra_features);
+        } else {
+          create_issue(
+              context,
+              source_taint,
+              sink_taint,
+              rule,
+              position,
+              sink_index,
+              callee,
+              extra_features);
+        }
       }
 
       // Check if this satisfies any partial (multi-source/sink) rule.
