@@ -27,7 +27,6 @@ namespace {
 
 std::optional<ShimTarget> try_make_shim_target(
     const TargetTemplate& target_template,
-    const Methods* methods,
     const ShimMethod& shim_method) {
   const auto& receiver_info = target_template.receiver_info();
 
@@ -262,7 +261,7 @@ std::optional<ShimTargetVariant> TargetTemplate::instantiate(
     const ShimMethod& shim_method) const {
   switch (kind_) {
     case Kind::DEFINED:
-      return try_make_shim_target(*this, methods, shim_method);
+      return try_make_shim_target(*this, shim_method);
 
     case Kind::REFLECTION:
       return try_make_shim_reflection_target(*this, shim_method);

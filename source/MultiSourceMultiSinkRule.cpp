@@ -67,7 +67,7 @@ Rule::KindSet used_kinds_by_label(
 std::optional<CoveredRule> MultiSourceMultiSinkRule::coverage(
     const KindSet& sources,
     const KindSet& sinks,
-    const TransformSet& _transforms) const {
+    const TransformSet& /* unused */) const {
   auto used_rule_sources = used_kinds_by_label(multi_source_kinds_, sources);
   if (used_rule_sources.empty()) {
     return std::nullopt;
