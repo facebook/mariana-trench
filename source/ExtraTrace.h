@@ -97,7 +97,7 @@ class ExtraTrace final {
 
  private:
   const Kind* kind_;
-  const FrameType frame_type_;
+  FrameType frame_type_;
   CallInfo call_info_;
 };
 

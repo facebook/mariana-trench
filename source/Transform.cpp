@@ -9,17 +9,17 @@
 #include <fmt/format.h>
 
 #include <mariana-trench/JsonValidation.h>
-#include <mariana-trench/Kind.h>
 #include <mariana-trench/KindFactory.h>
-#include <mariana-trench/LocalArgumentKind.h>
-#include <mariana-trench/TriggeredPartialKind.h>
+#include <mariana-trench/NamedTransform.h>
+#include <mariana-trench/SourceAsTransform.h>
+#include <mariana-trench/Transform.h>
 
 namespace marianatrench {
 
 const Transform* Transform::from_json(
     const Json::Value& value,
     Context& context) {
-  return from_trace_string(JsonValidation::string(value), context);
+  return Transform::from_trace_string(JsonValidation::string(value), context);
 }
 
 const Transform* Transform::from_trace_string(
