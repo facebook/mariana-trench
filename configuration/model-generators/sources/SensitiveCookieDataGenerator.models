@@ -13,6 +13,10 @@
           {
             "kind": "SessionData",
             "port": "Return"
+          },
+          {
+            "kind": "FBSessionCookie",
+            "port": "Return"
           }
         ]
       }

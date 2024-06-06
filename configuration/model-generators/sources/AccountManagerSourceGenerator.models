@@ -18,11 +18,11 @@
       "model": {
         "sources": [
           {
-            "kind": "AccountManagerAuth",
+            "kind": "SessionData",
             "port": "Return"
           },
           {
-            "kind": "AccountManagerAuthToken",
+            "kind": "AuthToken",
             "port": "Return"
           }
         ]
@@ -40,11 +40,11 @@
       "model": {
         "sources": [
           {
-            "kind": "AccountManagerAuth",
+            "kind": "SessionData",
             "port": "Return"
           },
           {
-            "kind": "AccountManagerPassword",
+            "kind": "Password",
             "port": "Return"
           }
         ]
