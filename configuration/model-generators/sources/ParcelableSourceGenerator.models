@@ -1,0 +1,60 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parents": [
+            "Landroid/os/Bundle;",
+            "Landroid/os/BaseBundle;"
+          ],
+          "names": [
+            "putParcelableArrayList",
+            "putParcelableArray",
+            "putParcelable"
+          ]
+        }
+      ],
+      "model": {
+        "generations": [
+          {
+            "kind": "PutParcelable",
+            "port": "Argument(0)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroid/content/Intent;",
+          "name": "putExtra"
+        },
+        {
+          "constraint": "parameter",
+          "idx": 2,
+          "inner": {
+            "constraint": "name",
+            "pattern": "Landroid/os/Parcelable;"
+          }
+        }
+      ],
+      "model": {
+        "generations": [
+          {
+            "kind": "PutParcelable",
+            "port": "Argument(0)"
+          }
+        ],
+        "sources": [
+          {
+            "kind": "PutParcelable"
+          }
+        ]
+      }
+    }
+  ]
+}
