@@ -40,11 +40,25 @@ public class TaintTransforms {
     return o;
   }
 
+  static Object transformT3(Object o) {
+    // Declared frozen propagation: Argument(0) -> `T3@LocalReturn`
+    return o;
+  }
+
   static Data transformT3WithSource(Data d) {
     // Declared frozen propagation: Argument(0) -> `T3@LocalReturn`
     // Expect inferred generation: Return.baz -> `NewSource`
     d.baz = getNewSource();
     return d;
+  }
+
+  public static Object propagateWithTransformT2T3(Object o) {
+    // Expect inferred propagations:
+    //   Argument(0) -> `T2@T3:LocalReturn`
+    //               -> `LocalReturn`
+    Object o1 = transformT2(o);
+    Object o2 = transformT3(o1);
+    return o2;
   }
 
   static Object transformUnused(Object o) {
@@ -283,5 +297,22 @@ public class TaintTransforms {
     //   Source -> Sink
     //   Source -> T1 -> Sink
     sinkWithoutTransformUnused(sourceT1);
+  }
+
+  public static void testTransformT2T3Issue() {
+    // Expect issue for rules:
+    //   Source -> T2 -> T3 -> Sink
+    Object source = Origin.source();
+    Object sourceT2 = transformT2(source);
+    Object sourceT2T3 = transformT3(sourceT2);
+    Origin.sink(sourceT2T3);
+  }
+
+  public static void testPropagateWithTransformT2T3Issue() {
+    // Expect issue for rules:
+    //   Source -> T2 -> T3 -> Sink
+    Object source = Origin.source();
+    Object sourceT2T3 = propagateWithTransformT2T3(source);
+    Origin.sink(sourceT2T3);
   }
 }

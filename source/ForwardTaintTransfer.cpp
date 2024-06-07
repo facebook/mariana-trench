@@ -299,7 +299,11 @@ void apply_propagations(
 
       const PropagationKind* propagation_kind = propagation.propagation_kind();
       auto transformed_taint_tree = transforms::apply_propagation(
-          context, call_info, propagation, input_taint_tree);
+          context,
+          call_info,
+          propagation,
+          input_taint_tree,
+          transforms::TransformDirection::Forward);
 
       auto output_root = propagation_kind->root();
       FeatureMayAlwaysSet features = FeatureMayAlwaysSet::make_always(

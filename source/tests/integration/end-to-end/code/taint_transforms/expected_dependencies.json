@@ -98,7 +98,9 @@
     "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testMultihopSource1:()V",
     "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testMultihopSource2:()V",
     "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testPropagateAlternateTransforms:()V",
-    "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testSourceWithTransformIssue:()V"
+    "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testPropagateWithTransformT2T3Issue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testSourceWithTransformIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testTransformT2T3Issue:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;" : 
   [
@@ -110,7 +112,9 @@
     "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testMultihopSink1:()V",
     "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testMultihopSink2:()V",
     "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testPropagateAlternateTransforms:()V",
-    "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testSinkWithTransformIssue:()V"
+    "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testPropagateWithTransformT2T3Issue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testSinkWithTransformIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testTransformT2T3Issue:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.getNewSource:()Ljava/lang/Object;" : 
   [
@@ -132,6 +136,10 @@
   "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.propagateAlternateTransforms:(Lcom/facebook/marianatrench/integrationtests/Data;)Lcom/facebook/marianatrench/integrationtests/Data;" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testPropagateAlternateTransforms:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.propagateWithTransformT2T3:(Ljava/lang/Object;)Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testPropagateWithTransformT2T3Issue:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.propagateWithTransformT3WithSource:(Lcom/facebook/marianatrench/integrationtests/Data;)Lcom/facebook/marianatrench/integrationtests/Data;" : 
   [
@@ -201,10 +209,17 @@
     "Lcom/facebook/marianatrench/integrationtests/ExtraTraces;.hopToSink3:(Ljava/lang/Object;)V",
     "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.hopSourceWithTransformsT1T2:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.propagateAlternateTransforms:(Lcom/facebook/marianatrench/integrationtests/Data;)Lcom/facebook/marianatrench/integrationtests/Data;",
+    "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.propagateWithTransformT2T3:(Ljava/lang/Object;)Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sinkWithTransformT2:(Ljava/lang/Object;)V",
     "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sinkWithTransformsT1T2:(Ljava/lang/Object;)V",
     "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sourceWithTransformsT1T2:()Ljava/lang/Object;",
-    "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testSourceSinkWithTransformSafe:()V"
+    "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testSourceSinkWithTransformSafe:()V",
+    "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testTransformT2T3Issue:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.transformT3:(Ljava/lang/Object;)Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.propagateWithTransformT2T3:(Ljava/lang/Object;)Ljava/lang/Object;",
+    "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testTransformT2T3Issue:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.transformT3WithSource:(Lcom/facebook/marianatrench/integrationtests/Data;)Lcom/facebook/marianatrench/integrationtests/Data;" : 
   [

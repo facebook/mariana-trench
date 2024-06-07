@@ -15,11 +15,14 @@ namespace marianatrench {
 
 namespace transforms {
 
+enum class TransformDirection { Forward, Backward };
+
 TaintTree apply_propagation(
     MethodContext* context,
     const CallInfo& propagation_call_info,
     const Frame& propagation_frame,
-    TaintTree input_taint_tree);
+    TaintTree input_taint_tree,
+    TransformDirection direction);
 
 Taint apply_source_as_transform_to_sink(
     MethodContext* context,

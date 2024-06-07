@@ -2356,7 +2356,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.hopSinkWithTransformsT1T2:(Ljava/lang/Object;)V",
   "position" : 
   {
-    "line" : 161,
+    "line" : 175,
     "path" : "TaintTransforms.java"
   },
   "sinks" : 
@@ -2373,7 +2373,7 @@
             "position" : 
             {
               "end" : 24,
-              "line" : 163,
+              "line" : 177,
               "path" : "TaintTransforms.java",
               "start" : 24
             },
@@ -2418,7 +2418,7 @@
                     "port" : "Argument(0)",
                     "position" : 
                     {
-                      "line" : 162,
+                      "line" : 176,
                       "path" : "TaintTransforms.java"
                     }
                   },
@@ -2450,7 +2450,7 @@
           [
             {
               "end" : 27,
-              "line" : 162,
+              "line" : 176,
               "start" : 27
             }
           ]
@@ -2474,7 +2474,7 @@
             "position" : 
             {
               "end" : 42,
-              "line" : 124,
+              "line" : 138,
               "path" : "TaintTransforms.java",
               "start" : 22
             },
@@ -2498,7 +2498,7 @@
                     "port" : "Argument(0)",
                     "position" : 
                     {
-                      "line" : 125,
+                      "line" : 139,
                       "path" : "TaintTransforms.java"
                     }
                   },
@@ -2540,7 +2540,7 @@
                     "port" : "Argument(0)",
                     "position" : 
                     {
-                      "line" : 125,
+                      "line" : 139,
                       "path" : "TaintTransforms.java"
                     }
                   },
@@ -2572,7 +2572,7 @@
           [
             {
               "end" : 30,
-              "line" : 125,
+              "line" : 139,
               "start" : 23
             }
           ]
@@ -2583,7 +2583,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.hopSourceWithTransformsT1T2:()Ljava/lang/Object;",
   "position" : 
   {
-    "line" : 123,
+    "line" : 137,
     "path" : "TaintTransforms.java"
   }
 }
@@ -2626,7 +2626,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.propagateAlternateTransforms:(Lcom/facebook/marianatrench/integrationtests/Data;)Lcom/facebook/marianatrench/integrationtests/Data;",
   "position" : 
   {
-    "line" : 74,
+    "line" : 88,
     "path" : "TaintTransforms.java"
   },
   "propagation" : 
@@ -2642,7 +2642,7 @@
             "port" : "Argument(0)",
             "position" : 
             {
-              "line" : 81,
+              "line" : 95,
               "path" : "TaintTransforms.java"
             }
           },
@@ -2721,7 +2721,7 @@
             "port" : "Argument(0)",
             "position" : 
             {
-              "line" : 79,
+              "line" : 93,
               "path" : "TaintTransforms.java"
             }
           },
@@ -2755,7 +2755,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.propagateWithTransformT1:(Ljava/lang/Object;)Ljava/lang/Object;",
   "position" : 
   {
-    "line" : 65,
+    "line" : 79,
     "path" : "TaintTransforms.java"
   },
   "propagation" : 
@@ -2788,7 +2788,7 @@
             "port" : "Argument(0)",
             "position" : 
             {
-              "line" : 66,
+              "line" : 80,
               "path" : "TaintTransforms.java"
             }
           },
@@ -2819,6 +2819,78 @@
   ]
 }
 {
+  "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.propagateWithTransformT2T3:(Ljava/lang/Object;)Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 58,
+    "path" : "TaintTransforms.java"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "PropagationWithTrace:Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "line" : 60,
+              "path" : "TaintTransforms.java"
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "extra_traces" : 
+              [
+                {
+                  "call_info" : 
+                  {
+                    "call_kind" : "PropagationWithTrace:Origin",
+                    "port" : "Argument(0)",
+                    "position" : 
+                    {
+                      "line" : 59,
+                      "path" : "TaintTransforms.java"
+                    }
+                  },
+                  "frame_type" : "sink",
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "T2"
+                  }
+                }
+              ],
+              "kind" : 
+              {
+                "base" : "LocalReturn",
+                "global" : "T3",
+                "local" : "T2"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.transformT3:(Ljava/lang/Object;)Ljava/lang/Object;",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "output_paths" : 
+              {
+                "" : 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
   "generations" : 
   [
     {
@@ -2833,7 +2905,7 @@
             "position" : 
             {
               "end" : 31,
-              "line" : 92,
+              "line" : 106,
               "path" : "TaintTransforms.java",
               "start" : 11
             },
@@ -2866,7 +2938,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.propagateWithTransformT3WithSource:(Lcom/facebook/marianatrench/integrationtests/Data;)Lcom/facebook/marianatrench/integrationtests/Data;",
   "position" : 
   {
-    "line" : 91,
+    "line" : 105,
     "path" : "TaintTransforms.java"
   },
   "propagation" : 
@@ -2882,7 +2954,7 @@
             "port" : "Argument(0)",
             "position" : 
             {
-              "line" : 92,
+              "line" : 106,
               "path" : "TaintTransforms.java"
             }
           },
@@ -2916,7 +2988,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.propagateWithTransformsT1Unused:(Ljava/lang/Object;)Ljava/lang/Object;",
   "position" : 
   {
-    "line" : 98,
+    "line" : 112,
     "path" : "TaintTransforms.java"
   },
   "propagation" : 
@@ -2949,7 +3021,7 @@
             "port" : "Argument(0)",
             "position" : 
             {
-              "line" : 99,
+              "line" : 113,
               "path" : "TaintTransforms.java"
             }
           },
@@ -2983,7 +3055,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sinkWithTransformT1:(Ljava/lang/Object;)V",
   "position" : 
   {
-    "line" : 137,
+    "line" : 151,
     "path" : "TaintTransforms.java"
   },
   "sinks" : 
@@ -3000,7 +3072,7 @@
             "position" : 
             {
               "end" : 17,
-              "line" : 139,
+              "line" : 153,
               "path" : "TaintTransforms.java",
               "start" : 16
             }
@@ -3038,7 +3110,7 @@
                     "port" : "Argument(0)",
                     "position" : 
                     {
-                      "line" : 138,
+                      "line" : 152,
                       "path" : "TaintTransforms.java"
                     }
                   },
@@ -3069,7 +3141,7 @@
           [
             {
               "end" : 28,
-              "line" : 138,
+              "line" : 152,
               "start" : 28
             }
           ]
@@ -3082,7 +3154,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sinkWithTransformT2:(Ljava/lang/Object;)V",
   "position" : 
   {
-    "line" : 144,
+    "line" : 158,
     "path" : "TaintTransforms.java"
   },
   "sinks" : 
@@ -3099,7 +3171,7 @@
             "position" : 
             {
               "end" : 17,
-              "line" : 146,
+              "line" : 160,
               "path" : "TaintTransforms.java",
               "start" : 16
             }
@@ -3121,7 +3193,7 @@
                     "port" : "Argument(0)",
                     "position" : 
                     {
-                      "line" : 145,
+                      "line" : 159,
                       "path" : "TaintTransforms.java"
                     }
                   },
@@ -3152,7 +3224,7 @@
           [
             {
               "end" : 28,
-              "line" : 145,
+              "line" : 159,
               "start" : 28
             }
           ]
@@ -3165,7 +3237,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sinkWithTransformsT1T2:(Ljava/lang/Object;)V",
   "position" : 
   {
-    "line" : 152,
+    "line" : 166,
     "path" : "TaintTransforms.java"
   },
   "sinks" : 
@@ -3182,7 +3254,7 @@
             "position" : 
             {
               "end" : 23,
-              "line" : 155,
+              "line" : 169,
               "path" : "TaintTransforms.java",
               "start" : 16
             }
@@ -3204,7 +3276,7 @@
                     "port" : "Argument(0)",
                     "position" : 
                     {
-                      "line" : 154,
+                      "line" : 168,
                       "path" : "TaintTransforms.java"
                     }
                   },
@@ -3245,7 +3317,7 @@
                     "port" : "Argument(0)",
                     "position" : 
                     {
-                      "line" : 153,
+                      "line" : 167,
                       "path" : "TaintTransforms.java"
                     }
                   },
@@ -3263,7 +3335,7 @@
                     "port" : "Argument(0)",
                     "position" : 
                     {
-                      "line" : 154,
+                      "line" : 168,
                       "path" : "TaintTransforms.java"
                     }
                   },
@@ -3294,12 +3366,12 @@
           [
             {
               "end" : 34,
-              "line" : 153,
+              "line" : 167,
               "start" : 34
             },
             {
               "end" : 41,
-              "line" : 154,
+              "line" : 168,
               "start" : 34
             }
           ]
@@ -3312,7 +3384,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sinkWithoutTransformUnused:(Ljava/lang/Object;)V",
   "position" : 
   {
-    "line" : 168,
+    "line" : 182,
     "path" : "TaintTransforms.java"
   },
   "sinks" : 
@@ -3329,7 +3401,7 @@
             "position" : 
             {
               "end" : 33,
-              "line" : 169,
+              "line" : 183,
               "path" : "TaintTransforms.java",
               "start" : 16
             }
@@ -3357,7 +3429,7 @@
           [
             {
               "end" : 32,
-              "line" : 169,
+              "line" : 183,
               "start" : 32
             }
           ]
@@ -3381,7 +3453,7 @@
             "position" : 
             {
               "end" : 32,
-              "line" : 107,
+              "line" : 121,
               "path" : "TaintTransforms.java",
               "start" : 27
             }
@@ -3419,7 +3491,7 @@
                     "port" : "Argument(0)",
                     "position" : 
                     {
-                      "line" : 108,
+                      "line" : 122,
                       "path" : "TaintTransforms.java"
                     }
                   },
@@ -3450,7 +3522,7 @@
           [
             {
               "end" : 43,
-              "line" : 108,
+              "line" : 122,
               "start" : 38
             }
           ]
@@ -3461,7 +3533,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sourceWithTransformT1:()Ljava/lang/Object;",
   "position" : 
   {
-    "line" : 106,
+    "line" : 120,
     "path" : "TaintTransforms.java"
   }
 }
@@ -3480,7 +3552,7 @@
             "position" : 
             {
               "end" : 46,
-              "line" : 116,
+              "line" : 130,
               "path" : "TaintTransforms.java",
               "start" : 41
             }
@@ -3502,7 +3574,7 @@
                     "port" : "Argument(0)",
                     "position" : 
                     {
-                      "line" : 117,
+                      "line" : 131,
                       "path" : "TaintTransforms.java"
                     }
                   },
@@ -3543,7 +3615,7 @@
                     "port" : "Argument(0)",
                     "position" : 
                     {
-                      "line" : 116,
+                      "line" : 130,
                       "path" : "TaintTransforms.java"
                     }
                   },
@@ -3561,7 +3633,7 @@
                     "port" : "Argument(0)",
                     "position" : 
                     {
-                      "line" : 117,
+                      "line" : 131,
                       "path" : "TaintTransforms.java"
                     }
                   },
@@ -3592,12 +3664,12 @@
           [
             {
               "end" : 30,
-              "line" : 117,
+              "line" : 131,
               "start" : 23
             },
             {
               "end" : 48,
-              "line" : 116,
+              "line" : 130,
               "start" : 34
             }
           ]
@@ -3608,7 +3680,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sourceWithTransformsT1T2:()Ljava/lang/Object;",
   "position" : 
   {
-    "line" : 115,
+    "line" : 129,
     "path" : "TaintTransforms.java"
   }
 }
@@ -3627,7 +3699,7 @@
             "position" : 
             {
               "end" : 39,
-              "line" : 131,
+              "line" : 145,
               "path" : "TaintTransforms.java",
               "start" : 34
             }
@@ -3655,7 +3727,7 @@
           [
             {
               "end" : 41,
-              "line" : 131,
+              "line" : 145,
               "start" : 27
             }
           ]
@@ -3666,13 +3738,1191 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sourceWithoutTransformUnused:()Ljava/lang/Object;",
   "position" : 
   {
-    "line" : 130,
+    "line" : 144,
     "path" : "TaintTransforms.java"
   }
 }
 {
   "issues" : 
   [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sinkWithTransformT2:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 285,
+        "path" : "TaintTransforms.java"
+      },
+      "rule" : 5,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 29,
+              "line" : 285,
+              "path" : "TaintTransforms.java",
+              "start" : 24
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sinkWithTransformT2:(Ljava/lang/Object;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "distance" : 1,
+              "kind" : 
+              {
+                "base" : "Sink",
+                "global" : "T2"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : false
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 70,
+              "line" : 284,
+              "path" : "TaintTransforms.java",
+              "start" : 65
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "extra_traces" : 
+              [
+                {
+                  "call_info" : 
+                  {
+                    "call_kind" : "PropagationWithTrace:Origin",
+                    "port" : "Argument(1)",
+                    "position" : 
+                    {
+                      "line" : 284,
+                      "path" : "TaintTransforms.java"
+                    }
+                  },
+                  "frame_type" : "sink",
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "T1"
+                  }
+                }
+              ],
+              "kind" : 
+              {
+                "base" : "Source",
+                "local" : "T1"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 72,
+              "line" : 284,
+              "start" : 58
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testForAllParameters:()V",
+  "position" : 
+  {
+    "line" : 283,
+    "path" : "TaintTransforms.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "always_features" : 
+      [
+        "via-issue-broadening"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 219,
+        "path" : "TaintTransforms.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 19,
+              "line" : 219,
+              "path" : "TaintTransforms.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Return.baz",
+            "position" : 
+            {
+              "end" : 44,
+              "line" : 214,
+              "path" : "TaintTransforms.java",
+              "start" : 11
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.propagateWithTransformT3WithSource:(Lcom/facebook/marianatrench/integrationtests/Data;)Lcom/facebook/marianatrench/integrationtests/Data;"
+          },
+          "kinds" : 
+          [
+            {
+              "distance" : 2,
+              "kind" : "NewSource",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.getNewSource:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ]
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-issue-broadening"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "always_features" : 
+      [
+        "via-propagation-broadening"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 219,
+        "path" : "TaintTransforms.java"
+      },
+      "rule" : 4,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 19,
+              "line" : 219,
+              "path" : "TaintTransforms.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 27,
+              "line" : 213,
+              "path" : "TaintTransforms.java",
+              "start" : 22
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "extra_traces" : 
+              [
+                {
+                  "call_info" : 
+                  {
+                    "call_kind" : "PropagationWithTrace:CallSite",
+                    "port" : "Argument(0)",
+                    "position" : 
+                    {
+                      "line" : 214,
+                      "path" : "TaintTransforms.java"
+                    },
+                    "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.propagateWithTransformT3WithSource:(Lcom/facebook/marianatrench/integrationtests/Data;)Lcom/facebook/marianatrench/integrationtests/Data;"
+                  },
+                  "frame_type" : "sink",
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "T3"
+                  }
+                }
+              ],
+              "kind" : 
+              {
+                "base" : "Source",
+                "local" : "T3"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-propagation-broadening"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 30,
+              "line" : 213,
+              "start" : 15
+            },
+            {
+              "end" : 49,
+              "line" : 214,
+              "start" : 46
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testIssuePropagateWithSource:()V",
+  "position" : 
+  {
+    "line" : 211,
+    "path" : "TaintTransforms.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sinkWithTransformsT1T2:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 255,
+        "path" : "TaintTransforms.java"
+      },
+      "rule" : 3,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 32,
+              "line" : 255,
+              "path" : "TaintTransforms.java",
+              "start" : 27
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sinkWithTransformsT1T2:(Ljava/lang/Object;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "distance" : 1,
+              "kind" : 
+              {
+                "base" : "Sink",
+                "global" : "T2"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : false
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 32,
+              "line" : 254,
+              "path" : "TaintTransforms.java",
+              "start" : 27
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Source",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sinkWithTransformsT1T2:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 255,
+        "path" : "TaintTransforms.java"
+      },
+      "rule" : 5,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 32,
+              "line" : 255,
+              "path" : "TaintTransforms.java",
+              "start" : 27
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sinkWithTransformsT1T2:(Ljava/lang/Object;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "distance" : 1,
+              "kind" : 
+              {
+                "base" : "Sink",
+                "global" : "T1:T2"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : false
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 32,
+              "line" : 254,
+              "path" : "TaintTransforms.java",
+              "start" : 27
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Source",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testMultihopSink1:()V",
+  "position" : 
+  {
+    "line" : 253,
+    "path" : "TaintTransforms.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.hopSinkWithTransformsT1T2:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 263,
+        "path" : "TaintTransforms.java"
+      },
+      "rule" : 3,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 35,
+              "line" : 263,
+              "path" : "TaintTransforms.java",
+              "start" : 30
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.hopSinkWithTransformsT1T2:(Ljava/lang/Object;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "distance" : 2,
+              "kind" : 
+              {
+                "base" : "Sink",
+                "global" : "T2"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 32,
+              "line" : 262,
+              "path" : "TaintTransforms.java",
+              "start" : 27
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Source",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.hopSinkWithTransformsT1T2:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 263,
+        "path" : "TaintTransforms.java"
+      },
+      "rule" : 5,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 35,
+              "line" : 263,
+              "path" : "TaintTransforms.java",
+              "start" : 30
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.hopSinkWithTransformsT1T2:(Ljava/lang/Object;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "distance" : 2,
+              "kind" : 
+              {
+                "base" : "Sink",
+                "global" : "T1:T2"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 32,
+              "line" : 262,
+              "path" : "TaintTransforms.java",
+              "start" : 27
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Source",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testMultihopSink2:()V",
+  "position" : 
+  {
+    "line" : 261,
+    "path" : "TaintTransforms.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 239,
+        "path" : "TaintTransforms.java"
+      },
+      "rule" : 3,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 21,
+              "line" : 239,
+              "path" : "TaintTransforms.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 43,
+              "line" : 238,
+              "path" : "TaintTransforms.java",
+              "start" : 20
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sourceWithTransformsT1T2:()Ljava/lang/Object;"
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "distance" : 1,
+              "kind" : 
+              {
+                "base" : "Source",
+                "global" : "T2"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 239,
+        "path" : "TaintTransforms.java"
+      },
+      "rule" : 5,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 21,
+              "line" : 239,
+              "path" : "TaintTransforms.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 43,
+              "line" : 238,
+              "path" : "TaintTransforms.java",
+              "start" : 20
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sourceWithTransformsT1T2:()Ljava/lang/Object;"
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "distance" : 1,
+              "kind" : 
+              {
+                "base" : "Source",
+                "global" : "T2:T1"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : false
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testMultihopSource1:()V",
+  "position" : 
+  {
+    "line" : 237,
+    "path" : "TaintTransforms.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 247,
+        "path" : "TaintTransforms.java"
+      },
+      "rule" : 3,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 21,
+              "line" : 247,
+              "path" : "TaintTransforms.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 46,
+              "line" : 246,
+              "path" : "TaintTransforms.java",
+              "start" : 20
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.hopSourceWithTransformsT1T2:()Ljava/lang/Object;"
+          },
+          "kinds" : 
+          [
+            {
+              "distance" : 2,
+              "kind" : 
+              {
+                "base" : "Source",
+                "global" : "T2"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 247,
+        "path" : "TaintTransforms.java"
+      },
+      "rule" : 5,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 21,
+              "line" : 247,
+              "path" : "TaintTransforms.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 46,
+              "line" : 246,
+              "path" : "TaintTransforms.java",
+              "start" : 20
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.hopSourceWithTransformsT1T2:()Ljava/lang/Object;"
+          },
+          "kinds" : 
+          [
+            {
+              "distance" : 2,
+              "kind" : 
+              {
+                "base" : "Source",
+                "global" : "T2:T1"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testMultihopSource2:()V",
+  "position" : 
+  {
+    "line" : 245,
+    "path" : "TaintTransforms.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sinkWithTransformT2:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 271,
+        "path" : "TaintTransforms.java"
+      },
+      "rule" : 3,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 29,
+              "line" : 271,
+              "path" : "TaintTransforms.java",
+              "start" : 24
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sinkWithTransformT2:(Ljava/lang/Object;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "distance" : 1,
+              "kind" : 
+              {
+                "base" : "Sink",
+                "global" : "T2"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : false
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 40,
+              "line" : 270,
+              "path" : "TaintTransforms.java",
+              "start" : 20
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sourceWithTransformT1:()Ljava/lang/Object;"
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "distance" : 1,
+              "kind" : "Source",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : false
+            }
+          ]
+        }
+      ]
+    },
     {
       "callee" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sinkWithTransformT2:(Ljava/lang/Object;)V",
       "position" : 
@@ -3729,1190 +4979,12 @@
         {
           "call_info" : 
           {
-            "call_kind" : "Origin",
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 70,
-              "line" : 270,
-              "path" : "TaintTransforms.java",
-              "start" : 65
-            }
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                40,
-                41
-              ],
-              "extra_traces" : 
-              [
-                {
-                  "call_info" : 
-                  {
-                    "call_kind" : "PropagationWithTrace:Origin",
-                    "port" : "Argument(1)",
-                    "position" : 
-                    {
-                      "line" : 270,
-                      "path" : "TaintTransforms.java"
-                    }
-                  },
-                  "frame_type" : "sink",
-                  "kind" : 
-                  {
-                    "base" : "LocalReturn",
-                    "global" : "T1"
-                  }
-                }
-              ],
-              "kind" : 
-              {
-                "base" : "Source",
-                "local" : "T1"
-              },
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-                  "port" : "Return"
-                }
-              ],
-              "preserves_type_context" : true
-            }
-          ],
-          "local_positions" : 
-          [
-            {
-              "end" : 72,
-              "line" : 270,
-              "start" : 58
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testForAllParameters:()V",
-  "position" : 
-  {
-    "line" : 269,
-    "path" : "TaintTransforms.java"
-  }
-}
-{
-  "issues" : 
-  [
-    {
-      "always_features" : 
-      [
-        "via-issue-broadening"
-      ],
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-      "position" : 
-      {
-        "line" : 205,
-        "path" : "TaintTransforms.java"
-      },
-      "rule" : 1,
-      "sink_index" : "0",
-      "sinks" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Origin",
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 19,
-              "line" : 205,
-              "path" : "TaintTransforms.java",
-              "start" : 16
-            }
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                40,
-                41
-              ],
-              "kind" : "Sink",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-                  "port" : "Argument(0)"
-                }
-              ],
-              "preserves_type_context" : true
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Return.baz",
-            "position" : 
-            {
-              "end" : 44,
-              "line" : 200,
-              "path" : "TaintTransforms.java",
-              "start" : 11
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.propagateWithTransformT3WithSource:(Lcom/facebook/marianatrench/integrationtests/Data;)Lcom/facebook/marianatrench/integrationtests/Data;"
-          },
-          "kinds" : 
-          [
-            {
-              "distance" : 2,
-              "kind" : "NewSource",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.getNewSource:()Ljava/lang/Object;",
-                  "port" : "Return"
-                }
-              ]
-            }
-          ],
-          "local_features" : 
-          {
-            "always_features" : 
-            [
-              "via-issue-broadening"
-            ]
-          }
-        }
-      ]
-    },
-    {
-      "always_features" : 
-      [
-        "via-propagation-broadening"
-      ],
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-      "position" : 
-      {
-        "line" : 205,
-        "path" : "TaintTransforms.java"
-      },
-      "rule" : 4,
-      "sink_index" : "0",
-      "sinks" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Origin",
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 19,
-              "line" : 205,
-              "path" : "TaintTransforms.java",
-              "start" : 16
-            }
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                40,
-                41
-              ],
-              "kind" : "Sink",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-                  "port" : "Argument(0)"
-                }
-              ],
-              "preserves_type_context" : true
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Origin",
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 27,
-              "line" : 199,
-              "path" : "TaintTransforms.java",
-              "start" : 22
-            }
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                40,
-                41
-              ],
-              "extra_traces" : 
-              [
-                {
-                  "call_info" : 
-                  {
-                    "call_kind" : "PropagationWithTrace:CallSite",
-                    "port" : "Argument(0)",
-                    "position" : 
-                    {
-                      "line" : 200,
-                      "path" : "TaintTransforms.java"
-                    },
-                    "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.propagateWithTransformT3WithSource:(Lcom/facebook/marianatrench/integrationtests/Data;)Lcom/facebook/marianatrench/integrationtests/Data;"
-                  },
-                  "frame_type" : "sink",
-                  "kind" : 
-                  {
-                    "base" : "LocalReturn",
-                    "global" : "T3"
-                  }
-                }
-              ],
-              "kind" : 
-              {
-                "base" : "Source",
-                "local" : "T3"
-              },
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-                  "port" : "Return"
-                }
-              ],
-              "preserves_type_context" : true
-            }
-          ],
-          "local_features" : 
-          {
-            "always_features" : 
-            [
-              "via-propagation-broadening"
-            ]
-          },
-          "local_positions" : 
-          [
-            {
-              "end" : 30,
-              "line" : 199,
-              "start" : 15
-            },
-            {
-              "end" : 49,
-              "line" : 200,
-              "start" : 46
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testIssuePropagateWithSource:()V",
-  "position" : 
-  {
-    "line" : 197,
-    "path" : "TaintTransforms.java"
-  }
-}
-{
-  "issues" : 
-  [
-    {
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sinkWithTransformsT1T2:(Ljava/lang/Object;)V",
-      "position" : 
-      {
-        "line" : 241,
-        "path" : "TaintTransforms.java"
-      },
-      "rule" : 3,
-      "sink_index" : "0",
-      "sinks" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 32,
-              "line" : 241,
-              "path" : "TaintTransforms.java",
-              "start" : 27
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sinkWithTransformsT1T2:(Ljava/lang/Object;)V"
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                40,
-                41
-              ],
-              "distance" : 1,
-              "kind" : 
-              {
-                "base" : "Sink",
-                "global" : "T2"
-              },
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-                  "port" : "Argument(0)"
-                }
-              ],
-              "preserves_type_context" : false
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Origin",
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 32,
-              "line" : 240,
-              "path" : "TaintTransforms.java",
-              "start" : 27
-            }
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                40,
-                41
-              ],
-              "kind" : "Source",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-                  "port" : "Return"
-                }
-              ],
-              "preserves_type_context" : true
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sinkWithTransformsT1T2:(Ljava/lang/Object;)V",
-      "position" : 
-      {
-        "line" : 241,
-        "path" : "TaintTransforms.java"
-      },
-      "rule" : 5,
-      "sink_index" : "0",
-      "sinks" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 32,
-              "line" : 241,
-              "path" : "TaintTransforms.java",
-              "start" : 27
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sinkWithTransformsT1T2:(Ljava/lang/Object;)V"
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                40,
-                41
-              ],
-              "distance" : 1,
-              "kind" : 
-              {
-                "base" : "Sink",
-                "global" : "T1:T2"
-              },
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-                  "port" : "Argument(0)"
-                }
-              ],
-              "preserves_type_context" : false
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Origin",
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 32,
-              "line" : 240,
-              "path" : "TaintTransforms.java",
-              "start" : 27
-            }
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                40,
-                41
-              ],
-              "kind" : "Source",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-                  "port" : "Return"
-                }
-              ],
-              "preserves_type_context" : true
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testMultihopSink1:()V",
-  "position" : 
-  {
-    "line" : 239,
-    "path" : "TaintTransforms.java"
-  }
-}
-{
-  "issues" : 
-  [
-    {
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.hopSinkWithTransformsT1T2:(Ljava/lang/Object;)V",
-      "position" : 
-      {
-        "line" : 249,
-        "path" : "TaintTransforms.java"
-      },
-      "rule" : 3,
-      "sink_index" : "0",
-      "sinks" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 35,
-              "line" : 249,
-              "path" : "TaintTransforms.java",
-              "start" : 30
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.hopSinkWithTransformsT1T2:(Ljava/lang/Object;)V"
-          },
-          "kinds" : 
-          [
-            {
-              "distance" : 2,
-              "kind" : 
-              {
-                "base" : "Sink",
-                "global" : "T2"
-              },
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-                  "port" : "Argument(0)"
-                }
-              ]
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Origin",
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 32,
-              "line" : 248,
-              "path" : "TaintTransforms.java",
-              "start" : 27
-            }
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                40,
-                41
-              ],
-              "kind" : "Source",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-                  "port" : "Return"
-                }
-              ],
-              "preserves_type_context" : true
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.hopSinkWithTransformsT1T2:(Ljava/lang/Object;)V",
-      "position" : 
-      {
-        "line" : 249,
-        "path" : "TaintTransforms.java"
-      },
-      "rule" : 5,
-      "sink_index" : "0",
-      "sinks" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 35,
-              "line" : 249,
-              "path" : "TaintTransforms.java",
-              "start" : 30
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.hopSinkWithTransformsT1T2:(Ljava/lang/Object;)V"
-          },
-          "kinds" : 
-          [
-            {
-              "distance" : 2,
-              "kind" : 
-              {
-                "base" : "Sink",
-                "global" : "T1:T2"
-              },
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-                  "port" : "Argument(0)"
-                }
-              ]
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Origin",
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 32,
-              "line" : 248,
-              "path" : "TaintTransforms.java",
-              "start" : 27
-            }
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                40,
-                41
-              ],
-              "kind" : "Source",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-                  "port" : "Return"
-                }
-              ],
-              "preserves_type_context" : true
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testMultihopSink2:()V",
-  "position" : 
-  {
-    "line" : 247,
-    "path" : "TaintTransforms.java"
-  }
-}
-{
-  "issues" : 
-  [
-    {
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-      "position" : 
-      {
-        "line" : 225,
-        "path" : "TaintTransforms.java"
-      },
-      "rule" : 3,
-      "sink_index" : "0",
-      "sinks" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Origin",
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 21,
-              "line" : 225,
-              "path" : "TaintTransforms.java",
-              "start" : 16
-            }
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                40,
-                41
-              ],
-              "kind" : "Sink",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-                  "port" : "Argument(0)"
-                }
-              ],
-              "preserves_type_context" : true
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 43,
-              "line" : 224,
-              "path" : "TaintTransforms.java",
-              "start" : 20
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sourceWithTransformsT1T2:()Ljava/lang/Object;"
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                40,
-                41
-              ],
-              "distance" : 1,
-              "kind" : 
-              {
-                "base" : "Source",
-                "global" : "T2"
-              },
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-                  "port" : "Return"
-                }
-              ],
-              "preserves_type_context" : false
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-      "position" : 
-      {
-        "line" : 225,
-        "path" : "TaintTransforms.java"
-      },
-      "rule" : 5,
-      "sink_index" : "0",
-      "sinks" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Origin",
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 21,
-              "line" : 225,
-              "path" : "TaintTransforms.java",
-              "start" : 16
-            }
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                40,
-                41
-              ],
-              "kind" : "Sink",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-                  "port" : "Argument(0)"
-                }
-              ],
-              "preserves_type_context" : true
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 43,
-              "line" : 224,
-              "path" : "TaintTransforms.java",
-              "start" : 20
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sourceWithTransformsT1T2:()Ljava/lang/Object;"
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                40,
-                41
-              ],
-              "distance" : 1,
-              "kind" : 
-              {
-                "base" : "Source",
-                "global" : "T2:T1"
-              },
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-                  "port" : "Return"
-                }
-              ],
-              "preserves_type_context" : false
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testMultihopSource1:()V",
-  "position" : 
-  {
-    "line" : 223,
-    "path" : "TaintTransforms.java"
-  }
-}
-{
-  "issues" : 
-  [
-    {
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-      "position" : 
-      {
-        "line" : 233,
-        "path" : "TaintTransforms.java"
-      },
-      "rule" : 3,
-      "sink_index" : "0",
-      "sinks" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Origin",
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 21,
-              "line" : 233,
-              "path" : "TaintTransforms.java",
-              "start" : 16
-            }
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                40,
-                41
-              ],
-              "kind" : "Sink",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-                  "port" : "Argument(0)"
-                }
-              ],
-              "preserves_type_context" : true
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 46,
-              "line" : 232,
-              "path" : "TaintTransforms.java",
-              "start" : 20
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.hopSourceWithTransformsT1T2:()Ljava/lang/Object;"
-          },
-          "kinds" : 
-          [
-            {
-              "distance" : 2,
-              "kind" : 
-              {
-                "base" : "Source",
-                "global" : "T2"
-              },
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-                  "port" : "Return"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-      "position" : 
-      {
-        "line" : 233,
-        "path" : "TaintTransforms.java"
-      },
-      "rule" : 5,
-      "sink_index" : "0",
-      "sinks" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Origin",
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 21,
-              "line" : 233,
-              "path" : "TaintTransforms.java",
-              "start" : 16
-            }
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                40,
-                41
-              ],
-              "kind" : "Sink",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-                  "port" : "Argument(0)"
-                }
-              ],
-              "preserves_type_context" : true
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 46,
-              "line" : 232,
-              "path" : "TaintTransforms.java",
-              "start" : 20
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.hopSourceWithTransformsT1T2:()Ljava/lang/Object;"
-          },
-          "kinds" : 
-          [
-            {
-              "distance" : 2,
-              "kind" : 
-              {
-                "base" : "Source",
-                "global" : "T2:T1"
-              },
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-                  "port" : "Return"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testMultihopSource2:()V",
-  "position" : 
-  {
-    "line" : 231,
-    "path" : "TaintTransforms.java"
-  }
-}
-{
-  "issues" : 
-  [
-    {
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sinkWithTransformT2:(Ljava/lang/Object;)V",
-      "position" : 
-      {
-        "line" : 257,
-        "path" : "TaintTransforms.java"
-      },
-      "rule" : 3,
-      "sink_index" : "0",
-      "sinks" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 29,
-              "line" : 257,
-              "path" : "TaintTransforms.java",
-              "start" : 24
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sinkWithTransformT2:(Ljava/lang/Object;)V"
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                40,
-                41
-              ],
-              "distance" : 1,
-              "kind" : 
-              {
-                "base" : "Sink",
-                "global" : "T2"
-              },
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-                  "port" : "Argument(0)"
-                }
-              ],
-              "preserves_type_context" : false
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "call_info" : 
-          {
             "call_kind" : "CallSite",
             "port" : "Return",
             "position" : 
             {
               "end" : 40,
-              "line" : 256,
-              "path" : "TaintTransforms.java",
-              "start" : 20
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sourceWithTransformT1:()Ljava/lang/Object;"
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                40,
-                41
-              ],
-              "distance" : 1,
-              "kind" : "Source",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-                  "port" : "Return"
-                }
-              ],
-              "preserves_type_context" : false
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sinkWithTransformT2:(Ljava/lang/Object;)V",
-      "position" : 
-      {
-        "line" : 257,
-        "path" : "TaintTransforms.java"
-      },
-      "rule" : 5,
-      "sink_index" : "0",
-      "sinks" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 29,
-              "line" : 257,
-              "path" : "TaintTransforms.java",
-              "start" : 24
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sinkWithTransformT2:(Ljava/lang/Object;)V"
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                40,
-                41
-              ],
-              "distance" : 1,
-              "kind" : 
-              {
-                "base" : "Sink",
-                "global" : "T2"
-              },
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-                  "port" : "Argument(0)"
-                }
-              ],
-              "preserves_type_context" : false
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 40,
-              "line" : 256,
+              "line" : 270,
               "path" : "TaintTransforms.java",
               "start" : 20
             },
@@ -4949,7 +5021,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testMultihopSourceSink:()V",
   "position" : 
   {
-    "line" : 255,
+    "line" : 269,
     "path" : "TaintTransforms.java"
   }
 }
@@ -4964,7 +5036,7 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 217,
+        "line" : 231,
         "path" : "TaintTransforms.java"
       },
       "rule" : 1,
@@ -4979,7 +5051,7 @@
             "position" : 
             {
               "end" : 19,
-              "line" : 217,
+              "line" : 231,
               "path" : "TaintTransforms.java",
               "start" : 16
             }
@@ -5015,7 +5087,7 @@
             "position" : 
             {
               "end" : 27,
-              "line" : 210,
+              "line" : 224,
               "path" : "TaintTransforms.java",
               "start" : 22
             }
@@ -5050,12 +5122,12 @@
           [
             {
               "end" : 30,
-              "line" : 210,
+              "line" : 224,
               "start" : 15
             },
             {
               "end" : 43,
-              "line" : 212,
+              "line" : 226,
               "start" : 40
             }
           ]
@@ -5070,7 +5142,7 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 217,
+        "line" : 231,
         "path" : "TaintTransforms.java"
       },
       "rule" : 2,
@@ -5085,7 +5157,7 @@
             "position" : 
             {
               "end" : 19,
-              "line" : 217,
+              "line" : 231,
               "path" : "TaintTransforms.java",
               "start" : 16
             }
@@ -5121,7 +5193,7 @@
             "position" : 
             {
               "end" : 27,
-              "line" : 210,
+              "line" : 224,
               "path" : "TaintTransforms.java",
               "start" : 22
             }
@@ -5143,7 +5215,7 @@
                     "port" : "Argument(0).foo",
                     "position" : 
                     {
-                      "line" : 212,
+                      "line" : 226,
                       "path" : "TaintTransforms.java"
                     },
                     "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.propagateAlternateTransforms:(Lcom/facebook/marianatrench/integrationtests/Data;)Lcom/facebook/marianatrench/integrationtests/Data;"
@@ -5182,12 +5254,12 @@
           [
             {
               "end" : 30,
-              "line" : 210,
+              "line" : 224,
               "start" : 15
             },
             {
               "end" : 43,
-              "line" : 212,
+              "line" : 226,
               "start" : 40
             }
           ]
@@ -5198,7 +5270,134 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testPropagateAlternateTransforms:()V",
   "position" : 
   {
-    "line" : 208,
+    "line" : 222,
+    "path" : "TaintTransforms.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 316,
+        "path" : "TaintTransforms.java"
+      },
+      "rule" : 8,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 25,
+              "line" : 316,
+              "path" : "TaintTransforms.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 32,
+              "line" : 314,
+              "path" : "TaintTransforms.java",
+              "start" : 27
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "extra_traces" : 
+              [
+                {
+                  "call_info" : 
+                  {
+                    "call_kind" : "PropagationWithTrace:CallSite",
+                    "port" : "Argument(0)",
+                    "position" : 
+                    {
+                      "line" : 315,
+                      "path" : "TaintTransforms.java"
+                    },
+                    "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.propagateWithTransformT2T3:(Ljava/lang/Object;)Ljava/lang/Object;"
+                  },
+                  "frame_type" : "sink",
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "T2:T3"
+                  }
+                }
+              ],
+              "kind" : 
+              {
+                "base" : "Source",
+                "local" : "T3:T2"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 56,
+              "line" : 315,
+              "start" : 51
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testPropagateWithTransformT2T3Issue:()V",
+  "position" : 
+  {
+    "line" : 313,
     "path" : "TaintTransforms.java"
   }
 }
@@ -5209,7 +5408,7 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sinkWithTransformT1:(Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 186,
+        "line" : 200,
         "path" : "TaintTransforms.java"
       },
       "rule" : 1,
@@ -5224,7 +5423,7 @@
             "position" : 
             {
               "end" : 38,
-              "line" : 186,
+              "line" : 200,
               "path" : "TaintTransforms.java",
               "start" : 24
             },
@@ -5262,7 +5461,7 @@
             "position" : 
             {
               "end" : 36,
-              "line" : 186,
+              "line" : 200,
               "path" : "TaintTransforms.java",
               "start" : 31
             }
@@ -5293,7 +5492,7 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sinkWithTransformT1:(Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 186,
+        "line" : 200,
         "path" : "TaintTransforms.java"
       },
       "rule" : 2,
@@ -5308,7 +5507,7 @@
             "position" : 
             {
               "end" : 38,
-              "line" : 186,
+              "line" : 200,
               "path" : "TaintTransforms.java",
               "start" : 24
             },
@@ -5350,7 +5549,7 @@
             "position" : 
             {
               "end" : 36,
-              "line" : 186,
+              "line" : 200,
               "path" : "TaintTransforms.java",
               "start" : 31
             }
@@ -5381,7 +5580,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testSinkWithTransformIssue:()V",
   "position" : 
   {
-    "line" : 185,
+    "line" : 199,
     "path" : "TaintTransforms.java"
   }
 }
@@ -5389,7 +5588,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testSourceSinkWithTransformSafe:()V",
   "position" : 
   {
-    "line" : 192,
+    "line" : 206,
     "path" : "TaintTransforms.java"
   }
 }
@@ -5400,7 +5599,7 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 179,
+        "line" : 193,
         "path" : "TaintTransforms.java"
       },
       "rule" : 1,
@@ -5415,7 +5614,7 @@
             "position" : 
             {
               "end" : 38,
-              "line" : 179,
+              "line" : 193,
               "path" : "TaintTransforms.java",
               "start" : 16
             }
@@ -5451,7 +5650,7 @@
             "position" : 
             {
               "end" : 36,
-              "line" : 179,
+              "line" : 193,
               "path" : "TaintTransforms.java",
               "start" : 16
             },
@@ -5484,7 +5683,7 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 179,
+        "line" : 193,
         "path" : "TaintTransforms.java"
       },
       "rule" : 2,
@@ -5499,7 +5698,7 @@
             "position" : 
             {
               "end" : 38,
-              "line" : 179,
+              "line" : 193,
               "path" : "TaintTransforms.java",
               "start" : 16
             }
@@ -5535,7 +5734,7 @@
             "position" : 
             {
               "end" : 36,
-              "line" : 179,
+              "line" : 193,
               "path" : "TaintTransforms.java",
               "start" : 16
             },
@@ -5572,7 +5771,156 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testSourceWithTransformIssue:()V",
   "position" : 
   {
-    "line" : 178,
+    "line" : 192,
+    "path" : "TaintTransforms.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 308,
+        "path" : "TaintTransforms.java"
+      },
+      "rule" : 8,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 25,
+              "line" : 308,
+              "path" : "TaintTransforms.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 32,
+              "line" : 305,
+              "path" : "TaintTransforms.java",
+              "start" : 27
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "extra_traces" : 
+              [
+                {
+                  "call_info" : 
+                  {
+                    "call_kind" : "PropagationWithTrace:Origin",
+                    "port" : "Argument(0)",
+                    "position" : 
+                    {
+                      "line" : 306,
+                      "path" : "TaintTransforms.java"
+                    }
+                  },
+                  "frame_type" : "sink",
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "T2"
+                  }
+                },
+                {
+                  "call_info" : 
+                  {
+                    "call_kind" : "PropagationWithTrace:Origin",
+                    "port" : "Argument(0)",
+                    "position" : 
+                    {
+                      "line" : 307,
+                      "path" : "TaintTransforms.java"
+                    }
+                  },
+                  "frame_type" : "sink",
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "T3"
+                  }
+                }
+              ],
+              "kind" : 
+              {
+                "base" : "Source",
+                "local" : "T3:T2"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 39,
+              "line" : 306,
+              "start" : 34
+            },
+            {
+              "end" : 43,
+              "line" : 307,
+              "start" : 36
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testTransformT2T3Issue:()V",
+  "position" : 
+  {
+    "line" : 304,
     "path" : "TaintTransforms.java"
   }
 }
@@ -5583,7 +5931,7 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.hopSinkWithTransformsT1T2:(Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 264,
+        "line" : 278,
         "path" : "TaintTransforms.java"
       },
       "rule" : 6,
@@ -5598,7 +5946,7 @@
             "position" : 
             {
               "end" : 35,
-              "line" : 264,
+              "line" : 278,
               "path" : "TaintTransforms.java",
               "start" : 30
             },
@@ -5634,7 +5982,7 @@
             "position" : 
             {
               "end" : 46,
-              "line" : 263,
+              "line" : 277,
               "path" : "TaintTransforms.java",
               "start" : 20
             },
@@ -5665,7 +6013,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testTransformsT1T2T1T2Issue:()V",
   "position" : 
   {
-    "line" : 262,
+    "line" : 276,
     "path" : "TaintTransforms.java"
   }
 }
@@ -5676,7 +6024,7 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sinkWithoutTransformUnused:(Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 285,
+        "line" : 299,
         "path" : "TaintTransforms.java"
       },
       "rule" : 1,
@@ -5691,7 +6039,7 @@
             "position" : 
             {
               "end" : 38,
-              "line" : 285,
+              "line" : 299,
               "path" : "TaintTransforms.java",
               "start" : 31
             },
@@ -5729,7 +6077,7 @@
             "position" : 
             {
               "end" : 47,
-              "line" : 277,
+              "line" : 291,
               "path" : "TaintTransforms.java",
               "start" : 20
             },
@@ -5759,12 +6107,12 @@
           [
             {
               "end" : 50,
-              "line" : 278,
+              "line" : 292,
               "start" : 45
             },
             {
               "end" : 68,
-              "line" : 280,
+              "line" : 294,
               "start" : 54
             }
           ]
@@ -5775,7 +6123,7 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sinkWithoutTransformUnused:(Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 285,
+        "line" : 299,
         "path" : "TaintTransforms.java"
       },
       "rule" : 2,
@@ -5790,7 +6138,7 @@
             "position" : 
             {
               "end" : 38,
-              "line" : 285,
+              "line" : 299,
               "path" : "TaintTransforms.java",
               "start" : 31
             },
@@ -5828,7 +6176,7 @@
             "position" : 
             {
               "end" : 47,
-              "line" : 277,
+              "line" : 291,
               "path" : "TaintTransforms.java",
               "start" : 20
             },
@@ -5852,7 +6200,7 @@
                     "port" : "Argument(0)",
                     "position" : 
                     {
-                      "line" : 280,
+                      "line" : 294,
                       "path" : "TaintTransforms.java"
                     },
                     "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.propagateWithTransformsT1Unused:(Ljava/lang/Object;)Ljava/lang/Object;"
@@ -5884,12 +6232,12 @@
           [
             {
               "end" : 50,
-              "line" : 278,
+              "line" : 292,
               "start" : 45
             },
             {
               "end" : 68,
-              "line" : 280,
+              "line" : 294,
               "start" : 54
             }
           ]
@@ -5900,7 +6248,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testUnusedTransforms:()V",
   "position" : 
   {
-    "line" : 276,
+    "line" : 290,
     "path" : "TaintTransforms.java"
   }
 }
@@ -5917,7 +6265,7 @@
   ],
   "position" : 
   {
-    "line" : 58,
+    "line" : 72,
     "path" : "TaintTransforms.java"
   },
   "propagation" : 
@@ -6134,6 +6482,59 @@
   [
     "propagation"
   ],
+  "inline_as_getter" : "Argument(0)",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.transformT3:(Ljava/lang/Object;)Ljava/lang/Object;",
+  "model_generators" : 
+  [
+    "model_generators:6"
+  ],
+  "position" : 
+  {
+    "line" : 44,
+    "path" : "TaintTransforms.java"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "PropagationWithTrace:Declaration"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : 
+              {
+                "base" : "LocalReturn",
+                "local" : "T3"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.transformT3:(Ljava/lang/Object;)Ljava/lang/Object;",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "output_paths" : 
+              {
+                "" : 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "freeze" : 
+  [
+    "propagation"
+  ],
   "generations" : 
   [
     {
@@ -6148,7 +6549,7 @@
             "position" : 
             {
               "end" : 23,
-              "line" : 46,
+              "line" : 51,
               "path" : "TaintTransforms.java",
               "start" : 12
             }
@@ -6176,7 +6577,7 @@
           [
             {
               "end" : 26,
-              "line" : 46,
+              "line" : 51,
               "start" : 12
             }
           ]
@@ -6191,7 +6592,7 @@
   ],
   "position" : 
   {
-    "line" : 45,
+    "line" : 50,
     "path" : "TaintTransforms.java"
   },
   "propagation" : 
@@ -6240,7 +6641,7 @@
   ],
   "position" : 
   {
-    "line" : 52,
+    "line" : 66,
     "path" : "TaintTransforms.java"
   },
   "propagation" : 

@@ -378,6 +378,14 @@
       "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.transformT1:(Ljava/lang/Object;)Ljava/lang/Object;"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.propagateWithTransformT2T3:(Ljava/lang/Object;)Ljava/lang/Object;" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.transformT2:(Ljava/lang/Object;)Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.transformT3:(Ljava/lang/Object;)Ljava/lang/Object;"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.propagateWithTransformT3WithSource:(Lcom/facebook/marianatrench/integrationtests/Data;)Lcom/facebook/marianatrench/integrationtests/Data;" : 
   {
     "static" : 
@@ -522,6 +530,15 @@
       "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.propagateAlternateTransforms:(Lcom/facebook/marianatrench/integrationtests/Data;)Lcom/facebook/marianatrench/integrationtests/Data;"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testPropagateWithTransformT2T3Issue:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.propagateWithTransformT2T3:(Ljava/lang/Object;)Ljava/lang/Object;"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testSinkWithTransformIssue:()V" : 
   {
     "static" : 
@@ -545,6 +562,16 @@
     [
       "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.sourceWithTransformT1:()Ljava/lang/Object;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testTransformT2T3Issue:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.transformT2:(Ljava/lang/Object;)Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.transformT3:(Ljava/lang/Object;)Ljava/lang/Object;"
     ]
   },
   "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testTransformsT1T2T1T2Issue:()V" : 

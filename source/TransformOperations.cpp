@@ -18,7 +18,8 @@ TaintTree apply_propagation(
     MethodContext* context,
     const CallInfo& propagation_call_info,
     const Frame& propagation_frame,
-    TaintTree input_taint_tree) {
+    TaintTree input_taint_tree,
+    TransformDirection direction) {
   const auto* kind = propagation_frame.kind();
   mt_assert(kind != nullptr);
 
@@ -36,6 +37,10 @@ TaintTree apply_propagation(
   const auto* all_transforms = context->transforms_factory.concat(
       transform_kind->local_transforms(), transform_kind->global_transforms());
   mt_assert(all_transforms != nullptr);
+
+  if (direction == TransformDirection::Forward) {
+    all_transforms = context->transforms_factory.reverse(all_transforms);
+  }
 
   const auto* propagation_kind =
       transform_kind->base_kind()->as<PropagationKind>();

@@ -104,5 +104,20 @@
     "sinks": [
       "Sink"
     ]
+  },
+  {
+    "name": "Flow with T2 and T3",
+    "code": 8,
+    "description": "T2 and T3 flows",
+    "sources": [
+      "Source"
+    ],
+    "transforms": [
+      "T2",
+      "T3"
+    ],
+    "sinks": [
+      "Sink"
+    ]
   }
 ]

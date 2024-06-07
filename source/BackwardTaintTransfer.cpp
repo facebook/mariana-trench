@@ -353,7 +353,8 @@ void apply_propagation(
       context,
       propagation_call_info,
       propagation_frame,
-      std::move(output_taint_tree));
+      std::move(output_taint_tree),
+      transforms::TransformDirection::Backward);
 
   FeatureMayAlwaysSet features = FeatureMayAlwaysSet::make_always(
       callee.model.add_features_to_arguments(output_root));

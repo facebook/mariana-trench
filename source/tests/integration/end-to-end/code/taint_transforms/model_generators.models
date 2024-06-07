@@ -149,6 +149,30 @@
           }
         ]
       }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;",
+          "name": "transformT3"
+        }
+      ],
+      "model": {
+        "freeze": [
+          "propagation"
+        ],
+        "propagation": [
+          {
+            "input": "Argument(0)",
+            "output": "Return",
+            "transforms": [
+              "T3"
+            ]
+          }
+        ]
+      }
     }
   ]
 }
