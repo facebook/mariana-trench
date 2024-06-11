@@ -90,6 +90,10 @@ class MockAndroidResources : public AndroidResources {
     return {};
   }
 
+  std::unordered_set<std::string> get_service_loader_classes() override {
+    return {};
+  }
+
   std::vector<std::string> find_resources_files() override {
     return {};
   }
