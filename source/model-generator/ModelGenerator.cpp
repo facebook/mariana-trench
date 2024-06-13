@@ -360,11 +360,11 @@ bool has_annotation(
           return true;
         }
       }
+    } else {
+      // If we do not expect a certain value, return as we found the
+      // annotation.
+      return true;
     }
-
-    // If we do not expect a certain value, return as we found the
-    // annotation.
-    return true;
   }
 
   return false;
