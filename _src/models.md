@@ -75,7 +75,7 @@ For the parameters and return types use the following table to pick the correct 
 
 Classes take the form `Lpackage/name/ClassName;` - where the leading `L` indicates that it is a class type, `package/name/` is the package that the class is in. A nested class will take the form `Lpackage/name/ClassName$NestedClassName` (the `$` will need to be double escaped `\\$` in json regex).
 
-> **NOTE 1:** Instance (i.e, non-static) method parameters are indexed starting from 1! The 0th parameter is the `this` parameter in dalvik byte-code. For static method parameter, indices start from 0.
+> **NOTE 1:** Instance (i.e, non-static) method parameters are indexed starting from 1! The 0th parameter is the `this` parameter in dalvik byte-code. For static method parameters, indices start from 0.
 
 > **NOTE 2:** In a constructor (\<init\> method), parameters are also indexed starting from 1. The 0th parameter refers to the instance being constructed, similar to the `this` reference.
 
@@ -340,6 +340,24 @@ The return value of the method can be controlled by both parameters, hence it ha
   }
 }
 ```
+
+#### Propagation with Transforms
+
+Propagations can additionally specify a list of "transforms". This is an ordered list of *transform kinds* which specifies the transformations that are applied to the input of the propagation. Transform kinds can be used to specify methods that flows must pass through to be valid flows. Transform kinds, like source and sink kinds, must be included as a part of the [rule](./rules.md#transforms) to add the transform constraint.
+
+
+```json
+"propagation": [
+  {
+    "input": "Argument(0)",
+    "output": "Return",
+    "transforms": [
+      "IntentData"
+    ]
+  }
+]
+```
+
 
 ### Features
 
