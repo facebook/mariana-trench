@@ -713,28 +713,61 @@ void check_flows_to_array_allocation(
   }
 }
 
-void apply_call_effects(MethodContext* context, const CalleeModel& callee) {
+void infer_exploitability_sinks(
+    MethodContext* context,
+    const IRInstruction* instruction) {
+  auto source_as_transform_sinks =
+      context->fulfilled_exploitability_state.partially_fulfilled_sinks(
+          instruction);
+  if (!source_as_transform_sinks.is_bottom()) {
+    context->new_model.add_inferred_call_effect_sinks(
+        AccessPath(Root(Root::Kind::CallEffectExploitability)),
+        std::move(source_as_transform_sinks),
+        context->options.heuristics());
+  }
+}
+
+void apply_call_effects(
+    MethodContext* context,
+    const IRInstruction* instruction,
+    const CalleeModel& callee) {
   const auto& callee_call_effect_sinks = callee.model.call_effect_sinks();
   for (const auto& [port, sinks] : callee_call_effect_sinks.elements()) {
     switch (port.root().kind()) {
-      case Root::Kind::CallEffectCallChain:
-      case Root::Kind::CallEffectExploitability: {
+      case Root::Kind::CallEffectCallChain: {
         LOG(5,
             "Add inferred call effect sinks {} for method: {}",
             sinks,
             show(context->method()));
-
-        auto sinks_copy = sinks;
         context->new_model.add_inferred_call_effect_sinks(
-            port, std::move(sinks_copy), context->options.heuristics());
-
+            port, sinks, context->options.heuristics());
       } break;
+
+      case Root::Kind::CallEffectExploitability: {
+        // Do not infer sinks for fulfilled sinks
+        auto sinks_copy = sinks;
+        sinks_copy.difference_with(
+            context->fulfilled_exploitability_state.fulfilled_sinks(
+                instruction));
+
+        if (!sinks_copy.is_bottom()) {
+          LOG(5,
+              "Add inferred exploitability sinks {} for method: {}",
+              sinks,
+              show(context->method()));
+          context->new_model.add_inferred_call_effect_sinks(
+              port, std::move(sinks_copy), context->options.heuristics());
+        }
+      } break;
+
       case Root::Kind::CallEffectIntent:
         break;
       default:
         mt_unreachable();
     }
   }
+
+  infer_exploitability_sinks(context, instruction);
 }
 
 } // namespace
@@ -814,7 +847,7 @@ bool BackwardTaintTransfer::analyze_invoke(
         result_taint);
   }
 
-  apply_call_effects(context, callee);
+  apply_call_effects(context, instruction, callee);
 
   return false;
 }

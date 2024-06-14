@@ -13,6 +13,7 @@
 #include <mariana-trench/CallGraph.h>
 #include <mariana-trench/Compiler.h>
 #include <mariana-trench/Context.h>
+#include <mariana-trench/FulfilledExploitabilityRuleState.h>
 #include <mariana-trench/FulfilledPartialKindResults.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/MemoryLocation.h>
@@ -86,6 +87,7 @@ class MethodContext final {
   MemoryFactory memory_factory;
   AliasAnalysisResults aliasing;
   FulfilledPartialKindResults fulfilled_partial_sinks;
+  FulfilledExploitabilityRuleState fulfilled_exploitability_state;
   const Model& previous_model;
   Model& new_model;
 

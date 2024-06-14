@@ -111,6 +111,7 @@ class TaintTree final : public sparta::AbstractDomain<TaintTree> {
 
   /* Return all taint in the tree. */
   Taint collapse(const FeatureMayAlwaysSet& broadening_features) const;
+  Taint collapse() const;
 
   /* Collapse the tree to the given maximum height. */
   void collapse_deeper_than(

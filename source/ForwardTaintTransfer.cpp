@@ -500,6 +500,7 @@ void check_multi_source_multi_sink_rules(
 
 void check_exploitability_rules(
     MethodContext* context,
+    const IRInstruction* instruction,
     const Kind* source_kind,
     Taint& source_taint,
     const Kind* sink_kind,
@@ -513,9 +514,8 @@ void check_exploitability_rules(
           exploitability_rule->source_as_transform(source_kind)) {
     // For an exploitability rule, when we find a flow from "source" to "sink"
     // as defined in the rule, there is an associated transform corresponding to
-    // the source kind. In this case, we apply the source-as-transform to the
-    // sink kind and add an inferred call-chain sink to the callable where this
-    // flow is found.
+    // the source kind. This indicates the partial fulfillment of the rule and
+    // we apply the source-as-transform to the sink kind to indicate this.
     auto transformed_sink_with_extra_trace =
         transforms::apply_source_as_transform_to_sink(
             context, source_taint, source_as_transform, sink_taint);
@@ -527,15 +527,53 @@ void check_exploitability_rules(
         exploitability_rule->code(),
         transformed_sink_with_extra_trace);
 
-    // Add an inferred call effect sink
-    context->new_model.add_inferred_call_effect_sinks(
-        AccessPath(Root(Root::Kind::CallEffectExploitability)),
-        std::move(transformed_sink_with_extra_trace),
-        context->options.heuristics());
+    // Collapse the taint tree as call effect exploitability port does not use
+    // paths.
+    auto caller_exploitability_sources =
+        context->previous_model.call_effect_sources()
+            .read(Root{Root::Kind::CallEffectExploitability})
+            .collapse();
+
+    // The fulfillment of the exploitability rule is tracked in the
+    // FulFilledExploitabilityState.
+    //  - If the rule is partially fulfilled, we track the source-as-transform
+    // sink for the rule to infer the exploitability call effect sink in
+    // backward analysis.
+    //  - If the rule is completely fulfilled, we emit an issue here.
+    auto source_for_issue =
+        context->fulfilled_exploitability_state.fulfill_exploitability_rule(
+            instruction,
+            exploitability_rule,
+            caller_exploitability_sources,
+            transformed_sink_with_extra_trace);
+    if (!source_for_issue.is_bottom()) {
+      LOG_OR_DUMP(
+          context,
+          4,
+          "Fulfilled exploitability rule: {}. Creating issue with: Source: {}, Sink: {}",
+          exploitability_rule->code(),
+          source_kind->to_trace_string(),
+          sink_kind->to_trace_string());
+      create_issue(
+          context,
+          source_for_issue.attach_position(position),
+          transformed_sink_with_extra_trace,
+          exploitability_rule,
+          position,
+          sink_index,
+          callee,
+          extra_features);
+    }
   } else {
     // For an exploitability rule, when we find a flow from "effect_source" to
     // "sink" with a SourceAsTransform transformation, we will emit an issue.
     mt_assert(sink_kind->as<TransformKind>());
+
+    auto source_for_issue =
+        context->fulfilled_exploitability_state.fulfill_exploitability_rule(
+            instruction, exploitability_rule, source_taint, sink_taint);
+    mt_assert(!source_for_issue.is_bottom());
+
     LOG_OR_DUMP(
         context,
         4,
@@ -545,7 +583,7 @@ void check_exploitability_rules(
         sink_kind->to_trace_string());
     create_issue(
         context,
-        source_taint,
+        source_for_issue,
         sink_taint,
         exploitability_rule,
         position,
@@ -564,6 +602,7 @@ void check_exploitability_rules(
 // at the callsite then pass the results to the backward analysis.
 void check_sources_sinks_flows(
     MethodContext* context,
+    const IRInstruction* instruction,
     const Taint& sources,
     const Taint& sinks,
     const Position* position,
@@ -596,6 +635,7 @@ void check_sources_sinks_flows(
                 rule->as<SourceSinkWithExploitabilityRule>()) {
           check_exploitability_rules(
               context,
+              instruction,
               source_kind,
               source_taint,
               sink_kind,
@@ -648,6 +688,7 @@ void check_sources_sinks_flows(
 
 void check_call_flows(
     MethodContext* context,
+    const IRInstruction* instruction,
     const InstructionAliasResults& aliasing,
     const ForwardTaintEnvironment* environment,
     const std::function<std::optional<Register>(Root)>& get_register,
@@ -677,6 +718,7 @@ void check_call_flows(
                 context->feature_factory.get_issue_broadening_feature()});
     check_sources_sinks_flows(
         context,
+        instruction,
         sources,
         sinks,
         callee.position,
@@ -691,6 +733,7 @@ void check_call_flows(
 
 void check_call_flows(
     MethodContext* context,
+    const IRInstruction* instruction,
     const InstructionAliasResults& aliasing,
     const ForwardTaintEnvironment* environment,
     const std::vector<Register>& instruction_sources,
@@ -700,6 +743,7 @@ void check_call_flows(
     FulfilledPartialKindState* MT_NULLABLE fulfilled_partial_sinks) {
   check_call_flows(
       context,
+      instruction,
       aliasing,
       environment,
       /* get_register */
@@ -771,6 +815,7 @@ void check_flows_to_array_allocation(
     // Fulfilled partial sinks ignored. No partial sinks for array allocation.
     check_sources_sinks_flows(
         context,
+        instruction,
         sources,
         array_allocation_sink,
         position,
@@ -809,6 +854,7 @@ void check_artificial_calls_flows(
     FulfilledPartialKindState fulfilled_partial_sinks;
     check_call_flows(
         context,
+        instruction,
         aliasing,
         environment,
         get_register,
@@ -820,6 +866,7 @@ void check_artificial_calls_flows(
 
     check_call_flows(
         context,
+        instruction,
         aliasing,
         environment,
         get_register,
@@ -836,6 +883,7 @@ void check_artificial_calls_flows(
 
 void check_call_effect_flows(
     MethodContext* context,
+    const IRInstruction* instruction,
     const CalleeModel& callee) {
   const auto& caller_call_effect_sources =
       context->previous_model.call_effect_sources();
@@ -860,6 +908,7 @@ void check_call_effect_flows(
     for (const auto& [_, sinks] : call_effect_sinks.elements()) {
       check_sources_sinks_flows(
           context,
+          instruction,
           // Add the position of the caller to call effect sources.
           sources.attach_position(position),
           sinks,
@@ -898,6 +947,7 @@ bool ForwardTaintTransfer::analyze_invoke(
   FulfilledPartialKindState fulfilled_partial_sinks;
   check_call_flows(
       context,
+      instruction,
       aliasing,
       &previous_environment,
       instruction->srcs_vec(),
@@ -908,7 +958,7 @@ bool ForwardTaintTransfer::analyze_invoke(
   context->fulfilled_partial_sinks.store_call(
       instruction, std::move(fulfilled_partial_sinks));
 
-  check_call_effect_flows(context, callee);
+  check_call_effect_flows(context, instruction, callee);
 
   TaintTree result_taint;
   apply_add_features_to_arguments(
@@ -1002,6 +1052,7 @@ void check_flows_to_field_sink(
   for (const auto& [port, sources] : source_taint.elements()) {
     check_sources_sinks_flows(
         context,
+        instruction,
         sources,
         field_sinks,
         position,
@@ -1358,6 +1409,7 @@ bool ForwardTaintTransfer::analyze_return(
       // sinks are never partial.
       check_sources_sinks_flows(
           context,
+          instruction,
           sources,
           sinks,
           position,

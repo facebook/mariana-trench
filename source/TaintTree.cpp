@@ -87,6 +87,10 @@ Taint TaintTree::collapse(
   });
 }
 
+Taint TaintTree::collapse() const {
+  return tree_.collapse();
+}
+
 void TaintTree::collapse_deeper_than(
     std::size_t height,
     const FeatureMayAlwaysSet& broadening_features) {
