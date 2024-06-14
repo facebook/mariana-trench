@@ -90,6 +90,7 @@ class MethodContext final {
   FulfilledExploitabilityRuleState fulfilled_exploitability_state;
   const Model& previous_model;
   Model& new_model;
+  Statistics& statistics;
 
  private:
   struct CacheKey {

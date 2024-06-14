@@ -135,7 +135,8 @@ MemoryLocationsDomain invoke_result_memory_location(
       environment->last_position(),
       get_source_register_types(context, instruction),
       get_source_constant_arguments(register_memory_locations_map, instruction),
-      get_is_this_call(register_memory_locations_map, instruction));
+      get_is_this_call(register_memory_locations_map, instruction),
+      context->statistics);
 
   if (callee.resolved_base_method &&
       callee.resolved_base_method->returns_void()) {

@@ -586,6 +586,11 @@ def _add_debug_arguments(parser: argparse.ArgumentParser) -> None:
         help="Dump the call graph in `call_graph.json`.",
     )
     debug_arguments.add_argument(
+        "--dump-unresolved-methods",
+        action="store_true",
+        help="Dump the list of unresolved methods in `unresolved_methods.json`.",
+    )
+    debug_arguments.add_argument(
         "--dump-dependencies",
         action="store_true",
         help="Dump the dependency graph in `dependencies.json`.",
@@ -737,6 +742,8 @@ def _get_command_options(
         options.append("--dump-overrides")
     if arguments.dump_call_graph:
         options.append("--dump-call-graph")
+    if arguments.dump_unresolved_methods:
+        options.append("--dump-unresolved-methods")
     if arguments.dump_dependencies:
         options.append("--dump-dependencies")
     if arguments.dump_methods:

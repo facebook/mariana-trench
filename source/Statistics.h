@@ -32,11 +32,14 @@ class Statistics final {
   void log_resident_set_size(double resident_set_size);
   void log_time(const std::string& name, const Timer& timer);
   void log_time(const Method* method, const Timer& timer);
+  void log_unable_to_resolve_call(const DexMethodRef* method);
 
   Json::Value to_json() const;
 
   /* Maximum number of slowest methods to record. */
   constexpr static std::size_t kRecordSlowestMethods = 20;
+
+  const std::unordered_set<const DexMethodRef*>& unresolved_methods() const;
 
  private:
   std::mutex mutex_;
@@ -52,6 +55,10 @@ class Statistics final {
 
   //  Sorted list of slowest methods to analyze (from slowest to fastest).
   std::vector<std::pair<const Method*, double>> slowest_methods_;
+
+  // Set of methods that could not be resolved.
+  std::unordered_set<const DexMethodRef*> unresolved_methods_ =
+      std::unordered_set<const DexMethodRef*>();
 };
 
 } // namespace marianatrench

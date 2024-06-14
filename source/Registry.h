@@ -104,6 +104,7 @@ class Registry final {
 
   void dump_file_coverage_info(const std::filesystem::path& path) const;
   void dump_rule_coverage_info(const std::filesystem::path& path) const;
+  void dump_unresolved_methods(const std::filesystem::path& path) const;
 
   std::string dump_models() const;
   Json::Value models_to_json() const;

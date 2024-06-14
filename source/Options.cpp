@@ -140,6 +140,7 @@ Options::Options(
       dump_class_intervals_(false),
       dump_overrides_(false),
       dump_call_graph_(false),
+      dump_unresolved_methods_(false),
       dump_dependencies_(false),
       dump_methods_(false),
       dump_coverage_info_(false),
@@ -277,6 +278,7 @@ Options::Options(const boost::program_options::variables_map& variables) {
   dump_class_intervals_ = variables.count("dump-class-intervals") > 0;
   dump_overrides_ = variables.count("dump-overrides") > 0;
   dump_call_graph_ = variables.count("dump-call-graph") > 0;
+  dump_unresolved_methods_ = variables.count("dump-unresolved-methods") > 0;
   dump_dependencies_ = variables.count("dump-dependencies") > 0;
   dump_methods_ = variables.count("dump-methods") > 0;
   dump_coverage_info_ = variables.count("dump-coverage-info") > 0;
@@ -445,6 +447,8 @@ void Options::add_options(
   options.add_options()(
       "dump-call-graph", "Dump the call graph in `call_graph.json`.");
   options.add_options()(
+      "dump-unresolved-methods", "Dump the list of unresolved methods in `unresolved_methods.json`.");
+  options.add_options()(
       "dump-dependencies", "Dump the dependency graph in `dependencies.json`.");
   options.add_options()(
       "dump-methods", "Dump the list of method signatures in `methods.json`.");
@@ -579,6 +583,10 @@ const std::filesystem::path Options::call_graph_output_path() const {
   return output_directory_;
 }
 
+const std::filesystem::path Options::unresolved_methods_output_path() const {
+  return output_directory_ / "unresolved_methods.json";
+}
+
 const std::filesystem::path Options::class_hierarchies_output_path() const {
   return output_directory_ / "class_hierarchies.json";
 }
@@ -686,6 +694,10 @@ bool Options::dump_overrides() const {
 
 bool Options::dump_call_graph() const {
   return dump_call_graph_;
+}
+
+bool Options::dump_unresolved_methods() const {
+  return dump_unresolved_methods_;
 }
 
 bool Options::dump_dependencies() const {

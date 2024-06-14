@@ -475,4 +475,12 @@ void Registry::dump_rule_coverage_info(
   JsonWriter::write_json_file(output_path, rule_coverage.to_json());
 }
 
+void Registry::dump_unresolved_methods(const std::filesystem::path& output_path) const {
+  auto unresolved_methods_value = Json::Value(Json::arrayValue);
+  for (const auto& unresolved_method_name : context_.statistics->unresolved_methods()) {
+    unresolved_methods_value.append(Json::Value(show(unresolved_method_name)));
+  }
+  JsonWriter::write_json_file(output_path, unresolved_methods_value);
+}
+
 } // namespace marianatrench
