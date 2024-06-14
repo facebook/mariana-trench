@@ -542,6 +542,7 @@ void check_call_flows(
     // so that they are discoverable on the current frame in the UI.
     FeatureMayAlwaysSet locally_inferred_fulfilled_sink_features{};
     new_sinks.transform_kind_with_features(
+        /* transform_kind */
         [context, &fulfilled_partial_sinks](
             const Kind* sink_kind) -> std::vector<const Kind*> {
           const auto* partial_sink = sink_kind->as<PartialKind>();
@@ -552,6 +553,7 @@ void check_call_flows(
           return fulfilled_partial_sinks.make_triggered_counterparts(
               /* unfulfilled_kind */ partial_sink, context->kind_factory);
         },
+        /* add_features */
         [&fulfilled_partial_sinks,
          &locally_inferred_fulfilled_sink_features](const Kind* new_kind) {
           auto fulfilled_sink_features =
@@ -711,6 +713,29 @@ void check_flows_to_array_allocation(
   }
 }
 
+void apply_call_effects(MethodContext* context, const CalleeModel& callee) {
+  const auto& callee_call_effect_sinks = callee.model.call_effect_sinks();
+  for (const auto& [port, sinks] : callee_call_effect_sinks.elements()) {
+    switch (port.root().kind()) {
+      case Root::Kind::CallEffectCallChain: {
+        LOG(5,
+            "Add inferred call effect sinks {} for method: {}",
+            sinks,
+            show(context->method()));
+
+        auto sinks_copy = sinks;
+        context->new_model.add_inferred_call_effect_sinks(
+            port, std::move(sinks_copy), context->options.heuristics());
+
+      } break;
+      case Root::Kind::CallEffectIntent:
+        break;
+      default:
+        mt_unreachable();
+    }
+  }
+}
+
 } // namespace
 
 bool BackwardTaintTransfer::analyze_invoke(
@@ -787,6 +812,8 @@ bool BackwardTaintTransfer::analyze_invoke(
         source_constant_arguments,
         result_taint);
   }
+
+  apply_call_effects(context, callee);
 
   return false;
 }
