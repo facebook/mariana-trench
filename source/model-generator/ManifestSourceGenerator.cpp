@@ -78,6 +78,18 @@ std::vector<Model> ManifestSourceGenerator::emit_method_models(
     }
 
     const auto* lifecycle_method = methods.get(*result);
+    // Mark lifecycle wrapper as exported. This is required to catch the flows
+    // found on the lifecycle wrapper itself.
+    Model model(lifecycle_method, context_);
+    model.add_call_effect_source(
+        AccessPath(Root(Root::Kind::CallEffectExploitability)),
+        generator::source(
+            context_,
+            /* kind */ "ExportedActivity"),
+        context_.options->heuristics());
+    models.push_back(model);
+
+    // Mark all callees of lifecycle wrapper as exported
     for (const auto& call_target :
          context_.call_graph->callees(lifecycle_method)) {
       const auto* callee = call_target.resolved_base_callee();
