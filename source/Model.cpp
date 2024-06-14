@@ -472,6 +472,7 @@ Model Model::at_callsite(
           const AccessPath& callee_port, const Taint& call_effect) {
         switch (callee_port.root().kind()) {
           case Root::Kind::CallEffectCallChain:
+          case Root::Kind::CallEffectExploitability:
           case Root::Kind::CallEffectIntent: {
             model.call_effect_sinks_.write(
                 callee_port,

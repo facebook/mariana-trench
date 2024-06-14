@@ -356,6 +356,8 @@ std::string Root::to_string() const {
       return "Argument(-1)";
     case Root::Kind::CallEffectCallChain:
       return "call-chain";
+    case Root::Kind::CallEffectExploitability:
+      return "call-chain-exploitability";
     case Root::Kind::CallEffectIntent:
       return "call-effect-intent";
     case Root::Kind::MaxArgument:
@@ -396,6 +398,8 @@ Root Root::from_json(const Json::Value& value) {
     return Root(Root::Kind::Producer);
   } else if (root_string == "call-chain") {
     return Root(Root::Kind::CallEffectCallChain);
+  } else if (root_string == "call-chain-exploitability") {
+    return Root(Root::Kind::CallEffectExploitability);
   } else if (root_string == "call-effect-intent") {
     return Root(Root::Kind::CallEffectIntent);
   } else {

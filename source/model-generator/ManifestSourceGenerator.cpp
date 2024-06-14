@@ -84,7 +84,7 @@ std::vector<Model> ManifestSourceGenerator::emit_method_models(
       mt_assert(callee != nullptr);
       Model model(callee, context_);
       model.add_call_effect_source(
-          AccessPath(Root(Root::Kind::CallEffectCallChain)),
+          AccessPath(Root(Root::Kind::CallEffectExploitability)),
           generator::source(
               context_,
               /* kind */ "ExportedActivity"),

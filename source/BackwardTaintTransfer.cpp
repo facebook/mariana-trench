@@ -717,7 +717,8 @@ void apply_call_effects(MethodContext* context, const CalleeModel& callee) {
   const auto& callee_call_effect_sinks = callee.model.call_effect_sinks();
   for (const auto& [port, sinks] : callee_call_effect_sinks.elements()) {
     switch (port.root().kind()) {
-      case Root::Kind::CallEffectCallChain: {
+      case Root::Kind::CallEffectCallChain:
+      case Root::Kind::CallEffectExploitability: {
         LOG(5,
             "Add inferred call effect sinks {} for method: {}",
             sinks,

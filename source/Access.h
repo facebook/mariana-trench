@@ -83,10 +83,23 @@ class Root final {
      */
     CallEffectCallChain = std::numeric_limits<IntegerEncoding>::max() - 5,
     /*
+     * Similar to call chain effect but used specifically by
+     * SourceSinkWithExploitabilityRule. Taint on this port is propagated the
+     * same way as the call chain effect. The differences are:
+     * - Sink taint on this port cannot be specified by the user but instead
+     *   is inferred based on the exploitability rule match.
+     * - Sources and Sinks on the exploitability call effect port are *both*
+     *   read from the method being analyzed (vs caller to callee). This allows
+     *   us to emit 0 hop issues in case the exploitability sink is inferred on
+     *   the method with the exploitability source. This is not desired for
+     *   call chain effect.
+     */
+    CallEffectExploitability = std::numeric_limits<IntegerEncoding>::max() - 6,
+    /*
      * Used for propagation of taint via activity Intents.
      */
-    CallEffectIntent = std::numeric_limits<IntegerEncoding>::max() - 6,
-    MaxArgument = std::numeric_limits<IntegerEncoding>::max() - 7,
+    CallEffectIntent = std::numeric_limits<IntegerEncoding>::max() - 7,
+    MaxArgument = std::numeric_limits<IntegerEncoding>::max() - 8,
   };
 
  private:
@@ -153,11 +166,16 @@ class Root final {
   bool is_call_effect() const {
     switch (kind()) {
       case Kind::CallEffectCallChain:
+      case Kind::CallEffectExploitability:
       case Kind::CallEffectIntent:
         return true;
       default:
         return false;
     }
+  }
+
+  bool is_call_chain_exploitability() const {
+    return kind() == Kind::CallEffectExploitability;
   }
 
   /**

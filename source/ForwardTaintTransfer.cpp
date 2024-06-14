@@ -529,7 +529,7 @@ void check_exploitability_rules(
 
     // Add an inferred call effect sink
     context->new_model.add_inferred_call_effect_sinks(
-        AccessPath(Root(Root::Kind::CallEffectCallChain)),
+        AccessPath(Root(Root::Kind::CallEffectExploitability)),
         std::move(transformed_sink_with_extra_trace),
         context->options.heuristics());
   } else {
