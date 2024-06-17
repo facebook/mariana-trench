@@ -37,6 +37,7 @@
 #include <mariana-trench/PathTreeDomain.h>
 #include <mariana-trench/PatriciaTreeSetAbstractDomain.h>
 #include <mariana-trench/Position.h>
+#include <mariana-trench/Sanitizer.h>
 #include <mariana-trench/TaggedRootSet.h>
 #include <mariana-trench/TransformKind.h>
 #include <mariana-trench/TransformsFactory.h>
@@ -239,6 +240,11 @@ class Frame final : public sparta::AbstractDomain<Frame> {
       const TransformsFactory& transforms_factory,
       const UsedKinds& used_kinds,
       const TransformList* local_transforms) const;
+
+  Frame add_sanitize_transform(
+      const Sanitizer& sanitizer,
+      const KindFactory& kind_factory,
+      const TransformsFactory& transforms_factory) const;
 
   std::vector<const Feature*> materialize_via_type_of_ports(
       const Method* callee,

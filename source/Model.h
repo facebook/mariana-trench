@@ -294,7 +294,9 @@ class Model final {
       AccessPath input_path,
       Taint local_taint,
       const FeatureMayAlwaysSet& widening_features,
-      const Heuristics& heuristics);
+      const Heuristics& heuristics,
+      const KindFactory& kind_factory,
+      const TransformsFactory& transforms_factory);
   const TaintAccessPathTree& propagations() const {
     return propagations_;
   }

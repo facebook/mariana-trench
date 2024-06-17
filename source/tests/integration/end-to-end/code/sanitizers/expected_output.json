@@ -3440,3 +3440,25 @@
     "line" : 14
   }
 }
+{
+  "method" : "java/net/URLEncoder;.encode:(Ljava/lang/String;)Ljava/lang/String;",
+  "modes" : 
+  [
+    "add-via-obscure-feature",
+    "skip-analysis"
+  ],
+  "position" : {},
+  "sanitizers" : 
+  [
+    {
+      "kinds" : 
+      [
+        {
+          "kind" : "SSRF"
+        }
+      ],
+      "port" : "Argument(0)",
+      "sanitize" : "propagations"
+    }
+  ]
+}

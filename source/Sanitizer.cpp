@@ -11,16 +11,14 @@
 #include <mariana-trench/NamedKind.h>
 #include <mariana-trench/PartialKind.h>
 #include <mariana-trench/Sanitizer.h>
+#include <mariana-trench/TransformsFactory.h>
 
 namespace marianatrench {
 
 Sanitizer::Sanitizer(
     const SanitizerKind& sanitizer_kind,
     const KindSetAbstractDomain& kinds)
-    : sanitizer_kind_(sanitizer_kind), kinds_(kinds) {
-  mt_assert(
-      sanitizer_kind_ != SanitizerKind::Propagations || !kinds_.is_value());
-}
+    : sanitizer_kind_(sanitizer_kind), kinds_(kinds) {}
 
 bool Sanitizer::leq(const Sanitizer& other) const {
   if (is_bottom()) {
@@ -116,15 +114,8 @@ const Sanitizer Sanitizer::from_json(
         /* expected */ "`sources`, `sinks` or `propagations`");
   }
 
-  KindSetAbstractDomain kinds;
+  KindSetAbstractDomain kinds = KindSetAbstractDomain::bottom();
   if (value.isMember("kinds")) {
-    if (sanitizer_kind == SanitizerKind::Propagations) {
-      throw JsonValidationError(
-          value,
-          /* field */ "kinds",
-          /* expected */
-          "Unspecified kinds for propagation sanitizers");
-    }
     kinds = KindSetAbstractDomain();
     for (const auto& kind_json :
          JsonValidation::nonempty_array(value, "kinds")) {
@@ -159,6 +150,7 @@ Json::Value Sanitizer::to_json() const {
     }
     value["kinds"] = kinds_json;
   }
+
   return value;
 }
 

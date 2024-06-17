@@ -936,10 +936,29 @@ void Model::add_inferred_propagations(
     AccessPath input_path,
     Taint local_taint,
     const FeatureMayAlwaysSet& widening_features,
-    const Heuristics& heuristics) {
-  if (has_global_propagation_sanitizer() ||
-      !port_sanitizers_.get(input_path.root()).is_bottom()) {
+    const Heuristics& heuristics,
+    const KindFactory& kind_factory,
+    const TransformsFactory& transforms_factory) {
+  if (has_global_propagation_sanitizer()) {
     return;
+  }
+
+  for (const auto& sanitizer : port_sanitizers_.get(input_path.root())) {
+    // Port sanitizer added without specifying any kinds. Sanitize all kinds on
+    // this port.
+    if (sanitizer.kinds().is_top()) {
+      return;
+    }
+
+    // Apply the kind-specific sanitizer
+    if (sanitizer.sanitizer_kind() == SanitizerKind::Propagations &&
+        !sanitizer.kinds().is_bottom()) {
+      local_taint.transform_frames(
+          [&sanitizer, &kind_factory, &transforms_factory](const Frame& frame) {
+            return frame.add_sanitize_transform(
+                sanitizer, kind_factory, transforms_factory);
+          });
+    }
   }
 
   update_taint_tree(

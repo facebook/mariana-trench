@@ -19,13 +19,6 @@ TEST_F(SanitizerTest, Constructor) {
   // Test bottom
   EXPECT_TRUE(Sanitizer().is_bottom());
   EXPECT_TRUE(Sanitizer::bottom().is_bottom());
-
-  auto context = test::make_empty_context();
-  EXPECT_THROW(
-      Sanitizer(
-          SanitizerKind::Propagations,
-          KindSetAbstractDomain(context.kind_factory->get("kind"))),
-      std::exception);
 }
 
 TEST_F(SanitizerTest, SanitizerLeq) {

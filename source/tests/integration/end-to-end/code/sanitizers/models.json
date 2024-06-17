@@ -148,5 +148,19 @@
         "port": "Argument(0)"
       }
     ]
+  },
+  {
+    "method": "java/net/URLEncoder;.encode:(Ljava/lang/String;)Ljava/lang/String;",
+    "sanitizers": [
+      {
+        "sanitize": "propagations",
+        "port": "Argument(0)",
+        "kinds": [
+          {
+            "kind": "SSRF"
+          }
+        ]
+      }
+    ]
   }
 ]

@@ -502,6 +502,14 @@ TEST_F(JsonTest, Sanitizer) {
           SanitizerKind::Sinks,
           /* kinds */
           KindSetAbstractDomain({kind1, partial_kind, partial_kind2})));
+  EXPECT_EQ(
+      Sanitizer::from_json(
+          test::parse_json(
+              R"({"sanitize": "propagations", "kinds": [{"kind": "Kind1"}, {"kind": "Kind2"}]})"),
+          context),
+      Sanitizer(
+          SanitizerKind::Propagations,
+          /* kinds */ KindSetAbstractDomain({kind1, kind2})));
 
   // Test to_json
   EXPECT_EQ(
@@ -525,6 +533,13 @@ TEST_F(JsonTest, Sanitizer) {
       test::sorted_json(Sanitizer(
                             SanitizerKind::Sinks,
                             /* kinds */ KindSetAbstractDomain({kind1, kind3}))
+                            .to_json()));
+  EXPECT_EQ(
+      test::parse_json(
+          R"({"sanitize": "propagations", "kinds": [{"kind": "Kind1"}, {"kind": "Kind2"}]})"),
+      test::sorted_json(Sanitizer(
+                            SanitizerKind::Propagations,
+                            /* kinds */ KindSetAbstractDomain({kind1, kind2}))
                             .to_json()));
 }
 

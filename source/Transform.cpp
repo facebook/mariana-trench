@@ -27,6 +27,8 @@ const Transform* Transform::from_trace_string(
     Context& context) {
   if (boost::starts_with(transform, "SourceAsTransform[")) {
     return SourceAsTransform::from_trace_string(transform, context);
+  } else if (boost::starts_with(transform, "SanitizeTransform[")) {
+    return SanitizeTransform::from_trace_string(transform, context);
   }
   // Default to NamedTransform
   return NamedTransform::from_trace_string(transform, context);

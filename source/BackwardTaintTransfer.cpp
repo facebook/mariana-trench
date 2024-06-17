@@ -217,7 +217,9 @@ void infer_input_taint(
           std::move(port),
           std::move(propagations),
           widening_features,
-          context->options.heuristics());
+          context->options.heuristics(),
+          context->kind_factory,
+          context->transforms_factory);
     }
   }
 }

@@ -34,9 +34,9 @@ class Transform {
   virtual void show(std::ostream&) const = 0;
 
   template <typename T>
-  T* MT_NULLABLE as() {
+  const T* MT_NULLABLE as() const {
     static_assert(std::is_base_of<Transform, T>::value, "invalid as<T>");
-    return dynamic_cast<T*>(this);
+    return dynamic_cast<const T*>(this);
   }
 
   template <typename T>

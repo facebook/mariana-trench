@@ -21,6 +21,11 @@ const SourceAsTransform* TransformsFactory::create_source_as_transform(
   return source_as_transform_.create(kind);
 }
 
+const SanitizeTransform* TransformsFactory::create_sanitize_transform(
+    const Kind* kind) const {
+  return sanitize_transform_.create(kind);
+}
+
 const TransformList* TransformsFactory::create(
     std::vector<std::string> transforms,
     Context& context) const {
