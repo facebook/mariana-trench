@@ -454,57 +454,40 @@ void create_issue(
   context->new_model.add_issue(std::move(issue));
 }
 
-// Called when a source is detected to be flowing into a partial sink for a
-// multi source rule. The set of fulfilled sinks should be accumulated for
-// each argument at a callsite (an invoke instruction).
-void check_multi_source_multi_sink_rules(
+/**
+ * Checks if the given sources/sinks fulfill any rule. If so, create an issue.
+ */
+void check_source_sink_rules(
     MethodContext* context,
     const Kind* source_kind,
-    const Taint& source,
-    const PartialKind* sink_kind,
-    const Taint& sink,
-    FulfilledPartialKindState& fulfilled_partial_sinks,
-    const MultiSourceMultiSinkRule* rule,
+    const Taint& source_taint,
+    const Kind* sink_kind,
+    const Taint& sink_taint,
     const Position* position,
     TextualOrderIndex sink_index,
     std::string_view callee,
     const FeatureMayAlwaysSet& extra_features) {
-  // Features found by this branch of the multi-source-sink flow. Should be
-  // reported as part of the final issue discovered.
-  auto features = source.features_joined();
-  features.add(sink.features_joined());
-
-  auto issue_sink_frame = fulfilled_partial_sinks.fulfill_kind(
-      sink_kind, rule, features, sink, context->kind_factory);
-
-  if (issue_sink_frame) {
+  const auto& rules = context->rules.rules(source_kind, sink_kind);
+  for (const auto* rule : rules) {
     create_issue(
         context,
-        source,
-        *issue_sink_frame,
+        source_taint,
+        sink_taint,
         rule,
         position,
         sink_index,
         callee,
         extra_features);
-  } else {
-    LOG_OR_DUMP(
-        context,
-        4,
-        "Found source kind: {} flowing into partial sink: {}, rule code: {}",
-        *source_kind,
-        *sink_kind,
-        rule->code());
   }
 }
 
-void check_exploitability_rules(
+void process_exploitability_rule(
     MethodContext* context,
     const IRInstruction* instruction,
     const Kind* source_kind,
-    Taint& source_taint,
+    const Taint& source_taint,
     const Kind* sink_kind,
-    Taint& sink_taint,
+    const Taint& sink_taint,
     const SourceSinkWithExploitabilityRule* exploitability_rule,
     const Position* position,
     TextualOrderIndex sink_index,
@@ -592,14 +575,220 @@ void check_exploitability_rules(
         extra_features);
   }
 }
-// Checks if the given sources/sinks fulfill any rule. If so, create an issue.
-//
-// If fulfilled_partial_sinks is non-null, also checks for multi-source rules
-// (partial rules). If a partial rule is fulfilled, this converts a partial
-// sink to a triggered sink and accumulates this list of triggered sinks. How
-// these sinks should be handled depends on what happens at other sinks/ports
-// within the same callsite/invoke. The caller MUST accumulate triggered sinks
-// at the callsite then pass the results to the backward analysis.
+
+/**
+ * Check if given exploitability source and source-as-transform sink fulfills
+ * any exploitability rule. If the rule is fulfilled, an issue is created. else
+ * the source-as-transform sink is stored in FulfilledExploitabilityState for
+ * backwards analysis to use.
+ */
+void check_fulfilled_exploitability_rules(
+    MethodContext* context,
+    const IRInstruction* instruction,
+    const Kind* exploitability_source_kind,
+    const Taint& exploitability_source_taint,
+    const TransformKind* source_as_transform_sink_kind,
+    const Taint& source_as_transform_sink_taint,
+    const Position* position,
+    TextualOrderIndex sink_index,
+    std::string_view callee,
+    const FeatureMayAlwaysSet& extra_features) {
+  mt_assert(source_as_transform_sink_kind->has_source_as_transform());
+
+  const auto& fulfilled_rules = context->rules.fulfilled_exploitability_rules(
+      exploitability_source_kind, source_as_transform_sink_kind);
+
+  if (fulfilled_rules.empty()) {
+    return;
+  }
+
+  // Create issues for fulfilled exploitability rules
+  for (const auto* rule : fulfilled_rules) {
+    process_exploitability_rule(
+        context,
+        instruction,
+        exploitability_source_kind,
+        exploitability_source_taint,
+        source_as_transform_sink_kind,
+        source_as_transform_sink_taint,
+        rule,
+        position,
+        sink_index,
+        callee,
+        extra_features);
+  }
+}
+
+/**
+ * Check if given source and sink kinds partially fulfills any exploitability
+ * rule. If partially fulfilled, computes the corresponding source-as-transform
+ * sink taint and checks if the materialized source-as-transform sink can
+ * trivially fulfill any exploitability rule or if we need to infer the
+ * source-as-transform sink on the call-effect exploitability port of the
+ * root-callable by checking against exploitability sources of the caller
+ * itself.
+ */
+void check_partially_fulfilled_exploitability_rules(
+    MethodContext* context,
+    const IRInstruction* instruction,
+    const Kind* source_kind,
+    const Taint& source_taint,
+    const Kind* sink_kind,
+    const Taint& sink_taint,
+
+    const Position* position,
+    TextualOrderIndex sink_index,
+    std::string_view callee,
+    const FeatureMayAlwaysSet& extra_features) {
+  const auto& partially_fulfilled_rules =
+      context->rules.partially_fulfilled_exploitability_rules(
+          source_kind, sink_kind);
+
+  if (partially_fulfilled_rules.empty()) {
+    // No "source" to "sink" flow found.
+    return;
+  }
+
+  for (const auto* rule : partially_fulfilled_rules) {
+    process_exploitability_rule(
+        context,
+        instruction,
+        source_kind,
+        source_taint,
+        sink_kind,
+        sink_taint,
+        rule,
+        position,
+        sink_index,
+        callee,
+        extra_features);
+  }
+}
+
+/**
+ * Check if the sources/sinks fulfill (or partially fulfill) any
+ * exploitability rules.
+ */
+void check_exploitability_rules(
+    MethodContext* context,
+    const IRInstruction* instruction,
+    const Kind* source_kind,
+    const Taint& source_taint,
+    const Kind* sink_kind,
+    const Taint& sink_taint,
+    const Position* position,
+    TextualOrderIndex sink_index,
+    std::string_view callee,
+    const FeatureMayAlwaysSet& extra_features) {
+  const TransformKind* source_as_transform_sink = nullptr;
+  if (const auto* transform_kind = sink_kind->as<TransformKind>()) {
+    if (transform_kind->has_source_as_transform()) {
+      source_as_transform_sink = transform_kind;
+    }
+  }
+
+  if (source_as_transform_sink == nullptr) {
+    check_partially_fulfilled_exploitability_rules(
+        context,
+        instruction,
+        source_kind,
+        source_taint,
+        sink_kind,
+        sink_taint,
+        position,
+        sink_index,
+        callee,
+        extra_features);
+  } else {
+    check_fulfilled_exploitability_rules(
+        context,
+        instruction,
+        source_kind,
+        source_taint,
+        source_as_transform_sink,
+        sink_taint,
+        position,
+        sink_index,
+        callee,
+        extra_features);
+  }
+}
+
+/**
+ * If fulfilled_partial_sinks is non-null, checks if a source is flows into a
+ * partial sink for a multi source rule.
+ *
+ * If a partial rule is fulfilled, this converts a partial
+ * sink to a triggered sink and accumulates this list of triggered sinks. How
+ * these sinks should be handled depends on what happens at other sinks/ports
+ * within the same callsite/invoke. The caller MUST accumulate triggered sinks
+ * at the callsite then pass the results to the backward analysis.
+ */
+void check_multi_source_multi_sink_rules(
+    MethodContext* context,
+    const Kind* source_kind,
+    const Taint& source_taint,
+    const Kind* sink_kind,
+    const Taint& sink_taint,
+    const Position* position,
+    TextualOrderIndex sink_index,
+    std::string_view callee,
+    const FeatureMayAlwaysSet& extra_features,
+    FulfilledPartialKindState* MT_NULLABLE fulfilled_partial_sinks) {
+  if (fulfilled_partial_sinks == nullptr) {
+    return;
+  }
+
+  const auto* MT_NULLABLE partial_sink = sink_kind->as<PartialKind>();
+  if (partial_sink == nullptr) {
+    return;
+  }
+
+  const auto& partial_rules =
+      context->rules.partial_rules(source_kind, partial_sink);
+  for (const auto* partial_rule : partial_rules) {
+    // Features found by this branch of the multi-source-sink flow. Should be
+    // reported as part of the final issue discovered.
+    auto features = source_taint.features_joined();
+    features.add(sink_taint.features_joined());
+
+    auto issue_sink_frame = fulfilled_partial_sinks->fulfill_kind(
+        partial_sink,
+        partial_rule,
+        features,
+        sink_taint,
+        context->kind_factory);
+
+    if (issue_sink_frame) {
+      create_issue(
+          context,
+          source_taint,
+          *issue_sink_frame,
+          partial_rule,
+          position,
+          sink_index,
+          callee,
+          extra_features);
+    } else {
+      LOG_OR_DUMP(
+          context,
+          4,
+          "Found source kind: {} flowing into partial sink: {}, rule code: {}",
+          *source_kind,
+          *sink_kind,
+          partial_rule->code());
+    }
+  }
+}
+
+/**
+ * Checks if the given sources/sinks fulfill any of the rules:
+ * - Source to Sink rules: Create an issue.
+ * - Exploitability rules: Infer source-as-transform sinks and/or create an
+ * issue.
+ * - Multi source/sink rules: Create triggered counter parts and/or create an
+ * issue.
+ */
 void check_sources_sinks_flows(
     MethodContext* context,
     const IRInstruction* instruction,
@@ -628,60 +817,44 @@ void check_sources_sinks_flows(
         // Intervals do not intersect, flow is not possible.
         continue;
       }
-      // Check if this satisfies any rule. If so, create the issue.
-      const auto& rules = context->rules.rules(source_kind, sink_kind);
-      for (const auto* rule : rules) {
-        if (const auto* exploitability_rule =
-                rule->as<SourceSinkWithExploitabilityRule>()) {
-          check_exploitability_rules(
-              context,
-              instruction,
-              source_kind,
-              source_taint,
-              sink_kind,
-              sink_taint,
-              exploitability_rule,
-              position,
-              sink_index,
-              callee,
-              extra_features);
-        } else {
-          create_issue(
-              context,
-              source_taint,
-              sink_taint,
-              rule,
-              position,
-              sink_index,
-              callee,
-              extra_features);
-        }
-      }
+
+      // Check if this satisfies any source-sink rule. If so, create the issue.
+      check_source_sink_rules(
+          context,
+          source_kind,
+          source_taint,
+          sink_kind,
+          sink_taint,
+          position,
+          sink_index,
+          callee,
+          extra_features);
+
+      // Check if this satisfies any exploitability rule.
+      check_exploitability_rules(
+          context,
+          instruction,
+          source_kind,
+          source_taint,
+          sink_kind,
+          sink_taint,
+          position,
+          sink_index,
+          callee,
+          extra_features);
 
       // Check if this satisfies any partial (multi-source/sink) rule.
-      if (fulfilled_partial_sinks != nullptr) {
-        const auto* MT_NULLABLE partial_sink = sink_kind->as<PartialKind>();
-        if (partial_sink != nullptr) {
-          const auto& partial_rules =
-              context->rules.partial_rules(source_kind, partial_sink);
-          for (const auto* partial_rule : partial_rules) {
-            check_multi_source_multi_sink_rules(
-                context,
-                source_kind,
-                source_taint,
-                partial_sink,
-                sink_taint,
-                *fulfilled_partial_sinks,
-                partial_rule,
-                position,
-                // TODO(T120190935) Add the ability to hold multiple callee
-                // ports per issue handle for multi-source multi-sink rules.
-                sink_index,
-                callee,
-                extra_features);
-          }
-        }
-      }
+      check_multi_source_multi_sink_rules(
+          context,
+          source_kind,
+          source_taint,
+          sink_kind,
+          sink_taint,
+          position,
+          sink_index,
+          callee,
+          extra_features,
+          fulfilled_partial_sinks);
     }
   }
 }

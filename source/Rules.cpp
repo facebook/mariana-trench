@@ -132,22 +132,23 @@ void Rules::add(Context& context, std::unique_ptr<Rule> rule) {
     for (const auto* source_kind : exploitability_rule->source_kinds()) {
       for (const auto* sink_kind : exploitability_rule->sink_kinds()) {
         // Create normal source to sink rule for initial matching.
-        source_to_sink_to_rules_[source_kind][sink_kind].push_back(
-            rule_pointer);
+        source_to_sink_to_exploitability_rules_[source_kind][sink_kind]
+            .push_back(exploitability_rule);
 
         // Create rule for effect-source to sink as a transform kind with
         // source-as-transform local transforms for final matching.
-        const auto* source_sink_transform_kind =
+        const auto* source_as_transform_sink_kind =
             context.kind_factory->transform_kind(
                 sink_kind,
                 /* local transforms */
-                exploitability_rule->source_as_transform(source_kind),
+                context.transforms_factory->create(
+                    TransformList::from_kind(source_kind, context)),
                 /* global transforms */ nullptr);
         for (const auto* effect_source_kind :
              exploitability_rule->effect_source_kinds()) {
-          source_to_sink_to_rules_[effect_source_kind]
-                                  [source_sink_transform_kind]
-                                      .push_back(rule_pointer);
+          effect_source_to_sink_to_exploitability_rules_
+              [effect_source_kind][source_as_transform_sink_kind]
+                  .push_back(exploitability_rule);
         }
       }
     }
@@ -158,14 +159,13 @@ void Rules::add(Context& context, std::unique_ptr<Rule> rule) {
   }
 }
 
-const std::vector<const Rule*>& Rules::rules(
-    const Kind* source_kind,
-    const Kind* sink_kind) const {
-  LOG(4,
-      "Searching for rules matching source: {} -> sink: {}",
-      source_kind->to_trace_string(),
-      sink_kind->to_trace_string());
+namespace {
 
+const Kind* MT_NULLABLE canonicalize_sink_kind(
+    const KindFactory& kind_factory,
+    const TransformsFactory& transforms_factory,
+    const Kind* source_kind,
+    const Kind* sink_kind) {
   // Get a list of all transforms (if any)
   const TransformList* all_transforms = nullptr;
   if (const auto* source_transform_kind = source_kind->as<TransformKind>()) {
@@ -190,13 +190,13 @@ const std::vector<const Rule*>& Rules::rules(
     // Check if we can sanitize the source
     if (all_transforms->sanitizes(
             source_base_kind, TransformList::ApplicationDirection::Forward)) {
-      return empty_rule_set_;
+      return nullptr;
     }
 
     // Check if we can sanitize the sink
     if (all_transforms->sanitizes(
             sink_base_kind, TransformList::ApplicationDirection::Backward)) {
-      return empty_rule_set_;
+      return nullptr;
     }
 
     // Discard sanitizing transforms for rules matching
@@ -213,23 +213,116 @@ const std::vector<const Rule*>& Rules::rules(
     }
   }
 
+  return sink_kind;
+}
+
+} // namespace
+
+const std::vector<const Rule*>& Rules::rules(
+    const Kind* source_kind,
+    const Kind* sink_kind) const {
+  LOG(4,
+      "Searching for source-sink rules matching source: {} -> sink: {}",
+      source_kind->to_trace_string(),
+      sink_kind->to_trace_string());
+
   auto sink_to_rules =
       source_to_sink_to_rules_.find(source_kind->discard_transforms());
   if (sink_to_rules == source_to_sink_to_rules_.end()) {
     return empty_rule_set_;
   }
 
-  auto rules = sink_to_rules->second.find(sink_kind);
+  const auto* canonicalized_sink_kind = canonicalize_sink_kind(
+      kind_factory, transforms_factory, source_kind, sink_kind);
+
+  if (canonicalized_sink_kind == nullptr) {
+    return empty_rule_set_;
+  }
+
+  auto rules = sink_to_rules->second.find(canonicalized_sink_kind);
   if (rules == sink_to_rules->second.end()) {
     return empty_rule_set_;
   }
 
   LOG(4,
-      "Found rule match for: {}->{}{} ",
+      "Found rule match for: {}->{} ",
       source_kind->discard_transforms()->to_trace_string(),
-      all_transforms != nullptr ? (all_transforms->to_trace_string() + "->")
-                                : "",
-      sink_kind->discard_transforms()->to_trace_string());
+      canonicalized_sink_kind->to_trace_string());
+
+  return rules->second;
+}
+
+const std::vector<const SourceSinkWithExploitabilityRule*>&
+Rules::partially_fulfilled_exploitability_rules(
+    const Kind* source_kind,
+    const Kind* sink_kind) const {
+  LOG(4,
+      "Searching for partially fulfilled exploitability rules matching source: {} -> sink: {}",
+      source_kind->to_trace_string(),
+      sink_kind->to_trace_string());
+
+  auto sink_to_rules = source_to_sink_to_exploitability_rules_.find(
+      source_kind->discard_transforms());
+  if (sink_to_rules == source_to_sink_to_exploitability_rules_.end()) {
+    return empty_exploitability_rule_set_;
+  }
+
+  const auto* canonicalized_sink_kind = canonicalize_sink_kind(
+      kind_factory, transforms_factory, source_kind, sink_kind);
+
+  if (canonicalized_sink_kind == nullptr) {
+    return empty_exploitability_rule_set_;
+  }
+
+  auto rules = sink_to_rules->second.find(canonicalized_sink_kind);
+  if (rules == sink_to_rules->second.end()) {
+    return empty_exploitability_rule_set_;
+  }
+
+  LOG(4,
+      "Found partially fulfilled exploitability rule match for: {}->{} ",
+      source_kind->discard_transforms()->to_trace_string(),
+      canonicalized_sink_kind->to_trace_string());
+
+  return rules->second;
+}
+
+const std::vector<const SourceSinkWithExploitabilityRule*>&
+Rules::fulfilled_exploitability_rules(
+    const Kind* effect_source_kind,
+    const TransformKind* source_as_transform_sink_kind) const {
+  LOG(4,
+      "Searching for fulfilled exploitability rules matching effect source: {} -> sink: {}",
+      effect_source_kind->to_trace_string(),
+      source_as_transform_sink_kind->to_trace_string());
+
+  mt_assert(effect_source_kind->is<NamedKind>());
+  auto sink_to_rules =
+      effect_source_to_sink_to_exploitability_rules_.find(effect_source_kind);
+  if (sink_to_rules == effect_source_to_sink_to_exploitability_rules_.end()) {
+    return empty_exploitability_rule_set_;
+  }
+
+  const auto* canonicalized_sink_kind = canonicalize_sink_kind(
+      kind_factory,
+      transforms_factory,
+      effect_source_kind,
+      source_as_transform_sink_kind);
+  mt_assert(canonicalized_sink_kind != nullptr);
+  const auto* source_as_transform_sink =
+      canonicalized_sink_kind->as<TransformKind>();
+  mt_assert(
+      source_as_transform_sink != nullptr &&
+      source_as_transform_sink->has_source_as_transform());
+  auto rules = sink_to_rules->second.find(source_as_transform_sink);
+  if (rules == sink_to_rules->second.end()) {
+    return empty_exploitability_rule_set_;
+  }
+
+  LOG(4,
+      "Found fulfilled exploitability rule match for: {}->{} ",
+      effect_source_kind->to_trace_string(),
+      source_as_transform_sink_kind->to_trace_string());
 
   return rules->second;
 }

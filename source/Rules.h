@@ -20,6 +20,7 @@
 #include <mariana-trench/MultiSourceMultiSinkRule.h>
 #include <mariana-trench/PartialKind.h>
 #include <mariana-trench/Rule.h>
+#include <mariana-trench/SourceSinkWithExploitabilityRule.h>
 #include <mariana-trench/TransformKind.h>
 #include <mariana-trench/TransformsFactory.h>
 
@@ -35,6 +36,16 @@ class Rules final {
       std::unordered_map<
           const PartialKind*,
           std::vector<const MultiSourceMultiSinkRule*>>>;
+  using SourceSinkExploitabilityRulesMap = std::unordered_map<
+      const Kind*,
+      std::unordered_map<
+          const Kind*,
+          std::vector<const SourceSinkWithExploitabilityRule*>>>;
+  using EffectSourceSinkExploitabilityRulesMap = std::unordered_map<
+      const Kind*,
+      std::unordered_map<
+          const TransformKind*,
+          std::vector<const SourceSinkWithExploitabilityRule*>>>;
 
  private:
   struct ExposeRulePointer {
@@ -99,11 +110,48 @@ class Rules final {
       const Kind* source_kind,
       const PartialKind* sink_kind) const;
 
+  /**
+   * Return the set of partially fulfilled exploitability rules matching the
+   * given source kind and sink kind. Exploitability rule is said to be
+   * partially fulfilled when a kind specified as "sources" is found to flow
+   * into a kind specified as "sinks" in the rule definition. It is the
+   * responsibility of the caller to create the corresponding
+   * source-as-transform sinks.
+   */
+  const std::vector<const SourceSinkWithExploitabilityRule*>&
+  partially_fulfilled_exploitability_rules(
+      const Kind* source_kind,
+      const Kind* sink_kind) const;
+
+  /**
+   * Return the set of fulfilled exploitability rules matching the
+   * given exploitability_source and source_as_transform_sink kind.
+   * Exploitability rule is said to be fulfilled when the kind listed
+   * "effect_sources" is found to flow to the special
+   * "source-as-transform-sinks" materialized when the rule is
+   * partially fulfulled. It is the responsibility of the caller to create an
+   * issue.
+   */
+  const std::vector<const SourceSinkWithExploitabilityRule*>&
+  fulfilled_exploitability_rules(
+      const Kind* source_kind,
+      const TransformKind* source_as_transform_sinks) const;
+
   std::unordered_set<const Kind*> collect_unused_kinds(
       const KindFactory& kinds) const;
 
   const SourceSinkRulesMap& source_to_sink_rules() const {
     return source_to_sink_to_rules_;
+  }
+
+  const SourceSinkExploitabilityRulesMap& source_to_sink_exploitability_rules()
+      const {
+    return source_to_sink_to_exploitability_rules_;
+  }
+
+  const EffectSourceSinkExploitabilityRulesMap&
+  effect_source_to_sink_exploitability_rules() const {
+    return effect_source_to_sink_to_exploitability_rules_;
   }
 
   std::size_t size() const {
@@ -126,9 +174,14 @@ class Rules final {
   //   Outer source kind = Kind without any Transforms
   //   Inner sink kind = Kind with all Transforms
   SourceSinkRulesMap source_to_sink_to_rules_;
+  SourceSinkExploitabilityRulesMap source_to_sink_to_exploitability_rules_;
+  EffectSourceSinkExploitabilityRulesMap
+      effect_source_to_sink_to_exploitability_rules_;
   SourcePartialSinkRulesMap source_to_partial_sink_to_rules_;
   std::vector<const Rule*> empty_rule_set_;
   std::vector<const MultiSourceMultiSinkRule*> empty_multi_source_rule_set_;
+  std::vector<const SourceSinkWithExploitabilityRule*>
+      empty_exploitability_rule_set_;
 };
 
 } // namespace marianatrench
