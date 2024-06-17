@@ -719,14 +719,21 @@ void infer_exploitability_sinks(
     MethodContext* context,
     const IRInstruction* instruction) {
   auto source_as_transform_sinks =
-      context->fulfilled_exploitability_state.partially_fulfilled_sinks(
+      context->fulfilled_exploitability_state.source_as_transform_sinks(
           instruction);
-  if (!source_as_transform_sinks.is_bottom()) {
-    context->new_model.add_inferred_call_effect_sinks(
-        AccessPath(Root(Root::Kind::CallEffectExploitability)),
-        std::move(source_as_transform_sinks),
-        context->options.heuristics());
+  if (source_as_transform_sinks.is_bottom()) {
+    return;
   }
+
+  LOG_OR_DUMP(
+      context,
+      4,
+      "Inferred source-as-transform sink {}",
+      source_as_transform_sinks);
+  context->new_model.add_inferred_call_effect_sinks(
+      AccessPath(Root(Root::Kind::CallEffectExploitability)),
+      std::move(source_as_transform_sinks),
+      context->options.heuristics());
 }
 
 void apply_call_effects(
@@ -737,7 +744,9 @@ void apply_call_effects(
   for (const auto& [port, sinks] : callee_call_effect_sinks.elements()) {
     switch (port.root().kind()) {
       case Root::Kind::CallEffectCallChain: {
-        LOG(5,
+        LOG_OR_DUMP(
+            context,
+            4,
             "Add inferred call effect sinks {} for method: {}",
             sinks,
             show(context->method()));
@@ -745,22 +754,23 @@ void apply_call_effects(
             port, sinks, context->options.heuristics());
       } break;
 
-      case Root::Kind::CallEffectExploitability: {
-        // Do not infer sinks for fulfilled sinks
-        auto sinks_copy = sinks;
-        sinks_copy.difference_with(
-            context->fulfilled_exploitability_state.fulfilled_sinks(
-                instruction));
-
-        if (!sinks_copy.is_bottom()) {
-          LOG(5,
-              "Add inferred exploitability sinks {} for method: {}",
-              sinks,
-              show(context->method()));
-          context->new_model.add_inferred_call_effect_sinks(
-              port, std::move(sinks_copy), context->options.heuristics());
-        }
-      } break;
+      case Root::Kind::CallEffectExploitability:
+        // A call-effect sink is always wrapped with source-as-transform
+        // transformation. This sink is inferred on the exploitability root
+        // based on the results of forward analysis.
+        // - Case 1: a new source-as-transform
+        // sink is materialized in the forward analysis iff an exploitability
+        // rule is only partially fulfilled.
+        // - Case 2: a source-as-transform sink on the
+        // callee's exploitability root is propagated to the caller iff an
+        // exploitability rule is only partially fulfilled. Although this case
+        // relies on the callee's call-effect sinks, we do not directly use it
+        // here. This is because the callee's model might have been updated
+        // between the forward and backwards analysis. Instead,
+        // we fully rely on the information passed from the forward analysis
+        // through the FulfilledExploitabilityRuleState for both cases below in
+        // `infer_exploitability_sinks`
+        break;
 
       case Root::Kind::CallEffectIntent:
         break;

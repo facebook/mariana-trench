@@ -481,101 +481,6 @@ void check_source_sink_rules(
   }
 }
 
-void process_exploitability_rule(
-    MethodContext* context,
-    const IRInstruction* instruction,
-    const Kind* source_kind,
-    const Taint& source_taint,
-    const Kind* sink_kind,
-    const Taint& sink_taint,
-    const SourceSinkWithExploitabilityRule* exploitability_rule,
-    const Position* position,
-    TextualOrderIndex sink_index,
-    std::string_view callee,
-    const FeatureMayAlwaysSet& extra_features) {
-  if (const auto* source_as_transform =
-          exploitability_rule->source_as_transform(source_kind)) {
-    // For an exploitability rule, when we find a flow from "source" to "sink"
-    // as defined in the rule, there is an associated transform corresponding to
-    // the source kind. This indicates the partial fulfillment of the rule and
-    // we apply the source-as-transform to the sink kind to indicate this.
-    auto transformed_sink_with_extra_trace =
-        transforms::apply_source_as_transform_to_sink(
-            context, source_taint, source_as_transform, sink_taint);
-
-    LOG_OR_DUMP(
-        context,
-        4,
-        "Fulfilled source->sink portion of the exploitability rule: {}. Creating call-effect-sink with source as transform: {}",
-        exploitability_rule->code(),
-        transformed_sink_with_extra_trace);
-
-    // Collapse the taint tree as call effect exploitability port does not use
-    // paths.
-    auto caller_exploitability_sources =
-        context->previous_model.call_effect_sources()
-            .read(Root{Root::Kind::CallEffectExploitability})
-            .collapse();
-
-    // The fulfillment of the exploitability rule is tracked in the
-    // FulFilledExploitabilityState.
-    //  - If the rule is partially fulfilled, we track the source-as-transform
-    // sink for the rule to infer the exploitability call effect sink in
-    // backward analysis.
-    //  - If the rule is completely fulfilled, we emit an issue here.
-    auto source_for_issue =
-        context->fulfilled_exploitability_state.fulfill_exploitability_rule(
-            instruction,
-            exploitability_rule,
-            caller_exploitability_sources,
-            transformed_sink_with_extra_trace);
-    if (!source_for_issue.is_bottom()) {
-      LOG_OR_DUMP(
-          context,
-          4,
-          "Fulfilled exploitability rule: {}. Creating issue with: Source: {}, Sink: {}",
-          exploitability_rule->code(),
-          source_kind->to_trace_string(),
-          sink_kind->to_trace_string());
-      create_issue(
-          context,
-          source_for_issue.attach_position(position),
-          transformed_sink_with_extra_trace,
-          exploitability_rule,
-          position,
-          sink_index,
-          callee,
-          extra_features);
-    }
-  } else {
-    // For an exploitability rule, when we find a flow from "effect_source" to
-    // "sink" with a SourceAsTransform transformation, we will emit an issue.
-    mt_assert(sink_kind->as<TransformKind>());
-
-    auto source_for_issue =
-        context->fulfilled_exploitability_state.fulfill_exploitability_rule(
-            instruction, exploitability_rule, source_taint, sink_taint);
-    mt_assert(!source_for_issue.is_bottom());
-
-    LOG_OR_DUMP(
-        context,
-        4,
-        "Fulfilled exploitability rule: {}. Creating issue with: Source: {}, Sink: {}",
-        exploitability_rule->code(),
-        source_kind->to_trace_string(),
-        sink_kind->to_trace_string());
-    create_issue(
-        context,
-        source_for_issue,
-        sink_taint,
-        exploitability_rule,
-        position,
-        sink_index,
-        callee,
-        extra_features);
-  }
-}
-
 /**
  * Check if given exploitability source and source-as-transform sink fulfills
  * any exploitability rule. If the rule is fulfilled, an issue is created. else
@@ -599,17 +504,26 @@ void check_fulfilled_exploitability_rules(
       exploitability_source_kind, source_as_transform_sink_kind);
 
   if (fulfilled_rules.empty()) {
+    // If an exploitability rule cannot be fulfilled,
+    // pass it to backwards analysis to propagate the source-as-transform sinks.
+    context->fulfilled_exploitability_state.add_source_as_transform_sinks(
+        instruction, source_as_transform_sink_taint);
     return;
   }
 
   // Create issues for fulfilled exploitability rules
   for (const auto* rule : fulfilled_rules) {
-    process_exploitability_rule(
+    LOG_OR_DUMP(
         context,
-        instruction,
-        exploitability_source_kind,
+        4,
+        "Fulfilled exploitability rule: {}. Creating issue with: Source: {}, Sink: {}",
+        rule->code(),
+        exploitability_source_kind->to_trace_string(),
+        source_as_transform_sink_kind->to_trace_string());
+
+    create_issue(
+        context,
         exploitability_source_taint,
-        source_as_transform_sink_kind,
         source_as_transform_sink_taint,
         rule,
         position,
@@ -635,7 +549,6 @@ void check_partially_fulfilled_exploitability_rules(
     const Taint& source_taint,
     const Kind* sink_kind,
     const Taint& sink_taint,
-
     const Position* position,
     TextualOrderIndex sink_index,
     std::string_view callee,
@@ -649,19 +562,49 @@ void check_partially_fulfilled_exploitability_rules(
     return;
   }
 
-  for (const auto* rule : partially_fulfilled_rules) {
-    process_exploitability_rule(
-        context,
-        instruction,
-        source_kind,
-        source_taint,
-        sink_kind,
-        sink_taint,
-        rule,
-        position,
-        sink_index,
-        callee,
-        extra_features);
+  const auto* source_as_transform =
+      context->transforms_factory.get_source_as_transform(source_kind);
+  mt_assert(source_as_transform != nullptr);
+
+  auto transformed_sink_with_extra_trace =
+      transforms::apply_source_as_transform_to_sink(
+          context, source_taint, source_as_transform, sink_taint);
+
+  // Collapse taint tree as exploitability port does not use paths.
+  auto exploitability_sources =
+      context->previous_model.call_effect_sources()
+          .read(Root{Root::Kind::CallEffectExploitability})
+          .collapse();
+
+  if (exploitability_sources.is_bottom()) {
+    // If an exploitability rule cannot be fulfilled,
+    // pass it to backwards analysis to propagate the source-as-transform sinks.
+    context->fulfilled_exploitability_state.add_source_as_transform_sinks(
+        instruction, transformed_sink_with_extra_trace);
+    return;
+  }
+
+  // Add the position of the caller to call effect sources.
+  auto* caller_position = context->positions.get(context->method());
+
+  // Check for trivially fulfilled case.
+  for (auto& [source_kind, source_taint] :
+       exploitability_sources.partition_by_kind()) {
+    for (const auto& [sink_kind, sink_taint] :
+         transformed_sink_with_extra_trace.partition_by_kind()) {
+      check_fulfilled_exploitability_rules(
+          context,
+          instruction,
+          /* exploitability_source_kind */ source_kind,
+          /* exploitability_source_taint */
+          source_taint.attach_position(caller_position),
+          /* source_as_transform_sink_kind */ sink_kind->as<TransformKind>(),
+          /* source_as_transform_sink_taint */ sink_taint,
+          position,
+          sink_index,
+          callee,
+          extra_features);
+    }
   }
 }
 
@@ -1058,32 +1001,33 @@ void check_call_effect_flows(
     MethodContext* context,
     const IRInstruction* instruction,
     const CalleeModel& callee) {
-  const auto& caller_call_effect_sources =
-      context->previous_model.call_effect_sources();
-  if (caller_call_effect_sources.is_bottom()) {
-    return;
-  }
-
   const auto& callee_call_effect_sinks = callee.model.call_effect_sinks();
   if (callee_call_effect_sinks.is_bottom()) {
     return;
   }
 
-  LOG(5,
-      "Checking call effect flow in method {} from sources: {} to sinks: {}",
-      show(callee.model.method()),
-      caller_call_effect_sources,
-      callee_call_effect_sinks);
+  const auto& caller_call_effect_sources =
+      context->previous_model.call_effect_sources();
 
-  auto* position = context->positions.get(context->method());
-  for (const auto& [port, sources] : caller_call_effect_sources.elements()) {
-    const auto& call_effect_sinks = callee_call_effect_sinks.read(port);
-    for (const auto& [_, sinks] : call_effect_sinks.elements()) {
+  auto* caller_position = context->positions.get(context->method());
+  for (const auto& [port, sinks] : callee_call_effect_sinks.elements()) {
+    const auto& sources = caller_call_effect_sources.read(port);
+    if (sources.is_bottom()) {
+      if (port.root().is_call_chain_exploitability()) {
+        // If an exploitability rule cannot be fulfilled,
+        // pass it to backwards analysis to propagate it.
+        context->fulfilled_exploitability_state.add_source_as_transform_sinks(
+            instruction, sinks);
+      }
+      continue;
+    }
+
+    for (const auto& [_, sources] : sources.elements()) {
       check_sources_sinks_flows(
           context,
           instruction,
           // Add the position of the caller to call effect sources.
-          sources.attach_position(position),
+          sources.attach_position(caller_position),
           sinks,
           callee.position,
           callee.call_index,
