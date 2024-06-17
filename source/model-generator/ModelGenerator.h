@@ -238,6 +238,17 @@ bool has_annotation(
     const std::optional<std::unordered_set<std::string>>& expected_values =
         std::nullopt);
 
+/**
+ * Extracts a list of field references from the given encoded value.
+ *
+ * @param encoded_value A pointer to a `DexEncodedValue` which should represent
+ *        an array of encoded values.
+ * @return A vector of pointers to `DexFieldRef` extracted from the encoded
+ * value.
+ */
+std::vector<DexFieldRef*> extract_annotation_fields(
+    const DexEncodedValue* encoded_value);
+
 TaintConfig source(
     Context& context,
     const std::string& kind,

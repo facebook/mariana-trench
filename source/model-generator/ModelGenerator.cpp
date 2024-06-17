@@ -405,6 +405,22 @@ bool generator::has_annotation(
       dex_class->get_anno_set(), expected_type, expected_values);
 }
 
+std::vector<DexFieldRef*> generator::extract_annotation_fields(
+    const DexEncodedValue* encoded_value) {
+  std::vector<DexFieldRef*> results;
+  if (const auto* array_value =
+          dynamic_cast<const DexEncodedValueArray*>(encoded_value)) {
+    mt_assert(array_value->evalues() != nullptr);
+    for (const auto& value : *(array_value->evalues())) {
+      if (auto enum_value =
+              dynamic_cast<const DexEncodedValueField*>(value.get())) {
+        results.emplace_back(enum_value->field());
+      }
+    }
+  }
+  return results;
+}
+
 TaintConfig generator::source(
     Context& context,
     const std::string& kind,
