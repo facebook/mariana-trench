@@ -719,8 +719,8 @@ void infer_exploitability_sinks(
     MethodContext* context,
     const IRInstruction* instruction) {
   auto source_as_transform_sinks =
-      context->fulfilled_exploitability_state.source_as_transform_sinks(
-          instruction);
+      context->partially_fulfilled_exploitability_state
+          .source_as_transform_sinks(instruction);
   if (source_as_transform_sinks.is_bottom()) {
     return;
   }
@@ -768,8 +768,8 @@ void apply_call_effects(
         // here. This is because the callee's model might have been updated
         // between the forward and backwards analysis. Instead,
         // we fully rely on the information passed from the forward analysis
-        // through the FulfilledExploitabilityRuleState for both cases below in
-        // `infer_exploitability_sinks`
+        // through the PartiallyFulfilledExploitabilityRuleState for both cases
+        // below in `infer_exploitability_sinks`
         break;
 
       case Root::Kind::CallEffectIntent:

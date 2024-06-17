@@ -506,8 +506,9 @@ void check_fulfilled_exploitability_rules(
   if (fulfilled_rules.empty()) {
     // If an exploitability rule cannot be fulfilled,
     // pass it to backwards analysis to propagate the source-as-transform sinks.
-    context->fulfilled_exploitability_state.add_source_as_transform_sinks(
-        instruction, source_as_transform_sink_taint);
+    context->partially_fulfilled_exploitability_state
+        .add_source_as_transform_sinks(
+            instruction, source_as_transform_sink_taint);
     return;
   }
 
@@ -579,8 +580,9 @@ void check_partially_fulfilled_exploitability_rules(
   if (exploitability_sources.is_bottom()) {
     // If an exploitability rule cannot be fulfilled,
     // pass it to backwards analysis to propagate the source-as-transform sinks.
-    context->fulfilled_exploitability_state.add_source_as_transform_sinks(
-        instruction, transformed_sink_with_extra_trace);
+    context->partially_fulfilled_exploitability_state
+        .add_source_as_transform_sinks(
+            instruction, transformed_sink_with_extra_trace);
     return;
   }
 
@@ -1016,8 +1018,8 @@ void check_call_effect_flows(
       if (port.root().is_call_chain_exploitability()) {
         // If an exploitability rule cannot be fulfilled,
         // pass it to backwards analysis to propagate it.
-        context->fulfilled_exploitability_state.add_source_as_transform_sinks(
-            instruction, sinks);
+        context->partially_fulfilled_exploitability_state
+            .add_source_as_transform_sinks(instruction, sinks);
       }
       continue;
     }
