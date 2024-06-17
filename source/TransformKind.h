@@ -62,6 +62,8 @@ class TransformKind final : public Kind {
 
   const Kind* discard_transforms() const override;
 
+  bool has_source_as_transform() const;
+
  private:
   const Kind* base_kind_;
   const TransformList* MT_NULLABLE local_transforms_;

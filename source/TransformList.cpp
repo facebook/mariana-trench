@@ -9,6 +9,7 @@
 #include <boost/algorithm/string/find_iterator.hpp>
 
 #include <mariana-trench/KindFactory.h>
+#include <mariana-trench/SourceAsTransform.h>
 #include <mariana-trench/TransformList.h>
 
 namespace marianatrench {
@@ -53,6 +54,13 @@ bool TransformList::sanitizes(const Kind* kind, ApplicationDirection direction)
     return kind == sanitizer->kind();
   }
   return false;
+}
+
+bool TransformList::has_source_as_transform() const {
+  return std::any_of(
+      transforms_.begin(), transforms_.end(), [](const Transform* transform) {
+        return transform->is<SourceAsTransform>();
+      });
 }
 
 std::string TransformList::to_trace_string() const {

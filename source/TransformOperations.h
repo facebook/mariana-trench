@@ -28,7 +28,7 @@ Taint apply_source_as_transform_to_sink(
     MethodContext* context,
     const Taint& source_taint,
     const TransformList* source_as_transform,
-    Taint& sink_taint);
+    const Taint& sink_taint);
 
 } // namespace transforms
 } // namespace marianatrench

@@ -74,6 +74,15 @@ TransformsFactory::reverse(const TransformList* MT_NULLABLE transforms) const {
   return create(TransformList::reverse_of(transforms));
 }
 
+const TransformList* MT_NULLABLE
+TransformsFactory::get_source_as_transform(const Kind* kind) const {
+  if (const auto* source_as_transform = source_as_transform_.get(kind)) {
+    return transform_lists_.get(TransformList({source_as_transform}));
+  }
+
+  return nullptr;
+}
+
 TransformCombinations TransformsFactory::all_combinations(
     const TransformList* transforms) const {
   TransformCombinations combinations{};

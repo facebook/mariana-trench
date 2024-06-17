@@ -88,6 +88,8 @@ class TransformList final {
 
   bool sanitizes(const Kind* kind, ApplicationDirection direction) const;
 
+  bool has_source_as_transform() const;
+
   std::string to_trace_string() const;
   static TransformList from_trace_string(
       const std::string& trace_string,

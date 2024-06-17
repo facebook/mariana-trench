@@ -79,7 +79,7 @@ Taint apply_source_as_transform_to_sink(
     MethodContext* context,
     const Taint& source_taint,
     const TransformList* source_as_transform,
-    Taint& sink_taint) {
+    const Taint& sink_taint) {
   auto transformed_sink_taint = sink_taint.apply_transform(
       context->kind_factory,
       context->transforms_factory,
@@ -93,6 +93,8 @@ Taint apply_source_as_transform_to_sink(
   // Add extra trace to source frame here:
   transformed_sink_taint.update_with_extra_trace(
       source_taint, FrameType::source());
+
+  LOG(5, "Materialized source-as-transform sink: {}", transformed_sink_taint);
 
   return transformed_sink_taint;
 }
