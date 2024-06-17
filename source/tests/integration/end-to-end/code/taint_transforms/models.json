@@ -25,5 +25,96 @@
         "port": "Argument(0)"
       }
     ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceA:()Ljava/lang/Object;",
+    "generations": [
+      {
+        "kind": "SourceA",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sinkB:(Ljava/lang/Object;)V",
+    "sinks": [
+      {
+        "kind": "SinkB",
+        "port": "Argument(0)"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeSourceA:(Ljava/lang/Object;)Ljava/lang/Object;",
+    "sanitizers": [
+      {
+        "sanitize": "propagations",
+        "port": "Argument(0)",
+        "kinds": [
+          {
+            "kind": "SourceA"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeSinkB:(Ljava/lang/Object;)Ljava/lang/Object;",
+    "sanitizers": [
+      {
+        "sanitize": "propagations",
+        "port": "Argument(0)",
+        "kinds": [
+          {
+            "kind": "SinkB"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformX:(Ljava/lang/Object;)Ljava/lang/Object;",
+    "freeze": [
+      "propagation"
+    ],
+    "propagation": [
+      {
+        "input": "Argument(0)",
+        "output": "Return",
+        "transforms": [
+          "TransformX"
+        ]
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformY:(Ljava/lang/Object;)Ljava/lang/Object;",
+    "freeze": [
+      "propagation"
+    ],
+    "propagation": [
+      {
+        "input": "Argument(0)",
+        "output": "Return",
+        "transforms": [
+          "TransformY"
+        ]
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformZ:(Ljava/lang/Object;)Ljava/lang/Object;",
+    "freeze": [
+      "propagation"
+    ],
+    "propagation": [
+      {
+        "input": "Argument(0)",
+        "output": "Return",
+        "transforms": [
+          "TransformZ"
+        ]
+      }
+    ]
   }
 ]

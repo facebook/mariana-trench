@@ -11,6 +11,7 @@
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Kind.h>
+#include <mariana-trench/SanitizeTransform.h>
 #include <mariana-trench/Transform.h>
 
 namespace marianatrench {
@@ -28,6 +29,15 @@ class TransformList final {
 
  public:
   using ConstIterator = List::const_iterator;
+
+  // The reason for not reusing `transforms::TransformDirection` is that it
+  // represents the direction of propagation, while we need a enum that encodes
+  // the direction of transforms application in the list. For example, even if
+  // we are doing Forward propagation (with
+  // `transforms::TransformDirection::Forward`), the transform list is still
+  // applied in the reverse order on the source. Reusing the enum would cause
+  // great ambiguity.
+  enum class ApplicationDirection { Forward, Backward };
 
  public:
   TransformList() = default;
@@ -47,6 +57,8 @@ class TransformList final {
 
   static TransformList reverse_of(const TransformList* transforms);
 
+  static TransformList discard_sanitizers(const TransformList* transforms);
+
  public:
   bool operator==(const TransformList& other) const {
     return transforms_ == other.transforms_;
@@ -63,6 +75,18 @@ class TransformList final {
   std::size_t size() const {
     return transforms_.size();
   }
+
+  bool has_sanitizers() const {
+    return std::any_of(begin(), end(), [](const Transform* t) {
+      return t->is<SanitizeTransform>();
+    });
+  }
+
+  static bool has_sanitizers(const TransformList* MT_NULLABLE transforms) {
+    return transforms == nullptr ? false : transforms->has_sanitizers();
+  }
+
+  bool sanitizes(const Kind* kind, ApplicationDirection direction) const;
 
   std::string to_trace_string() const;
   static TransformList from_trace_string(

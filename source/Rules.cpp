@@ -184,10 +184,33 @@ const std::vector<const Rule*>& Rules::rules(
   }
 
   if (all_transforms != nullptr) {
-    sink_kind = kind_factory.transform_kind(
-        sink_kind->discard_transforms(),
-        /* local transforms */ all_transforms,
-        /* global transforms */ nullptr);
+    const auto* source_base_kind = source_kind->discard_transforms();
+    const auto* sink_base_kind = sink_kind->discard_transforms();
+
+    // Check if we can sanitize the source
+    if (all_transforms->sanitizes(
+            source_base_kind, TransformList::ApplicationDirection::Forward)) {
+      return empty_rule_set_;
+    }
+
+    // Check if we can sanitize the sink
+    if (all_transforms->sanitizes(
+            sink_base_kind, TransformList::ApplicationDirection::Backward)) {
+      return empty_rule_set_;
+    }
+
+    // Discard sanitizing transforms for rules matching
+    all_transforms = transforms_factory.discard_sanitizers(all_transforms);
+
+    // Every transform is a sanitizer
+    if (all_transforms == nullptr) {
+      sink_kind = sink_base_kind;
+    } else {
+      sink_kind = kind_factory.transform_kind(
+          sink_base_kind,
+          /* local transforms */ all_transforms,
+          /* global transforms */ nullptr);
+    }
   }
 
   auto sink_to_rules =

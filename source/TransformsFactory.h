@@ -67,6 +67,9 @@ class TransformsFactory final {
 
   static const TransformsFactory& singleton();
 
+  const TransformList* MT_NULLABLE
+  discard_sanitizers(const TransformList* MT_NULLABLE transforms) const;
+
  private:
   UniquePointerFactory<std::string, NamedTransform> transform_;
   UniquePointerFactory<const Kind*, SourceAsTransform> source_as_transform_;

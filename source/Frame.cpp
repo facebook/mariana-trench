@@ -18,6 +18,7 @@
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/OriginFactory.h>
+#include <mariana-trench/SanitizeTransform.h>
 #include <mariana-trench/TaggedRootSet.h>
 #include <mariana-trench/UsedKinds.h>
 
@@ -203,6 +204,12 @@ Frame Frame::apply_transform(
   const Kind* base_kind = kind_;
   const TransformList* global_transforms = nullptr;
 
+  // See if we can drop some taint here
+  if (local_transforms->sanitizes(
+          kind_, TransformList::ApplicationDirection::Backward)) {
+    return Frame::bottom();
+  }
+
   if (const auto* transform_kind = kind_->as<TransformKind>()) {
     // If the current kind is already a TransformKind, append existing
     // local_transforms.
@@ -222,7 +229,9 @@ Frame Frame::apply_transform(
   const auto* new_kind = kind_factory.transform_kind(
       base_kind, local_transforms, global_transforms);
 
-  if (!used_kinds.should_keep(new_kind)) {
+  if (!used_kinds.should_keep(new_kind) &&
+      !(TransformList::has_sanitizers(local_transforms)) &&
+      !(TransformList::has_sanitizers(global_transforms))) {
     return Frame::bottom();
   }
 

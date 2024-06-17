@@ -30,6 +30,31 @@ TransformList TransformList::reverse_of(const TransformList* transforms) {
       List(transforms->transforms_.rbegin(), transforms->transforms_.rend()));
 }
 
+TransformList TransformList::discard_sanitizers(
+    const TransformList* transforms) {
+  List no_sanitizers;
+  for (const auto* transform : *transforms) {
+    if (!transform->is<SanitizeTransform>()) {
+      no_sanitizers.push_back(transform);
+    }
+  }
+  return TransformList(std::move(no_sanitizers));
+}
+
+// TODO: T189558338 Handle cases where multiple, continuous transforms are
+// present based on the canonicalization
+bool TransformList::sanitizes(const Kind* kind, ApplicationDirection direction)
+    const {
+  const auto* maybe_sanitizer = direction == ApplicationDirection::Forward
+      ? transforms_.front()
+      : transforms_.back();
+
+  if (const auto* sanitizer = maybe_sanitizer->as<SanitizeTransform>()) {
+    return kind == sanitizer->kind();
+  }
+  return false;
+}
+
 std::string TransformList::to_trace_string() const {
   std::string value{};
 

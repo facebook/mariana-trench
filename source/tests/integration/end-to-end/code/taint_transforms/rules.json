@@ -119,5 +119,62 @@
     "sinks": [
       "Sink"
     ]
+  },
+  {
+    "name": "SourceA -> SinkB",
+    "code": 9,
+    "description": "",
+    "sources": [
+      "SourceA"
+    ],
+    "sinks": [
+      "SinkB"
+    ]
+  },
+  {
+    "name": "SourceA -> TransformX -> SinkB",
+    "code": 10,
+    "description": "",
+    "sources": [
+      "SourceA"
+    ],
+    "sinks": [
+      "SinkB"
+    ],
+    "transforms": [
+      "TransformX"
+    ]
+  },
+  {
+    "name": "SourceA -> TransformY -> TransformZ -> SinkB",
+    "code": 11,
+    "description": "",
+    "sources": [
+      "SourceA"
+    ],
+    "sinks": [
+      "SinkB"
+    ],
+    "transforms": [
+      "TransformY",
+      "TransformZ"
+    ]
+  },
+  {
+    "name": "SourceA -> TransformX -> TransformY -> TransformY -> TransformZ -> SinkB",
+    "code": 12,
+    "description": "",
+    "sources": [
+      "SourceA"
+    ],
+    "sinks": [
+      "SinkB"
+    ],
+    "transforms": [
+      "TransformX",
+      "TransformY",
+      "TransformY",
+      "TransformZ"
+    ]
   }
 ]

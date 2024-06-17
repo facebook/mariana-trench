@@ -100,4 +100,19 @@ const TransformsFactory& TransformsFactory::singleton() {
   return instance;
 }
 
+const TransformList* MT_NULLABLE TransformsFactory::discard_sanitizers(
+    const TransformList* MT_NULLABLE transforms) const {
+  if (transforms == nullptr) {
+    return transforms;
+  }
+
+  auto no_sanitizers = TransformList::discard_sanitizers(transforms);
+
+  if (no_sanitizers.size() == 0) {
+    return nullptr;
+  }
+
+  return create(std::move(no_sanitizers));
+}
+
 } // namespace marianatrench

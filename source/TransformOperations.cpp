@@ -29,7 +29,6 @@ TaintTree apply_propagation(
 
   const auto* transform_kind = kind->as<TransformKind>();
   mt_assert(transform_kind != nullptr);
-  mt_assert(propagation_call_info.call_kind().is_propagation_with_trace());
   // For propagations with traces, we can have local and global transforms the
   // same as with source/sink traces. Regardless, both local and global
   // transforms in the propagation are local to the call-site where it's
@@ -37,6 +36,16 @@ TaintTree apply_propagation(
   const auto* all_transforms = context->transforms_factory.concat(
       transform_kind->local_transforms(), transform_kind->global_transforms());
   mt_assert(all_transforms != nullptr);
+
+  mt_assert(
+      propagation_call_info.call_kind().is_propagation_with_trace() ||
+      propagation_call_info.call_kind().is_propagation() &&
+          std::any_of(
+              all_transforms->begin(),
+              all_transforms->end(),
+              [](const Transform* transform) {
+                return transform->is<SanitizeTransform>();
+              }));
 
   if (direction == TransformDirection::Forward) {
     all_transforms = context->transforms_factory.reverse(all_transforms);

@@ -121,7 +121,6 @@ void TaintTree::update_maximum_collapse_depth(CollapseDepth collapse_depth) {
 void TaintTree::update_with_propagation_trace(
     const CallInfo& propagation_call_info,
     const Frame& propagation_frame) {
-  mt_assert(propagation_call_info.call_kind().is_propagation_with_trace());
   tree_.transform(
       [&propagation_call_info, &propagation_frame](const Taint& taint) {
         return taint.update_with_propagation_trace(

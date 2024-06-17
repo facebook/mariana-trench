@@ -2309,6 +2309,2774 @@
   }
 }
 {
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9,
+    "path" : "SanitizeTransforms.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeASinkB:(Ljava/lang/Object;)V",
+  "position" : 
+  {
+    "line" : 92,
+    "path" : "SanitizeTransforms.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(0)",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 11,
+              "line" : 94,
+              "path" : "SanitizeTransforms.java",
+              "start" : 10
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : 
+              {
+                "base" : "SinkB",
+                "local" : "SanitizeTransform[SourceA]"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sinkB:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 32,
+              "line" : 93,
+              "start" : 32
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeAToYToZToB:(Ljava/lang/Object;)V",
+  "position" : 
+  {
+    "line" : 167,
+    "path" : "SanitizeTransforms.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(0)",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 11,
+              "line" : 171,
+              "path" : "SanitizeTransforms.java",
+              "start" : 10
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "extra_traces" : 
+              [
+                {
+                  "call_info" : 
+                  {
+                    "call_kind" : "PropagationWithTrace:Origin",
+                    "port" : "Argument(0)",
+                    "position" : 
+                    {
+                      "line" : 169,
+                      "path" : "SanitizeTransforms.java"
+                    }
+                  },
+                  "frame_type" : "sink",
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "TransformY"
+                  }
+                },
+                {
+                  "call_info" : 
+                  {
+                    "call_kind" : "PropagationWithTrace:Origin",
+                    "port" : "Argument(0)",
+                    "position" : 
+                    {
+                      "line" : 170,
+                      "path" : "SanitizeTransforms.java"
+                    }
+                  },
+                  "frame_type" : "sink",
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "TransformZ"
+                  }
+                }
+              ],
+              "kind" : 
+              {
+                "base" : "SinkB",
+                "local" : "SanitizeTransform[SourceA]:TransformY:TransformZ"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sinkB:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 28,
+              "line" : 169,
+              "start" : 27
+            },
+            {
+              "end" : 28,
+              "line" : 170,
+              "start" : 27
+            },
+            {
+              "end" : 32,
+              "line" : 168,
+              "start" : 32
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeATransformX:(Ljava/lang/Object;)Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 128,
+    "path" : "SanitizeTransforms.java"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "PropagationWithTrace:Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "line" : 130,
+              "path" : "SanitizeTransforms.java"
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : 
+              {
+                "base" : "LocalReturn",
+                "global" : "TransformX",
+                "local" : "SanitizeTransform[SourceA]"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformX:(Ljava/lang/Object;)Ljava/lang/Object;",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "output_paths" : 
+              {
+                "" : 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeATransformXSinkB:(Ljava/lang/Object;)V",
+  "position" : 
+  {
+    "line" : 156,
+    "path" : "SanitizeTransforms.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(0)",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "line" : 159,
+              "path" : "SanitizeTransforms.java"
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "extra_traces" : 
+              [
+                {
+                  "call_info" : 
+                  {
+                    "call_kind" : "PropagationWithTrace:Origin",
+                    "port" : "Argument(0)",
+                    "position" : 
+                    {
+                      "line" : 158,
+                      "path" : "SanitizeTransforms.java"
+                    }
+                  },
+                  "frame_type" : "sink",
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "TransformX"
+                  }
+                }
+              ],
+              "kind" : 
+              {
+                "base" : "SinkB",
+                "local" : "SanitizeTransform[SourceA]:TransformX"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sinkB:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "line" : 157
+            },
+            {
+              "line" : 158
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeBTransformX:(Ljava/lang/Object;)Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 234,
+    "path" : "SanitizeTransforms.java"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "PropagationWithTrace:Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "line" : 236,
+              "path" : "SanitizeTransforms.java"
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : 
+              {
+                "base" : "LocalReturn",
+                "global" : "TransformX",
+                "local" : "SanitizeTransform[SinkB]"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformX:(Ljava/lang/Object;)Ljava/lang/Object;",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "output_paths" : 
+              {
+                "" : 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "inline_as_getter" : "Argument(0)",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeSinkB:(Ljava/lang/Object;)Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 22,
+    "path" : "SanitizeTransforms.java"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : 
+              {
+                "base" : "LocalReturn",
+                "local" : "SanitizeTransform[SinkB]"
+              },
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "sanitizers" : 
+  [
+    {
+      "kinds" : 
+      [
+        {
+          "kind" : "SinkB"
+        }
+      ],
+      "port" : "Argument(0)",
+      "sanitize" : "propagations"
+    }
+  ]
+}
+{
+  "inline_as_getter" : "Argument(0)",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeSourceA:(Ljava/lang/Object;)Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 18,
+    "path" : "SanitizeTransforms.java"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : 
+              {
+                "base" : "LocalReturn",
+                "local" : "SanitizeTransform[SourceA]"
+              },
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "sanitizers" : 
+  [
+    {
+      "kinds" : 
+      [
+        {
+          "kind" : "SourceA"
+        }
+      ],
+      "port" : "Argument(0)",
+      "sanitize" : "propagations"
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sinkB:(Ljava/lang/Object;)V",
+  "position" : 
+  {
+    "line" : 15,
+    "path" : "SanitizeTransforms.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(0)",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "SinkB",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sinkB:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "SourceA",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceA:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceA:()Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 12,
+    "path" : "SanitizeTransforms.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceASanitizeA:()Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 44,
+    "path" : "SanitizeTransforms.java"
+  }
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 51,
+              "path" : "SanitizeTransforms.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : 
+              {
+                "base" : "SourceA",
+                "local" : "SanitizeTransform[SinkB]"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceA:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 31,
+              "line" : 52,
+              "start" : 30
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceASanitizeB:()Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 50,
+    "path" : "SanitizeTransforms.java"
+  }
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 258,
+              "path" : "SanitizeTransforms.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "extra_traces" : 
+              [
+                {
+                  "call_info" : 
+                  {
+                    "call_kind" : "PropagationWithTrace:Origin",
+                    "port" : "Argument(0)",
+                    "position" : 
+                    {
+                      "line" : 260,
+                      "path" : "SanitizeTransforms.java"
+                    }
+                  },
+                  "frame_type" : "sink",
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "TransformX"
+                  }
+                }
+              ],
+              "kind" : 
+              {
+                "base" : "SourceA",
+                "local" : "TransformX:SanitizeTransform[SinkB]"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceA:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 28,
+              "line" : 260,
+              "start" : 27
+            },
+            {
+              "end" : 31,
+              "line" : 259,
+              "start" : 30
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceASanitizeBTransformX:()Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 257,
+    "path" : "SanitizeTransforms.java"
+  }
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "line" : 214,
+              "path" : "SanitizeTransforms.java"
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "extra_traces" : 
+              [
+                {
+                  "call_info" : 
+                  {
+                    "call_kind" : "PropagationWithTrace:Origin",
+                    "port" : "Argument(0)",
+                    "position" : 
+                    {
+                      "line" : 215,
+                      "path" : "SanitizeTransforms.java"
+                    }
+                  },
+                  "frame_type" : "sink",
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "TransformX"
+                  }
+                }
+              ],
+              "kind" : 
+              {
+                "base" : "SourceA",
+                "local" : "SanitizeTransform[SinkB]:TransformX"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceA:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "line" : 215
+            },
+            {
+              "line" : 216
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceATransformXSanitizeB:()Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 213,
+    "path" : "SanitizeTransforms.java"
+  }
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 39,
+              "path" : "SanitizeTransforms.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "extra_traces" : 
+              [
+                {
+                  "call_info" : 
+                  {
+                    "call_kind" : "PropagationWithTrace:Origin",
+                    "port" : "Argument(0)",
+                    "position" : 
+                    {
+                      "line" : 40,
+                      "path" : "SanitizeTransforms.java"
+                    }
+                  },
+                  "frame_type" : "sink",
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "TransformX"
+                  }
+                }
+              ],
+              "kind" : 
+              {
+                "base" : "SourceA",
+                "local" : "TransformX"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceA:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 28,
+              "line" : 40,
+              "start" : 27
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.taintWithTransformX:()Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 38,
+    "path" : "SanitizeTransforms.java"
+  }
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 57,
+              "path" : "SanitizeTransforms.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "extra_traces" : 
+              [
+                {
+                  "call_info" : 
+                  {
+                    "call_kind" : "PropagationWithTrace:Origin",
+                    "port" : "Argument(0)",
+                    "position" : 
+                    {
+                      "line" : 58,
+                      "path" : "SanitizeTransforms.java"
+                    }
+                  },
+                  "frame_type" : "sink",
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "TransformX"
+                  }
+                },
+                {
+                  "call_info" : 
+                  {
+                    "call_kind" : "PropagationWithTrace:Origin",
+                    "port" : "Argument(0)",
+                    "position" : 
+                    {
+                      "line" : 59,
+                      "path" : "SanitizeTransforms.java"
+                    }
+                  },
+                  "frame_type" : "sink",
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "TransformY"
+                  }
+                }
+              ],
+              "kind" : 
+              {
+                "base" : "SourceA",
+                "local" : "TransformY:TransformX"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceA:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 28,
+              "line" : 58,
+              "start" : 27
+            },
+            {
+              "end" : 28,
+              "line" : 59,
+              "start" : 27
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.taintWithTransformXY:()Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 56,
+    "path" : "SanitizeTransforms.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testASanitizeAToXBNoIssue:()V",
+  "position" : 
+  {
+    "line" : 151,
+    "path" : "SanitizeTransforms.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformXSinkB:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 254,
+        "path" : "SanitizeTransforms.java"
+      },
+      "rule" : 10,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 21,
+              "line" : 254,
+              "path" : "SanitizeTransforms.java",
+              "start" : 20
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformXSinkB:(Ljava/lang/Object;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "distance" : 1,
+              "kind" : 
+              {
+                "base" : "SinkB",
+                "global" : "TransformX"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sinkB:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : false
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 31,
+              "line" : 253,
+              "path" : "SanitizeTransforms.java",
+              "start" : 16
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceASanitizeB:()Ljava/lang/Object;"
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "distance" : 1,
+              "kind" : 
+              {
+                "base" : "SourceA",
+                "global" : "SanitizeTransform[SinkB]"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceA:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : false
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testASanitizeBToXBIssue:()V",
+  "position" : 
+  {
+    "line" : 252,
+    "path" : "SanitizeTransforms.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sinkB:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 249,
+        "path" : "SanitizeTransforms.java"
+      },
+      "rule" : 10,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 11,
+              "line" : 249,
+              "path" : "SanitizeTransforms.java",
+              "start" : 10
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "SinkB",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sinkB:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 31,
+              "line" : 247,
+              "path" : "SanitizeTransforms.java",
+              "start" : 16
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceASanitizeB:()Ljava/lang/Object;"
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "distance" : 1,
+              "extra_traces" : 
+              [
+                {
+                  "call_info" : 
+                  {
+                    "call_kind" : "PropagationWithTrace:Origin",
+                    "port" : "Argument(0)",
+                    "position" : 
+                    {
+                      "line" : 248,
+                      "path" : "SanitizeTransforms.java"
+                    }
+                  },
+                  "frame_type" : "sink",
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "TransformX"
+                  }
+                }
+              ],
+              "kind" : 
+              {
+                "base" : "SourceA",
+                "global" : "SanitizeTransform[SinkB]",
+                "local" : "TransformX"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceA:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : false
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 28,
+              "line" : 248,
+              "start" : 27
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testASanitizeBToXToBIssue:()V",
+  "position" : 
+  {
+    "line" : 246,
+    "path" : "SanitizeTransforms.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sinkB:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 266,
+        "path" : "SanitizeTransforms.java"
+      },
+      "rule" : 10,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 11,
+              "line" : 266,
+              "path" : "SanitizeTransforms.java",
+              "start" : 10
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "SinkB",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sinkB:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 41,
+              "line" : 265,
+              "path" : "SanitizeTransforms.java",
+              "start" : 16
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceASanitizeBTransformX:()Ljava/lang/Object;"
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "distance" : 1,
+              "kind" : 
+              {
+                "base" : "SourceA",
+                "global" : "TransformX:SanitizeTransform[SinkB]"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceA:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : false
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testASanitizeBXToBIssue:()V",
+  "position" : 
+  {
+    "line" : 264,
+    "path" : "SanitizeTransforms.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeAToBNoIssue:()V",
+  "position" : 
+  {
+    "line" : 65,
+    "path" : "SanitizeTransforms.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeAToXBNoIssue:()V",
+  "position" : 
+  {
+    "line" : 145,
+    "path" : "SanitizeTransforms.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeAXBNoIssue:()V",
+  "position" : 
+  {
+    "line" : 162,
+    "path" : "SanitizeTransforms.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeAXToBNoIssue:()V",
+  "position" : 
+  {
+    "line" : 134,
+    "path" : "SanitizeTransforms.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeAYZBNoIssue:()V",
+  "position" : 
+  {
+    "line" : 174,
+    "path" : "SanitizeTransforms.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeAtoXToBNoIssue:()V",
+  "position" : 
+  {
+    "line" : 121,
+    "path" : "SanitizeTransforms.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeBToBNoIssue:()V",
+  "position" : 
+  {
+    "line" : 186,
+    "path" : "SanitizeTransforms.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sinkB:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 231,
+        "path" : "SanitizeTransforms.java"
+      },
+      "rule" : 10,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 11,
+              "line" : 231,
+              "path" : "SanitizeTransforms.java",
+              "start" : 10
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "SinkB",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sinkB:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 228,
+              "path" : "SanitizeTransforms.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "extra_traces" : 
+              [
+                {
+                  "call_info" : 
+                  {
+                    "call_kind" : "PropagationWithTrace:Origin",
+                    "port" : "Argument(0)",
+                    "position" : 
+                    {
+                      "line" : 230,
+                      "path" : "SanitizeTransforms.java"
+                    }
+                  },
+                  "frame_type" : "sink",
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "TransformX"
+                  }
+                }
+              ],
+              "kind" : 
+              {
+                "base" : "SourceA",
+                "local" : "TransformX:SanitizeTransform[SinkB]"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceA:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 28,
+              "line" : 230,
+              "start" : 27
+            },
+            {
+              "end" : 31,
+              "line" : 229,
+              "start" : 30
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeBToXToBIssue:()V",
+  "position" : 
+  {
+    "line" : 227,
+    "path" : "SanitizeTransforms.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sinkB:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 243,
+        "path" : "SanitizeTransforms.java"
+      },
+      "rule" : 10,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 11,
+              "line" : 243,
+              "path" : "SanitizeTransforms.java",
+              "start" : 10
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "SinkB",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sinkB:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 241,
+              "path" : "SanitizeTransforms.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "extra_traces" : 
+              [
+                {
+                  "call_info" : 
+                  {
+                    "call_kind" : "PropagationWithTrace:CallSite",
+                    "port" : "Argument(0)",
+                    "position" : 
+                    {
+                      "line" : 242,
+                      "path" : "SanitizeTransforms.java"
+                    },
+                    "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeBTransformX:(Ljava/lang/Object;)Ljava/lang/Object;"
+                  },
+                  "frame_type" : "sink",
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "SanitizeTransform[SinkB]:TransformX"
+                  }
+                }
+              ],
+              "kind" : 
+              {
+                "base" : "SourceA",
+                "local" : "TransformX:SanitizeTransform[SinkB]"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceA:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 37,
+              "line" : 242,
+              "start" : 36
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeBXToBIssue:()V",
+  "position" : 
+  {
+    "line" : 240,
+    "path" : "SanitizeTransforms.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformXSanitizeASinkB:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 116,
+        "path" : "SanitizeTransforms.java"
+      },
+      "rule" : 10,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 30,
+              "line" : 116,
+              "path" : "SanitizeTransforms.java",
+              "start" : 29
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformXSanitizeASinkB:(Ljava/lang/Object;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "distance" : 1,
+              "kind" : 
+              {
+                "base" : "SinkB",
+                "global" : "TransformX:SanitizeTransform[SourceA]"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sinkB:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : false
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 115,
+              "path" : "SanitizeTransforms.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "SourceA",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceA:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToXSanitizeABIssue:()V",
+  "position" : 
+  {
+    "line" : 114,
+    "path" : "SanitizeTransforms.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sinkB:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 89,
+        "path" : "SanitizeTransforms.java"
+      },
+      "rule" : 10,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 11,
+              "line" : 89,
+              "path" : "SanitizeTransforms.java",
+              "start" : 10
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "SinkB",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sinkB:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 87,
+              "path" : "SanitizeTransforms.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "extra_traces" : 
+              [
+                {
+                  "call_info" : 
+                  {
+                    "call_kind" : "PropagationWithTrace:CallSite",
+                    "port" : "Argument(0)",
+                    "position" : 
+                    {
+                      "line" : 88,
+                      "path" : "SanitizeTransforms.java"
+                    },
+                    "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformXSanitizeA:(Ljava/lang/Object;)Ljava/lang/Object;"
+                  },
+                  "frame_type" : "sink",
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "TransformX:SanitizeTransform[SourceA]"
+                  }
+                }
+              ],
+              "kind" : 
+              {
+                "base" : "SourceA",
+                "local" : "SanitizeTransform[SourceA]:TransformX"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceA:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 37,
+              "line" : 88,
+              "start" : 36
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToXSanitizeAToBIssue:()V",
+  "position" : 
+  {
+    "line" : 86,
+    "path" : "SanitizeTransforms.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToXSanitizeBToBNoIssue:()V",
+  "position" : 
+  {
+    "line" : 207,
+    "path" : "SanitizeTransforms.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeASinkB:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 100,
+        "path" : "SanitizeTransforms.java"
+      },
+      "rule" : 10,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 20,
+              "line" : 100,
+              "path" : "SanitizeTransforms.java",
+              "start" : 19
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeASinkB:(Ljava/lang/Object;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "distance" : 1,
+              "kind" : 
+              {
+                "base" : "SinkB",
+                "global" : "SanitizeTransform[SourceA]"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sinkB:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : false
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 98,
+              "path" : "SanitizeTransforms.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "extra_traces" : 
+              [
+                {
+                  "call_info" : 
+                  {
+                    "call_kind" : "PropagationWithTrace:Origin",
+                    "port" : "Argument(0)",
+                    "position" : 
+                    {
+                      "line" : 99,
+                      "path" : "SanitizeTransforms.java"
+                    }
+                  },
+                  "frame_type" : "sink",
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "TransformX"
+                  }
+                }
+              ],
+              "kind" : 
+              {
+                "base" : "SourceA",
+                "local" : "TransformX"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceA:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 28,
+              "line" : 99,
+              "start" : 27
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToXToSanitizeABIssue:()V",
+  "position" : 
+  {
+    "line" : 97,
+    "path" : "SanitizeTransforms.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sinkB:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 77,
+        "path" : "SanitizeTransforms.java"
+      },
+      "rule" : 10,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 11,
+              "line" : 77,
+              "path" : "SanitizeTransforms.java",
+              "start" : 10
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "SinkB",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sinkB:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 74,
+              "path" : "SanitizeTransforms.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "extra_traces" : 
+              [
+                {
+                  "call_info" : 
+                  {
+                    "call_kind" : "PropagationWithTrace:Origin",
+                    "port" : "Argument(0)",
+                    "position" : 
+                    {
+                      "line" : 75,
+                      "path" : "SanitizeTransforms.java"
+                    }
+                  },
+                  "frame_type" : "sink",
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "TransformX"
+                  }
+                }
+              ],
+              "kind" : 
+              {
+                "base" : "SourceA",
+                "local" : "SanitizeTransform[SourceA]:TransformX"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceA:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 28,
+              "line" : 75,
+              "start" : 27
+            },
+            {
+              "end" : 33,
+              "line" : 76,
+              "start" : 32
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToXToSanitizeAtoBIssue:()V",
+  "position" : 
+  {
+    "line" : 73,
+    "path" : "SanitizeTransforms.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToXToSanitizeBToBNoIssue:()V",
+  "position" : 
+  {
+    "line" : 194,
+    "path" : "SanitizeTransforms.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAXSanitizeBToBNoIssue:()V",
+  "position" : 
+  {
+    "line" : 220,
+    "path" : "SanitizeTransforms.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeASinkB:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 105,
+        "path" : "SanitizeTransforms.java"
+      },
+      "rule" : 10,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 20,
+              "line" : 105,
+              "path" : "SanitizeTransforms.java",
+              "start" : 19
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeASinkB:(Ljava/lang/Object;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "distance" : 1,
+              "kind" : 
+              {
+                "base" : "SinkB",
+                "global" : "SanitizeTransform[SourceA]"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sinkB:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : false
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 34,
+              "line" : 104,
+              "path" : "SanitizeTransforms.java",
+              "start" : 16
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.taintWithTransformX:()Ljava/lang/Object;"
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "distance" : 1,
+              "kind" : 
+              {
+                "base" : "SourceA",
+                "global" : "TransformX"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceA:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : false
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAXToSanitizeABIssue:()V",
+  "position" : 
+  {
+    "line" : 103,
+    "path" : "SanitizeTransforms.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeAToYToZToB:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 181,
+        "path" : "SanitizeTransforms.java"
+      },
+      "rule" : 12,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 24,
+              "line" : 181,
+              "path" : "SanitizeTransforms.java",
+              "start" : 23
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeAToYToZToB:(Ljava/lang/Object;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "distance" : 1,
+              "kind" : 
+              {
+                "base" : "SinkB",
+                "global" : "SanitizeTransform[SourceA]:TransformY:TransformZ"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sinkB:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : false
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 35,
+              "line" : 180,
+              "path" : "SanitizeTransforms.java",
+              "start" : 16
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.taintWithTransformXY:()Ljava/lang/Object;"
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "distance" : 1,
+              "kind" : 
+              {
+                "base" : "SourceA",
+                "global" : "TransformY:TransformX"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceA:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : false
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAXYToSanitizeAYZBIssue:()V",
+  "position" : 
+  {
+    "line" : 179,
+    "path" : "SanitizeTransforms.java"
+  }
+}
+{
+  "freeze" : 
+  [
+    "propagation"
+  ],
+  "inline_as_getter" : "Argument(0)",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformX:(Ljava/lang/Object;)Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 26,
+    "path" : "SanitizeTransforms.java"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "PropagationWithTrace:Declaration"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : 
+              {
+                "base" : "LocalReturn",
+                "local" : "TransformX"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformX:(Ljava/lang/Object;)Ljava/lang/Object;",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "output_paths" : 
+              {
+                "" : 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformXSanitizeA:(Ljava/lang/Object;)Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 80,
+    "path" : "SanitizeTransforms.java"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "PropagationWithTrace:Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "line" : 81,
+              "path" : "SanitizeTransforms.java"
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : 
+              {
+                "base" : "LocalReturn",
+                "global" : "SanitizeTransform[SourceA]",
+                "local" : "TransformX"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformX:(Ljava/lang/Object;)Ljava/lang/Object;",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "output_paths" : 
+              {
+                "" : 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformXSanitizeASinkB:(Ljava/lang/Object;)V",
+  "position" : 
+  {
+    "line" : 108,
+    "path" : "SanitizeTransforms.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(0)",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 11,
+              "line" : 111,
+              "path" : "SanitizeTransforms.java",
+              "start" : 10
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "extra_traces" : 
+              [
+                {
+                  "call_info" : 
+                  {
+                    "call_kind" : "PropagationWithTrace:Origin",
+                    "port" : "Argument(0)",
+                    "position" : 
+                    {
+                      "line" : 109,
+                      "path" : "SanitizeTransforms.java"
+                    }
+                  },
+                  "frame_type" : "sink",
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "TransformX"
+                  }
+                }
+              ],
+              "kind" : 
+              {
+                "base" : "SinkB",
+                "local" : "TransformX:SanitizeTransform[SourceA]"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sinkB:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 27,
+              "line" : 109,
+              "start" : 27
+            },
+            {
+              "end" : 33,
+              "line" : 110,
+              "start" : 32
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformXSanitizeB:(Ljava/lang/Object;)Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 201,
+    "path" : "SanitizeTransforms.java"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "PropagationWithTrace:Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "line" : 202,
+              "path" : "SanitizeTransforms.java"
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : 
+              {
+                "base" : "LocalReturn",
+                "global" : "SanitizeTransform[SinkB]",
+                "local" : "TransformX"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformX:(Ljava/lang/Object;)Ljava/lang/Object;",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "output_paths" : 
+              {
+                "" : 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformXSinkB:(Ljava/lang/Object;)V",
+  "position" : 
+  {
+    "line" : 140,
+    "path" : "SanitizeTransforms.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(0)",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 11,
+              "line" : 142,
+              "path" : "SanitizeTransforms.java",
+              "start" : 10
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "extra_traces" : 
+              [
+                {
+                  "call_info" : 
+                  {
+                    "call_kind" : "PropagationWithTrace:Origin",
+                    "port" : "Argument(0)",
+                    "position" : 
+                    {
+                      "line" : 141,
+                      "path" : "SanitizeTransforms.java"
+                    }
+                  },
+                  "frame_type" : "sink",
+                  "kind" : 
+                  {
+                    "base" : "LocalReturn",
+                    "global" : "TransformX"
+                  }
+                }
+              ],
+              "kind" : 
+              {
+                "base" : "SinkB",
+                "local" : "TransformX"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sinkB:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 27,
+              "line" : 141,
+              "start" : 27
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "freeze" : 
+  [
+    "propagation"
+  ],
+  "inline_as_getter" : "Argument(0)",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformY:(Ljava/lang/Object;)Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 30,
+    "path" : "SanitizeTransforms.java"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "PropagationWithTrace:Declaration"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : 
+              {
+                "base" : "LocalReturn",
+                "local" : "TransformY"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformY:(Ljava/lang/Object;)Ljava/lang/Object;",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "output_paths" : 
+              {
+                "" : 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "freeze" : 
+  [
+    "propagation"
+  ],
+  "inline_as_getter" : "Argument(0)",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformZ:(Ljava/lang/Object;)Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 34,
+    "path" : "SanitizeTransforms.java"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "PropagationWithTrace:Declaration"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : 
+              {
+                "base" : "LocalReturn",
+                "local" : "TransformZ"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformZ:(Ljava/lang/Object;)Ljava/lang/Object;",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "output_paths" : 
+              {
+                "" : 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
   "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.<init>:()V",
   "position" : 
   {
@@ -2384,8 +5152,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "distance" : 1,
               "kind" : 
@@ -2405,8 +5173,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "distance" : 1,
               "extra_traces" : 
@@ -2485,8 +5253,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "distance" : 1,
               "extra_traces" : 
@@ -2527,8 +5295,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "distance" : 1,
               "extra_traces" : 
@@ -2916,8 +5684,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "distance" : 1,
               "kind" : "NewSource",
@@ -3082,8 +5850,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "kind" : "Sink",
               "origins" : 
@@ -3098,8 +5866,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "extra_traces" : 
               [
@@ -3181,8 +5949,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "extra_traces" : 
               [
@@ -3264,8 +6032,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "extra_traces" : 
               [
@@ -3305,8 +6073,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "extra_traces" : 
               [
@@ -3411,8 +6179,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "kind" : "Sink",
               "origins" : 
@@ -3463,8 +6231,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "kind" : "Source",
               "origins" : 
@@ -3479,8 +6247,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "extra_traces" : 
               [
@@ -3562,8 +6330,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "extra_traces" : 
               [
@@ -3603,8 +6371,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "extra_traces" : 
               [
@@ -3709,8 +6477,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "kind" : "Source",
               "origins" : 
@@ -3775,8 +6543,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "distance" : 1,
               "kind" : 
@@ -3816,8 +6584,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "extra_traces" : 
               [
@@ -3910,8 +6678,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "kind" : "Sink",
               "origins" : 
@@ -3999,8 +6767,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "kind" : "Sink",
               "origins" : 
@@ -4035,8 +6803,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "extra_traces" : 
               [
@@ -4139,8 +6907,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "distance" : 1,
               "kind" : 
@@ -4180,8 +6948,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "kind" : "Source",
               "origins" : 
@@ -4227,8 +6995,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "distance" : 1,
               "kind" : 
@@ -4268,8 +7036,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "kind" : "Source",
               "origins" : 
@@ -4361,8 +7129,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "kind" : "Source",
               "origins" : 
@@ -4443,8 +7211,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "kind" : "Source",
               "origins" : 
@@ -4500,8 +7268,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "kind" : "Sink",
               "origins" : 
@@ -4537,8 +7305,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "distance" : 1,
               "kind" : 
@@ -4588,8 +7356,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "kind" : "Sink",
               "origins" : 
@@ -4625,8 +7393,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "distance" : 1,
               "kind" : 
@@ -4687,8 +7455,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "kind" : "Sink",
               "origins" : 
@@ -4769,8 +7537,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "kind" : "Sink",
               "origins" : 
@@ -4863,8 +7631,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "distance" : 1,
               "kind" : 
@@ -4905,8 +7673,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "distance" : 1,
               "kind" : "Source",
@@ -4953,8 +7721,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "distance" : 1,
               "kind" : 
@@ -4995,8 +7763,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "distance" : 1,
               "kind" : 
@@ -5061,8 +7829,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "kind" : "Sink",
               "origins" : 
@@ -5097,8 +7865,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "kind" : "Source",
               "origins" : 
@@ -5167,8 +7935,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "kind" : "Sink",
               "origins" : 
@@ -5203,8 +7971,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "extra_traces" : 
               [
@@ -5306,8 +8074,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "kind" : "Sink",
               "origins" : 
@@ -5342,8 +8110,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "extra_traces" : 
               [
@@ -5434,8 +8202,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "distance" : 1,
               "kind" : "Sink",
@@ -5471,8 +8239,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "kind" : "Source",
               "origins" : 
@@ -5518,8 +8286,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "distance" : 1,
               "kind" : 
@@ -5559,8 +8327,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "kind" : "Source",
               "origins" : 
@@ -5624,8 +8392,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "kind" : "Sink",
               "origins" : 
@@ -5661,8 +8429,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "distance" : 1,
               "kind" : "Source",
@@ -5708,8 +8476,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "kind" : "Sink",
               "origins" : 
@@ -5745,8 +8513,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "distance" : 1,
               "kind" : 
@@ -5807,8 +8575,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "kind" : "Sink",
               "origins" : 
@@ -5843,8 +8611,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "extra_traces" : 
               [
@@ -6050,8 +8818,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "distance" : 1,
               "kind" : "Sink",
@@ -6088,8 +8856,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "distance" : 1,
               "kind" : "Source",
@@ -6149,8 +8917,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "distance" : 1,
               "kind" : "Sink",
@@ -6187,8 +8955,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "distance" : 1,
               "extra_traces" : 
@@ -6559,8 +9327,8 @@
             {
               "callee_interval" : 
               [
-                40,
-                41
+                42,
+                43
               ],
               "kind" : "NewSource",
               "origins" : 
