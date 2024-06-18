@@ -19,7 +19,8 @@ class EventLogger {
   static void log_event(
       const std::string& event,
       const std::string& message = "",
-      const int value = -1);
+      int value = -1,
+      int verbosity_level = 1);
 };
 
 } // namespace marianatrench

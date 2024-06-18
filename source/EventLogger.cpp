@@ -6,14 +6,18 @@
  */
 
 #include <mariana-trench/EventLogger.h>
+#include <mariana-trench/Log.h>
 
 namespace marianatrench {
 
 #ifndef MARIANA_TRENCH_FACEBOOK_BUILD
 void EventLogger::log_event(
-    const std::string& /* unused */,
-    const std::string& /* unused */,
-    const int /* unused */) {}
+    const std::string& event,
+    const std::string& message,
+    int value,
+    int verbosity_level) {
+  LOG(verbosity_level, "[{}]: Message: {}. Value: {}", event, message, value);
+}
 
 void EventLogger::init_event_logger(const Options* /* unused */) {}
 #endif

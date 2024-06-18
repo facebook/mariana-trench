@@ -231,7 +231,10 @@ std::vector<Model> JsonModelGenerator::emit_method_models_optimized(
         show(item.name()),
         method_models.size());
     EventLogger::log_event(
-        "model_generator_match", show(item.name()), method_models.size());
+        "model_generator_match",
+        show(item.name()),
+        method_models.size(),
+        /* verbosity_level */ 3);
 
     models.insert(
         models.end(),
