@@ -57,6 +57,6 @@ Here is an example of a transform rule in JSON:
 
 The flow will only be created if UriQueryParameter flows through IntentData and then into LaunchingFamilyComponent. It will not be created when UriQueryParameter flows into LaunchingFamilyComponent without passing through the IntentData transform.
 
-See [Models and Model Generators](./models.md#transforms) for how to model transforms.
+See [Models and Model Generators](./models.md#propagation-with-transforms) for how to model transforms.
 
 <MultiSourceSinkRule />
