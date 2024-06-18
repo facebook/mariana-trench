@@ -20,6 +20,7 @@
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/CallGraph.h>
+#include <mariana-trench/EventLogger.h>
 #include <mariana-trench/FeatureFactory.h>
 #include <mariana-trench/FeatureSet.h>
 #include <mariana-trench/JsonReaderWriter.h>
@@ -330,12 +331,13 @@ void process_shim_target(
       MethodSearch::Any);
 
   if (!dex_method) {
-    WARNING(
-        1,
-        "Could not resolve method for shim target: {} at instruction {} in caller: {}",
-        shim_target,
-        show(instruction),
-        caller->show());
+    EventLogger::log_event(
+        "shim_method_not_found",
+        fmt::format(
+            "Could not resolve method for shim target: {} at instruction {} in caller: {}",
+            shim_target,
+            show(instruction),
+            caller->show()));
     return;
   }
 
@@ -389,12 +391,13 @@ void process_shim_reflection(
       caller, instruction, shim_reflection.receiver_register(instruction));
 
   if (reflection_type == nullptr) {
-    WARNING(
-        1,
-        "Could not resolve receiver type for shim reflection target: {} at instruction: {} in caller: {}",
-        shim_reflection,
-        show(instruction),
-        caller->show());
+    EventLogger::log_event(
+        "shim_reflection_type_resolution_failure",
+        fmt::format(
+            "Could not resolve receiver type for shim reflection target: {} at instruction: {} in caller: {}",
+            shim_reflection,
+            show(instruction),
+            caller->show()));
     return;
   }
 
@@ -405,12 +408,13 @@ void process_shim_reflection(
       MethodSearch::Any);
 
   if (!dex_reflection_method) {
-    WARNING(
-        1,
-        "Could not resolve method for shim reflection target: {} at instruction {} in caller: {}",
-        shim_reflection,
-        show(instruction),
-        caller->show());
+    EventLogger::log_event(
+        "shim_reflection_method_not_found",
+        fmt::format(
+            "Could not resolve method for shim reflection target: {} at instruction {} in caller: {}",
+            shim_reflection,
+            show(instruction),
+            caller->show()));
     return;
   }
 
@@ -455,18 +459,23 @@ void process_shim_lifecycle(
       ? types.register_const_class_type(caller, instruction, receiver_register)
       : types.register_type(caller, instruction, receiver_register);
   if (receiver_type == nullptr) {
-    WARNING(
-        1,
-        "Could not resolve receiver type for shim lifecycle target: {} at instruction: {} in caller: {}",
-        shim_lifecycle,
-        show(instruction),
-        caller->show());
+    EventLogger::log_event(
+        "shim_lifecycle_receiver_type_resolution_failure",
+        fmt::format(
+            "Could not resolve receiver type for shim lifecycle target: {} at instruction: {} in caller: {}",
+            shim_lifecycle,
+            show(instruction),
+            caller->show()));
     return;
   }
 
   auto result = lifecycle_methods.methods().find(method_name);
   if (result == lifecycle_methods.methods().end()) {
-    WARNING(1, "Specified lifecycle method not found: `{}`", method_name);
+    // This indicates an error in the user configuration, e.g. incorrect method
+    // name, or not providing life-cycles JSON, etc.
+    EventLogger::log_event(
+        "shim_lifecycle_method_not_found",
+        fmt::format("Specified lifecycle method not found: `{}`", method_name));
     return;
   }
 
@@ -476,12 +485,13 @@ void process_shim_lifecycle(
   auto target_lifecycle_methods = result->second.get_methods_for_type(
       receiver_type, local_extends, class_hierarchies);
   if (target_lifecycle_methods.size() == 0) {
-    WARNING(
-        1,
-        "Could not resolve any method for shim lifecycle target: {} at instruction: {} in caller: {}",
-        shim_lifecycle,
-        show(instruction),
-        caller->show());
+    EventLogger::log_event(
+        "shim_lifecycle_target_method_not_found",
+        fmt::format(
+            "Could not resolve any method for shim lifecycle target: {} at instruction: {} in caller: {}",
+            shim_lifecycle,
+            show(instruction),
+            caller->show()));
     return;
   } else if (
       target_lifecycle_methods.size() >= heuristics.join_override_threshold()) {
@@ -489,15 +499,16 @@ void process_shim_lifecycle(
     // simulates the joining the models of these as if they were virtual
     // overrides. Besides, if there is a large number of overrides, there will
     // likely be many false positives as well.
-    WARNING(
-        1,
-        "Shim lifecycle target: {} resolved to {} methods at instruction: {} in caller: {} "
-        "which exceeds the join override threshold of {}. Shim not created.",
-        method_name,
-        target_lifecycle_methods.size(),
-        show(instruction),
-        caller->show(),
-        heuristics.join_override_threshold());
+    EventLogger::log_event(
+        "shim_lifecycle_target_too_many_overrides",
+        fmt::format(
+            "Shim lifecycle target: {} resolved to {} methods at instruction: {} in caller: {} "
+            "which exceeds the join override threshold of {}. Shim not created.",
+            method_name,
+            target_lifecycle_methods.size(),
+            show(instruction),
+            caller->show(),
+            heuristics.join_override_threshold()));
     return;
   }
 
