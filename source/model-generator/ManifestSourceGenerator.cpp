@@ -89,11 +89,21 @@ std::vector<Model> ManifestSourceGenerator::emit_method_models(
         context_.options->heuristics());
     models.push_back(model);
 
-    // Mark all callees of lifecycle wrapper as exported
-    for (const auto& call_target :
-         context_.call_graph->callees(lifecycle_method)) {
-      const auto* callee = call_target.resolved_base_callee();
-      mt_assert(callee != nullptr);
+    // Mark all public methods in the class as exported.
+    for (const auto* dex_callee : dex_klass->get_all_methods()) {
+      if (dex_callee == nullptr) {
+        continue;
+      }
+
+      if (!(dex_callee->get_access() & DexAccessFlags::ACC_PUBLIC)) {
+        continue;
+      }
+
+      const auto* callee = methods.get(dex_callee);
+      if (callee == nullptr) {
+        continue;
+      }
+
       Model model(callee, context_);
       model.add_call_effect_source(
           AccessPath(Root(Root::Kind::CallEffectExploitability)),
