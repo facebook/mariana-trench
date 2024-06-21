@@ -1042,6 +1042,57 @@ void check_call_effect_flows(
   }
 }
 
+void check_artificial_call_effect_flows(
+    MethodContext* context,
+    const InstructionAliasResults& aliasing,
+    const IRInstruction* instruction) {
+  const auto& artificial_callees =
+      context->call_graph.artificial_callees(context->method(), instruction);
+
+  const auto* caller_position = context->positions.get(context->method());
+
+  const auto& caller_call_effect_sources =
+      context->previous_model.call_effect_sources();
+
+  for (const auto& artificial_callee : artificial_callees) {
+    auto callee = get_callee(context, artificial_callee, aliasing.position());
+    const auto& callee_call_effect_sinks = callee.model.call_effect_sinks();
+
+    if (callee_call_effect_sinks.is_bottom()) {
+      continue;
+    }
+
+    for (const auto& [port, sinks] : callee_call_effect_sinks.elements()) {
+      const auto& sources = caller_call_effect_sources.read(port);
+      if (sources.is_bottom()) {
+        if (port.root().is_call_chain_exploitability()) {
+          // If an exploitability rule cannot be fulfilled, pass it to backwards
+          // analysis to propagate it.
+          context->partially_fulfilled_exploitability_state
+              .add_source_as_transform_sinks(instruction, sinks);
+        }
+        continue;
+      }
+
+      for (const auto& [_, sources] : sources.elements()) {
+        check_sources_sinks_flows(
+            context,
+            instruction,
+            // Add the position of the caller to call effect sources.
+            sources.attach_position(caller_position),
+            sinks,
+            callee.position,
+            callee.call_index,
+            /* sink_index */ callee.resolved_base_method
+                ? callee.resolved_base_method->show()
+                : std::string(k_unresolved_callee),
+            /* extra features */ {},
+            /* fulfilled partial sinks */ nullptr);
+      }
+    }
+  }
+}
+
 } // namespace
 
 bool ForwardTaintTransfer::analyze_invoke(
@@ -1131,6 +1182,7 @@ bool ForwardTaintTransfer::analyze_invoke(
 
   check_artificial_calls_flows(
       context, aliasing, instruction, environment, source_constant_arguments);
+  check_artificial_call_effect_flows(context, aliasing, instruction);
 
   return false;
 }
