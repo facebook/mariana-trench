@@ -1279,6 +1279,7 @@ bool ForwardTaintTransfer::analyze_iput(
   }
 
   check_artificial_calls_flows(context, aliasing, instruction, environment);
+  check_artificial_call_effect_flows(context, aliasing, instruction);
 
   return false;
 }
