@@ -108,12 +108,10 @@ def _copy_package(build_root: Path, output_path: Path) -> None:
     output_path /= "dist"
     output_path.mkdir(exist_ok=True)
     shutil.move(
-        # pyre-fixme[6]: Expected `str` for 1st param but got `Path`.
         wheel,
         output_path
         / wheel.name.replace("-any.whl", f"-{_distribution_platform()}.whl"),
     )
-    # pyre-fixme[6]: Expected `str` for 1st param but got `Path`.
     shutil.move(source_distribution, output_path / source_distribution.name)
 
 
