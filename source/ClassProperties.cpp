@@ -227,7 +227,7 @@ bool ClassProperties::is_dfa_public(std::string_view class_name) const {
 
 FeatureMayAlwaysSet ClassProperties::issue_features(
     const Method* method,
-    std::unordered_set<const Kind*> kinds,
+    const std::unordered_set<const Kind*>& kinds,
     const Heuristics& heuristics) const {
   FeatureSet features;
   auto clazz = method->get_class()->str();

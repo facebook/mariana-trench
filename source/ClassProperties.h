@@ -61,7 +61,7 @@ class ClassProperties final {
   /* A set of features to add on issues found in the given method. */
   FeatureMayAlwaysSet issue_features(
       const Method* method,
-      std::unordered_set<const Kind*> kinds,
+      const std::unordered_set<const Kind*>& kinds,
       const Heuristics& heuristics) const;
 
   static DexClass* MT_NULLABLE get_service_from_stub(const DexClass* clazz);
