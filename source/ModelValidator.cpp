@@ -60,10 +60,12 @@ std::unique_ptr<ModelValidator> make_validator(
   switch (validator_type) {
     case ModelValidationType::EXPECT_ISSUE:
     case ModelValidationType::EXPECT_ISSUES:
-      return std::make_unique<ExpectIssue>(annotation_elements);
+      return std::make_unique<ExpectIssue>(
+          ExpectIssue::from_annotation(annotation_elements));
     case ModelValidationType::EXPECT_NO_ISSUE:
     case ModelValidationType::EXPECT_NO_ISSUES:
-      return std::make_unique<ExpectNoIssue>(annotation_elements);
+      return std::make_unique<ExpectNoIssue>(
+          ExpectNoIssue::from_annotation(annotation_elements));
       break;
   }
 }
@@ -115,26 +117,30 @@ std::vector<std::unique_ptr<ModelValidator>> ModelValidator::from_annotation(
   return result;
 }
 
-ExpectIssue::ExpectIssue(const EncodedAnnotations& annotation_elements)
-    : code_(-1) {
+ExpectIssue ExpectIssue::from_annotation(
+    const EncodedAnnotations& annotation_elements) {
+  int code = -1;
+  std::set<std::string> source_kinds;
+  std::set<std::string> sink_kinds;
+
   for (const auto& annotation_element : annotation_elements) {
     const auto* annotation_key = annotation_element.string;
     if (annotation_key->str() == "code") {
       mt_assert(annotation_element.encoded_value->is_evtype_primitive());
-      code_ = annotation_element.encoded_value->value();
+      code = annotation_element.encoded_value->value();
     } else if (annotation_key->str() == "sourceKinds") {
       mt_assert(annotation_element.encoded_value->evtype() == DEVT_ARRAY);
-      std::vector<const DexString*> source_kinds;
-      annotation_element.encoded_value->gather_strings(source_kinds);
-      for (const auto* dex_string : source_kinds) {
-        source_kinds_.insert(dex_string->str_copy());
+      std::vector<const DexString*> source_kinds_dexstring;
+      annotation_element.encoded_value->gather_strings(source_kinds_dexstring);
+      for (const auto* dex_string : source_kinds_dexstring) {
+        source_kinds.insert(dex_string->str_copy());
       }
     } else if (annotation_key->str() == "sinkKinds") {
       mt_assert(annotation_element.encoded_value->evtype() == DEVT_ARRAY);
-      std::vector<const DexString*> sink_kinds;
-      annotation_element.encoded_value->gather_strings(sink_kinds);
-      for (const auto* dex_string : sink_kinds) {
-        sink_kinds_.insert(dex_string->str_copy());
+      std::vector<const DexString*> sink_kinds_dexstring;
+      annotation_element.encoded_value->gather_strings(sink_kinds_dexstring);
+      for (const auto* dex_string : sink_kinds_dexstring) {
+        sink_kinds.insert(dex_string->str_copy());
       }
     } else {
       throw std::runtime_error(fmt::format(
@@ -143,8 +149,7 @@ ExpectIssue::ExpectIssue(const EncodedAnnotations& annotation_elements)
     }
   }
 
-  // "Code" must have been specified.
-  mt_assert(code_ != -1);
+  return ExpectIssue(code, std::move(source_kinds), std::move(sink_kinds));
 }
 
 namespace {
@@ -190,19 +195,22 @@ std::string ExpectIssue::show() const {
       boost::algorithm::join(sink_kinds_, ","));
 }
 
-ExpectNoIssue::ExpectNoIssue(const EncodedAnnotations& annotation_elements)
-    : code_(-1) {
+ExpectNoIssue ExpectNoIssue::from_annotation(
+    const EncodedAnnotations& annotation_elements) {
+  int code = -1;
   for (const auto& annotation_element : annotation_elements) {
     const auto* annotation_key = annotation_element.string;
     if (annotation_key->str() == "code") {
       mt_assert(annotation_element.encoded_value->is_evtype_primitive());
-      code_ = annotation_element.encoded_value->value();
+      code = annotation_element.encoded_value->value();
     } else {
       throw std::runtime_error(fmt::format(
           "Unexpected annotation key: {} in @ExpectNoIssue",
           ::show(annotation_key)));
     }
   }
+
+  return ExpectNoIssue(code);
 }
 
 bool ExpectNoIssue::validate(const Model& model) const {

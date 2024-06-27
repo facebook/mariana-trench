@@ -29,7 +29,7 @@ namespace marianatrench {
 class ModelValidator {
  public:
   ModelValidator() = default;
-  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS_VIRTUAL_DESTRUCTOR(ModelValidator)
+  MOVE_CONSTRUCTOR_ONLY_VIRTUAL_DESTRUCTOR(ModelValidator)
 
   static std::vector<std::unique_ptr<ModelValidator>> from_annotation(
       const DexAnnotation* annotation);
@@ -41,17 +41,21 @@ class ModelValidator {
 
 class ExpectIssue final : public ModelValidator {
  public:
-  explicit ExpectIssue(const EncodedAnnotations& annotation_elements);
-
   explicit ExpectIssue(
       int code,
       std::set<std::string> source_kinds,
       std::set<std::string> sink_kinds)
       : code_(code),
         source_kinds_(std::move(source_kinds)),
-        sink_kinds_(std::move(sink_kinds)) {}
+        sink_kinds_(std::move(sink_kinds)) {
+    // "Code" must have been specified.
+    mt_assert(code != -1);
+  }
 
-  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ExpectIssue)
+  MOVE_CONSTRUCTOR_ONLY(ExpectIssue)
+
+  static ExpectIssue from_annotation(
+      const EncodedAnnotations& annotation_elements);
 
   bool validate(const Model& model) const override;
 
@@ -67,11 +71,12 @@ class ExpectIssue final : public ModelValidator {
 
 class ExpectNoIssue final : public ModelValidator {
  public:
-  explicit ExpectNoIssue(const EncodedAnnotations& annotation_elements);
-
   explicit ExpectNoIssue(int code) : code_(code) {}
 
-  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ExpectNoIssue)
+  MOVE_CONSTRUCTOR_ONLY(ExpectNoIssue)
+
+  static ExpectNoIssue from_annotation(
+      const EncodedAnnotations& annotation_elements);
 
   bool validate(const Model& model) const override;
 

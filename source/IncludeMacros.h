@@ -130,6 +130,13 @@
   Class& operator=(Class&&) = delete;      \
   ~Class() = default;
 
+#define MOVE_CONSTRUCTOR_ONLY_VIRTUAL_DESTRUCTOR(Class) \
+  Class(const Class&) = delete;                         \
+  Class(Class&&) = default;                             \
+  Class& operator=(const Class&) = delete;              \
+  Class& operator=(Class&&) = delete;                   \
+  virtual ~Class() = default;
+
 #define INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Class) \
   Class(const Class&) = default;                                 \
   Class(Class&&) = default;                                      \
@@ -143,10 +150,3 @@
   Class& operator=(const Class&) = delete;              \
   Class& operator=(Class&&) = delete;                   \
   ~Class() = default;
-
-#define DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS_VIRTUAL_DESTRUCTOR(Class) \
-  Class(const Class&) = delete;                                            \
-  Class(Class&&) = delete;                                                 \
-  Class& operator=(const Class&) = delete;                                 \
-  Class& operator=(Class&&) = delete;                                      \
-  virtual ~Class() = default;
