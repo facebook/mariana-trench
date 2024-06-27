@@ -11,6 +11,7 @@
 #include <mariana-trench/KindFactory.h>
 #include <mariana-trench/SourceAsTransform.h>
 #include <mariana-trench/TransformList.h>
+#include <mariana-trench/TransformsFactory.h>
 
 namespace marianatrench {
 
@@ -33,27 +34,15 @@ TransformList TransformList::reverse_of(const TransformList* transforms) {
 
 TransformList TransformList::discard_sanitizers(
     const TransformList* transforms) {
-  List no_sanitizers;
+  List no_sanitizers{};
   for (const auto* transform : *transforms) {
     if (!transform->is<SanitizeTransform>()) {
       no_sanitizers.push_back(transform);
     }
   }
+
+  // No canonicalization needed because we removed all sanitizers
   return TransformList(std::move(no_sanitizers));
-}
-
-// TODO: T189558338 Handle cases where multiple, continuous transforms are
-// present based on the canonicalization
-bool TransformList::sanitizes(const Kind* kind, ApplicationDirection direction)
-    const {
-  const auto* maybe_sanitizer = direction == ApplicationDirection::Forward
-      ? transforms_.front()
-      : transforms_.back();
-
-  if (const auto* sanitizer = maybe_sanitizer->as<SanitizeTransform>()) {
-    return kind == sanitizer->kind();
-  }
-  return false;
 }
 
 bool TransformList::has_source_as_transform() const {
@@ -82,7 +71,7 @@ std::string TransformList::to_trace_string() const {
 TransformList TransformList::from_trace_string(
     const std::string& transforms,
     Context& context) {
-  std::vector<const Transform*> result;
+  List result{};
 
   auto transform_string = transforms;
   typedef boost::algorithm::split_iterator<std::string::iterator>
@@ -95,7 +84,8 @@ TransformList TransformList::from_trace_string(
     result.push_back(Transform::from_trace_string(transform, context));
   }
 
-  return TransformList(result);
+  TransformList raw_transforms(std::move(result));
+  return canonicalize(&raw_transforms);
 }
 
 TransformList TransformList::from_json(
@@ -110,12 +100,53 @@ TransformList TransformList::from_json(
     transforms.push_back(Transform::from_json(transform, context));
   }
 
-  return TransformList(std::move(transforms));
+  TransformList raw_transforms(std::move(transforms));
+  return canonicalize(&raw_transforms);
 }
 
 TransformList TransformList::from_kind(const Kind* kind, Context& context) {
   return TransformList(
       List{context.transforms_factory->create_source_as_transform(kind)});
+}
+
+TransformList TransformList::concat(
+    const TransformList* left,
+    const TransformList* right) {
+  List transforms{};
+  transforms.reserve(left->size() + right->size());
+  transforms.insert(transforms.end(), left->begin(), left->end());
+  transforms.insert(transforms.end(), right->begin(), right->end());
+
+  return TransformList(std::move(transforms));
+}
+
+TransformList TransformList::canonicalize(const TransformList* transforms) {
+  List canonicalized{};
+  std::set<const SanitizeTransform*, SanitizeTransformCompare> sanitizers;
+
+  for (const auto* transform : *transforms) {
+    if (const auto* santize_transform = transform->as<SanitizeTransform>()) {
+      sanitizers.insert(santize_transform);
+      continue;
+    } else {
+      if (!sanitizers.empty()) {
+        // We have a non-sanitizer transform after sanitizers, so we need to add
+        // the sanitizers before this one and clear them out for next iteration
+        canonicalized.insert(
+            canonicalized.end(), sanitizers.begin(), sanitizers.end());
+        sanitizers.clear();
+      }
+      canonicalized.push_back(transform);
+    }
+  }
+
+  // Add the remaining sanitizers at the end
+  if (!sanitizers.empty()) {
+    canonicalized.insert(
+        canonicalized.end(), sanitizers.begin(), sanitizers.end());
+  }
+
+  return TransformList(std::move(canonicalized));
 }
 
 } // namespace marianatrench

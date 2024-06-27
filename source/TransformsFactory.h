@@ -56,6 +56,8 @@ class TransformsFactory final {
       TransformList::ConstIterator begin,
       TransformList::ConstIterator end) const;
 
+  const TransformList* create(std::vector<const Transform*> transforms) const;
+
   const TransformList* concat(
       const TransformList* MT_NULLABLE local_transforms,
       const TransformList* MT_NULLABLE global_transforms) const;
@@ -72,6 +74,9 @@ class TransformsFactory final {
 
   const TransformList* MT_NULLABLE
   discard_sanitizers(const TransformList* MT_NULLABLE transforms) const;
+
+  const TransformList* MT_NULLABLE
+  canonicalize(const TransformList* MT_NULLABLE transforms) const;
 
  private:
   UniquePointerFactory<std::string, NamedTransform> transform_;

@@ -188,6 +188,25 @@ Taint Taint::apply_transform(
   return result;
 }
 
+Taint Taint::add_sanitize_transform(
+    const Sanitizer& sanitizer,
+    const KindFactory& kind_factory,
+    const TransformsFactory& transforms_factory) const {
+  Taint result{};
+
+  for (const auto& [_, local_taint] : map_.bindings()) {
+    auto new_callee_frames = local_taint.add_sanitize_transform(
+        sanitizer, kind_factory, transforms_factory);
+    if (new_callee_frames.is_bottom()) {
+      continue;
+    }
+
+    result.add(new_callee_frames);
+  }
+
+  return result;
+}
+
 Taint Taint::update_with_propagation_trace(
     const CallInfo& propagation_call_info,
     const Frame& propagation_frame) const {

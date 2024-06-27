@@ -953,11 +953,8 @@ void Model::add_inferred_propagations(
     // Apply the kind-specific sanitizer
     if (sanitizer.sanitizer_kind() == SanitizerKind::Propagations &&
         !sanitizer.kinds().is_bottom()) {
-      local_taint.transform_frames(
-          [&sanitizer, &kind_factory, &transforms_factory](const Frame& frame) {
-            return frame.add_sanitize_transform(
-                sanitizer, kind_factory, transforms_factory);
-          });
+      local_taint = local_taint.add_sanitize_transform(
+          sanitizer, kind_factory, transforms_factory);
     }
   }
 

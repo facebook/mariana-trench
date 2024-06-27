@@ -150,10 +150,22 @@ UsedKinds UsedKinds::from_rules(
 
 bool UsedKinds::should_keep(const TransformKind* transform_kind) const {
   const auto* base_kind = transform_kind->base_kind();
+
+  const auto* transforms_to_check =
+      transforms_factory_.discard_sanitizers(transforms_factory_.concat(
+          transform_kind->local_transforms(),
+          transform_kind->global_transforms()));
+
+  // Since TransformFactory::concat() cannot return nullptr, the only case where
+  // TransformFactory::discard_sanitizers() can return nullptr is when the input
+  // transforms only contains sanitizers, and under this case we do not want to
+  // drop the them.
+  if (transforms_to_check == nullptr) {
+    return true;
+  }
+
   if (base_kind->is<PropagationKind>()) {
-    return propagation_kind_to_transforms_.find(transforms_factory_.concat(
-               transform_kind->local_transforms(),
-               transform_kind->global_transforms())) !=
+    return propagation_kind_to_transforms_.find(transforms_to_check) !=
         propagation_kind_to_transforms_.end();
   }
 
@@ -162,9 +174,7 @@ bool UsedKinds::should_keep(const TransformKind* transform_kind) const {
     return false;
   }
 
-  return valid_transforms->second.find(transforms_factory_.concat(
-             transform_kind->local_transforms(),
-             transform_kind->global_transforms())) !=
+  return valid_transforms->second.find(transforms_to_check) !=
       valid_transforms->second.end();
 }
 

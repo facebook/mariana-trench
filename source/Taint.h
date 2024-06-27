@@ -221,6 +221,11 @@ class Taint final : public sparta::AbstractDomain<Taint> {
       const UsedKinds& used_kinds,
       const TransformList* local_transforms) const;
 
+  Taint add_sanitize_transform(
+      const Sanitizer& sanitizer,
+      const KindFactory& kind_factory,
+      const TransformsFactory& transforms_factory) const;
+
   void update_with_extra_trace(const Taint& source_taint, FrameType frame_type);
 
   static Taint from_json(const Json::Value& taint_json, Context& context);

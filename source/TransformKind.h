@@ -10,10 +10,10 @@
 #include <mariana-trench/Context.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Kind.h>
-#include <mariana-trench/TransformList.h>
-#include <mariana-trench/TransformsFactory.h>
 
 namespace marianatrench {
+
+class TransformList;
 
 /**
  * Used to represent the transformations applied to the base_kind.
@@ -22,7 +22,8 @@ namespace marianatrench {
  *   - For ParameterSources: NamedKind
  *   - For Sinks: NamedKind, PartialKind, TriggeredPartialKind
  *   - For Propagations: PropagationKind
- * `global_transforms` and `local_transforms` store ordered list of `NamedKind`
+ * `global_transforms` and `local_transforms` store ordered list of `Transform`,
+ * `SanitizeTransform`, or `SourceAsTransform`
  */
 class TransformKind final : public Kind {
  public:

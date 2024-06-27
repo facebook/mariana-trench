@@ -425,6 +425,53 @@ KindFrames KindFrames::propagate(
   return KindFrames(kind, propagated_frames);
 }
 
+KindFrames KindFrames::add_sanitize_transform(
+    const Sanitizer& sanitizer,
+    const KindFactory& kind_factory,
+    const TransformsFactory& transforms_factory) const {
+  mt_assert(
+      sanitizer.sanitizer_kind() == SanitizerKind::Propagations &&
+      sanitizer.kinds().is_value());
+
+  std::vector<const Transform*> local_transforms_vec;
+  local_transforms_vec.reserve(sanitizer.kinds().size());
+  for (const auto* sanitize_kind : sanitizer.kinds().elements()) {
+    local_transforms_vec.push_back(
+        transforms_factory.create_sanitize_transform(sanitize_kind));
+  }
+
+  const TransformList* local_transforms =
+      transforms_factory.create(std::move(local_transforms_vec));
+  const TransformList* global_transforms = nullptr;
+  const Kind* base_kind = kind_;
+
+  mt_assert(base_kind != nullptr);
+
+  // Check and see if we can drop some taints here
+  if (local_transforms
+          ->sanitizes<TransformList::ApplicationDirection::Backward>(
+              base_kind)) {
+    return KindFrames::bottom();
+  }
+
+  // Need a special case for TransformKind, since we need to append the
+  // local_transforms to the existing local transforms.
+  if (const auto* transform_kind = base_kind->as<TransformKind>()) {
+    local_transforms = transforms_factory.concat(
+        local_transforms, transform_kind->local_transforms());
+    global_transforms = transform_kind->global_transforms();
+    base_kind = transform_kind->base_kind();
+  }
+
+  local_transforms = transforms_factory.canonicalize(local_transforms);
+  mt_assert(local_transforms != nullptr);
+
+  const auto* new_kind = kind_factory.transform_kind(
+      base_kind, local_transforms, global_transforms);
+
+  return KindFrames::with_kind(new_kind);
+}
+
 void KindFrames::filter_invalid_frames(
     const std::function<bool(const Kind*)>& is_valid) {
   frames_.transform([&is_valid](Frame* frame) -> void {

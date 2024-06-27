@@ -305,6 +305,11 @@ class LocalTaint final : public sparta::AbstractDomain<LocalTaint> {
       const UsedKinds& used_kinds,
       const TransformList* local_transforms) const;
 
+  LocalTaint add_sanitize_transform(
+      const Sanitizer& sanitizer,
+      const KindFactory& kind_factory,
+      const TransformsFactory& transforms_factory) const;
+
   void update_maximum_collapse_depth(CollapseDepth collapse_depth);
 
   std::vector<LocalTaint> update_non_declaration_positions(

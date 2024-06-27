@@ -265,4 +265,159 @@ public class SanitizeTransforms {
     Object o1 = sourceASanitizeBTransformX();
     sinkB(o1);
   }
+
+  /* ... -> Loop of sanitizers | transforms -> ... */
+
+  static void testAToUnboundedLoopToB() {
+    Object o1 = sourceA();
+
+    while (true) {
+      int n = new java.util.Random().nextInt(10);
+
+      switch (n) {
+        case 0:
+          o1 = sanitizeSourceA(o1);
+          continue;
+        case 1:
+          o1 = transformX(o1);
+          continue;
+        default:
+          sinkB(o1);
+          return;
+      }
+    }
+  }
+
+  /* ... -> sink sanitizer -> source sanitizer ->  ... */
+
+  static void testAToSanitizeBToSanitizeAToBNoIssue() {
+    Object o1 = sourceA();
+    Object o2 = sanitizeSinkB(o1);
+    Object o3 = sanitizeSourceA(o2);
+    sinkB(o3);
+  }
+
+  /* ... -> sink sanitizer -> source sanitizer -> transforms ->  ... */
+
+  static void testAToSanitizeBToSanitizeAToXToBNoIssue() {
+    Object o1 = sourceA();
+    Object o2 = sanitizeSinkB(o1);
+    Object o3 = sanitizeSourceA(o2);
+    Object o4 = transformX(o3);
+    sinkB(o4);
+  }
+
+  /* ... -> transforms -> sink sanitizer -> source sanitizer ->  ... */
+
+  static void testAToXToSanitizeBToSanitizeAToBNoIssue() {
+    Object o1 = sourceA();
+    Object o2 = transformX(o1);
+    Object o3 = sanitizeSinkB(o2);
+    Object o4 = sanitizeSourceA(o3);
+    sinkB(o4);
+  }
+
+  static void testAToXSanitizeBToSanitizeAToBNoIssue() {
+    Object o1 = sourceA();
+    Object o2 = transformXSanitizeB(o1);
+    Object o3 = sanitizeSourceA(o2);
+    sinkB(o3);
+  }
+
+  static Object sanitizeBSanitizeB(Object o) {
+    Object o1 = sanitizeSinkB(o);
+    Object o2 = sanitizeSinkB(o1);
+    return o2;
+  }
+
+  static void testAToSanitizeBSanitizeBToSanitizeAToXToBNoIssue() {
+    Object o1 = sourceA();
+    Object o2 = sanitizeBSanitizeB(o1);
+    Object o3 = sanitizeSourceA(o2);
+    Object o4 = transformX(o3);
+    sinkB(o4);
+  }
+
+  /* sanitizer method that also has other transforms */
+
+  // TODO: T189558338 Figure out the desirable order of sanitizers
+  // currently the sanitizers are always added to the front of transformlist
+  // so the model would be sanitize[A] -> transform[X] -> localreturn
+  static Object transformXwithSanitizeA(Object o) {
+    Object o1 = transformX(o);
+    return o1;
+  }
+
+  // Should have same model as transformXwithSanitizeA
+  static Object transformXSanitizeAwithSanitizeA(Object o) {
+    Object o1 = sanitizeSourceA(o);
+    Object o2 = transformX(o1);
+    return o2;
+  }
+
+  static void testATotransformXwithSanitizeAToBNoIssue() {
+    Object o1 = sourceA();
+    Object o2 = transformXwithSanitizeA(o1);
+    sinkB(o2);
+  }
+
+  static void testATotransformXSanitizeAwithSanitizeAToBNoIssue() {
+    Object o1 = sourceA();
+    Object o2 = transformXSanitizeAwithSanitizeA(o1);
+    sinkB(o2);
+  }
+
+  /* Test ordering in UI traces */
+
+  static Object taintWithTransformY() {
+    Object o1 = sourceA();
+    Object o2 = transformY(o1);
+    return o2;
+  }
+
+  static Object taintWithYSanitizeB() {
+    Object o1 = taintWithTransformY();
+    Object o2 = sanitizeSinkB(o1);
+    return o2;
+  }
+
+  static Object taintWithYSanitizeBSanitizeA() {
+    Object o1 = taintWithYSanitizeB();
+    Object o2 = sanitizeSourceA(o1);
+    return o2;
+  }
+
+  static Object taintWithYSanitizeBSanitizeAToZ() {
+    Object o1 = taintWithYSanitizeBSanitizeA();
+    Object o2 = transformZ(o1);
+    return o2;
+  }
+
+  static void testAToYToSantizeBToSanitizeAToZToBIssue() {
+    Object o1 = taintWithYSanitizeBSanitizeAToZ();
+    sinkB(o1);
+  }
+
+  static Object taintWithYSanitizeA() {
+    Object o1 = taintWithTransformY();
+    Object o2 = sanitizeSourceA(o1);
+    return o2;
+  }
+
+  static Object taintWithYSanitizeASanitizeB() {
+    Object o1 = taintWithYSanitizeA();
+    Object o2 = sanitizeSinkB(o1);
+    return o2;
+  }
+
+  static Object taintWithYSanitizeASanitizeBToZ() {
+    Object o1 = taintWithYSanitizeASanitizeB();
+    Object o2 = transformZ(o1);
+    return o2;
+  }
+
+  static void testAToYToSantizeAToSanitizeBToZToBIssue() {
+    Object o1 = taintWithYSanitizeASanitizeBToZ();
+    sinkB(o1);
+  }
 }

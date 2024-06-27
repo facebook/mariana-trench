@@ -188,14 +188,15 @@ const Kind* MT_NULLABLE canonicalize_sink_kind(
     const auto* sink_base_kind = sink_kind->discard_transforms();
 
     // Check if we can sanitize the source
-    if (all_transforms->sanitizes(
-            source_base_kind, TransformList::ApplicationDirection::Forward)) {
+    if (all_transforms->sanitizes<TransformList::ApplicationDirection::Forward>(
+            source_base_kind)) {
       return nullptr;
     }
 
     // Check if we can sanitize the sink
-    if (all_transforms->sanitizes(
-            sink_base_kind, TransformList::ApplicationDirection::Backward)) {
+    if (all_transforms
+            ->sanitizes<TransformList::ApplicationDirection::Backward>(
+                sink_base_kind)) {
       return nullptr;
     }
 

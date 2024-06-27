@@ -441,6 +441,36 @@ LocalTaint LocalTaint::apply_transform(
       locally_inferred_features_);
 }
 
+LocalTaint LocalTaint::add_sanitize_transform(
+    const Sanitizer& sanitizer,
+    const KindFactory& kind_factory,
+    const TransformsFactory& transforms_factory) const {
+  FramesByKind new_frames;
+  this->visit_kind_frames(
+      [&new_frames, &sanitizer, &kind_factory, &transforms_factory](
+          const KindFrames& kind_frames) {
+        auto new_kind_frames = kind_frames.add_sanitize_transform(
+            sanitizer, kind_factory, transforms_factory);
+        if (!kind_frames.is_bottom()) {
+          new_frames.update(
+              new_kind_frames.kind(),
+              [&new_kind_frames](const KindFrames& old_frames) {
+                return std::move(new_kind_frames);
+              });
+        }
+      });
+
+  if (new_frames.is_bottom()) {
+    return LocalTaint::bottom();
+  }
+
+  return LocalTaint(
+      call_info_,
+      std::move(new_frames),
+      local_positions_,
+      locally_inferred_features_);
+}
+
 void LocalTaint::update_maximum_collapse_depth(CollapseDepth collapse_depth) {
   if (!call_kind().is_propagation()) {
     return;

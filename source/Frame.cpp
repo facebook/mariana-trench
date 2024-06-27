@@ -205,8 +205,8 @@ Frame Frame::apply_transform(
   const TransformList* global_transforms = nullptr;
 
   // See if we can drop some taint here
-  if (local_transforms->sanitizes(
-          kind_, TransformList::ApplicationDirection::Backward)) {
+  if (local_transforms
+          ->sanitizes<TransformList::ApplicationDirection::Backward>(kind_)) {
     return Frame::bottom();
   }
 
@@ -215,6 +215,9 @@ Frame Frame::apply_transform(
     // local_transforms.
     local_transforms = transforms_factory.concat(
         local_transforms, transform_kind->local_transforms());
+    local_transforms = transforms_factory.canonicalize(local_transforms);
+    mt_assert(local_transforms != nullptr);
+
     global_transforms = transform_kind->global_transforms();
     base_kind = transform_kind->base_kind();
   } else if (kind_->is<PropagationKind>()) {
@@ -229,48 +232,9 @@ Frame Frame::apply_transform(
   const auto* new_kind = kind_factory.transform_kind(
       base_kind, local_transforms, global_transforms);
 
-  if (!used_kinds.should_keep(new_kind) &&
-      !(TransformList::has_sanitizers(local_transforms)) &&
-      !(TransformList::has_sanitizers(global_transforms))) {
+  if (!used_kinds.should_keep(new_kind)) {
     return Frame::bottom();
   }
-
-  Frame new_frame{*this};
-  new_frame.kind_ = new_kind;
-  return new_frame;
-}
-
-Frame Frame::add_sanitize_transform(
-    const Sanitizer& sanitizer,
-    const KindFactory& kind_factory,
-    const TransformsFactory& transforms_factory) const {
-  mt_assert(
-      sanitizer.sanitizer_kind() == SanitizerKind::Propagations &&
-      sanitizer.kinds().is_value());
-
-  std::vector<const Transform*> local_transforms_vec;
-  local_transforms_vec.reserve(sanitizer.kinds().size());
-  for (const auto* sanitize_kind : sanitizer.kinds().elements()) {
-    local_transforms_vec.push_back(
-        transforms_factory.create_sanitize_transform(sanitize_kind));
-  }
-
-  const TransformList* local_transforms = transforms_factory.create(
-      local_transforms_vec.begin(), local_transforms_vec.end());
-  const TransformList* global_transforms = nullptr;
-  const Kind* base_kind = kind_;
-
-  // Need a special case for TransformKind, since we need to append the
-  // local_transforms to the existing local transforms.
-  if (const auto* transform_kind = base_kind->as<TransformKind>()) {
-    local_transforms = transforms_factory.concat(
-        local_transforms, transform_kind->local_transforms());
-    global_transforms = transform_kind->global_transforms();
-    base_kind = transform_kind->base_kind();
-  }
-
-  const auto* new_kind = kind_factory.transform_kind(
-      base_kind, local_transforms, global_transforms);
 
   Frame new_frame{*this};
   new_frame.kind_ = new_kind;

@@ -44,4 +44,12 @@ class SanitizeTransform final : public Transform {
   const Kind* sanitizer_kind_;
 };
 
+class SanitizeTransformCompare {
+ public:
+  bool operator()(const SanitizeTransform* lhs, const SanitizeTransform* rhs)
+      const {
+    return lhs->kind()->to_trace_string() < rhs->kind()->to_trace_string();
+  }
+};
+
 } // namespace marianatrench

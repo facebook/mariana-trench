@@ -7,12 +7,14 @@
 
 #pragma once
 
+#include <mariana-trench/Assert.h>
 #include <mariana-trench/Context.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Kind.h>
 #include <mariana-trench/SanitizeTransform.h>
 #include <mariana-trench/Transform.h>
+#include <mariana-trench/TransformKind.h>
 
 namespace marianatrench {
 
@@ -59,6 +61,42 @@ class TransformList final {
 
   static TransformList discard_sanitizers(const TransformList* transforms);
 
+  /**
+   * Helper for locating the leading sanitizers (i.e. the adjacent sanitizers
+   * at the start/end of the list, given the direction).
+   * The result is in the form of an iterator pair, denoting the begin and end
+   * If `Direction == ApplicationDirection::Forward`, this would be a pair of
+   * `std::vector<const Transform*>::const_iterator`,
+   * If `Direction == ApplicationDirection::Backward`, this would be a pair of
+   * `std::vector<const Transform*>::const_reverse_iterator`
+   */
+  template <ApplicationDirection Direction>
+  auto find_consecutive_sanitizers() const {
+    if constexpr (Direction == ApplicationDirection::Forward) {
+      // Use cbegin and cend
+      auto sanitizer_begin = transforms_.cbegin();
+      auto sanitizer_end = std::find_if(
+          sanitizer_begin, transforms_.cend(), [](const Transform* transform) {
+            return !transform->is<SanitizeTransform>();
+          });
+      return std::make_pair(sanitizer_begin, sanitizer_end);
+    } else {
+      // Use crbegin and crend
+      auto sanitizer_rbegin = transforms_.crbegin();
+      auto sanitizer_rend = std::find_if(
+          sanitizer_rbegin,
+          transforms_.crend(),
+          [](const Transform* transform) {
+            return !transform->is<SanitizeTransform>();
+          });
+      return std::make_pair(sanitizer_rbegin, sanitizer_rend);
+    }
+  }
+
+  static TransformList concat(
+      const TransformList* left,
+      const TransformList* right);
+
  public:
   bool operator==(const TransformList& other) const {
     return transforms_ == other.transforms_;
@@ -76,17 +114,48 @@ class TransformList final {
     return transforms_.size();
   }
 
-  bool has_sanitizers() const {
-    return std::any_of(begin(), end(), [](const Transform* t) {
-      return t->is<SanitizeTransform>();
-    });
-  }
+  /**
+   * Checks whether the consecutive sanitizers at begining or end of the list
+   * would sanitize the given kind
+   */
+  template <ApplicationDirection Direction>
+  bool sanitizes(const Kind* kind) const {
+    const auto* transform_list_ptr = this;
 
-  static bool has_sanitizers(const TransformList* MT_NULLABLE transforms) {
-    return transforms == nullptr ? false : transforms->has_sanitizers();
-  }
+    // Create a local transform list, which we do not put into the factory.
+    TransformList transform_list;
 
-  bool sanitizes(const Kind* kind, ApplicationDirection direction) const;
+    if (const auto* transform_kind = kind->as<TransformKind>()) {
+      // The only place where this function can be called with
+      // ApplicationDirection::Forward is during rule matching, in which case
+      // the kind argument is never a TransformKind.
+      if constexpr (Direction == ApplicationDirection::Forward) {
+        mt_unreachable();
+      }
+
+      const auto* local_transforms = transform_kind->local_transforms();
+      const auto* global_transforms = transform_kind->global_transforms();
+      kind = transform_kind->base_kind();
+
+      transform_list = concat(&transform_list, this);
+      if (local_transforms != nullptr) {
+        transform_list = concat(&transform_list, local_transforms);
+      }
+      if (global_transforms != nullptr) {
+        transform_list = concat(&transform_list, global_transforms);
+      }
+      transform_list_ptr = &transform_list;
+    }
+
+    auto [sanitizer_begin, sanitizer_end] =
+        transform_list_ptr->find_consecutive_sanitizers<Direction>();
+    return std::any_of(
+        std::move(sanitizer_begin),
+        std::move(sanitizer_end),
+        [kind](const Transform* transform) {
+          return transform->as<SanitizeTransform>()->kind() == kind;
+        });
+  }
 
   bool has_source_as_transform() const;
 
@@ -100,6 +169,8 @@ class TransformList final {
       Context& context);
 
   static TransformList from_kind(const Kind* kind, Context& context);
+
+  static TransformList canonicalize(const TransformList* transforms);
 
  private:
   friend class TransformsFactory;

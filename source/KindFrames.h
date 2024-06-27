@@ -152,6 +152,11 @@ class KindFrames final : public sparta::AbstractDomain<KindFrames> {
       const CallClassIntervalContext& class_interval_context,
       const ClassIntervals::Interval& caller_class_interval) const;
 
+  KindFrames add_sanitize_transform(
+      const Sanitizer& sanitizer,
+      const KindFactory& kind_factory,
+      const TransformsFactory& transforms_factory) const;
+
   void filter_invalid_frames(const std::function<bool(const Kind*)>& is_valid);
 
   bool contains_kind(const Kind*) const;

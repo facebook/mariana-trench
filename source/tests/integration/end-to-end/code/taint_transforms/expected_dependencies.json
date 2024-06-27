@@ -134,19 +134,29 @@
   [
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeAXBNoIssue:()V"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeBSanitizeB:(Ljava/lang/Object;)Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeBSanitizeBToSanitizeAToXToBNoIssue:()V"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeBTransformX:(Ljava/lang/Object;)Ljava/lang/Object;" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeBXToBIssue:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeSinkB:(Ljava/lang/Object;)Ljava/lang/Object;" : 
   [
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeBSanitizeB:(Ljava/lang/Object;)Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeBTransformX:(Ljava/lang/Object;)Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceASanitizeB:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceASanitizeBTransformX:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceATransformXSanitizeB:()Ljava/lang/Object;",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.taintWithYSanitizeASanitizeB:()Ljava/lang/Object;",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.taintWithYSanitizeB:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeBToBNoIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeBToSanitizeAToBNoIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeBToSanitizeAToXToBNoIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeBToXToBIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToXToSanitizeBToBNoIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToXToSanitizeBToSanitizeAToBNoIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformXSanitizeB:(Ljava/lang/Object;)Ljava/lang/Object;"
   ],
   "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeSourceA:(Ljava/lang/Object;)Ljava/lang/Object;" : 
@@ -156,12 +166,21 @@
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeATransformX:(Ljava/lang/Object;)Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeATransformXSinkB:(Ljava/lang/Object;)V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceASanitizeA:()Ljava/lang/Object;",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.taintWithYSanitizeA:()Ljava/lang/Object;",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.taintWithYSanitizeBSanitizeA:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeAToBNoIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeAToXBNoIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeAtoXToBNoIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeBSanitizeBToSanitizeAToXToBNoIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeBToSanitizeAToBNoIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeBToSanitizeAToXToBNoIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToUnboundedLoopToB:()V",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToXSanitizeBToSanitizeAToBNoIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToXToSanitizeAtoBIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToXToSanitizeBToSanitizeAToBNoIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformXSanitizeA:(Ljava/lang/Object;)Ljava/lang/Object;",
-    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformXSanitizeASinkB:(Ljava/lang/Object;)V"
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformXSanitizeASinkB:(Ljava/lang/Object;)V",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformXSanitizeAwithSanitizeA:(Ljava/lang/Object;)Ljava/lang/Object;"
   ],
   "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sinkB:(Ljava/lang/Object;)V" : 
   [
@@ -173,13 +192,23 @@
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeAToBNoIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeAXToBNoIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeAtoXToBNoIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeBSanitizeBToSanitizeAToXToBNoIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeBToBNoIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeBToSanitizeAToBNoIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeBToSanitizeAToXToBNoIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeBToXToBIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeBXToBIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToUnboundedLoopToB:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToXSanitizeAToBIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToXSanitizeBToBNoIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToXSanitizeBToSanitizeAToBNoIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToXToSanitizeAtoBIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToXToSanitizeBToBNoIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToXToSanitizeBToSanitizeAToBNoIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToYToSantizeAToSanitizeBToZToBIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToYToSantizeBToSanitizeAToZToBIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testATotransformXSanitizeAwithSanitizeAToBNoIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testATotransformXwithSanitizeAToBNoIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAXSanitizeBToBNoIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformXSanitizeASinkB:(Ljava/lang/Object;)V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformXSinkB:(Ljava/lang/Object;)V"
@@ -192,21 +221,30 @@
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceATransformXSanitizeB:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.taintWithTransformX:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.taintWithTransformXY:()Ljava/lang/Object;",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.taintWithTransformY:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeAToBNoIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeAToXBNoIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeAXBNoIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeAXToBNoIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeAYZBNoIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeAtoXToBNoIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeBSanitizeBToSanitizeAToXToBNoIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeBToBNoIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeBToSanitizeAToBNoIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeBToSanitizeAToXToBNoIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeBToXToBIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeBXToBIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToUnboundedLoopToB:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToXSanitizeABIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToXSanitizeAToBIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToXSanitizeBToBNoIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToXSanitizeBToSanitizeAToBNoIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToXToSanitizeABIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToXToSanitizeAtoBIssue:()V",
-    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToXToSanitizeBToBNoIssue:()V"
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToXToSanitizeBToBNoIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToXToSanitizeBToSanitizeAToBNoIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testATotransformXSanitizeAwithSanitizeAToBNoIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testATotransformXwithSanitizeAToBNoIssue:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceASanitizeA:()Ljava/lang/Object;" : 
   [
@@ -233,6 +271,35 @@
   [
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAXYToSanitizeAYZBIssue:()V"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.taintWithTransformY:()Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.taintWithYSanitizeA:()Ljava/lang/Object;",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.taintWithYSanitizeB:()Ljava/lang/Object;"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.taintWithYSanitizeA:()Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.taintWithYSanitizeASanitizeB:()Ljava/lang/Object;"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.taintWithYSanitizeASanitizeB:()Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.taintWithYSanitizeASanitizeBToZ:()Ljava/lang/Object;"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.taintWithYSanitizeASanitizeBToZ:()Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToYToSantizeAToSanitizeBToZToBIssue:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.taintWithYSanitizeB:()Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.taintWithYSanitizeBSanitizeA:()Ljava/lang/Object;"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.taintWithYSanitizeBSanitizeA:()Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.taintWithYSanitizeBSanitizeAToZ:()Ljava/lang/Object;"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.taintWithYSanitizeBSanitizeAToZ:()Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToYToSantizeBToSanitizeAToZToBIssue:()V"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformX:(Ljava/lang/Object;)Ljava/lang/Object;" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeATransformX:(Ljava/lang/Object;)Ljava/lang/Object;",
@@ -244,14 +311,20 @@
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.taintWithTransformXY:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testASanitizeBToXToBIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeAtoXToBNoIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeBSanitizeBToSanitizeAToXToBNoIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeBToSanitizeAToXToBNoIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeBToXToBIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToUnboundedLoopToB:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToXToSanitizeABIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToXToSanitizeAtoBIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToXToSanitizeBToBNoIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToXToSanitizeBToSanitizeAToBNoIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformXSanitizeA:(Ljava/lang/Object;)Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformXSanitizeASinkB:(Ljava/lang/Object;)V",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformXSanitizeAwithSanitizeA:(Ljava/lang/Object;)Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformXSanitizeB:(Ljava/lang/Object;)Ljava/lang/Object;",
-    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformXSinkB:(Ljava/lang/Object;)V"
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformXSinkB:(Ljava/lang/Object;)V",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformXwithSanitizeA:(Ljava/lang/Object;)Ljava/lang/Object;"
   ],
   "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformXSanitizeA:(Ljava/lang/Object;)Ljava/lang/Object;" : 
   [
@@ -261,9 +334,14 @@
   [
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToXSanitizeABIssue:()V"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformXSanitizeAwithSanitizeA:(Ljava/lang/Object;)Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testATotransformXSanitizeAwithSanitizeAToBNoIssue:()V"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformXSanitizeB:(Ljava/lang/Object;)Ljava/lang/Object;" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToXSanitizeBToBNoIssue:()V"
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToXSanitizeBToBNoIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToXSanitizeBToSanitizeAToBNoIssue:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformXSinkB:(Ljava/lang/Object;)V" : 
   [
@@ -271,14 +349,21 @@
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testASanitizeBToXBIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeAToXBNoIssue:()V"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformXwithSanitizeA:(Ljava/lang/Object;)Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testATotransformXwithSanitizeAToBNoIssue:()V"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformY:(Ljava/lang/Object;)Ljava/lang/Object;" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeAToYToZToB:(Ljava/lang/Object;)V",
-    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.taintWithTransformXY:()Ljava/lang/Object;"
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.taintWithTransformXY:()Ljava/lang/Object;",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.taintWithTransformY:()Ljava/lang/Object;"
   ],
   "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformZ:(Ljava/lang/Object;)Ljava/lang/Object;" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeAToYToZToB:(Ljava/lang/Object;)V"
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeAToYToZToB:(Ljava/lang/Object;)V",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.taintWithYSanitizeASanitizeBToZ:()Ljava/lang/Object;",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.taintWithYSanitizeBSanitizeAToZ:()Ljava/lang/Object;"
   ],
   "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.getNewSource:()Ljava/lang/Object;" : 
   [

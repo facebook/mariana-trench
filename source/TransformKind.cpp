@@ -10,6 +10,7 @@
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/KindFactory.h>
 #include <mariana-trench/TransformKind.h>
+#include <mariana-trench/TransformsFactory.h>
 
 namespace marianatrench {
 

@@ -116,5 +116,33 @@
         ]
       }
     ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformXwithSanitizeA:(Ljava/lang/Object;)Ljava/lang/Object;",
+    "sanitizers": [
+      {
+        "sanitize": "propagations",
+        "port": "Argument(0)",
+        "kinds": [
+          {
+            "kind": "SourceA"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformXSanitizeAwithSanitizeA:(Ljava/lang/Object;)Ljava/lang/Object;",
+    "sanitizers": [
+      {
+        "sanitize": "propagations",
+        "port": "Argument(0)",
+        "kinds": [
+          {
+            "kind": "SourceA"
+          }
+        ]
+      }
+    ]
   }
 ]

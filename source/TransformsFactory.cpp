@@ -46,6 +46,11 @@ const TransformList* TransformsFactory::create(TransformList transforms) const {
   return transform_lists_.insert(transforms).first;
 }
 
+const TransformList* TransformsFactory::create(
+    std::vector<const Transform*> transforms) const {
+  return create(TransformList(std::move(transforms)));
+}
+
 const TransformList* TransformsFactory::concat(
     const TransformList* MT_NULLABLE left,
     const TransformList* MT_NULLABLE right) const {
@@ -57,12 +62,7 @@ const TransformList* TransformsFactory::concat(
     return left;
   }
 
-  TransformList::List transforms{};
-  transforms.reserve(left->size() + right->size());
-  transforms.insert(transforms.end(), left->begin(), left->end());
-  transforms.insert(transforms.end(), right->begin(), right->end());
-
-  return create(TransformList(transforms));
+  return create(TransformList::concat(left, right));
 }
 
 const TransformList* MT_NULLABLE
@@ -122,6 +122,15 @@ const TransformList* MT_NULLABLE TransformsFactory::discard_sanitizers(
   }
 
   return create(std::move(no_sanitizers));
+}
+
+const TransformList* MT_NULLABLE TransformsFactory::canonicalize(
+    const TransformList* MT_NULLABLE transforms) const {
+  if (transforms == nullptr) {
+    return transforms;
+  }
+
+  return create(TransformList::canonicalize(transforms));
 }
 
 } // namespace marianatrench
