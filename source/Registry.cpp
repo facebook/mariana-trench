@@ -493,11 +493,12 @@ void Registry::verify_expected_output(
     for (const auto& annotation : annotations_set->get_annotations()) {
       auto validators = ModelValidator::from_annotation(annotation.get());
       for (const auto& validator : validators) {
+        bool valid = validator->validate(model);
         LOG(1,
-            "In method {}, found annotation for validation: {}",
+            "In method {}, found annotation for validation: {}. Is valid: {}",
             method->show(),
-            validator->show());
-        // TODO(T176363194): Call validate().
+            validator->show(),
+            valid);
       }
     }
   }

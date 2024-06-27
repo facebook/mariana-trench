@@ -124,10 +124,18 @@ ExpectIssue::ExpectIssue(const EncodedAnnotations& annotation_elements)
       code_ = annotation_element.encoded_value->value();
     } else if (annotation_key->str() == "sourceKinds") {
       mt_assert(annotation_element.encoded_value->evtype() == DEVT_ARRAY);
-      annotation_element.encoded_value->gather_strings(source_kinds_);
+      std::vector<const DexString*> source_kinds;
+      annotation_element.encoded_value->gather_strings(source_kinds);
+      for (const auto* dex_string : source_kinds) {
+        source_kinds_.insert(dex_string->str_copy());
+      }
     } else if (annotation_key->str() == "sinkKinds") {
       mt_assert(annotation_element.encoded_value->evtype() == DEVT_ARRAY);
-      annotation_element.encoded_value->gather_strings(sink_kinds_);
+      std::vector<const DexString*> sink_kinds;
+      annotation_element.encoded_value->gather_strings(sink_kinds);
+      for (const auto* dex_string : sink_kinds) {
+        sink_kinds_.insert(dex_string->str_copy());
+      }
     } else {
       throw std::runtime_error(fmt::format(
           "Unexpected annotation key: {} in @ExpectIssue",
@@ -141,31 +149,49 @@ ExpectIssue::ExpectIssue(const EncodedAnnotations& annotation_elements)
 
 namespace {
 
-std::string join(
-    const std::vector<const DexString*>& dex_strings,
-    const std::string& separator) {
-  std::vector<std::string> strings(dex_strings.size());
-  std::transform(
-      dex_strings.cbegin(),
-      dex_strings.cend(),
-      strings.begin(),
-      [](const DexString* dex_string) { return dex_string->str(); });
+bool includes_issue_kinds(
+    const std::unordered_set<const Kind*>& issue_kinds,
+    const std::set<std::string>& validator_kinds) {
+  if (validator_kinds.empty()) {
+    return true;
+  }
 
-  return boost::algorithm::join(strings, separator);
+  std::set<std::string> issue_kinds_set;
+  for (const auto* kind : issue_kinds) {
+    issue_kinds_set.insert(kind->to_trace_string());
+  }
+
+  return std::includes(
+      issue_kinds_set.cbegin(),
+      issue_kinds_set.cend(),
+      validator_kinds.cbegin(),
+      validator_kinds.cend());
 }
 
 } // namespace
+
+bool ExpectIssue::validate(const Model& model) const {
+  const auto& issues = model.issues();
+  return std::any_of(issues.begin(), issues.end(), [this](const Issue& issue) {
+    // Issue (hence rule) should not be bottom() at this point.
+    const auto* rule = issue.rule();
+    mt_assert(rule != nullptr);
+    return rule->code() == code_ &&
+        includes_issue_kinds(issue.sources().kinds(), source_kinds_) &&
+        includes_issue_kinds(issue.sinks().kinds(), sink_kinds_);
+  });
+}
 
 std::string ExpectIssue::show() const {
   return fmt::format(
       "ExpectIssue(code={}, sourceKinds={}, sinkKinds={})",
       code_,
-      join(source_kinds_, ","),
-      join(sink_kinds_, ","));
+      boost::algorithm::join(source_kinds_, ","),
+      boost::algorithm::join(sink_kinds_, ","));
 }
 
 ExpectNoIssue::ExpectNoIssue(const EncodedAnnotations& annotation_elements)
-    : code_(std::nullopt) {
+    : code_(-1) {
   for (const auto& annotation_element : annotation_elements) {
     const auto* annotation_key = annotation_element.string;
     if (annotation_key->str() == "code") {
@@ -179,8 +205,23 @@ ExpectNoIssue::ExpectNoIssue(const EncodedAnnotations& annotation_elements)
   }
 }
 
+bool ExpectNoIssue::validate(const Model& model) const {
+  if (code_ == -1) {
+    // Issue code unspecified. Model must not contain any issues.
+    return model.issues().empty();
+  }
+
+  const auto& issues = model.issues();
+  return std::none_of(issues.begin(), issues.end(), [this](const Issue& issue) {
+    // Issue (hence rule) should not be bottom() at this point.
+    const auto* rule = issue.rule();
+    mt_assert(rule != nullptr);
+    return rule->code() == code_;
+  });
+}
+
 std::string ExpectNoIssue::show() const {
-  return fmt::format("ExpectNoIssue(code={})", code_.has_value() ? *code_ : -1);
+  return fmt::format("ExpectNoIssue(code={})", code_);
 }
 
 } // namespace marianatrench

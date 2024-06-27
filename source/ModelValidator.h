@@ -34,8 +34,7 @@ class ModelValidator {
   static std::vector<std::unique_ptr<ModelValidator>> from_annotation(
       const DexAnnotation* annotation);
 
-  // TODO(T176363194): Implement
-  // virtual bool validate(const Model& model) const = 0;
+  virtual bool validate(const Model& model) const = 0;
 
   virtual std::string show() const = 0;
 };
@@ -43,25 +42,45 @@ class ModelValidator {
 class ExpectIssue final : public ModelValidator {
  public:
   explicit ExpectIssue(const EncodedAnnotations& annotation_elements);
+
+  explicit ExpectIssue(
+      int code,
+      std::set<std::string> source_kinds,
+      std::set<std::string> sink_kinds)
+      : code_(code),
+        source_kinds_(std::move(source_kinds)),
+        sink_kinds_(std::move(sink_kinds)) {}
+
   DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ExpectIssue)
+
+  bool validate(const Model& model) const override;
 
   std::string show() const override;
 
  private:
   int code_;
-  std::vector<const DexString*> source_kinds_;
-  std::vector<const DexString*> sink_kinds_;
+
+  // NOTE: Ordering is used for subset/includes comparison against issue kinds
+  std::set<std::string> source_kinds_;
+  std::set<std::string> sink_kinds_;
 };
 
 class ExpectNoIssue final : public ModelValidator {
  public:
   explicit ExpectNoIssue(const EncodedAnnotations& annotation_elements);
+
+  explicit ExpectNoIssue(int code) : code_(code) {}
+
   DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ExpectNoIssue)
+
+  bool validate(const Model& model) const override;
 
   std::string show() const override;
 
  private:
-  std::optional<int> code_;
+  // This field in @ExpectNoIssue annotation is optional and defaults to -1
+  // if unspecified.
+  int code_;
 };
 
 } // namespace marianatrench
