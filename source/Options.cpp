@@ -132,6 +132,7 @@ Options::Options(
       remove_unreachable_code_(remove_unreachable_code),
       disable_parameter_type_overrides_(false),
       disable_global_type_analysis_(false),
+      verify_expected_output_(false),
       maximum_method_analysis_time_(std::nullopt),
       maximum_source_sink_distance_(10),
       emit_all_via_cast_features_(emit_all_via_cast_features),
@@ -246,11 +247,12 @@ Options::Options(const boost::program_options::variables_map& variables) {
   sequential_ = variables.count("sequential") > 0;
   skip_source_indexing_ = variables.count("skip-source-indexing") > 0;
   skip_analysis_ = variables.count("skip-analysis") > 0;
+  remove_unreachable_code_ = variables.count("remove-unreachable-code") > 0;
   disable_parameter_type_overrides_ =
       variables.count("disable-parameter-type-overrides") > 0;
   disable_global_type_analysis_ =
       variables.count("disable-global-type-analysis") > 0;
-  remove_unreachable_code_ = variables.count("remove-unreachable-code") > 0;
+  verify_expected_output_ = variables.count("verify-expected-output") > 0;
 
   maximum_method_analysis_time_ =
       variables.count("maximum-method-analysis-time") == 0
@@ -401,14 +403,17 @@ void Options::add_options(
       "skip-source-indexing", "Skip indexing java source files.");
   options.add_options()("skip-analysis", "Skip taint analysis.");
   options.add_options()(
+      "remove-unreachable-code",
+      "Prune unreachable code based on entry points specified in proguard configuration.");
+  options.add_options()(
       "disable-parameter-type-overrides",
       "Disable analyzing methods with specific parameter type information.");
   options.add_options()(
       "disable-global-type-analysis",
       "Disable running Redex's global type analysis to infer types.");
   options.add_options()(
-      "remove-unreachable-code",
-      "Prune unreachable code based on entry points specified in proguard configuration.");
+      "verify-expected-output",
+      "Verify any @Expected* annotations. Only valid for custom APKs containing said annotations. Results are written to `verification.json`.");
   options.add_options()(
       "maximum-method-analysis-time",
       program_options::value<int>(),
@@ -603,6 +608,10 @@ const std::filesystem::path Options::rule_coverage_output_path() const {
   return output_directory_ / "rule_coverage.json";
 }
 
+const std::filesystem::path Options::verification_output_path() const {
+  return output_directory_ / "verification.json";
+}
+
 const std::optional<std::filesystem::path> Options::sharded_models_directory()
     const {
   return sharded_models_directory_;
@@ -642,6 +651,10 @@ bool Options::disable_parameter_type_overrides() const {
 
 bool Options::disable_global_type_analysis() const {
   return disable_global_type_analysis_;
+}
+
+bool Options::verify_expected_output() const {
+  return verify_expected_output_;
 }
 
 bool Options::remove_unreachable_code() const {

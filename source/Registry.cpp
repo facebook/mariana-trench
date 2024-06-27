@@ -14,6 +14,7 @@
 #include <json/value.h>
 
 #include <ConcurrentContainers.h>
+#include <DexAnnotation.h>
 #include <sparta/WorkQueue.h>
 
 #include <mariana-trench/Constants.h>
@@ -22,6 +23,7 @@
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Methods.h>
+#include <mariana-trench/ModelValidator.h>
 #include <mariana-trench/Options.h>
 #include <mariana-trench/Positions.h>
 #include <mariana-trench/Registry.h>
@@ -473,6 +475,34 @@ void Registry::dump_rule_coverage_info(
   auto rule_coverage = RulesCoverage::create(
       *(context_.rules), used_sources, used_sinks, used_transforms);
   JsonWriter::write_json_file(output_path, rule_coverage.to_json());
+}
+
+void Registry::verify_expected_output(
+    const std::filesystem::path& /* test_output_path */) const {
+  for (const auto& [method, model] : models_) {
+    const auto* dex_method = method->dex_method();
+    if (dex_method == nullptr) {
+      continue;
+    }
+
+    const auto* annotations_set = dex_method->get_anno_set();
+    if (annotations_set == nullptr) {
+      continue;
+    }
+
+    for (const auto& annotation : annotations_set->get_annotations()) {
+      auto validators = ModelValidator::from_annotation(annotation.get());
+      for (const auto& validator : validators) {
+        LOG(1,
+            "In method {}, found annotation for validation: {}",
+            method->show(),
+            validator->show());
+        // TODO(T176363194): Call validate().
+      }
+    }
+  }
+
+  // TODO(T176363194): Write results to test_output_path.
 }
 
 } // namespace marianatrench

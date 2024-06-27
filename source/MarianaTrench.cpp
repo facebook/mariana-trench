@@ -487,6 +487,11 @@ void MarianaTrench::run(const program_options::variables_map& variables) {
   auto metadata_path = options.metadata_output_path();
   LOG(1, "Writing metadata to `{}`.", metadata_path.native());
   registry.dump_metadata(/* path */ metadata_path);
+
+  if (options.verify_expected_output()) {
+    LOG(1, "Verifying expected output");
+    registry.verify_expected_output(options.verification_output_path());
+  }
 }
 
 } // namespace marianatrench

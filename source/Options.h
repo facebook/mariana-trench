@@ -91,6 +91,7 @@ class Options final {
   const std::filesystem::path dependencies_output_path() const;
   const std::filesystem::path file_coverage_output_path() const;
   const std::filesystem::path rule_coverage_output_path() const;
+  const std::filesystem::path verification_output_path() const;
 
   const std::optional<std::filesystem::path> sharded_models_directory() const;
   const std::optional<std::filesystem::path> overrides_input_path() const;
@@ -100,9 +101,10 @@ class Options final {
   bool sequential() const;
   bool skip_source_indexing() const;
   bool skip_analysis() const;
+  bool remove_unreachable_code() const;
   bool disable_parameter_type_overrides() const;
   bool disable_global_type_analysis() const;
-  bool remove_unreachable_code() const;
+  bool verify_expected_output() const;
   std::optional<int> maximum_method_analysis_time() const;
 
   int maximum_source_sink_distance() const;
@@ -164,6 +166,7 @@ class Options final {
   bool remove_unreachable_code_;
   bool disable_parameter_type_overrides_;
   bool disable_global_type_analysis_;
+  bool verify_expected_output_;
   std::optional<int> maximum_method_analysis_time_;
 
   int maximum_source_sink_distance_;

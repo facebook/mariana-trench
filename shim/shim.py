@@ -387,6 +387,11 @@ def _add_configuration_arguments(parser: argparse.ArgumentParser) -> None:
         help="Disables global type analysis. If a proguard configuration path is passed in, it will be ignored.",
     )
     configuration_arguments.add_argument(
+        "--verify-expected-output",
+        action="store_true",
+        help="Verifies special @Expected* annotations against the analysis output.",
+    )
+    configuration_arguments.add_argument(
         "--remove-unreachable-code",
         action="store_true",
         help="Prune unreachable code based on entry points specified in proguard configuration.",
@@ -703,6 +708,8 @@ def _get_command_options(
         options.append("--disable-parameter-type-overrides")
     if arguments.disable_global_type_analysis:
         options.append("--disable-global-type-analysis")
+    if arguments.verify_expected_output:
+        options.append("--verify-expected-output")
     if arguments.remove_unreachable_code:
         options.append("--remove-unreachable-code")
     if arguments.maximum_method_analysis_time is not None:
