@@ -65,6 +65,8 @@ class TransformKind final : public Kind {
 
   bool has_source_as_transform() const;
 
+  bool has_non_sanitize_transform() const;
+
  private:
   const Kind* base_kind_;
   const TransformList* MT_NULLABLE local_transforms_;

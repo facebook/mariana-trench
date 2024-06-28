@@ -48,6 +48,7 @@ const TransformList* TransformsFactory::create(TransformList transforms) const {
 
 const TransformList* TransformsFactory::create(
     std::vector<const Transform*> transforms) const {
+  mt_assert(!transforms.empty());
   return create(TransformList(std::move(transforms)));
 }
 

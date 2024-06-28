@@ -100,6 +100,9 @@ class Sanitizer final : public sparta::AbstractDomain<Sanitizer> {
   static const Sanitizer from_json(const Json::Value& value, Context& context);
   Json::Value to_json() const;
 
+  const TransformList* to_sanitize_transforms(
+      const TransformsFactory& transforms_factory) const;
+
   // Describe how to join sanitizers together in `SanitizerSet`.
   struct GroupEqual {
     bool operator()(const Sanitizer& left, const Sanitizer& right) const;

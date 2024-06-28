@@ -120,11 +120,6 @@ class TransformList final {
    */
   template <ApplicationDirection Direction>
   bool sanitizes(const Kind* kind) const {
-    const auto* transform_list_ptr = this;
-
-    // Create a local transform list, which we do not put into the factory.
-    TransformList transform_list;
-
     if (const auto* transform_kind = kind->as<TransformKind>()) {
       // The only place where this function can be called with
       // ApplicationDirection::Forward is during rule matching, in which case
@@ -133,22 +128,18 @@ class TransformList final {
         mt_unreachable();
       }
 
-      const auto* local_transforms = transform_kind->local_transforms();
-      const auto* global_transforms = transform_kind->global_transforms();
-      kind = transform_kind->base_kind();
+      if (transform_kind->has_non_sanitize_transform()) {
+        return false;
+      }
 
-      transform_list = concat(&transform_list, this);
-      if (local_transforms != nullptr) {
-        transform_list = concat(&transform_list, local_transforms);
-      }
-      if (global_transforms != nullptr) {
-        transform_list = concat(&transform_list, global_transforms);
-      }
-      transform_list_ptr = &transform_list;
+      // Otherwise, check whether `this` can sanitize the base_kind (since the
+      // existing sanitizers in transform_kind definitely cannot sanitize
+      // base_kind)
+      kind = transform_kind->base_kind();
     }
 
     auto [sanitizer_begin, sanitizer_end] =
-        transform_list_ptr->find_consecutive_sanitizers<Direction>();
+        find_consecutive_sanitizers<Direction>();
     return std::any_of(
         std::move(sanitizer_begin),
         std::move(sanitizer_end),
@@ -158,6 +149,8 @@ class TransformList final {
   }
 
   bool has_source_as_transform() const;
+
+  bool has_non_sanitize_transform() const;
 
   std::string to_trace_string() const;
   static TransformList from_trace_string(

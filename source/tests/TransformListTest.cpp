@@ -174,6 +174,40 @@ TEST_F(TransformListTest, Sanitize) {
               kind_a,
               context.transforms_factory->create(std::vector{transform_z}),
               nullptr)));
+  EXPECT_FALSE(
+      context.transforms_factory->create(std::vector{sanitize_a, transform_x})
+          ->sanitizes<Backward>(context.kind_factory->transform_kind(
+              kind_a,
+              context.transforms_factory->create(std::vector{transform_z}),
+              nullptr)));
+  EXPECT_FALSE(context.transforms_factory
+                   ->create(std::vector{transform_x, transform_y, sanitize_a})
+                   ->sanitizes<Backward>(context.kind_factory->transform_kind(
+                       kind_a,
+                       context.transforms_factory->create(
+                           std::vector{transform_z, sanitize_b}),
+                       nullptr)));
+  EXPECT_FALSE(context.transforms_factory
+                   ->create(std::vector{transform_x, transform_y, sanitize_a})
+                   ->sanitizes<Backward>(context.kind_factory->transform_kind(
+                       kind_a,
+                       context.transforms_factory->create(
+                           std::vector{sanitize_b, transform_z}),
+                       nullptr)));
+  EXPECT_FALSE(context.transforms_factory
+                   ->create(std::vector{sanitize_a, transform_x, transform_y})
+                   ->sanitizes<Backward>(context.kind_factory->transform_kind(
+                       kind_a,
+                       context.transforms_factory->create(
+                           std::vector{transform_z, sanitize_b}),
+                       nullptr)));
+  EXPECT_FALSE(context.transforms_factory
+                   ->create(std::vector{sanitize_a, transform_x, transform_y})
+                   ->sanitizes<Backward>(context.kind_factory->transform_kind(
+                       kind_a,
+                       context.transforms_factory->create(
+                           std::vector{sanitize_b, transform_z}),
+                       nullptr)));
 }
 
 } // namespace marianatrench

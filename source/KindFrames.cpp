@@ -429,19 +429,8 @@ KindFrames KindFrames::add_sanitize_transform(
     const Sanitizer& sanitizer,
     const KindFactory& kind_factory,
     const TransformsFactory& transforms_factory) const {
-  mt_assert(
-      sanitizer.sanitizer_kind() == SanitizerKind::Propagations &&
-      sanitizer.kinds().is_value());
-
-  std::vector<const Transform*> local_transforms_vec;
-  local_transforms_vec.reserve(sanitizer.kinds().size());
-  for (const auto* sanitize_kind : sanitizer.kinds().elements()) {
-    local_transforms_vec.push_back(
-        transforms_factory.create_sanitize_transform(sanitize_kind));
-  }
-
   const TransformList* local_transforms =
-      transforms_factory.create(std::move(local_transforms_vec));
+      sanitizer.to_sanitize_transforms(transforms_factory);
   const TransformList* global_transforms = nullptr;
   const Kind* base_kind = kind_;
 

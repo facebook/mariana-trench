@@ -100,4 +100,10 @@ bool TransformKind::has_source_as_transform() const {
       (global_transforms_ && global_transforms_->has_source_as_transform());
 }
 
+bool TransformKind::has_non_sanitize_transform() const {
+  return (local_transforms_ &&
+          local_transforms_->has_non_sanitize_transform()) ||
+      (global_transforms_ && global_transforms_->has_non_sanitize_transform());
+}
+
 } // namespace marianatrench

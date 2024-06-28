@@ -455,7 +455,8 @@ LocalTaint LocalTaint::add_sanitize_transform(
           new_frames.update(
               new_kind_frames.kind(),
               [&new_kind_frames](const KindFrames& old_frames) {
-                return std::move(new_kind_frames);
+                new_kind_frames.join_with(old_frames);
+                return new_kind_frames;
               });
         }
       });

@@ -52,6 +52,13 @@ bool TransformList::has_source_as_transform() const {
       });
 }
 
+bool TransformList::has_non_sanitize_transform() const {
+  return std::any_of(
+      transforms_.begin(), transforms_.end(), [](const Transform* transform) {
+        return !transform->is<SanitizeTransform>();
+      });
+}
+
 std::string TransformList::to_trace_string() const {
   std::string value{};
 
@@ -84,8 +91,9 @@ TransformList TransformList::from_trace_string(
     result.push_back(Transform::from_trace_string(transform, context));
   }
 
-  TransformList raw_transforms(std::move(result));
-  return canonicalize(&raw_transforms);
+  // from_trace_string only takes input of something MT previously dumped, so
+  // we can assume that the result is canonicalized.
+  return TransformList(std::move(result));
 }
 
 TransformList TransformList::from_json(
@@ -100,8 +108,9 @@ TransformList TransformList::from_json(
     transforms.push_back(Transform::from_json(transform, context));
   }
 
-  TransformList raw_transforms(std::move(transforms));
-  return canonicalize(&raw_transforms);
+  // Users are not supposed to write transforms that contains sanitizers in json
+  // config, these should be specified in the `sanitizers` field.
+  return TransformList(std::move(transforms));
 }
 
 TransformList TransformList::from_kind(const Kind* kind, Context& context) {
