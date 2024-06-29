@@ -1399,6 +1399,102 @@
           ]
         }
       ]
+    },
+    {
+      "always_features" : 
+      [
+        "via-cast:Ljava/lang/Integer;"
+      ],
+      "callee" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
+      "position" : 
+      {
+        "line" : 24,
+        "path" : "ArrayAllocation.java"
+      },
+      "rule" : 1,
+      "sink_index" : "1",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 0,
+              "line" : 24,
+              "path" : "ArrayAllocation.java",
+              "start" : 0
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "distance" : 1,
+              "kind" : "ArrayAllocation",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
+                  "port" : "Argument(0)"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 42,
+              "line" : 20,
+              "path" : "ArrayAllocation.java",
+              "start" : 37
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                34,
+                35
+              ],
+              "kind" : "Source",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-cast:Ljava/lang/Integer;"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 0,
+              "line" : 24,
+              "start" : 0
+            }
+          ]
+        }
+      ]
     }
   ],
   "method" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.integerArrayThroughPropagation:()V",
@@ -1409,6 +1505,86 @@
   }
 }
 {
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
+      "position" : 
+      {
+        "line" : 36,
+        "path" : "ArrayAllocation.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 0,
+              "line" : 36,
+              "path" : "ArrayAllocation.java",
+              "start" : 0
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "distance" : 1,
+              "kind" : "ArrayAllocation",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
+                  "port" : "Argument(0)"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 37,
+              "line" : 35,
+              "path" : "ArrayAllocation.java",
+              "start" : 32
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                34,
+                35
+              ],
+              "kind" : "Source",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ]
+    }
+  ],
   "method" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.multidimentionalArray:()V",
   "position" : 
   {
@@ -1417,6 +1593,86 @@
   }
 }
 {
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
+      "position" : 
+      {
+        "line" : 49,
+        "path" : "ArrayAllocation.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 0,
+              "line" : 49,
+              "path" : "ArrayAllocation.java",
+              "start" : 0
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "distance" : 1,
+              "kind" : "ArrayAllocation",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
+                  "port" : "Argument(0)"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 37,
+              "line" : 48,
+              "path" : "ArrayAllocation.java",
+              "start" : 32
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                34,
+                35
+              ],
+              "kind" : "Source",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ]
+    }
+  ],
   "method" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.multidimentionalArrayThree:()V",
   "position" : 
   {
@@ -1425,6 +1681,86 @@
   }
 }
 {
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
+      "position" : 
+      {
+        "line" : 42,
+        "path" : "ArrayAllocation.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 0,
+              "line" : 42,
+              "path" : "ArrayAllocation.java",
+              "start" : 0
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "distance" : 1,
+              "kind" : "ArrayAllocation",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
+                  "port" : "Argument(0)"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 37,
+              "line" : 40,
+              "path" : "ArrayAllocation.java",
+              "start" : 32
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                34,
+                35
+              ],
+              "kind" : "Source",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ]
+    }
+  ],
   "method" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.multidimentionalArrayTwo:()V",
   "position" : 
   {
@@ -1433,6 +1769,86 @@
   }
 }
 {
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
+      "position" : 
+      {
+        "line" : 55,
+        "path" : "ArrayAllocation.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 0,
+              "line" : 55,
+              "path" : "ArrayAllocation.java",
+              "start" : 0
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "distance" : 1,
+              "kind" : "ArrayAllocation",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
+                  "port" : "Argument(0)"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 37,
+              "line" : 54,
+              "path" : "ArrayAllocation.java",
+              "start" : 32
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                34,
+                35
+              ],
+              "kind" : "Source",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.source:()I",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ]
+    }
+  ],
   "method" : "Lcom/facebook/marianatrench/integrationtests/ArrayAllocation;.multidimentionalObjectArray:()V",
   "position" : 
   {
