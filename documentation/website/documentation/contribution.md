@@ -43,12 +43,12 @@ Finally, install all the dependencies.
 
 On **macOS**, run:
 ```shell
-$ brew install python3 cmake zlib boost googletest jsoncpp re2
+$ brew install python3 git cmake zlib boost googletest jsoncpp re2
 ```
 
 On **Linux**, run:
 ```shell
-$ brew install cmake zlib boost jsoncpp re2
+$ brew install git cmake zlib boost jsoncpp re2
 $ brew install googletest --build-from-source # The package is currently broken.
 $ export CMAKE_PREFIX_PATH=/home/linuxbrew/.linuxbrew/opt/jsoncpp:/home/linuxbrew/.linuxbrew/opt/zlib
 ```
@@ -58,17 +58,24 @@ On **Linux**, you will need to install Java to run the tests. For instance, on *
 $ sudo apt install default-jre default-jdk
 ```
 
+### Installation directory
+
+We do not recommend installing Mariana Trench as root. Instead, you should pick a directory where all libraries and binaries will be installed, and set the variable `MT_INSTALL_DIRECTORY` to its absolute path. For instance, assuming you are in the root directory of the repository:
+```shell
+$ mkdir install
+$ MT_INSTALL_DIRECTORY="$PWD/install"
+```
+
 ### Building fmt
 
 The 9.0 release of `fmt` has breaking changes that Mariana Trench is not yet compatible with, so for now, you need to build the library from source. You will need to do the following:
 
 ```shell
-$ git clone https://github.com/fmtlib/fmt.git
-$ git checkout 8.1.1
+$ git clone -b 8.1.1 https://github.com/fmtlib/fmt.git
 $ mkdir fmt/build
 $ cd fmt/build
-$ cmake ..
-$ make
+$ cmake -DCMAKE_INSTALL_PREFIX="$MT_INSTALL_DIRECTORY" ..
+$ make -j4
 $ make install
 ```
 
@@ -81,11 +88,9 @@ $ MT_INSTALL_DIRECTORY="$PWD/install"
 
 To build [Redex](https://fbredex.com/) from source, run:
 ```shell
-$ brew install git
 $ git clone https://github.com/facebook/redex.git
-$ cd redex
-$ mkdir build
-$ cd build
+$ mkdir redex/build
+$ cd redex/build
 $ cmake -DCMAKE_INSTALL_PREFIX="$MT_INSTALL_DIRECTORY" ..
 $ make -j4
 $ make install
@@ -95,10 +100,14 @@ $ make install
 
 Now that we have our dependencies ready, let's build the Mariana Trench binary:
 ```shell
-$ cd ../..  # Go back to the root directory
+$ cd ../..  # Go back to the root directory of Mariana Trench
 $ mkdir build
 $ cd build
-$ cmake -DREDEX_ROOT="$MT_INSTALL_DIRECTORY" -DCMAKE_INSTALL_PREFIX="$MT_INSTALL_DIRECTORY" ..
+$ cmake \
+  -DREDEX_ROOT="$MT_INSTALL_DIRECTORY" \
+  -Dfmt_ROOT="$MT_INSTALL_DIRECTORY" \
+  -DCMAKE_INSTALL_PREFIX="$MT_INSTALL_DIRECTORY" \
+  ..
 $ make -j4
 $ make install
 ```
