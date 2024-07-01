@@ -69,6 +69,10 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+if (POLICY CMP0144)
+  cmake_policy(SET CMP0144 NEW)
+endif ()
+
 # Dependencies
 find_package(Threads REQUIRED)
 find_package(ZLIB REQUIRED)
