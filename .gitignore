@@ -1,6 +1,7 @@
 /build/
 /env/
 /install/
+/dependencies/
 /.cache/
 
 # Editors

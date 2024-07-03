@@ -58,12 +58,23 @@ On **Linux**, you will need to install Java to run the tests. For instance, on *
 $ sudo apt install default-jre default-jdk
 ```
 
+### Clone the repository
+
+First of, clone the Mariana Trench repository. We will also set an environment variable `MARIANA_TRENCH_DIRECTORY` that points to it for the following instructions.
+```shell
+$ git clone https://github.com/facebook/mariana-trench.git
+$ cd mariana-trench
+$ MARIANA_TRENCH_DIRECTORY="$PWD"
+```
+
 ### Installation directory
 
-We do not recommend installing Mariana Trench as root. Instead, you should pick a directory where all libraries and binaries will be installed, and set the variable `MT_INSTALL_DIRECTORY` to its absolute path. For instance, assuming you are in the root directory of the repository:
+We do not recommend installing Mariana Trench as root. Instead, we will install all libraries and binaries in a directory "install".
+We will also use a directory called "dependencies" to store dependencies that we have to build from source.
+Run the following commands:
 ```shell
 $ mkdir install
-$ MT_INSTALL_DIRECTORY="$PWD/install"
+$ mkdir dependencies
 ```
 
 ### Building fmt
@@ -71,27 +82,24 @@ $ MT_INSTALL_DIRECTORY="$PWD/install"
 The 9.0 release of `fmt` has breaking changes that Mariana Trench is not yet compatible with, so for now, you need to build the library from source. You will need to do the following:
 
 ```shell
+$ cd "$MARIANA_TRENCH_DIRECTORY/dependencies"
 $ git clone -b 8.1.1 https://github.com/fmtlib/fmt.git
 $ mkdir fmt/build
 $ cd fmt/build
-$ cmake -DCMAKE_INSTALL_PREFIX="$MT_INSTALL_DIRECTORY" ..
+$ cmake -DCMAKE_INSTALL_PREFIX="$MARIANA_TRENCH_DIRECTORY/install" ..
 $ make -j4
 $ make install
 ```
 
 ### Building Redex
 
-You will need to choose a temporary directory to store the C++ binaries and libraries for Redex and Mariana Trench. You can safely remove these after installation if you do not intend to update the C++ code. Pick a directory and set the variable `MT_INSTALL_DIRECTORY` to its absolute path, for instance:
+We also need to build [Redex](https://fbredex.com/) from source, run:
 ```shell
-$ MT_INSTALL_DIRECTORY="$PWD/install"
-```
-
-To build [Redex](https://fbredex.com/) from source, run:
-```shell
+$ cd "$MARIANA_TRENCH_DIRECTORY/dependencies"
 $ git clone https://github.com/facebook/redex.git
 $ mkdir redex/build
 $ cd redex/build
-$ cmake -DCMAKE_INSTALL_PREFIX="$MT_INSTALL_DIRECTORY" ..
+$ cmake -DCMAKE_INSTALL_PREFIX="$MARIANA_TRENCH_DIRECTORY/install" ..
 $ make -j4
 $ make install
 ```
@@ -100,22 +108,23 @@ $ make install
 
 Now that we have our dependencies ready, let's build the Mariana Trench binary:
 ```shell
-$ cd ../..  # Go back to the root directory of Mariana Trench
+$ cd "$MARIANA_TRENCH_DIRECTORY"
 $ mkdir build
 $ cd build
 $ cmake \
-  -DREDEX_ROOT="$MT_INSTALL_DIRECTORY" \
-  -Dfmt_ROOT="$MT_INSTALL_DIRECTORY" \
-  -DCMAKE_INSTALL_PREFIX="$MT_INSTALL_DIRECTORY" \
+  -DREDEX_ROOT="$MARIANA_TRENCH_DIRECTORY/install" \
+  -Dfmt_ROOT="$MARIANA_TRENCH_DIRECTORY/install" \
+  -DCMAKE_INSTALL_PREFIX="$MARIANA_TRENCH_DIRECTORY/install" \
   ..
 $ make -j4
 $ make install
 ```
 
 Finally, let's install Mariana Trench as a Python package.
-We recommend to run this step inside a [virtual environment](https://packaging.python.org/tutorials/installing-packages/#creating-virtual-environments).
+First, follow the instructions to create a [virtual environment](https://packaging.python.org/tutorials/installing-packages/#creating-virtual-environments).
+Once inside a virtual environment (after using the `activate` script), run:
 ```shell
-$ cd .. # Go back to the root directory
+$ cd "$MARIANA_TRENCH_DIRECTORY"
 $ python scripts/setup.py \
   --binary "$MT_INSTALL_DIRECTORY/bin/mariana-trench-binary" \
   --pyredex "$MT_INSTALL_DIRECTORY/bin/pyredex" \
