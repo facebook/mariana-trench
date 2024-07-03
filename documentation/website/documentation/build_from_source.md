@@ -1,18 +1,16 @@
 ---
-id: contribution
-title: Contribution
-sidebar_label: Contribution
+id: build-from-source
+title: Build from Source
+sidebar_label: Build from Source
 ---
 
-This documentation aims to help you become an active contributor to Mariana Trench.
+This documentation aims to help you build Mariana Trench from source and run the tests.
 
-## Building From Source
-
-### Support
+## Supported Platforms
 
 Mariana Trench is currently supported on **macOS** (tested on *Big Sur 11.4*) and **Linux** (tested on *Ubuntu 20.04 LTS*).
 
-### Dependencies
+## Dependencies
 
 Below is a list of the required dependencies. Most of them can be installed with **[Homebrew](https://brew.sh/)**.
 
@@ -28,6 +26,8 @@ Below is a list of the required dependencies. Most of them can be installed with
 * Java (Optional)
 * Android SDK (Optional)
 * Redex (master)
+
+## Building and Installing
 
 ### Install all dependencies with Homebrew
 
@@ -131,7 +131,7 @@ $ python scripts/setup.py \
   install
 ```
 
-## Development
+## Testing during development
 
 If you are making changes to Mariana Trench, you can use the `mariana-trench` wrapper inside the build directory:
 ```shell
@@ -148,7 +148,7 @@ Note that you will need to install all python dependencies:
 $ pip install pyre_extensions fb-sapp
 ```
 
-## Run the tests
+## Running the tests
 
 To run the tests after building Mariana Trench, use:
 ```shell

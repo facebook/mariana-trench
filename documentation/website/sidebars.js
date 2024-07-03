@@ -32,7 +32,7 @@ module.exports = {
       fbInternalOnly('fb/testing-diffs'),
     ],
     'Developer Guide': [
-      fbContent({external: 'contribution'}),
+      fbContent({external: 'build-from-source'}),
       fbInternalOnly('fb/developer-getting-started'),
       fbInternalOnly('fb/running-tests'),
       fbInternalOnly('fb/inspecting-an-apk'),
