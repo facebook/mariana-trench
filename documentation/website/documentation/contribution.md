@@ -155,3 +155,30 @@ To run the tests after building Mariana Trench, use:
 $ cd build
 $ make check
 ```
+
+## Troubleshooting
+
+Here are a set of errors you might encounter, and their solutions.
+
+### CMake Warning: Ignoring extra path from command line: ".."
+
+You probably tried to run `cmake` from the wrong directory.
+Make sure that `$MARIANA_TRENCH_DIRECTORY` is set correctly (test with `echo $MARIANA_TRENCH_DIRECTORY`).
+Then, run the instructions again from the beginning of the section you are in.
+
+### error: externally-managed-environment
+
+You probably tried to run `python scripts/setup.py` without a virtual environment. Create a [virtual environment](https://packaging.python.org/tutorials/installing-packages/#creating-virtual-environments) first.
+
+### undefined reference to `pthread_create@GLIBC`
+
+This seems to happen on Linux, when your operating system has an old version of glibc, which doesn't match the version used by Homebrew.
+Try upgrading your operating system to the last version.
+
+Another option is to use the compiler (gcc) from Homebrew directly:
+```
+$ brew install gcc
+export CC=/home/linuxbrew/.linuxbrew/bin/cc
+export CXX=/home/linuxbrew/.linuxbrew/bin/c++
+```
+You will need to run all the instructions from this page again, starting from `Clone the repository`. We recommend starting from scratch, i.e delete the mariana-trench directory.
