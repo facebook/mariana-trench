@@ -5,21 +5,22 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <boost/algorithm/string/join.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/algorithm/string/replace.hpp>
 #include <fmt/format.h>
 
 #include <mariana-trench/JsonValidation.h>
-#include <mariana-trench/SanitizeTransform.h>
+#include <mariana-trench/SanitizerSetTransform.h>
 #include <mariana-trench/TransformsFactory.h>
 
 namespace marianatrench {
 
-void SanitizeTransform::show(std::ostream& out) const {
+void SanitizerSetTransform::show(std::ostream& out) const {
   out << to_trace_string();
 }
 
-const SanitizeTransform* SanitizeTransform::from_trace_string(
+const SanitizerSetTransform* SanitizerSetTransform::from_trace_string(
     const std::string& transform,
     Context& context) {
   if (boost::starts_with(transform, "SanitizeTransform[") &&
@@ -29,7 +30,8 @@ const SanitizeTransform* SanitizeTransform::from_trace_string(
     boost::replace_last(kind_str, "]", "");
     const auto* kind = Kind::from_trace_string(kind_str, context);
 
-    return context.transforms_factory->create_sanitize_transform(kind);
+    return context.transforms_factory->create_sanitizer_set_transform(
+        Set{kind});
   }
 
   throw JsonValidationError(
@@ -38,19 +40,28 @@ const SanitizeTransform* SanitizeTransform::from_trace_string(
       "Could not be parsed as a valid SanitizeTransform");
 }
 
-std::string SanitizeTransform::to_trace_string() const {
-  return fmt::format(
-      "SanitizeTransform[{}]", sanitizer_kind_->to_trace_string());
+std::string SanitizerSetTransform::to_trace_string() const {
+  std::vector<std::string> sanitized_kinds;
+  sanitized_kinds.reserve(kinds_.size());
+
+  for (const auto* kind : kinds_) {
+    sanitized_kinds.push_back(
+        fmt::format("SanitizeTransform[{}]", kind->to_trace_string()));
+  }
+
+  std::sort(sanitized_kinds.begin(), sanitized_kinds.end());
+
+  return boost::join(sanitized_kinds, ":");
 }
 
-const SanitizeTransform* SanitizeTransform::from_config_json(
+const SanitizerSetTransform* SanitizerSetTransform::from_config_json(
     const Json::Value& transform,
     Context& context) {
   JsonValidation::validate_object(transform);
 
   const auto* kind = Kind::from_json(transform, context);
 
-  return context.transforms_factory->create_sanitize_transform(kind);
+  return context.transforms_factory->create_sanitizer_set_transform(Set{kind});
 }
 
 } // namespace marianatrench

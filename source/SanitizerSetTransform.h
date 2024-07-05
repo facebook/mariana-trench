@@ -12,6 +12,8 @@
 
 #include <json/json.h>
 
+#include <boost/container/flat_set.hpp>
+
 #include <mariana-trench/Context.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Kind.h>
@@ -19,37 +21,38 @@
 
 namespace marianatrench {
 
-class SanitizeTransform final : public Transform {
+class SanitizerSetTransform final : public Transform {
  public:
-  explicit SanitizeTransform(const Kind* kind) : sanitizer_kind_(kind) {}
+  using Set = boost::container::flat_set<const Kind*>;
 
-  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(SanitizeTransform)
+  explicit SanitizerSetTransform(const Set& kinds) : kinds_(kinds) {}
+
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(SanitizerSetTransform)
 
   std::string to_trace_string() const override;
   void show(std::ostream&) const override;
 
-  static const SanitizeTransform* from_trace_string(
+  static const SanitizerSetTransform* from_trace_string(
       const std::string& transform,
       Context& context);
 
-  static const SanitizeTransform* from_config_json(
+  static const SanitizerSetTransform* from_config_json(
       const Json::Value& transform,
       Context& context);
 
-  const Kind* kind() const {
-    return sanitizer_kind_;
+  const Set& kinds() const {
+    return kinds_;
   }
+
+  struct SetHash {
+    // Directly define here for inline oppotunities
+    std::size_t operator()(const Set& kinds) const {
+      return boost::hash_range(kinds.begin(), kinds.end());
+    }
+  };
 
  private:
-  const Kind* sanitizer_kind_;
-};
-
-class SanitizeTransformCompare {
- public:
-  bool operator()(const SanitizeTransform* lhs, const SanitizeTransform* rhs)
-      const {
-    return lhs->kind()->to_trace_string() < rhs->kind()->to_trace_string();
-  }
+  Set kinds_;
 };
 
 } // namespace marianatrench

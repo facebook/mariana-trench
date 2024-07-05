@@ -36,7 +36,7 @@ TransformList TransformList::discard_sanitizers(
     const TransformList* transforms) {
   List no_sanitizers{};
   for (const auto* transform : *transforms) {
-    if (!transform->is<SanitizeTransform>()) {
+    if (!transform->is<SanitizerSetTransform>()) {
       no_sanitizers.push_back(transform);
     }
   }
@@ -55,7 +55,7 @@ bool TransformList::has_source_as_transform() const {
 bool TransformList::has_non_sanitize_transform() const {
   return std::any_of(
       transforms_.begin(), transforms_.end(), [](const Transform* transform) {
-        return !transform->is<SanitizeTransform>();
+        return !transform->is<SanitizerSetTransform>();
       });
 }
 
@@ -129,30 +129,36 @@ TransformList TransformList::concat(
   return TransformList(std::move(transforms));
 }
 
-TransformList TransformList::canonicalize(const TransformList* transforms) {
+TransformList TransformList::canonicalize(
+    const TransformList* transforms,
+    const TransformsFactory& transforms_factory) {
   List canonicalized{};
-  std::set<const SanitizeTransform*, SanitizeTransformCompare> sanitizers;
+  SanitizerSetTransform::Set sanitize_kinds{};
 
   for (const auto* transform : *transforms) {
-    if (const auto* santize_transform = transform->as<SanitizeTransform>()) {
-      sanitizers.insert(santize_transform);
-      continue;
+    if (const auto* santize_transform =
+            transform->as<SanitizerSetTransform>()) {
+      const auto& current_sanitizers = santize_transform->kinds();
+      sanitize_kinds.insert(
+          boost::container::ordered_unique_range,
+          current_sanitizers.begin(),
+          current_sanitizers.end());
     } else {
-      if (!sanitizers.empty()) {
+      if (!sanitize_kinds.empty()) {
         // We have a non-sanitizer transform after sanitizers, so we need to add
         // the sanitizers before this one and clear them out for next iteration
-        canonicalized.insert(
-            canonicalized.end(), sanitizers.begin(), sanitizers.end());
-        sanitizers.clear();
+        canonicalized.push_back(
+            transforms_factory.create_sanitizer_set_transform(sanitize_kinds));
+        sanitize_kinds.clear();
       }
       canonicalized.push_back(transform);
     }
   }
 
   // Add the remaining sanitizers at the end
-  if (!sanitizers.empty()) {
-    canonicalized.insert(
-        canonicalized.end(), sanitizers.begin(), sanitizers.end());
+  if (!sanitize_kinds.empty()) {
+    canonicalized.push_back(
+        transforms_factory.create_sanitizer_set_transform(sanitize_kinds));
   }
 
   return TransformList(std::move(canonicalized));

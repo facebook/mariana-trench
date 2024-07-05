@@ -44,7 +44,7 @@ TaintTree apply_propagation(
               all_transforms->begin(),
               all_transforms->end(),
               [](const Transform* transform) {
-                return transform->is<SanitizeTransform>();
+                return transform->is<SanitizerSetTransform>();
               }));
 
   if (direction == TransformDirection::Forward) {

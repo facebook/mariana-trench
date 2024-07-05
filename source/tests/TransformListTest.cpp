@@ -26,48 +26,71 @@ TEST_F(TransformListTest, Canonicalize) {
   const Kind* kind_a = context.kind_factory->get("A");
   const Kind* kind_b = context.kind_factory->get("B");
   const Transform* sanitize_a =
-      context.transforms_factory->create_sanitize_transform(kind_a);
+      context.transforms_factory->create_sanitizer_set_transform(
+          SanitizerSetTransform::Set{kind_a});
   const Transform* sanitize_b =
-      context.transforms_factory->create_sanitize_transform(kind_b);
+      context.transforms_factory->create_sanitizer_set_transform(
+          SanitizerSetTransform::Set{kind_b});
+  const Transform* sanitize_a_b =
+      context.transforms_factory->create_sanitizer_set_transform(
+          SanitizerSetTransform::Set{kind_a, kind_b});
 
   // canonicalize does not change the list if there is no sanitizer
   EXPECT_EQ(
-      TransformList::canonicalize(context.transforms_factory->create(
-          std::vector{transform_x, transform_y, transform_z})),
+      TransformList::canonicalize(
+          context.transforms_factory->create(
+              std::vector{transform_x, transform_y, transform_z}),
+          *context.transforms_factory),
       *context.transforms_factory->create(
           std::vector{transform_x, transform_y, transform_z}));
 
   // No duplication, sorted
   EXPECT_EQ(
-      TransformList::canonicalize(context.transforms_factory->create(
-          std::vector{sanitize_a, sanitize_b})),
-      *context.transforms_factory->create(std::vector{sanitize_a, sanitize_b}));
+      TransformList::canonicalize(
+          context.transforms_factory->create(
+              std::vector{sanitize_a, sanitize_b}),
+          *context.transforms_factory),
+      *context.transforms_factory->create(std::vector{sanitize_a_b}));
 
   // No duplication, unsorted
   EXPECT_EQ(
-      TransformList::canonicalize(context.transforms_factory->create(
-          std::vector{sanitize_b, sanitize_a})),
-      *context.transforms_factory->create(std::vector{sanitize_a, sanitize_b}));
+      TransformList::canonicalize(
+          context.transforms_factory->create(
+              std::vector{sanitize_b, sanitize_a}),
+          *context.transforms_factory),
+      *context.transforms_factory->create(std::vector{sanitize_a_b}));
+
+  EXPECT_EQ(
+      TransformList::canonicalize(
+          context.transforms_factory->create(
+              std::vector{sanitize_a_b, sanitize_a}),
+          *context.transforms_factory),
+      *context.transforms_factory->create(std::vector{sanitize_a_b}));
 
   // Duplication, sorted
   EXPECT_EQ(
-      TransformList::canonicalize(context.transforms_factory->create(
-          std::vector{sanitize_a, sanitize_a, sanitize_b, sanitize_b})),
-      *context.transforms_factory->create(std::vector{sanitize_a, sanitize_b}));
+      TransformList::canonicalize(
+          context.transforms_factory->create(
+              std::vector{sanitize_a, sanitize_a, sanitize_b, sanitize_b}),
+          *context.transforms_factory),
+      *context.transforms_factory->create(std::vector{sanitize_a_b}));
 
   // Duplication, unsorted
   EXPECT_EQ(
-      TransformList::canonicalize(context.transforms_factory->create(
-          std::vector{sanitize_b, sanitize_a, sanitize_a, sanitize_b})),
-      *context.transforms_factory->create(std::vector{sanitize_a, sanitize_b}));
+      TransformList::canonicalize(
+          context.transforms_factory->create(
+              std::vector{sanitize_b, sanitize_a, sanitize_a, sanitize_b}),
+          *context.transforms_factory),
+      *context.transforms_factory->create(std::vector{sanitize_a_b}));
 
   // Mix with transforms
   EXPECT_EQ(
       TransformList::canonicalize(
           context.transforms_factory->create(std::vector{
-              transform_z, sanitize_b, sanitize_a, sanitize_a, transform_y})),
+              transform_z, sanitize_b, sanitize_a, sanitize_a, transform_y}),
+          *context.transforms_factory),
       *context.transforms_factory->create(
-          std::vector{transform_z, sanitize_a, sanitize_b, transform_y}));
+          std::vector{transform_z, sanitize_a_b, transform_y}));
 
   EXPECT_EQ(
       TransformList::canonicalize(
@@ -79,14 +102,10 @@ TEST_F(TransformListTest, Canonicalize) {
               transform_y,
               sanitize_a,
               sanitize_b,
-              sanitize_a})),
+              sanitize_a}),
+          *context.transforms_factory),
       *context.transforms_factory->create(std::vector{
-          sanitize_b,
-          transform_x,
-          transform_z,
-          transform_y,
-          sanitize_a,
-          sanitize_b}));
+          sanitize_b, transform_x, transform_z, transform_y, sanitize_a_b}));
 }
 
 TEST_F(TransformListTest, Sanitize) {
@@ -104,10 +123,16 @@ TEST_F(TransformListTest, Sanitize) {
 
   const Kind* kind_a = context.kind_factory->get("A");
   const Kind* kind_b = context.kind_factory->get("B");
+
   const Transform* sanitize_a =
-      context.transforms_factory->create_sanitize_transform(kind_a);
+      context.transforms_factory->create_sanitizer_set_transform(
+          SanitizerSetTransform::Set{kind_a});
   const Transform* sanitize_b =
-      context.transforms_factory->create_sanitize_transform(kind_b);
+      context.transforms_factory->create_sanitizer_set_transform(
+          SanitizerSetTransform::Set{kind_b});
+  const Transform* sanitize_a_b =
+      context.transforms_factory->create_sanitizer_set_transform(
+          SanitizerSetTransform::Set{kind_a, kind_b});
 
   // No sanitizers
   EXPECT_FALSE(context.transforms_factory
@@ -133,30 +158,24 @@ TEST_F(TransformListTest, Sanitize) {
 
   // Multiple sanitizer in the front/back
   EXPECT_TRUE(context.transforms_factory
-                  ->create(std::vector{
-                      sanitize_a, sanitize_b, transform_x, transform_y})
+                  ->create(std::vector{sanitize_a_b, transform_x, transform_y})
                   ->sanitizes<Forward>(kind_a));
   EXPECT_TRUE(context.transforms_factory
-                  ->create(std::vector{
-                      transform_x, transform_y, sanitize_a, sanitize_b})
+                  ->create(std::vector{transform_x, transform_y, sanitize_a_b})
                   ->sanitizes<Backward>(kind_b));
   EXPECT_TRUE(context.transforms_factory
-                  ->create(std::vector{
-                      sanitize_a, sanitize_b, transform_x, transform_y})
+                  ->create(std::vector{sanitize_a_b, transform_x, transform_y})
                   ->sanitizes<Forward>(kind_b));
   EXPECT_TRUE(context.transforms_factory
-                  ->create(std::vector{
-                      transform_x, transform_y, sanitize_a, sanitize_b})
+                  ->create(std::vector{transform_x, transform_y, sanitize_a_b})
                   ->sanitizes<Backward>(kind_a));
 
   // Sanitizer in the middle
   EXPECT_FALSE(context.transforms_factory
-                   ->create(std::vector{
-                       transform_z, sanitize_a, sanitize_b, transform_y})
+                   ->create(std::vector{transform_z, sanitize_a_b, transform_y})
                    ->sanitizes<Forward>(kind_a));
   EXPECT_FALSE(context.transforms_factory
-                   ->create(std::vector{
-                       transform_z, sanitize_a, sanitize_b, transform_y})
+                   ->create(std::vector{transform_z, sanitize_a_b, transform_y})
                    ->sanitizes<Backward>(kind_a));
 
   // Passing in a TransformKind

@@ -12,7 +12,7 @@
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Kind.h>
-#include <mariana-trench/SanitizeTransform.h>
+#include <mariana-trench/SanitizerSetTransform.h>
 #include <mariana-trench/Transform.h>
 #include <mariana-trench/TransformKind.h>
 
@@ -44,12 +44,12 @@ class TransformList final {
  public:
   TransformList() = default;
 
-  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(TransformList)
-
- private:
   explicit TransformList(List transforms)
       : transforms_(std::move(transforms)) {}
 
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(TransformList)
+
+ private:
   explicit TransformList(ConstIterator begin, ConstIterator end)
       : transforms_(List{begin, end}) {}
 
@@ -77,7 +77,7 @@ class TransformList final {
       auto sanitizer_begin = transforms_.cbegin();
       auto sanitizer_end = std::find_if(
           sanitizer_begin, transforms_.cend(), [](const Transform* transform) {
-            return !transform->is<SanitizeTransform>();
+            return !transform->is<SanitizerSetTransform>();
           });
       return std::make_pair(sanitizer_begin, sanitizer_end);
     } else {
@@ -87,15 +87,11 @@ class TransformList final {
           sanitizer_rbegin,
           transforms_.crend(),
           [](const Transform* transform) {
-            return !transform->is<SanitizeTransform>();
+            return !transform->is<SanitizerSetTransform>();
           });
       return std::make_pair(sanitizer_rbegin, sanitizer_rend);
     }
   }
-
-  static TransformList concat(
-      const TransformList* left,
-      const TransformList* right);
 
  public:
   bool operator==(const TransformList& other) const {
@@ -144,7 +140,7 @@ class TransformList final {
         std::move(sanitizer_begin),
         std::move(sanitizer_end),
         [kind](const Transform* transform) {
-          return transform->as<SanitizeTransform>()->kind() == kind;
+          return transform->as<SanitizerSetTransform>()->kinds().contains(kind);
         });
   }
 
@@ -163,7 +159,13 @@ class TransformList final {
 
   static TransformList from_kind(const Kind* kind, Context& context);
 
-  static TransformList canonicalize(const TransformList* transforms);
+  static TransformList concat(
+      const TransformList* left,
+      const TransformList* right);
+
+  static TransformList canonicalize(
+      const TransformList* transforms,
+      const TransformsFactory& transforms_factory);
 
  private:
   friend class TransformsFactory;

@@ -14,15 +14,15 @@
 #include <mariana-trench/Context.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Kind.h>
-#include <mariana-trench/SanitizeTransform.h>
+#include <mariana-trench/SanitizerSetTransform.h>
 #include <mariana-trench/TransformList.h>
 
 namespace marianatrench {
 
-enum class SanitizerKind { Sources, Sinks, Propagations };
-
 using KindSetAbstractDomain =
     sparta::PatriciaTreeSetAbstractDomain<const Kind*>;
+
+enum class SanitizerKind { Sources, Sinks, Propagations };
 
 /**
  * Represents a sanitizer for specific flows through a method.
@@ -100,7 +100,7 @@ class Sanitizer final : public sparta::AbstractDomain<Sanitizer> {
   static const Sanitizer from_json(const Json::Value& value, Context& context);
   Json::Value to_json() const;
 
-  const TransformList* to_sanitize_transforms(
+  const Transform* to_transform(
       const TransformsFactory& transforms_factory) const;
 
   // Describe how to join sanitizers together in `SanitizerSet`.

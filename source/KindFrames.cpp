@@ -429,30 +429,38 @@ KindFrames KindFrames::add_sanitize_transform(
     const Sanitizer& sanitizer,
     const KindFactory& kind_factory,
     const TransformsFactory& transforms_factory) const {
-  const TransformList* local_transforms =
-      sanitizer.to_sanitize_transforms(transforms_factory);
+  TransformList new_transforms(
+      std::vector{sanitizer.to_transform(transforms_factory)});
   const TransformList* global_transforms = nullptr;
-  const Kind* base_kind = kind_;
+  const auto* base_kind = kind_;
 
   mt_assert(base_kind != nullptr);
 
   // Check and see if we can drop some taints here
-  if (local_transforms
-          ->sanitizes<TransformList::ApplicationDirection::Backward>(
-              base_kind)) {
+  if (new_transforms.sanitizes<TransformList::ApplicationDirection::Backward>(
+          base_kind)) {
     return KindFrames::bottom();
   }
 
   // Need a special case for TransformKind, since we need to append the
   // local_transforms to the existing local transforms.
   if (const auto* transform_kind = base_kind->as<TransformKind>()) {
-    local_transforms = transforms_factory.concat(
-        local_transforms, transform_kind->local_transforms());
+    const auto* existing_transforms = transform_kind->local_transforms();
+
+    //  TransformList::concat requires non-null transform lists.
+    if (existing_transforms != nullptr) {
+      new_transforms =
+          TransformList::concat(&new_transforms, existing_transforms);
+    }
+
     global_transforms = transform_kind->global_transforms();
     base_kind = transform_kind->base_kind();
+    new_transforms =
+        TransformList::canonicalize(&new_transforms, transforms_factory);
   }
 
-  local_transforms = transforms_factory.canonicalize(local_transforms);
+  // Finally put the new transform list into the factory
+  const auto* local_transforms = transforms_factory.create(new_transforms);
   mt_assert(local_transforms != nullptr);
 
   const auto* new_kind = kind_factory.transform_kind(

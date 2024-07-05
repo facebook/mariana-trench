@@ -12,7 +12,7 @@
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Kind.h>
 #include <mariana-trench/NamedTransform.h>
-#include <mariana-trench/SanitizeTransform.h>
+#include <mariana-trench/SanitizerSetTransform.h>
 #include <mariana-trench/SourceAsTransform.h>
 #include <mariana-trench/TransformList.h>
 #include <mariana-trench/UniquePointerFactory.h>
@@ -43,7 +43,8 @@ class TransformsFactory final {
 
   const SourceAsTransform* create_source_as_transform(const Kind* kind) const;
 
-  const SanitizeTransform* create_sanitize_transform(const Kind* kind) const;
+  const SanitizerSetTransform* create_sanitizer_set_transform(
+      const SanitizerSetTransform::Set& kinds) const;
 
   // Use for testing only
   const TransformList* create(
@@ -81,7 +82,11 @@ class TransformsFactory final {
  private:
   UniquePointerFactory<std::string, NamedTransform> transform_;
   UniquePointerFactory<const Kind*, SourceAsTransform> source_as_transform_;
-  UniquePointerFactory<const Kind*, SanitizeTransform> sanitize_transform_;
+  UniquePointerFactory<
+      SanitizerSetTransform::Set,
+      SanitizerSetTransform,
+      SanitizerSetTransform::SetHash>
+      sanitize_transform_set_;
   mutable InsertOnlyConcurrentSet<TransformList> transform_lists_;
 };
 

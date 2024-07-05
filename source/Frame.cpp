@@ -18,7 +18,7 @@
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/OriginFactory.h>
-#include <mariana-trench/SanitizeTransform.h>
+#include <mariana-trench/SanitizerSetTransform.h>
 #include <mariana-trench/TaggedRootSet.h>
 #include <mariana-trench/UsedKinds.h>
 

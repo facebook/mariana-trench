@@ -21,9 +21,9 @@ const SourceAsTransform* TransformsFactory::create_source_as_transform(
   return source_as_transform_.create(kind);
 }
 
-const SanitizeTransform* TransformsFactory::create_sanitize_transform(
-    const Kind* kind) const {
-  return sanitize_transform_.create(kind);
+const SanitizerSetTransform* TransformsFactory::create_sanitizer_set_transform(
+    const SanitizerSetTransform::Set& kinds) const {
+  return sanitize_transform_set_.create(kinds);
 }
 
 const TransformList* TransformsFactory::create(
@@ -131,7 +131,7 @@ const TransformList* MT_NULLABLE TransformsFactory::canonicalize(
     return transforms;
   }
 
-  return create(TransformList::canonicalize(transforms));
+  return create(TransformList::canonicalize(transforms, *this));
 }
 
 } // namespace marianatrench

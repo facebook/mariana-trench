@@ -154,19 +154,13 @@ Json::Value Sanitizer::to_json() const {
   return value;
 }
 
-const TransformList* Sanitizer::to_sanitize_transforms(
+const Transform* Sanitizer::to_transform(
     const TransformsFactory& transforms_factory) const {
   mt_assert(
       sanitizer_kind_ == SanitizerKind::Propagations && kinds_.is_value());
-
-  std::vector<const Transform*> local_transforms_vec;
-  local_transforms_vec.reserve(kinds_.size());
-  for (const auto* sanitize_kind : kinds_.elements()) {
-    local_transforms_vec.push_back(
-        transforms_factory.create_sanitize_transform(sanitize_kind));
-  }
-
-  return transforms_factory.create(std::move(local_transforms_vec));
+  const auto& elements = kinds_.elements();
+  return transforms_factory.create_sanitizer_set_transform(
+      SanitizerSetTransform::Set(elements.begin(), elements.end()));
 }
 
 bool Sanitizer::GroupEqual::operator()(
