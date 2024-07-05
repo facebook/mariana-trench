@@ -2353,7 +2353,7 @@
               "kind" : 
               {
                 "base" : "SinkB",
-                "local" : "SanitizeTransform[SourceA]"
+                "local" : "Sanitize[SourceA]"
               },
               "origins" : 
               [
@@ -2454,7 +2454,7 @@
               "kind" : 
               {
                 "base" : "SinkB",
-                "local" : "SanitizeTransform[SourceA]:TransformY:TransformZ"
+                "local" : "Sanitize[SourceA]:TransformY:TransformZ"
               },
               "origins" : 
               [
@@ -2520,7 +2520,7 @@
               {
                 "base" : "LocalReturn",
                 "global" : "TransformX",
-                "local" : "SanitizeTransform[SourceA]"
+                "local" : "Sanitize[SourceA]"
               },
               "origins" : 
               [
@@ -2596,7 +2596,7 @@
               "kind" : 
               {
                 "base" : "SinkB",
-                "local" : "SanitizeTransform[SourceA]:TransformX"
+                "local" : "Sanitize[SourceA]:TransformX"
               },
               "origins" : 
               [
@@ -2647,8 +2647,8 @@
               "kind" : 
               {
                 "base" : "LocalReturn",
-                "global" : "SanitizeTransform[SinkB]",
-                "local" : "SanitizeTransform[SinkB]"
+                "global" : "Sanitize[SinkB]",
+                "local" : "Sanitize[SinkB]"
               },
               "output_paths" : 
               {
@@ -2692,7 +2692,7 @@
               {
                 "base" : "LocalReturn",
                 "global" : "TransformX",
-                "local" : "SanitizeTransform[SinkB]"
+                "local" : "Sanitize[SinkB]"
               },
               "origins" : 
               [
@@ -2738,7 +2738,7 @@
               "kind" : 
               {
                 "base" : "LocalReturn",
-                "local" : "SanitizeTransform[SinkB]"
+                "local" : "Sanitize[SinkB]"
               },
               "output_paths" : 
               {
@@ -2790,7 +2790,7 @@
               "kind" : 
               {
                 "base" : "LocalReturn",
-                "local" : "SanitizeTransform[SourceA]"
+                "local" : "Sanitize[SourceA]"
               },
               "output_paths" : 
               {
@@ -2927,7 +2927,7 @@
               "kind" : 
               {
                 "base" : "SourceA",
-                "local" : "SanitizeTransform[SinkB]"
+                "local" : "Sanitize[SinkB]"
               },
               "origins" : 
               [
@@ -3010,7 +3010,7 @@
               "kind" : 
               {
                 "base" : "SourceA",
-                "local" : "TransformX:SanitizeTransform[SinkB]"
+                "local" : "TransformX:Sanitize[SinkB]"
               },
               "origins" : 
               [
@@ -3096,7 +3096,7 @@
               "kind" : 
               {
                 "base" : "SourceA",
-                "local" : "SanitizeTransform[SinkB]:TransformX"
+                "local" : "Sanitize[SinkB]:TransformX"
               },
               "origins" : 
               [
@@ -3434,7 +3434,7 @@
               {
                 "base" : "SourceA",
                 "global" : "TransformY",
-                "local" : "SanitizeTransform[SourceA]"
+                "local" : "Sanitize[SourceA]"
               },
               "origins" : 
               [
@@ -3493,8 +3493,8 @@
               "kind" : 
               {
                 "base" : "SourceA",
-                "global" : "SanitizeTransform[SourceA]:TransformY",
-                "local" : "SanitizeTransform[SinkB]"
+                "global" : "Sanitize[SourceA]:TransformY",
+                "local" : "Sanitize[SinkB]"
               },
               "origins" : 
               [
@@ -3573,7 +3573,7 @@
               "kind" : 
               {
                 "base" : "SourceA",
-                "global" : "SanitizeTransform[SinkB]:SanitizeTransform[SourceA]:TransformY",
+                "global" : "Sanitize[SinkB]:Sanitize[SourceA]:TransformY",
                 "local" : "TransformZ"
               },
               "origins" : 
@@ -3638,7 +3638,7 @@
               {
                 "base" : "SourceA",
                 "global" : "TransformY",
-                "local" : "SanitizeTransform[SinkB]"
+                "local" : "Sanitize[SinkB]"
               },
               "origins" : 
               [
@@ -3697,8 +3697,8 @@
               "kind" : 
               {
                 "base" : "SourceA",
-                "global" : "SanitizeTransform[SinkB]:TransformY",
-                "local" : "SanitizeTransform[SourceA]"
+                "global" : "Sanitize[SinkB]:TransformY",
+                "local" : "Sanitize[SourceA]"
               },
               "origins" : 
               [
@@ -3777,7 +3777,7 @@
               "kind" : 
               {
                 "base" : "SourceA",
-                "global" : "SanitizeTransform[SourceA]:SanitizeTransform[SinkB]:TransformY",
+                "global" : "Sanitize[SourceA]:Sanitize[SinkB]:TransformY",
                 "local" : "TransformZ"
               },
               "origins" : 
@@ -3898,7 +3898,7 @@
               "kind" : 
               {
                 "base" : "SourceA",
-                "global" : "SanitizeTransform[SinkB]"
+                "global" : "Sanitize[SinkB]"
               },
               "origins" : 
               [
@@ -4018,7 +4018,7 @@
               "kind" : 
               {
                 "base" : "SourceA",
-                "global" : "SanitizeTransform[SinkB]",
+                "global" : "Sanitize[SinkB]",
                 "local" : "TransformX"
               },
               "origins" : 
@@ -4126,7 +4126,7 @@
               "kind" : 
               {
                 "base" : "SourceA",
-                "global" : "TransformX:SanitizeTransform[SinkB]"
+                "global" : "TransformX:Sanitize[SinkB]"
               },
               "origins" : 
               [
@@ -4324,7 +4324,7 @@
               "kind" : 
               {
                 "base" : "SourceA",
-                "local" : "TransformX:SanitizeTransform[SinkB]"
+                "local" : "TransformX:Sanitize[SinkB]"
               },
               "origins" : 
               [
@@ -4449,14 +4449,14 @@
                   "kind" : 
                   {
                     "base" : "LocalReturn",
-                    "global" : "SanitizeTransform[SinkB]:TransformX"
+                    "global" : "Sanitize[SinkB]:TransformX"
                   }
                 }
               ],
               "kind" : 
               {
                 "base" : "SourceA",
-                "local" : "TransformX:SanitizeTransform[SinkB]"
+                "local" : "TransformX:Sanitize[SinkB]"
               },
               "origins" : 
               [
@@ -4677,7 +4677,7 @@
               "kind" : 
               {
                 "base" : "SourceA",
-                "local" : "SanitizeTransform[SourceA]:TransformX"
+                "local" : "Sanitize[SourceA]:TransformX"
               },
               "origins" : 
               [
@@ -4794,7 +4794,7 @@
               "kind" : 
               {
                 "base" : "SinkB",
-                "global" : "TransformX:SanitizeTransform[SourceA]"
+                "global" : "TransformX:Sanitize[SourceA]"
               },
               "origins" : 
               [
@@ -4942,14 +4942,14 @@
                   "kind" : 
                   {
                     "base" : "LocalReturn",
-                    "global" : "TransformX:SanitizeTransform[SourceA]"
+                    "global" : "TransformX:Sanitize[SourceA]"
                   }
                 }
               ],
               "kind" : 
               {
                 "base" : "SourceA",
-                "local" : "SanitizeTransform[SourceA]:TransformX"
+                "local" : "Sanitize[SourceA]:TransformX"
               },
               "origins" : 
               [
@@ -5036,7 +5036,7 @@
               "kind" : 
               {
                 "base" : "SinkB",
-                "global" : "SanitizeTransform[SourceA]"
+                "global" : "Sanitize[SourceA]"
               },
               "origins" : 
               [
@@ -5223,7 +5223,7 @@
               "kind" : 
               {
                 "base" : "SourceA",
-                "local" : "SanitizeTransform[SourceA]:TransformX"
+                "local" : "Sanitize[SourceA]:TransformX"
               },
               "origins" : 
               [
@@ -5346,7 +5346,7 @@
               "kind" : 
               {
                 "base" : "SourceA",
-                "global" : "TransformZ:SanitizeTransform[SinkB]:SanitizeTransform[SourceA]:TransformY"
+                "global" : "TransformZ:Sanitize[SinkB]:Sanitize[SourceA]:TransformY"
               },
               "origins" : 
               [
@@ -5439,7 +5439,7 @@
               "kind" : 
               {
                 "base" : "SourceA",
-                "global" : "TransformZ:SanitizeTransform[SourceA]:SanitizeTransform[SinkB]:TransformY"
+                "global" : "TransformZ:Sanitize[SourceA]:Sanitize[SinkB]:TransformY"
               },
               "origins" : 
               [
@@ -5525,7 +5525,7 @@
               "kind" : 
               {
                 "base" : "SinkB",
-                "global" : "SanitizeTransform[SourceA]"
+                "global" : "Sanitize[SourceA]"
               },
               "origins" : 
               [
@@ -5630,7 +5630,7 @@
               "kind" : 
               {
                 "base" : "SinkB",
-                "global" : "SanitizeTransform[SourceA]:TransformY:TransformZ"
+                "global" : "Sanitize[SourceA]:TransformY:TransformZ"
               },
               "origins" : 
               [
@@ -5774,7 +5774,7 @@
               "kind" : 
               {
                 "base" : "LocalReturn",
-                "global" : "SanitizeTransform[SourceA]",
+                "global" : "Sanitize[SourceA]",
                 "local" : "TransformX"
               },
               "origins" : 
@@ -5853,7 +5853,7 @@
               "kind" : 
               {
                 "base" : "SinkB",
-                "local" : "TransformX:SanitizeTransform[SourceA]"
+                "local" : "TransformX:Sanitize[SourceA]"
               },
               "origins" : 
               [
@@ -5914,7 +5914,7 @@
               {
                 "base" : "LocalReturn",
                 "global" : "TransformX",
-                "local" : "SanitizeTransform[SourceA]"
+                "local" : "Sanitize[SourceA]"
               },
               "origins" : 
               [
@@ -5977,7 +5977,7 @@
               "kind" : 
               {
                 "base" : "LocalReturn",
-                "global" : "SanitizeTransform[SinkB]",
+                "global" : "Sanitize[SinkB]",
                 "local" : "TransformX"
               },
               "origins" : 
@@ -6112,7 +6112,7 @@
               {
                 "base" : "LocalReturn",
                 "global" : "TransformX",
-                "local" : "SanitizeTransform[SourceA]"
+                "local" : "Sanitize[SourceA]"
               },
               "origins" : 
               [

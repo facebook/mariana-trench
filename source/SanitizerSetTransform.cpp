@@ -23,10 +23,9 @@ void SanitizerSetTransform::show(std::ostream& out) const {
 const SanitizerSetTransform* SanitizerSetTransform::from_trace_string(
     const std::string& transform,
     Context& context) {
-  if (boost::starts_with(transform, "SanitizeTransform[") &&
+  if (boost::starts_with(transform, "Sanitize[") &&
       boost::ends_with(transform, "]")) {
-    auto kind_str =
-        boost::replace_first_copy(transform, "SanitizeTransform[", "");
+    auto kind_str = boost::replace_first_copy(transform, "Sanitize[", "");
     boost::replace_last(kind_str, "]", "");
     const auto* kind = Kind::from_trace_string(kind_str, context);
 
@@ -46,7 +45,7 @@ std::string SanitizerSetTransform::to_trace_string() const {
 
   for (const auto* kind : kinds_) {
     sanitized_kinds.push_back(
-        fmt::format("SanitizeTransform[{}]", kind->to_trace_string()));
+        fmt::format("Sanitize[{}]", kind->to_trace_string()));
   }
 
   std::sort(sanitized_kinds.begin(), sanitized_kinds.end());
