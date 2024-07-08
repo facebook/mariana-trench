@@ -32,7 +32,7 @@ public class Flow {
         this.a = tree.f;
       }
       // Inferred propagation: Argument(1) -> Argument(0).a as the input paths are collapsed when it
-      // exceeds Heuristics::kMaxInputPathLeaves.
+      // exceeds Heuristics::propagation_max_input_path_leaves().
     }
   }
 
