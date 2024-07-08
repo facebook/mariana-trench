@@ -429,8 +429,8 @@ KindFrames KindFrames::add_sanitize_transform(
     const Sanitizer& sanitizer,
     const KindFactory& kind_factory,
     const TransformsFactory& transforms_factory) const {
-  TransformList new_transforms(
-      std::vector{sanitizer.to_transform(transforms_factory)});
+  TransformList new_transforms{
+      std::vector{sanitizer.to_transform(transforms_factory)}};
   const TransformList* global_transforms = nullptr;
   const auto* base_kind = kind_;
 
