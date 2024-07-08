@@ -36,13 +36,19 @@
     ]
   },
   {
-    "method": "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/Test;",
+    "method": "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.buildUsingFieldsAsArguments:()Lcom/facebook/marianatrench/integrationtests/Test;",
     "modes": [
       "no-collapse-on-propagation"
     ]
   },
   {
-    "method": "Lcom/facebook/marianatrench/integrationtests/Test;.noCollapseOnApproximateBuilder:()Lcom/facebook/marianatrench/integrationtests/Test;",
+    "method": "Lcom/facebook/marianatrench/integrationtests/Test;.noCollapseOnApproximateBuildUsingFields:()Lcom/facebook/marianatrench/integrationtests/Test;",
+    "modes": [
+      "no-collapse-on-approximate"
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Test;.noCollapseOnApproximateBuildUsingThis:()Lcom/facebook/marianatrench/integrationtests/Test;",
     "modes": [
       "no-collapse-on-approximate"
     ]

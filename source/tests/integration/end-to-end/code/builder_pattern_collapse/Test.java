@@ -23,6 +23,13 @@ public class Test {
     this.d = d;
   }
 
+  public Test(Test.Builder builder) {
+    this.a = builder.a;
+    this.b = builder.b;
+    this.c = builder.c;
+    this.d = builder.d;
+  }
+
   private static Object differentSource() {
     return new Object();
   }
@@ -55,8 +62,12 @@ public class Test {
       return this;
     }
 
-    public Test build() {
+    public Test buildUsingFieldsAsArguments() {
       return new Test(this.a, this.b, this.c, this.d);
+    }
+
+    public Test buildUsingBuilderAsArgument() {
+      return new Test(this);
     }
   }
 
@@ -68,21 +79,33 @@ public class Test {
         .setA((Test) Origin.source())
         .setB((Test) Test.differentSource())
         .setC((Test) Origin.source())
-        .build();
+        .buildUsingFieldsAsArguments();
   }
 
   public static Test noCollapseOnBuilder() {
     // Resulting taint tree will have caller port Return.a and Return.b
-    return (new Builder()).setA((Test) Origin.source()).setB((Test) Test.differentSource()).build();
+    return (new Builder())
+        .setA((Test) Origin.source())
+        .setB((Test) Test.differentSource())
+        .buildUsingFieldsAsArguments();
   }
 
-  public static Test noCollapseOnApproximateBuilder() {
+  public static Test noCollapseOnApproximateBuildUsingFields() {
     // Still the 3-field pattern, but with "no-collapse-on-approximate" enabled
     return (new Builder())
         .setA((Test) Origin.source())
         .setB((Test) Test.differentSource())
         .setC((Test) Origin.source())
-        .build();
+        .buildUsingFieldsAsArguments();
+  }
+
+  public static Test noCollapseOnApproximateBuildUsingThis() {
+    // Still the 3-field pattern, but with "no-collapse-on-approximate" enabled
+    return (new Builder())
+        .setA((Test) Origin.source())
+        .setB((Test) Test.differentSource())
+        .setC((Test) Origin.source())
+        .buildUsingBuilderAsArgument();
   }
 
   public static void testCollapseOnBuilder() {
@@ -113,8 +136,22 @@ public class Test {
     Test.differentSink(output.d);
   }
 
-  public static void testNoCollapseOnApproximateBuilder() {
-    Test output = noCollapseOnApproximateBuilder();
+  public static void testNoCollapseOnApproximateBuildUsingFields() {
+    Test output = noCollapseOnApproximateBuildUsingFields();
+
+    // issue: a has "Source" and b has "DifferentSource"
+    Origin.sink(output.a);
+    Test.differentSink(output.b);
+
+    // no issue, since no collapsing occurs
+    Test.differentSink(output.a);
+    Origin.sink(output.b);
+    Origin.sink(output.d);
+    Test.differentSink(output.d);
+  }
+
+  public static void testNoCollapseOnApproximiateBuildUsingThis() {
+    Test output = noCollapseOnApproximateBuildUsingThis();
 
     // issue: a has "Source" and b has "DifferentSource"
     Origin.sink(output.a);

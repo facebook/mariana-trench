@@ -224,7 +224,14 @@
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/Test;" : 
+  "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.buildUsingBuilderAsArgument:()Lcom/facebook/marianatrench/integrationtests/Test;" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Test;.<init>:(Lcom/facebook/marianatrench/integrationtests/Test$Builder;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.buildUsingFieldsAsArguments:()Lcom/facebook/marianatrench/integrationtests/Test;" : 
   {
     "static" : 
     [
@@ -232,6 +239,13 @@
     ]
   },
   "Lcom/facebook/marianatrench/integrationtests/Test;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Test;.<init>:(Lcom/facebook/marianatrench/integrationtests/Test$Builder;)V" : 
   {
     "static" : 
     [
@@ -255,7 +269,7 @@
     ],
     "virtual" : 
     [
-      "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/Test;",
+      "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.buildUsingFieldsAsArguments:()Lcom/facebook/marianatrench/integrationtests/Test;",
       "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.setA:(Lcom/facebook/marianatrench/integrationtests/Test;)Lcom/facebook/marianatrench/integrationtests/Test$Builder;",
       "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.setB:(Lcom/facebook/marianatrench/integrationtests/Test;)Lcom/facebook/marianatrench/integrationtests/Test$Builder;",
       "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.setC:(Lcom/facebook/marianatrench/integrationtests/Test;)Lcom/facebook/marianatrench/integrationtests/Test$Builder;"
@@ -268,7 +282,7 @@
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/Test;.noCollapseOnApproximateBuilder:()Lcom/facebook/marianatrench/integrationtests/Test;" : 
+  "Lcom/facebook/marianatrench/integrationtests/Test;.noCollapseOnApproximateBuildUsingFields:()Lcom/facebook/marianatrench/integrationtests/Test;" : 
   {
     "static" : 
     [
@@ -278,7 +292,23 @@
     ],
     "virtual" : 
     [
-      "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/Test;",
+      "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.buildUsingFieldsAsArguments:()Lcom/facebook/marianatrench/integrationtests/Test;",
+      "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.setA:(Lcom/facebook/marianatrench/integrationtests/Test;)Lcom/facebook/marianatrench/integrationtests/Test$Builder;",
+      "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.setB:(Lcom/facebook/marianatrench/integrationtests/Test;)Lcom/facebook/marianatrench/integrationtests/Test$Builder;",
+      "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.setC:(Lcom/facebook/marianatrench/integrationtests/Test;)Lcom/facebook/marianatrench/integrationtests/Test$Builder;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Test;.noCollapseOnApproximateBuildUsingThis:()Lcom/facebook/marianatrench/integrationtests/Test;" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/Test;.differentSource:()Ljava/lang/Object;"
+    ],
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.buildUsingBuilderAsArgument:()Lcom/facebook/marianatrench/integrationtests/Test;",
       "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.setA:(Lcom/facebook/marianatrench/integrationtests/Test;)Lcom/facebook/marianatrench/integrationtests/Test$Builder;",
       "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.setB:(Lcom/facebook/marianatrench/integrationtests/Test;)Lcom/facebook/marianatrench/integrationtests/Test$Builder;",
       "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.setC:(Lcom/facebook/marianatrench/integrationtests/Test;)Lcom/facebook/marianatrench/integrationtests/Test$Builder;"
@@ -294,7 +324,7 @@
     ],
     "virtual" : 
     [
-      "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/Test;",
+      "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.buildUsingFieldsAsArguments:()Lcom/facebook/marianatrench/integrationtests/Test;",
       "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.setA:(Lcom/facebook/marianatrench/integrationtests/Test;)Lcom/facebook/marianatrench/integrationtests/Test$Builder;",
       "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.setB:(Lcom/facebook/marianatrench/integrationtests/Test;)Lcom/facebook/marianatrench/integrationtests/Test$Builder;"
     ]
@@ -308,13 +338,22 @@
       "Lcom/facebook/marianatrench/integrationtests/Test;.differentSink:(Ljava/lang/Object;)V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/Test;.testNoCollapseOnApproximateBuilder:()V" : 
+  "Lcom/facebook/marianatrench/integrationtests/Test;.testNoCollapseOnApproximateBuildUsingFields:()V" : 
   {
     "static" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "Lcom/facebook/marianatrench/integrationtests/Test;.differentSink:(Ljava/lang/Object;)V",
-      "Lcom/facebook/marianatrench/integrationtests/Test;.noCollapseOnApproximateBuilder:()Lcom/facebook/marianatrench/integrationtests/Test;"
+      "Lcom/facebook/marianatrench/integrationtests/Test;.noCollapseOnApproximateBuildUsingFields:()Lcom/facebook/marianatrench/integrationtests/Test;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Test;.testNoCollapseOnApproximiateBuildUsingThis:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Test;.differentSink:(Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Test;.noCollapseOnApproximateBuildUsingThis:()Lcom/facebook/marianatrench/integrationtests/Test;"
     ]
   },
   "Lcom/facebook/marianatrench/integrationtests/Test;.testNoCollapseOnBuilder:()V" : 
