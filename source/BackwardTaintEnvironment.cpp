@@ -35,7 +35,8 @@ BackwardTaintEnvironment BackwardTaintEnvironment::initial(
             /* output_paths */
             PathTreeDomain{
                 {Path{},
-                 CollapseDepth(Heuristics::kPropagationMaxCollapseDepth)}},
+                 CollapseDepth(Heuristics::singleton()
+                                   .propagation_max_collapse_depth())}},
             /* inferred_features */ {},
             /* user_features */ {})));
   }
@@ -57,7 +58,8 @@ BackwardTaintEnvironment BackwardTaintEnvironment::initial(
               /* output_paths */
               PathTreeDomain{
                   {Path{},
-                   CollapseDepth(Heuristics::kPropagationMaxCollapseDepth)}},
+                   CollapseDepth(Heuristics::singleton()
+                                     .propagation_max_collapse_depth())}},
               /* inferred_features */ {},
               /* user_features */ {})));
     }

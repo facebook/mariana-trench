@@ -1172,7 +1172,9 @@ bool BackwardTaintTransfer::analyze_return(
       /* kind */ context->kind_factory.local_return(),
       /* output_paths */
       PathTreeDomain{
-          {Path{}, CollapseDepth(Heuristics::kPropagationMaxCollapseDepth)}},
+          {Path{},
+           CollapseDepth(
+               Heuristics::singleton().propagation_max_collapse_depth())}},
       /* inferred_features */ {},
       /* user_features */ {})));
 

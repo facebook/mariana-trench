@@ -170,7 +170,7 @@ class Heuristics final {
    *
    * This is also the maximum collapse depth for inferred propagations.
    */
-  constexpr static std::uint32_t kPropagationMaxCollapseDepth = 4;
+  std::uint32_t propagation_max_collapse_depth() const;
 
  private:
   std::size_t join_override_threshold_;
@@ -193,6 +193,7 @@ class Heuristics final {
   std::size_t propagation_max_input_path_leaves_;
   std::size_t propagation_max_output_path_size_;
   std::size_t propagation_max_output_path_leaves_;
+  std::uint32_t propagation_max_collapse_depth_;
 };
 
 } // namespace marianatrench
