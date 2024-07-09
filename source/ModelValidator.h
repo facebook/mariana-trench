@@ -21,6 +21,48 @@
 
 namespace marianatrench {
 
+enum ModelValidationType {
+  EXPECT_ISSUE,
+  EXPECT_NO_ISSUE,
+};
+
+class ModelValidator;
+
+/**
+ * The top-level validator for all models with a given validation type.
+ *
+ * Encapsulates the concept of a validation type + [validators].
+ * A list is used to support repeating annotations.
+ * Non-repeating/single annotations simply result in a single-element list.
+ */
+class ModelValidators final {
+ public:
+  ModelValidators(
+      ModelValidationType validation_type,
+      std::vector<std::unique_ptr<ModelValidator>> validators)
+      : validation_type_(validation_type), validators_(std::move(validators)) {}
+
+  MOVE_CONSTRUCTOR_ONLY(ModelValidators)
+
+  /**
+   * Validators created from top-level annotation are always `ModelValidators`.
+   */
+  static std::optional<ModelValidators> from_annotation(
+      const DexAnnotation* annotation);
+
+  bool validate(const Model& model) const;
+
+  std::string show() const;
+
+  ModelValidationType validation_type() const {
+    return validation_type_;
+  }
+
+ private:
+  ModelValidationType validation_type_;
+  std::vector<std::unique_ptr<ModelValidator>> validators_;
+};
+
 /**
  * Used for validating @Expected* annotations in the APK (if any) against the
  * models emitted at the end of the analysis. Each @Expected* annotation type
@@ -30,9 +72,6 @@ class ModelValidator {
  public:
   ModelValidator() = default;
   MOVE_CONSTRUCTOR_ONLY_VIRTUAL_DESTRUCTOR(ModelValidator)
-
-  static std::vector<std::unique_ptr<ModelValidator>> from_annotation(
-      const DexAnnotation* annotation);
 
   virtual bool validate(const Model& model) const = 0;
 

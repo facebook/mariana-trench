@@ -15,6 +15,76 @@ namespace marianatrench {
 
 class ModelValidatorTest : public test::Test {};
 
+TEST_F(ModelValidatorTest, ModelValidators) {
+  auto context = test::make_empty_context();
+
+  const auto* source_kind = context.kind_factory->get("TestSource");
+  const auto* sink_kind = context.kind_factory->get("TestSink");
+  const auto* position = context.positions->get(std::nullopt, 1);
+
+  SourceSinkRule rule_1(
+      "rule 1",
+      /* code */ 1,
+      "description",
+      {source_kind},
+      {sink_kind},
+      /* transforms */ nullptr);
+
+  // Single issue with single source and sink kind.
+  Model model;
+  model.add_issue(Issue(
+      /* source */ Taint{test::make_leaf_taint_config(source_kind)},
+      /* sink */ Taint{test::make_leaf_taint_config(sink_kind)},
+      &rule_1,
+      "callee",
+      /* sink_index */ 0,
+      position));
+
+  {
+    // All validators pass
+    std::vector<std::unique_ptr<ModelValidator>> validators;
+    validators.push_back(std::make_unique<ExpectIssue>(
+        1,
+        /* source_kinds */ std::set<std::string>{},
+        /* sink_kinds */ std::set<std::string>{}));
+    validators.push_back(std::make_unique<ExpectIssue>(
+        1,
+        /* source_kinds */ std::set<std::string>{"TestSource"},
+        /* sink_kinds */ std::set<std::string>{}));
+
+    ModelValidators validator(
+        ModelValidationType::EXPECT_ISSUE, std::move(validators));
+    EXPECT_TRUE(validator.validate(model));
+  }
+
+  {
+    // One validator fails
+    std::vector<std::unique_ptr<ModelValidator>> validators;
+    validators.push_back(std::make_unique<ExpectIssue>(
+        1,
+        /* source_kinds */ std::set<std::string>{},
+        /* sink_kinds */ std::set<std::string>{}));
+    validators.push_back(std::make_unique<ExpectIssue>(
+        2,
+        /* source_kinds */ std::set<std::string>{},
+        /* sink_kinds */ std::set<std::string>{}));
+
+    ModelValidators validator(
+        ModelValidationType::EXPECT_ISSUE, std::move(validators));
+    EXPECT_FALSE(validator.validate(model));
+  }
+
+  {
+    // All validators fail (and single validator)
+    std::vector<std::unique_ptr<ModelValidator>> validators;
+    validators.push_back(std::make_unique<ExpectNoIssue>(1));
+
+    ModelValidators validator(
+        ModelValidationType::EXPECT_NO_ISSUE, std::move(validators));
+    EXPECT_FALSE(validator.validate(model));
+  }
+}
+
 TEST_F(ModelValidatorTest, ExpectIssue) {
   auto context = test::make_empty_context();
 

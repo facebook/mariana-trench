@@ -17,14 +17,12 @@ namespace marianatrench {
 
 namespace {
 
-enum ModelValidationType {
-  EXPECT_ISSUE,
-  EXPECT_ISSUES,
-  EXPECT_NO_ISSUE,
-  EXPECT_NO_ISSUES,
+struct AnnotationProperties {
+  ModelValidationType validation_type;
+  bool repeatable;
 };
 
-std::optional<ModelValidationType> validation_type(
+std::optional<AnnotationProperties> get_annotation_properties(
     const DexAnnotation* annotation) {
   const auto* annotation_type = annotation->type();
   if (!annotation_type) {
@@ -34,21 +32,29 @@ std::optional<ModelValidationType> validation_type(
   auto annotation_type_string = annotation_type->str();
   if (annotation_type_string ==
       "Lcom/facebook/marianabench/validation/ExpectIssue;") {
-    return ModelValidationType::EXPECT_ISSUE;
+    return AnnotationProperties{
+        .validation_type = ModelValidationType::EXPECT_ISSUE,
+        .repeatable = false};
   } else if (
       annotation_type_string ==
       "Lcom/facebook/marianabench/validation/ExpectIssues;") {
     // For repeatable/multiple @ExpectIssue annotation
-    return ModelValidationType::EXPECT_ISSUES;
+    return AnnotationProperties{
+        .validation_type = ModelValidationType::EXPECT_ISSUE,
+        .repeatable = true};
   } else if (
       annotation_type_string ==
       "Lcom/facebook/marianabench/validation/ExpectNoIssue;") {
-    return ModelValidationType::EXPECT_NO_ISSUE;
+    return AnnotationProperties{
+        .validation_type = ModelValidationType::EXPECT_NO_ISSUE,
+        .repeatable = false};
   } else if (
       annotation_type_string ==
       "Lcom/facebook/marianabench/validation/ExpectNoIssues;") {
     // For repeatable/multiple @ExpectNoIssue annotation
-    return ModelValidationType::EXPECT_NO_ISSUES;
+    return AnnotationProperties{
+        .validation_type = ModelValidationType::EXPECT_NO_ISSUE,
+        .repeatable = true};
   }
 
   return std::nullopt;
@@ -59,11 +65,9 @@ std::unique_ptr<ModelValidator> make_validator(
     const EncodedAnnotations& annotation_elements) {
   switch (validator_type) {
     case ModelValidationType::EXPECT_ISSUE:
-    case ModelValidationType::EXPECT_ISSUES:
       return std::make_unique<ExpectIssue>(
           ExpectIssue::from_annotation(annotation_elements));
     case ModelValidationType::EXPECT_NO_ISSUE:
-    case ModelValidationType::EXPECT_NO_ISSUES:
       return std::make_unique<ExpectNoIssue>(
           ExpectNoIssue::from_annotation(annotation_elements));
       break;
@@ -72,49 +76,63 @@ std::unique_ptr<ModelValidator> make_validator(
 
 } // namespace
 
-std::vector<std::unique_ptr<ModelValidator>> ModelValidator::from_annotation(
+std::optional<ModelValidators> ModelValidators::from_annotation(
     const DexAnnotation* annotation) {
-  auto annotation_type = validation_type(annotation);
-  if (!annotation_type) {
-    return std::vector<std::unique_ptr<ModelValidator>>{};
+  auto annotation_properties = get_annotation_properties(annotation);
+  if (!annotation_properties) {
+    return std::nullopt;
   }
 
-  std::vector<std::unique_ptr<ModelValidator>> result;
-  switch (*annotation_type) {
-    case ModelValidationType::EXPECT_ISSUE:
-    case ModelValidationType::EXPECT_NO_ISSUE:
-      // Non-repeating annotations are encoded in the outer-most annotation.
-      result.emplace_back(
-          make_validator(*annotation_type, annotation->anno_elems()));
-      break;
-    case ModelValidationType::EXPECT_ISSUES:
-    case ModelValidationType::EXPECT_NO_ISSUES:
-      // Repeatable annotation. The annotation of interest is nested within an
-      // encoded array. The outer annotation has only 1 element which is the
-      // array itself.
-      mt_assert(annotation->anno_elems().size() == 1);
-      for (const auto& element : annotation->anno_elems()) {
-        // Arrays represent repeated annotations of the same kind.
-        const auto* repeatable_annotation =
-            dynamic_cast<const DexEncodedValueArray*>(
-                element.encoded_value.get());
-        mt_assert(repeatable_annotation != nullptr);
+  std::vector<std::unique_ptr<ModelValidator>> validators;
+  ModelValidationType validation_type = annotation_properties->validation_type;
 
-        for (const auto& repeated_annotation :
-             *repeatable_annotation->evalues()) {
-          const auto* inner_annotation =
-              dynamic_cast<const DexEncodedValueAnnotation*>(
-                  repeated_annotation.get());
-          // Within each repeatable annotation should be the nested annotation.
-          mt_assert(inner_annotation != nullptr);
-          result.emplace_back(make_validator(
-              *annotation_type, inner_annotation->annotations()));
-        }
+  if (!annotation_properties->repeatable) {
+    // Non-repeating annotations are encoded in the outer-most annotation.
+    validators.emplace_back(
+        make_validator(validation_type, annotation->anno_elems()));
+  } else {
+    // Repeatable annotation. The annotation of interest is nested within an
+    // encoded array. The outer annotation has only 1 element which is the
+    // array itself.
+    mt_assert(annotation->anno_elems().size() == 1);
+    for (const auto& element : annotation->anno_elems()) {
+      // Arrays represent repeated annotations of the same kind.
+      const auto* repeatable_annotation =
+          dynamic_cast<const DexEncodedValueArray*>(
+              element.encoded_value.get());
+      mt_assert(repeatable_annotation != nullptr);
+
+      for (const auto& repeated_annotation :
+           *repeatable_annotation->evalues()) {
+        const auto* inner_annotation =
+            dynamic_cast<const DexEncodedValueAnnotation*>(
+                repeated_annotation.get());
+        // Within each repeatable annotation should be the nested annotation.
+        mt_assert(inner_annotation != nullptr);
+        validators.emplace_back(
+            make_validator(validation_type, inner_annotation->annotations()));
       }
-      break;
+    }
   }
 
-  return result;
+  return ModelValidators(validation_type, std::move(validators));
+}
+
+bool ModelValidators::validate(const Model& model) const {
+  return std::all_of(
+      validators_.cbegin(),
+      validators_.cend(),
+      [&model](const auto& validator) { return validator->validate(model); });
+}
+
+std::string ModelValidators::show() const {
+  std::vector<std::string> validator_strings(validators_.size());
+  std::transform(
+      validators_.cbegin(),
+      validators_.cend(),
+      validator_strings.begin(),
+      [](const auto& validator) { return validator->show(); });
+  return boost::algorithm::join(validator_strings, ",");
 }
 
 ExpectIssue ExpectIssue::from_annotation(
