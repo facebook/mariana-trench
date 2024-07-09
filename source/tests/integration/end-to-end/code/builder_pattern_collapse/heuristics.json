@@ -1,3 +1,4 @@
 {
-  "generation_max_output_path_leaves": 2
+  "generation_max_output_path_leaves": 2,
+  "propagation_max_input_path_leaves": 2
 }
