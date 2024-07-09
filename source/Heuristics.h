@@ -8,9 +8,12 @@
 #pragma once
 
 #include <cstdint>
+#include <filesystem>
 #include <optional>
 
 #include <json/json.h>
+
+#include <mariana-trench/IncludeMacros.h>
 
 namespace marianatrench {
 
@@ -18,7 +21,11 @@ class Heuristics final {
  public:
   explicit Heuristics();
 
-  static Heuristics from_json(const Json::Value& value);
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Heuristics)
+
+  static void init_from_file(const std::filesystem::path& heuristics_path);
+
+  static const Heuristics& singleton();
 
   /**
    * When a method has a set of overrides greater than this threshold, we do not

@@ -635,6 +635,7 @@ InstructionCallGraphInformation process_instruction(
     const LifecycleMethods& lifecycle_methods,
     const Shims& shims,
     const FeatureFactory& feature_factory,
+    const Heuristics& heuristics,
     ConcurrentSet<const Method*>& worklist,
     ConcurrentSet<const Method*>& processed,
     Methods& method_factory,
@@ -717,7 +718,7 @@ InstructionCallGraphInformation process_instruction(
         feature_factory,
         *shim,
         sink_textual_order_index,
-        options.heuristics());
+        heuristics);
   }
 
   auto call_index =
@@ -976,6 +977,7 @@ CallGraph::CallGraph(
     const LifecycleMethods& lifecycle_methods,
     const Shims& shims,
     const FeatureFactory& feature_factory,
+    const Heuristics& heuristics,
     Methods& method_factory,
     Fields& field_factory,
     Overrides& override_factory,
@@ -1055,6 +1057,7 @@ CallGraph::CallGraph(
                   lifecycle_methods,
                   shims,
                   feature_factory,
+                  heuristics,
                   worklist,
                   processed,
                   method_factory,

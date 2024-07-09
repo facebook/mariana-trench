@@ -70,6 +70,7 @@ Context test_dependencies(const Scope& scope) {
       LifecycleMethods{},
       Shims{/* global_shims_size */ 0},
       *context.feature_factory,
+      *context.heuristics,
       *context.methods,
       *context.fields,
       *context.overrides,
@@ -78,6 +79,7 @@ Context test_dependencies(const Scope& scope) {
   auto registry = Registry(context);
   context.dependencies = std::make_unique<Dependencies>(
       *context.options,
+      *context.heuristics,
       *context.methods,
       *context.overrides,
       *context.call_graph,
@@ -647,6 +649,7 @@ TEST_F(DependenciesTest, NoJoinVirtualOverrides) {
 
   context.dependencies = std::make_unique<Dependencies>(
       *context.options,
+      *context.heuristics,
       *context.methods,
       *context.overrides,
       *context.call_graph,

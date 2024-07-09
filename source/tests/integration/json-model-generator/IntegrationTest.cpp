@@ -114,6 +114,7 @@ TEST_P(JsonModelGeneratorIntegrationTest, CompareModels) {
       LifecycleMethods{},
       Shims{/* global_shims_size */ 0},
       *context.feature_factory,
+      *context.heuristics,
       *context.methods,
       *context.fields,
       *context.overrides,

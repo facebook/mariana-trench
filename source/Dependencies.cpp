@@ -26,6 +26,7 @@ namespace marianatrench {
 
 Dependencies::Dependencies(
     const Options& options,
+    const Heuristics& heuristics,
     const Methods& methods,
     const Overrides& overrides,
     const CallGraph& call_graph,
@@ -70,9 +71,9 @@ Dependencies::Dependencies(
             return;
           }
 
-          if (options.heuristics().warn_override_threshold() &&
+          if (heuristics.warn_override_threshold() &&
               overrides.get(call_target.resolved_base_callee()).size() >=
-                  *(options.heuristics().warn_override_threshold())) {
+                  *(heuristics.warn_override_threshold())) {
             warn_many_overrides.insert(call_target.resolved_base_callee());
           }
 

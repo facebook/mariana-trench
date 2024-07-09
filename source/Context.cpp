@@ -17,6 +17,7 @@
 #include <mariana-trench/FeatureFactory.h>
 #include <mariana-trench/FieldCache.h>
 #include <mariana-trench/Fields.h>
+#include <mariana-trench/Heuristics.h>
 #include <mariana-trench/KindFactory.h>
 #include <mariana-trench/Methods.h>
 #include <mariana-trench/Options.h>
@@ -40,6 +41,7 @@ Context::Context()
       model_generator_name_factory(&ModelGeneratorNameFactory::singleton()),
       access_path_factory(&AccessPathFactory::singleton()),
       origin_factory(&OriginFactory::singleton()),
+      heuristics(&Heuristics::singleton()),
       statistics(std::make_unique<Statistics>()) {}
 
 Context::Context(Context&&) noexcept = default;

@@ -193,19 +193,19 @@ Model::Model(
   }
 
   for (const auto& [port, source] : generations) {
-    add_generation(port, source, context.options->heuristics());
+    add_generation(port, source, *context.heuristics);
   }
 
   for (const auto& [port, source] : parameter_sources) {
-    add_parameter_source(port, source, context.options->heuristics());
+    add_parameter_source(port, source, *context.heuristics);
   }
 
   for (const auto& [port, sink] : sinks) {
-    add_sink(port, sink, context.options->heuristics());
+    add_sink(port, sink, *context.heuristics);
   }
 
   for (const auto& propagation : propagations) {
-    add_propagation(propagation, context.options->heuristics());
+    add_propagation(propagation, *context.heuristics);
   }
 
   for (const auto& sanitizer : global_sanitizers) {
@@ -272,30 +272,29 @@ Model Model::instantiate(const Method* method, Context& context) const {
   Model model(method, context, modes_, frozen_);
 
   for (const auto& [port, generation_taint] : generations_.elements()) {
-    model.add_generation(port, generation_taint, context.options->heuristics());
+    model.add_generation(port, generation_taint, *context.heuristics);
   }
 
   for (const auto& [port, parameter_source_taint] :
        parameter_sources_.elements()) {
     model.add_parameter_source(
-        port, parameter_source_taint, context.options->heuristics());
+        port, parameter_source_taint, *context.heuristics);
   }
 
   for (const auto& [port, sink_taint] : sinks_.elements()) {
-    model.add_sink(port, sink_taint, context.options->heuristics());
+    model.add_sink(port, sink_taint, *context.heuristics);
   }
 
   for (const auto& [port, source_taint] : call_effect_sources_.elements()) {
-    model.add_call_effect_source(
-        port, source_taint, context.options->heuristics());
+    model.add_call_effect_source(port, source_taint, *context.heuristics);
   }
 
   for (const auto& [port, sink_taint] : call_effect_sinks_.elements()) {
-    model.add_call_effect_sink(port, sink_taint, context.options->heuristics());
+    model.add_call_effect_sink(port, sink_taint, *context.heuristics);
   }
 
   for (const auto& [input_path, output] : propagations_.elements()) {
-    model.add_propagation(input_path, output, context.options->heuristics());
+    model.add_propagation(input_path, output, *context.heuristics);
   }
 
   for (const auto& sanitizer : global_sanitizers_) {
@@ -460,7 +459,7 @@ Model Model::at_callsite(
   });
 
   std::size_t max_call_chain_source_sink_distance =
-      context.options->heuristics().max_call_chain_source_sink_distance();
+      context.heuristics->max_call_chain_source_sink_distance();
   call_effect_sinks_.visit(
       [&model,
        callee,
@@ -707,7 +706,7 @@ void add_taint_in_taint_out_propagation(
             /* inferred_features */ FeatureMayAlwaysSet::bottom(),
             /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
             user_features),
-        context.options->heuristics());
+        *context.heuristics);
   }
 }
 
@@ -804,7 +803,7 @@ void Model::add_taint_in_taint_this(Context& context) {
             /* inferred_features */ FeatureMayAlwaysSet::bottom(),
             /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
             user_features),
-        context.options->heuristics());
+        *context.heuristics);
   }
 }
 
@@ -1428,21 +1427,19 @@ Model Model::from_config_json(
     model.add_generation(
         port,
         TaintConfig::from_json(generation_value, context),
-        context.options->heuristics());
+        *context.heuristics);
   }
 
   for (const auto& [port, parameter_source_value] : parameter_source_values) {
     model.add_parameter_source(
         port,
         TaintConfig::from_json(parameter_source_value, context),
-        context.options->heuristics());
+        *context.heuristics);
   }
 
   for (const auto& [port, sink_value] : sink_values) {
     model.add_sink(
-        port,
-        TaintConfig::from_json(sink_value, context),
-        context.options->heuristics());
+        port, TaintConfig::from_json(sink_value, context), *context.heuristics);
   }
 
   for (auto effect_source_value :
@@ -1454,7 +1451,7 @@ Model Model::from_config_json(
     model.add_call_effect_source(
         port,
         TaintConfig::from_json(effect_source_value, context),
-        context.options->heuristics());
+        *context.heuristics);
   }
 
   for (auto effect_sink_value :
@@ -1466,14 +1463,14 @@ Model Model::from_config_json(
     model.add_call_effect_sink(
         port,
         TaintConfig::from_json(effect_sink_value, context),
-        context.options->heuristics());
+        *context.heuristics);
   }
 
   for (auto propagation_value :
        JsonValidation::null_or_array(value, /* field */ "propagation")) {
     model.add_propagation(
         PropagationConfig::from_json(propagation_value, context),
-        context.options->heuristics());
+        *context.heuristics);
   }
 
   for (auto sanitizer_value :
@@ -1687,43 +1684,42 @@ Model Model::from_json(const Json::Value& value, Context& context) {
        JsonValidation::null_or_array(value, /* field */ "generations")) {
     auto port = AccessPath::from_json(generation_value["port"]);
     auto taint = Taint::from_json(generation_value["taint"], context);
-    model.add_generation(port, taint, context.options->heuristics());
+    model.add_generation(port, taint, *context.heuristics);
   }
 
   for (const auto& parameter_source_value :
        JsonValidation::null_or_array(value, /* field */ "parameter_sources")) {
     auto port = AccessPath::from_json(parameter_source_value["port"]);
     auto taint = Taint::from_json(parameter_source_value["taint"], context);
-    model.add_parameter_source(port, taint, context.options->heuristics());
+    model.add_parameter_source(port, taint, *context.heuristics);
   }
 
   for (const auto& call_effect_source_value :
        JsonValidation::null_or_array(value, /* field */ "effect_sources")) {
     auto port = AccessPath::from_json(call_effect_source_value["port"]);
     auto taint = Taint::from_json(call_effect_source_value["taint"], context);
-    model.add_call_effect_source(port, taint, context.options->heuristics());
+    model.add_call_effect_source(port, taint, *context.heuristics);
   }
 
   for (const auto& sink_value :
        JsonValidation::null_or_array(value, /* field */ "sinks")) {
     auto port = AccessPath::from_json(sink_value["port"]);
     auto taint = Taint::from_json(sink_value["taint"], context);
-    model.add_sink(port, taint, context.options->heuristics());
+    model.add_sink(port, taint, *context.heuristics);
   }
 
   for (const auto& call_effect_sink_value :
        JsonValidation::null_or_array(value, /* field */ "effect_sinks")) {
     auto port = AccessPath::from_json(call_effect_sink_value["port"]);
     auto taint = Taint::from_json(call_effect_sink_value["taint"], context);
-    model.add_call_effect_sink(port, taint, context.options->heuristics());
+    model.add_call_effect_sink(port, taint, *context.heuristics);
   }
 
   for (const auto& propagation_value :
        JsonValidation::null_or_array(value, /* field */ "propagation")) {
     auto input_path = AccessPath::from_json(propagation_value["input"]);
     auto output_taint = Taint::from_json(propagation_value["output"], context);
-    model.add_propagation(
-        input_path, output_taint, context.options->heuristics());
+    model.add_propagation(input_path, output_taint, *context.heuristics);
   }
 
   for (const auto& sanitizer_value :

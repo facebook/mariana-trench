@@ -18,6 +18,7 @@ class KindFactory;
 class FeatureFactory;
 class Statistics;
 class Options;
+class Heuristics;
 class ArtificialMethods;
 class Methods;
 class Fields;
@@ -58,6 +59,7 @@ class Context final {
   const ModelGeneratorNameFactory* model_generator_name_factory;
   const AccessPathFactory* access_path_factory;
   const OriginFactory* origin_factory;
+  const Heuristics* heuristics;
   std::unique_ptr<Statistics> statistics;
   std::unique_ptr<Options> options;
   std::vector<DexStore> stores;

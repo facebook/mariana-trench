@@ -235,6 +235,7 @@ class CallGraph final {
       const LifecycleMethods& lifecycle_methods,
       const Shims& shims,
       const FeatureFactory& feature_factory,
+      const Heuristics& heuristics,
       Methods& methods,
       Fields& fields,
       Overrides& overrides,

@@ -286,7 +286,7 @@ void generator::add_propagation_to_return(
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ user_features),
-      context.options->heuristics());
+      *context.heuristics);
 }
 
 void generator::add_propagation_to_parameter(
@@ -311,7 +311,7 @@ void generator::add_propagation_to_parameter(
           /* inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ user_features),
-      context.options->heuristics());
+      *context.heuristics);
 }
 
 void generator::add_propagation_to_self(

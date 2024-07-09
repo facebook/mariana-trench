@@ -113,8 +113,7 @@ Options::Options(
     const std::string& source_root_directory,
     bool enable_cross_component_analysis,
     ExportOriginsMode export_origins_mode,
-    bool propagate_across_arguments,
-    const Heuristics& heuristics)
+    bool propagate_across_arguments)
     : models_paths_(models_paths),
       field_models_paths_(field_models_paths),
       literal_models_paths_(literal_models_paths),
@@ -146,8 +145,7 @@ Options::Options(
       dump_coverage_info_(false),
       enable_cross_component_analysis_(enable_cross_component_analysis),
       export_origins_mode_(export_origins_mode),
-      propagate_across_arguments_(propagate_across_arguments),
-      heuristics_(heuristics) {}
+      propagate_across_arguments_(propagate_across_arguments) {}
 
 Options::Options(const boost::program_options::variables_map& variables) {
   system_jar_paths_ = parse_paths_list(
@@ -300,10 +298,8 @@ Options::Options(const boost::program_options::variables_map& variables) {
       variables.count("propagate-across-arguments") > 0;
 
   if (!variables["heuristics"].empty()) {
-    auto heuristics_path =
-        check_path_exists(variables["heuristics"].as<std::string>());
-    auto json = JsonReader::parse_json_file(heuristics_path);
-    heuristics_ = Heuristics::from_json(json);
+    heuristics_path_ = std::filesystem::path(
+        check_path_exists(variables["heuristics"].as<std::string>()));
   }
 }
 
@@ -733,8 +729,8 @@ bool Options::propagate_across_arguments() const {
   return propagate_across_arguments_;
 }
 
-const marianatrench::Heuristics& Options::heuristics() const {
-  return heuristics_;
+const std::optional<std::filesystem::path> Options::heuristics_path() const {
+  return heuristics_path_;
 }
 
 } // namespace marianatrench

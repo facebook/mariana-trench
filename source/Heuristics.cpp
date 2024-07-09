@@ -6,9 +6,20 @@
  */
 
 #include <mariana-trench/Heuristics.h>
+#include <mariana-trench/JsonReaderWriter.h>
 #include <mariana-trench/JsonValidation.h>
 
 namespace marianatrench {
+
+namespace {
+
+Heuristics& get_mutable_singleton() {
+  // Thread-safe global variable, initialized on first call.
+  static Heuristics heuristics;
+  return heuristics;
+}
+
+} // namespace
 
 // Default values for heuristics parameters.
 constexpr std::size_t join_override_threshold_default = 40;
@@ -58,9 +69,10 @@ Heuristics::Heuristics()
       propagation_max_input_path_leaves_(
           propagation_max_input_path_leaves_default) {}
 
-Heuristics Heuristics::from_json(const Json::Value& value) {
+void Heuristics::init_from_file(const std::filesystem::path& heuristics_path) {
   // Create an `Heuristics` object with the default values.
-  Heuristics heuristics = Heuristics();
+  Json::Value value = JsonReader::parse_json_file(heuristics_path);
+  auto& heuristics = get_mutable_singleton();
   JsonValidation::validate_object(value);
   JsonValidation::check_unexpected_members(
       value,
@@ -188,8 +200,10 @@ Heuristics Heuristics::from_json(const Json::Value& value) {
         JsonValidation::unsigned_integer(
             value, "propagation_max_input_path_leaves");
   }
+}
 
-  return heuristics;
+const Heuristics& Heuristics::singleton() {
+  return get_mutable_singleton();
 }
 
 std::size_t Heuristics::join_override_threshold() const {

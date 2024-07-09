@@ -86,7 +86,7 @@ std::vector<Model> ManifestSourceGenerator::emit_method_models(
         generator::source(
             context_,
             /* kind */ "ExportedActivity"),
-        context_.options->heuristics());
+        *context_.heuristics);
     models.push_back(model);
 
     // Mark all public methods in the class as exported.
@@ -110,7 +110,7 @@ std::vector<Model> ManifestSourceGenerator::emit_method_models(
           generator::source(
               context_,
               /* kind */ "ExportedActivity"),
-          context_.options->heuristics());
+          *context_.heuristics);
       models.push_back(model);
     }
   }

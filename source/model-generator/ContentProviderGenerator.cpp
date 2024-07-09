@@ -43,7 +43,7 @@ Model create_model(
         generator::source(
             context,
             /* kind */ "ProviderUserInput"),
-        context.options->heuristics());
+        *context.heuristics);
   }
   auto return_type = generator::get_return_type_string(method);
   if (!return_type) {
@@ -55,7 +55,7 @@ Model create_model(
         generator::sink(
             context,
             /* kind */ "ProviderExitNode"),
-        context.options->heuristics());
+        *context.heuristics);
   }
   return model;
 }

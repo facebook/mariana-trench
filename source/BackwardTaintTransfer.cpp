@@ -158,13 +158,13 @@ void infer_input_taint(
             std::move(port),
             std::move(sinks),
             widening_features,
-            context->options.heuristics());
+            context->heuristics);
       } else {
         context->new_model.add_inferred_sinks(
             std::move(port),
             std::move(sinks),
             widening_features,
-            context->options.heuristics());
+            context->heuristics);
       }
     }
 
@@ -217,7 +217,7 @@ void infer_input_taint(
           std::move(port),
           std::move(propagations),
           widening_features,
-          context->options.heuristics(),
+          context->heuristics,
           context->kind_factory,
           context->transforms_factory);
     }
@@ -733,7 +733,7 @@ void infer_exploitability_sinks(
   context->new_model.add_inferred_call_effect_sinks(
       AccessPath(Root(Root::Kind::CallEffectExploitability)),
       std::move(source_as_transform_sinks),
-      context->options.heuristics());
+      context->heuristics);
 }
 
 void apply_call_effects(
@@ -751,7 +751,7 @@ void apply_call_effects(
             sinks,
             show(context->method()));
         context->new_model.add_inferred_call_effect_sinks(
-            port, sinks, context->options.heuristics());
+            port, sinks, context->heuristics);
       } break;
 
       case Root::Kind::CallEffectExploitability:

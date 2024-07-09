@@ -44,7 +44,7 @@ Model source_first_argument(
       generator::source(
           context,
           /* kind */ "ServiceUserInput"),
-      context.options->heuristics());
+      *context.heuristics);
   return model;
 }
 

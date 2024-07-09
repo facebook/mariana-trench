@@ -234,6 +234,7 @@ Registry MarianaTrench::analyze(Context& context) {
         lifecycle_methods,
         shims,
         *context.feature_factory,
+        *context.heuristics,
         *context.methods,
         *context.fields,
         *context.overrides,
@@ -330,6 +331,7 @@ Registry MarianaTrench::analyze(Context& context) {
   LOG(1, "Building dependency graph...");
   context.dependencies = std::make_unique<Dependencies>(
       *context.options,
+      *context.heuristics,
       *context.methods,
       *context.overrides,
       *context.call_graph,
@@ -424,6 +426,10 @@ void MarianaTrench::run(const program_options::variables_map& variables) {
 
   context.options = std::make_unique<Options>(variables);
   const auto& options = *context.options;
+
+  if (auto heuristics_path = options.heuristics_path()) {
+    Heuristics::init_from_file(*heuristics_path);
+  }
 
   EventLogger::init_event_logger(context.options.get());
 

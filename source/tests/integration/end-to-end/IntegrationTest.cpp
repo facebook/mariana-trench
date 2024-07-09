@@ -143,11 +143,9 @@ TEST_P(IntegrationTest, CompareFlows) {
   bool propagate_across_arguments = "propagation_via_arg" == name.string();
 
   auto heuristics_file = directory / "heuristics.json";
-  Heuristics heuristics;
   if (std::filesystem::exists(heuristics_file)) {
     LOG(3, "Found heuristics configuration.");
-    Json::Value json = JsonReader::parse_json_file(heuristics_file);
-    heuristics = Heuristics::from_json(json);
+    Heuristics::init_from_file(std::filesystem::path(heuristics_file));
   }
 
   // Read the configuration for this test case.
@@ -179,8 +177,7 @@ TEST_P(IntegrationTest, CompareFlows) {
       /* source_root_directory */ directory.string(),
       /* enable_cross_component_analysis */ true,
       /* export_origins_mode */ ExportOriginsMode::Always,
-      propagate_across_arguments,
-      heuristics);
+      propagate_across_arguments);
 
   // Load test Java classes
   std::filesystem::path dex_path = test::find_dex_path(directory);

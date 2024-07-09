@@ -440,7 +440,7 @@ void create_issue(
   });
 
   source.add_locally_inferred_features(context->class_properties.issue_features(
-      context->method(), kinds, context->options.heuristics()));
+      context->method(), kinds, context->heuristics));
 
   sink.add_locally_inferred_features(extra_features);
   auto issue = Issue(
@@ -1519,7 +1519,7 @@ void infer_output_taint(
         /* widening_features */
         FeatureMayAlwaysSet{
             context->feature_factory.get_widen_broadening_feature()},
-        context->options.heuristics());
+        context->heuristics);
   }
 }
 

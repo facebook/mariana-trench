@@ -177,7 +177,7 @@ void PropagationTemplate::instantiate(
           inferred_features_,
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           user_features_),
-      context.options->heuristics());
+      *context.heuristics);
 }
 
 PortSanitizerTemplate::PortSanitizerTemplate(
@@ -242,7 +242,7 @@ void SinkTemplate::instantiate(
   model.add_sink(
       port_.instantiate(parameter_positions),
       sink_.instantiate(method, context, parameter_positions),
-      context.options->heuristics());
+      *context.heuristics);
 }
 
 ParameterSourceTemplate::ParameterSourceTemplate(
@@ -269,7 +269,7 @@ void ParameterSourceTemplate::instantiate(
   model.add_parameter_source(
       port_.instantiate(parameter_positions),
       source_.instantiate(method, context, parameter_positions),
-      context.options->heuristics());
+      *context.heuristics);
 }
 
 GenerationTemplate::GenerationTemplate(
@@ -296,7 +296,7 @@ void GenerationTemplate::instantiate(
   model.add_generation(
       port_.instantiate(parameter_positions),
       source_.instantiate(method, context, parameter_positions),
-      context.options->heuristics());
+      *context.heuristics);
 }
 
 SourceTemplate::SourceTemplate(TaintConfig source, AccessPathTemplate port)
@@ -640,7 +640,7 @@ bool ForAllParameters::instantiate(
       }
       for (const auto& source_template : source_templates_) {
         source_template.instantiate(
-            variable_mapping, model, context.options->heuristics());
+            variable_mapping, model, *context.heuristics);
         updated = true;
       }
       for (const auto& propagation_template : propagation_templates_) {
@@ -712,19 +712,19 @@ std::optional<Model> ModelTemplate::instantiate(
     model.add_generation(
         port,
         taint_config_template.instantiate(method, context),
-        context.options->heuristics());
+        *context.heuristics);
   }
   for (const auto& [port, taint_config_template] : parameter_sources_) {
     model.add_parameter_source(
         port,
         taint_config_template.instantiate(method, context),
-        context.options->heuristics());
+        *context.heuristics);
   }
   for (const auto& [port, taint_config_template] : sinks_) {
     model.add_sink(
         port,
         taint_config_template.instantiate(method, context),
-        context.options->heuristics());
+        *context.heuristics);
   }
 
   // An instantiated model can be nonempty even when it is instantiated from

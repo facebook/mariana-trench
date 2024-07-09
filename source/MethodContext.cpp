@@ -41,6 +41,7 @@ MethodContext::MethodContext(
       used_kinds(*context.used_kinds),
       access_path_factory(*context.access_path_factory),
       origin_factory(*context.origin_factory),
+      heuristics(*context.heuristics),
       memory_factory(previous_model.method()),
       previous_model(previous_model),
       new_model(new_model),
@@ -126,7 +127,7 @@ Model MethodContext::model_at_callsite(
 
   model.approximate(
       FeatureMayAlwaysSet{feature_factory.get_widen_broadening_feature()},
-      context_.options->heuristics());
+      *context_.heuristics);
 
   callsite_model_cache_.emplace(CacheKey{call_target, position}, model);
   return model;

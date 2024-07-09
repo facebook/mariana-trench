@@ -2930,7 +2930,7 @@ TEST_F(JsonTest, CallEffectModel) {
       AccessPath(Root(Root::Kind::CallEffectCallChain)),
       test::make_leaf_taint_config(
           context.kind_factory->get("CallChainOrigin")),
-      context.options->heuristics());
+      *context.heuristics);
 
   EXPECT_EQ(
       test::sorted_json(effect_source_model.to_json(ExportOriginsMode::Always)),
@@ -2960,7 +2960,7 @@ TEST_F(JsonTest, CallEffectModel) {
   effect_sink_model.add_call_effect_sink(
       AccessPath(Root(Root::Kind::CallEffectCallChain)),
       test::make_leaf_taint_config(context.kind_factory->get("CallChainSink")),
-      context.options->heuristics());
+      *context.heuristics);
   EXPECT_EQ(
       test::sorted_json(effect_sink_model.to_json(ExportOriginsMode::Always)),
       test::parse_json(R"#({

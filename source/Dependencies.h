@@ -26,6 +26,7 @@ class Dependencies final {
  public:
   explicit Dependencies(
       const Options& options,
+      const Heuristics& heuristics,
       const Methods& methods,
       const Overrides& overrides,
       const CallGraph& call_graph,

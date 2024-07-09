@@ -84,6 +84,7 @@ class MethodContext final {
   const UsedKinds& used_kinds;
   const AccessPathFactory& access_path_factory;
   const OriginFactory& origin_factory;
+  const Heuristics& heuristics;
   MemoryFactory memory_factory;
   AliasAnalysisResults aliasing;
   FulfilledPartialKindResults fulfilled_partial_sinks;

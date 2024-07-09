@@ -83,21 +83,21 @@ TEST_F(ModelTest, remove_kinds_call_effects) {
   model_with_removable_kind.add_call_effect_source(
       call_effect_port,
       test::make_leaf_taint_config(source_kind),
-      context.options->heuristics());
+      *context.heuristics);
   model_with_removable_kind.add_call_effect_source(
       call_effect_port,
       test::make_leaf_taint_config(removable_source_kind),
-      context.options->heuristics());
+      *context.heuristics);
 
   // Add call effect sinks
   model_with_removable_kind.add_call_effect_sink(
       call_effect_port,
       test::make_leaf_taint_config(sink_kind),
-      context.options->heuristics());
+      *context.heuristics);
   model_with_removable_kind.add_call_effect_sink(
       call_effect_port,
       test::make_leaf_taint_config(removable_sink_kind),
-      context.options->heuristics());
+      *context.heuristics);
 
   model_with_removable_kind.remove_kinds(
       {removable_source_kind, removable_sink_kind});
@@ -108,12 +108,12 @@ TEST_F(ModelTest, remove_kinds_call_effects) {
   model_without_removable_kind.add_call_effect_source(
       call_effect_port,
       test::make_leaf_taint_config(source_kind),
-      context.options->heuristics());
+      *context.heuristics);
   // Add expected call effect sink
   model_without_removable_kind.add_call_effect_sink(
       call_effect_port,
       test::make_leaf_taint_config(sink_kind),
-      context.options->heuristics());
+      *context.heuristics);
 
   EXPECT_EQ(model_with_removable_kind, model_without_removable_kind);
 }
@@ -1172,7 +1172,7 @@ TEST_F(ModelTest, SourceKinds) {
   model_with_call_effect_source.add_call_effect_source(
       AccessPath(Root(Root::Kind::CallEffectIntent)),
       test::make_leaf_taint_config(source_kind1),
-      context.options->heuristics());
+      *context.heuristics);
   EXPECT_THAT(
       model_with_call_effect_source.source_kinds(),
       testing::UnorderedElementsAre(source_kind1));
@@ -1222,7 +1222,7 @@ TEST_F(ModelTest, SinkKinds) {
   model_with_call_effect_sink.add_call_effect_sink(
       AccessPath(Root(Root::Kind::CallEffectIntent)),
       test::make_leaf_taint_config(sink_kind1),
-      context.options->heuristics());
+      *context.heuristics);
   EXPECT_THAT(
       model_with_call_effect_sink.sink_kinds(),
       testing::UnorderedElementsAre(sink_kind1));
