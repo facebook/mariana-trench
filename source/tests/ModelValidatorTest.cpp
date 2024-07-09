@@ -52,8 +52,7 @@ TEST_F(ModelValidatorTest, ModelValidators) {
         /* source_kinds */ std::set<std::string>{"TestSource"},
         /* sink_kinds */ std::set<std::string>{}));
 
-    ModelValidators validator(
-        ModelValidationType::EXPECT_ISSUE, std::move(validators));
+    ModelValidators validator(std::move(validators));
     EXPECT_TRUE(validator.validate(model));
   }
 
@@ -69,8 +68,7 @@ TEST_F(ModelValidatorTest, ModelValidators) {
         /* source_kinds */ std::set<std::string>{},
         /* sink_kinds */ std::set<std::string>{}));
 
-    ModelValidators validator(
-        ModelValidationType::EXPECT_ISSUE, std::move(validators));
+    ModelValidators validator(std::move(validators));
     EXPECT_FALSE(validator.validate(model));
   }
 
@@ -79,9 +77,21 @@ TEST_F(ModelValidatorTest, ModelValidators) {
     std::vector<std::unique_ptr<ModelValidator>> validators;
     validators.push_back(std::make_unique<ExpectNoIssue>(1));
 
-    ModelValidators validator(
-        ModelValidationType::EXPECT_NO_ISSUE, std::move(validators));
+    ModelValidators validator(std::move(validators));
     EXPECT_FALSE(validator.validate(model));
+  }
+
+  {
+    // All validators pass, with a different validator types
+    std::vector<std::unique_ptr<ModelValidator>> validators;
+    validators.push_back(std::make_unique<ExpectIssue>(
+        1,
+        /* source_kinds */ std::set<std::string>{},
+        /* sink_kinds */ std::set<std::string>{}));
+    validators.push_back(std::make_unique<ExpectNoIssue>(2));
+
+    ModelValidators validator(std::move(validators));
+    EXPECT_TRUE(validator.validate(model));
   }
 }
 

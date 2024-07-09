@@ -17,6 +17,11 @@ namespace marianatrench {
 
 namespace {
 
+enum ModelValidationType {
+  EXPECT_ISSUE,
+  EXPECT_NO_ISSUE,
+};
+
 struct AnnotationProperties {
   ModelValidationType validation_type;
   bool repeatable;
@@ -74,13 +79,11 @@ std::unique_ptr<ModelValidator> make_validator(
   }
 }
 
-} // namespace
-
-std::optional<ModelValidators> ModelValidators::from_annotation(
+std::vector<std::unique_ptr<ModelValidator>> validators_from_annotation(
     const DexAnnotation* annotation) {
   auto annotation_properties = get_annotation_properties(annotation);
   if (!annotation_properties) {
-    return std::nullopt;
+    return {};
   }
 
   std::vector<std::unique_ptr<ModelValidator>> validators;
@@ -115,7 +118,37 @@ std::optional<ModelValidators> ModelValidators::from_annotation(
     }
   }
 
-  return ModelValidators(validation_type, std::move(validators));
+  return validators;
+}
+
+} // namespace
+
+std::optional<ModelValidators> ModelValidators::from_method(
+    const Method* method) {
+  const auto* dex_method = method->dex_method();
+  if (dex_method == nullptr) {
+    return std::nullopt;
+  }
+
+  const auto* annotations_set = dex_method->get_anno_set();
+  if (annotations_set == nullptr) {
+    return std::nullopt;
+  }
+
+  std::vector<std::unique_ptr<ModelValidator>> validators;
+  for (const auto& annotation : annotations_set->get_annotations()) {
+    auto validator = validators_from_annotation(annotation.get());
+    validators.insert(
+        validators.end(),
+        std::make_move_iterator(validator.begin()),
+        std::make_move_iterator(validator.end()));
+  }
+
+  if (validators.empty()) {
+    return std::nullopt;
+  }
+
+  return ModelValidators(std::move(validators));
 }
 
 bool ModelValidators::validate(const Model& model) const {

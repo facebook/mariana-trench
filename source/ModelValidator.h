@@ -21,45 +21,32 @@
 
 namespace marianatrench {
 
-enum ModelValidationType {
-  EXPECT_ISSUE,
-  EXPECT_NO_ISSUE,
-};
-
 class ModelValidator;
 
 /**
- * The top-level validator for all models with a given validation type.
- *
- * Encapsulates the concept of a validation type + [validators].
- * A list is used to support repeating annotations.
- * Non-repeating/single annotations simply result in a single-element list.
+ * The top-level validator for models in given method.
  */
 class ModelValidators final {
  public:
-  ModelValidators(
-      ModelValidationType validation_type,
+  explicit ModelValidators(
       std::vector<std::unique_ptr<ModelValidator>> validators)
-      : validation_type_(validation_type), validators_(std::move(validators)) {}
+      : validators_(std::move(validators)) {
+    mt_assert(!validators_.empty());
+  }
 
   MOVE_CONSTRUCTOR_ONLY(ModelValidators)
 
   /**
-   * Validators created from top-level annotation are always `ModelValidators`.
+   * Contains all validators for the given method. `std::nullopt` if the method
+   * has no validators, e.g. "fake" methods, no validator annotations, etc.
    */
-  static std::optional<ModelValidators> from_annotation(
-      const DexAnnotation* annotation);
+  static std::optional<ModelValidators> from_method(const Method* method);
 
   bool validate(const Model& model) const;
 
   std::string show() const;
 
-  ModelValidationType validation_type() const {
-    return validation_type_;
-  }
-
  private:
-  ModelValidationType validation_type_;
   std::vector<std::unique_ptr<ModelValidator>> validators_;
 };
 

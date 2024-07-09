@@ -480,28 +480,16 @@ void Registry::dump_rule_coverage_info(
 void Registry::verify_expected_output(
     const std::filesystem::path& /* test_output_path */) const {
   for (const auto& [method, model] : models_) {
-    const auto* dex_method = method->dex_method();
-    if (dex_method == nullptr) {
+    auto model_validators = ModelValidators::from_method(method);
+    if (!model_validators) {
       continue;
     }
-
-    const auto* annotations_set = dex_method->get_anno_set();
-    if (annotations_set == nullptr) {
-      continue;
-    }
-
-    for (const auto& annotation : annotations_set->get_annotations()) {
-      auto validator = ModelValidators::from_annotation(annotation.get());
-      if (!validator) {
-        continue;
-      }
-      bool valid = validator->validate(model);
-      LOG(1,
-          "In method {}, found annotation for validation: {}. Is valid: {}",
-          method->show(),
-          validator->show(),
-          valid);
-    }
+    bool valid = model_validators->validate(model);
+    LOG(1,
+        "In method {}, found annotation for validation: {}. Is valid: {}",
+        method->show(),
+        model_validators->show(),
+        valid);
   }
 
   // TODO(T176363194): Write results to test_output_path.
