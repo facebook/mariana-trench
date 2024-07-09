@@ -18,8 +18,6 @@ class Heuristics final {
  public:
   explicit Heuristics();
 
-  bool operator==(const Heuristics& other) const;
-
   static Heuristics from_json(const Json::Value& value);
 
   /**
