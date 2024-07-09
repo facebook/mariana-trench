@@ -207,75 +207,75 @@ const Heuristics& Heuristics::singleton() {
 }
 
 std::size_t Heuristics::join_override_threshold() const {
-  return this->join_override_threshold_;
+  return join_override_threshold_;
 }
 
 std::size_t Heuristics::android_join_override_threshold() const {
-  return this->android_join_override_threshold_;
+  return android_join_override_threshold_;
 }
 
 const std::optional<std::size_t> Heuristics::warn_override_threshold() const {
-  return this->warn_override_threshold_;
+  return warn_override_threshold_;
 }
 
 std::size_t Heuristics::generation_max_port_size() const {
-  return this->generation_max_port_size_;
+  return generation_max_port_size_;
 }
 
 std::size_t Heuristics::generation_max_output_path_leaves() const {
-  return this->generation_max_output_path_leaves_;
+  return generation_max_output_path_leaves_;
 }
 
 std::size_t Heuristics::parameter_source_max_port_size() const {
-  return this->parameter_source_max_port_size_;
+  return parameter_source_max_port_size_;
 }
 
 std::size_t Heuristics::parameter_source_max_output_path_leaves() const {
-  return this->parameter_source_max_output_path_leaves_;
+  return parameter_source_max_output_path_leaves_;
 }
 
 std::size_t Heuristics::sink_max_port_size() const {
-  return this->sink_max_port_size_;
+  return sink_max_port_size_;
 }
 
 std::size_t Heuristics::sink_max_input_path_leaves() const {
-  return this->sink_max_input_path_leaves_;
+  return sink_max_input_path_leaves_;
 }
 
 std::size_t Heuristics::call_effect_source_max_port_size() const {
-  return this->call_effect_source_max_port_size_;
+  return call_effect_source_max_port_size_;
 }
 
 std::size_t Heuristics::call_effect_source_max_output_path_leaves() const {
-  return this->call_effect_source_max_output_path_leaves_;
+  return call_effect_source_max_output_path_leaves_;
 }
 
 std::size_t Heuristics::call_effect_sink_max_port_size() const {
-  return this->call_effect_sink_max_port_size_;
+  return call_effect_sink_max_port_size_;
 }
 
 std::size_t Heuristics::call_effect_sink_max_input_path_leaves() const {
-  return this->call_effect_sink_max_input_path_leaves_;
+  return call_effect_sink_max_input_path_leaves_;
 }
 
 std::size_t Heuristics::max_number_iterations() const {
-  return this->max_number_iterations_;
+  return max_number_iterations_;
 }
 
 std::size_t Heuristics::max_depth_class_properties() const {
-  return this->max_depth_class_properties_;
+  return max_depth_class_properties_;
 }
 
 std::size_t Heuristics::max_call_chain_source_sink_distance() const {
-  return this->max_call_chain_source_sink_distance_;
+  return max_call_chain_source_sink_distance_;
 }
 
 std::size_t Heuristics::propagation_max_input_path_size() const {
-  return this->propagation_max_input_path_size_;
+  return propagation_max_input_path_size_;
 }
 
 std::size_t Heuristics::propagation_max_input_path_leaves() const {
-  return this->propagation_max_input_path_leaves_;
+  return propagation_max_input_path_leaves_;
 }
 
 } // namespace marianatrench
