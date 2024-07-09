@@ -41,6 +41,8 @@ constexpr std::size_t max_depth_class_properties_default = 10;
 constexpr std::size_t max_call_chain_source_sink_distance_default = 10;
 constexpr std::size_t propagation_max_input_path_size_default = 4;
 constexpr std::size_t propagation_max_input_path_leaves_default = 4;
+constexpr std::size_t propagation_max_output_path_size_default = 4;
+constexpr std::size_t propagation_max_output_path_leaves_default = 4;
 
 Heuristics::Heuristics()
     : join_override_threshold_(join_override_threshold_default),
@@ -67,7 +69,11 @@ Heuristics::Heuristics()
           max_call_chain_source_sink_distance_default),
       propagation_max_input_path_size_(propagation_max_input_path_size_default),
       propagation_max_input_path_leaves_(
-          propagation_max_input_path_leaves_default) {}
+          propagation_max_input_path_leaves_default),
+      propagation_max_output_path_size_(
+          propagation_max_output_path_size_default),
+      propagation_max_output_path_leaves_(
+          propagation_max_output_path_leaves_default) {}
 
 void Heuristics::init_from_file(const std::filesystem::path& heuristics_path) {
   // Create an `Heuristics` object with the default values.
@@ -93,7 +99,9 @@ void Heuristics::init_from_file(const std::filesystem::path& heuristics_path) {
        "max_depth_class_properties",
        "max_call_chain_source_sink_distance",
        "propagation_max_input_path_size",
-       "propagation_max_input_path_leaves"});
+       "propagation_max_input_path_leaves",
+       "propagation_max_output_path_size",
+       "propagation_max_output_path_leaves"});
 
   // Set the heuristics parameters that are specified in the JSON document.
 
@@ -200,6 +208,18 @@ void Heuristics::init_from_file(const std::filesystem::path& heuristics_path) {
         JsonValidation::unsigned_integer(
             value, "propagation_max_input_path_leaves");
   }
+
+  if (JsonValidation::has_field(value, "propagation_max_output_path_size")) {
+    heuristics.propagation_max_output_path_size_ =
+        JsonValidation::unsigned_integer(
+            value, "propagation_max_output_path_size");
+  }
+
+  if (JsonValidation::has_field(value, "propagation_max_output_path_leaves")) {
+    heuristics.propagation_max_output_path_leaves_ =
+        JsonValidation::unsigned_integer(
+            value, "propagation_max_output_path_leaves");
+  }
 }
 
 const Heuristics& Heuristics::singleton() {
@@ -276,6 +296,14 @@ std::size_t Heuristics::propagation_max_input_path_size() const {
 
 std::size_t Heuristics::propagation_max_input_path_leaves() const {
   return propagation_max_input_path_leaves_;
+}
+
+std::size_t Heuristics::propagation_max_output_path_size() const {
+  return propagation_max_output_path_size_;
+}
+
+std::size_t Heuristics::propagation_max_output_path_leaves() const {
+  return propagation_max_output_path_leaves_;
 }
 
 } // namespace marianatrench

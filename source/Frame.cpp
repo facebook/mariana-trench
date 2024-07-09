@@ -139,8 +139,9 @@ void Frame::join_with(const Frame& other) {
     // Approximate the output paths here to avoid storing very large trees
     // during the analysis of a method.
     output_paths_.collapse_deeper_than(
-        Heuristics::kPropagationMaxOutputPathSize);
-    output_paths_.limit_leaves(Heuristics::kPropagationMaxOutputPathLeaves);
+        Heuristics::singleton().propagation_max_output_path_size());
+    output_paths_.limit_leaves(
+        Heuristics::singleton().propagation_max_output_path_leaves());
 
     extra_traces_.join_with(other.extra_traces_);
   }
@@ -322,8 +323,10 @@ void Frame::append_to_propagation_output_paths(Path::Element path_element) {
     }
   }
   output_paths_ = std::move(new_output_paths);
-  output_paths_.collapse_deeper_than(Heuristics::kPropagationMaxOutputPathSize);
-  output_paths_.limit_leaves(Heuristics::kPropagationMaxOutputPathLeaves);
+  output_paths_.collapse_deeper_than(
+      Heuristics::singleton().propagation_max_output_path_size());
+  output_paths_.limit_leaves(
+      Heuristics::singleton().propagation_max_output_path_leaves());
 }
 
 void Frame::update_maximum_collapse_depth(

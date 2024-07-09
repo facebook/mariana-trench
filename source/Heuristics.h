@@ -145,7 +145,7 @@ class Heuristics final {
   /**
    * Maximum size of the output access path of a propagation.
    */
-  constexpr static std::size_t kPropagationMaxOutputPathSize = 4;
+  std::size_t propagation_max_output_path_size() const;
 
   /**
    * Maximum number of leaves in the tree of input paths of propagations.
@@ -155,7 +155,7 @@ class Heuristics final {
   /**
    * Maximum number of leaves in the tree of output paths of propagations.
    */
-  constexpr static std::size_t kPropagationMaxOutputPathLeaves = 4;
+  std::size_t propagation_max_output_path_leaves() const;
 
   /**
    * Maximum height of the output path tree of propagations after widening.
@@ -191,6 +191,8 @@ class Heuristics final {
   std::size_t max_call_chain_source_sink_distance_;
   std::size_t propagation_max_input_path_size_;
   std::size_t propagation_max_input_path_leaves_;
+  std::size_t propagation_max_output_path_size_;
+  std::size_t propagation_max_output_path_leaves_;
 };
 
 } // namespace marianatrench
