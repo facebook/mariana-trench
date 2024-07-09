@@ -15,6 +15,26 @@
 
 namespace marianatrench {
 
+Json::Value ModelValidatorResult::to_json() const {
+  auto result = Json::Value(Json::objectValue);
+  result["valid"] = valid_;
+  result["annotation"] = annotation_;
+  return result;
+}
+
+Json::Value ModelValidatorsResult::to_json() const {
+  auto results = Json::Value(Json::objectValue);
+  results["method"] = method_->show();
+
+  auto validator_results = Json::Value(Json::arrayValue);
+  for (const auto& result : results_) {
+    validator_results.append(result.to_json());
+  }
+  results["validators"] = validator_results;
+
+  return results;
+}
+
 namespace {
 
 enum ModelValidationType {
@@ -148,14 +168,16 @@ std::optional<ModelValidators> ModelValidators::from_method(
     return std::nullopt;
   }
 
-  return ModelValidators(std::move(validators));
+  return ModelValidators(method, std::move(validators));
 }
 
-bool ModelValidators::validate(const Model& model) const {
-  return std::all_of(
-      validators_.cbegin(),
-      validators_.cend(),
-      [&model](const auto& validator) { return validator->validate(model); });
+ModelValidatorsResult ModelValidators::validate(const Model& model) const {
+  std::vector<ModelValidatorResult> results;
+  for (const auto& validator : validators_) {
+    results.emplace_back(validator->validate(model));
+  }
+
+  return ModelValidatorsResult(method_, std::move(results));
 }
 
 std::string ModelValidators::show() const {
@@ -226,16 +248,18 @@ bool includes_issue_kinds(
 
 } // namespace
 
-bool ExpectIssue::validate(const Model& model) const {
+ModelValidatorResult ExpectIssue::validate(const Model& model) const {
   const auto& issues = model.issues();
-  return std::any_of(issues.begin(), issues.end(), [this](const Issue& issue) {
-    // Issue (hence rule) should not be bottom() at this point.
-    const auto* rule = issue.rule();
-    mt_assert(rule != nullptr);
-    return rule->code() == code_ &&
-        includes_issue_kinds(issue.sources().kinds(), source_kinds_) &&
-        includes_issue_kinds(issue.sinks().kinds(), sink_kinds_);
-  });
+  bool valid =
+      std::any_of(issues.begin(), issues.end(), [this](const Issue& issue) {
+        // Issue (hence rule) should not be bottom() at this point.
+        const auto* rule = issue.rule();
+        mt_assert(rule != nullptr);
+        return rule->code() == code_ &&
+            includes_issue_kinds(issue.sources().kinds(), source_kinds_) &&
+            includes_issue_kinds(issue.sinks().kinds(), sink_kinds_);
+      });
+  return ModelValidatorResult(valid, /* annotation */ show());
 }
 
 std::string ExpectIssue::show() const {
@@ -264,19 +288,23 @@ ExpectNoIssue ExpectNoIssue::from_annotation(
   return ExpectNoIssue(code);
 }
 
-bool ExpectNoIssue::validate(const Model& model) const {
+ModelValidatorResult ExpectNoIssue::validate(const Model& model) const {
   if (code_ == -1) {
     // Issue code unspecified. Model must not contain any issues.
-    return model.issues().empty();
+    return ModelValidatorResult(
+        /* valid */ model.issues().empty(), /* annotation */ show());
   }
 
   const auto& issues = model.issues();
-  return std::none_of(issues.begin(), issues.end(), [this](const Issue& issue) {
-    // Issue (hence rule) should not be bottom() at this point.
-    const auto* rule = issue.rule();
-    mt_assert(rule != nullptr);
-    return rule->code() == code_;
-  });
+  bool valid =
+      std::none_of(issues.begin(), issues.end(), [this](const Issue& issue) {
+        // Issue (hence rule) should not be bottom() at this point.
+        const auto* rule = issue.rule();
+        mt_assert(rule != nullptr);
+        return rule->code() == code_;
+      });
+
+  return ModelValidatorResult(valid, /* annotation */ show());
 }
 
 std::string ExpectNoIssue::show() const {

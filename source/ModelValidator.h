@@ -23,14 +23,49 @@ namespace marianatrench {
 
 class ModelValidator;
 
+class ModelValidatorResult {
+ public:
+  explicit ModelValidatorResult(bool valid, std::string annotation)
+      : valid_(valid), annotation_(std::move(annotation)) {}
+
+  MOVE_CONSTRUCTOR_ONLY(ModelValidatorResult)
+
+  bool is_valid() const {
+    return valid_;
+  }
+
+  Json::Value to_json() const;
+
+ private:
+  bool valid_;
+  std::string annotation_;
+};
+
+class ModelValidatorsResult {
+ public:
+  explicit ModelValidatorsResult(
+      const Method* method,
+      std::vector<ModelValidatorResult> results)
+      : method_(method), results_(std::move(results)) {}
+
+  MOVE_CONSTRUCTOR_ONLY(ModelValidatorsResult)
+
+  Json::Value to_json() const;
+
+ private:
+  const Method* method_;
+  std::vector<ModelValidatorResult> results_;
+};
+
 /**
  * The top-level validator for models in given method.
  */
 class ModelValidators final {
  public:
   explicit ModelValidators(
+      const Method* method,
       std::vector<std::unique_ptr<ModelValidator>> validators)
-      : validators_(std::move(validators)) {
+      : method_(method), validators_(std::move(validators)) {
     mt_assert(!validators_.empty());
   }
 
@@ -42,11 +77,12 @@ class ModelValidators final {
    */
   static std::optional<ModelValidators> from_method(const Method* method);
 
-  bool validate(const Model& model) const;
+  ModelValidatorsResult validate(const Model& model) const;
 
   std::string show() const;
 
  private:
+  const Method* method_;
   std::vector<std::unique_ptr<ModelValidator>> validators_;
 };
 
@@ -60,7 +96,7 @@ class ModelValidator {
   ModelValidator() = default;
   MOVE_CONSTRUCTOR_ONLY_VIRTUAL_DESTRUCTOR(ModelValidator)
 
-  virtual bool validate(const Model& model) const = 0;
+  virtual ModelValidatorResult validate(const Model& model) const = 0;
 
   virtual std::string show() const = 0;
 };
@@ -83,7 +119,7 @@ class ExpectIssue final : public ModelValidator {
   static ExpectIssue from_annotation(
       const EncodedAnnotations& annotation_elements);
 
-  bool validate(const Model& model) const override;
+  ModelValidatorResult validate(const Model& model) const override;
 
   std::string show() const override;
 
@@ -104,7 +140,7 @@ class ExpectNoIssue final : public ModelValidator {
   static ExpectNoIssue from_annotation(
       const EncodedAnnotations& annotation_elements);
 
-  bool validate(const Model& model) const override;
+  ModelValidatorResult validate(const Model& model) const override;
 
   std::string show() const override;
 

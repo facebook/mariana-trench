@@ -478,21 +478,18 @@ void Registry::dump_rule_coverage_info(
 }
 
 void Registry::verify_expected_output(
-    const std::filesystem::path& /* test_output_path */) const {
+    const std::filesystem::path& test_output_path) const {
+  auto results = Json::Value(Json::arrayValue);
+
   for (const auto& [method, model] : models_) {
     auto model_validators = ModelValidators::from_method(method);
     if (!model_validators) {
       continue;
     }
-    bool valid = model_validators->validate(model);
-    LOG(1,
-        "In method {}, found annotation for validation: {}. Is valid: {}",
-        method->show(),
-        model_validators->show(),
-        valid);
+    results.append(model_validators->validate(model).to_json());
   }
 
-  // TODO(T176363194): Write results to test_output_path.
+  JsonWriter::write_json_file(test_output_path, results);
 }
 
 } // namespace marianatrench
