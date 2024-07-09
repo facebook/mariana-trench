@@ -56,9 +56,10 @@ class Heuristics final {
    * Maximum height of a taint (source or sink) tree after widening.
    *
    * When reaching the maximum, we collapse the leaves to reduce the height.
-   * This parameter cannot be set a runtime, as it used at compile time.
    */
-  constexpr static std::size_t kSourceSinkTreeWideningHeight = 4;
+  std::size_t source_sink_tree_widening_height() const {
+    return source_sink_tree_widening_height_;
+  }
 
   /**
    * Maximum size of the port of a generation.
@@ -218,6 +219,7 @@ class Heuristics final {
   std::size_t join_override_threshold_;
   std::size_t android_join_override_threshold_;
   std::optional<std::size_t> warn_override_threshold_;
+  std::size_t source_sink_tree_widening_height_;
   std::size_t generation_max_port_size_;
   std::size_t generation_max_output_path_leaves_;
   std::size_t parameter_source_max_port_size_;

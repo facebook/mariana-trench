@@ -16,7 +16,7 @@ namespace marianatrench {
 
 struct TaintTreeConfiguration {
   static std::size_t max_tree_height_after_widening() {
-    return Heuristics::kSourceSinkTreeWideningHeight;
+    return Heuristics::singleton().source_sink_tree_widening_height();
   }
 
   static Taint transform_on_widening_collapse(Taint);

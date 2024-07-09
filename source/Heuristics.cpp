@@ -26,6 +26,7 @@ constexpr std::size_t join_override_threshold_default = 40;
 constexpr std::size_t android_join_override_threshold_default = 10;
 constexpr std::optional<std::size_t> warn_override_threshold_default =
     std::nullopt;
+constexpr std::size_t source_sink_tree_widening_height_default = 4;
 constexpr std::size_t generation_max_port_size_default = 4;
 constexpr std::size_t generation_max_output_path_leaves_default = 20;
 constexpr std::size_t parameter_source_max_port_size_default = 4;
@@ -49,6 +50,8 @@ Heuristics::Heuristics()
     : join_override_threshold_(join_override_threshold_default),
       android_join_override_threshold_(android_join_override_threshold_default),
       warn_override_threshold_(warn_override_threshold_default),
+      source_sink_tree_widening_height_(
+          source_sink_tree_widening_height_default),
       generation_max_port_size_(generation_max_port_size_default),
       generation_max_output_path_leaves_(
           generation_max_output_path_leaves_default),
@@ -87,6 +90,7 @@ void Heuristics::init_from_file(const std::filesystem::path& heuristics_path) {
       {"join_override_threshold",
        "android_join_override_threshold",
        "warn_override_threshold",
+       "source_sink_tree_widening_height",
        "generation_max_port_size",
        "generation_max_output_path_leaves",
        "parameter_source_max_port_size",
@@ -122,6 +126,12 @@ void Heuristics::init_from_file(const std::filesystem::path& heuristics_path) {
   if (JsonValidation::has_field(value, "warn_override_threshold")) {
     heuristics.warn_override_threshold_ =
         JsonValidation::unsigned_integer(value, "warn_override_threshold");
+  }
+
+  if (JsonValidation::has_field(value, "source_sink_tree_widening_height")) {
+    heuristics.source_sink_tree_widening_height_ =
+        JsonValidation::unsigned_integer(
+            value, "source_sink_tree_widening_height");
   }
 
   if (JsonValidation::has_field(value, "generation_max_port_size")) {
