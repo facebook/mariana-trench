@@ -202,9 +202,10 @@ class Heuristics final {
    * Maximum height of the output path tree of propagations after widening.
    *
    * When reaching the maximum, we collapse the leaves to reduce the height.
-   * This parameter cannot be set a runtime, as it used at compile time.
    */
-  constexpr static std::size_t kPropagationOutputPathTreeWideningHeight = 4;
+  std::size_t propagation_output_path_tree_widening_height() const {
+    return propagation_output_path_tree_widening_height_;
+  }
 
   /**
    * Maximum height of the input taint tree when applying propagations.
@@ -237,6 +238,7 @@ class Heuristics final {
   std::size_t propagation_max_input_path_leaves_;
   std::size_t propagation_max_output_path_size_;
   std::size_t propagation_max_output_path_leaves_;
+  std::size_t propagation_output_path_tree_widening_height_;
   std::uint32_t propagation_max_collapse_depth_;
 };
 

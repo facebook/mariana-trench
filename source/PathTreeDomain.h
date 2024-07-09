@@ -14,7 +14,8 @@ namespace marianatrench {
 
 struct PathTreeConfiguration {
   static std::size_t max_tree_height_after_widening() {
-    return Heuristics::kPropagationOutputPathTreeWideningHeight;
+    return Heuristics::singleton()
+        .propagation_output_path_tree_widening_height();
   }
 
   static CollapseDepth transform_on_widening_collapse(

@@ -13,14 +13,6 @@ namespace marianatrench {
 
 namespace {
 
-Heuristics& get_mutable_singleton() {
-  // Thread-safe global variable, initialized on first call.
-  static Heuristics heuristics;
-  return heuristics;
-}
-
-} // namespace
-
 // Default values for heuristics parameters.
 constexpr std::size_t join_override_threshold_default = 40;
 constexpr std::size_t android_join_override_threshold_default = 10;
@@ -44,7 +36,16 @@ constexpr std::size_t propagation_max_input_path_size_default = 4;
 constexpr std::size_t propagation_max_input_path_leaves_default = 4;
 constexpr std::size_t propagation_max_output_path_size_default = 4;
 constexpr std::size_t propagation_max_output_path_leaves_default = 4;
+constexpr std::size_t propagation_output_path_tree_widening_height_default = 4;
 constexpr std::uint32_t propagation_max_collapse_depth_default = 4;
+
+Heuristics& get_mutable_singleton() {
+  // Thread-safe global variable, initialized on first call.
+  static Heuristics heuristics;
+  return heuristics;
+}
+
+} // namespace
 
 Heuristics::Heuristics()
     : join_override_threshold_(join_override_threshold_default),
@@ -78,6 +79,8 @@ Heuristics::Heuristics()
           propagation_max_output_path_size_default),
       propagation_max_output_path_leaves_(
           propagation_max_output_path_leaves_default),
+      propagation_output_path_tree_widening_height_(
+          propagation_output_path_tree_widening_height_default),
       propagation_max_collapse_depth_(propagation_max_collapse_depth_default) {}
 
 void Heuristics::init_from_file(const std::filesystem::path& heuristics_path) {
@@ -108,6 +111,7 @@ void Heuristics::init_from_file(const std::filesystem::path& heuristics_path) {
        "propagation_max_input_path_leaves",
        "propagation_max_output_path_size",
        "propagation_max_output_path_leaves",
+       "propagation_output_path_tree_widening_height",
        "propagation_max_collapse_depth"});
 
   // Set the heuristics parameters that are specified in the JSON document.
@@ -232,6 +236,13 @@ void Heuristics::init_from_file(const std::filesystem::path& heuristics_path) {
     heuristics.propagation_max_output_path_leaves_ =
         JsonValidation::unsigned_integer(
             value, "propagation_max_output_path_leaves");
+  }
+
+  if (JsonValidation::has_field(
+          value, "propagation_output_path_tree_widening_height")) {
+    heuristics.propagation_output_path_tree_widening_height_ =
+        JsonValidation::unsigned_integer(
+            value, "propagation_output_path_tree_widening_height");
   }
 
   if (JsonValidation::has_field(value, "propagation_max_collapse_depth")) {
