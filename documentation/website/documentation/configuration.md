@@ -1,12 +1,12 @@
 ---
 id: configuration
-title: Configuration
-sidebar_label: Configuration
+title: Configuration Options
+sidebar_label: Configuration Options
 ---
 
-Mariana Trench is highly configurable and we recommend that you invest time into adjusting the tool to your specific use cases. At Facebook, we have dedicated security engineers that will spend a significant amount of their time adding new rules and model generators to improve the analysis results.
+Mariana Trench is highly configurable and we recommend that you invest time into adjusting the tool to your specific use cases. At Meta, we have dedicated security engineers that will spend a significant amount of their time adding new rules and model generators to improve the analysis results.
 
-This page will cover the more important, non-trivial configuration options. Note that you will spend most of your time configuring Mariana Trench writing model generators. These are covered in the [next section](models.md).
+This page will cover the more important, non-trivial configuration options. Note that you will spend most of your time configuring Mariana Trench writing model generators. These are covered in the [Models and Model Generators](models.md).
 
 
 ## Command Line Options
@@ -126,7 +126,7 @@ Maximum number of leaves in the tree of input paths of propagations.
 ### Heuristics Parameter Configuration Example
 
 The following JSON document is a valid configuration file for the heuristics parameters.
-It improves the precision of the analysis by sacrificing some performance.
+Typically, we try to find a balance between precision of the analysis and performance.
 ```json
 {
     "join_override_threshold": 100,
