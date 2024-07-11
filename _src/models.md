@@ -1268,7 +1268,7 @@ Each "rule" defines a "filter" (which uses "constraints" to specify methods for 
     - `attach_to_propagations`\*: A list of attach-to-propagations that describe that inferred propagations of sources flowing in or out of a given parameter or return value must have the given features. An attach-to-propagation has the following key/values:
       - `port`: The access path root (e.g, `"Return"` or `"Argument(1)"`);
       - `features`: A list of features/breadcrumb names;
-    - `add_features_to_parameters`\*: A list of add-features-to-parameters that describe that flows that might flow on the given parameter must have the given features. An add-features-to-parameter has the following key/values:
+    - `add_features_to_arguments`\*: A list of add-features-to-arguments that describe that flows that might flow on the given argument must have the given features. An add-features-to-argument has the following key/values:
       - `port`: The access path root (e.g, `"Argument(1)"`);
       - `features`: A list of features/breadcrumb names;
     - `modes`\*: A list of mode names that describe specific behaviors of a method;
