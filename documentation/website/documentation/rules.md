@@ -4,7 +4,7 @@ title: Rules
 sidebar_label: Rules
 ---
 
-import MultiSourceSinkRule from './fb/multi_source_sink_rules.md';
+import MultiSourceSinkRule from './multi_source_sink_rules.md';
 
 <!-- Careful saving this file, weird formatting happens to json blocks -->
 
