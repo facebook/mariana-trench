@@ -55,7 +55,7 @@ module.exports = {
           label: 'Call Graph Configuration',
           items: [
             'shims',
-            fbInternalOnly('fb/android-lifecycles'),
+            'android-lifecycles',
           ],
         },
         'feature-descriptions',
