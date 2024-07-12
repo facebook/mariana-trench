@@ -13,35 +13,70 @@ const {
 } = require('docusaurus-plugin-internaldocs-fb/internal');
 
 module.exports = {
-  docs: {
-    'User Guide': [
-      'overview',
-      fbContent({external: 'getting-started'}),
-      fbInternalOnly('fb/xfn-onboarding'),
-      fbInternalOnly('fb/using-mt-101'),
-      fbInternalOnly('fb/running-on-apps'),
-      fbInternalOnly('fb/running-on-new-apps'),
-      fbInternalOnly('fb/running-on-3rd-party-apps'),
-      'configuration',
-      'customize-sources-and-sinks',
-      'rules',
-      'models',
-      'shims',
-      'feature-descriptions',
-      'known-false-negatives',
-      fbInternalOnly('fb/testing-diffs'),
-    ],
-    'Developer Guide': [
-      fbContent({external: 'build-from-source'}),
-      fbInternalOnly('fb/developer-getting-started'),
-      fbInternalOnly('fb/running-tests'),
-      fbInternalOnly('fb/inspecting-an-apk'),
-      fbInternalOnly('fb/android-lifecycles'),
-      'debugging-fp-fns',
-      fbInternalOnly('fb/deployment'),
-      fbInternalOnly('fb/continuous-and-diff-runs'),
-      fbInternalOnly('fb/crtex'),
-      fbInternalOnly('fb/alerts'),
-    ],
-  },
+  docs: [
+    'overview',
+    {
+      type: 'category',
+      label: 'Mariana Trench Concepts',
+      collapsed: false,
+      items: [
+        fbInternalOnly('fb/xfn-onboarding'),
+        fbInternalOnly('fb/using-mt-101'),
+        'known-false-negatives',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'User Guide',
+      collapsed: false,
+      items: [
+        fbContent({external: 'getting-started'}),
+        fbInternalOnly({
+          type: 'category',
+          label: 'Running Mariana Trench',
+          items: [
+            'fb/running-on-apps',
+            'fb/running-on-new-apps',
+            'fb/running-on-3rd-party-apps',
+          ],
+        }),
+        'configuration',
+        {
+          type: 'category',
+          label: 'Model/Taint Configuration',
+          items: [
+            'customize-sources-and-sinks',
+            'rules',
+            'models',
+          ],
+        },
+        {
+          type: 'category',
+          label: 'Call Graph Configuration',
+          items: [
+            'shims',
+            fbInternalOnly('fb/android-lifecycles'),
+          ],
+        },
+        'feature-descriptions',
+        fbInternalOnly('fb/testing-diffs'),
+      ]
+    },
+    {
+      type: 'category',
+      label: 'Developer Guide',
+      collapsed: false,
+      items: [
+        fbContent({external: 'build-from-source'}),
+        fbInternalOnly('fb/developer-getting-started'),
+        fbInternalOnly('fb/running-tests'),
+        fbInternalOnly('fb/inspecting-an-apk'),
+        'debugging-fp-fns',
+        fbInternalOnly('fb/deployment'),
+        fbInternalOnly('fb/continuous-and-diff-runs'),
+        fbInternalOnly('fb/crtex'),
+        fbInternalOnly('fb/alerts'),
+      ],
+    },
+  ],
 };
