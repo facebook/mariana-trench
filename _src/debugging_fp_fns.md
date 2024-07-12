@@ -17,7 +17,7 @@ First, you need to run the analysis on your computer. This will create `model@XX
 
 ## Investigate the output models
 
-Now, your objective is to understand in which method we lost the flow (false negative) or introduced the invalid flow (false positive). You will need to look into the output models for that. I recommend to use the `explore_models.py` bento script.
+Now, your objective is to understand in which method we lost the flow (false negative) or introduced the invalid flow (false positive). You will need to look into the output models for that. These models include both the declared models and inferred models. Declared models are models explicitly written out or created by a model generator. Inferred models are models created by Mariana Trench's analysis of other models and the code. I recommend using the `explore_models.py` bento script.
 
 Run the following command in the directory containing the output model files (i.e, `model@XXX.json`):
 <OssOnly>
@@ -132,6 +132,22 @@ In [3]: print_model('Landroidx/core/content/pm/ShortcutManagerCompat;.requestPin
 I can see the frame from `ShortcutManagerCompat.requestPinShortcut` on `Argument(1).mIntents` to `Context.sendOrderedBroadcast` on `Argument(1)`. I can keep following frames until I find the method that misses a source or sink.
 
 For frames from the source to the root callable, I should look at `generations`, and for frames from the root callable to the sink, I should look at `sinks`. On the root callable, I should look at `issues`.
+
+As you can see above, methods can have very long signatures. Fortunately, the bento script is also a python REPL, so you can assign them to variables
+
+```shell
+In [4]:requestPinShortcut = 'Landroidx/core/content/pm/ShortcutManagerCompat;.requestPinShortcut:(Landroid/content/Context;Landroidx/core/content/pm/ShortcutInfoCompat;Landroid/content/IntentSender;)Z'
+In [5]:pm = print_model
+In [6]:pm(requestPinShortcut)
+{
+  "method": "Landroidx/core/content/pm/ShortcutManagerCompat;.requestPinShortcut:(Landroid/content/Context;Landroidx/core/content/pm/ShortcutInfoCompat;Landroid/content/IntentSender;)Z",
+  "position": {
+    "line": 112,
+    "path": "androidx/core/content/pm/ShortcutManagerCompat.java"
+  },
+  ...
+}
+```
 
 ## Investigating the transfer function
 
