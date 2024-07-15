@@ -495,8 +495,11 @@ void MarianaTrench::run(const program_options::variables_map& variables) {
   registry.dump_metadata(/* path */ metadata_path);
 
   if (options.verify_expected_output()) {
-    LOG(1, "Verifying expected output");
-    registry.verify_expected_output(options.verification_output_path());
+    auto verification_output_path = options.verification_output_path();
+    LOG(1,
+        "Verifying expected output. Writing results to `{}`",
+        verification_output_path.native());
+    registry.verify_expected_output(verification_output_path);
   }
 }
 
