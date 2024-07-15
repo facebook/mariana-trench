@@ -127,4 +127,53 @@ class StringOrigin final : public Origin {
   const DexString* name_;
 };
 
+/**
+ * Represents the origin of the source-as-transform sinks for the exploitability
+ * rules. See PartiallyFulfilledExploitabilityRuleState.h for how
+ * source-as-transform sinks are materialized.
+ *
+ * Similar to how method/field/string origins are first added when creating
+ * user-declared models (see Taint::add_origins_if_declaration()),
+ * exploitability-origins are added when we first infer the source-as-transform
+ * sinks. It tracks the (caller method + sink callee) pair where
+ * the source-as-transform sink was materialized/originated.
+ *
+ * From the SAPP UI perspective: Similar to how method/field/string origins
+ * indicates the leaf frames of the source/sink traces, exploitability-origins
+ * indicates the leaf of the call-chain portion of the exploitability trace.
+ *
+ * But since the SAPP UI only has the notion of source/sink traces for an issue,
+ * the traces for the exploitability rules are "flatten" to a single sink trace.
+ * The transition from the call-chain trace to the taint-flow sink trace is
+ * modelled using a taint transform. So, exploitability-origin is ignored by
+ * SAPP.
+ */
+class ExploitabilityOrigin final : public Origin {
+ public:
+  explicit ExploitabilityOrigin(
+      const Method* exploitability_root,
+      const DexString* callee)
+      : exploitability_root_(exploitability_root), callee_(callee) {}
+
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ExploitabilityOrigin)
+
+  std::string to_string() const override;
+
+  Json::Value to_json() const override;
+
+  const DexString* callee() const {
+    return callee_;
+  }
+
+  const Method* exploitability_root() const {
+    return exploitability_root_;
+  }
+
+  std::string issue_handle_callee() const;
+
+ private:
+  const Method* exploitability_root_;
+  const DexString* callee_;
+};
+
 } // namespace marianatrench

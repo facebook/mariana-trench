@@ -33,6 +33,10 @@ class OriginFactory final {
 
   const StringOrigin* string_origin(std::string_view name) const;
 
+  const ExploitabilityOrigin* exploitability_origin(
+      const Method* exploitability_root,
+      std::string_view callee) const;
+
   static const OriginFactory& singleton();
 
  private:
@@ -48,6 +52,11 @@ class OriginFactory final {
       TupleHash<const DexString*, const AccessPath*>>
       crtex_origins_;
   UniquePointerFactory<const DexString*, StringOrigin> string_origins_;
+  UniquePointerFactory<
+      std::tuple<const Method*, const DexString*>,
+      ExploitabilityOrigin,
+      TupleHash<const Method*, const DexString*>>
+      exploitability_origins_;
 };
 
 } // namespace marianatrench

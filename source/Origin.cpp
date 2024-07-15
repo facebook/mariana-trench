@@ -5,6 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <fmt/format.h>
+
 #include <mariana-trench/AccessPathFactory.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Origin.h>
@@ -28,12 +30,17 @@ const Origin* Origin::from_json(const Json::Value& value, Context& context) {
   } else if (value.isMember("method")) {
     return context.origin_factory->string_origin(
         JsonValidation::string(value, "method"));
+  } else if (
+      value.isMember("exploitability_root") && value.isMember("callee")) {
+    return context.origin_factory->exploitability_origin(
+        Method::from_json(value["exploitability_root"], context),
+        JsonValidation::string(value, "callee"));
   }
 
   throw JsonValidationError(
       value,
       std::nullopt,
-      "contains one of fields [method|field|canonical_name]");
+      "contains one of fields [method|field|canonical_name|exploitability_root]");
 }
 
 std::string MethodOrigin::to_string() const {
@@ -77,6 +84,24 @@ Json::Value StringOrigin::to_json() const {
   // Rename key to something more descriptive. Using "method" for now to
   // remain compatible with the parser.
   value["method"] = name_->str_copy();
+  return value;
+}
+
+std::string ExploitabilityOrigin::to_string() const {
+  return fmt::format(
+      "exploitability_root={},callee={}",
+      exploitability_root_->show(),
+      callee_->str());
+}
+
+std::string ExploitabilityOrigin::issue_handle_callee() const {
+  return fmt::format("{}:{}", exploitability_root_->show(), callee_->str());
+}
+
+Json::Value ExploitabilityOrigin::to_json() const {
+  auto value = Json::Value(Json::objectValue);
+  value["exploitability_root"] = exploitability_root_->to_json();
+  value["callee"] = callee_->str_copy();
   return value;
 }
 
