@@ -76,6 +76,7 @@ module.exports = {
         fbInternalOnly('fb/continuous-and-diff-runs'),
         fbInternalOnly('fb/crtex'),
         fbInternalOnly('fb/alerts'),
+        fbInternalOnly('fb/marianabench'),
       ],
     },
   ],
