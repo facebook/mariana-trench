@@ -12,6 +12,7 @@
 #include <mariana-trench/Feature.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Method.h>
+#include <mariana-trench/Origin.h>
 #include <mariana-trench/UniquePointerFactory.h>
 
 namespace marianatrench {
@@ -71,6 +72,9 @@ class FeatureFactory final {
   const Feature* get_missing_method() const;
 
   const Feature* get_exploitability_root() const;
+
+  const Feature* get_exploitability_origin_feature(
+      const ExploitabilityOrigin* exploitability_origin) const;
 
   static const FeatureFactory& singleton();
 

@@ -79,7 +79,8 @@ Taint apply_source_as_transform_to_sink(
     MethodContext* context,
     const Taint& source_taint,
     const TransformList* source_as_transform,
-    const Taint& sink_taint) {
+    const Taint& sink_taint,
+    std::string_view callee) {
   auto transformed_sink_taint = sink_taint.apply_transform(
       context->kind_factory,
       context->transforms_factory,
@@ -90,9 +91,9 @@ Taint apply_source_as_transform_to_sink(
   transformed_sink_taint.add_locally_inferred_features(
       FeatureMayAlwaysSet{context->feature_factory.get_exploitability_root()});
 
-  // Add extra trace to source frame here:
-  transformed_sink_taint.update_with_extra_trace(
-      source_taint, FrameType::source());
+  // Add extra trace and exploitability origin to source frame
+  transformed_sink_taint.update_with_extra_trace_and_exploitability_origin(
+      source_taint, FrameType::source(), context->method(), callee);
 
   LOG(5, "Materialized source-as-transform sink: {}", transformed_sink_taint);
 

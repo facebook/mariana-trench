@@ -94,6 +94,16 @@ const Feature* FeatureFactory::get_exploitability_root() const {
   return factory_.create("exploitability-root-callable");
 }
 
+const Feature* FeatureFactory::get_exploitability_origin_feature(
+    const ExploitabilityOrigin* exploitability_origin) const {
+  mt_assert(exploitability_origin != nullptr);
+  auto callee = exploitability_origin->callee()->str_copy();
+
+  // This feature is used for filtering in the SAPP UI which only includes the
+  // callee name but not its arguments.
+  return factory_.create(callee.substr(0, callee.find(':')));
+}
+
 const FeatureFactory& FeatureFactory::singleton() {
   // Thread-safe global variable, initialized on first call.
   static FeatureFactory instance;

@@ -493,7 +493,7 @@ void check_fulfilled_exploitability_rules(
     const Kind* exploitability_source_kind,
     const Taint& exploitability_source_taint,
     const TransformKind* source_as_transform_sink_kind,
-    const Taint& source_as_transform_sink_taint,
+    Taint& source_as_transform_sink_taint,
     const Position* position,
     TextualOrderIndex sink_index,
     std::string_view callee,
@@ -512,7 +512,15 @@ void check_fulfilled_exploitability_rules(
     return;
   }
 
-  // Create issues for fulfilled exploitability rules
+  auto exploitability_origins =
+      source_as_transform_sink_taint.exploitability_origins();
+  mt_assert(!exploitability_origins.is_bottom());
+
+  source_as_transform_sink_taint.transform_frames(
+      [](Frame frame) { return frame.without_exploitability_origins(); });
+
+  // Create an issue per exploitability-origin for fulfilled exploitability
+  // rules
   for (const auto* rule : fulfilled_rules) {
     LOG_OR_DUMP(
         context,
@@ -522,15 +530,26 @@ void check_fulfilled_exploitability_rules(
         exploitability_source_kind->to_trace_string(),
         source_as_transform_sink_kind->to_trace_string());
 
-    create_issue(
-        context,
-        exploitability_source_taint,
-        source_as_transform_sink_taint,
-        rule,
-        position,
-        sink_index,
-        callee,
-        extra_features);
+    for (const auto* origin : exploitability_origins) {
+      const auto* exploitability_origin = origin->as<ExploitabilityOrigin>();
+      mt_assert(exploitability_origin != nullptr);
+
+      // Add exploitability_origin's callee as a feature.
+      auto extra_features_copy = extra_features;
+      extra_features_copy.add_always(
+          context->feature_factory.get_exploitability_origin_feature(
+              exploitability_origin));
+
+      create_issue(
+          context,
+          exploitability_source_taint,
+          source_as_transform_sink_taint,
+          rule,
+          position,
+          sink_index,
+          exploitability_origin->issue_handle_callee(),
+          extra_features_copy);
+    }
   }
 }
 
@@ -569,7 +588,7 @@ void check_partially_fulfilled_exploitability_rules(
 
   auto transformed_sink_with_extra_trace =
       transforms::apply_source_as_transform_to_sink(
-          context, source_taint, source_as_transform, sink_taint);
+          context, source_taint, source_as_transform, sink_taint, callee);
 
   // Collapse taint tree as exploitability port does not use paths.
   auto exploitability_sources =
@@ -592,7 +611,7 @@ void check_partially_fulfilled_exploitability_rules(
   // Check for trivially fulfilled case.
   for (auto& [source_kind, source_taint] :
        exploitability_sources.partition_by_kind()) {
-    for (const auto& [sink_kind, sink_taint] :
+    for (auto& [sink_kind, sink_taint] :
          transformed_sink_with_extra_trace.partition_by_kind()) {
       check_fulfilled_exploitability_rules(
           context,
@@ -620,7 +639,7 @@ void check_exploitability_rules(
     const Kind* source_kind,
     const Taint& source_taint,
     const Kind* sink_kind,
-    const Taint& sink_taint,
+    Taint& sink_taint,
     const Position* position,
     TextualOrderIndex sink_index,
     std::string_view callee,

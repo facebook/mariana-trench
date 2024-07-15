@@ -157,9 +157,15 @@ class Frame final : public sparta::AbstractDomain<Frame> {
 
   void add_origin(std::string_view literal);
 
+  void add_exploitability_origin(
+      const Method* exploitability_root,
+      std::string_view callee);
+
   const OriginSet& origins() const {
     return origins_;
   }
+
+  OriginSet exploitability_origins() const;
 
   void append_to_propagation_output_paths(Path::Element path_element);
 
@@ -254,6 +260,12 @@ class Frame final : public sparta::AbstractDomain<Frame> {
       const;
 
   Frame with_origins(OriginSet origins) const;
+
+  /**
+   * Returns frame without exploitability origins. Used for creating
+   * exploitability issues.
+   */
+  Frame without_exploitability_origins() const;
 
   static Frame from_json(
       const Json::Value& value,

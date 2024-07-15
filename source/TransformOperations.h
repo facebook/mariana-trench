@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <string_view>
+
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/MethodContext.h>
 #include <mariana-trench/TaintTree.h>
@@ -28,7 +30,8 @@ Taint apply_source_as_transform_to_sink(
     MethodContext* context,
     const Taint& source_taint,
     const TransformList* source_as_transform,
-    const Taint& sink_taint);
+    const Taint& sink_taint,
+    std::string_view callee);
 
 } // namespace transforms
 } // namespace marianatrench

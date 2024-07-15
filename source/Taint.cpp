@@ -220,9 +220,11 @@ Taint Taint::update_with_propagation_trace(
   return result;
 }
 
-void Taint::update_with_extra_trace(
+void Taint::update_with_extra_trace_and_exploitability_origin(
     const Taint& extra_trace_taint,
-    FrameType frame_type) {
+    FrameType frame_type,
+    const Method* exploitability_root,
+    std::string_view callee) {
   // Collect all extra-trace frames to add.
   std::vector<ExtraTrace> extra_traces{};
   extra_trace_taint.visit_frames(
@@ -237,12 +239,24 @@ void Taint::update_with_extra_trace(
             frame_type));
       });
 
-  map_.transform([&extra_traces](LocalTaint* local_taint) -> void {
-    local_taint->transform_frames([&extra_traces](Frame frame) {
-      frame.add_extra_traces(extra_traces);
-      return frame;
-    });
+  map_.transform(
+      [&extra_traces, exploitability_root, callee](
+          LocalTaint* local_taint) -> void {
+        local_taint->transform_frames(
+            [&extra_traces, exploitability_root, callee](Frame frame) {
+              frame.add_extra_traces(extra_traces);
+              frame.add_exploitability_origin(exploitability_root, callee);
+              return frame;
+            });
+      });
+}
+
+OriginSet Taint::exploitability_origins() const {
+  OriginSet result{};
+  visit_frames([&result](const CallInfo& /* unused */, const Frame& frame) {
+    result.join_with(frame.exploitability_origins());
   });
+  return result;
 }
 
 Taint Taint::from_json(const Json::Value& value, Context& context) {

@@ -226,7 +226,13 @@ class Taint final : public sparta::AbstractDomain<Taint> {
       const KindFactory& kind_factory,
       const TransformsFactory& transforms_factory) const;
 
-  void update_with_extra_trace(const Taint& source_taint, FrameType frame_type);
+  void update_with_extra_trace_and_exploitability_origin(
+      const Taint& source_taint,
+      FrameType frame_type,
+      const Method* exploitability_root,
+      std::string_view callee);
+
+  OriginSet exploitability_origins() const;
 
   static Taint from_json(const Json::Value& taint_json, Context& context);
   Json::Value to_json(ExportOriginsMode export_origins_mode) const;

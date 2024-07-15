@@ -50,6 +50,25 @@ void Frame::add_origin(std::string_view literal) {
   origins_.add(OriginFactory::singleton().string_origin(literal));
 }
 
+void Frame::add_exploitability_origin(
+    const Method* exploitability_root,
+    std::string_view callee) {
+  origins_.add(OriginFactory::singleton().exploitability_origin(
+      exploitability_root, callee));
+}
+
+OriginSet Frame::exploitability_origins() const {
+  OriginSet result{};
+
+  for (const auto* origin : origins_) {
+    if (origin->is<ExploitabilityOrigin>()) {
+      result.add(origin);
+    }
+  }
+
+  return result;
+}
+
 void Frame::add_inferred_features(const FeatureMayAlwaysSet& features) {
   inferred_features_.add(features);
 }
@@ -342,6 +361,18 @@ Frame Frame::with_origins(OriginSet origins) const {
   auto copy = *this;
   copy.origins_ = std::move(origins);
   return copy;
+}
+
+Frame Frame::without_exploitability_origins() const {
+  OriginSet result{};
+
+  for (const auto* origin : origins_) {
+    if (!origin->is<ExploitabilityOrigin>()) {
+      result.add(origin);
+    }
+  }
+
+  return with_origins(std::move(result));
 }
 
 Frame Frame::from_json(
