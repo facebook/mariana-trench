@@ -121,16 +121,16 @@ ClassProperties::ClassProperties(
       switch (tag_info.tag) {
         case ComponentTag::Activity:
         case ComponentTag::ActivityAlias:
-          emplace_classes(activities_, tag_info);
+          update_classes(activities_, tag_info);
           break;
         case ComponentTag::Service:
-          emplace_classes(services_, tag_info);
+          update_classes(services_, tag_info);
           break;
         case ComponentTag::Receiver:
-          emplace_classes(receivers_, tag_info);
+          update_classes(receivers_, tag_info);
           break;
         case ComponentTag::Provider:
-          emplace_classes(providers_, tag_info);
+          update_classes(providers_, tag_info);
           break;
       }
     }
@@ -157,14 +157,15 @@ ClassProperties::ClassProperties(
   }
 }
 
-void ClassProperties::emplace_classes(
+void ClassProperties::update_classes(
     std::unordered_map<std::string_view, ExportedKind>& map,
     const ComponentTagInfo& tag_info) {
   if (tag_info.is_exported == BooleanXMLAttribute::True ||
       (tag_info.is_exported == BooleanXMLAttribute::Undefined &&
        tag_info.has_intent_filters)) {
     if (tag_info.permission.empty()) {
-      map.emplace(strings_[tag_info.classname], ExportedKind::Exported);
+      map.insert_or_assign(
+          strings_[tag_info.classname], ExportedKind::Exported);
     } else {
       map.emplace(
           strings_[tag_info.classname], ExportedKind::ExportedWithPermission);

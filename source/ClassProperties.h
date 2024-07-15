@@ -37,7 +37,7 @@ class ClassProperties final {
   DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ClassProperties)
 
  private:
-  void emplace_classes(
+  void update_classes(
       std::unordered_map<std::string_view, ExportedKind>& map,
       const ComponentTagInfo& tag_info);
   FeatureSet get_manifest_features(
