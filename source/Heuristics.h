@@ -63,6 +63,11 @@ class Heuristics final {
 
   /**
    * Maximum size of the port of a generation.
+   *
+   * This is the maximum depth of the generation taint tree. We truncate the
+   * ports upto this threshold when updating the tree. This is equivalent to
+   * collapsing all the subtrees exceeding this threshold to the node at this
+   * maximum depth.
    */
   std::size_t generation_max_port_size() const {
     return generation_max_port_size_;
@@ -71,7 +76,10 @@ class Heuristics final {
   /**
    * Maximum number of leaves in the tree of output paths of generations.
    *
-   * When reaching the maximum, we collapse all the subtrees into a single node.
+   * This is the maximum width of the generation taint tree. When the number of
+   * leaves exceeds this threshold, we compute the depth at which the tree
+   * exceeds the threshold and collapse all the subtrees into the nodes at this
+   * level.
    */
   std::size_t generation_max_output_path_leaves() const {
     return generation_max_output_path_leaves_;
@@ -79,6 +87,11 @@ class Heuristics final {
 
   /**
    * Maximum size of the port of a parameter source.
+   *
+   * This is the maximum depth of the parameter source taint tree. We truncate
+   * the ports upto this threshold when updating the tree. This is equivalent
+   * to collapsing all the subtrees exceeding this threshold to the node at this
+   * maximum depth.
    */
   std::size_t parameter_source_max_port_size() const {
     return parameter_source_max_port_size_;
@@ -87,7 +100,10 @@ class Heuristics final {
   /**
    * Maximum number of leaves in the tree of output paths of parameter sources.
    *
-   * When reaching the maximum, we collapse all the subtrees into a single node.
+   * This is the maximum width of the parameter source taint tree. When the
+   * number of leaves exceeds this threshold, we compute the depth at which the
+   * tree exceeds the threshold and collapse all the subtrees into the nodes at
+   * this level.
    */
   std::size_t parameter_source_max_output_path_leaves() const {
     return parameter_source_max_output_path_leaves_;
@@ -95,6 +111,11 @@ class Heuristics final {
 
   /**
    * Maximum size of the port of a sink.
+   *
+   * This is the maximum depth of the sink taint tree. We truncate the
+   * ports upto this threshold when updating the tree. This is equivalent to
+   * collapsing all the subtrees exceeding this threshold to the node at this
+   * maximum depth.
    */
   std::size_t sink_max_port_size() const {
     return sink_max_port_size_;
@@ -103,7 +124,10 @@ class Heuristics final {
   /**
    * Maximum number of leaves in the tree of input paths of sinks.
    *
-   * When reaching the maximum, we collapse all the subtrees into a single node.
+   * This is the maximum width of the sink taint tree. When the number of
+   * leaves exceeds this threshold, we compute the depth at which the tree
+   * exceeds the threshold and collapse all the subtrees into the nodes at this
+   * level.
    */
   std::size_t sink_max_input_path_leaves() const {
     return sink_max_input_path_leaves_;
@@ -111,6 +135,11 @@ class Heuristics final {
 
   /**
    * Maximum size of the port of a call effect source.
+   *
+   * This is the maximum depth of the call effect source taint tree. We truncate
+   * the ports upto this threshold when updating the tree. This is equivalent
+   * to collapsing all the subtrees exceeding this threshold to the node at this
+   * maximum depth.
    */
   std::size_t call_effect_source_max_port_size() const {
     return call_effect_source_max_port_size_;
@@ -120,7 +149,10 @@ class Heuristics final {
    * Maximum number of leaves in the tree of output paths of call effect
    * sources.
    *
-   * When reaching the maximum, we collapse all the subtrees into a single node.
+   * This is the maximum width of the call effect source taint tree. When the
+   * number of leaves exceeds this threshold, we compute the depth at which the
+   * tree exceeds the threshold and collapse all the subtrees into the nodes at
+   * this level.
    */
   std::size_t call_effect_source_max_output_path_leaves() const {
     return call_effect_source_max_output_path_leaves_;
@@ -128,6 +160,11 @@ class Heuristics final {
 
   /**
    * Maximum size of the port of a call effect sink.
+   *
+   * This is the maximum depth of the call effect sink taint tree. We truncate
+   * the ports upto this threshold when updating the tree. This is equivalent
+   * to collapsing all the subtrees exceeding this threshold to the node at this
+   * maximum depth.
    */
   std::size_t call_effect_sink_max_port_size() const {
     return call_effect_sink_max_port_size_;
@@ -136,7 +173,10 @@ class Heuristics final {
   /**
    * Maximum number of leaves in the tree of input paths of call effect sinks.
    *
-   * When reaching the maximum, we collapse all the subtrees into a single node.
+   * This is the maximum width of the call effect sink taint tree. When the
+   * number of leaves exceeds this threshold, we compute the depth at which the
+   * tree exceeds the threshold and collapse all the subtrees into the nodes at
+   * this level.
    */
   std::size_t call_effect_sink_max_input_path_leaves() const {
     return call_effect_sink_max_input_path_leaves_;
@@ -172,27 +212,47 @@ class Heuristics final {
 
   /**
    * Maximum size of the input access path of a propagation.
+   *
+   * This is the maximum depth of the propagation taint tree. We truncate the
+   * ports upto this threshold when updating the tree. This is equivalent to
+   * collapsing all the subtrees exceeding this threshold to the node at this
+   * maximum depth.
    */
   std::size_t propagation_max_input_path_size() const {
     return propagation_max_input_path_size_;
   }
 
   /**
-   * Maximum size of the output access path of a propagation.
+   * Maximum number of leaves in input access path of a propagation.
+   *
+   * This is the maximum width of the propagation taint tree. When the number of
+   * leaves exceeds this threshold, we compute the depth at which the tree
+   * exceeds the threshold and collapse all the subtrees into the nodes at this
+   * level.
    */
   std::size_t propagation_max_input_path_leaves() const {
     return propagation_max_input_path_leaves_;
   }
 
   /**
-   * Maximum number of leaves in the tree of input paths of propagations.
+   * Maximum size of the output access path of propagations.
+   *
+   * This is the maximum depth of the propagation output paths tree. We truncate
+   * the ports upto this threshold when updating the tree. This is equivalent
+   * to collapsing all the subtrees exceeding this threshold to the node at this
+   * maximum depth.
    */
   std::size_t propagation_max_output_path_size() const {
     return propagation_max_output_path_size_;
   }
 
   /**
-   * Maximum number of leaves in the tree of output paths of propagations.
+   * Maximum number of leaves in the propagations output paths tree.
+   *
+   * This is the maximum width of the propagation output paths tree. When the
+   * number of leaves exceeds this threshold, we compute the depth at which the
+   * tree exceeds the threshold and collapse all the subtrees into the nodes at
+   * this level.
    */
   std::size_t propagation_max_output_path_leaves() const {
     return propagation_max_output_path_leaves_;
