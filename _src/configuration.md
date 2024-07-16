@@ -1,7 +1,7 @@
 ---
 id: configuration
-title: Configuration Options
-sidebar_label: Configuration Options
+title: Analysis Configuration Options
+sidebar_label: Analysis Configuration Options
 ---
 
 Mariana Trench is highly configurable and we recommend that you invest time into adjusting the tool to your specific use cases. At Meta, we have dedicated security engineers that will spend a significant amount of their time adding new rules and model generators to improve the analysis results.
