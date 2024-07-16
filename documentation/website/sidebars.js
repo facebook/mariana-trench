@@ -41,6 +41,7 @@ module.exports = {
           ],
         }),
         'configuration',
+        fbInternalOnly('fb/app-configuration'),
         {
           type: 'category',
           label: 'Model/Taint Configuration',
