@@ -62,6 +62,14 @@ public class Test {
       return this;
     }
 
+    public void inlineAsSetter(Test other) {
+      this.a.b.c = other.c.d.a;
+    }
+
+    public Test inlineAsGetter(Test other) {
+      return this.a.b.c;
+    }
+
     public Test buildUsingFieldsAsArguments() {
       return new Test(this.a, this.b, this.c, this.d);
     }
