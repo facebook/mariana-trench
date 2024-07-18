@@ -755,6 +755,154 @@ def _get_command_options(
     return options
 
 
+def _get_command_options_json(
+    arguments: argparse.Namespace, apk_directory: str, dex_directory: str
+) -> str:
+
+    options_json = {}
+    options_json["system-jar-paths"] = arguments.system_jar_configuration_path
+    options_json["apk-directory"] = apk_directory
+    options_json["dex-directory"] = dex_directory
+    options_json["rules-paths"] = arguments.rules_paths
+    options_json["repository-root-directory"] = arguments.repository_root_directory
+    options_json["source-root-directory"] = arguments.source_root_directory
+    options_json["apk-path"] = arguments.apk_path
+    options_json["output-directory"] = arguments.output_directory
+    options_json["maximum-source-sink-distance"] = arguments.maximum_source_sink_distance
+    options_json["model-generator-configuration-paths"] = arguments.model_generator_configuration_paths
+
+    if arguments.grepo_metadata_path:
+        options_json["grepo-metadata-path"] = arguments.grepo_metadata_path
+
+    if arguments.model_generator_search_paths:
+        options_json["model-generator-search-paths"] = arguments.model_generator_search_paths
+
+    if arguments.models_paths:
+        options_json["models-paths"] = arguments.models_paths
+
+    if arguments.field_models_paths:
+        options_json["field-models-paths"] = arguments.field_models_paths
+
+    if arguments.literal_models_paths:
+        options_json["literal-models-paths"] = arguments.literal_models_paths
+
+    if arguments.proguard_configuration_paths:
+        options_json["proguard-configuration-paths"] = arguments.proguard_configuration_paths
+
+    if arguments.lifecycles_paths:
+        options_json["lifecycles-paths"] = arguments.lifecycles_paths
+
+    if arguments.shims_paths:
+        options_json["shims-paths"] = arguments.shims_paths
+
+    if arguments.graphql_metadata_paths:
+        options_json["graphql-metadata-paths"] = arguments.graphql_metadata_paths
+
+    if arguments.source_exclude_directories:
+        options_json["source-exclude-directories"] = arguments.source_exclude_directories
+
+    if arguments.generated_models_directory:
+        options_json["generated-models-directory"] = arguments.generated_models_directory
+
+    if arguments.sharded_models_directory:
+        options_json["sharded-models-directory"] = arguments.sharded_models_directory
+
+    if arguments.emit_all_via_cast_features:
+        options_json["emit-all-via-cast-features"] = arguments.emit_all_via_cast_features
+
+    if arguments.propagate_across_arguments:
+        options_json["propagate-across-arguments"] = arguments.propagate_across_arguments
+
+    if arguments.allow_via_cast_feature:
+        options_json["allow-via-cast-feature"] = []
+        for feature in arguments.allow_via_cast_feature:
+            options_json["allow-via-cast-feature"].append(feature.strip())
+
+    if arguments.heuristics:
+        options_json["heuristics"] = arguments.heuristics
+
+    if arguments.sequential:
+        options_json["sequential"] = arguments.sequential
+
+    if arguments.skip_source_indexing:
+        options_json["skip-source-indexing"] = arguments.skip_source_indexing
+
+    if arguments.skip_analysis:
+        options_json["skip-analysis"] = arguments.skip_analysis
+
+    if arguments.disable_parameter_type_overrides:
+        options_json["disable-parameter-type-overrides"] = arguments.disable_parameter_type_overrides
+
+    if arguments.disable_global_type_analysis:
+        options_json["disable-global-type-analysis"] = arguments.disable_global_type_analysis
+
+    if arguments.verify_expected_output:
+        options_json["verify-expected-output"] = arguments.verify_expected_output
+
+    if arguments.remove_unreachable_code:
+        options_json["remove-unreachable-code"] = arguments.remove_unreachable_code
+
+    if arguments.maximum_method_analysis_time is not None:
+        options_json["maximum-method-analysis-time"] = arguments.maximum_method_analysis_time
+
+    if arguments.enable_cross_component_analysis:
+        options_json["enable-cross-component-analysis"] = arguments.enable_cross_component_analysis
+
+    if arguments.extra_analysis_arguments:
+        for arg in shlex.split(arguments.extra_analysis_arguments):
+            options_json[arg] = arg
+
+    if arguments.job_id:
+        options_json["job-id"] = arguments.job_id
+
+    if arguments.metarun_id:
+        options_json["metarun-id"] = arguments.metarun_id
+
+    trace_settings = [f"MARIANA_TRENCH:{arguments.verbosity}"]
+    if "TRACE" in os.environ:
+        trace_settings.insert(0, os.environ["TRACE"])
+    os.environ["TRACE"] = ",".join(trace_settings)
+
+    if arguments.log_method:
+        options_json["log-method"] = []
+        for method in arguments.log_method:
+            options_json["log-method"].append(method.strip())
+
+    if arguments.log_method_types:
+        options_json["log-method-types"] = []
+        for method in arguments.log_method_types:
+            options_json["log-method-types"].append(method.strip())
+
+    if arguments.dump_class_hierarchies:
+        options_json["dump-class-hierarchies"] = arguments.dump_class_hierarchies
+
+    if arguments.dump_overrides:
+        options_json["dump-overrides"] = arguments.dump_overrides
+
+    if arguments.dump_call_graph:
+        options_json["dump-call-graph"] = arguments.dump_call_graph
+
+    if arguments.dump_dependencies:
+        options_json["dump-dependencies"] = arguments.dump_dependencies
+
+    if arguments.dump_methods:
+        options_json["dump-methods"] = arguments.dump_methods
+
+    if arguments.dump_coverage_info:
+        options_json["dump-coverage-info"] = arguments.dump_coverage_info
+
+    if arguments.always_export_origins:
+        options_json["always-export-origins"] = arguments.always_export_origins
+
+    # Dump the options to a file and return the file path
+    options_file = tempfile.NamedTemporaryFile(suffix=".json")
+    options_file.write(json.dumps(options_json).encode())
+    # Get the options file path
+    options_file_path = options_file.name
+
+    return options_file_path
+
+
 def main() -> None:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
     build_directory = Path(tempfile.mkdtemp())
@@ -855,8 +1003,9 @@ def main() -> None:
                 binary, arguments, apk_directory, dex_directory
             )
         else:
-            options = _get_command_options(arguments, apk_directory, dex_directory)
-            command = [os.fspath(binary.resolve())] + options
+            options_file_path = _get_command_options_json(arguments, apk_directory, dex_directory)
+
+            command = [os.fspath(binary.resolve()), options_file_path]
             if arguments.gdb:
                 command = ["gdb", "--args"] + command
             elif arguments.lldb:
