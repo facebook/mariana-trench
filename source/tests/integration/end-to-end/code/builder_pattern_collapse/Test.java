@@ -182,15 +182,15 @@ public class Test {
     Test x = new Test();
     x.a = a; // x.a.b.c = tainted
 
-    // Expect issues as: x.a.b.c is tainted so x.a.b.c.d is also tainted.
+    // Expect issue as: x.a.b.c is tainted so x.a.b.c.d is also tainted.
     Origin.sink(x.a.b.c.d);
-    // FN when propagation_max_input_path_size = 2.
+    // Expect issue with propagation_max_input_path_size = 2.
     // - inline_as_getter: Argument(0).a.b.c
-    // - propagation: Argument(0).a.b -> LocalReturn (collapse depth = 4)
+    // - propagation: Argument(0).a.b -> LocalReturn (collapse depth = 0)
     // - is_safe_to_inline is false as inline_as_getter and propagation mismatch.
-    // - so propagation model is applied but collapse depth is incorrect at 4.
-    // - result memory location after call to inlineAsGetter() is: .c -> tainted
-    // Results in FN.
+    // - so propagation model is applied.
+    // - Since collapse depth is 0, result memory location after call to inlineAsGetter() is tainted
+    //   and we find the issue.
     Origin.sink(x.inlineAsGetter().d);
   }
 

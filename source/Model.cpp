@@ -2206,6 +2206,7 @@ void Model::update_taint_tree(
 
   if (port.path().size() > truncation_amount) {
     new_taint.add_locally_inferred_features(widening_features);
+    new_taint.update_maximum_collapse_depth(CollapseDepth::zero());
   }
   port.truncate(truncation_amount);
   tree.write(port, std::move(new_taint), UpdateKind::Weak);
