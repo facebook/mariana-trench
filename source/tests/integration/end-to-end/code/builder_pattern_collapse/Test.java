@@ -184,6 +184,13 @@ public class Test {
 
     // Expect issues as: x.a.b.c is tainted so x.a.b.c.d is also tainted.
     Origin.sink(x.a.b.c.d);
+    // FN when propagation_max_input_path_size = 2.
+    // - inline_as_getter: Argument(0).a.b.c
+    // - propagation: Argument(0).a.b -> LocalReturn (collapse depth = 4)
+    // - is_safe_to_inline is false as inline_as_getter and propagation mismatch.
+    // - so propagation model is applied but collapse depth is incorrect at 4.
+    // - result memory location after call to inlineAsGetter() is: .c -> tainted
+    // Results in FN.
     Origin.sink(x.inlineAsGetter().d);
   }
 
@@ -196,7 +203,15 @@ public class Test {
 
     Test x = new Test();
     x.inlineAsSetter(b); // x.a.b.c = tainted
-    // Expect no issues as: only x.a.b.c is tainted
+    // Should be no issue as: only x.a.b.c is tainted
+    // But FP when propagation_max_[input|output]_path_size = 2 which is the expected sound result.
+    // For inlineAsSetter():
+    // - inline_as_setter: value=Argument(1).c.d.a, target=Argument(0).a.b.c
+    // - propagation: Argument(1).c.d -> Argument(0).a.b (collapse depth = 0)
+    // - is_safe_to_inline is false as inline_as_setter and propagation mismatch.
+    // - so propagation model is applied.
+    // - result memory location after call to inlineAsSetter() is: .a.b = tainted
+    // FP issue (as expected) as x.a.b is tainted so x.a.b.d is also tainted.
     Origin.sink(x.a.b.d);
   }
 }
