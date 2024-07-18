@@ -18,6 +18,8 @@
 #include <RedexContext.h>
 
 #include <mariana-trench/ExitCode.h>
+#include <mariana-trench/JsonReaderWriter.h>
+#include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/GlobalRedexContext.h>
 #include <mariana-trench/LifecycleMethods.h>
 #include <mariana-trench/MarianaTrench.h>
@@ -40,11 +42,43 @@ int main(int argc, char* argv[]) {
   tool.add_options(options);
 
   try {
-    program_options::variables_map variables;
-    program_options::store(
-        program_options::command_line_parser(argc, argv).options(options).run(),
-        variables);
+    if (argc < 2) {
+      std::cerr << "Usage: " << argv[0] << " <json_config_file>\n";
+      return ExitCode::invalid_argument_error("No JSON configuration file provided.");
+    }
+    
+    std::string json_file_path = argv[1];
 
+    // Use JsonReader to parse the JSON file
+    Json::Value json = marianatrench::JsonReader::parse_json_file(json_file_path);
+    // Validate the JSON object
+    marianatrench::JsonValidation::validate_object(json);
+    // Use variables_map to store the JSON data
+    program_options::variables_map variables;
+    // Populate variables_map from JSON data
+    for (const auto& key : json.getMemberNames()) {
+      const auto& value = json[key];
+
+      if (value.isString()) {
+        variables.insert(std::make_pair(key, program_options::variable_value(value.asString(), false)));
+      } else if (value.isBool()) {
+        variables.insert(std::make_pair(key, program_options::variable_value(value.asBool(), false)));
+      } else if (value.isInt()) {
+        variables.insert(std::make_pair(key, program_options::variable_value(value.asInt(), false)));
+      } else if (value.isUInt()) {
+        variables.insert(std::make_pair(key, program_options::variable_value(value.asUInt(), false)));
+      } else if (value.isDouble()) {
+        variables.insert(std::make_pair(key, program_options::variable_value(value.asDouble(), false)));
+      } else if (value.isArray()) {
+        std::vector<std::string> array_values;
+        for (const auto& element : value) {
+          if (element.isString()) {
+            array_values.push_back(element.asString());
+          }
+        }
+        variables.insert(std::make_pair(key, program_options::variable_value(array_values, false)));
+      }
+    }
     if (variables.count("help")) {
       std::cerr << options;
       return 0;
