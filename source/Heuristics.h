@@ -277,6 +277,9 @@ class Heuristics final {
   }
 
  private:
+  void enforce_heuristics_consistency();
+
+ private:
   std::size_t join_override_threshold_;
   std::size_t android_join_override_threshold_;
   std::optional<std::size_t> warn_override_threshold_;

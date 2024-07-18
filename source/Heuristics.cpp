@@ -8,6 +8,7 @@
 #include <mariana-trench/Heuristics.h>
 #include <mariana-trench/JsonReaderWriter.h>
 #include <mariana-trench/JsonValidation.h>
+#include <mariana-trench/Log.h>
 
 namespace marianatrench {
 
@@ -47,6 +48,115 @@ Heuristics& get_mutable_singleton() {
 
 } // namespace
 
+void Heuristics::enforce_heuristics_consistency() {
+  if (propagation_max_collapse_depth_ > propagation_max_input_path_size_ ||
+      propagation_max_collapse_depth_ > propagation_max_output_path_size_) {
+    WARNING(
+        1,
+        "propagation_max_collapse_depth ({}) is greater than propagation_max_input_path_size ({}) and/or propagation_max_output_path_size ({}). "
+        "Updating propagation_max_collapse_depth to the minimum of the two.",
+        propagation_max_collapse_depth_,
+        propagation_max_input_path_size_,
+        propagation_max_output_path_size_);
+
+    // For correctness, max collapse depth cannot be greater. If so, when
+    // applying propagations for path sizes > propagation max sizes but < max
+    // collapse depth, we will fail to collapse the taint tree and lead to
+    // false-negative results.
+    propagation_max_collapse_depth_ = std::min(
+        propagation_max_input_path_size_, propagation_max_output_path_size_);
+  }
+
+  // source_sink_tree_widening_height is used in TaintTreeConfiguration and
+  // hence applies for all TaintAccessPathTree. This limits the height of the
+  // taint tree on widen operation. We allow separate *_max_port_size heuristics
+  // to limit the height of the taint tree on write operations. These can be set
+  // at different levels for different taint trees of a Model
+  // (generations/parameter_sources/sinks/call_effect[source|sink]/propagations).
+  //
+  // Here, we log a warning when the common source_sink_tree_widening_height is
+  // greater than the *_max_port_size heuristics as this means that the widening
+  // operation will not affect the height of the tree. This is not incorrect but
+  // might not be what the user is expecting.
+  if (source_sink_tree_widening_height_ > generation_max_port_size_) {
+    WARNING(
+        1,
+        "source_sink_tree_widening_height ({}) > generation_max_port_size ({}). "
+        "Both affect the maximum depth of the generation taint tree. "
+        "The final model may not be as expected.",
+        source_sink_tree_widening_height_,
+        generation_max_port_size_);
+  }
+
+  if (source_sink_tree_widening_height_ > sink_max_port_size_) {
+    WARNING(
+        1,
+        "source_sink_tree_widening_height ({}) > sink_max_port_size ({}). "
+        "Both affect the maximum depth of the sink taint tree. "
+        "The final model may not be as expected.",
+        source_sink_tree_widening_height_,
+        sink_max_port_size_);
+  }
+
+  if (source_sink_tree_widening_height_ > parameter_source_max_port_size_) {
+    WARNING(
+        1,
+        "source_sink_tree_widening_height ({}) > parameter_source_max_port_size ({}). "
+        "Both affect the maximum depth of the parameter source taint tree. "
+        "The final model may not be as expected.",
+        source_sink_tree_widening_height_,
+        parameter_source_max_port_size_);
+  }
+
+  if (source_sink_tree_widening_height_ > call_effect_source_max_port_size_) {
+    WARNING(
+        1,
+        "source_sink_tree_widening_height ({}) > call_effect_source_max_port_size ({}). "
+        "Both affect the maximum depth of the call effect source taint tree. "
+        "The final model may not be as expected.",
+        source_sink_tree_widening_height_,
+        call_effect_source_max_port_size_);
+  }
+
+  if (source_sink_tree_widening_height_ > call_effect_sink_max_port_size_) {
+    WARNING(
+        1,
+        "source_sink_tree_widening_height ({}) > call_effect_sink_max_port_size ({}). "
+        "Both affect the maximum depth of the call effect sink taint tree. "
+        "The final model may not be as expected.",
+        source_sink_tree_widening_height_,
+        call_effect_sink_max_port_size_);
+  }
+
+  if (source_sink_tree_widening_height_ > propagation_max_input_path_size_) {
+    WARNING(
+        1,
+        "source_sink_tree_widening_height ({}) > propagation_max_input_path_size ({}). "
+        "Both affect the maximum depth of the propagation taint tree input path. "
+        "The final model may not be as expected.",
+        source_sink_tree_widening_height_,
+        propagation_max_input_path_size_);
+  }
+
+  // Similar to the source_sink_tree_widening_height,
+  // propagation_output_path_tree_widening_height is used in
+  // PathTreeConfiguration. Here we log a warning when the
+  // propagation_output_path_tree_widening_height is greater than the
+  // propagation_max_output_path_size heuristic as this means that the widening
+  // operation on the PathTreeDomain will not affect the height of the tree.
+  // This is not incorrect but might not be what the user is expecting.
+  if (propagation_output_path_tree_widening_height_ >
+      propagation_max_output_path_size_) {
+    WARNING(
+        1,
+        "propagation_output_path_tree_widening_height ({}) > propagation_max_output_path_size ({}). "
+        "Both affect the maximum depth of the propagation output path tree. "
+        "The final model may not be as expected.",
+        propagation_output_path_tree_widening_height_,
+        propagation_max_output_path_size_);
+  }
+}
+
 Heuristics::Heuristics()
     : join_override_threshold_(join_override_threshold_default),
       android_join_override_threshold_(android_join_override_threshold_default),
@@ -81,7 +191,9 @@ Heuristics::Heuristics()
           propagation_max_output_path_leaves_default),
       propagation_output_path_tree_widening_height_(
           propagation_output_path_tree_widening_height_default),
-      propagation_max_collapse_depth_(propagation_max_collapse_depth_default) {}
+      propagation_max_collapse_depth_(propagation_max_collapse_depth_default) {
+  enforce_heuristics_consistency();
+}
 
 void Heuristics::init_from_file(const std::filesystem::path& heuristics_path) {
   // Create an `Heuristics` object with the default values.
@@ -249,7 +361,35 @@ void Heuristics::init_from_file(const std::filesystem::path& heuristics_path) {
     heuristics.propagation_max_collapse_depth_ =
         JsonValidation::unsigned_integer(
             value, "propagation_max_collapse_depth");
+
+    if (heuristics.propagation_max_collapse_depth_ >
+        heuristics.propagation_max_output_path_size_) {
+      throw JsonValidationError(
+          value,
+          std::nullopt,
+          fmt::format(
+              "propagation_max_collapse_depth ({}) > propagation_max_output_path_size ({}). "
+              "Both affect the output path of propagations and propagation_max_output_path_size takes precedence. "
+              "The final model may not be as expected.",
+              heuristics.propagation_max_collapse_depth_,
+              heuristics.propagation_max_output_path_size_));
+    }
+
+    if (heuristics.propagation_max_collapse_depth_ >
+        heuristics.propagation_max_input_path_size_) {
+      throw JsonValidationError(
+          value,
+          std::nullopt,
+          fmt::format(
+              "propagation_max_collapse_depth ({}) > propagation_max_input_path_size ({}). "
+              "Both affect the output path of propagations and propagation_max_input_path_size takes precedence. "
+              "The final model may not be as expected.",
+              heuristics.propagation_max_collapse_depth_,
+              heuristics.propagation_max_output_path_size_));
+    }
   }
+
+  heuristics.enforce_heuristics_consistency();
 }
 
 const Heuristics& Heuristics::singleton() {
