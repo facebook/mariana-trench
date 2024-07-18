@@ -2,5 +2,6 @@
   "generation_max_output_path_leaves": 2,
   "propagation_max_input_path_leaves": 2,
   "propagation_max_input_path_size": 2,
-  "propagation_max_output_path_size": 2
+  "propagation_max_output_path_size": 2,
+  "propagation_max_collapse_depth": 4
 }
