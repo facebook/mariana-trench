@@ -36,11 +36,11 @@ public class Test {
 
   private static void differentSink(Object obj) {}
 
-  public void inlineAsSetter(Test other) {
+  public void doNotInlineAsSetter(Test other) {
     this.a.b.c = other.c.d.a;
   }
 
-  public Test inlineAsGetter() {
+  public Test doNotInlineAsGetter() {
     return this.a.b.c;
   }
 
@@ -189,9 +189,9 @@ public class Test {
     // - propagation: Argument(0).a.b -> LocalReturn (collapse depth = 0)
     // - is_safe_to_inline is false as inline_as_getter and propagation mismatch.
     // - so propagation model is applied.
-    // - Since collapse depth is 0, result memory location after call to inlineAsGetter() is tainted
-    //   and we find the issue.
-    Origin.sink(x.inlineAsGetter().d);
+    // - Since collapse depth is 0, result memory location after call to doNotInlineAsGetter() is
+    //   tainted and we find the issue.
+    Origin.sink(x.doNotInlineAsGetter().d);
   }
 
   public void testInlineAsSetter() {
@@ -202,15 +202,15 @@ public class Test {
     Origin.sink(b.c.d.b);
 
     Test x = new Test();
-    x.inlineAsSetter(b); // x.a.b.c = tainted
+    x.doNotInlineAsSetter(b); // x.a.b.c = tainted
     // Should be no issue as: only x.a.b.c is tainted
     // But FP when propagation_max_[input|output]_path_size = 2 which is the expected sound result.
-    // For inlineAsSetter():
+    // For doNotInlineAsSetter():
     // - inline_as_setter: value=Argument(1).c.d.a, target=Argument(0).a.b.c
     // - propagation: Argument(1).c.d -> Argument(0).a.b (collapse depth = 0)
     // - is_safe_to_inline is false as inline_as_setter and propagation mismatch.
     // - so propagation model is applied.
-    // - result memory location after call to inlineAsSetter() is: .a.b = tainted
+    // - result memory location after call to doNotInlineAsSetter() is: .a.b = tainted
     // FP issue (as expected) as x.a.b is tainted so x.a.b.d is also tainted.
     Origin.sink(x.a.b.d);
   }

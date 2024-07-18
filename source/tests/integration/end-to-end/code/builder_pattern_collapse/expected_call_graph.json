@@ -348,7 +348,7 @@
     ],
     "virtual" : 
     [
-      "Lcom/facebook/marianatrench/integrationtests/Test;.inlineAsGetter:()Lcom/facebook/marianatrench/integrationtests/Test;"
+      "Lcom/facebook/marianatrench/integrationtests/Test;.doNotInlineAsGetter:()Lcom/facebook/marianatrench/integrationtests/Test;"
     ]
   },
   "Lcom/facebook/marianatrench/integrationtests/Test;.testInlineAsSetter:()V" : 
@@ -361,7 +361,7 @@
     ],
     "virtual" : 
     [
-      "Lcom/facebook/marianatrench/integrationtests/Test;.inlineAsSetter:(Lcom/facebook/marianatrench/integrationtests/Test;)V"
+      "Lcom/facebook/marianatrench/integrationtests/Test;.doNotInlineAsSetter:(Lcom/facebook/marianatrench/integrationtests/Test;)V"
     ]
   },
   "Lcom/facebook/marianatrench/integrationtests/Test;.testNoCollapseOnApproximateBuildUsingFields:()V" : 

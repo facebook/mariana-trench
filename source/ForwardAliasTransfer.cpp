@@ -186,7 +186,16 @@ SetterAccessPathConstantDomain infer_field_write(
   }
   MemoryLocation* value_memory_location = *value_memory_location_singleton;
   auto value_access_path = value_memory_location->access_path();
+
   if (!value_access_path) {
+    return SetterAccessPathConstantDomain::top();
+  }
+
+  // If size of access_path is greater than the max input path size of the
+  // propagation taint tree, it is not safe to inline_as_setter and can lead
+  // to invalid trees.
+  if (value_access_path->path().size() >
+      context->heuristics.propagation_max_input_path_size()) {
     return SetterAccessPathConstantDomain::top();
   }
 
@@ -204,6 +213,14 @@ SetterAccessPathConstantDomain infer_field_write(
 
   auto* field_name = instruction->get_field()->get_name();
   target_access_path->append(PathElement::field(field_name));
+
+  // If size of access_path is greater than the max output path size of the
+  // propagation taint tree, it is not safe to inline_as_setter and can lead
+  // to invalid trees.
+  if (target_access_path->path().size() >
+      context->heuristics.propagation_max_output_path_size()) {
+    return SetterAccessPathConstantDomain::top();
+  }
 
   auto setter = SetterAccessPath(
       /* target */ *target_access_path,
@@ -434,6 +451,14 @@ AccessPathConstantDomain infer_inline_as_getter(
   MemoryLocation* memory_location = *memory_location_singleton;
   auto access_path = memory_location->access_path();
   if (!access_path) {
+    return AccessPathConstantDomain::top();
+  }
+
+  // If size of access_path is greater than the max input path size of the
+  // propagation taint tree, it is not safe to inline_as_getter and can lead to
+  // invalid trees.
+  if (access_path->path().size() >
+      context->heuristics.propagation_max_input_path_size()) {
     return AccessPathConstantDomain::top();
   }
 

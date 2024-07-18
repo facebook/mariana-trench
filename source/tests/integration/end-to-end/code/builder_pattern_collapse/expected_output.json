@@ -1860,8 +1860,7 @@
   }
 }
 {
-  "inline_as_getter" : "Argument(0).a.b.c",
-  "method" : "Lcom/facebook/marianatrench/integrationtests/Test;.inlineAsGetter:()Lcom/facebook/marianatrench/integrationtests/Test;",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Test;.doNotInlineAsGetter:()Lcom/facebook/marianatrench/integrationtests/Test;",
   "position" : 
   {
     "line" : 43,
@@ -1902,12 +1901,7 @@
   ]
 }
 {
-  "inline_as_setter" : 
-  {
-    "target" : "Argument(0).a.b.c",
-    "value" : "Argument(1).c.d.a"
-  },
-  "method" : "Lcom/facebook/marianatrench/integrationtests/Test;.inlineAsSetter:(Lcom/facebook/marianatrench/integrationtests/Test;)V",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Test;.doNotInlineAsSetter:(Lcom/facebook/marianatrench/integrationtests/Test;)V",
   "position" : 
   {
     "line" : 39,
@@ -4322,7 +4316,7 @@
             "port" : "Argument(0)",
             "position" : 
             {
-              "end" : 35,
+              "end" : 40,
               "line" : 194,
               "path" : "Test.java",
               "start" : 16
@@ -4526,9 +4520,9 @@
           "local_positions" : 
           [
             {
-              "end" : 21,
+              "end" : 26,
               "line" : 205,
-              "start" : 21
+              "start" : 26
             },
             {
               "end" : 57,
