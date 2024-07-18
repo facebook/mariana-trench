@@ -895,7 +895,7 @@ def _get_command_options_json(
         options_json["always-export-origins"] = arguments.always_export_origins
 
     # Dump the options to a file and return the file path
-    options_file = tempfile.NamedTemporaryFile(suffix=".json")
+    options_file = tempfile.NamedTemporaryFile(suffix=".json",delete=False)
     options_file.write(json.dumps(options_json).encode())
     # Get the options file path
     options_file_path = options_file.name
