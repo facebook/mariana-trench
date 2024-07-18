@@ -36,6 +36,14 @@ public class Test {
 
   private static void differentSink(Object obj) {}
 
+  public void inlineAsSetter(Test other) {
+    this.a.b.c = other.c.d.a;
+  }
+
+  public Test inlineAsGetter() {
+    return this.a.b.c;
+  }
+
   public static final class Builder {
     public Test a;
     public Test b;
@@ -60,14 +68,6 @@ public class Test {
     public Builder setD(Test d) {
       this.d = d;
       return this;
-    }
-
-    public void inlineAsSetter(Test other) {
-      this.a.b.c = other.c.d.a;
-    }
-
-    public Test inlineAsGetter(Test other) {
-      return this.a.b.c;
     }
 
     public Test buildUsingFieldsAsArguments() {
@@ -170,5 +170,33 @@ public class Test {
     Origin.sink(output.b);
     Origin.sink(output.d);
     Test.differentSink(output.d);
+  }
+
+  public void testInlineAsGetter() {
+    Test b = new Test();
+    b.c = (Test) Origin.source(); // b.c = tainted
+
+    Test a = new Test();
+    a.b = b; // a.b.c = tainted
+
+    Test x = new Test();
+    x.a = a; // x.a.b.c = tainted
+
+    // Expect issues as: x.a.b.c is tainted so x.a.b.c.d is also tainted.
+    Origin.sink(x.a.b.c.d);
+    Origin.sink(x.inlineAsGetter().d);
+  }
+
+  public void testInlineAsSetter() {
+    Test b = new Test();
+    b.c.d.a = (Test) Origin.source(); // b.c.d.a = tainted
+
+    // Expect no issues as: only b.c.d.a is tainted
+    Origin.sink(b.c.d.b);
+
+    Test x = new Test();
+    x.inlineAsSetter(b); // x.a.b.c = tainted
+    // Expect no issues as: only x.a.b.c is tainted
+    Origin.sink(x.a.b.d);
   }
 }
