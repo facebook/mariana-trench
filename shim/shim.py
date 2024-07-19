@@ -805,6 +805,10 @@ def main() -> None:
             arguments.lifecycles_paths = _separated_paths_exist(
                 os.fspath(configuration.get_path("lifecycles.json"))
             )
+        if arguments.shims_paths is None:
+            arguments.shims_paths = _separated_paths_exist(
+                os.fspath(configuration.get_path("shims.json"))
+            )
         if (
             configuration.FACEBOOK_SHIM
             and arguments.java_target is not None
