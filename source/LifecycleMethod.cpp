@@ -49,11 +49,10 @@ void LifecycleMethodCall::validate(
     if (get_dex_method(base_class) == nullptr) {
       // Callee does not exist within the base class. Likely an invalid config
       // (e.g. typo).
-      ERROR(
-          1,
-          "Callee `{}` is not in base class type `{}`.",
+      throw std::runtime_error(fmt::format(
+          "Callee `{}` is not in base class type `{}`. Check spelling, or add \"defined_in_derived_class\" if the method belongs to a derived class.",
           to_string(),
-          base_class->str());
+          base_class->str()));
     }
     return;
   }
@@ -84,20 +83,17 @@ void LifecycleMethodCall::validate(
 
   auto derived_types = class_hierarchies.extends(base_class->get_type());
   if (derived_types.find(derived_type) == derived_types.end()) {
-    ERROR(
-        1,
+    throw std::runtime_error(fmt::format(
         "Derived class `{}` is not derived from base class `{}`.",
         derived_class->str(),
-        base_class->str());
-    return;
+        base_class->str()));
   }
 
   if (get_dex_method(derived_class) == nullptr) {
-    ERROR(
-        1,
+    throw std::runtime_error(fmt::format(
         "Callee `{}` is not in derived class type `{}`.",
         to_string(),
-        derived_class->str());
+        derived_class->str()));
   }
 }
 

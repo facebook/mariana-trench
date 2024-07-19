@@ -25,7 +25,8 @@
         "return_type": "V",
         "argument_types": [
           "Ljava/lang/Object;"
-        ]
+        ],
+        "defined_in_derived_class": "Lcom/facebook/marianatrench/integrationtests/FragmentOneActivity;"
       }
     ]
   }
