@@ -2848,8 +2848,51 @@ TEST_F(JsonTest, LifecycleMethod) {
           /* base_class_name */ "Landroidx/fragment/app/FragmentActivity;",
           /* method_name */ "activity_lifecycle_wrapper",
           /* callees */
-          {LifecycleMethodCall("onCreate", "V", {"Landroid/os/Bundle;"}),
-           LifecycleMethodCall("onStart", "V", {})}));
+          {LifecycleMethodCall(
+               "onCreate",
+               "V",
+               {"Landroid/os/Bundle;"},
+               /* defined_in_derived_class */ std::nullopt),
+           LifecycleMethodCall(
+               "onStart",
+               "V",
+               {},
+               /* defined_in_derived_class */ std::nullopt)}));
+
+  EXPECT_EQ(
+      LifecycleMethod::from_json(test::parse_json(R"({
+        "base_class_name": "Landroidx/fragment/app/FragmentActivity;",
+        "method_name": "activity_lifecycle_wrapper",
+        "callees": [
+          {
+            "method_name": "onCreate",
+            "return_type": "V",
+            "argument_types": [
+              "Landroid/os/Bundle;"
+            ]
+          },
+          {
+            "method_name": "afterOnStart",
+            "return_type": "V",
+            "argument_types": [],
+            "defined_in_derived_class": "CustomFragmentActivity",
+          }
+        ]
+      })")),
+      LifecycleMethod(
+          /* base_class_name */ "Landroidx/fragment/app/FragmentActivity;",
+          /* method_name */ "activity_lifecycle_wrapper",
+          /* callees */
+          {LifecycleMethodCall(
+               "onCreate",
+               "V",
+               {"Landroid/os/Bundle;"},
+               /* defined_in_derived_class */ std::nullopt),
+           LifecycleMethodCall(
+               "afterOnStart",
+               "V",
+               {},
+               /* defined_in_derived_class */ "CustomFragmentActivity")}));
 }
 
 TEST_F(JsonTest, LifecycleMethods) {

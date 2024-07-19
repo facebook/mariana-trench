@@ -29,21 +29,27 @@ class LifecycleMethodCall {
   LifecycleMethodCall(
       std::string method_name,
       std::string return_type,
-      std::vector<std::string> argument_types)
+      std::vector<std::string> argument_types,
+      std::optional<std::string> defined_in_derived_class)
       : method_name_(std::move(method_name)),
         return_type_(std::move(return_type)),
-        argument_types_(std::move(argument_types)) {}
+        argument_types_(std::move(argument_types)),
+        defined_in_derived_class_(std::move(defined_in_derived_class)) {}
 
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(LifecycleMethodCall)
 
   static LifecycleMethodCall from_json(const Json::Value& value);
+
+  void validate(
+      const DexClass* base_class,
+      const ClassHierarchies& class_hierarchies) const;
 
   /**
    * Gets the DexMethod for the overridden call in `klass`. Returns `nullptr`
    * if `klass` does not override this method, or if its definition is invalid,
    * e.g. unrecognized types.
    */
-  DexMethodRef* MT_NULLABLE get_dex_method(DexClass* klass) const;
+  DexMethodRef* MT_NULLABLE get_dex_method(const DexClass* klass) const;
 
   const DexTypeList* MT_NULLABLE get_argument_types() const;
 
@@ -58,6 +64,20 @@ class LifecycleMethodCall {
   std::string method_name_;
   std::string return_type_;
   std::vector<std::string> argument_types_;
+
+  // If not nullopt, this method does not exist in the life-cycle method's base
+  // class but is in one of its child classes instead. This means that not all
+  // derived classes will have a corresponding DexMethod for it. Example:
+  //
+  // Activity <-- CustomDerivedActivity (::afterOnCreate()) <-- ActivityA
+  //          <-- ActivityB
+  //
+  // `afterOnCreate()` does not exist in ActivityB but is in
+  // `CustomDerivedActivity` and `ActivityA`.
+  //
+  // Not required for functionality. Used for validation since it is easy to
+  // make mistakes with the method signature.
+  std::optional<std::string> defined_in_derived_class_;
 };
 
 /**
@@ -105,6 +125,13 @@ class LifecycleMethod {
   }
 
   static LifecycleMethod from_json(const Json::Value& value);
+
+  /**
+   * Returns true if this is a valid life-cycle definition for the given base
+   * class and methods should be created for it. Also logs warnings. See
+   * implementation for details.
+   */
+  bool validate(const ClassHierarchies& class_hierarchies) const;
 
   /**
    * Creates the relevant dex methods. These methods are added to `methods`.

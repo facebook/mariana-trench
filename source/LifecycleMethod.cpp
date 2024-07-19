@@ -29,11 +29,80 @@ LifecycleMethodCall LifecycleMethodCall::from_json(const Json::Value& value) {
     argument_types.emplace_back(JsonValidation::string(argument_type));
   }
 
-  return LifecycleMethodCall(method_name, return_type, argument_types);
+  std::optional<std::string> defined_in_derived_class = std::nullopt;
+  if (JsonValidation::has_field(value, "defined_in_derived_class")) {
+    defined_in_derived_class =
+        JsonValidation::string(value, "defined_in_derived_class");
+  }
+
+  return LifecycleMethodCall(
+      method_name,
+      return_type,
+      argument_types,
+      std::move(defined_in_derived_class));
+}
+
+void LifecycleMethodCall::validate(
+    const DexClass* base_class,
+    const ClassHierarchies& class_hierarchies) const {
+  if (!defined_in_derived_class_) {
+    if (get_dex_method(base_class) == nullptr) {
+      // Callee does not exist within the base class. Likely an invalid config
+      // (e.g. typo).
+      ERROR(
+          1,
+          "Callee `{}` is not in base class type `{}`.",
+          to_string(),
+          base_class->str());
+    }
+    return;
+  }
+
+  const auto* derived_type = DexType::get_type(*defined_in_derived_class_);
+  if (!derived_type) {
+    // Either a mis-spelt type, or a type that belongs to another APK whose
+    // life-cycle config is shared with this one.
+    WARNING(
+        1,
+        "Could not find type `{}` for callee `{}`",
+        *defined_in_derived_class_,
+        to_string());
+    return;
+  }
+
+  const auto* derived_class = type_class(derived_type);
+  if (!derived_class) {
+    // Either derived type is not a class (e.g. primitive ), or the JAR
+    // containing the class definition is not loaded. This is a warning and not
+    // an error as the type may not be relevant to the current APK.
+    WARNING(
+        1,
+        "Could not convert derived class type `{}` into DexClass.",
+        derived_type->str());
+    return;
+  }
+
+  auto derived_types = class_hierarchies.extends(base_class->get_type());
+  if (derived_types.find(derived_type) == derived_types.end()) {
+    ERROR(
+        1,
+        "Derived class `{}` is not derived from base class `{}`.",
+        derived_class->str(),
+        base_class->str());
+    return;
+  }
+
+  if (get_dex_method(derived_class) == nullptr) {
+    ERROR(
+        1,
+        "Callee `{}` is not in derived class type `{}`.",
+        to_string(),
+        derived_class->str());
+  }
 }
 
 DexMethodRef* MT_NULLABLE
-LifecycleMethodCall::get_dex_method(DexClass* klass) const {
+LifecycleMethodCall::get_dex_method(const DexClass* klass) const {
   const auto* return_type =
       DexType::get_type(DexString::make_string(return_type_));
   if (return_type == nullptr) {
@@ -71,7 +140,8 @@ const DexTypeList* MT_NULLABLE LifecycleMethodCall::get_argument_types() const {
 bool LifecycleMethodCall::operator==(const LifecycleMethodCall& other) const {
   return method_name_ == other.method_name_ &&
       return_type_ == other.return_type_ &&
-      argument_types_ == other.argument_types_;
+      argument_types_ == other.argument_types_ &&
+      defined_in_derived_class_ == other.defined_in_derived_class_;
 }
 
 LifecycleMethod LifecycleMethod::from_json(const Json::Value& value) {
@@ -85,9 +155,50 @@ LifecycleMethod LifecycleMethod::from_json(const Json::Value& value) {
   return LifecycleMethod(base_class_name, method_name, callees);
 }
 
+bool LifecycleMethod::validate(
+    const ClassHierarchies& class_hierarchies) const {
+  const auto* base_class_type = DexType::get_type(base_class_name_);
+  if (!base_class_type) {
+    // Base type is not found in the APK. Config may still be valid, e.g. when
+    // re-using configs across different APKs.
+    WARNING(
+        1,
+        "Could not find type for base class name `{}`. Will skip creating life-cycle methods.",
+        base_class_name_);
+    return false;
+  }
+
+  const auto* base_class = type_class(base_class_type);
+  if (!base_class) {
+    // Base class is not a class, e.g. primitive type. Possibly an invalid
+    // config, or the class definition doesn't exist in the APK, but the type
+    // does. Loading the corresponding JAR helps with the latter, and it is
+    // required for resolving callees to the right `DexMethod`.
+    ERROR(
+        1,
+        "Could not convert base class type `{}` into DexClass.",
+        base_class_type->str());
+    throw std::runtime_error(fmt::format(
+        "Invalid base class type `{}` in life-cycle definition.",
+        base_class_name_));
+  }
+
+  for (const auto& callee : callees_) {
+    callee.validate(base_class, class_hierarchies);
+  }
+
+  return true;
+}
+
 void LifecycleMethod::create_methods(
     const ClassHierarchies& class_hierarchies,
     Methods& methods) {
+  if (!validate(class_hierarchies)) {
+    // Invalid life-cycle method. Do not create methods. Relevant warnings
+    // should be logged by `validate()`.
+    return;
+  }
+
   // All DexMethods created by `LifecycleMethod` have the same signature:
   //   void <method_name_>(<arguments>)
   // The arguments are determined by the callees' arguments. This creates the
@@ -107,14 +218,9 @@ void LifecycleMethod::create_methods(
     }
   }
 
-  auto* MT_NULLABLE base_class_type = DexType::get_type(base_class_name_);
-  if (!base_class_type) {
-    WARNING(
-        1,
-        "Could not find type for base class name `{}`. Will skip creating life-cycle methods.",
-        base_class_name_);
-    return;
-  }
+  auto* base_class_type = DexType::get_type(base_class_name_);
+  // Base class should exist. See validate().
+  mt_assert(base_class_type != nullptr);
 
   std::atomic<int> methods_created_count = 0;
 
@@ -221,11 +327,8 @@ const DexMethod* MT_NULLABLE LifecycleMethod::create_dex_method(
   for (const auto& callee : callees_) {
     auto* dex_method = callee.get_dex_method(dex_klass);
     if (!dex_method) {
-      WARNING(
-          1,
-          "Could not find method `{}` within ancestor class hierarchy of `{}`.",
-          callee.to_string(),
-          klass->str());
+      // Dex method does not apply for current APK.
+      // See `LifecycleMethod::validate()`.
       continue;
     }
 
