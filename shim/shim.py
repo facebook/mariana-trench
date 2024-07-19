@@ -758,7 +758,6 @@ def _get_command_options(
 def _get_command_options_json(
     arguments: argparse.Namespace, apk_directory: str, dex_directory: str
 ) -> str:
-
     options_json = {}
     options_json["system-jar-paths"] = arguments.system_jar_configuration_path
     options_json["apk-directory"] = apk_directory
