@@ -620,7 +620,7 @@ def _set_environment_variables(arguments):
 
 def _get_command_options_json(
     arguments: argparse.Namespace, apk_directory: str, dex_directory: str
-) -> str:
+) -> dict:
     options_json = {}
     options_json["system-jar-paths"] = arguments.system_jar_configuration_path
     options_json["apk-directory"] = apk_directory
@@ -753,11 +753,7 @@ def _get_command_options_json(
     if arguments.always_export_origins:
         options_json["always-export-origins"] = arguments.always_export_origins
 
-    # Dump the options to a file and return the file path
-    options_file = tempfile.NamedTemporaryFile(suffix=".json",delete=False)
-    options_file.write(json.dumps(options_json).encode())
-
-    return options_file.name
+    return options_json
 
 
 def main() -> None:
@@ -860,15 +856,19 @@ def main() -> None:
                 binary, arguments, apk_directory, dex_directory
             )
         else:
-            options_file_path = _get_command_options_json(arguments, apk_directory, dex_directory)
-
-            command = [os.fspath(binary.resolve()), options_file_path]
-            if arguments.gdb:
-                command = ["gdb", "--args"] + command
-            elif arguments.lldb:
-                command = ["lldb", "--"] + command
-            LOG.info(f"Running Mariana Trench: {' '.join(command)}")
-            output = subprocess.run(command)
+            with tempfile.NamedTemporaryFile(suffix=".json",mode="w") as options_file:
+                options_json = _get_command_options_json(arguments, apk_directory, dex_directory)
+                print(f"options_json type: {type(options_json)}")
+                print(f"options_file mode: {options_file.mode}")
+                json.dump(options_json, options_file, indent=4)
+                options_file.flush()
+                command = [os.fspath(binary.resolve()), options_file.name]
+                if arguments.gdb:
+                    command = ["gdb", "--args"] + command
+                elif arguments.lldb:
+                    command = ["lldb", "--"] + command
+                LOG.info(f"Running Mariana Trench: {' '.join(command)}")
+                output = subprocess.run(command)
         if output.returncode != 0:
             LOG.fatal(f"Analysis binary exited with exit code {output.returncode}.")
             sys.exit(output.returncode)
