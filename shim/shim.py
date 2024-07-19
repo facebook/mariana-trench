@@ -754,6 +754,11 @@ def _get_command_options(
         options.append("--always-export-origins")
     return options
 
+def _set_environment_variables(arguments):
+    trace_settings = [f"MARIANA_TRENCH:{arguments.verbosity}"]
+    if "TRACE" in os.environ:
+        trace_settings.insert(0, os.environ["TRACE"])
+    os.environ["TRACE"] = ",".join(trace_settings)
 
 def _get_command_options_json(
     arguments: argparse.Namespace, apk_directory: str, dex_directory: str
@@ -857,10 +862,7 @@ def _get_command_options_json(
     if arguments.metarun_id:
         options_json["metarun-id"] = arguments.metarun_id
 
-    trace_settings = [f"MARIANA_TRENCH:{arguments.verbosity}"]
-    if "TRACE" in os.environ:
-        trace_settings.insert(0, os.environ["TRACE"])
-    os.environ["TRACE"] = ",".join(trace_settings)
+    _set_environment_variables(arguments)
 
     if arguments.log_method:
         options_json["log-method"] = []
