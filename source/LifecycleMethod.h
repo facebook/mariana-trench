@@ -20,6 +20,19 @@
 namespace marianatrench {
 
 /**
+ * Unlike `LifecycleMethodsJsonError` which is used when issues are found solely
+ * from the JSON, this is thrown when attempting to construct the `DexMethod`s.
+ * The cause of the error is most likely a value in the JSON, but could also be
+ * due to other factors in the setup, such as a dependent JAR with required
+ * class definitions not being loaded.
+ */
+class LifecycleMethodValidationError : public std::invalid_argument {
+ public:
+  explicit LifecycleMethodValidationError(const std::string& message)
+      : std::invalid_argument(message) {}
+};
+
+/**
  * Represents an invoke operation in `LifecycleMethod` to a specific callee.
  * These are typically methods in the base class that can be overridden by
  * children.

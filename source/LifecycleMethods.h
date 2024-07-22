@@ -16,9 +16,9 @@
 
 namespace marianatrench {
 
-class LifecycleMethodsError : public JsonValidationError {
+class LifecycleMethodsJsonError : public JsonValidationError {
  public:
-  LifecycleMethodsError(
+  LifecycleMethodsJsonError(
       const Json::Value& value,
       const std::optional<std::string>& field,
       const std::string& expected);

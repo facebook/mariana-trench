@@ -11,7 +11,7 @@
 
 namespace marianatrench {
 
-LifecycleMethodsError::LifecycleMethodsError(
+LifecycleMethodsJsonError::LifecycleMethodsJsonError(
     const Json::Value& value,
     const std::optional<std::string>& field,
     const std::string& expected)
@@ -45,7 +45,7 @@ void LifecycleMethods::add_methods_from_json(
       // as the current one. Method names must be unique across all
       // definitions because a `DexMethod` of the form
       // `ChildClass;.<method_name>` will be created per `method` defined.
-      throw LifecycleMethodsError(
+      throw LifecycleMethodsJsonError(
           lifecycle_definition,
           /* field */ "method_name",
           "unique values across all life-cycle definitions");

@@ -49,7 +49,7 @@ void LifecycleMethodCall::validate(
     if (get_dex_method(base_class) == nullptr) {
       // Callee does not exist within the base class. Likely an invalid config
       // (e.g. typo).
-      throw std::runtime_error(fmt::format(
+      throw LifecycleMethodValidationError(fmt::format(
           "Callee `{}` is not in base class type `{}`. Check spelling, or add \"defined_in_derived_class\" if the method belongs to a derived class.",
           to_string(),
           base_class->str()));
@@ -83,14 +83,14 @@ void LifecycleMethodCall::validate(
 
   auto derived_types = class_hierarchies.extends(base_class->get_type());
   if (derived_types.find(derived_type) == derived_types.end()) {
-    throw std::runtime_error(fmt::format(
+    throw LifecycleMethodValidationError(fmt::format(
         "Derived class `{}` is not derived from base class `{}`.",
         derived_class->str(),
         base_class->str()));
   }
 
   if (get_dex_method(derived_class) == nullptr) {
-    throw std::runtime_error(fmt::format(
+    throw LifecycleMethodValidationError(fmt::format(
         "Callee `{}` is not in derived class type `{}`.",
         to_string(),
         derived_class->str()));
@@ -174,7 +174,7 @@ bool LifecycleMethod::validate(
         1,
         "Could not convert base class type `{}` into DexClass.",
         base_class_type->str());
-    throw std::runtime_error(fmt::format(
+    throw LifecycleMethodValidationError(fmt::format(
         "Invalid base class type `{}` in life-cycle definition.",
         base_class_name_));
   }

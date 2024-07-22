@@ -69,7 +69,9 @@ int main(int argc, char* argv[]) {
     return ExitCode::redex_error(aggregate_exception.what());
   } catch (const marianatrench::ModelGeneratorError& exception) {
     return ExitCode::model_generator_error(exception.what());
-  } catch (const marianatrench::LifecycleMethodsError& exception) {
+  } catch (const marianatrench::LifecycleMethodsJsonError& exception) {
+    return ExitCode::lifecycle_error(exception.what());
+  } catch (const marianatrench::LifecycleMethodValidationError& exception) {
     return ExitCode::lifecycle_error(exception.what());
   } catch (const marianatrench::ShimGeneratorError& exception) {
     return ExitCode::shim_generator_error(exception.what());
