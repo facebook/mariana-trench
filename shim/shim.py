@@ -670,10 +670,10 @@ def _get_command_options_json(
         options_json["sharded-models-directory"] = arguments.sharded_models_directory
 
     if arguments.emit_all_via_cast_features:
-        options_json["emit-all-via-cast-features"] = arguments.emit_all_via_cast_features
+        options_json["emit-all-via-cast-features"] = True
 
     if arguments.propagate_across_arguments:
-        options_json["propagate-across-arguments"] = arguments.propagate_across_arguments
+        options_json["propagate-across-arguments"] = True
 
     if arguments.allow_via_cast_feature:
         options_json["allow-via-cast-feature"] = []
@@ -684,31 +684,31 @@ def _get_command_options_json(
         options_json["heuristics"] = arguments.heuristics
 
     if arguments.sequential:
-        options_json["sequential"] = arguments.sequential
+        options_json["sequential"] = True
 
     if arguments.skip_source_indexing:
-        options_json["skip-source-indexing"] = arguments.skip_source_indexing
+        options_json["skip-source-indexing"] = True
 
     if arguments.skip_analysis:
-        options_json["skip-analysis"] = arguments.skip_analysis
+        options_json["skip-analysis"] = True
 
     if arguments.disable_parameter_type_overrides:
-        options_json["disable-parameter-type-overrides"] = arguments.disable_parameter_type_overrides
+        options_json["disable-parameter-type-overrides"] = True
 
     if arguments.disable_global_type_analysis:
-        options_json["disable-global-type-analysis"] = arguments.disable_global_type_analysis
+        options_json["disable-global-type-analysis"] = True
 
     if arguments.verify_expected_output:
-        options_json["verify-expected-output"] = arguments.verify_expected_output
+        options_json["verify-expected-output"] = True
 
     if arguments.remove_unreachable_code:
-        options_json["remove-unreachable-code"] = arguments.remove_unreachable_code
+        options_json["remove-unreachable-code"] = True
 
     if arguments.maximum_method_analysis_time is not None:
         options_json["maximum-method-analysis-time"] = arguments.maximum_method_analysis_time
 
     if arguments.enable_cross_component_analysis:
-        options_json["enable-cross-component-analysis"] = arguments.enable_cross_component_analysis
+        options_json["enable-cross-component-analysis"] = True
 
     if arguments.extra_analysis_arguments:
         for arg in shlex.split(arguments.extra_analysis_arguments):
@@ -731,25 +731,25 @@ def _get_command_options_json(
             options_json["log-method-types"].append(method.strip())
 
     if arguments.dump_class_hierarchies:
-        options_json["dump-class-hierarchies"] = arguments.dump_class_hierarchies
+        options_json["dump-class-hierarchies"] = True
 
     if arguments.dump_overrides:
-        options_json["dump-overrides"] = arguments.dump_overrides
+        options_json["dump-overrides"] = True
 
     if arguments.dump_call_graph:
-        options_json["dump-call-graph"] = arguments.dump_call_graph
+        options_json["dump-call-graph"] = True
 
     if arguments.dump_dependencies:
-        options_json["dump-dependencies"] = arguments.dump_dependencies
+        options_json["dump-dependencies"] = True
 
     if arguments.dump_methods:
-        options_json["dump-methods"] = arguments.dump_methods
+        options_json["dump-methods"] = True
 
     if arguments.dump_coverage_info:
-        options_json["dump-coverage-info"] = arguments.dump_coverage_info
+        options_json["dump-coverage-info"] = True
 
     if arguments.always_export_origins:
-        options_json["always-export-origins"] = arguments.always_export_origins
+        options_json["always-export-origins"] = True
 
     return options_json
 
