@@ -711,8 +711,14 @@ def _get_command_options_json(
         options_json["enable-cross-component-analysis"] = True
 
     if arguments.extra_analysis_arguments:
-        for arg in shlex.split(arguments.extra_analysis_arguments):
-            options_json[arg] = arg
+        extra_arguments = json.loads(arguments.extra_analysis_arguments)
+        for key, value in extra_arguments.items():
+            if key in options_json and isinstance(options_json[key],list) and isinstance(value, list):
+                # Append the values to the existing list
+                options_json[key].extend(value)
+            else:
+                # Overwrite the value
+                options_json[key] = value
 
     if arguments.job_id:
         options_json["job-id"] = arguments.job_id
