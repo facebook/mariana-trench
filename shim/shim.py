@@ -857,8 +857,6 @@ def main() -> None:
             with tempfile.NamedTemporaryFile(suffix=".json",mode="w") as options_file:
                 _set_environment_variables(arguments)
                 options_json = _get_command_options_json(arguments, apk_directory, dex_directory)
-                print(f"options_json type: {type(options_json)}")
-                print(f"options_file mode: {options_file.mode}")
                 json.dump(options_json, options_file, indent=4)
                 options_file.flush()
                 command = [os.fspath(binary.resolve()), options_file.name]
