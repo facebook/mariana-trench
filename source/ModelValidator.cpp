@@ -216,9 +216,12 @@ ExpectIssue ExpectIssue::from_annotation(
         sink_kinds.insert(dex_string->str_copy());
       }
     } else {
-      throw std::runtime_error(fmt::format(
+      // Do not fail in case new fields have been added to annotation, in which
+      // case, the error is expected to resolve on the next release
+      ERROR(
+          1,
           "Unexpected annotation key: {} in @ExpectIssue",
-          ::show(annotation_key)));
+          ::show(annotation_key));
     }
   }
 
@@ -279,9 +282,12 @@ ExpectNoIssue ExpectNoIssue::from_annotation(
       mt_assert(annotation_element.encoded_value->is_evtype_primitive());
       code = annotation_element.encoded_value->value();
     } else {
-      throw std::runtime_error(fmt::format(
+      // Do not fail in case new fields have been added to annotation, in which
+      // case, the error is expected to resolve on the next release
+      ERROR(
+          1,
           "Unexpected annotation key: {} in @ExpectNoIssue",
-          ::show(annotation_key)));
+          ::show(annotation_key));
     }
   }
 
