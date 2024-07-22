@@ -720,8 +720,6 @@ def _get_command_options_json(
     if arguments.metarun_id:
         options_json["metarun-id"] = arguments.metarun_id
 
-    _set_environment_variables(arguments)
-
     if arguments.log_method:
         options_json["log-method"] = []
         for method in arguments.log_method:
@@ -857,6 +855,7 @@ def main() -> None:
             )
         else:
             with tempfile.NamedTemporaryFile(suffix=".json",mode="w") as options_file:
+                _set_environment_variables(arguments)
                 options_json = _get_command_options_json(arguments, apk_directory, dex_directory)
                 print(f"options_json type: {type(options_json)}")
                 print(f"options_file mode: {options_file.mode}")
