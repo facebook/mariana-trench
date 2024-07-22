@@ -14,6 +14,10 @@ namespace marianatrench {
 
 /* The collapse depth for a given output path. */
 class CollapseDepth final : public sparta::AbstractDomain<CollapseDepth> {
+ private:
+  using ScalarAbstractDomain =
+      ScalarAbstractDomainScaffolding<scalar_impl::ScalarTopIsZero>;
+
  public:
   using IntType = ScalarAbstractDomain::IntType;
 

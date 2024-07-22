@@ -2309,6 +2309,9 @@ TEST_F(AbstractTreeDomainTest, Shape) {
   EXPECT_EQ(tree, (IntSetTree{IntSet{1, 2, 3, 4, 5}}));
 }
 
+using ScalarAbstractDomain =
+    ScalarAbstractDomainScaffolding<scalar_impl::ScalarTopIsZero>;
+
 struct ScalarTreeConfiguration {
   static std::size_t max_tree_height_after_widening() {
     return 4;
