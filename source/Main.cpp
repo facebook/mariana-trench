@@ -36,26 +36,33 @@ int main(int argc, char* argv[]) {
 
   namespace program_options = boost::program_options;
   program_options::options_description options;
-  options.add_options()("help,h", "Show help dialog.");
+  options.add_options()
+  ("help,h", "Show help dialog.")
+  ("config,c", program_options::value<std::string>()->required(), "Path to the JSON configuration file.");
 
   auto tool = marianatrench::MarianaTrench();
   tool.add_options(options);
 
   try {
-    if (argc < 2) {
-      std::cerr << "Usage: " << argv[0] << " <json_config_file>\n";
+    program_options::variables_map variables;
+    po::store(po::parse_command_line(argc, argv, options), variables);
+    if (variables.count("help")) {
+      std::cerr << options;
+      return 0;
+    }
+    if (!variables.count("config")) {
+      std::cerr << "No JSON configuration file provided.\n";
+      std::cerr << "Usage: " << argv[0] << " --config <json_config_file>\n";
       return ExitCode::invalid_argument_error("No JSON configuration file provided.");
     }
     
-    std::string json_file_path = argv[1];
+    std::string json_file_path = variables["config"].as<std::string>();
 
     // Use JsonReader to parse the JSON file
     Json::Value json = marianatrench::JsonReader::parse_json_file(json_file_path);
     // Validate the JSON object
     marianatrench::JsonValidation::validate_object(json);
-    // Use variables_map to store the JSON data
-    program_options::variables_map variables;
-    // Populate variables_map from JSON data
+
     for (const auto& key : json.getMemberNames()) {
       const auto& value = json[key];
 
@@ -78,10 +85,6 @@ int main(int argc, char* argv[]) {
         }
         variables.insert(std::make_pair(key, program_options::variable_value(array_values, false)));
       }
-    }
-    if (variables.count("help")) {
-      std::cerr << options;
-      return 0;
     }
 
     program_options::notify(variables);
