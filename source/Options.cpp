@@ -149,164 +149,155 @@ Options::Options(
 
 Options::Options(const Json::Value &json){
     system_jar_paths_ = parse_paths_list(
-        json["system-jar-paths"].asString(),
+        JsonValidation::string(json,"system-jar-paths"),
         std::nullopt,
         /* check exist */ false);
 
     apk_directory_ =
-        check_directory_exists(json["apk-directory"].asString());
+        check_directory_exists(JsonValidation::string(json,"apk-directory"));
     dex_directory_ =
-        check_directory_exists(json["dex-directory"].asString());
+        check_directory_exists(JsonValidation::string(json,"dex-directory"));
 
-    if (!json["models-paths"].isNull()) {
+    if (json.isMember("models-paths")) {
         models_paths_ = parse_paths_list(
-            json["models-paths"].asString(), /* extension */ ".json");
+            JsonValidation::string(json,"models-paths"), /* extension */ ".json");
     }
 
-    if (!json["field-models-paths"].isNull()) {
+    if (json.isMember("field-models-paths")) {
         field_models_paths_ = parse_paths_list(
-            json["field-models-paths"].asString(),
+            JsonValidation::string(json,"field-models-paths"),
             /* extension */ ".json");
     }
 
-    if (!json["literal-models-paths"].isNull()) {
+    if (json.isMember("literal-models-paths")) {
         literal_models_paths_ = parse_paths_list(
-            json["literal-models-paths"].asString(),
+            JsonValidation::string(json,"literal-models-paths"),
             /* extension */ ".json");
     }
 
     rules_paths_ = parse_paths_list(
-        json["rules-paths"].asString(), /* extension */ ".json");
+        JsonValidation::string(json,"rules-paths"), /* extension */ ".json");
 
-    if (!json["lifecycles-paths"].isNull()) {
+    if (json.isMember("lifecycles-paths")) {
         lifecycles_paths_ = parse_paths_list(
-            json["lifecycles-paths"].asString(),
+            JsonValidation::string(json,"lifecycles-paths"),
             /* extension */ ".json");
     }
 
-    if (!json["shims-paths"].isNull()) {
+    if (json.isMember("shims-paths")) {
         shims_paths_ = parse_paths_list(
-            json["shims-paths"].asString(),
+            JsonValidation::string(json,"shims-paths"),
             /* extension */ ".json");
     }
 
-    if (!json["graphql-metadata-paths"].isNull()) {
+    if (json.isMember("graphql-metadata-paths")) {
         graphql_metadata_paths_ = check_path_exists(
-            json["graphql-metadata-paths"].asString());
+            JsonValidation::string(json,"graphql-metadata-paths"));
     } else {
         graphql_metadata_paths_ = "";
     }
 
-    if (!json["proguard-configuration-paths"].isNull()) {
+    if (json.isMember("proguard-configuration-paths")) {
         proguard_configuration_paths_ = parse_paths_list(
-            json["proguard-configuration-paths"].asString(),
+            JsonValidation::string(json,"proguard-configuration-paths"),
             /* extension */ ".pro");
     }
 
-    if (!json["generated-models-directory"].isNull()) {
+    if (json.isMember("generated-models-directory")) {
         generated_models_directory_ = check_path_exists(
-            json["generated-models-directory"].asString());
+            JsonValidation::string(json,"generated-models-directory"));
     }
 
     generator_configuration_paths_ = parse_paths_list(
-        json["model-generator-configuration-paths"].asString(),
+        JsonValidation::string(json,"model-generator-configuration-paths"),
         /* extension */ ".json");
     model_generators_configuration_ =
         parse_json_configuration_files(generator_configuration_paths_);
 
-    if (!json["model-generator-search-paths"].isNull()) {
+    if (json.isMember("model-generator-search-paths")) {
         model_generator_search_paths_ = parse_search_paths(
-            json["model-generator-search-paths"].asString());
+            JsonValidation::string(json,"model-generator-search-paths"));
     }
 
     repository_root_directory_ = check_directory_exists(
-        json["repository-root-directory"].asString());
+        JsonValidation::string(json,"repository-root-directory"));
     source_root_directory_ = check_directory_exists(
-        json["source-root-directory"].asString());
+        JsonValidation::string(json,"source-root-directory"));
 
-    if (!json["source-exclude-directories"].isNull()) {
+    if (json.isMember("source-exclude-directories")) {
         source_exclude_directories_ = parse_paths_list(
-            json["source-exclude-directories"].asString(),
+            JsonValidation::string(json,"source-exclude-directories"),
             /* extension */ std::nullopt,
             /* check_exist */ false);
     }
 
-    if (!json["grepo-metadata-path"].isNull()) {
+    if (json.isMember("grepo-metadata-path")) {
         grepo_metadata_path_ =
-            check_path_exists(json["grepo-metadata-path"].asString());
+            check_path_exists(JsonValidation::string(json,"grepo-metadata-path"));
     }
 
-    apk_path_ = check_path_exists(json["apk-path"].asString());
+    apk_path_ = check_path_exists(JsonValidation::string(json,"apk-path"));
     output_directory_ = std::filesystem::path(
-        check_directory_exists(json["output-directory"].asString()));
+        check_directory_exists(JsonValidation::string(json,"output-directory")));
 
-    if (!json["sharded-models-directory"].isNull()) {
+    if (json.isMember("sharded-models-directory")) {
         sharded_models_directory_ = std::filesystem::path(check_directory_exists(
-            json["sharded-models-directory"].asString()));
+            JsonValidation::string(json,"sharded-models-directory")));
     }
 
-    sequential_ = json["sequential"].asBool();
-    skip_source_indexing_ = json["skip-source-indexing"].asBool();
-    skip_analysis_ = json["skip-analysis"].asBool();
-    remove_unreachable_code_ = json["remove-unreachable-code"].asBool();
-    disable_parameter_type_overrides_ =
-        json["disable-parameter-type-overrides"].asBool();
-    disable_global_type_analysis_ = json["disable-global-type-analysis"].asBool();
-    verify_expected_output_ = json["verify-expected-output"].asBool();
-    maximum_method_analysis_time_ =
-        json["maximum-method-analysis-time"] ?
-        std::nullopt
-        : std::make_optional<int>(json["maximum-method-analysis-time"].asInt());
-    maximum_source_sink_distance_ =
-        json["maximum-source-sink-distance"].asInt();
-    emit_all_via_cast_features_ = 
-        json["emit-all-via-cast-features"].asBool();
+    sequential_ = JsonValidation::optional_boolean(json,"sequential",false);
+    skip_source_indexing_ = JsonValidation::optional_boolean(json,"skip-source-indexing",false);
+    skip_analysis_ = JsonValidation::optional_boolean(json,"skip-analysis",false);
+    remove_unreachable_code_ = JsonValidation::optional_boolean(json,"remove-unreachable-code",false);
+    disable_parameter_type_overrides_ = JsonValidation::optional_boolean(json,"disable-parameter-type-overrides",false);
+    disable_global_type_analysis_ = JsonValidation::optional_boolean(json,"disable-global-type-analysis",false);
+    verify_expected_output_ = JsonValidation::optional_boolean(json,"verify-expected-output",false); 
+    maximum_method_analysis_time_ = JsonValidation::optional_integer(json,"maximum-method-analysis-time");
 
-    if (!json["allow-via-cast-feature"].isNull()) {
-        for (const auto& value : json["allow-via-cast-feature"]) {
-            allow_via_cast_features_.push_back(value.asString());
+    maximum_source_sink_distance_ =  JsonValidation::integer(json,"maximum-source-sink-distance"); 
+    emit_all_via_cast_features_ = JsonValidation::optional_boolean(json,"emit-all-via-cast-features",false);
+
+    if (json.isMember("allow-via-cast-feature")) {
+        for (const auto& value : JsonValidation::nonempty_array(json,"allow-via-cast-feature")) {
+            allow_via_cast_features_.push_back(JsonValidation::string(value));
         }
     }
 
-    if (!json["log-method"].isNull()) {
-        for (const auto& value : json["log-method"]) {
-            log_methods_.push_back(value.asString());
+    if (json.isMember("log-method")) {
+        for (const auto& value :  JsonValidation::nonempty_array(json,"log-method")) {
+            log_methods_.push_back(JsonValidation::string(value));
         }
     }
 
-    if (!json["log-method-types"].isNull()) {
-        for (const auto& value : json["log-method-types"]) {
-            log_method_types_.push_back(value.asString());
+    if (json.isMember("log-method-types")) {
+        for (const auto& value :JsonValidation::nonempty_array(json,"log-method-types")) {
+            log_method_types_.push_back(JsonValidation::string(value));
         }
     }
 
-    dump_class_hierarchies_ = json["dump-class-hierarchies"].asBool();
-    dump_class_intervals_ = json["dump-class-intervals"].asBool();
-    dump_overrides_ = json["dump-overrides"].asBool();
-    dump_call_graph_ = json["dump-call-graph"].asBool();
-    dump_dependencies_ = json["dump-dependencies"].asBool();
-    dump_methods_ = json["dump-methods"].asBool();
-    dump_coverage_info_ = json["dump-coverage-info"].asBool();
+    dump_class_hierarchies_ = JsonValidation::optional_boolean(json,"dump-class-hierarchies",false);
+    dump_class_intervals_ = JsonValidation::optional_boolean(json,"dump-class-intervals",false);
+    dump_overrides_ = JsonValidation::optional_boolean(json,"dump-overrides",false);
+    dump_call_graph_ = JsonValidation::optional_boolean(json,"dump-call-graph",false);
+    dump_dependencies_ = JsonValidation::optional_boolean(json,"dump-dependencies",false);
+    dump_methods_ = JsonValidation::optional_boolean(json,"dump-methods",false);
+    dump_coverage_info_ = JsonValidation::optional_boolean(json,"dump-coverage-info",false);
 
-    if (!json["job-id"].isNull()) {
-        job_id_ = std::make_optional<std::string>(json["job-id"].asString());
-    }
+    job_id_ = JsonValidation::optional_string(json,"job-id");
+    metarun_id_ = JsonValidation::optional_string(json,"metarun-id");
 
-    if (!json["metarun-id"].isNull()) {
-        metarun_id_ = std::make_optional<std::string>(json["metarun-id"].asString());
-    }
+    enable_cross_component_analysis_ = JsonValidation::optional_boolean(json,"enable-cross-component-analysis",false);
 
-    enable_cross_component_analysis_ = json["enable-cross-component-analysis"].asBool();
 
-    export_origins_mode_ = json["always-export-origins"] ?
+    export_origins_mode_ = JsonValidation::optional_boolean(json,"always-export-origins",false) ?
         ExportOriginsMode::Always
         : ExportOriginsMode::OnlyOnOrigins;
 
-    propagate_across_arguments_ = json["propagate-across-arguments"].asBool();
+    propagate_across_arguments_ = JsonValidation::optional_boolean(json,"propagate-across-arguments",false);
 
-    if (!json["heuristics"].isNull()) {
+    if (json.isMember("heuristics")) {
         heuristics_path_ = std::filesystem::path(
-            check_path_exists(json["heuristics"].asString()));
+            check_path_exists(JsonValidation::string(json,"heuristics")));
     }
 }
 
