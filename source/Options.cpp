@@ -303,7 +303,7 @@ Options::Options(const boost::program_options::variables_map& variables) {
   }
 }
 
-Options* Options::options_from_json_file(const std::string& options_json_path){
+std::unique_ptr<Options> Options::options_from_json_file(const std::string& options_json_path){
     program_options::variables_map variables;
     // Use JsonReader to parse the JSON file
     Json::Value json = marianatrench::JsonReader::parse_json_file(options_json_path);
@@ -333,9 +333,7 @@ Options* Options::options_from_json_file(const std::string& options_json_path){
         variables.insert(std::make_pair(key, program_options::variable_value(array_values, false)));
       }
     }
-
-    Options * options = new Options(variables);
-    return options;
+    return std::make_unique<Options>(variables);
 }
 void Options::add_options(
     boost::program_options::options_description& options) {
