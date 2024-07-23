@@ -424,8 +424,8 @@ std::vector<std::string> filter_existing_jars(
 void MarianaTrench::run(const program_options::variables_map& variables) {
   Context context;
   std::string json_file_path = variables["config"].as<std::string>();
-  Options* options_from_file = Options::options_from_json_file(json_file_path);
-  context.options = std::unique_ptr<Options>(options_from_file);
+  std::unique_ptr<Options> options_from_file = Options::options_from_json_file(json_file_path);
+  context.options = std::move(options_from_file);
   const auto& options = *context.options;
 
   if (auto heuristics_path = options.heuristics_path()) {
