@@ -127,6 +127,8 @@ class ExpectIssue final : public ModelValidator {
 
   std::string show() const override;
 
+  std::string show_parameters() const;
+
  private:
   int code_;
 
@@ -139,7 +141,8 @@ class ExpectIssue final : public ModelValidator {
 
 class ExpectNoIssue final : public ModelValidator {
  public:
-  explicit ExpectNoIssue(int code) : code_(code) {}
+  explicit ExpectNoIssue(ExpectIssue expect_issue)
+      : expect_issue_(std::move(expect_issue)) {}
 
   MOVE_CONSTRUCTOR_ONLY(ExpectNoIssue)
 
@@ -151,9 +154,8 @@ class ExpectNoIssue final : public ModelValidator {
   std::string show() const override;
 
  private:
-  // This field in @ExpectNoIssue annotation is optional and defaults to -1
-  // if unspecified.
-  int code_;
+  // ExpectNoIssue is simply a negation of ExpectIssue.
+  ExpectIssue expect_issue_;
 };
 
 } // namespace marianatrench

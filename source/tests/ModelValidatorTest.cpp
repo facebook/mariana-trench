@@ -105,8 +105,12 @@ TEST_F(ModelValidatorTest, ModelValidators) {
   {
     // All validators fail (and single validator)
     std::vector<std::unique_ptr<ModelValidator>> validators;
-    validators.push_back(std::make_unique<ExpectNoIssue>(
-        /* code */ 1));
+    validators.push_back(std::make_unique<ExpectNoIssue>(ExpectIssue(
+        /* code */ 1,
+        /* source_kinds */ std::set<std::string>{},
+        /* sink_kinds */ std::set<std::string>{},
+        /* source_origins */ std::set<std::string>{},
+        /* sink_origins */ std::set<std::string>{})));
 
     ModelValidators validator(method, std::move(validators));
     auto result = validator.validate(model).to_json();
@@ -114,7 +118,7 @@ TEST_F(ModelValidatorTest, ModelValidators) {
         R"#({
               "method": "LClass;.one:()V",
               "validators": [
-                { "valid": false, "annotation": "ExpectNoIssue(code=1)" }
+                { "valid": false, "annotation": "ExpectNoIssue(code=1, sourceKinds=, sinkKinds=, sourceOrigins=, sinkOrigins=)" }
               ]
             })#");
     EXPECT_EQ(test::sorted_json(expected), test::sorted_json(result));
@@ -129,8 +133,12 @@ TEST_F(ModelValidatorTest, ModelValidators) {
         /* sink_kinds */ std::set<std::string>{},
         /* source_origins */ std::set<std::string>{},
         /* sink_origins */ std::set<std::string>{}));
-    validators.push_back(std::make_unique<ExpectNoIssue>(
-        /* code */ 2));
+    validators.push_back(std::make_unique<ExpectNoIssue>(ExpectIssue(
+        /* code */ 2,
+        /* source_kinds */ std::set<std::string>{},
+        /* sink_kinds */ std::set<std::string>{},
+        /* source_origins */ std::set<std::string>{},
+        /* sink_origins */ std::set<std::string>{})));
 
     ModelValidators validator(method, std::move(validators));
     auto result = validator.validate(model).to_json();
@@ -139,14 +147,14 @@ TEST_F(ModelValidatorTest, ModelValidators) {
               "method": "LClass;.one:()V",
               "validators": [
                 { "valid": true, "annotation": "ExpectIssue(code=1, sourceKinds=, sinkKinds=, sourceOrigins=, sinkOrigins=)" },
-                { "valid": true, "annotation": "ExpectNoIssue(code=2)" }
+                { "valid": true, "annotation": "ExpectNoIssue(code=2, sourceKinds=, sinkKinds=, sourceOrigins=, sinkOrigins=)" }
               ]
             })#");
     EXPECT_EQ(test::sorted_json(expected), test::sorted_json(result));
   }
 }
 
-TEST_F(ModelValidatorTest, ExpectIssue) {
+TEST_F(ModelValidatorTest, ExpectIssueExpectNoIssue) {
   auto context = test::make_empty_context();
 
   const auto* source_kind = context.kind_factory->get("TestSource");
@@ -192,6 +200,8 @@ TEST_F(ModelValidatorTest, ExpectIssue) {
         /* source_origins */ {},
         /* sink_origins */ {});
     EXPECT_TRUE(expect_issue.validate(model).is_valid());
+    EXPECT_FALSE(
+        ExpectNoIssue(std::move(expect_issue)).validate(model).is_valid());
   }
 
   {
@@ -203,6 +213,8 @@ TEST_F(ModelValidatorTest, ExpectIssue) {
         /* source_origins */ {},
         /* sink_origins */ {});
     EXPECT_TRUE(expect_issue.validate(model).is_valid());
+    EXPECT_FALSE(
+        ExpectNoIssue(std::move(expect_issue)).validate(model).is_valid());
   }
 
   {
@@ -214,6 +226,8 @@ TEST_F(ModelValidatorTest, ExpectIssue) {
         /* source_origins */ {},
         /* sink_origins */ {});
     EXPECT_FALSE(expect_issue.validate(model).is_valid());
+    EXPECT_TRUE(
+        ExpectNoIssue(std::move(expect_issue)).validate(model).is_valid());
   }
 
   {
@@ -225,6 +239,8 @@ TEST_F(ModelValidatorTest, ExpectIssue) {
         /* source_origins */ {},
         /* sink_origins */ {});
     EXPECT_FALSE(expect_issue.validate(model).is_valid());
+    EXPECT_TRUE(
+        ExpectNoIssue(std::move(expect_issue)).validate(model).is_valid());
   }
 
   {
@@ -236,6 +252,8 @@ TEST_F(ModelValidatorTest, ExpectIssue) {
         /* source_origins */ {},
         /* sink_origins */ {});
     EXPECT_FALSE(expect_issue.validate(model).is_valid());
+    EXPECT_TRUE(
+        ExpectNoIssue(std::move(expect_issue)).validate(model).is_valid());
   }
 
   {
@@ -247,6 +265,8 @@ TEST_F(ModelValidatorTest, ExpectIssue) {
         /* source_origins */ {},
         /* sink_origins */ {});
     EXPECT_FALSE(expect_issue.validate(model).is_valid());
+    EXPECT_TRUE(
+        ExpectNoIssue(std::move(expect_issue)).validate(model).is_valid());
   }
 
   // Single issue with multiple source and sink kinds.
@@ -274,6 +294,8 @@ TEST_F(ModelValidatorTest, ExpectIssue) {
         /* source_origins */ {},
         /* sink_origins */ {});
     EXPECT_TRUE(expect_issue.validate(model).is_valid());
+    EXPECT_FALSE(
+        ExpectNoIssue(std::move(expect_issue)).validate(model).is_valid());
   }
 
   {
@@ -285,6 +307,8 @@ TEST_F(ModelValidatorTest, ExpectIssue) {
         /* source_origins */ {},
         /* sink_origins */ {});
     EXPECT_TRUE(expect_issue.validate(model).is_valid());
+    EXPECT_FALSE(
+        ExpectNoIssue(std::move(expect_issue)).validate(model).is_valid());
   }
 
   {
@@ -296,6 +320,8 @@ TEST_F(ModelValidatorTest, ExpectIssue) {
         /* source_origins */ {},
         /* sink_origins */ {});
     EXPECT_FALSE(expect_issue.validate(model).is_valid());
+    EXPECT_TRUE(
+        ExpectNoIssue(std::move(expect_issue)).validate(model).is_valid());
   }
 
   // Multiple issues, each with with single source and sink kind.
@@ -324,6 +350,8 @@ TEST_F(ModelValidatorTest, ExpectIssue) {
         /* source_origins */ {},
         /* sink_origins */ {});
     EXPECT_TRUE(expect_issue.validate(model).is_valid());
+    EXPECT_FALSE(
+        ExpectNoIssue(std::move(expect_issue)).validate(model).is_valid());
   }
 
   {
@@ -335,6 +363,8 @@ TEST_F(ModelValidatorTest, ExpectIssue) {
         /* source_origins */ {},
         /* sink_origins */ {});
     EXPECT_FALSE(expect_issue.validate(model).is_valid());
+    EXPECT_TRUE(
+        ExpectNoIssue(std::move(expect_issue)).validate(model).is_valid());
   }
 
   // Single issue with source and sink kinds and origins
@@ -359,6 +389,8 @@ TEST_F(ModelValidatorTest, ExpectIssue) {
         /* source_origins */ {"TestSourceOrigin"},
         /* sink_origins */ {});
     EXPECT_TRUE(expect_issue.validate(model).is_valid());
+    EXPECT_FALSE(
+        ExpectNoIssue(std::move(expect_issue)).validate(model).is_valid());
   }
 
   {
@@ -370,6 +402,8 @@ TEST_F(ModelValidatorTest, ExpectIssue) {
         /* source_origins */ {"TestSourceOrigin"},
         /* sink_origins */ {method->show()});
     EXPECT_TRUE(expect_issue.validate(model).is_valid());
+    EXPECT_FALSE(
+        ExpectNoIssue(std::move(expect_issue)).validate(model).is_valid());
   }
 
   {
@@ -381,63 +415,8 @@ TEST_F(ModelValidatorTest, ExpectIssue) {
         /* source_origins */ {"TestSourceOrigin"},
         /* sink_origins */ {"InvalidSinkorigin"});
     EXPECT_FALSE(expect_issue.validate(model).is_valid());
-  }
-}
-
-TEST_F(ModelValidatorTest, ExpectNoIssue) {
-  auto context = test::make_empty_context();
-
-  const auto* source_kind = context.kind_factory->get("TestSource");
-  const auto* sink_kind = context.kind_factory->get("TestSink");
-  const auto* position = context.positions->get(std::nullopt, 1);
-
-  SourceSinkRule rule_1(
-      "rule 1",
-      /* code */ 1,
-      "description",
-      {source_kind},
-      {sink_kind},
-      /* transforms */ nullptr);
-
-  // Empty model
-  Model model;
-
-  {
-    // Matches no issues (regardless of code)
-    ExpectNoIssue expect_no_issue(/* code */ -1);
-    EXPECT_TRUE(expect_no_issue.validate(model).is_valid());
-  }
-  {
-    // Matches no issues with code "1"
-    ExpectNoIssue expect_no_issue(/* code */ 1);
-    EXPECT_TRUE(expect_no_issue.validate(model).is_valid());
-  }
-
-  // Single issue with single source and sink kind.
-  model.add_issue(Issue(
-      /* source */ Taint{test::make_leaf_taint_config(source_kind)},
-      /* sink */ Taint{test::make_leaf_taint_config(sink_kind)},
-      &rule_1,
-      "callee",
-      /* sink_index */ 0,
-      position));
-
-  {
-    // Fails "no issues" check
-    ExpectNoIssue expect_no_issue(/* code */ -1);
-    EXPECT_FALSE(expect_no_issue.validate(model).is_valid());
-  }
-
-  {
-    // Fails "no issues" with code "1" check
-    ExpectNoIssue expect_no_issue(/* code */ 1);
-    EXPECT_FALSE(expect_no_issue.validate(model).is_valid());
-  }
-
-  {
-    // Passes "no issues" with code "2" check
-    ExpectNoIssue expect_no_issue(/* code */ 2);
-    EXPECT_TRUE(expect_no_issue.validate(model).is_valid());
+    EXPECT_TRUE(
+        ExpectNoIssue(std::move(expect_issue)).validate(model).is_valid());
   }
 }
 

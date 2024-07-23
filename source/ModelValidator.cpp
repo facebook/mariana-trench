@@ -301,8 +301,12 @@ ModelValidatorResult ExpectIssue::validate(const Model& model) const {
 }
 
 std::string ExpectIssue::show() const {
+  return fmt::format("ExpectIssue({})", show_parameters());
+}
+
+std::string ExpectIssue::show_parameters() const {
   return fmt::format(
-      "ExpectIssue(code={}, sourceKinds={}, sinkKinds={}, sourceOrigins={}, sinkOrigins={})",
+      "code={}, sourceKinds={}, sinkKinds={}, sourceOrigins={}, sinkOrigins={}",
       code_,
       boost::algorithm::join(source_kinds_, ","),
       boost::algorithm::join(sink_kinds_, ","),
@@ -312,46 +316,17 @@ std::string ExpectIssue::show() const {
 
 ExpectNoIssue ExpectNoIssue::from_annotation(
     const EncodedAnnotations& annotation_elements) {
-  int code = -1;
-  for (const auto& annotation_element : annotation_elements) {
-    const auto* annotation_key = annotation_element.string;
-    if (annotation_key->str() == "code") {
-      mt_assert(annotation_element.encoded_value->is_evtype_primitive());
-      code = annotation_element.encoded_value->value();
-    } else {
-      // Do not fail in case new fields have been added to annotation, in which
-      // case, the error is expected to resolve on the next release
-      ERROR(
-          1,
-          "Unexpected annotation key: {} in @ExpectNoIssue",
-          ::show(annotation_key));
-    }
-  }
-
-  return ExpectNoIssue(code);
+  auto expect_issue = ExpectIssue::from_annotation(annotation_elements);
+  return ExpectNoIssue(std::move(expect_issue));
 }
 
 ModelValidatorResult ExpectNoIssue::validate(const Model& model) const {
-  if (code_ == -1) {
-    // Issue code unspecified. Model must not contain any issues.
-    return ModelValidatorResult(
-        /* valid */ model.issues().empty(), /* annotation */ show());
-  }
-
-  const auto& issues = model.issues();
-  bool valid =
-      std::none_of(issues.begin(), issues.end(), [this](const Issue& issue) {
-        // Issue (hence rule) should not be bottom() at this point.
-        const auto* rule = issue.rule();
-        mt_assert(rule != nullptr);
-        return rule->code() == code_;
-      });
-
-  return ModelValidatorResult(valid, /* annotation */ show());
+  return ModelValidatorResult(
+      !expect_issue_.validate(model).is_valid(), /* annotation */ show());
 }
 
 std::string ExpectNoIssue::show() const {
-  return fmt::format("ExpectNoIssue(code={})", code_);
+  return fmt::format("ExpectNoIssue({})", expect_issue_.show_parameters());
 }
 
 } // namespace marianatrench
