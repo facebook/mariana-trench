@@ -60,10 +60,6 @@ MarianaTrench::MarianaTrench()
 
 namespace program_options = boost::program_options;
 
-void MarianaTrench::add_options(
-    program_options::options_description& options) const {
-  Options::add_options(options);
-}
 
 Registry MarianaTrench::analyze(Context& context) {
   context.artificial_methods = std::make_unique<ArtificialMethods>(

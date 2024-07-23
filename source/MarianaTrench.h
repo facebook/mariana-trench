@@ -22,8 +22,6 @@ class MarianaTrench : public Tool {
  public:
   MarianaTrench();
 
-  void add_options(
-      boost::program_options::options_description& options) const override;
   void run(const boost::program_options::variables_map& variables) override;
 
  private:
