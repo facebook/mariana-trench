@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
 
   try {
     program_options::variables_map variables;
-    po::store(po::parse_command_line(argc, argv, options), variables);
+    program_options::store(program_options::parse_command_line(argc, argv, options), variables);
     if (variables.count("help")) {
       std::cerr << options;
       return 0;
@@ -56,38 +56,6 @@ int main(int argc, char* argv[]) {
       return ExitCode::invalid_argument_error("No JSON configuration file provided.");
     }
     
-    std::string json_file_path = variables["config"].as<std::string>();
-
-    // Use JsonReader to parse the JSON file
-    Json::Value json = marianatrench::JsonReader::parse_json_file(json_file_path);
-    // Validate the JSON object
-    marianatrench::JsonValidation::validate_object(json);
-
-    for (const auto& key : json.getMemberNames()) {
-      const auto& value = json[key];
-
-      if (value.isString()) {
-        variables.insert(std::make_pair(key, program_options::variable_value(value.asString(), false)));
-      } else if (value.isBool()) {
-        variables.insert(std::make_pair(key, program_options::variable_value(value.asBool(), false)));
-      } else if (value.isInt()) {
-        variables.insert(std::make_pair(key, program_options::variable_value(value.asInt(), false)));
-      } else if (value.isUInt()) {
-        variables.insert(std::make_pair(key, program_options::variable_value(value.asUInt(), false)));
-      } else if (value.isDouble()) {
-        variables.insert(std::make_pair(key, program_options::variable_value(value.asDouble(), false)));
-      } else if (value.isArray()) {
-        std::vector<std::string> array_values;
-        for (const auto& element : value) {
-          if (element.isString()) {
-            array_values.push_back(element.asString());
-          }
-        }
-        variables.insert(std::make_pair(key, program_options::variable_value(array_values, false)));
-      }
-    }
-
-    program_options::notify(variables);
 
     marianatrench::GlobalRedexContext redex_context(
         /* allow_class_duplicates */ true);
