@@ -147,368 +147,176 @@ Options::Options(
       export_origins_mode_(export_origins_mode),
       propagate_across_arguments_(propagate_across_arguments) {}
 
-Options::Options(const boost::program_options::variables_map& variables) {
-  system_jar_paths_ = parse_paths_list(
-      variables["system-jar-paths"].as<std::string>(),
-      std::nullopt,
-      /* check exist */ false);
+Options::Options(const Json::Value &json){
+    system_jar_paths_ = parse_paths_list(
+        json["system-jar-paths"].asString(),
+        std::nullopt,
+        /* check exist */ false);
 
-  apk_directory_ =
-      check_directory_exists(variables["apk-directory"].as<std::string>());
-  dex_directory_ =
-      check_directory_exists(variables["dex-directory"].as<std::string>());
+    apk_directory_ =
+        check_directory_exists(json["apk-directory"].asString());
+    dex_directory_ =
+        check_directory_exists(json["dex-directory"].asString());
 
-  if (!variables["models-paths"].empty()) {
-    models_paths_ = parse_paths_list(
-        variables["models-paths"].as<std::string>(), /* extension */ ".json");
-  }
-  if (!variables["field-models-paths"].empty()) {
-    field_models_paths_ = parse_paths_list(
-        variables["field-models-paths"].as<std::string>(),
+    if (!json["models-paths"].isNull()) {
+        models_paths_ = parse_paths_list(
+            json["models-paths"].asString(), /* extension */ ".json");
+    }
+
+    if (!json["field-models-paths"].isNull()) {
+        field_models_paths_ = parse_paths_list(
+            json["field-models-paths"].asString(),
+            /* extension */ ".json");
+    }
+
+    if (!json["literal-models-paths"].isNull()) {
+        literal_models_paths_ = parse_paths_list(
+            json["literal-models-paths"].asString(),
+            /* extension */ ".json");
+    }
+
+    rules_paths_ = parse_paths_list(
+        json["rules-paths"].asString(), /* extension */ ".json");
+
+    if (!json["lifecycles-paths"].isNull()) {
+        lifecycles_paths_ = parse_paths_list(
+            json["lifecycles-paths"].asString(),
+            /* extension */ ".json");
+    }
+
+    if (!json["shims-paths"].isNull()) {
+        shims_paths_ = parse_paths_list(
+            json["shims-paths"].asString(),
+            /* extension */ ".json");
+    }
+
+    if (!json["graphql-metadata-paths"].isNull()) {
+        graphql_metadata_paths_ = check_path_exists(
+            json["graphql-metadata-paths"].asString());
+    } else {
+        graphql_metadata_paths_ = "";
+    }
+
+    if (!json["proguard-configuration-paths"].isNull()) {
+        proguard_configuration_paths_ = parse_paths_list(
+            json["proguard-configuration-paths"].asString(),
+            /* extension */ ".pro");
+    }
+
+    if (!json["generated-models-directory"].isNull()) {
+        generated_models_directory_ = check_path_exists(
+            json["generated-models-directory"].asString());
+    }
+
+    generator_configuration_paths_ = parse_paths_list(
+        json["model-generator-configuration-paths"].asString(),
         /* extension */ ".json");
-  }
-  if (!variables["literal-models-paths"].empty()) {
-    literal_models_paths_ = parse_paths_list(
-        variables["literal-models-paths"].as<std::string>(),
-        /* extension */ ".json");
-  }
-  rules_paths_ = parse_paths_list(
-      variables["rules-paths"].as<std::string>(), /* extension */ ".json");
+    model_generators_configuration_ =
+        parse_json_configuration_files(generator_configuration_paths_);
 
-  if (!variables["lifecycles-paths"].empty()) {
-    lifecycles_paths_ = parse_paths_list(
-        variables["lifecycles-paths"].as<std::string>(),
-        /* extension */ ".json");
-  }
+    if (!json["model-generator-search-paths"].isNull()) {
+        model_generator_search_paths_ = parse_search_paths(
+            json["model-generator-search-paths"].asString());
+    }
 
-  if (!variables["shims-paths"].empty()) {
-    shims_paths_ = parse_paths_list(
-        variables["shims-paths"].as<std::string>(),
-        /* extension */ ".json");
-  }
+    repository_root_directory_ = check_directory_exists(
+        json["repository-root-directory"].asString());
+    source_root_directory_ = check_directory_exists(
+        json["source-root-directory"].asString());
 
-  if (!variables["graphql-metadata-paths"].empty()) {
-    graphql_metadata_paths_ = check_path_exists(
-        variables["graphql-metadata-paths"].as<std::string>());
-  } else {
-    graphql_metadata_paths_ = "";
-  }
+    if (!json["source-exclude-directories"].isNull()) {
+        source_exclude_directories_ = parse_paths_list(
+            json["source-exclude-directories"].asString(),
+            /* extension */ std::nullopt,
+            /* check_exist */ false);
+    }
 
-  if (!variables["proguard-configuration-paths"].empty()) {
-    proguard_configuration_paths_ = parse_paths_list(
-        variables["proguard-configuration-paths"].as<std::string>(),
-        /* extension */ ".pro");
-  }
+    if (!json["grepo-metadata-path"].isNull()) {
+        grepo_metadata_path_ =
+            check_path_exists(json["grepo-metadata-path"].asString());
+    }
 
-  if (!variables["generated-models-directory"].empty()) {
-    generated_models_directory_ = check_path_exists(
-        variables["generated-models-directory"].as<std::string>());
-  }
+    apk_path_ = check_path_exists(json["apk-path"].asString());
+    output_directory_ = std::filesystem::path(
+        check_directory_exists(json["output-directory"].asString()));
 
-  generator_configuration_paths_ = parse_paths_list(
-      variables["model-generator-configuration-paths"].as<std::string>(),
-      /* extension */ ".json");
-  model_generators_configuration_ =
-      parse_json_configuration_files(generator_configuration_paths_);
+    if (!json["sharded-models-directory"].isNull()) {
+        sharded_models_directory_ = std::filesystem::path(check_directory_exists(
+            json["sharded-models-directory"].asString()));
+    }
 
-  if (!variables["model-generator-search-paths"].empty()) {
-    model_generator_search_paths_ = parse_search_paths(
-        variables["model-generator-search-paths"].as<std::string>());
-  }
+    sequential_ = json["sequential"].asBool();
+    skip_source_indexing_ = json["skip-source-indexing"].asBool();
+    skip_analysis_ = json["skip-analysis"].asBool();
+    remove_unreachable_code_ = json["remove-unreachable-code"].asBool();
+    disable_parameter_type_overrides_ =
+        json["disable-parameter-type-overrides"].asBool();
+    disable_global_type_analysis_ = json["disable-global-type-analysis"].asBool();
+    verify_expected_output_ = json["verify-expected-output"].asBool();
+    maximum_method_analysis_time_ =
+        json["maximum-method-analysis-time"] ?
+        std::nullopt
+        : std::make_optional<int>(json["maximum-method-analysis-time"].asInt());
+    maximum_source_sink_distance_ =
+        json["maximum-source-sink-distance"].asInt();
+    emit_all_via_cast_features_ = 
+        json["emit-all-via-cast-features"].asBool();
 
-  repository_root_directory_ = check_directory_exists(
-      variables["repository-root-directory"].as<std::string>());
-  source_root_directory_ = check_directory_exists(
-      variables["source-root-directory"].as<std::string>());
+    if (!json["allow-via-cast-feature"].isNull()) {
+        for (const auto& value : json["allow-via-cast-feature"]) {
+            allow_via_cast_features_.push_back(value.asString());
+        }
+    }
 
-  if (!variables["source-exclude-directories"].empty()) {
-    source_exclude_directories_ = parse_paths_list(
-        variables["source-exclude-directories"].as<std::string>(),
-        /* extension */ std::nullopt,
-        /* check_exist */ false);
-  }
+    if (!json["log-method"].isNull()) {
+        for (const auto& value : json["log-method"]) {
+            log_methods_.push_back(value.asString());
+        }
+    }
 
-  if (!variables["grepo-metadata-path"].empty()) {
-    grepo_metadata_path_ =
-        check_path_exists(variables["grepo-metadata-path"].as<std::string>());
-  }
+    if (!json["log-method-types"].isNull()) {
+        for (const auto& value : json["log-method-types"]) {
+            log_method_types_.push_back(value.asString());
+        }
+    }
 
-  apk_path_ = check_path_exists(variables["apk-path"].as<std::string>());
-  output_directory_ = std::filesystem::path(
-      check_directory_exists(variables["output-directory"].as<std::string>()));
+    dump_class_hierarchies_ = json["dump-class-hierarchies"].asBool();
+    dump_class_intervals_ = json["dump-class-intervals"].asBool();
+    dump_overrides_ = json["dump-overrides"].asBool();
+    dump_call_graph_ = json["dump-call-graph"].asBool();
+    dump_dependencies_ = json["dump-dependencies"].asBool();
+    dump_methods_ = json["dump-methods"].asBool();
+    dump_coverage_info_ = json["dump-coverage-info"].asBool();
 
-  if (!variables["sharded-models-directory"].empty()) {
-    sharded_models_directory_ = std::filesystem::path(check_directory_exists(
-        variables["sharded-models-directory"].as<std::string>()));
-  }
+    if (!json["job-id"].isNull()) {
+        job_id_ = std::make_optional<std::string>(json["job-id"].asString());
+    }
 
-  sequential_ = variables.count("sequential") > 0;
-  skip_source_indexing_ = variables.count("skip-source-indexing") > 0;
-  skip_analysis_ = variables.count("skip-analysis") > 0;
-  remove_unreachable_code_ = variables.count("remove-unreachable-code") > 0;
-  disable_parameter_type_overrides_ =
-      variables.count("disable-parameter-type-overrides") > 0;
-  disable_global_type_analysis_ =
-      variables.count("disable-global-type-analysis") > 0;
-  verify_expected_output_ = variables.count("verify-expected-output") > 0;
+    if (!json["metarun-id"].isNull()) {
+        metarun_id_ = std::make_optional<std::string>(json["metarun-id"].asString());
+    }
 
-  maximum_method_analysis_time_ =
-      variables.count("maximum-method-analysis-time") == 0
-      ? std::nullopt
-      : std::make_optional<int>(
-            variables["maximum-method-analysis-time"].as<int>());
-  maximum_source_sink_distance_ =
-      variables["maximum-source-sink-distance"].as<int>();
-  emit_all_via_cast_features_ =
-      variables.count("emit-all-via-cast-features") > 0;
-  if (!variables["allow-via-cast-feature"].empty()) {
-    allow_via_cast_features_ =
-        variables["allow-via-cast-feature"].as<std::vector<std::string>>();
-  }
+    enable_cross_component_analysis_ = json["enable-cross-component-analysis"].asBool();
 
-  if (!variables["log-method"].empty()) {
-    log_methods_ = variables["log-method"].as<std::vector<std::string>>();
-  }
-  if (!variables["log-method-types"].empty()) {
-    log_method_types_ =
-        variables["log-method-types"].as<std::vector<std::string>>();
-  }
-  dump_class_hierarchies_ = variables.count("dump-class-hierarchies") > 0;
-  dump_class_intervals_ = variables.count("dump-class-intervals") > 0;
-  dump_overrides_ = variables.count("dump-overrides") > 0;
-  dump_call_graph_ = variables.count("dump-call-graph") > 0;
-  dump_dependencies_ = variables.count("dump-dependencies") > 0;
-  dump_methods_ = variables.count("dump-methods") > 0;
-  dump_coverage_info_ = variables.count("dump-coverage-info") > 0;
+    export_origins_mode_ = json["always-export-origins"] ?
+        ExportOriginsMode::Always
+        : ExportOriginsMode::OnlyOnOrigins;
 
-  job_id_ = variables.count("job-id") == 0
-      ? std::nullopt
-      : std::make_optional<std::string>(variables["job-id"].as<std::string>());
-  metarun_id_ = variables.count("metarun-id") == 0
-      ? std::nullopt
-      : std::make_optional<std::string>(
-            variables["metarun-id"].as<std::string>());
+    propagate_across_arguments_ = json["propagate-across-arguments"].asBool();
 
-  enable_cross_component_analysis_ =
-      variables.count("enable-cross-component-analysis") > 0;
-  export_origins_mode_ = variables.count("always-export-origins")
-      ? ExportOriginsMode::Always
-      : ExportOriginsMode::OnlyOnOrigins;
-  propagate_across_arguments_ =
-      variables.count("propagate-across-arguments") > 0;
-
-  if (!variables["heuristics"].empty()) {
-    heuristics_path_ = std::filesystem::path(
-        check_path_exists(variables["heuristics"].as<std::string>()));
-  }
+    if (!json["heuristics"].isNull()) {
+        heuristics_path_ = std::filesystem::path(
+            check_path_exists(json["heuristics"].asString()));
+    }
 }
 
+
 std::unique_ptr<Options> Options::options_from_json_file(const std::string& options_json_path){
-    program_options::variables_map variables;
     // Use JsonReader to parse the JSON file
     Json::Value json = marianatrench::JsonReader::parse_json_file(options_json_path);
     // Validate the JSON object
     marianatrench::JsonValidation::validate_object(json);
-
-    for (const auto& key : json.getMemberNames()) {
-      const auto& value = json[key];
-
-      if (value.isString()) {
-        variables.insert(std::make_pair(key, program_options::variable_value(value.asString(), false)));
-      } else if (value.isBool()) {
-        variables.insert(std::make_pair(key, program_options::variable_value(value.asBool(), false)));
-      } else if (value.isInt()) {
-        variables.insert(std::make_pair(key, program_options::variable_value(value.asInt(), false)));
-      } else if (value.isUInt()) {
-        variables.insert(std::make_pair(key, program_options::variable_value(value.asUInt(), false)));
-      } else if (value.isDouble()) {
-        variables.insert(std::make_pair(key, program_options::variable_value(value.asDouble(), false)));
-      } else if (value.isArray()) {
-        std::vector<std::string> array_values;
-        for (const auto& element : value) {
-          if (element.isString()) {
-            array_values.push_back(element.asString());
-          }
-        }
-        variables.insert(std::make_pair(key, program_options::variable_value(array_values, false)));
-      }
-    }
-    return std::make_unique<Options>(variables);
-}
-void Options::add_options(
-    boost::program_options::options_description& options) {
-  options.add_options()(
-      "system-jar-paths",
-      program_options::value<std::string>()->required(),
-      "A JSON configuration file with a list of paths to the system jars.");
-  options.add_options()(
-      "apk-directory",
-      program_options::value<std::string>()->required(),
-      "The extraced APK obtained by `redex -u`.");
-  options.add_options()(
-      "dex-directory",
-      program_options::value<std::string>()->required(),
-      "The extraced DEX obtained by `redex -u`.");
-
-  options.add_options()(
-      "models-paths",
-      program_options::value<std::string>(),
-      "A `;` separated list of models files and directories containing models files.");
-  options.add_options()(
-      "field-models-paths",
-      program_options::value<std::string>(),
-      "A `;` separated list of field models files and directories containing field models files.");
-  options.add_options()(
-      "literal-models-paths",
-      program_options::value<std::string>(),
-      "A `;` separated list of literal models files and directories containing literal models files.");
-  options.add_options()(
-      "rules-paths",
-      program_options::value<std::string>()->required(),
-      "A `;` separated list of rules files and directories containing rules files.");
-  options.add_options()(
-      "proguard-configuration-paths",
-      program_options::value<std::string>(),
-      "A `;` separated list of ProGuard configuration files or directories containing ProGuard configuration files.");
-  options.add_options()(
-      "lifecycles-paths",
-      program_options::value<std::string>(),
-      "A `;` separated list of files and directories containing life-cycles files.");
-  options.add_options()(
-      "shims-paths",
-      program_options::value<std::string>(),
-      "A `;` separated list of files and directories containing shims files.");
-  options.add_options()(
-      "graphql-metadata-paths",
-      program_options::value<std::string>(),
-      "A graphql metadata JSON mapping file that will be used to generate asset_xid's for the GraphQL sink.");
-  options.add_options()(
-      "generated-models-directory",
-      program_options::value<std::string>(),
-      "Directory where generated models will be stored.");
-  options.add_options()(
-      "model-generator-configuration-paths",
-      program_options::value<std::string>()->required(),
-      "A `;` separated list of JSON configuration files each specifying a list of absolute paths to JSON model generators or names of CPP model generators.");
-  options.add_options()(
-      "model-generator-search-paths",
-      program_options::value<std::string>(),
-      "A `;` separated list of paths where we look for JSON model generators.");
-
-  options.add_options()(
-      "repository-root-directory",
-      program_options::value<std::string>()->required(),
-      "The root of the repository.");
-  options.add_options()(
-      "source-root-directory",
-      program_options::value<std::string>()->required(),
-      "The root where source files for the APK can be found.");
-  options.add_options()(
-      "source-exclude-directories",
-      program_options::value<std::string>(),
-      "A `;`-separated list of directories that should be excluded from indexed source files.");
-  options.add_options()(
-      "grepo-metadata-path",
-      program_options::value<std::string>(),
-      "A json file containing grepo metadata for source file indexing.");
-
-  options.add_options()(
-      "apk-path",
-      program_options::value<std::string>()->required(),
-      "The APK to analyze.");
-  options.add_options()(
-      "output-directory",
-      program_options::value<std::string>()->required(),
-      "Directory to write results in.");
-  options.add_options()(
-      "sharded-models-directory",
-      program_options::value<std::string>(),
-      "Directory where sharded output models from a previous analysis is stored.");
-
-  options.add_options()(
-      "sequential", "Run the global fixpoint without parallelization.");
-  options.add_options()(
-      "skip-source-indexing", "Skip indexing java source files.");
-  options.add_options()("skip-analysis", "Skip taint analysis.");
-  options.add_options()(
-      "remove-unreachable-code",
-      "Prune unreachable code based on entry points specified in proguard configuration.");
-  options.add_options()(
-      "disable-parameter-type-overrides",
-      "Disable analyzing methods with specific parameter type information.");
-  options.add_options()(
-      "disable-global-type-analysis",
-      "Disable running Redex's global type analysis to infer types.");
-  options.add_options()(
-      "verify-expected-output",
-      "Verify any @Expected* annotations. Only valid for custom APKs containing said annotations. Results are written to `verification.json`.");
-  options.add_options()(
-      "maximum-method-analysis-time",
-      program_options::value<int>(),
-      "Specify number of seconds as a bound. If the analysis of a method takes longer than this then make the method obscure (default taint-in-taint-out).");
-
-  options.add_options()(
-      "maximum-source-sink-distance",
-      program_options::value<int>(),
-      "Limits the distance of sources and sinks from a trace entry point.");
-  options.add_options()(
-      "emit-all-via-cast-features",
-      "Compute and emit all via-cast features. There can be many such features which slows down the analysis so it is disabled by default. Use this to enable it.");
-  options.add_options()(
-      "allow-via-cast-feature",
-      program_options::value<std::vector<std::string>>(),
-      "Compute only these via-cast features. Specified as the full type name, e.g. Ljava/lang/Object;. Multiple inputs allowed. Use --emit-all-via-cast-features to allow everything.");
-
-  options.add_options()(
-      "log-method",
-      program_options::value<std::vector<std::string>>()->multitoken(),
-      "Enable logging for the given methods.");
-  options.add_options()(
-      "log-method-types",
-      program_options::value<std::vector<std::string>>()->multitoken(),
-      "Enable logging of types for the given methods.");
-  options.add_options()(
-      "dump-class-hierarchies",
-      "Dump the class hierarchies in `class_hierarchies.json`.");
-  options.add_options()(
-      "dump-class-intervals",
-      "Dump the class intervals in `class_intervals.json`. For test/debug only.");
-  options.add_options()(
-      "dump-overrides", "Dump the override graph in `overrides.json`.");
-  options.add_options()(
-      "dump-call-graph", "Dump the call graph in `call_graph.json`.");
-  options.add_options()(
-      "dump-dependencies", "Dump the dependency graph in `dependencies.json`.");
-  options.add_options()(
-      "dump-methods", "Dump the list of method signatures in `methods.json`.");
-  options.add_options()(
-      "dump-coverage-info",
-      "Dump the file coverage info into `file_coverage.txt` and rule coverage info into `rule_coverage.json`.");
-
-  options.add_options()(
-      "job-id",
-      program_options::value<std::string>(),
-      "Identifier for the current analysis run.");
-  options.add_options()(
-      "metarun-id",
-      program_options::value<std::string>(),
-      "Identifier for a group of analysis runs.");
-  options.add_options()(
-      "enable-cross-component-analysis",
-      "Compute taint flows across Android components.");
-  options.add_options()(
-      "enable-class-intervals",
-      "Compute and apply class intervals for improved precision.");
-  options.add_options()(
-      "always-export-origins",
-      "Export origin information for all frames instead of only leaves. Used for debugging.");
-  options.add_options()(
-      "propagate-across-arguments",
-      "Enable taint propagation across object type arguments. By default, taint propagation is only tracked for return values and the `this` argument. This enables taint propagation across method invocations for all other object type arguments as well.");
-  options.add_options()(
-      "heuristics",
-      program_options::value<std::string>(),
-      "Path to JSON configuration file which specifies heuristics parameters to use during the analysis. See the documentation for available heuristics parameters.");
+    return std::make_unique<Options>(json);
 }
 
 const std::vector<std::string>& Options::models_paths() const {
