@@ -30,6 +30,7 @@
 #include <mariana-trench/Sanitizer.h>
 #include <mariana-trench/SetterAccessPathConstantDomain.h>
 #include <mariana-trench/Taint.h>
+#include <mariana-trench/TaintAccessPathTree.h>
 #include <mariana-trench/TaintTree.h>
 #include <mariana-trench/model-generator/ModelGeneratorNameSet.h>
 
