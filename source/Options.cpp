@@ -148,10 +148,7 @@ Options::Options(
       propagate_across_arguments_(propagate_across_arguments) {}
 
 Options::Options(const Json::Value &json){
-    system_jar_paths_ = parse_paths_list(
-        JsonValidation::string(json,"system-jar-paths"),
-        std::nullopt,
-        /* check exist */ false);
+    system_jar_paths_ = JsonValidation::string_list(json,"system-jar-paths");
 
     apk_directory_ =
         check_directory_exists(JsonValidation::string(json,"apk-directory"));
