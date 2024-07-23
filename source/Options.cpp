@@ -6,7 +6,7 @@
  */
 
 #include <optional>
-
+#include <iostream>
 #include <boost/algorithm/string.hpp>
 #include <fmt/format.h>
 
@@ -303,6 +303,44 @@ Options::Options(const boost::program_options::variables_map& variables) {
   }
 }
 
+Options* Options::options_from_json_file(const std::string& options_json_path){
+
+    std::cout<<"======================\n";
+    std::cout << "options from json file options_json_path: " << options_json_path << std::endl;
+    std::cout<<"======================\n";
+    program_options::variables_map variables;
+    // Use JsonReader to parse the JSON file
+    Json::Value json = marianatrench::JsonReader::parse_json_file(options_json_path);
+    // Validate the JSON object
+    marianatrench::JsonValidation::validate_object(json);
+
+    for (const auto& key : json.getMemberNames()) {
+      const auto& value = json[key];
+
+      if (value.isString()) {
+        variables.insert(std::make_pair(key, program_options::variable_value(value.asString(), false)));
+      } else if (value.isBool()) {
+        variables.insert(std::make_pair(key, program_options::variable_value(value.asBool(), false)));
+      } else if (value.isInt()) {
+        variables.insert(std::make_pair(key, program_options::variable_value(value.asInt(), false)));
+      } else if (value.isUInt()) {
+        variables.insert(std::make_pair(key, program_options::variable_value(value.asUInt(), false)));
+      } else if (value.isDouble()) {
+        variables.insert(std::make_pair(key, program_options::variable_value(value.asDouble(), false)));
+      } else if (value.isArray()) {
+        std::vector<std::string> array_values;
+        for (const auto& element : value) {
+          if (element.isString()) {
+            array_values.push_back(element.asString());
+          }
+        }
+        variables.insert(std::make_pair(key, program_options::variable_value(array_values, false)));
+      }
+    }
+
+    Options * options = new Options(variables);
+    return options;
+}
 void Options::add_options(
     boost::program_options::options_description& options) {
   options.add_options()(
