@@ -450,7 +450,8 @@ TEST_F(ModelTest, LessOrEqual) {
           /* global_sanitizers */
           {Sanitizer(
               SanitizerKind::Sources,
-              KindSetAbstractDomain({context.kind_factory->get("Kind")}))})
+              KindSetAbstractDomain(
+                  SourceSinkKind::source(context.kind_factory->get("Kind"))))})
           .leq(Model(
               /* method */ nullptr,
               context,
@@ -480,7 +481,8 @@ TEST_F(ModelTest, LessOrEqual) {
           {{Root(Root::Kind::Return),
             SanitizerSet(Sanitizer(
                 SanitizerKind::Sources,
-                KindSetAbstractDomain({context.kind_factory->get("Kind")})))}})
+                KindSetAbstractDomain(SourceSinkKind::source(
+                    context.kind_factory->get("Kind")))))}})
           .leq(Model(
               /* method */ nullptr,
               context,
@@ -915,7 +917,9 @@ TEST_F(ModelTest, Join) {
       /* sinks */ {},
       /* propagations */ {},
       /* global_sanitizers */
-      {Sanitizer(SanitizerKind::Sources, KindSetAbstractDomain({kind1}))});
+      {Sanitizer(
+          SanitizerKind::Sources,
+          KindSetAbstractDomain(SourceSinkKind::source(kind1)))});
   model_with_sanitizers.join_with(Model(
       /* method */ nullptr,
       context,
@@ -939,7 +943,9 @@ TEST_F(ModelTest, Join) {
           /* sinks */ {},
           /* propagations */ {},
           /* global_sanitizers */
-          {Sanitizer(SanitizerKind::Sources, KindSetAbstractDomain({kind1})),
+          {Sanitizer(
+               SanitizerKind::Sources,
+               KindSetAbstractDomain(SourceSinkKind::source(kind1))),
            Sanitizer(
                SanitizerKind::Propagations, KindSetAbstractDomain::top())}));
 
@@ -953,7 +959,9 @@ TEST_F(ModelTest, Join) {
       /* sinks */ {},
       /* propagations */ {},
       /* global_sanitizers */
-      {Sanitizer(SanitizerKind::Sources, KindSetAbstractDomain({kind2}))}));
+      {Sanitizer(
+          SanitizerKind::Sources,
+          KindSetAbstractDomain(SourceSinkKind::source(kind2)))}));
   EXPECT_EQ(
       model_with_sanitizers,
       Model(
@@ -967,7 +975,10 @@ TEST_F(ModelTest, Join) {
           /* propagations */ {},
           /* global_sanitizers */
           {Sanitizer(
-               SanitizerKind::Sources, KindSetAbstractDomain({kind1, kind2})),
+               SanitizerKind::Sources,
+               KindSetAbstractDomain(
+                   {SourceSinkKind::source(kind1),
+                    SourceSinkKind::source(kind2)})),
            Sanitizer(
                SanitizerKind::Propagations, KindSetAbstractDomain::top())}));
 
@@ -985,7 +996,8 @@ TEST_F(ModelTest, Join) {
       /* port_sanitizers */
       {{Root(Root::Kind::Return),
         SanitizerSet(Sanitizer(
-            SanitizerKind::Sources, KindSetAbstractDomain({kind1})))}});
+            SanitizerKind::Sources,
+            KindSetAbstractDomain(SourceSinkKind::source(kind1))))}});
   model_with_port_sanitizers.join_with(Model(
       /* method */ nullptr,
       context,
@@ -1015,7 +1027,8 @@ TEST_F(ModelTest, Join) {
           /* port_sanitizers */
           {{Root(Root::Kind::Return),
             SanitizerSet(Sanitizer(
-                SanitizerKind::Sources, KindSetAbstractDomain({kind1})))},
+                SanitizerKind::Sources,
+                KindSetAbstractDomain(SourceSinkKind::source(kind1))))},
            {Root(Root::Kind::Argument, 1),
             SanitizerSet(Sanitizer(
                 SanitizerKind::Sinks, KindSetAbstractDomain::top()))}}));
@@ -1371,7 +1384,8 @@ TEST_F(ModelTest, SerializationDeserialization) {
         /* port_sanitizers */
         {{Root(Root::Kind::Return),
           SanitizerSet(Sanitizer(
-              SanitizerKind::Sources, KindSetAbstractDomain({source_kind})))}},
+              SanitizerKind::Sources,
+              KindSetAbstractDomain(SourceSinkKind::source(source_kind))))}},
         /* attach_to_sources */
         {{Root(Root::Kind::Argument, 0), FeatureSet{feature}}},
         /* attach_to_sinks */

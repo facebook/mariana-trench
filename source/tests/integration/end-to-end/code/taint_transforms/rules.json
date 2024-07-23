@@ -125,10 +125,10 @@
     "code": 9,
     "description": "",
     "sources": [
-      "SourceA"
+      "A"
     ],
     "sinks": [
-      "SinkB"
+      "B"
     ]
   },
   {
@@ -136,10 +136,10 @@
     "code": 10,
     "description": "",
     "sources": [
-      "SourceA"
+      "A"
     ],
     "sinks": [
-      "SinkB"
+      "B"
     ],
     "transforms": [
       "TransformX"
@@ -150,10 +150,10 @@
     "code": 11,
     "description": "",
     "sources": [
-      "SourceA"
+      "A"
     ],
     "sinks": [
-      "SinkB"
+      "B"
     ],
     "transforms": [
       "TransformY",
@@ -165,10 +165,10 @@
     "code": 12,
     "description": "",
     "sources": [
-      "SourceA"
+      "A"
     ],
     "sinks": [
-      "SinkB"
+      "B"
     ],
     "transforms": [
       "TransformX",

@@ -245,7 +245,8 @@ class Frame final : public sparta::AbstractDomain<Frame> {
       const KindFactory& kind_factory,
       const TransformsFactory& transforms_factory,
       const UsedKinds& used_kinds,
-      const TransformList* local_transforms) const;
+      const TransformList* local_transforms,
+      transforms::TransformDirection direction) const;
 
   std::vector<const Feature*> materialize_via_type_of_ports(
       const Method* callee,

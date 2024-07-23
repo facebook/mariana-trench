@@ -20,7 +20,7 @@
 namespace marianatrench {
 
 using KindSetAbstractDomain =
-    sparta::PatriciaTreeSetAbstractDomain<const Kind*>;
+    sparta::PatriciaTreeSetAbstractDomain<SourceSinkKind>;
 
 enum class SanitizerKind { Sources, Sinks, Propagations };
 

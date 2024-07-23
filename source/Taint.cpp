@@ -172,12 +172,17 @@ Taint Taint::apply_transform(
     const KindFactory& kind_factory,
     const TransformsFactory& transforms_factory,
     const UsedKinds& used_kinds,
-    const TransformList* local_transforms) const {
+    const TransformList* local_transforms,
+    transforms::TransformDirection direction) const {
   Taint result{};
 
   for (const auto& [_, local_taint] : map_.bindings()) {
     auto new_callee_frames = local_taint.apply_transform(
-        kind_factory, transforms_factory, used_kinds, local_transforms);
+        kind_factory,
+        transforms_factory,
+        used_kinds,
+        local_transforms,
+        direction);
     if (new_callee_frames.is_bottom()) {
       continue;
     }

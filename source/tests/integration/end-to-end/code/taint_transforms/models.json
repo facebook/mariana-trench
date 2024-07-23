@@ -30,7 +30,7 @@
     "method": "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceA:()Ljava/lang/Object;",
     "generations": [
       {
-        "kind": "SourceA",
+        "kind": "A",
         "port": "Return"
       }
     ]
@@ -39,7 +39,7 @@
     "method": "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sinkB:(Ljava/lang/Object;)V",
     "sinks": [
       {
-        "kind": "SinkB",
+        "kind": "B",
         "port": "Argument(0)"
       }
     ]
@@ -52,7 +52,7 @@
         "port": "Argument(0)",
         "kinds": [
           {
-            "kind": "SourceA"
+            "kind": "Source[A]"
           }
         ]
       }
@@ -66,7 +66,7 @@
         "port": "Argument(0)",
         "kinds": [
           {
-            "kind": "SinkB"
+            "kind": "Sink[B]"
           }
         ]
       }
@@ -125,7 +125,7 @@
         "port": "Argument(0)",
         "kinds": [
           {
-            "kind": "SourceA"
+            "kind": "Source[A]"
           }
         ]
       }
@@ -139,7 +139,7 @@
         "port": "Argument(0)",
         "kinds": [
           {
-            "kind": "SourceA"
+            "kind": "Source[A]"
           }
         ]
       }

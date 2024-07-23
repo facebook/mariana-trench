@@ -12,6 +12,7 @@
 
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/SanitizerSetTransform.h>
+#include <mariana-trench/TransformOperations.h>
 #include <mariana-trench/TransformsFactory.h>
 
 namespace marianatrench {
@@ -27,8 +28,9 @@ const SanitizerSetTransform* SanitizerSetTransform::from_trace_string(
       boost::ends_with(transform, "]")) {
     auto kind_str = boost::replace_first_copy(transform, "Sanitize[", "");
     boost::replace_last(kind_str, "]", "");
-    const auto* kind = Kind::from_trace_string(kind_str, context);
 
+    const auto kind = SourceSinkKind::from_trace_string(
+        kind_str, context, SanitizerKind::Propagations);
     return context.transforms_factory->create_sanitizer_set_transform(
         Set{kind});
   }
@@ -43,9 +45,9 @@ std::string SanitizerSetTransform::to_trace_string() const {
   std::vector<std::string> sanitized_kinds;
   sanitized_kinds.reserve(kinds_.size());
 
-  for (const auto* kind : kinds_) {
-    sanitized_kinds.push_back(
-        fmt::format("Sanitize[{}]", kind->to_trace_string()));
+  for (const auto kind : kinds_) {
+    sanitized_kinds.push_back(fmt::format(
+        "Sanitize[{}]", kind.to_trace_string(SanitizerKind::Propagations)));
   }
 
   std::sort(sanitized_kinds.begin(), sanitized_kinds.end());
@@ -56,10 +58,8 @@ std::string SanitizerSetTransform::to_trace_string() const {
 const SanitizerSetTransform* SanitizerSetTransform::from_config_json(
     const Json::Value& transform,
     Context& context) {
-  JsonValidation::validate_object(transform);
-
-  const auto* kind = Kind::from_json(transform, context);
-
+  const auto kind = SourceSinkKind::from_config_json(
+      transform, context, SanitizerKind::Propagations);
   return context.transforms_factory->create_sanitizer_set_transform(Set{kind});
 }
 

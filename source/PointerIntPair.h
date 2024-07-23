@@ -176,4 +176,4 @@ class PointerIntPair final {
   uintptr_t value_ = 0;
 };
 
-}; // namespace marianatrench
+} // namespace marianatrench

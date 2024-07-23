@@ -40,16 +40,20 @@ TEST_F(SanitizerTest, SanitizerLeq) {
   EXPECT_TRUE(Sanitizer(
                   SanitizerKind::Sources,
                   /* kinds */
-                  KindSetAbstractDomain({kind1}))
+                  KindSetAbstractDomain(SourceSinkKind::source(kind1)))
                   .leq(Sanitizer(
                       SanitizerKind::Sources,
                       /* kinds */ KindSetAbstractDomain::top())));
-  EXPECT_FALSE(Sanitizer(
-                   SanitizerKind::Sources,
-                   /* kinds */ KindSetAbstractDomain({kind1, kind2}))
-                   .leq(Sanitizer(
-                       SanitizerKind::Sources,
-                       /* kinds */ KindSetAbstractDomain({kind1}))));
+  EXPECT_FALSE(
+      Sanitizer(
+          SanitizerKind::Sources,
+          /* kinds */
+          KindSetAbstractDomain(
+              {SourceSinkKind::source(kind1), SourceSinkKind::source(kind2)}))
+          .leq(Sanitizer(
+              SanitizerKind::Sources,
+              /* kinds */
+              KindSetAbstractDomain(SourceSinkKind::source(kind1)))));
   EXPECT_TRUE(Sanitizer(
                   SanitizerKind::Sinks,
                   /* kinds */ KindSetAbstractDomain::top())
@@ -58,12 +62,18 @@ TEST_F(SanitizerTest, SanitizerLeq) {
                       /* kinds */ KindSetAbstractDomain::top())));
 
   // Comparison with different kinds
-  EXPECT_FALSE(Sanitizer(
-                   SanitizerKind::Sinks,
-                   /* kinds */ KindSetAbstractDomain({kind1, kind2}))
-                   .leq(Sanitizer(
-                       SanitizerKind::Sources,
-                       /* kinds */ KindSetAbstractDomain({kind1, kind2}))));
+  EXPECT_FALSE(
+      Sanitizer(
+          SanitizerKind::Sinks,
+          /* kinds */
+          KindSetAbstractDomain(
+              {SourceSinkKind::sink(kind1), SourceSinkKind::sink(kind2)}))
+          .leq(Sanitizer(
+              SanitizerKind::Sources,
+              /* kinds */
+              KindSetAbstractDomain(
+                  {SourceSinkKind::source(kind1),
+                   SourceSinkKind::source(kind2)}))));
 }
 
 TEST_F(SanitizerTest, SanitizerEquals) {
@@ -111,7 +121,7 @@ TEST_F(SanitizerTest, SanitizerJoin) {
   EXPECT_EQ(
       Sanitizer(
           SanitizerKind::Sources,
-          /* kinds */ KindSetAbstractDomain(kind1))
+          /* kinds */ KindSetAbstractDomain(SourceSinkKind::source(kind1)))
           .join(Sanitizer(
               SanitizerKind::Sources,
               /* kinds */ KindSetAbstractDomain::top())),
@@ -121,20 +131,28 @@ TEST_F(SanitizerTest, SanitizerJoin) {
   EXPECT_EQ(
       Sanitizer(
           SanitizerKind::Sinks,
-          /* kinds */ KindSetAbstractDomain({kind1, kind2}))
+          /* kinds */
+          KindSetAbstractDomain(
+              {SourceSinkKind::sink(kind1), SourceSinkKind::sink(kind2)}))
           .join(Sanitizer(
               SanitizerKind::Sinks,
-              /* kinds */ KindSetAbstractDomain({kind2, kind3}))),
+              /* kinds */
+              KindSetAbstractDomain(
+                  {SourceSinkKind::sink(kind2), SourceSinkKind::sink(kind3)}))),
       Sanitizer(
           SanitizerKind::Sinks,
-          /* kinds */ KindSetAbstractDomain({kind1, kind2, kind3})));
+          /* kinds */
+          KindSetAbstractDomain(
+              {SourceSinkKind::sink(kind1),
+               SourceSinkKind::sink(kind2),
+               SourceSinkKind::sink(kind3)})));
   EXPECT_EQ(
       Sanitizer(
           SanitizerKind::Sinks,
           /* kinds */ KindSetAbstractDomain::top())
           .join(Sanitizer(
               SanitizerKind::Sinks,
-              /* kinds */ KindSetAbstractDomain({kind1}))),
+              /* kinds */ KindSetAbstractDomain(SourceSinkKind::sink(kind1)))),
       Sanitizer(
           SanitizerKind::Sinks,
           /* kinds */ KindSetAbstractDomain::top()));

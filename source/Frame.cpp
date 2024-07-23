@@ -220,13 +220,15 @@ Frame Frame::apply_transform(
     const KindFactory& kind_factory,
     const TransformsFactory& transforms_factory,
     const UsedKinds& used_kinds,
-    const TransformList* local_transforms) const {
+    const TransformList* local_transforms,
+    transforms::TransformDirection direction) const {
   const Kind* base_kind = kind_;
   const TransformList* global_transforms = nullptr;
 
   // See if we can drop some taint here
   if (local_transforms
-          ->sanitizes<TransformList::ApplicationDirection::Backward>(kind_)) {
+          ->sanitizes<TransformList::ApplicationDirection::Backward>(
+              kind_, direction)) {
     return Frame::bottom();
   }
 

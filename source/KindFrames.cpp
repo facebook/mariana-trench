@@ -15,6 +15,7 @@
 #include <mariana-trench/Log.h>
 #include <mariana-trench/OriginFactory.h>
 #include <mariana-trench/PathTreeDomain.h>
+#include <mariana-trench/TransformOperations.h>
 
 namespace marianatrench {
 
@@ -437,8 +438,10 @@ KindFrames KindFrames::add_sanitize_transform(
   mt_assert(base_kind != nullptr);
 
   // Check and see if we can drop some taints here
+  // We use transforms::TransformDirection::Backward because this is always
+  // called right after backward taint transfer
   if (new_transforms.sanitizes<TransformList::ApplicationDirection::Backward>(
-          base_kind)) {
+          base_kind, transforms::TransformDirection::Backward)) {
     return KindFrames::bottom();
   }
 

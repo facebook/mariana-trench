@@ -8,6 +8,7 @@
 #include <gmock/gmock.h>
 
 #include <mariana-trench/TransformList.h>
+#include <mariana-trench/TransformOperations.h>
 #include <mariana-trench/tests/Test.h>
 
 namespace marianatrench {
@@ -27,13 +28,14 @@ TEST_F(TransformListTest, Canonicalize) {
   const Kind* kind_b = context.kind_factory->get("B");
   const Transform* sanitize_a =
       context.transforms_factory->create_sanitizer_set_transform(
-          SanitizerSetTransform::Set{kind_a});
+          SanitizerSetTransform::Set{SourceSinkKind::source(kind_a)});
   const Transform* sanitize_b =
       context.transforms_factory->create_sanitizer_set_transform(
-          SanitizerSetTransform::Set{kind_b});
+          SanitizerSetTransform::Set{SourceSinkKind::source(kind_b)});
   const Transform* sanitize_a_b =
       context.transforms_factory->create_sanitizer_set_transform(
-          SanitizerSetTransform::Set{kind_a, kind_b});
+          SanitizerSetTransform::Set{
+              SourceSinkKind::source(kind_a), SourceSinkKind::source(kind_b)});
 
   // canonicalize does not change the list if there is no sanitizer
   EXPECT_EQ(
@@ -126,107 +128,134 @@ TEST_F(TransformListTest, Sanitize) {
 
   const Transform* sanitize_a =
       context.transforms_factory->create_sanitizer_set_transform(
-          SanitizerSetTransform::Set{kind_a});
+          SanitizerSetTransform::Set{SourceSinkKind::source(kind_a)});
   const Transform* sanitize_b =
       context.transforms_factory->create_sanitizer_set_transform(
-          SanitizerSetTransform::Set{kind_b});
+          SanitizerSetTransform::Set{SourceSinkKind::source(kind_b)});
   const Transform* sanitize_a_b =
       context.transforms_factory->create_sanitizer_set_transform(
-          SanitizerSetTransform::Set{kind_a, kind_b});
+          SanitizerSetTransform::Set{
+              SourceSinkKind::source(kind_a), SourceSinkKind::source(kind_b)});
 
   // No sanitizers
   EXPECT_FALSE(context.transforms_factory
                    ->create(std::vector{transform_x, transform_y, transform_z})
-                   ->sanitizes<Forward>(kind_a));
+                   ->sanitizes<Forward>(
+                       kind_a, transforms::TransformDirection::Forward));
   EXPECT_FALSE(context.transforms_factory
                    ->create(std::vector{transform_x, transform_y, transform_z})
-                   ->sanitizes<Backward>(kind_a));
+                   ->sanitizes<Backward>(
+                       kind_a, transforms::TransformDirection::Forward));
   EXPECT_FALSE(context.transforms_factory
                    ->create(std::vector{transform_z, transform_x, transform_y})
-                   ->sanitizes<Forward>(kind_a));
+                   ->sanitizes<Forward>(
+                       kind_a, transforms::TransformDirection::Forward));
   EXPECT_FALSE(context.transforms_factory
                    ->create(std::vector{transform_z, transform_x, transform_y})
-                   ->sanitizes<Backward>(kind_a));
+                   ->sanitizes<Backward>(
+                       kind_a, transforms::TransformDirection::Forward));
 
   // Sanitizer in the front/back
   EXPECT_TRUE(context.transforms_factory
                   ->create(std::vector{sanitize_a, transform_x, transform_y})
-                  ->sanitizes<Forward>(kind_a));
+                  ->sanitizes<Forward>(
+                      kind_a, transforms::TransformDirection::Forward));
   EXPECT_TRUE(context.transforms_factory
                   ->create(std::vector{transform_x, transform_y, sanitize_a})
-                  ->sanitizes<Backward>(kind_a));
+                  ->sanitizes<Backward>(
+                      kind_a, transforms::TransformDirection::Forward));
 
   // Multiple sanitizer in the front/back
   EXPECT_TRUE(context.transforms_factory
                   ->create(std::vector{sanitize_a_b, transform_x, transform_y})
-                  ->sanitizes<Forward>(kind_a));
+                  ->sanitizes<Forward>(
+                      kind_a, transforms::TransformDirection::Forward));
   EXPECT_TRUE(context.transforms_factory
                   ->create(std::vector{transform_x, transform_y, sanitize_a_b})
-                  ->sanitizes<Backward>(kind_b));
+                  ->sanitizes<Backward>(
+                      kind_b, transforms::TransformDirection::Forward));
   EXPECT_TRUE(context.transforms_factory
                   ->create(std::vector{sanitize_a_b, transform_x, transform_y})
-                  ->sanitizes<Forward>(kind_b));
+                  ->sanitizes<Forward>(
+                      kind_b, transforms::TransformDirection::Forward));
   EXPECT_TRUE(context.transforms_factory
                   ->create(std::vector{transform_x, transform_y, sanitize_a_b})
-                  ->sanitizes<Backward>(kind_a));
+                  ->sanitizes<Backward>(
+                      kind_a, transforms::TransformDirection::Forward));
 
   // Sanitizer in the middle
   EXPECT_FALSE(context.transforms_factory
                    ->create(std::vector{transform_z, sanitize_a_b, transform_y})
-                   ->sanitizes<Forward>(kind_a));
+                   ->sanitizes<Forward>(
+                       kind_a, transforms::TransformDirection::Forward));
   EXPECT_FALSE(context.transforms_factory
                    ->create(std::vector{transform_z, sanitize_a_b, transform_y})
-                   ->sanitizes<Backward>(kind_a));
+                   ->sanitizes<Backward>(
+                       kind_a, transforms::TransformDirection::Forward));
 
   // Passing in a TransformKind
   EXPECT_TRUE(
       context.transforms_factory
           ->create(std::vector{transform_x, transform_y, sanitize_a})
-          ->sanitizes<Backward>(context.kind_factory->transform_kind(
-              kind_a,
-              context.transforms_factory->create(std::vector{sanitize_b}),
-              nullptr)));
+          ->sanitizes<Backward>(
+              context.kind_factory->transform_kind(
+                  kind_a,
+                  context.transforms_factory->create(std::vector{sanitize_b}),
+                  nullptr),
+              transforms::TransformDirection::Forward));
   EXPECT_FALSE(
       context.transforms_factory
           ->create(std::vector{transform_x, transform_y, sanitize_a})
-          ->sanitizes<Backward>(context.kind_factory->transform_kind(
-              kind_a,
-              context.transforms_factory->create(std::vector{transform_z}),
-              nullptr)));
+          ->sanitizes<Backward>(
+              context.kind_factory->transform_kind(
+                  kind_a,
+                  context.transforms_factory->create(std::vector{transform_z}),
+                  nullptr),
+              transforms::TransformDirection::Forward));
   EXPECT_FALSE(
       context.transforms_factory->create(std::vector{sanitize_a, transform_x})
-          ->sanitizes<Backward>(context.kind_factory->transform_kind(
-              kind_a,
-              context.transforms_factory->create(std::vector{transform_z}),
-              nullptr)));
+          ->sanitizes<Backward>(
+              context.kind_factory->transform_kind(
+                  kind_a,
+                  context.transforms_factory->create(std::vector{transform_z}),
+                  nullptr),
+              transforms::TransformDirection::Forward));
   EXPECT_FALSE(context.transforms_factory
                    ->create(std::vector{transform_x, transform_y, sanitize_a})
-                   ->sanitizes<Backward>(context.kind_factory->transform_kind(
-                       kind_a,
-                       context.transforms_factory->create(
-                           std::vector{transform_z, sanitize_b}),
-                       nullptr)));
+                   ->sanitizes<Backward>(
+                       context.kind_factory->transform_kind(
+                           kind_a,
+                           context.transforms_factory->create(
+                               std::vector{transform_z, sanitize_b}),
+                           nullptr),
+                       transforms::TransformDirection::Forward));
   EXPECT_FALSE(context.transforms_factory
                    ->create(std::vector{transform_x, transform_y, sanitize_a})
-                   ->sanitizes<Backward>(context.kind_factory->transform_kind(
-                       kind_a,
-                       context.transforms_factory->create(
-                           std::vector{sanitize_b, transform_z}),
-                       nullptr)));
+                   ->sanitizes<Backward>(
+                       context.kind_factory->transform_kind(
+                           kind_a,
+                           context.transforms_factory->create(
+                               std::vector{sanitize_b, transform_z}),
+                           nullptr),
+                       transforms::TransformDirection::Forward));
   EXPECT_FALSE(context.transforms_factory
                    ->create(std::vector{sanitize_a, transform_x, transform_y})
-                   ->sanitizes<Backward>(context.kind_factory->transform_kind(
-                       kind_a,
-                       context.transforms_factory->create(
-                           std::vector{transform_z, sanitize_b}),
-                       nullptr)));
+                   ->sanitizes<Backward>(
+                       context.kind_factory->transform_kind(
+                           kind_a,
+                           context.transforms_factory->create(
+                               std::vector{transform_z, sanitize_b}),
+                           nullptr),
+                       transforms::TransformDirection::Forward));
   EXPECT_FALSE(context.transforms_factory
                    ->create(std::vector{sanitize_a, transform_x, transform_y})
-                   ->sanitizes<Backward>(context.kind_factory->transform_kind(
-                       kind_a,
-                       context.transforms_factory->create(
-                           std::vector{sanitize_b, transform_z}),
-                       nullptr)));
+                   ->sanitizes<Backward>(
+                       context.kind_factory->transform_kind(
+                           kind_a,
+                           context.transforms_factory->create(
+                               std::vector{sanitize_b, transform_z}),
+                           nullptr),
+                       transforms::TransformDirection::Forward));
 }
 
 } // namespace marianatrench

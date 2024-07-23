@@ -63,7 +63,8 @@ TaintTree apply_propagation(
             context->kind_factory,
             context->transforms_factory,
             context->used_kinds,
-            all_transforms),
+            all_transforms,
+            direction),
         UpdateKind::Weak);
   }
 
@@ -81,11 +82,13 @@ Taint apply_source_as_transform_to_sink(
     const TransformList* source_as_transform,
     const Taint& sink_taint,
     std::string_view callee) {
+  // Direction of applying on sink should be the same as backward transform
   auto transformed_sink_taint = sink_taint.apply_transform(
       context->kind_factory,
       context->transforms_factory,
       context->used_kinds,
-      source_as_transform);
+      source_as_transform,
+      TransformDirection::Backward);
 
   // Add additional features
   transformed_sink_taint.add_locally_inferred_features(

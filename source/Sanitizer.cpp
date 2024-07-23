@@ -119,7 +119,8 @@ const Sanitizer Sanitizer::from_json(
     kinds = KindSetAbstractDomain();
     for (const auto& kind_json :
          JsonValidation::nonempty_array(value, "kinds")) {
-      kinds.add(Kind::from_config_json(kind_json, context));
+      kinds.add(
+          SourceSinkKind::from_config_json(kind_json, context, sanitizer_kind));
     }
   } else {
     kinds = KindSetAbstractDomain::top();
@@ -145,8 +146,8 @@ Json::Value Sanitizer::to_json() const {
 
   if (kinds_.is_value()) {
     auto kinds_json = Json::Value(Json::arrayValue);
-    for (const auto* kind : kinds_.elements()) {
-      kinds_json.append(kind->to_json());
+    for (const auto kind : kinds_.elements()) {
+      kinds_json.append(kind.to_json(sanitizer_kind_));
     }
     value["kinds"] = kinds_json;
   }

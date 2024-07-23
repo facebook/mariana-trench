@@ -16,6 +16,7 @@
 #include <mariana-trench/Rules.h>
 #include <mariana-trench/SourceSinkRule.h>
 #include <mariana-trench/SourceSinkWithExploitabilityRule.h>
+#include <mariana-trench/TransformOperations.h>
 
 namespace marianatrench {
 
@@ -189,14 +190,14 @@ const Kind* MT_NULLABLE canonicalize_sink_kind(
 
     // Check if we can sanitize the source
     if (all_transforms->sanitizes<TransformList::ApplicationDirection::Forward>(
-            source_base_kind)) {
+            source_base_kind, transforms::TransformDirection::Forward)) {
       return nullptr;
     }
 
     // Check if we can sanitize the sink
     if (all_transforms
             ->sanitizes<TransformList::ApplicationDirection::Backward>(
-                sink_base_kind)) {
+                sink_base_kind, transforms::TransformDirection::Backward)) {
       return nullptr;
     }
 

@@ -3454,7 +3454,7 @@
       "kinds" : 
       [
         {
-          "kind" : "SSRF"
+          "kind" : "Sink[SSRF]"
         }
       ],
       "port" : "Argument(0)",

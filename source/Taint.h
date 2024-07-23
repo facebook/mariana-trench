@@ -219,7 +219,8 @@ class Taint final : public sparta::AbstractDomain<Taint> {
       const KindFactory& kind_factory,
       const TransformsFactory& transforms_factory,
       const UsedKinds& used_kinds,
-      const TransformList* local_transforms) const;
+      const TransformList* local_transforms,
+      transforms::TransformDirection direction) const;
 
   Taint add_sanitize_transform(
       const Sanitizer& sanitizer,

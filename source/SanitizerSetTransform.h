@@ -13,17 +13,20 @@
 #include <json/json.h>
 
 #include <boost/container/flat_set.hpp>
+#include <boost/functional/hash.hpp>
+#include <sparta/PatriciaTreeKeyTrait.h>
 
 #include <mariana-trench/Context.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Kind.h>
+#include <mariana-trench/SourceSinkKind.h>
 #include <mariana-trench/Transform.h>
 
 namespace marianatrench {
 
 class SanitizerSetTransform final : public Transform {
  public:
-  using Set = boost::container::flat_set<const Kind*>;
+  using Set = boost::container::flat_set<SourceSinkKind>;
 
   explicit SanitizerSetTransform(const Set& kinds) : kinds_(kinds) {}
 

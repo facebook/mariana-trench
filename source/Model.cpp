@@ -994,8 +994,10 @@ Taint Model::apply_source_sink_sanitizers(
         if (kinds.is_top()) {
           return Taint::bottom();
         }
-        sanitized_kinds.insert(
-            kinds.elements().begin(), kinds.elements().end());
+
+        for (const auto element : kinds.elements()) {
+          sanitized_kinds.insert(element.kind());
+        }
       }
     }
   }

@@ -115,7 +115,8 @@ class TransformList final {
    * would sanitize the given kind
    */
   template <ApplicationDirection Direction>
-  bool sanitizes(const Kind* kind) const {
+  bool sanitizes(const Kind* kind, transforms::TransformDirection direction)
+      const {
     if (const auto* transform_kind = kind->as<TransformKind>()) {
       // The only place where this function can be called with
       // ApplicationDirection::Forward is during rule matching, in which case
@@ -139,8 +140,9 @@ class TransformList final {
     return std::any_of(
         std::move(sanitizer_begin),
         std::move(sanitizer_end),
-        [kind](const Transform* transform) {
-          return transform->as<SanitizerSetTransform>()->kinds().contains(kind);
+        [kind, direction](const Transform* transform) {
+          return transform->as<SanitizerSetTransform>()->kinds().contains(
+              SourceSinkKind::from_transform_direction(kind, direction));
         });
   }
 

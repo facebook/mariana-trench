@@ -303,7 +303,8 @@ class LocalTaint final : public sparta::AbstractDomain<LocalTaint> {
       const KindFactory& kind_factory,
       const TransformsFactory& transforms,
       const UsedKinds& used_kinds,
-      const TransformList* local_transforms) const;
+      const TransformList* local_transforms,
+      transforms::TransformDirection direction) const;
 
   LocalTaint add_sanitize_transform(
       const Sanitizer& sanitizer,
