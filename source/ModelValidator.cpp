@@ -269,12 +269,14 @@ bool includes_origins(
     const Taint& taint,
     const std::set<std::string>& validator_origins) {
   std::set<std::string> taint_origins;
-  taint.visit_frames(
-      [&taint_origins](const CallInfo& /* call_info */, const Frame& frame) {
-        for (const auto* origin : frame.origins()) {
-          taint_origins.insert(origin->to_model_validator_string());
-        }
-      });
+  taint.visit_frames([&taint_origins](
+                         const CallInfo& /* call_info */, const Frame& frame) {
+    for (const auto* origin : frame.origins()) {
+      if (auto model_validator_string = origin->to_model_validator_string()) {
+        taint_origins.insert(*model_validator_string);
+      }
+    }
+  });
   return std::includes(
       taint_origins.cbegin(),
       taint_origins.cend(),

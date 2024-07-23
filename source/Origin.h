@@ -42,7 +42,10 @@ class Origin {
   }
 
   virtual std::string to_string() const = 0;
-  virtual std::string to_model_validator_string() const = 0;
+
+  // std::nullopt if origin type is not supported for `ModelValidator`.
+  virtual std::optional<std::string> to_model_validator_string() const = 0;
+
   virtual Json::Value to_json() const = 0;
   static const Origin* from_json(const Json::Value& value, Context& context);
 };
@@ -56,7 +59,7 @@ class MethodOrigin final : public Origin {
 
   std::string to_string() const override;
 
-  std::string to_model_validator_string() const override;
+  std::optional<std::string> to_model_validator_string() const override;
 
   Json::Value to_json() const override;
 
@@ -81,7 +84,7 @@ class FieldOrigin final : public Origin {
 
   std::string to_string() const override;
 
-  std::string to_model_validator_string() const override;
+  std::optional<std::string> to_model_validator_string() const override;
 
   Json::Value to_json() const override;
 
@@ -110,7 +113,7 @@ class CrtexOrigin final : public Origin {
 
   std::string to_string() const override;
 
-  std::string to_model_validator_string() const override;
+  std::optional<std::string> to_model_validator_string() const override;
 
   Json::Value to_json() const override;
 
@@ -128,7 +131,7 @@ class StringOrigin final : public Origin {
 
   std::string to_string() const override;
 
-  std::string to_model_validator_string() const override;
+  std::optional<std::string> to_model_validator_string() const override;
 
   Json::Value to_json() const override;
 
@@ -168,7 +171,7 @@ class ExploitabilityOrigin final : public Origin {
 
   std::string to_string() const override;
 
-  std::string to_model_validator_string() const override;
+  std::optional<std::string> to_model_validator_string() const override;
 
   Json::Value to_json() const override;
 

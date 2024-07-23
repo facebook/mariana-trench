@@ -47,7 +47,7 @@ std::string MethodOrigin::to_string() const {
   return "method=" + method_->show() + ",port=" + port_->to_string();
 }
 
-std::string MethodOrigin::to_model_validator_string() const {
+std::optional<std::string> MethodOrigin::to_model_validator_string() const {
   return method_->show();
 }
 
@@ -62,7 +62,7 @@ std::string FieldOrigin::to_string() const {
   return field_->show();
 }
 
-std::string FieldOrigin::to_model_validator_string() const {
+std::optional<std::string> FieldOrigin::to_model_validator_string() const {
   return field_->show();
 }
 
@@ -76,8 +76,8 @@ std::string CrtexOrigin::to_string() const {
   return canonical_name_->str_copy();
 }
 
-std::string CrtexOrigin::to_model_validator_string() const {
-  return canonical_name_->str_copy();
+std::optional<std::string> CrtexOrigin::to_model_validator_string() const {
+  return std::nullopt;
 }
 
 Json::Value CrtexOrigin::to_json() const {
@@ -91,7 +91,7 @@ std::string StringOrigin::to_string() const {
   return name_->str_copy();
 }
 
-std::string StringOrigin::to_model_validator_string() const {
+std::optional<std::string> StringOrigin::to_model_validator_string() const {
   return name_->str_copy();
 }
 
@@ -110,8 +110,9 @@ std::string ExploitabilityOrigin::to_string() const {
       callee_->str());
 }
 
-std::string ExploitabilityOrigin::to_model_validator_string() const {
-  return exploitability_root_->show();
+std::optional<std::string> ExploitabilityOrigin::to_model_validator_string()
+    const {
+  return std::nullopt;
 }
 
 std::string ExploitabilityOrigin::issue_handle_callee() const {
