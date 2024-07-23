@@ -66,8 +66,8 @@ TEST_F(ModelValidatorTest, ModelValidators) {
         R"#({
               "method": "LClass;.one:()V",
               "validators": [
-                { "valid": true, "annotation": "ExpectIssue(code=1, sourceKinds=, sinkKinds=, sourceOrigins=, sinkOrigins=)" },
-                { "valid": true, "annotation": "ExpectIssue(code=1, sourceKinds=TestSource, sinkKinds=, sourceOrigins=, sinkOrigins=)" }
+                { "valid": true, "annotation": "ExpectIssue(code=1)" },
+                { "valid": true, "annotation": "ExpectIssue(code=1, sourceKinds={TestSource})" }
               ]
             })#");
     EXPECT_EQ(test::sorted_json(expected), test::sorted_json(result));
@@ -95,8 +95,8 @@ TEST_F(ModelValidatorTest, ModelValidators) {
         R"#({
               "method": "LClass;.one:()V",
               "validators": [
-                { "valid": true, "annotation": "ExpectIssue(code=1, sourceKinds=, sinkKinds=, sourceOrigins=, sinkOrigins=)" },
-                { "valid": false, "annotation": "ExpectIssue(code=2, sourceKinds=, sinkKinds=, sourceOrigins=, sinkOrigins=)" }
+                { "valid": true, "annotation": "ExpectIssue(code=1)" },
+                { "valid": false, "annotation": "ExpectIssue(code=2)" }
               ]
             })#");
     EXPECT_EQ(test::sorted_json(expected), test::sorted_json(result));
@@ -118,7 +118,7 @@ TEST_F(ModelValidatorTest, ModelValidators) {
         R"#({
               "method": "LClass;.one:()V",
               "validators": [
-                { "valid": false, "annotation": "ExpectNoIssue(code=1, sourceKinds=, sinkKinds=, sourceOrigins=, sinkOrigins=)" }
+                { "valid": false, "annotation": "ExpectNoIssue(code=1)" }
               ]
             })#");
     EXPECT_EQ(test::sorted_json(expected), test::sorted_json(result));
@@ -146,8 +146,8 @@ TEST_F(ModelValidatorTest, ModelValidators) {
         R"#({
               "method": "LClass;.one:()V",
               "validators": [
-                { "valid": true, "annotation": "ExpectIssue(code=1, sourceKinds=, sinkKinds=, sourceOrigins=, sinkOrigins=)" },
-                { "valid": true, "annotation": "ExpectNoIssue(code=2, sourceKinds=, sinkKinds=, sourceOrigins=, sinkOrigins=)" }
+                { "valid": true, "annotation": "ExpectIssue(code=1)" },
+                { "valid": true, "annotation": "ExpectNoIssue(code=2)" }
               ]
             })#");
     EXPECT_EQ(test::sorted_json(expected), test::sorted_json(result));

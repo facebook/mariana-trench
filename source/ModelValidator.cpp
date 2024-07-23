@@ -305,13 +305,25 @@ std::string ExpectIssue::show() const {
 }
 
 std::string ExpectIssue::show_parameters() const {
-  return fmt::format(
-      "code={}, sourceKinds={}, sinkKinds={}, sourceOrigins={}, sinkOrigins={}",
-      code_,
-      boost::algorithm::join(source_kinds_, ","),
-      boost::algorithm::join(sink_kinds_, ","),
-      boost::algorithm::join(source_origins_, ","),
-      boost::algorithm::join(sink_origins_, ","));
+  std::stringstream parameters_string;
+  parameters_string << "code=" << code_;
+  if (!source_kinds_.empty()) {
+    parameters_string << ", sourceKinds={"
+                      << boost::algorithm::join(source_kinds_, ",") << "}";
+  }
+  if (!sink_kinds_.empty()) {
+    parameters_string << ", sinkKinds={"
+                      << boost::algorithm::join(sink_kinds_, ",") << "}";
+  }
+  if (!source_origins_.empty()) {
+    parameters_string << ", sourceOrigins={"
+                      << boost::algorithm::join(source_origins_, ",") << "}";
+  }
+  if (!sink_origins_.empty()) {
+    parameters_string << ", sinkOrigins={"
+                      << boost::algorithm::join(sink_origins_, ",") << "}";
+  }
+  return parameters_string.str();
 }
 
 ExpectNoIssue ExpectNoIssue::from_annotation(
