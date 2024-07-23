@@ -52,7 +52,7 @@ class Options final {
 
   static void add_options(boost::program_options::options_description& options);
 
-  static Options* options_from_json_file(const std::string& options_json_path);
+  static std::unique_ptr<Options> options_from_json_file(const std::string& options_json_path);
 
   const std::vector<std::string>& models_paths() const;
   const std::vector<std::string>& field_models_paths() const;
