@@ -358,7 +358,7 @@ class Taint final : public sparta::AbstractDomain<Taint> {
    * Return the same taint without any non-essential information (e.g,
    * features).
    *
-   * This is used to create a mold for `AccessPathTreeDomain::shape_with`.
+   * This is used to create a mold for `TaintAccessPathTree::shape_with`.
    */
   Taint essential() const;
 

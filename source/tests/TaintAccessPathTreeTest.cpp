@@ -9,7 +9,6 @@
 
 #include <sparta/PatriciaTreeSetAbstractDomain.h>
 
-#include <mariana-trench/AccessPathTreeDomain.h>
 #include <mariana-trench/Redex.h>
 #include <mariana-trench/tests/Test.h>
 

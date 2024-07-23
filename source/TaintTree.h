@@ -8,7 +8,6 @@
 #pragma once
 
 #include <mariana-trench/AbstractTreeDomain.h>
-#include <mariana-trench/AccessPathTreeDomain.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Taint.h>
 
