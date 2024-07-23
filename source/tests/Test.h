@@ -89,6 +89,7 @@ TaintConfig make_taint_config(
     const Kind* kind,
     const FrameProperties& properties);
 TaintConfig make_leaf_taint_config(const Kind* kind);
+TaintConfig make_leaf_taint_config(const Kind* kind, OriginSet origins);
 TaintConfig make_leaf_taint_config(
     const Kind* kind,
     FeatureMayAlwaysSet inferred_features,

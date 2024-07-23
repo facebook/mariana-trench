@@ -211,6 +211,15 @@ TaintConfig make_leaf_taint_config(const Kind* kind) {
       /* origins */ {});
 }
 
+TaintConfig make_leaf_taint_config(const Kind* kind, OriginSet origins) {
+  return make_leaf_taint_config(
+      kind,
+      /* inferred_features */ FeatureMayAlwaysSet::bottom(),
+      /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
+      /* user_features */ FeatureSet::bottom(),
+      /* origins */ std::move(origins));
+}
+
 TaintConfig make_leaf_taint_config(
     const Kind* kind,
     FeatureMayAlwaysSet inferred_features,

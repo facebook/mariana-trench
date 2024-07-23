@@ -106,10 +106,14 @@ class ExpectIssue final : public ModelValidator {
   explicit ExpectIssue(
       int code,
       std::set<std::string> source_kinds,
-      std::set<std::string> sink_kinds)
+      std::set<std::string> sink_kinds,
+      std::set<std::string> source_origins,
+      std::set<std::string> sink_origins)
       : code_(code),
         source_kinds_(std::move(source_kinds)),
-        sink_kinds_(std::move(sink_kinds)) {
+        sink_kinds_(std::move(sink_kinds)),
+        source_origins_(std::move(source_origins)),
+        sink_origins_(std::move(sink_origins)) {
     // "Code" must have been specified.
     mt_assert(code != -1);
   }
@@ -129,6 +133,8 @@ class ExpectIssue final : public ModelValidator {
   // NOTE: Ordering is used for subset/includes comparison against issue kinds
   std::set<std::string> source_kinds_;
   std::set<std::string> sink_kinds_;
+  std::set<std::string> source_origins_;
+  std::set<std::string> sink_origins_;
 };
 
 class ExpectNoIssue final : public ModelValidator {

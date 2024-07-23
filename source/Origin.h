@@ -42,6 +42,7 @@ class Origin {
   }
 
   virtual std::string to_string() const = 0;
+  virtual std::string to_model_validator_string() const = 0;
   virtual Json::Value to_json() const = 0;
   static const Origin* from_json(const Json::Value& value, Context& context);
 };
@@ -54,6 +55,8 @@ class MethodOrigin final : public Origin {
   DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(MethodOrigin)
 
   std::string to_string() const override;
+
+  std::string to_model_validator_string() const override;
 
   Json::Value to_json() const override;
 
@@ -77,6 +80,8 @@ class FieldOrigin final : public Origin {
   DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(FieldOrigin)
 
   std::string to_string() const override;
+
+  std::string to_model_validator_string() const override;
 
   Json::Value to_json() const override;
 
@@ -105,6 +110,8 @@ class CrtexOrigin final : public Origin {
 
   std::string to_string() const override;
 
+  std::string to_model_validator_string() const override;
+
   Json::Value to_json() const override;
 
  private:
@@ -120,6 +127,8 @@ class StringOrigin final : public Origin {
   explicit StringOrigin(const DexString* name) : name_(name) {}
 
   std::string to_string() const override;
+
+  std::string to_model_validator_string() const override;
 
   Json::Value to_json() const override;
 
@@ -158,6 +167,8 @@ class ExploitabilityOrigin final : public Origin {
   DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ExploitabilityOrigin)
 
   std::string to_string() const override;
+
+  std::string to_model_validator_string() const override;
 
   Json::Value to_json() const override;
 

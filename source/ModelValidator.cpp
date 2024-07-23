@@ -190,11 +190,28 @@ std::string ModelValidators::show() const {
   return boost::algorithm::join(validator_strings, ",");
 }
 
+namespace {
+
+void gather_strings(
+    const DexAnnotationElement& annotation_element,
+    std::set<std::string>& result) {
+  mt_assert(annotation_element.encoded_value->evtype() == DEVT_ARRAY);
+  std::vector<const DexString*> dex_strings;
+  annotation_element.encoded_value->gather_strings(dex_strings);
+  for (const auto* dex_string : dex_strings) {
+    result.insert(dex_string->str_copy());
+  }
+}
+
+} // namespace
+
 ExpectIssue ExpectIssue::from_annotation(
     const EncodedAnnotations& annotation_elements) {
   int code = -1;
   std::set<std::string> source_kinds;
   std::set<std::string> sink_kinds;
+  std::set<std::string> source_origins;
+  std::set<std::string> sink_origins;
 
   for (const auto& annotation_element : annotation_elements) {
     const auto* annotation_key = annotation_element.string;
@@ -202,19 +219,13 @@ ExpectIssue ExpectIssue::from_annotation(
       mt_assert(annotation_element.encoded_value->is_evtype_primitive());
       code = annotation_element.encoded_value->value();
     } else if (annotation_key->str() == "sourceKinds") {
-      mt_assert(annotation_element.encoded_value->evtype() == DEVT_ARRAY);
-      std::vector<const DexString*> source_kinds_dexstring;
-      annotation_element.encoded_value->gather_strings(source_kinds_dexstring);
-      for (const auto* dex_string : source_kinds_dexstring) {
-        source_kinds.insert(dex_string->str_copy());
-      }
+      gather_strings(annotation_element, source_kinds);
     } else if (annotation_key->str() == "sinkKinds") {
-      mt_assert(annotation_element.encoded_value->evtype() == DEVT_ARRAY);
-      std::vector<const DexString*> sink_kinds_dexstring;
-      annotation_element.encoded_value->gather_strings(sink_kinds_dexstring);
-      for (const auto* dex_string : sink_kinds_dexstring) {
-        sink_kinds.insert(dex_string->str_copy());
-      }
+      gather_strings(annotation_element, sink_kinds);
+    } else if (annotation_key->str() == "sourceOrigins") {
+      gather_strings(annotation_element, source_origins);
+    } else if (annotation_key->str() == "sinkOrigins") {
+      gather_strings(annotation_element, sink_origins);
     } else {
       // Do not fail in case new fields have been added to annotation, in which
       // case, the error is expected to resolve on the next release
@@ -225,7 +236,12 @@ ExpectIssue ExpectIssue::from_annotation(
     }
   }
 
-  return ExpectIssue(code, std::move(source_kinds), std::move(sink_kinds));
+  return ExpectIssue(
+      code,
+      std::move(source_kinds),
+      std::move(sink_kinds),
+      std::move(source_origins),
+      std::move(sink_origins));
 }
 
 namespace {
@@ -249,6 +265,23 @@ bool includes_issue_kinds(
       validator_kinds.cend());
 }
 
+bool includes_origins(
+    const Taint& taint,
+    const std::set<std::string>& validator_origins) {
+  std::set<std::string> taint_origins;
+  taint.visit_frames(
+      [&taint_origins](const CallInfo& /* call_info */, const Frame& frame) {
+        for (const auto* origin : frame.origins()) {
+          taint_origins.insert(origin->to_model_validator_string());
+        }
+      });
+  return std::includes(
+      taint_origins.cbegin(),
+      taint_origins.cend(),
+      validator_origins.cbegin(),
+      validator_origins.cend());
+}
+
 } // namespace
 
 ModelValidatorResult ExpectIssue::validate(const Model& model) const {
@@ -260,17 +293,21 @@ ModelValidatorResult ExpectIssue::validate(const Model& model) const {
         mt_assert(rule != nullptr);
         return rule->code() == code_ &&
             includes_issue_kinds(issue.sources().kinds(), source_kinds_) &&
-            includes_issue_kinds(issue.sinks().kinds(), sink_kinds_);
+            includes_issue_kinds(issue.sinks().kinds(), sink_kinds_) &&
+            includes_origins(issue.sources(), source_origins_) &&
+            includes_origins(issue.sinks(), sink_origins_);
       });
   return ModelValidatorResult(valid, /* annotation */ show());
 }
 
 std::string ExpectIssue::show() const {
   return fmt::format(
-      "ExpectIssue(code={}, sourceKinds={}, sinkKinds={})",
+      "ExpectIssue(code={}, sourceKinds={}, sinkKinds={}, sourceOrigins={}, sinkOrigins={})",
       code_,
       boost::algorithm::join(source_kinds_, ","),
-      boost::algorithm::join(sink_kinds_, ","));
+      boost::algorithm::join(sink_kinds_, ","),
+      boost::algorithm::join(source_origins_, ","),
+      boost::algorithm::join(sink_origins_, ","));
 }
 
 ExpectNoIssue ExpectNoIssue::from_annotation(

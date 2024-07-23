@@ -47,6 +47,10 @@ std::string MethodOrigin::to_string() const {
   return "method=" + method_->show() + ",port=" + port_->to_string();
 }
 
+std::string MethodOrigin::to_model_validator_string() const {
+  return method_->show();
+}
+
 Json::Value MethodOrigin::to_json() const {
   auto value = Json::Value(Json::objectValue);
   value["method"] = method_->to_json();
@@ -55,6 +59,10 @@ Json::Value MethodOrigin::to_json() const {
 }
 
 std::string FieldOrigin::to_string() const {
+  return field_->show();
+}
+
+std::string FieldOrigin::to_model_validator_string() const {
   return field_->show();
 }
 
@@ -68,6 +76,10 @@ std::string CrtexOrigin::to_string() const {
   return canonical_name_->str_copy();
 }
 
+std::string CrtexOrigin::to_model_validator_string() const {
+  return canonical_name_->str_copy();
+}
+
 Json::Value CrtexOrigin::to_json() const {
   auto value = Json::Value(Json::objectValue);
   value["canonical_name"] = canonical_name_->str_copy();
@@ -76,6 +88,10 @@ Json::Value CrtexOrigin::to_json() const {
 }
 
 std::string StringOrigin::to_string() const {
+  return name_->str_copy();
+}
+
+std::string StringOrigin::to_model_validator_string() const {
   return name_->str_copy();
 }
 
@@ -92,6 +108,10 @@ std::string ExploitabilityOrigin::to_string() const {
       "exploitability_root={},callee={}",
       exploitability_root_->show(),
       callee_->str());
+}
+
+std::string ExploitabilityOrigin::to_model_validator_string() const {
+  return exploitability_root_->show();
 }
 
 std::string ExploitabilityOrigin::issue_handle_callee() const {
