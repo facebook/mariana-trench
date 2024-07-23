@@ -11,7 +11,6 @@
 #include <string>
 
 #include <json/json.h>
-
 #include <sparta/PatriciaTreeKeyTrait.h>
 
 #include <mariana-trench/Context.h>
@@ -97,8 +96,9 @@ class SourceSinkKind final {
   Json::Value to_json(SanitizerKind sanitizer_kind) const;
 
  private:
-  KindPair value_;
   friend std::size_t hash_value(const SourceSinkKind& pair);
+
+  KindPair value_;
 };
 
 // For hash in boost

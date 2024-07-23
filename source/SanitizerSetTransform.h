@@ -10,11 +10,8 @@
 #include <ostream>
 #include <string>
 
-#include <json/json.h>
-
 #include <boost/container/flat_set.hpp>
-#include <boost/functional/hash.hpp>
-#include <sparta/PatriciaTreeKeyTrait.h>
+#include <json/json.h>
 
 #include <mariana-trench/Context.h>
 #include <mariana-trench/IncludeMacros.h>

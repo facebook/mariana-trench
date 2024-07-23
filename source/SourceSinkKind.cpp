@@ -7,7 +7,6 @@
 
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/algorithm/string/replace.hpp>
-#include <boost/stacktrace.hpp>
 
 #include <mariana-trench/Sanitizer.h>
 #include <mariana-trench/SourceSinkKind.h>
@@ -18,15 +17,17 @@ namespace marianatrench {
 namespace {
 
 // Returns true if the kind is a source kind and removes the prefix accordingly.
-bool parse_source_sink_kind(std::string& kind, SanitizerKind sanitizer_kind) {
+std::pair<std::string, bool> parse_source_sink_kind(
+    std::string kind,
+    SanitizerKind sanitizer_kind) {
   // The only case we do not already know the source/sink info is when we have a
   // propagation sanitizer
   if (sanitizer_kind == SanitizerKind::Sources) {
     mt_assert(!boost::starts_with(kind, "Source["));
-    return true;
+    return std::make_pair(std::move(kind), true);
   } else if (sanitizer_kind == SanitizerKind::Sinks) {
     mt_assert(!boost::starts_with(kind, "Sink["));
-    return false;
+    return std::make_pair(std::move(kind), false);
   }
 
   // This is a propagation sanitizer. Remove the Source[]/Sink[] wrapper from
@@ -49,7 +50,7 @@ bool parse_source_sink_kind(std::string& kind, SanitizerKind sanitizer_kind) {
         "Could not be parsed as a valid Kind for Sanitizer");
   }
 
-  return is_source;
+  return std::make_pair(std::move(kind), is_source);
 }
 
 } // anonymous namespace
@@ -67,11 +68,11 @@ SourceSinkKind SourceSinkKind::from_trace_string(
     Context& context,
     SanitizerKind sanitizer_kind) {
   // Parse and remove the extra prefix from the kind string
-  std::string value_copy = value;
-  bool is_source = parse_source_sink_kind(value_copy, sanitizer_kind);
+  const auto& [value_parsed, is_source] =
+      parse_source_sink_kind(value, sanitizer_kind);
 
   // Parse the kind as a regular kind since prefix is now gone
-  const auto* kind = Kind::from_trace_string(value_copy, context);
+  const auto* kind = Kind::from_trace_string(value_parsed, context);
   return is_source ? SourceSinkKind::source(kind) : SourceSinkKind::sink(kind);
 }
 
@@ -81,10 +82,11 @@ SourceSinkKind SourceSinkKind::from_config_json(
     SanitizerKind sanitizer_kind) {
   // Parse and remove the extra prefix from the kind string
   auto kind_str = JsonValidation::string(value, /* field */ "kind");
-  bool is_source = parse_source_sink_kind(kind_str, sanitizer_kind);
+  const auto& [value_parsed, is_source] =
+      parse_source_sink_kind(std::move(kind_str), sanitizer_kind);
 
   Json::Value value_with_parsed_kind = value;
-  value_with_parsed_kind["kind"] = kind_str;
+  value_with_parsed_kind["kind"] = value_parsed;
 
   // Parse the kind as a regular kind since prefix is now gone
   const auto* kind = Kind::from_config_json(value_with_parsed_kind, context);
