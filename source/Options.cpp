@@ -304,10 +304,6 @@ Options::Options(const boost::program_options::variables_map& variables) {
 }
 
 Options* Options::options_from_json_file(const std::string& options_json_path){
-
-    std::cout<<"======================\n";
-    std::cout << "options from json file options_json_path: " << options_json_path << std::endl;
-    std::cout<<"======================\n";
     program_options::variables_map variables;
     // Use JsonReader to parse the JSON file
     Json::Value json = marianatrench::JsonReader::parse_json_file(options_json_path);
