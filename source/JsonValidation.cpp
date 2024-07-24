@@ -84,6 +84,21 @@ std::string JsonValidation::string(
   return string.asString();
 }
 
+std::optional<std::string> JsonValidation::optional_string(
+    const Json::Value& value,
+    const std::string& field) {
+  validate_object(
+      value, fmt::format("non-null object with string field `{}`", field));
+  const auto& string = value[field];
+  if (string.isNull()) {
+    return std::nullopt;
+  }
+  if (!string.isString()) {
+    throw JsonValidationError(value, field, /* expected */ "string");
+  }
+  return string.asString();
+}
+
 int JsonValidation::integer(const Json::Value& value) {
   if (value.isNull() || !value.isInt()) {
     throw JsonValidationError(
@@ -157,6 +172,22 @@ bool JsonValidation::boolean(
       value, fmt::format("non-null object with boolean field `{}`", field));
   const auto& boolean = value[field];
   if (boolean.isNull() || !boolean.isBool()) {
+    throw JsonValidationError(value, field, /* expected */ "boolean");
+  }
+  return boolean.asBool();
+}
+
+bool JsonValidation::optional_boolean(
+    const Json::Value& value,
+    const std::string& field,
+    bool default_value) {
+  validate_object(
+      value, fmt::format("non-null object with boolean field `{}`", field));
+  const auto& boolean = value[field];
+  if (boolean.isNull()) {
+    return default_value;
+  }
+  if (!boolean.isBool()) {
     throw JsonValidationError(value, field, /* expected */ "boolean");
   }
   return boolean.asBool();

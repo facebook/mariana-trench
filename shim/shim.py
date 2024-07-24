@@ -612,146 +612,158 @@ def _add_debug_arguments(parser: argparse.ArgumentParser) -> None:
     )
 
 
-def _get_command_options(
-    arguments: argparse.Namespace, apk_directory: str, dex_directory: str
-) -> List[str]:
-    options = [
-        "--system-jar-paths",
-        arguments.system_jar_configuration_path,
-        "--apk-directory",
-        apk_directory,
-        "--dex-directory",
-        dex_directory,
-        "--rules-paths",
-        arguments.rules_paths,
-        "--repository-root-directory",
-        arguments.repository_root_directory,
-        "--source-root-directory",
-        arguments.source_root_directory,
-        "--apk-path",
-        arguments.apk_path,
-        "--output-directory",
-        arguments.output_directory,
-        "--maximum-source-sink-distance",
-        str(arguments.maximum_source_sink_distance),
-        "--model-generator-configuration-paths",
-        arguments.model_generator_configuration_paths,
-    ]
-
-    if arguments.grepo_metadata_path:
-        options.append("--grepo-metadata-path")
-        options.append(arguments.grepo_metadata_path)
-
-    if arguments.model_generator_search_paths:
-        options.append("--model-generator-search-paths")
-        options.append(arguments.model_generator_search_paths)
-
-    if arguments.models_paths:
-        options.append("--models-paths")
-        options.append(arguments.models_paths)
-
-    if arguments.field_models_paths:
-        options.append("--field-models-paths")
-        options.append(arguments.field_models_paths)
-
-    if arguments.literal_models_paths:
-        options.append("--literal-models-paths")
-        options.append(arguments.literal_models_paths)
-
-    if arguments.proguard_configuration_paths:
-        options.append("--proguard-configuration-paths")
-        options.append(arguments.proguard_configuration_paths)
-
-    if arguments.lifecycles_paths:
-        options.append("--lifecycles-paths")
-        options.append(arguments.lifecycles_paths)
-
-    if arguments.shims_paths:
-        options.append("--shims-paths")
-        options.append(arguments.shims_paths)
-
-    if arguments.graphql_metadata_paths:
-        options.append("--graphql-metadata-paths")
-        options.append(arguments.graphql_metadata_paths)
-
-    if arguments.source_exclude_directories:
-        options.append("--source-exclude-directories")
-        options.append(arguments.source_exclude_directories)
-
-    if arguments.generated_models_directory:
-        options.append("--generated-models-directory")
-        options.append(arguments.generated_models_directory)
-
-    if arguments.sharded_models_directory:
-        options.append("--sharded-models-directory")
-        options.append(arguments.sharded_models_directory)
-
-    if arguments.emit_all_via_cast_features:
-        options.append("--emit-all-via-cast-features")
-    if arguments.propagate_across_arguments:
-        options.append("--propagate-across-arguments")
-    if arguments.allow_via_cast_feature:
-        for feature in arguments.allow_via_cast_feature:
-            options.append("--allow-via-cast-feature=%s" % feature.strip())
-
-    if arguments.heuristics:
-        options.append("--heuristics")
-        options.append(arguments.heuristics)
-
-    if arguments.sequential:
-        options.append("--sequential")
-    if arguments.skip_source_indexing:
-        options.append("--skip-source-indexing")
-    if arguments.skip_analysis:
-        options.append("--skip-analysis")
-    if arguments.disable_parameter_type_overrides:
-        options.append("--disable-parameter-type-overrides")
-    if arguments.disable_global_type_analysis:
-        options.append("--disable-global-type-analysis")
-    if arguments.verify_expected_output:
-        options.append("--verify-expected-output")
-    if arguments.remove_unreachable_code:
-        options.append("--remove-unreachable-code")
-    if arguments.maximum_method_analysis_time is not None:
-        options.append("--maximum-method-analysis-time")
-        options.append(str(arguments.maximum_method_analysis_time))
-    if arguments.enable_cross_component_analysis:
-        options.append("--enable-cross-component-analysis")
-    if arguments.extra_analysis_arguments:
-        options.extend(shlex.split(arguments.extra_analysis_arguments))
-
-    if arguments.job_id:
-        options.append("--job-id")
-        options.append(arguments.job_id)
-    if arguments.metarun_id:
-        options.append("--metarun-id")
-        options.append(arguments.metarun_id)
-
+def _set_environment_variables(arguments: argparse.Namespace) -> None:
     trace_settings = [f"MARIANA_TRENCH:{arguments.verbosity}"]
     if "TRACE" in os.environ:
         trace_settings.insert(0, os.environ["TRACE"])
     os.environ["TRACE"] = ",".join(trace_settings)
 
+
+def _get_command_options_json(
+    arguments: argparse.Namespace, apk_directory: str, dex_directory: str
+) -> Dict[str, Any]:
+    options = {}
+    options["system-jar-paths"] = arguments.system_jar_configuration_path
+    options["apk-directory"] = apk_directory
+    options["dex-directory"] = dex_directory
+    options["rules-paths"] = arguments.rules_paths
+    options["repository-root-directory"] = arguments.repository_root_directory
+    options["source-root-directory"] = arguments.source_root_directory
+    options["apk-path"] = arguments.apk_path
+    options["output-directory"] = arguments.output_directory
+    options["maximum-source-sink-distance"] = arguments.maximum_source_sink_distance
+    options["model-generator-configuration-paths"] = (
+        arguments.model_generator_configuration_paths
+    )
+
+    if arguments.grepo_metadata_path:
+        options["grepo-metadata-path"] = arguments.grepo_metadata_path
+
+    if arguments.model_generator_search_paths:
+        options["model-generator-search-paths"] = arguments.model_generator_search_paths
+
+    if arguments.models_paths:
+        options["models-paths"] = arguments.models_paths
+
+    if arguments.field_models_paths:
+        options["field-models-paths"] = arguments.field_models_paths
+
+    if arguments.literal_models_paths:
+        options["literal-models-paths"] = arguments.literal_models_paths
+
+    if arguments.proguard_configuration_paths:
+        options["proguard-configuration-paths"] = arguments.proguard_configuration_paths
+
+    if arguments.lifecycles_paths:
+        options["lifecycles-paths"] = arguments.lifecycles_paths
+
+    if arguments.shims_paths:
+        options["shims-paths"] = arguments.shims_paths
+
+    if arguments.graphql_metadata_paths:
+        options["graphql-metadata-paths"] = arguments.graphql_metadata_paths
+
+    if arguments.source_exclude_directories:
+        options["source-exclude-directories"] = arguments.source_exclude_directories
+
+    if arguments.generated_models_directory:
+        options["generated-models-directory"] = arguments.generated_models_directory
+
+    if arguments.sharded_models_directory:
+        options["sharded-models-directory"] = arguments.sharded_models_directory
+
+    if arguments.emit_all_via_cast_features:
+        options["emit-all-via-cast-features"] = True
+
+    if arguments.propagate_across_arguments:
+        options["propagate-across-arguments"] = True
+
+    if arguments.allow_via_cast_feature:
+        options["allow-via-cast-feature"] = []
+        for feature in arguments.allow_via_cast_feature:
+            options["allow-via-cast-feature"].append(feature.strip())
+
+    if arguments.heuristics:
+        options["heuristics"] = arguments.heuristics
+
+    if arguments.sequential:
+        options["sequential"] = True
+
+    if arguments.skip_source_indexing:
+        options["skip-source-indexing"] = True
+
+    if arguments.skip_analysis:
+        options["skip-analysis"] = True
+
+    if arguments.disable_parameter_type_overrides:
+        options["disable-parameter-type-overrides"] = True
+
+    if arguments.disable_global_type_analysis:
+        options["disable-global-type-analysis"] = True
+
+    if arguments.verify_expected_output:
+        options["verify-expected-output"] = True
+
+    if arguments.remove_unreachable_code:
+        options["remove-unreachable-code"] = True
+
+    if arguments.maximum_method_analysis_time is not None:
+        options["maximum-method-analysis-time"] = arguments.maximum_method_analysis_time
+
+    if arguments.enable_cross_component_analysis:
+        options["enable-cross-component-analysis"] = True
+
+    if arguments.extra_analysis_arguments:
+        extra_arguments = json.loads(arguments.extra_analysis_arguments)
+        for key, value in extra_arguments.items():
+            if (
+                key in options
+                and isinstance(options[key], list)
+                and isinstance(value, list)
+            ):
+                # Append the values to the existing list
+                options[key].extend(value)
+            else:
+                # Override the value
+                options[key] = value
+
+    if arguments.job_id:
+        options["job-id"] = arguments.job_id
+
+    if arguments.metarun_id:
+        options["metarun-id"] = arguments.metarun_id
+
     if arguments.log_method:
+        options["log-method"] = []
         for method in arguments.log_method:
-            options.append("--log-method=%s" % method.strip())
+            options["log-method"].append(method.strip())
+
     if arguments.log_method_types:
+        options["log-method-types"] = []
         for method in arguments.log_method_types:
-            options.append("--log-method-types=%s" % method.strip())
+            options["log-method-types"].append(method.strip())
+
     if arguments.dump_class_hierarchies:
-        options.append("--dump-class-hierarchies")
+        options["dump-class-hierarchies"] = True
+
     if arguments.dump_overrides:
-        options.append("--dump-overrides")
+        options["dump-overrides"] = True
+
     if arguments.dump_call_graph:
-        options.append("--dump-call-graph")
+        options["dump-call-graph"] = True
+
     if arguments.dump_dependencies:
-        options.append("--dump-dependencies")
+        options["dump-dependencies"] = True
+
     if arguments.dump_methods:
-        options.append("--dump-methods")
+        options["dump-methods"] = True
+
     if arguments.dump_coverage_info:
-        options.append("--dump-coverage-info")
+        options["dump-coverage-info"] = True
+
     if arguments.always_export_origins:
-        options.append("--always-export-origins")
+        options["always-export-origins"] = True
+
     return options
 
 
@@ -859,14 +871,20 @@ def main() -> None:
                 binary, arguments, apk_directory, dex_directory
             )
         else:
-            options = _get_command_options(arguments, apk_directory, dex_directory)
-            command = [os.fspath(binary.resolve())] + options
-            if arguments.gdb:
-                command = ["gdb", "--args"] + command
-            elif arguments.lldb:
-                command = ["lldb", "--"] + command
-            LOG.info(f"Running Mariana Trench: {' '.join(command)}")
-            output = subprocess.run(command)
+            with tempfile.NamedTemporaryFile(suffix=".json", mode="w") as options_file:
+                _set_environment_variables(arguments)
+                options_json = _get_command_options_json(
+                    arguments, apk_directory, dex_directory
+                )
+                json.dump(options_json, options_file, indent=4)
+                options_file.flush()
+                command = [os.fspath(binary.resolve()), "--config", options_file.name]
+                if arguments.gdb:
+                    command = ["gdb", "--args"] + command
+                elif arguments.lldb:
+                    command = ["lldb", "--"] + command
+                LOG.info(f"Running Mariana Trench: {' '.join(command)}")
+                output = subprocess.run(command)
         if output.returncode != 0:
             LOG.fatal(f"Analysis binary exited with exit code {output.returncode}.")
             sys.exit(output.returncode)

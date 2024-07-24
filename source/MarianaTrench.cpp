@@ -60,11 +60,6 @@ MarianaTrench::MarianaTrench()
 
 namespace program_options = boost::program_options;
 
-void MarianaTrench::add_options(
-    program_options::options_description& options) const {
-  Options::add_options(options);
-}
-
 Registry MarianaTrench::analyze(Context& context) {
   context.artificial_methods = std::make_unique<ArtificialMethods>(
       *context.kind_factory, context.stores);
@@ -423,8 +418,10 @@ std::vector<std::string> filter_existing_jars(
 
 void MarianaTrench::run(const program_options::variables_map& variables) {
   Context context;
+  std::filesystem::path json_file_path =
+      std::filesystem::path(variables["config"].as<std::string>());
 
-  context.options = std::make_unique<Options>(variables);
+  context.options = Options::from_json_file(json_file_path);
   const auto& options = *context.options;
 
   if (auto heuristics_path = options.heuristics_path()) {

@@ -46,11 +46,12 @@ class Options final {
       ExportOriginsMode export_origins_mode = ExportOriginsMode::Always,
       bool propagate_across_arguments = false);
 
-  explicit Options(const boost::program_options::variables_map& variables);
+  explicit Options(const Json::Value& json);
 
   DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Options)
 
-  static void add_options(boost::program_options::options_description& options);
+  static std::unique_ptr<Options> from_json_file(
+      const std::filesystem::path& options_json_path);
 
   const std::vector<std::string>& models_paths() const;
   const std::vector<std::string>& field_models_paths() const;

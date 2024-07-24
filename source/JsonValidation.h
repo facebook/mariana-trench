@@ -40,6 +40,9 @@ class JsonValidation final {
 
   static std::string string(const Json::Value& value);
   static std::string string(const Json::Value& value, const std::string& field);
+  static std::optional<std::string> optional_string(
+      const Json::Value& value,
+      const std::string& field);
 
   static int integer(const Json::Value& value);
   static int integer(const Json::Value& value, const std::string& field);
@@ -54,6 +57,10 @@ class JsonValidation final {
 
   static bool boolean(const Json::Value& value);
   static bool boolean(const Json::Value& value, const std::string& field);
+  static bool optional_boolean(
+      const Json::Value& value,
+      const std::string& field,
+      bool default_value);
 
   static const Json::Value& null_or_array(const Json::Value& value);
   static const Json::Value& null_or_array(
