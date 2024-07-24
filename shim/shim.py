@@ -622,7 +622,7 @@ def _get_command_options_json(
     arguments: argparse.Namespace, apk_directory: str, dex_directory: str
 ) -> dict:
     options_json = {}
-    options_json["system-jar-paths"] = arguments.system_jar_configuration_path.split(";")
+    options_json["system-jar-paths"] = arguments.system_jar_configuration_path
     options_json["apk-directory"] = apk_directory
     options_json["dex-directory"] = dex_directory
     options_json["rules-paths"] = arguments.rules_paths
