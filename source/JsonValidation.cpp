@@ -99,23 +99,6 @@ std::optional<std::string> JsonValidation::optional_string(
   return string.asString();
 }
 
-std::vector<std::string> JsonValidation::string_list(const Json::Value& value, const std::string& field){
-  validate_object(
-      value, fmt::format("non-null object with array field `{}`", field));
-  const auto& string_list = value[field];
-  if (string_list.isNull() || !string_list.isArray() || string_list.empty()) {
-    throw JsonValidationError(value, field, /* expected */ "array");
-  }
-
-  std::vector<std::string> result;
-  for (const auto& element : string_list) {
-    if (!element.isString()) {
-      throw JsonValidationError(value, field, /* expected */ "array of strings");
-    }
-    result.push_back(element.asString());
-  }
-  return result;
-}
 
 int JsonValidation::integer(const Json::Value& value) {
   if (value.isNull() || !value.isInt()) {

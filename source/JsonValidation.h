@@ -41,7 +41,6 @@ class JsonValidation final {
   static std::string string(const Json::Value& value);
   static std::string string(const Json::Value& value, const std::string& field);
   static std::optional<std::string> optional_string(const Json::Value& value, const std::string& field);
-  static std::vector<std::string> string_list(const Json::Value& value, const std::string& field);
 
   static int integer(const Json::Value& value);
   static int integer(const Json::Value& value, const std::string& field);
