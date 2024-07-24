@@ -49,10 +49,11 @@ void LifecycleMethodCall::validate(
     if (get_dex_method(base_class) == nullptr) {
       // Callee does not exist within the base class. Likely an invalid config
       // (e.g. typo).
-      throw LifecycleMethodValidationError(fmt::format(
+      ERROR(
+          1,
           "Callee `{}` is not in base class type `{}`. Check spelling, or add \"defined_in_derived_class\" if the method belongs to a derived class.",
           to_string(),
-          base_class->str()));
+          base_class->str());
     }
     return;
   }
