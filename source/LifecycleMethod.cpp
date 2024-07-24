@@ -174,9 +174,7 @@ bool LifecycleMethod::validate(
         1,
         "Could not convert base class type `{}` into DexClass.",
         base_class_type->str());
-    throw LifecycleMethodValidationError(fmt::format(
-        "Invalid base class type `{}` in life-cycle definition.",
-        base_class_name_));
+    return false;
   }
 
   for (const auto& callee : callees_) {
