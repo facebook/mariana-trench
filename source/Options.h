@@ -50,7 +50,7 @@ class Options final {
 
   DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Options)
 
-  static std::unique_ptr<Options> options_from_json_file(const std::string& options_json_path);
+  static std::unique_ptr<Options> from_json_file(const std::filesystem::path& options_json_path);
 
   const std::vector<std::string>& models_paths() const;
   const std::vector<std::string>& field_models_paths() const;

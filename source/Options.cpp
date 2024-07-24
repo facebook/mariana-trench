@@ -148,7 +148,10 @@ Options::Options(
       propagate_across_arguments_(propagate_across_arguments) {}
 
 Options::Options(const Json::Value &json){
-    system_jar_paths_ = JsonValidation::string_list(json,"system-jar-paths");
+    system_jar_paths_ =  parse_paths_list(
+        JsonValidation::string(json,"system-jar-paths"),
+        std::nullopt,
+        /* check exist */ false);
 
     apk_directory_ =
         check_directory_exists(JsonValidation::string(json,"apk-directory"));
@@ -299,10 +302,8 @@ Options::Options(const Json::Value &json){
 }
 
 
-std::unique_ptr<Options> Options::options_from_json_file(const std::string& options_json_path){
-    // Use JsonReader to parse the JSON file
+std::unique_ptr<Options> Options::from_json_file(const std::filesystem::path& options_json_path){
     Json::Value json = marianatrench::JsonReader::parse_json_file(options_json_path);
-    // Validate the JSON object
     marianatrench::JsonValidation::validate_object(json);
     return std::make_unique<Options>(json);
 }
