@@ -31,6 +31,7 @@ class TransformList final {
 
  public:
   using ConstIterator = List::const_iterator;
+  using ConstReverseIterator = List::const_reverse_iterator;
 
   // The reason for not reusing `transforms::TransformDirection` is that it
   // represents the direction of propagation, while we need a enum that encodes
@@ -40,6 +41,38 @@ class TransformList final {
   // applied in the reverse order on the source. Reusing the enum would cause
   // great ambiguity.
   enum class ApplicationDirection { Forward, Backward };
+
+  // A non-owning range view of the sanitizers in the list.
+  template <ApplicationDirection Direction>
+  class SanitizerRange {
+   private:
+    using Iterator = std::conditional_t<
+        Direction == ApplicationDirection::Forward,
+        ConstIterator,
+        ConstReverseIterator>;
+
+   public:
+    static constexpr ApplicationDirection direction = Direction;
+
+    SanitizerRange(const Iterator& begin, const Iterator& end)
+        : it_pair_(begin, end) {}
+    INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(SanitizerRange)
+
+    Iterator begin() const {
+      return it_pair_.first;
+    }
+
+    Iterator end() const {
+      return it_pair_.second;
+    }
+
+    std::size_t size() const {
+      return std::distance(begin(), end());
+    }
+
+   private:
+    std::pair<Iterator, Iterator> it_pair_;
+  };
 
  public:
   TransformList() = default;
@@ -64,14 +97,11 @@ class TransformList final {
   /**
    * Helper for locating the leading sanitizers (i.e. the adjacent sanitizers
    * at the start/end of the list, given the direction).
-   * The result is in the form of an iterator pair, denoting the begin and end
-   * If `Direction == ApplicationDirection::Forward`, this would be a pair of
-   * `std::vector<const Transform*>::const_iterator`,
-   * If `Direction == ApplicationDirection::Backward`, this would be a pair of
-   * `std::vector<const Transform*>::const_reverse_iterator`
+   * The result is in the form of a non-owning range implemented by an iterator
+   * pair, denoting the begin and end.
    */
   template <ApplicationDirection Direction>
-  auto find_consecutive_sanitizers() const {
+  SanitizerRange<Direction> find_consecutive_sanitizers() const {
     if constexpr (Direction == ApplicationDirection::Forward) {
       // Use cbegin and cend
       auto sanitizer_begin = transforms_.cbegin();
@@ -79,7 +109,7 @@ class TransformList final {
           sanitizer_begin, transforms_.cend(), [](const Transform* transform) {
             return !transform->is<SanitizerSetTransform>();
           });
-      return std::make_pair(sanitizer_begin, sanitizer_end);
+      return SanitizerRange<Direction>(sanitizer_begin, sanitizer_end);
     } else {
       // Use crbegin and crend
       auto sanitizer_rbegin = transforms_.crbegin();
@@ -89,7 +119,7 @@ class TransformList final {
           [](const Transform* transform) {
             return !transform->is<SanitizerSetTransform>();
           });
-      return std::make_pair(sanitizer_rbegin, sanitizer_rend);
+      return SanitizerRange<Direction>(sanitizer_rbegin, sanitizer_rend);
     }
   }
 
@@ -135,11 +165,10 @@ class TransformList final {
       kind = transform_kind->base_kind();
     }
 
-    auto [sanitizer_begin, sanitizer_end] =
-        find_consecutive_sanitizers<Direction>();
+    const auto sanitizer_range = find_consecutive_sanitizers<Direction>();
     return std::any_of(
-        std::move(sanitizer_begin),
-        std::move(sanitizer_end),
+        sanitizer_range.begin(),
+        sanitizer_range.end(),
         [kind, direction](const Transform* transform) {
           return transform->as<SanitizerSetTransform>()->kinds().contains(
               SourceSinkKind::from_transform_direction(kind, direction));
