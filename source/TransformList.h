@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <boost/iterator/transform_iterator.hpp>
+
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/Context.h>
 #include <mariana-trench/IncludeMacros.h>
@@ -42,28 +44,48 @@ class TransformList final {
   // great ambiguity.
   enum class ApplicationDirection { Forward, Backward };
 
-  // A non-owning range view of the sanitizers in the list.
+  /* A non-owning range view of the sanitizers in the list. */
   template <ApplicationDirection Direction>
   class SanitizerRange {
    private:
-    using Iterator = std::conditional_t<
+    using TransformListIterator = std::conditional_t<
         Direction == ApplicationDirection::Forward,
         ConstIterator,
         ConstReverseIterator>;
 
+    /**
+     * Functor used by boost::transform_iterator to convert a const Transform*
+     * to a const SanitizerSetTransform*.
+     */
+    struct GetAsSanitizerSetTransform {
+      const SanitizerSetTransform* operator()(
+          const Transform* transform) const {
+        // Only used by SanitizerRange, therefore safe to static_cast.
+        return static_cast<const SanitizerSetTransform*>(transform);
+      }
+    };
+
    public:
+    using Iterator = boost::
+        transform_iterator<GetAsSanitizerSetTransform, TransformListIterator>;
+
     static constexpr ApplicationDirection direction = Direction;
 
-    SanitizerRange(const Iterator& begin, const Iterator& end)
-        : it_pair_(begin, end) {}
+    SanitizerRange(
+        const TransformListIterator& begin,
+        const TransformListIterator& end)
+        : iterator_pair_(
+              Iterator(begin, GetAsSanitizerSetTransform()),
+              Iterator(end, GetAsSanitizerSetTransform())) {}
+
     INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(SanitizerRange)
 
     Iterator begin() const {
-      return it_pair_.first;
+      return iterator_pair_.first;
     }
 
     Iterator end() const {
-      return it_pair_.second;
+      return iterator_pair_.second;
     }
 
     std::size_t size() const {
@@ -71,7 +93,7 @@ class TransformList final {
     }
 
    private:
-    std::pair<Iterator, Iterator> it_pair_;
+    std::pair<Iterator, Iterator> iterator_pair_;
   };
 
  public:
@@ -169,8 +191,8 @@ class TransformList final {
     return std::any_of(
         sanitizer_range.begin(),
         sanitizer_range.end(),
-        [kind, direction](const Transform* transform) {
-          return transform->as<SanitizerSetTransform>()->kinds().contains(
+        [kind, direction](const SanitizerSetTransform* sanitizer) {
+          return sanitizer->kinds().contains(
               SourceSinkKind::from_transform_direction(kind, direction));
         });
   }
