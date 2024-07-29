@@ -258,4 +258,117 @@ TEST_F(TransformListTest, Sanitize) {
                        transforms::TransformDirection::Forward));
 }
 
+TEST_F(TransformListTest, FilterGlobalSanitizer) {
+  auto context = test::make_empty_context();
+
+  const Transform* transform_x =
+      context.transforms_factory->create_transform("X");
+  const Transform* transform_y =
+      context.transforms_factory->create_transform("Y");
+  const Transform* transform_z =
+      context.transforms_factory->create_transform("Z");
+
+  const Kind* kind_a = context.kind_factory->get("A");
+  const Kind* kind_b = context.kind_factory->get("B");
+  const Kind* kind_c = context.kind_factory->get("C");
+
+  const Transform* sanitize_a =
+      context.transforms_factory->create_sanitizer_set_transform(
+          SanitizerSetTransform::Set{SourceSinkKind::source(kind_a)});
+  const Transform* sanitize_b =
+      context.transforms_factory->create_sanitizer_set_transform(
+          SanitizerSetTransform::Set{SourceSinkKind::source(kind_b)});
+  const Transform* sanitize_a_b =
+      context.transforms_factory->create_sanitizer_set_transform(
+          SanitizerSetTransform::Set{
+              SourceSinkKind::source(kind_a), SourceSinkKind::source(kind_b)});
+  const Transform* sanitize_c =
+      context.transforms_factory->create_sanitizer_set_transform(
+          SanitizerSetTransform::Set{SourceSinkKind::source(kind_c)});
+
+  // No filtering if there is no sanitizer
+  EXPECT_EQ(
+      TransformList::filter_global_sanitizers(
+          context.transforms_factory->create(
+              std::vector{transform_x, transform_y}),
+          context.transforms_factory->create(std::vector{transform_z}),
+          *context.transforms_factory),
+      *context.transforms_factory->create(
+          std::vector{transform_x, transform_y}));
+
+  // No existing global sanitizers
+  EXPECT_EQ(
+      TransformList::filter_global_sanitizers(
+          context.transforms_factory->create(std::vector{sanitize_a}),
+          context.transforms_factory->create(std::vector{transform_z}),
+          *context.transforms_factory),
+      *context.transforms_factory->create(std::vector{sanitize_a}));
+
+  // Existing global sanitizer is not the same type
+  EXPECT_EQ(
+      TransformList::filter_global_sanitizers(
+          context.transforms_factory->create(std::vector{sanitize_a}),
+          context.transforms_factory->create(std::vector{sanitize_b}),
+          *context.transforms_factory),
+      *context.transforms_factory->create(std::vector{sanitize_a}));
+
+  // Existing global sanitizer is the same type
+  EXPECT_EQ(
+      TransformList::filter_global_sanitizers(
+          context.transforms_factory->create(
+              std::vector{transform_x, sanitize_a}),
+          context.transforms_factory->create(std::vector{sanitize_a}),
+          *context.transforms_factory),
+      *context.transforms_factory->create(std::vector{transform_x}));
+
+  EXPECT_EQ(
+      TransformList::filter_global_sanitizers(
+          context.transforms_factory->create(
+              std::vector{transform_z, sanitize_a_b}),
+          context.transforms_factory->create(
+              std::vector{sanitize_a, sanitize_b}),
+          *context.transforms_factory),
+      *context.transforms_factory->create(std::vector{transform_z}));
+
+  // Blocked by named transforms
+  EXPECT_EQ(
+      TransformList::filter_global_sanitizers(
+          context.transforms_factory->create(
+              std::vector{sanitize_a, transform_x}),
+          context.transforms_factory->create(std::vector{sanitize_a}),
+          *context.transforms_factory),
+      *context.transforms_factory->create(
+          std::vector{sanitize_a, transform_x}));
+
+  EXPECT_EQ(
+      TransformList::filter_global_sanitizers(
+          context.transforms_factory->create(std::vector{sanitize_a}),
+          context.transforms_factory->create(
+              std::vector{transform_x, sanitize_a}),
+          *context.transforms_factory),
+      *context.transforms_factory->create(std::vector{sanitize_a}));
+
+  // Filter only part of the sanitized kinds
+  EXPECT_EQ(
+      TransformList::filter_global_sanitizers(
+          context.transforms_factory->create(std::vector{sanitize_a_b}),
+          context.transforms_factory->create(std::vector{sanitize_b}),
+          *context.transforms_factory),
+      *context.transforms_factory->create(std::vector{sanitize_a}));
+
+  EXPECT_EQ(
+      TransformList::filter_global_sanitizers(
+          context.transforms_factory->create(std::vector{sanitize_a_b}),
+          context.transforms_factory->create(std::vector{sanitize_a}),
+          *context.transforms_factory),
+      *context.transforms_factory->create(std::vector{sanitize_b}));
+
+  EXPECT_EQ(
+      TransformList::filter_global_sanitizers(
+          context.transforms_factory->create(
+              std::vector{sanitize_b, sanitize_c, sanitize_a}),
+          context.transforms_factory->create(std::vector{sanitize_c}),
+          *context.transforms_factory),
+      *context.transforms_factory->create(std::vector{sanitize_b, sanitize_a}));
+}
 } // namespace marianatrench

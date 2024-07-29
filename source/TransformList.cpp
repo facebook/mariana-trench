@@ -161,4 +161,54 @@ TransformList TransformList::canonicalize(
   return TransformList(std::move(canonicalized));
 }
 
+TransformList TransformList::filter_global_sanitizers(
+    const TransformList* incoming,
+    const TransformList* existing_global,
+    const TransformsFactory& transforms_factory) {
+  SanitizerSetTransform::Set global_sanitizer_kinds{};
+  for (const auto* global_sanitizer :
+       existing_global
+           ->find_consecutive_sanitizers<ApplicationDirection::Forward>()) {
+    global_sanitizer_kinds.union_with(global_sanitizer->kinds());
+  }
+
+  // If there are no sanitizers in global transforms, we can just return
+  if (global_sanitizer_kinds.empty()) {
+    return *incoming;
+  }
+
+  const auto sanitizer_range =
+      incoming->find_consecutive_sanitizers<ApplicationDirection::Backward>();
+
+  // If there are no sanitizers in incoming transforms, we can just return
+  if (sanitizer_range.empty()) {
+    return *incoming;
+  }
+
+  List filtered{};
+  for (const auto* incoming_sanitizer : sanitizer_range) {
+    // Collect kinds that are not already in the global sanitizers
+    SanitizerSetTransform::Set new_kinds =
+        incoming_sanitizer->kinds().get_difference_with(global_sanitizer_kinds);
+
+    // Add the sanitizers that are not entirely filtered
+    if (!new_kinds.empty()) {
+      filtered.push_back(
+          transforms_factory.create_sanitizer_set_transform(new_kinds));
+    }
+  }
+
+  // First copy over the transforms we did not touch
+  List result{};
+  result.reserve(incoming->size() - sanitizer_range.size() + filtered.size());
+  result.insert(
+      result.end(),
+      incoming->begin(),
+      incoming->end() - sanitizer_range.size());
+
+  // Then copy over the sanitizers we did not filter out
+  result.insert(result.end(), filtered.crbegin(), filtered.crend());
+
+  return TransformList(std::move(result));
+}
 } // namespace marianatrench

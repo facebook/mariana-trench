@@ -88,6 +88,10 @@ class TransformList final {
       return iterator_pair_.second;
     }
 
+    bool empty() const {
+      return begin() == end();
+    }
+
     std::size_t size() const {
       return std::distance(begin(), end());
     }
@@ -218,6 +222,11 @@ class TransformList final {
 
   static TransformList canonicalize(
       const TransformList* transforms,
+      const TransformsFactory& transforms_factory);
+
+  static TransformList filter_global_sanitizers(
+      const TransformList* incoming,
+      const TransformList* existing_global,
       const TransformsFactory& transforms_factory);
 
  private:

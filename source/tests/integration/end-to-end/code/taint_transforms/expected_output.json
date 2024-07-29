@@ -2647,8 +2647,7 @@
               "kind" : 
               {
                 "base" : "LocalReturn",
-                "global" : "Sanitize[Sink[B]]",
-                "local" : "Sanitize[Sink[B]]"
+                "global" : "Sanitize[Sink[B]]"
               },
               "output_paths" : 
               {
