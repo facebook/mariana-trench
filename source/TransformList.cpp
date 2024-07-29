@@ -139,10 +139,7 @@ TransformList TransformList::canonicalize(
     if (const auto* santize_transform =
             transform->as<SanitizerSetTransform>()) {
       const auto& current_sanitizers = santize_transform->kinds();
-      sanitize_kinds.insert(
-          boost::container::ordered_unique_range,
-          current_sanitizers.begin(),
-          current_sanitizers.end());
+      sanitize_kinds.union_with(current_sanitizers);
     } else {
       if (!sanitize_kinds.empty()) {
         // We have a non-sanitizer transform after sanitizers, so we need to add

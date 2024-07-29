@@ -10,8 +10,9 @@
 #include <ostream>
 #include <string>
 
-#include <boost/container/flat_set.hpp>
 #include <json/json.h>
+
+#include <sparta/include/sparta/FlatSet.h>
 
 #include <mariana-trench/Context.h>
 #include <mariana-trench/IncludeMacros.h>
@@ -23,7 +24,7 @@ namespace marianatrench {
 
 class SanitizerSetTransform final : public Transform {
  public:
-  using Set = boost::container::flat_set<SourceSinkKind>;
+  using Set = sparta::FlatSet<SourceSinkKind>;
 
   explicit SanitizerSetTransform(const Set& kinds) : kinds_(kinds) {}
 
