@@ -12,7 +12,7 @@
 
 #include <json/json.h>
 
-#include <sparta/include/sparta/FlatSet.h>
+#include <sparta/FlatSet.h>
 
 #include <mariana-trench/Context.h>
 #include <mariana-trench/IncludeMacros.h>
