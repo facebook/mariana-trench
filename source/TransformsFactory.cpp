@@ -77,7 +77,8 @@ TransformsFactory::reverse(const TransformList* MT_NULLABLE transforms) const {
 
 const TransformList* MT_NULLABLE
 TransformsFactory::get_source_as_transform(const Kind* kind) const {
-  if (const auto* source_as_transform = source_as_transform_.get(kind)) {
+  if (const auto* source_as_transform =
+          source_as_transform_.get(kind->discard_transforms())) {
     return transform_lists_.get(TransformList({source_as_transform}));
   }
 
