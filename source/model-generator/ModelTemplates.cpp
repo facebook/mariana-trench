@@ -182,13 +182,18 @@ void PropagationTemplate::instantiate(
 
 PortSanitizerTemplate::PortSanitizerTemplate(
     SanitizerKind sanitizer_kind,
-    RootTemplate port)
-    : sanitizer_kind_(std::move(sanitizer_kind)), port_(std::move(port)) {}
+    RootTemplate port,
+    KindSetAbstractDomain kinds)
+    : sanitizer_kind_(std::move(sanitizer_kind)),
+      port_(std::move(port)),
+      kinds_(std::move(kinds)) {}
 
 PortSanitizerTemplate PortSanitizerTemplate::from_json(
-    const Json::Value& value) {
+    const Json::Value& value,
+    Context& context) {
   JsonValidation::validate_object(value);
-  JsonValidation::check_unexpected_members(value, {"port", "sanitize"});
+  JsonValidation::check_unexpected_members(
+      value, {"kinds", "port", "sanitize"});
 
   SanitizerKind sanitizer_kind;
   auto sanitizer_kind_string =
@@ -208,14 +213,26 @@ PortSanitizerTemplate PortSanitizerTemplate::from_json(
 
   auto port = AccessPathTemplate::from_json(value["port"]);
 
-  return PortSanitizerTemplate(sanitizer_kind, port.root());
+  auto kinds = KindSetAbstractDomain::bottom();
+  if (value.isMember("kinds")) {
+    kinds = KindSetAbstractDomain();
+    for (const auto& kind_json :
+         JsonValidation::nonempty_array(value, "kinds")) {
+      kinds.add(
+          SourceSinkKind::from_config_json(kind_json, context, sanitizer_kind));
+    }
+  } else {
+    kinds = KindSetAbstractDomain::top();
+  }
+
+  return PortSanitizerTemplate(sanitizer_kind, port.root(), std::move(kinds));
 }
 
 void PortSanitizerTemplate::instantiate(
     const TemplateVariableMapping& parameter_positions,
     Model& model) const {
   auto root = port_.instantiate(parameter_positions);
-  auto sanitizer = Sanitizer(sanitizer_kind_, KindSetAbstractDomain::top());
+  auto sanitizer = Sanitizer(sanitizer_kind_, kinds_);
 
   model.add_port_sanitizers(SanitizerSet(sanitizer), root);
 }
@@ -562,7 +579,7 @@ ForAllParameters ForAllParameters::from_json(
   for (auto sanitizer_value :
        JsonValidation::null_or_array(value, /* field */ "sanitizers")) {
     port_sanitizers.push_back(
-        PortSanitizerTemplate::from_json(sanitizer_value));
+        PortSanitizerTemplate::from_json(sanitizer_value, context));
   }
 
   for (auto attach_to_sources_value :

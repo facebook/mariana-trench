@@ -301,6 +301,75 @@
       ]
     }
   ],
+  "sanitizers" : 
+  [
+    {
+      "kinds" : 
+      [
+        {
+          "kind" : "TestParameterSource"
+        }
+      ],
+      "port" : "Argument(1)",
+      "sanitize" : "sources"
+    },
+    {
+      "kinds" : 
+      [
+        {
+          "kind" : "TestParameterSource"
+        }
+      ],
+      "port" : "Argument(2)",
+      "sanitize" : "sources"
+    },
+    {
+      "kinds" : 
+      [
+        {
+          "kind" : "TestSink"
+        }
+      ],
+      "port" : "Argument(1)",
+      "sanitize" : "sinks"
+    },
+    {
+      "kinds" : 
+      [
+        {
+          "kind" : "TestSink"
+        }
+      ],
+      "port" : "Argument(2)",
+      "sanitize" : "sinks"
+    },
+    {
+      "kinds" : 
+      [
+        {
+          "kind" : "Source[TestParameterSource]"
+        },
+        {
+          "kind" : "Source[TestSink]"
+        }
+      ],
+      "port" : "Argument(1)",
+      "sanitize" : "propagations"
+    },
+    {
+      "kinds" : 
+      [
+        {
+          "kind" : "Source[TestParameterSource]"
+        },
+        {
+          "kind" : "Source[TestSink]"
+        }
+      ],
+      "port" : "Argument(2)",
+      "sanitize" : "propagations"
+    }
+  ],
   "sinks" : 
   [
     {

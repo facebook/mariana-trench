@@ -124,6 +124,44 @@
                 ],
                 "port": "Argument(x)"
               }
+            ],
+            "sanitizers": [
+              {
+                "sanitize": "sources",
+                "port": "Argument(x)",
+                "kinds": [
+                  {
+                    "kind": "TestParameterSource"
+                  }
+                ]
+              },
+              {
+                "sanitize": "sinks",
+                "port": "Argument(x)",
+                "kinds": [
+                  {
+                    "kind": "TestSink"
+                  }
+                ]
+              },
+              {
+                "sanitize": "propagations",
+                "port": "Argument(x)",
+                "kinds": [
+                  {
+                    "kind": "Source[TestParameterSource]"
+                  }
+                ]
+              },
+              {
+                "sanitize": "propagations",
+                "port": "Argument(x)",
+                "kinds": [
+                  {
+                    "kind": "Source[TestSink]"
+                  }
+                ]
+              }
             ]
           }
         ]

@@ -87,11 +87,14 @@ class PortSanitizerTemplate final {
  public:
   explicit PortSanitizerTemplate(
       SanitizerKind sanitizer_kind,
-      RootTemplate port);
+      RootTemplate port,
+      KindSetAbstractDomain kinds);
 
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(PortSanitizerTemplate)
 
-  static PortSanitizerTemplate from_json(const Json::Value& value);
+  static PortSanitizerTemplate from_json(
+      const Json::Value& value,
+      Context& context);
   void instantiate(
       const TemplateVariableMapping& parameter_positions,
       Model& model) const;
@@ -99,6 +102,7 @@ class PortSanitizerTemplate final {
  private:
   SanitizerKind sanitizer_kind_;
   RootTemplate port_;
+  KindSetAbstractDomain kinds_;
 };
 
 class SinkTemplate final {
