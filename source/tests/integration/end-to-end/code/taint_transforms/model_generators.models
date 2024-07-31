@@ -173,6 +173,34 @@
           }
         ]
       }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_pattern",
+          "pattern": "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeAAllArgsRet.*"
+        }
+      ],
+      "model": {
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [],
+            "sanitizers": [
+              {
+                "sanitize": "propagations",
+                "port": "Argument(x)",
+                "kinds": [
+                  {
+                    "kind": "Source[A]"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
     }
   ]
 }

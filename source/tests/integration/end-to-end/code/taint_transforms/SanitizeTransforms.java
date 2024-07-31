@@ -420,4 +420,22 @@ public class SanitizeTransforms {
     Object o1 = taintWithYSanitizeASanitizeBToZ();
     sinkB(o1);
   }
+
+  /* KSS defined using for_all_parameters */
+  static Object sanitizeAAllArgsRet1(Object o1, Object o2) {
+    return o1;
+  }
+
+  static Object sanitizeAAllArgsRet2(Object o1, Object o2) {
+    return o2;
+  }
+
+  static void testAToSanitizeAAllArgsToBNoIssue() {
+    Object o1 = sourceA();
+    Object o2 = sourceA();
+    Object o3 = sanitizeAAllArgsRet1(o1, o2);
+    Object o4 = sanitizeAAllArgsRet2(o1, o2);
+    sinkB(o3);
+    sinkB(o4);
+  }
 }

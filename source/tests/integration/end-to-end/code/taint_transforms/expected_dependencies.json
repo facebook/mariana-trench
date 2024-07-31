@@ -116,6 +116,14 @@
     "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testSinkWithTransformIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testTransformT2T3Issue:()V"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeAAllArgsRet1:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeAAllArgsToBNoIssue:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeAAllArgsRet2:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeAAllArgsToBNoIssue:()V"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeASinkB:(Ljava/lang/Object;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToXToSanitizeABIssue:()V",
@@ -189,6 +197,7 @@
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeATransformXSinkB:(Ljava/lang/Object;)V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testASanitizeBToXToBIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testASanitizeBXToBIssue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeAAllArgsToBNoIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeAToBNoIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeAXToBNoIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeAtoXToBNoIssue:()V",
@@ -222,6 +231,7 @@
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.taintWithTransformX:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.taintWithTransformXY:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.taintWithTransformY:()Ljava/lang/Object;",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeAAllArgsToBNoIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeAToBNoIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeAToXBNoIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeAXBNoIssue:()V",

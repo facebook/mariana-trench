@@ -536,6 +536,16 @@
       "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceASanitizeBTransformX:()Ljava/lang/Object;"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeAAllArgsToBNoIssue:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeAAllArgsRet1:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeAAllArgsRet2:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sinkB:(Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceA:()Ljava/lang/Object;"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeAToBNoIssue:()V" : 
   {
     "static" : 
