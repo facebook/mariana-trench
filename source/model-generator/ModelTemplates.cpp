@@ -25,7 +25,7 @@ std::optional<ParameterPosition> TemplateVariableMapping::at(
     const std::string& name) const {
   try {
     return map_.at(name);
-  } catch (const std::out_of_range& exception) {
+  } catch (const std::out_of_range&) {
     return std::nullopt;
   }
 }
