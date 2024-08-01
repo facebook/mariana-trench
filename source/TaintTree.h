@@ -10,6 +10,7 @@
 #include <mariana-trench/AbstractTreeDomain.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Taint.h>
+#include <mariana-trench/TaintTreeConfigurationOverrides.h>
 
 namespace marianatrench {
 
@@ -29,6 +30,9 @@ struct TaintTreeConfiguration {
   }
 };
 
+// We cannot use `sparta::DirectProductAbstractDomain` because both
+// AbstractTreeDomain and TaintTreeConfigurationOverrides are bottom value
+// interfaces (i.e. empty is bottom). So, the product domain is never updated.
 class TaintTree final : public sparta::AbstractDomain<TaintTree> {
  private:
   // We wrap `AbstractTreeDomain<Taint, TaintTreeConfiguration>`
@@ -36,19 +40,45 @@ class TaintTree final : public sparta::AbstractDomain<TaintTree> {
 
   using Tree = AbstractTreeDomain<Taint, TaintTreeConfiguration>;
 
-  explicit TaintTree(Tree tree) : tree_(std::move(tree)) {}
+  explicit TaintTree(Tree tree)
+      : tree_(std::move(tree)),
+        overrides_(TaintTreeConfigurationOverrides::bottom()) {}
 
  public:
   /* Create the bottom (empty) taint tree. */
-  TaintTree() : tree_(Tree::bottom()) {}
+  TaintTree()
+      : tree_(Tree::bottom()),
+        overrides_(TaintTreeConfigurationOverrides::bottom()) {}
 
-  explicit TaintTree(Taint taint) : tree_(std::move(taint)) {}
+  explicit TaintTree(Taint taint)
+      : tree_(Tree(std::move(taint))),
+        overrides_(TaintTreeConfigurationOverrides::bottom()) {}
 
   explicit TaintTree(std::initializer_list<std::pair<Path, Taint>> edges)
-      : tree_(std::move(edges)) {}
+      : tree_(Tree(std::move(edges))),
+        overrides_(TaintTreeConfigurationOverrides::bottom()) {}
 
-  INCLUDE_ABSTRACT_DOMAIN_METHODS(TaintTree, Tree, tree_)
+  bool is_bottom() const;
 
+  bool is_top() const;
+
+  bool leq(const TaintTree& other) const;
+
+  bool equals(const TaintTree& other) const;
+
+  void set_to_bottom();
+
+  void set_to_top();
+
+  void join_with(const TaintTree& other);
+
+  void widen_with(const TaintTree& other);
+
+  void meet_with(const TaintTree& other);
+
+  void narrow_with(const TaintTree& other);
+
+ public:
   const Taint& root() const {
     return tree_.root();
   }
@@ -137,14 +167,15 @@ class TaintTree final : public sparta::AbstractDomain<TaintTree> {
   }
 
   friend std::ostream& operator<<(std::ostream& out, const TaintTree& tree) {
-    return out << "TaintTree" << tree.tree_;
+    return out << "TaintTree(tree=" << tree.tree_
+               << ", overrides=" << tree.overrides_ << ")";
   }
 
  private:
   Tree tree_;
+  TaintTreeConfigurationOverrides overrides_;
 
  private:
   friend class TaintAccessPathTree;
 };
-
 } // namespace marianatrench

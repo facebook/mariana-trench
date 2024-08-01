@@ -21,6 +21,60 @@ Taint TaintTreeConfiguration::transform_on_widening_collapse(Taint taint) {
   return taint;
 }
 
+bool TaintTree::is_bottom() const {
+  return tree_.is_bottom() && overrides_.is_bottom();
+}
+
+bool TaintTree::is_top() const {
+  return tree_.is_top() && overrides_.is_top();
+}
+
+bool TaintTree::leq(const TaintTree& other) const {
+  return tree_.leq(other.tree_) && overrides_.leq(other.overrides_);
+}
+
+bool TaintTree::equals(const TaintTree& other) const {
+  return tree_.equals(other.tree_) && overrides_.equals(other.overrides_);
+}
+
+void TaintTree::set_to_bottom() {
+  tree_.set_to_bottom();
+  overrides_.set_to_bottom();
+}
+
+void TaintTree::set_to_top() {
+  tree_.set_to_top();
+  overrides_.set_to_top();
+}
+
+void TaintTree::join_with(const TaintTree& other) {
+  mt_if_expensive_assert(auto previous = *this);
+
+  tree_.join_with(other.tree_);
+  overrides_.join_with(other.overrides_);
+
+  mt_expensive_assert(previous.leq(*this) && other.leq(*this));
+}
+
+void TaintTree::widen_with(const TaintTree& other) {
+  mt_if_expensive_assert(auto previous = *this);
+
+  tree_.widen_with(other.tree_);
+  overrides_.widen_with(other.overrides_);
+
+  mt_expensive_assert(previous.leq(*this) && other.leq(*this));
+}
+
+void TaintTree::meet_with(const TaintTree& other) {
+  tree_.meet_with(other.tree_);
+  overrides_.meet_with(other.overrides_);
+}
+
+void TaintTree::narrow_with(const TaintTree& other) {
+  tree_.narrow_with(other.tree_);
+  overrides_.narrow_with(other.overrides_);
+}
+
 TaintTree TaintTree::read(const Path& path) const {
   return TaintTree(tree_.read(path));
 }
