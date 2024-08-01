@@ -226,6 +226,12 @@ ExpectIssue ExpectIssue::from_annotation(
       gather_strings(annotation_element, source_origins);
     } else if (annotation_key->str() == "sinkOrigins") {
       gather_strings(annotation_element, sink_origins);
+    } else if (
+        annotation_key->str() == "isFalsePositive" ||
+        annotation_key->str() == "isFalseNegative") {
+      // No-op. This is a flag to document whether the expected issue is a false
+      // positive (or false negative for ExpectNoIssue). It has no bearing on
+      // validation.
     } else {
       // Do not fail in case new fields have been added to annotation, in which
       // case, the error is expected to resolve on the next release
