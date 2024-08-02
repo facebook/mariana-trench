@@ -116,6 +116,22 @@
     "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testSinkWithTransformIssue:()V",
     "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.testTransformT2T3Issue:()V"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms$Builder;.<init>:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testBuilderNoIssue:()Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testBuilderNoIssue:()Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms$Builder;.number:(I)Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms$Builder;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testBuilderNoIssue:()Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.<init>:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeAAllArgsRet1:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testAToSanitizeAAllArgsToBNoIssue:()V"
@@ -535,6 +551,7 @@
     "Lcom/facebook/marianatrench/integrationtests/ExtraTraces;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms$Builder;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceA:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.<init>:()V",

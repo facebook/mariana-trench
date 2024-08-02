@@ -332,6 +332,20 @@
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms$Builder;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.<init>:()V"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.<init>:()V" : 
   {
     "static" : 
@@ -801,6 +815,18 @@
     [
       "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeAToYToZToB:(Ljava/lang/Object;)V",
       "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.taintWithTransformXY:()Ljava/lang/Object;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testBuilderNoIssue:()Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms$Builder;.<init>:()V"
+    ],
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;",
+      "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms$Builder;.number:(I)Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms$Builder;"
     ]
   },
   "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformXSanitizeA:(Ljava/lang/Object;)Ljava/lang/Object;" : 

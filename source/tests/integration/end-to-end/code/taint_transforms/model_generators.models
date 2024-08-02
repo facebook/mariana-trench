@@ -201,6 +201,68 @@
           }
         ]
       }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms$Builder;",
+          "name": "<init>"
+        }
+      ],
+      "model": {
+        "sources": [
+          {
+            "kind": "Builder",
+            "port": "Argument(0)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms$Builder;",
+          "name": "build"
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "Build",
+            "port": "Argument(0)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms$Builder;",
+          "name": "number"
+        }
+      ],
+      "model": {
+        "modes": [
+          "alias-memory-location-on-invoke"
+        ],
+        "sanitizers": [
+          {
+            "sanitize": "propagations",
+            "kinds": [
+              {
+                "kind": "Sink[Build]"
+              }
+            ],
+            "port": "Argument(0)"
+          }
+        ]
+      }
     }
   ]
 }
