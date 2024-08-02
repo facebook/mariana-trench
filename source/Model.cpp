@@ -160,6 +160,7 @@ Model::Model(
     Context& context,
     Modes modes,
     Frozen frozen,
+    TaintTreeConfigurationOverrides config_overrides,
     const std::vector<std::pair<AccessPath, TaintConfig>>& generations,
     const std::vector<std::pair<AccessPath, TaintConfig>>& parameter_sources,
     const std::vector<std::pair<AccessPath, TaintConfig>>& sinks,
@@ -242,6 +243,8 @@ Model::Model(
   for (const auto& issue : issues) {
     add_issue(issue);
   }
+
+  apply_config_overrides(config_overrides);
 }
 
 bool Model::operator==(const Model& other) const {
@@ -1375,6 +1378,7 @@ Model Model::from_config_json(
          "position", // Only when parsing previously emitted models.
          "modes",
          "freeze",
+         "config_overrides",
          "generations",
          "parameter_sources",
          "sources",
@@ -1413,7 +1417,13 @@ Model Model::from_config_json(
     frozen.set(*freeze_kind, true);
   }
 
-  Model model(method, context, modes, frozen);
+  TaintTreeConfigurationOverrides config_overrides;
+  if (value.isMember("config_overrides")) {
+    config_overrides =
+        TaintTreeConfigurationOverrides::from_json(value["config_overrides"]);
+  }
+
+  Model model(method, context, modes, frozen, config_overrides);
 
   std::vector<std::pair<AccessPath, Json::Value>> generation_values;
   std::vector<std::pair<AccessPath, Json::Value>> parameter_source_values;
@@ -1568,6 +1578,8 @@ Model Model::from_config_json(
         value, /* field */ std::nullopt, /* expected */ "model without issues");
   }
 
+  model.apply_config_overrides(config_overrides);
+
   return model;
 }
 
@@ -1687,6 +1699,11 @@ Model Model::from_json(const Json::Value& value, Context& context) {
     auto port = AccessPath::from_json(generation_value["port"]);
     auto taint = Taint::from_json(generation_value["taint"], context);
     model.add_generation(port, taint, *context.heuristics);
+    if (generation_value.isMember("config_overrides")) {
+      model.generations_.apply_config_overrides(
+          TaintTreeConfigurationOverrides::from_json(
+              generation_value["config_overrides"]));
+    }
   }
 
   for (const auto& parameter_source_value :
@@ -1694,6 +1711,11 @@ Model Model::from_json(const Json::Value& value, Context& context) {
     auto port = AccessPath::from_json(parameter_source_value["port"]);
     auto taint = Taint::from_json(parameter_source_value["taint"], context);
     model.add_parameter_source(port, taint, *context.heuristics);
+    if (parameter_source_value.isMember("config_overrides")) {
+      model.parameter_sources_.apply_config_overrides(
+          TaintTreeConfigurationOverrides::from_json(
+              parameter_source_value["config_overrides"]));
+    }
   }
 
   for (const auto& call_effect_source_value :
@@ -1708,6 +1730,11 @@ Model Model::from_json(const Json::Value& value, Context& context) {
     auto port = AccessPath::from_json(sink_value["port"]);
     auto taint = Taint::from_json(sink_value["taint"], context);
     model.add_sink(port, taint, *context.heuristics);
+    if (sink_value.isMember("config_overrides")) {
+      model.sinks_.apply_config_overrides(
+          TaintTreeConfigurationOverrides::from_json(
+              sink_value["config_overrides"]));
+    }
   }
 
   for (const auto& call_effect_sink_value :
@@ -1722,6 +1749,11 @@ Model Model::from_json(const Json::Value& value, Context& context) {
     auto input_path = AccessPath::from_json(propagation_value["input"]);
     auto output_taint = Taint::from_json(propagation_value["output"], context);
     model.add_propagation(input_path, output_taint, *context.heuristics);
+    if (propagation_value.isMember("config_overrides")) {
+      model.propagations_.apply_config_overrides(
+          TaintTreeConfigurationOverrides::from_json(
+              propagation_value["config_overrides"]));
+    }
   }
 
   for (const auto& sanitizer_value :
@@ -1841,6 +1873,10 @@ Json::Value Model::to_json(ExportOriginsMode export_origins_mode) const {
       auto generation_value = Json::Value(Json::objectValue);
       generation_value["port"] = port.to_json();
       generation_value["taint"] = generation_taint.to_json(export_origins_mode);
+      const auto& config_overrides = generations_.config_overrides(port.root());
+      if (!config_overrides.is_bottom()) {
+        generation_value["config_overrides"] = config_overrides.to_json();
+      }
       generations_value.append(generation_value);
     }
     value["generations"] = generations_value;
@@ -1854,6 +1890,11 @@ Json::Value Model::to_json(ExportOriginsMode export_origins_mode) const {
       parameter_source_value["port"] = port.to_json();
       parameter_source_value["taint"] =
           parameter_source_taint.to_json(export_origins_mode);
+      const auto& config_overrides =
+          parameter_sources_.config_overrides(port.root());
+      if (!config_overrides.is_bottom()) {
+        parameter_source_value["config_overrides"] = config_overrides.to_json();
+      }
       parameter_sources_value.append(parameter_source_value);
     }
     value["parameter_sources"] = parameter_sources_value;
@@ -1876,6 +1917,10 @@ Json::Value Model::to_json(ExportOriginsMode export_origins_mode) const {
       auto sink_value = Json::Value(Json::objectValue);
       sink_value["port"] = port.to_json();
       sink_value["taint"] = sink_taint.to_json(export_origins_mode);
+      const auto& config_overrides = sinks_.config_overrides(port.root());
+      if (!config_overrides.is_bottom()) {
+        sink_value["config_overrides"] = config_overrides.to_json();
+      }
       sinks_value.append(sink_value);
     }
     value["sinks"] = sinks_value;
@@ -1900,6 +1945,11 @@ Json::Value Model::to_json(ExportOriginsMode export_origins_mode) const {
       propagation_value["input"] = input_path.to_json();
       propagation_value["output"] =
           propagation_taint.to_json(export_origins_mode);
+      const auto& config_overrides =
+          propagations_.config_overrides(input_path.root());
+      if (!config_overrides.is_bottom()) {
+        propagation_value["config_overrides"] = config_overrides.to_json();
+      }
       propagations_value.append(propagation_value);
     }
     value["propagation"] = propagations_value;
@@ -2528,6 +2578,18 @@ void Model::add_propagation(
     input_path.truncate(heuristics.propagation_max_input_path_size());
   }
   propagations_.write(input_path, output, UpdateKind::Weak);
+}
+
+void Model::apply_config_overrides(
+    const TaintTreeConfigurationOverrides& config_overrides) {
+  if (config_overrides.is_bottom()) {
+    return;
+  }
+
+  generations_.apply_config_overrides(config_overrides);
+  parameter_sources_.apply_config_overrides(config_overrides);
+  sinks_.apply_config_overrides(config_overrides);
+  propagations_.apply_config_overrides(config_overrides);
 }
 
 } // namespace marianatrench

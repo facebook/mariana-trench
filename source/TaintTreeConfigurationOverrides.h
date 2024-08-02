@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <json/json.h>
+
 #include <sparta/PatriciaTreeMapAbstractPartition.h>
 
 #include <mariana-trench/IncludeMacros.h>
@@ -15,9 +17,8 @@
 namespace marianatrench {
 
 enum class TaintTreeConfigurationOverrideOptions : unsigned {
-  PropagationMaxInputPathLeaves,
-  GenerationMaxPathLeaves,
-  SinkMaxPathLeaves,
+  MaxModelWidth,
+  MaxModelHeight,
 };
 
 } // namespace marianatrench
@@ -45,6 +46,11 @@ class TaintTreeConfigurationOverrides final
   explicit TaintTreeConfigurationOverrides(OptionMap options)
       : options_(std::move(options)) {}
 
+  explicit TaintTreeConfigurationOverrides(
+      std::initializer_list<std::pair<
+          TaintTreeConfigurationOverrideOptions,
+          ScalarAbstractDomain::IntType>> options);
+
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(
       TaintTreeConfigurationOverrides)
 
@@ -53,11 +59,15 @@ class TaintTreeConfigurationOverrides final
       OptionMap,
       options_)
 
+  void add(TaintTreeConfigurationOverrideOptions option, unsigned int value);
+
+  Json::Value to_json() const;
+
+  static TaintTreeConfigurationOverrides from_json(Json::Value value);
+
   friend std::ostream& operator<<(
       std::ostream& out,
-      const TaintTreeConfigurationOverrides& /* overrides */) {
-    return out << "TaintTreeConfigurationOverrides()";
-  }
+      const TaintTreeConfigurationOverrides& overrides);
 
  private:
   OptionMap options_;

@@ -222,6 +222,7 @@ TEST_F(RegistryTest, ConstructorUseJoin) {
       context,
       /* modes */ {},
       /* frozen */ {},
+      /* config_overrides */ {},
       /* generations */
       {{AccessPath(Root(Root::Kind::Return)),
         test::make_leaf_taint_config(source_kind)}});
@@ -231,6 +232,7 @@ TEST_F(RegistryTest, ConstructorUseJoin) {
       context,
       /* modes */ {},
       /* frozen */ {},
+      /* config_overrides */ {},
       /* generations */
       {{AccessPath(Root(Root::Kind::Argument, 2)),
         test::make_leaf_taint_config(source_kind)}});

@@ -18,6 +18,19 @@ TaintAccessPathTree::TaintAccessPathTree(
   }
 }
 
+void TaintAccessPathTree::apply_config_overrides(
+    const TaintTreeConfigurationOverrides& config_overrides) {
+  map_.transform([&config_overrides](TaintTree taint_tree) {
+    taint_tree.apply_config_overrides(config_overrides);
+    return taint_tree;
+  });
+}
+
+const TaintTreeConfigurationOverrides& TaintAccessPathTree::config_overrides(
+    Root root) const {
+  return map_.get(root).config_overrides();
+}
+
 TaintTree TaintAccessPathTree::read(Root root) const {
   return map_.get(root);
 }

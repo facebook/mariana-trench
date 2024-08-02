@@ -36,6 +36,7 @@ TEST_F(ModelTest, remove_kinds) {
       context,
       /* modes */ {},
       /* frozen */ {},
+      /* config overrides */ {},
       /* generations */
       {{AccessPath(Root(Root::Kind::Producer, 0)),
         test::make_leaf_taint_config(source_kind)}},
@@ -53,6 +54,7 @@ TEST_F(ModelTest, remove_kinds) {
       context,
       /* modes */ {},
       /* frozen */ {},
+      /* config overrides */ {},
       /* generations */
       {{AccessPath(Root(Root::Kind::Producer, 0)),
         test::make_leaf_taint_config(source_kind)}},
@@ -242,6 +244,7 @@ TEST_F(ModelTest, LessOrEqual) {
                   context,
                   /* modes */ {},
                   /* frozen */ {},
+                  /* config_overrides */ {},
                   /* generations */ {})
                   .leq(Model(
                       /* method */ nullptr,
@@ -253,6 +256,7 @@ TEST_F(ModelTest, LessOrEqual) {
                   context,
                   /* modes */ {},
                   /* frozen */ {},
+                  /* config_overrides */ {},
                   /* generations */
                   {{AccessPath(Root(Root::Kind::Return)),
                     test::make_leaf_taint_config(source_kind)}})
@@ -261,6 +265,7 @@ TEST_F(ModelTest, LessOrEqual) {
                       context,
                       /* modes */ {},
                       /* frozen */ {},
+                      /* config_overrides */ {},
                       /* generations */
                       {{AccessPath(Root(Root::Kind::Return)),
                         test::make_leaf_taint_config(source_kind)}})));
@@ -271,6 +276,7 @@ TEST_F(ModelTest, LessOrEqual) {
                   context,
                   /* modes */ {},
                   /* frozen */ {},
+                  /* config_overrides */ {},
                   /* generations */
                   {{AccessPath(Root(Root::Kind::Return)),
                     test::make_leaf_taint_config(source_kind)}})
@@ -279,6 +285,7 @@ TEST_F(ModelTest, LessOrEqual) {
                       context,
                       /* modes */ {},
                       /* frozen */ {},
+                      /* config_overrides */ {},
                       /* generations */
                       {
                           {AccessPath(Root(Root::Kind::Return)),
@@ -291,6 +298,7 @@ TEST_F(ModelTest, LessOrEqual) {
                    context,
                    /* modes */ {},
                    /* frozen */ {},
+                   /* config_overrides */ {},
                    /* generations */
                    {
                        {AccessPath(Root(Root::Kind::Return)),
@@ -303,6 +311,7 @@ TEST_F(ModelTest, LessOrEqual) {
                        context,
                        /* modes */ {},
                        /* frozen */ {},
+                       /* config_overrides */ {},
                        /* generations */
                        {{AccessPath(Root(Root::Kind::Return)),
                          test::make_leaf_taint_config(source_kind)}})));
@@ -312,6 +321,7 @@ TEST_F(ModelTest, LessOrEqual) {
                   context,
                   /* modes */ {},
                   /* frozen */ {},
+                  /* config_overrides */ {},
                   /* generations */ {},
                   /* parameter_sources */
                   {{AccessPath(Root(Root::Kind::Argument, 1)),
@@ -321,6 +331,7 @@ TEST_F(ModelTest, LessOrEqual) {
                       context,
                       /* modes */ {},
                       /* frozen */ {},
+                      /* config_overrides */ {},
                       /* generations */ {},
                       /* parameter_sources */
                       {{AccessPath(Root(Root::Kind::Argument, 1)),
@@ -332,6 +343,7 @@ TEST_F(ModelTest, LessOrEqual) {
                    context,
                    /* modes */ {},
                    /* frozen */ {},
+                   /* config_overrides */ {},
                    /* generations */ {},
                    /* parameter_sources */
                    {{AccessPath(Root(Root::Kind::Argument, 1)),
@@ -341,6 +353,7 @@ TEST_F(ModelTest, LessOrEqual) {
                        context,
                        /* modes */ {},
                        /* frozen */ {},
+                       /* config_overrides */ {},
                        /* generations */ {},
                        /* parameter_sources */
                        {{AccessPath(Root(Root::Kind::Argument, 2)),
@@ -350,6 +363,7 @@ TEST_F(ModelTest, LessOrEqual) {
                    context,
                    /* modes */ {},
                    /* frozen */ {},
+                   /* config_overrides */ {},
                    /* generations */
                    {{AccessPath(Root(Root::Kind::Return)),
                      test::make_leaf_taint_config(source_kind)}},
@@ -361,6 +375,7 @@ TEST_F(ModelTest, LessOrEqual) {
                        context,
                        /* modes */ {},
                        /* frozen */ {},
+                       /* config_overrides */ {},
                        /* generations */
                        {{AccessPath(Root(Root::Kind::Return)),
                          test::make_leaf_taint_config(source_kind)}},
@@ -374,6 +389,7 @@ TEST_F(ModelTest, LessOrEqual) {
           context,
           /* modes */ {},
           /* frozen */ {},
+          /* config_overrides */ {},
           /* generations */ {},
           /* parameter_sources */ {},
           /* sinks */ {},
@@ -394,6 +410,7 @@ TEST_F(ModelTest, LessOrEqual) {
               context,
               /* modes */ {},
               /* frozen */ {},
+              /* config_overrides */ {},
               /* generations */ {},
               /* parameter_sources */ {},
               /* sinks */ {},
@@ -418,6 +435,7 @@ TEST_F(ModelTest, LessOrEqual) {
           context,
           /* modes */ {},
           /* frozen */ {},
+          /* config_overrides */ {},
           /* generations */ {},
           /* parameter_sources */ {},
           /* sinks */ {},
@@ -429,6 +447,7 @@ TEST_F(ModelTest, LessOrEqual) {
               context,
               /* modes */ {},
               /* frozen */ {},
+              /* config_overrides */ {},
               /* generations */ {},
               /* parameter_sources */ {},
               /* sinks */ {},
@@ -443,6 +462,7 @@ TEST_F(ModelTest, LessOrEqual) {
           context,
           /* modes */ {},
           /* frozen */ {},
+          /* config_overrides */ {},
           /* generations */ {},
           /* parameter_sources */ {},
           /* sinks */ {},
@@ -457,6 +477,7 @@ TEST_F(ModelTest, LessOrEqual) {
               context,
               /* modes */ {},
               /* frozen */ {},
+              /* config_overrides */ {},
               /* generations */ {},
               /* parameter_sources */ {},
               /* sinks */ {},
@@ -472,6 +493,7 @@ TEST_F(ModelTest, LessOrEqual) {
           context,
           /* modes */ {},
           /* frozen */ {},
+          /* config_overrides */ {},
           /* generations */ {},
           /* parameter_sources */ {},
           /* sinks */ {},
@@ -488,6 +510,7 @@ TEST_F(ModelTest, LessOrEqual) {
               context,
               /* modes */ {},
               /* frozen */ {},
+              /* config_overrides */ {},
               /* generations */ {},
               /* parameter_sources */ {},
               /* sinks */ {},
@@ -507,6 +530,7 @@ TEST_F(ModelTest, LessOrEqual) {
           context,
           /* modes */ {},
           /* frozen */ {},
+          /* config_overrides */ {},
           /* generations */ {},
           /* parameter_sources */ {},
           /* sinks */ {},
@@ -521,6 +545,7 @@ TEST_F(ModelTest, LessOrEqual) {
               context,
               /* modes */ {},
               /* frozen */ {},
+              /* config_overrides */ {},
               /* generations */ {},
               /* parameter_sources */ {},
               /* sinks */ {},
@@ -537,6 +562,7 @@ TEST_F(ModelTest, LessOrEqual) {
                    context,
                    /* modes */ {},
                    /* frozen */ Model::FreezeKind::Generations,
+                   /* config overrides */ {},
                    /* generations */ {})
                    .leq(Model(
                        /* method */ nullptr,
@@ -548,6 +574,7 @@ TEST_F(ModelTest, LessOrEqual) {
                   context,
                   /* modes */ {},
                   /* frozen */ {},
+                  /* config_overrides */ {},
                   /* generations */
                   {{AccessPath(Root(Root::Kind::Return)),
                     test::make_leaf_taint_config(source_kind)}})
@@ -556,6 +583,7 @@ TEST_F(ModelTest, LessOrEqual) {
                       context,
                       /* modes */ {},
                       /* frozen */ Model::FreezeKind::Generations,
+                      /* config overrides */ {},
                       /* generations */
                       {})));
 
@@ -565,6 +593,7 @@ TEST_F(ModelTest, LessOrEqual) {
       context,
       /* modes */ {},
       /* frozen */ Model::FreezeKind::Generations,
+      /* config overrides */ {},
       /* generations */ {},
       /* parameter_sources */ {});
   Model model_with_frozen_parameter_sources(
@@ -572,6 +601,7 @@ TEST_F(ModelTest, LessOrEqual) {
       context,
       /* modes */ {},
       /* frozen */ Model::FreezeKind::Generations,
+      /* config overrides */ {},
       /* generations */ {},
       /* parameter_sources */
       {{AccessPath(Root(Root::Kind::Argument, 1)),
@@ -607,6 +637,7 @@ TEST_F(ModelTest, Join) {
       context,
       /* modes */ {},
       /* frozen */ {},
+      /* config_overrides */ {},
       /* generations */ {},
       /* parameter_sources */ {},
       /* sinks */ {},
@@ -647,6 +678,7 @@ TEST_F(ModelTest, Join) {
       context,
       /* modes */ {},
       /* frozen */ {},
+      /* config_overrides */ {},
       /* generations */
       {{AccessPath(Root(Root::Kind::Return)),
         test::make_leaf_taint_config(source_kind)}});
@@ -673,6 +705,7 @@ TEST_F(ModelTest, Join) {
       context,
       /* modes */ {},
       /* frozen */ {},
+      /* config_overrides */ {},
       /* generations */
       {{AccessPath(Root(Root::Kind::Return)),
         test::make_leaf_taint_config(other_source_kind)}});
@@ -692,6 +725,7 @@ TEST_F(ModelTest, Join) {
       context,
       /* modes */ {},
       /* frozen */ {},
+      /* config_overrides */ {},
       /* generations */ {},
       /* parameter_sources */ {},
       /* sinks */
@@ -717,6 +751,7 @@ TEST_F(ModelTest, Join) {
       context,
       /* modes */ {},
       /* frozen */ {},
+      /* config_overrides */ {},
       /* generations */ {},
       /* parameter_sources */ {},
       /* sinks */ {},
@@ -755,6 +790,7 @@ TEST_F(ModelTest, Join) {
       context,
       /* modes */ {},
       /* frozen */ {},
+      /* config_overrides */ {},
       /* generations */ {},
       /* parameter_sources */ {},
       /* sinks */ {},
@@ -804,6 +840,7 @@ TEST_F(ModelTest, Join) {
       context,
       /* modes */ {},
       /* frozen */ {},
+      /* config_overrides */ {},
       /* generations */ {},
       /* parameter_sources */ {},
       /* sinks */ {},
@@ -842,6 +879,7 @@ TEST_F(ModelTest, Join) {
       context,
       /* modes */ {},
       /* frozen */ {},
+      /* config_overrides */ {},
       /* generations */ {},
       /* parameter_sources */ {},
       /* sinks */ {},
@@ -912,6 +950,7 @@ TEST_F(ModelTest, Join) {
       context,
       /* modes */ {},
       /* frozen */ {},
+      /* config_overrides */ {},
       /* generations */ {},
       /* parameter_sources */ {},
       /* sinks */ {},
@@ -925,6 +964,7 @@ TEST_F(ModelTest, Join) {
       context,
       /* modes */ {},
       /* frozen */ {},
+      /* config_overrides */ {},
       /* generations */ {},
       /* parameter_sources */ {},
       /* sinks */ {},
@@ -938,6 +978,7 @@ TEST_F(ModelTest, Join) {
           context,
           /* modes */ {},
           /* frozen */ {},
+          /* config_overrides */ {},
           /* generations */ {},
           /* parameter_sources */ {},
           /* sinks */ {},
@@ -954,6 +995,7 @@ TEST_F(ModelTest, Join) {
       context,
       /* modes */ {},
       /* frozen */ {},
+      /* config_overrides */ {},
       /* generations */ {},
       /* parameter_sources */ {},
       /* sinks */ {},
@@ -969,6 +1011,7 @@ TEST_F(ModelTest, Join) {
           context,
           /* modes */ {},
           /* frozen */ {},
+          /* config_overrides */ {},
           /* generations */ {},
           /* parameter_sources */ {},
           /* sinks */ {},
@@ -988,6 +1031,7 @@ TEST_F(ModelTest, Join) {
       context,
       /* modes */ {},
       /* frozen */ {},
+      /* config_overrides */ {},
       /* generations */ {},
       /* parameter_sources */ {},
       /* sinks */ {},
@@ -1003,6 +1047,7 @@ TEST_F(ModelTest, Join) {
       context,
       /* modes */ {},
       /* frozen */ {},
+      /* config_overrides */ {},
       /* generations */ {},
       /* parameter_sources */ {},
       /* sinks */ {},
@@ -1019,6 +1064,7 @@ TEST_F(ModelTest, Join) {
           context,
           /* modes */ {},
           /* frozen */ {},
+          /* config_overrides */ {},
           /* generations */ {},
           /* parameter_sources */ {},
           /* sinks */ {},
@@ -1037,6 +1083,7 @@ TEST_F(ModelTest, Join) {
       context,
       /* modes */ {},
       /* frozen */ {},
+      /* config_overrides */ {},
       /* generations */ {},
       /* parameter_sources */ {},
       /* sinks */ {},
@@ -1053,6 +1100,7 @@ TEST_F(ModelTest, Join) {
           context,
           /* modes */ {},
           /* frozen */ {},
+          /* config_overrides */ {},
           /* generations */ {},
           /* parameter_sources */ {},
           /* sinks */ {},
@@ -1072,6 +1120,7 @@ TEST_F(ModelTest, Join) {
       context,
       /* modes */ {},
       /* frozen */ Model::FreezeKind::Generations,
+      /* config overrides */ {},
       /* generations */ {});
 
   model_with_frozen_generation.join_with(Model(
@@ -1079,6 +1128,7 @@ TEST_F(ModelTest, Join) {
       context,
       /* modes */ {},
       /* frozen */ {},
+      /* config_overrides */ {},
       /* generations */
       {{AccessPath(Root(Root::Kind::Return)),
         test::make_leaf_taint_config(source_kind)}}));
@@ -1090,6 +1140,7 @@ TEST_F(ModelTest, Join) {
           context,
           /* modes */ {},
           /* frozen */ Model::FreezeKind::Generations,
+          /* config overrides */ {},
           /* generations */ {}));
 
   // Only the frozen FreezeKind is affected.
@@ -1098,6 +1149,7 @@ TEST_F(ModelTest, Join) {
       context,
       /* modes */ {},
       /* frozen */ {},
+      /* config_overrides */ {},
       /* generations */
       {{AccessPath(Root(Root::Kind::Return)),
         test::make_leaf_taint_config(source_kind)}},
@@ -1113,6 +1165,7 @@ TEST_F(ModelTest, Join) {
           context,
           /* modes */ {},
           /* frozen */ Model::FreezeKind::Generations,
+          /* config overrides */ {},
           /* generations */ {},
           /* parameter_sources */ {},
           /* sinks */
@@ -1124,6 +1177,7 @@ TEST_F(ModelTest, Join) {
       context,
       /* modes */ {},
       /* frozen */ Model::FreezeKind::Sinks,
+      /* config overrides */ {},
       /* generations */
       {{AccessPath(Root(Root::Kind::Return)),
         test::make_leaf_taint_config(source_kind)}},
@@ -1139,6 +1193,7 @@ TEST_F(ModelTest, Join) {
           /* modes */ {},
           /* frozen */ Model::FreezeKind::Generations |
               Model::FreezeKind::Sinks,
+          /* config overrides */ {},
           /* generations */ {},
           /* parameter_sources */ {},
           /* sinks */
@@ -1159,6 +1214,7 @@ TEST_F(ModelTest, SourceKinds) {
       context,
       /* modes */ {},
       /* frozen */ {},
+      /* config_overrides */ {},
       /* generations */
       {{AccessPath(Root(Root::Kind::Return)),
         test::make_leaf_taint_config(source_kind1)}});
@@ -1171,6 +1227,7 @@ TEST_F(ModelTest, SourceKinds) {
       context,
       /* modes */ {},
       /* frozen */ {},
+      /* config_overrides */ {},
       /* generations */ {},
       /* parameter_sources */
       {{AccessPath(Root(Root::Kind::Argument, 0)),
@@ -1195,6 +1252,7 @@ TEST_F(ModelTest, SourceKinds) {
       context,
       /* modes */ {},
       /* frozen */ {},
+      /* config_overrides */ {},
       /* generations */
       {{AccessPath(Root(Root::Kind::Return)),
         test::make_leaf_taint_config(source_kind1)}},
@@ -1223,6 +1281,7 @@ TEST_F(ModelTest, SinkKinds) {
       context,
       /* modes */ {},
       /* frozen */ {},
+      /* config_overrides */ {},
       /* generations */ {},
       /* parameter_sources */ {},
       /* sinks */
@@ -1245,6 +1304,7 @@ TEST_F(ModelTest, SinkKinds) {
       context,
       /* modes */ {},
       /* frozen */ {},
+      /* config_overrides */ {},
       /* generations */
       {{AccessPath(Root(Root::Kind::Return)),
         test::make_leaf_taint_config(source_kind)}},
@@ -1287,6 +1347,7 @@ TEST_F(ModelTest, PropagationTransforms) {
       context,
       /* modes */ {},
       /* frozen */ {},
+      /* config_overrides */ {},
       /* generations */ {},
       /* parameter_sources */ {},
       /* sinks */ {},
@@ -1338,6 +1399,7 @@ TEST_F(ModelTest, SerializationDeserialization) {
         context,
         /* modes */ {},
         /* frozen */ {},
+        /* config_overrides */ {},
         /* generations */
         {{AccessPath(Root(Root::Kind::Argument, 0)),
           test::make_leaf_taint_config(source_kind)}},
@@ -1367,6 +1429,7 @@ TEST_F(ModelTest, SerializationDeserialization) {
         context,
         /* modes */ Model::Mode::AddViaObscureFeature,
         /* frozen */ {},
+        /* config_overrides */ {},
         /* generations */
         {{AccessPath(Root(Root::Kind::Argument, 0)),
           test::make_leaf_taint_config(source_kind)}},
@@ -1404,6 +1467,30 @@ TEST_F(ModelTest, SerializationDeserialization) {
         ModelGeneratorNameSet{
             context.model_generator_name_factory->create("TestModelGenerator")},
         /* issues - intentionally empty. These are not deserialized */ {});
+
+    EXPECT_EQ(
+        Model::from_json(model.to_json(ExportOriginsMode::Always), context),
+        model);
+  }
+
+  {
+    // Simple model with taint tree configuration overrides
+    auto model = Model(
+        method,
+        context,
+        /* modes */ {},
+        /* frozen */ {},
+        /* config_overrides */
+        TaintTreeConfigurationOverrides{
+            {TaintTreeConfigurationOverrideOptions::MaxModelHeight, 5},
+            {TaintTreeConfigurationOverrideOptions::MaxModelWidth, 10}},
+        /* generations */
+        {{AccessPath(Root(Root::Kind::Argument, 0)),
+          test::make_leaf_taint_config(source_kind)}},
+        /* parameter_sources */ {},
+        /* sinks */
+        {{AccessPath(Root(Root::Kind::Argument, 0)),
+          test::make_leaf_taint_config(sink_kind)}});
 
     EXPECT_EQ(
         Model::from_json(model.to_json(ExportOriginsMode::Always), context),

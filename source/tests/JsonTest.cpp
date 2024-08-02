@@ -1768,6 +1768,7 @@ TEST_F(JsonTest, Model) {
           context,
           {},
           /* frozen */ {},
+          /* config_overrides */ {},
           /* generations */
           {{AccessPath(Root(Root::Kind::Argument, 2)),
             test::make_leaf_taint_config(
@@ -1778,6 +1779,7 @@ TEST_F(JsonTest, Model) {
           context,
           {},
           /* frozen */ {},
+          /* config_overrides */ {},
           /* generations */
           {{AccessPath(Root(Root::Kind::Argument, 2)),
             test::make_leaf_taint_config(
@@ -1825,6 +1827,7 @@ TEST_F(JsonTest, Model) {
           context,
           {},
           /* frozen */ {},
+          /* config_overrides */ {},
           /* generations */ {},
           /* parameter_sources */
           {{AccessPath(Root(Root::Kind::Argument, 1)),
@@ -1836,6 +1839,7 @@ TEST_F(JsonTest, Model) {
           context,
           {},
           /* frozen */ {},
+          /* config_overrides */ {},
           /* generations */ {},
           /* parameter_sources */
           {{AccessPath(Root(Root::Kind::Argument, 1)),
@@ -1878,6 +1882,7 @@ TEST_F(JsonTest, Model) {
           context,
           {},
           /* frozen */ {},
+          /* config_overrides */ {},
           /* generations */
           {{AccessPath(Root(Root::Kind::Return)),
             test::make_leaf_taint_config(
@@ -1900,6 +1905,7 @@ TEST_F(JsonTest, Model) {
           context,
           {},
           /* frozen */ {},
+          /* config_overrides */ {},
           /* generations */
           {{AccessPath(Root(Root::Kind::Return)),
             test::make_leaf_taint_config(
@@ -1922,6 +1928,7 @@ TEST_F(JsonTest, Model) {
           context,
           {},
           /* frozen */ {},
+          /* config_overrides */ {},
           /* generations */ {},
           /* parameter_sources */
           {{AccessPath(Root(Root::Kind::Argument, 1)),
@@ -1958,6 +1965,7 @@ TEST_F(JsonTest, Model) {
           context,
           {},
           /* frozen */ {},
+          /* config_overrides */ {},
           /* generations */ {},
           /* parameter_sources */ {},
           /* sinks */ {},
@@ -1987,6 +1995,7 @@ TEST_F(JsonTest, Model) {
               context,
               {},
               /* frozen */ {},
+              /* config_overrides */ {},
               /* generations */ {},
               /* parameter_sources */ {},
               /* sinks */ {},
@@ -2082,6 +2091,7 @@ TEST_F(JsonTest, Model) {
           context,
           {},
           /* frozen */ {},
+          /* config_overrides */ {},
           /* generations */ {},
           /* parameter_sources */ {},
           /* sinks */ {},
@@ -2109,6 +2119,7 @@ TEST_F(JsonTest, Model) {
               context,
               {},
               /* frozen */ {},
+              /* config_overrides */ {},
               /* generations */ {},
               /* parameter_sources */ {},
               /* sinks */ {},
@@ -2152,6 +2163,7 @@ TEST_F(JsonTest, Model) {
           context,
           {},
           /* frozen */ {},
+          /* config_overrides */ {},
           /* generations */ {},
           /* parameter_sources */ {},
           /* sinks */ {},
@@ -2185,6 +2197,7 @@ TEST_F(JsonTest, Model) {
               context,
               {},
               /* frozen */ {},
+              /* config_overrides */ {},
               /* generations */ {},
               /* parameter_sources */ {},
               /* sinks */ {},
@@ -2241,6 +2254,7 @@ TEST_F(JsonTest, Model) {
           context,
           {},
           /* frozen */ {},
+          /* config_overrides */ {},
           /* generations */ {},
           /* parameter_sources */ {},
           /* sinks */
@@ -2255,6 +2269,7 @@ TEST_F(JsonTest, Model) {
                             context,
                             {},
                             /* frozen */ {},
+                            /* config_overrides */ {},
                             /* generations */ {},
                             /* parameter_sources */ {},
                             /* sinks */
@@ -2289,6 +2304,7 @@ TEST_F(JsonTest, Model) {
                             context,
                             {},
                             /* frozen */ {},
+                            /* config_overrides */ {},
                             /* generations */ {},
                             /* parameter_sources */ {},
                             /* sinks */
@@ -2334,6 +2350,7 @@ TEST_F(JsonTest, Model) {
           context,
           {},
           /* frozen */ {},
+          /* config_overrides */ {},
           /* generations */ {},
           /* parameter_sources */ {},
           /* sinks */ {},
@@ -2350,6 +2367,7 @@ TEST_F(JsonTest, Model) {
               context,
               {},
               /* frozen */ {},
+              /* config_overrides */ {},
               /* generations */ {},
               /* parameter_sources */ {},
               /* sinks */ {},
@@ -2387,6 +2405,7 @@ TEST_F(JsonTest, Model) {
           context,
           {},
           /* frozen */ {},
+          /* config_overrides */ {},
           /* generations */ {},
           /* parameter_sources */ {},
           /* sinks */ {},
@@ -2404,6 +2423,7 @@ TEST_F(JsonTest, Model) {
               context,
               {},
               /* frozen */ {},
+              /* config_overrides */ {},
               /* generations */ {},
               /* parameter_sources */ {},
               /* sinks */ {},
@@ -2442,6 +2462,7 @@ TEST_F(JsonTest, Model) {
           context,
           {},
           /* frozen */ {},
+          /* config_overrides */ {},
           /* generations */ {},
           /* parameter_sources */ {},
           /* sinks */ {},
@@ -2460,6 +2481,7 @@ TEST_F(JsonTest, Model) {
               context,
               {},
               /* frozen */ {},
+              /* config_overrides */ {},
               /* generations */ {},
               /* parameter_sources */ {},
               /* sinks */ {},
@@ -2499,6 +2521,7 @@ TEST_F(JsonTest, Model) {
           context,
           {},
           /* frozen */ {},
+          /* config_overrides */ {},
           /* generations */ {},
           /* parameter_sources */ {},
           /* sinks */ {},
@@ -2518,6 +2541,7 @@ TEST_F(JsonTest, Model) {
               context,
               {},
               /* frozen */ {},
+              /* config_overrides */ {},
               /* generations */ {},
               /* parameter_sources */ {},
               /* sinks */ {},
@@ -2553,6 +2577,7 @@ TEST_F(JsonTest, Model) {
           context,
           {},
           /* frozen */ {},
+          /* config_overrides */ {},
           /* generations */ {},
           /* parameter_sources */ {},
           /* sinks */ {},
@@ -2573,6 +2598,7 @@ TEST_F(JsonTest, Model) {
                             context,
                             {},
                             /* frozen */ {},
+                            /* config_overrides */ {},
                             /* generations */ {},
                             /* parameter_sources */ {},
                             /* sinks */ {},
@@ -2608,6 +2634,7 @@ TEST_F(JsonTest, Model) {
           context,
           {},
           /* frozen */ {},
+          /* config_overrides */ {},
           /* generations */ {},
           /* parameter_sources */ {},
           /* sinks */ {},
@@ -2632,6 +2659,7 @@ TEST_F(JsonTest, Model) {
               context,
               {},
               /* frozen */ {},
+              /* config_overrides */ {},
               /* generations */ {},
               /* parameter_sources */ {},
               /* sinks */ {},
@@ -2658,6 +2686,84 @@ TEST_F(JsonTest, Model) {
           "target": "Argument(0).foo",
           "value": "Argument(1)"
         }
+      })#"));
+
+  // Parse config_overrides
+  EXPECT_EQ(
+      Model::from_config_json(
+          method,
+          test::parse_json(R"#({
+          "sinks": [
+              {
+                "kind": "first_sink",
+                "port": "Argument(2)"
+              }
+            ],
+          "config_overrides": {
+            "max_model_width": 10,
+            "max_model_height": 5
+          }
+          })#"),
+          context),
+      Model(
+          method,
+          context,
+          {},
+          /* frozen */ {},
+          /* config_overrides */
+          TaintTreeConfigurationOverrides{
+              {TaintTreeConfigurationOverrideOptions::MaxModelWidth, 10},
+              {TaintTreeConfigurationOverrideOptions::MaxModelHeight, 5}},
+          /* generations */ {},
+          /* parameter_sources */ {},
+          /* sinks */
+          {
+              {AccessPath(Root(Root::Kind::Argument, 2)),
+               test::make_leaf_taint_config(
+                   context.kind_factory->get("first_sink"))},
+          }));
+
+  EXPECT_EQ(
+      test::sorted_json(
+          Model(
+              method,
+              context,
+              {},
+              /* frozen */ {},
+              /* config_overrides */
+              TaintTreeConfigurationOverrides{
+                  {TaintTreeConfigurationOverrideOptions::MaxModelWidth, 10},
+                  {TaintTreeConfigurationOverrideOptions::MaxModelHeight, 5}},
+              /* generations */ {},
+              /* parameter_sources */ {},
+              /* sinks */
+              {
+                  {AccessPath(Root(Root::Kind::Argument, 2)),
+                   test::make_leaf_taint_config(
+                       context.kind_factory->get("first_sink"))},
+              })
+              .to_json(ExportOriginsMode::OnlyOnOrigins)),
+      test::parse_json(R"#({
+        "method": "LData;.method:(LData;LData;)V",
+        "sinks": [
+          {
+            "port": "Argument(2)",
+            "taint": [
+              {
+                "call_info": { "call_kind": "Declaration" },
+                "kinds": [
+                  {
+                    "kind": "first_sink"
+                  }
+                ]
+              }
+            ],
+            "config_overrides": {
+              "max_model_width": 10,
+              "max_model_height": 5
+            }
+          }
+        ]
       })#"));
 
   // We do not parse issues for now.
@@ -2688,6 +2794,7 @@ TEST_F(JsonTest, Model) {
               context,
               {},
               /* frozen */ {},
+              /* config_overrides */ {},
               /* generations */
               std::vector<std::pair<AccessPath, TaintConfig>>{},
               /* parameter_sources */ {},
@@ -3081,6 +3188,7 @@ TEST_F(JsonTest, CallEffectModel) {
               context,
               {},
               /* frozen */ {},
+              /* config_overrides */ {},
               /* generations */
               std::vector<std::pair<AccessPath, TaintConfig>>{},
               /* parameter_sources */ {},

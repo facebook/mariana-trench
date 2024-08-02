@@ -151,6 +151,8 @@ class Model final {
       Context& context,
       Modes modes = {},
       Frozen frozen = {},
+      TaintTreeConfigurationOverrides config_overrides =
+          TaintTreeConfigurationOverrides::bottom(),
       const std::vector<std::pair<AccessPath, TaintConfig>>& generations = {},
       const std::vector<std::pair<AccessPath, TaintConfig>>& parameter_sources =
           {},
@@ -482,6 +484,9 @@ class Model final {
       AccessPath input_path,
       Taint output,
       const Heuristics& heuristics);
+
+  void apply_config_overrides(
+      const TaintTreeConfigurationOverrides& config_overrides);
 
  private:
   const Method* MT_NULLABLE method_;

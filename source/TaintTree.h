@@ -83,6 +83,10 @@ class TaintTree final : public sparta::AbstractDomain<TaintTree> {
     return tree_.root();
   }
 
+  const TaintTreeConfigurationOverrides& config_overrides() const {
+    return overrides_;
+  }
+
   /**
    * Return the subtree at the given path.
    *
@@ -159,6 +163,9 @@ class TaintTree final : public sparta::AbstractDomain<TaintTree> {
   void update_with_propagation_trace(
       const CallInfo& propagation_call_info,
       const Frame& propagation_frame);
+
+  void apply_config_overrides(
+      const TaintTreeConfigurationOverrides& config_overrides);
 
   /* Apply the given function on all taint. */
   template <typename Function> // Taint(Taint)

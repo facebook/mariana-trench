@@ -182,4 +182,9 @@ void TaintTree::update_with_propagation_trace(
       });
 }
 
+void TaintTree::apply_config_overrides(
+    const TaintTreeConfigurationOverrides& config_overrides) {
+  overrides_.join_with(config_overrides);
+}
+
 } // namespace marianatrench

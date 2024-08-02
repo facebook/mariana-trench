@@ -32,6 +32,14 @@ class TaintAccessPathTree final
 
   INCLUDE_ABSTRACT_DOMAIN_METHODS(TaintAccessPathTree, Map, map_)
 
+  /**
+   * Apply the config_overrides to the Root of the TaintTree.
+   */
+  void apply_config_overrides(
+      const TaintTreeConfigurationOverrides& config_overrides);
+
+  const TaintTreeConfigurationOverrides& config_overrides(Root root) const;
+
   TaintTree read(Root root) const;
 
   template <typename Propagate> // Taint(Taint, Path::Element)
