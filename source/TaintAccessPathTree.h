@@ -184,7 +184,7 @@ class TaintAccessPathTree final
         taint.update_maximum_collapse_depth(CollapseDepth::zero());
         return taint;
       });
-      return TaintTree(std::move(copy));
+      return TaintTree(std::move(copy), taint_tree.overrides_);
     });
   }
 

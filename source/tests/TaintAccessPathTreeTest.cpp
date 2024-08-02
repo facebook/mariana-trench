@@ -5,6 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <algorithm>
+
 #include <gmock/gmock.h>
 
 #include <sparta/PatriciaTreeSetAbstractDomain.h>
@@ -854,6 +856,68 @@ TEST_F(TaintAccessPathTreeTest, CollapseInvalid) {
   };
   expected_tree.apply_config_overrides(config_override);
   EXPECT_EQ(tree_override, expected_tree);
+}
+
+TEST_F(TaintAccessPathTreeTest, ShapeWith) {
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+  const auto z = PathElement::field("z");
+
+  auto tree = TaintAccessPathTree{
+      {AccessPath(Root(Root::Kind::Return)), get_taint({"1"})},
+      {AccessPath(Root(Root::Kind::Argument, 0), Path{x}), get_taint({"2"})},
+      {AccessPath(Root(Root::Kind::Argument, 0), Path{x, y}), get_taint({"3"})},
+      {AccessPath(Root(Root::Kind::Argument, 0), Path{x, z}), get_taint({"4"})},
+  };
+  TaintTreeConfigurationOverrides config_override{
+      {TaintTreeConfigurationOverrideOptions::MaxModelHeight, 5},
+      {TaintTreeConfigurationOverrideOptions::MaxModelWidth, 10},
+  };
+  tree.apply_config_overrides(config_override);
+  // Add new root Argument(1) without config overrides
+  tree.join_with(TaintAccessPathTree{
+      {AccessPath(Root(Root::Kind::Argument, 1)), get_taint({"5"})},
+      {AccessPath(Root(Root::Kind::Argument, 1), Path{x}), get_taint({"6"})},
+  });
+  EXPECT_TRUE(tree.config_overrides(Root(Root::Kind::Argument, 1)).is_bottom());
+
+  // Dummy mold to only keep certain kinds
+  std::unordered_set<const Kind*> keep_kinds = {
+      KindFactory::singleton().get("1"),
+      KindFactory::singleton().get("2"),
+      KindFactory::singleton().get("3")};
+  const auto make_mold = [&keep_kinds](Taint taint) {
+    if (std::any_of(
+            keep_kinds.begin(), keep_kinds.end(), [&taint](const Kind* kind) {
+              return taint.contains_kind(kind);
+            })) {
+      return taint.essential();
+    } else {
+      return Taint::bottom();
+    }
+  };
+
+  tree.shape_with(make_mold, /* broadening features */ FeatureMayAlwaysSet{});
+
+  auto expected_tree = TaintAccessPathTree{
+      {AccessPath(Root(Root::Kind::Return)), get_taint({"1"})},
+      {AccessPath(Root(Root::Kind::Argument, 0), Path{x}),
+       get_taint({"2", "4"})},
+      {AccessPath(Root(Root::Kind::Argument, 0), Path{x, y}), get_taint({"3"})},
+  };
+  expected_tree.apply_config_overrides(config_override);
+  expected_tree.join_with(TaintAccessPathTree{
+      {AccessPath(Root(Root::Kind::Argument, 1)), get_taint({"5", "6"})},
+  });
+
+  EXPECT_FALSE(tree.config_overrides(Root(Root::Kind::Return)).is_bottom());
+  EXPECT_EQ(tree.config_overrides(Root(Root::Kind::Return)), config_override);
+  EXPECT_FALSE(
+      tree.config_overrides(Root(Root::Kind::Argument, 0)).is_bottom());
+  EXPECT_EQ(
+      tree.config_overrides(Root(Root::Kind::Argument, 0)), config_override);
+  EXPECT_TRUE(tree.config_overrides(Root(Root::Kind::Argument, 1)).is_bottom());
+  EXPECT_EQ(tree, expected_tree);
 }
 
 } // namespace marianatrench
