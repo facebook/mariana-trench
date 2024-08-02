@@ -826,6 +826,34 @@ TEST_F(TaintAccessPathTreeTest, CollapseInvalid) {
            get_taint({"2", "3", "4"})},
           {AccessPath(Root(Root::Kind::Argument, 1)), get_taint({"5", "6"})},
       }));
+
+  // Collapse with config override still holds the overrides
+  auto tree_override = TaintAccessPathTree{
+      {AccessPath(Root(Root::Kind::Return)), get_taint({"1"})},
+      {AccessPath(Root(Root::Kind::Argument, 0), Path{x}), get_taint({"2"})},
+      {AccessPath(Root(Root::Kind::Argument, 0), Path{x, y}), get_taint({"3"})},
+      {AccessPath(Root(Root::Kind::Argument, 0), Path{x, z}), get_taint({"4"})},
+      {AccessPath(Root(Root::Kind::Argument, 1)), get_taint({"5"})},
+      {AccessPath(Root(Root::Kind::Argument, 1), Path{x}), get_taint({"6"})},
+  };
+  TaintTreeConfigurationOverrides config_override{
+      {TaintTreeConfigurationOverrideOptions::MaxModelHeight, 10},
+      {TaintTreeConfigurationOverrideOptions::MaxModelWidth, 5},
+  };
+  tree_override.apply_config_overrides(config_override);
+
+  tree_override.collapse_invalid_paths<Accumulator>(
+      is_valid,
+      initial_accumulator,
+      /* broadening features */ FeatureMayAlwaysSet{});
+  TaintAccessPathTree expected_tree{
+      {AccessPath(Root(Root::Kind::Return)), get_taint({"1"})},
+      {AccessPath(Root(Root::Kind::Argument, 0), Path{x}),
+       get_taint({"2", "3", "4"})},
+      {AccessPath(Root(Root::Kind::Argument, 1)), get_taint({"5", "6"})},
+  };
+  expected_tree.apply_config_overrides(config_override);
+  EXPECT_EQ(tree_override, expected_tree);
 }
 
 } // namespace marianatrench
