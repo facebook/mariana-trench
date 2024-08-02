@@ -40,9 +40,11 @@ class TaintTree final : public sparta::AbstractDomain<TaintTree> {
 
   using Tree = AbstractTreeDomain<Taint, TaintTreeConfiguration>;
 
-  explicit TaintTree(Tree tree)
-      : tree_(std::move(tree)),
-        overrides_(TaintTreeConfigurationOverrides::bottom()) {}
+  explicit TaintTree(
+      Tree tree,
+      TaintTreeConfigurationOverrides config_overrides =
+          TaintTreeConfigurationOverrides::bottom())
+      : tree_(std::move(tree)), overrides_(std::move(config_overrides)) {}
 
  public:
   /* Create the bottom (empty) taint tree. */
@@ -50,13 +52,19 @@ class TaintTree final : public sparta::AbstractDomain<TaintTree> {
       : tree_(Tree::bottom()),
         overrides_(TaintTreeConfigurationOverrides::bottom()) {}
 
-  explicit TaintTree(Taint taint)
+  explicit TaintTree(
+      Taint taint,
+      TaintTreeConfigurationOverrides config_overrides =
+          TaintTreeConfigurationOverrides::bottom())
       : tree_(Tree(std::move(taint))),
-        overrides_(TaintTreeConfigurationOverrides::bottom()) {}
+        overrides_(std::move(config_overrides)) {}
 
-  explicit TaintTree(std::initializer_list<std::pair<Path, Taint>> edges)
+  explicit TaintTree(
+      std::initializer_list<std::pair<Path, Taint>> edges,
+      TaintTreeConfigurationOverrides config_overrides =
+          TaintTreeConfigurationOverrides::bottom())
       : tree_(Tree(std::move(edges))),
-        overrides_(TaintTreeConfigurationOverrides::bottom()) {}
+        overrides_(std::move(config_overrides)) {}
 
   bool is_bottom() const;
 
@@ -88,7 +96,7 @@ class TaintTree final : public sparta::AbstractDomain<TaintTree> {
   }
 
   /**
-   * Return the subtree at the given path.
+   * Return the subtree at the given path with the config_overrides.
    *
    * `propagate` is a function that is called when propagating taint down to
    * a child. This is usually used to attach the correct access path to
@@ -96,18 +104,19 @@ class TaintTree final : public sparta::AbstractDomain<TaintTree> {
    */
   template <typename Propagate> // Taint(Taint, Path::Element)
   TaintTree read(const Path& path, Propagate&& propagate) const {
-    return TaintTree(tree_.read(path, std::forward<Propagate>(propagate)));
+    return TaintTree(
+        tree_.read(path, std::forward<Propagate>(propagate)), overrides_);
   }
 
   /**
-   * Return the subtree at the given path.
+   * Return the subtree at the given path with the config_overrides.
    *
    * Taint are propagated down to children unchanged.
    */
   TaintTree read(const Path& path) const;
 
   /**
-   * Return the subtree at the given path.
+   * Return the subtree at the given path with the config_overrides.
    *
    * Taint are NOT propagated down to children.
    */
@@ -185,4 +194,5 @@ class TaintTree final : public sparta::AbstractDomain<TaintTree> {
  private:
   friend class TaintAccessPathTree;
 };
+
 } // namespace marianatrench

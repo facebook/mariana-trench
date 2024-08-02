@@ -216,6 +216,22 @@ TEST_F(TaintAccessPathTreeTest, Read) {
   EXPECT_EQ(
       tree.read(AccessPath(Root(Root::Kind::Argument, 1))),
       (TaintTree{get_taint({"4"})}));
+
+  // Read with TaintTreeConfigurationOverrides.
+  TaintTreeConfigurationOverrides config_overrides{
+      {TaintTreeConfigurationOverrideOptions::MaxModelHeight, 10},
+      {TaintTreeConfigurationOverrideOptions::MaxModelWidth, 5},
+  };
+
+  tree.apply_config_overrides(config_overrides);
+  auto tree_at_return_x_y =
+      tree.read(AccessPath(Root(Root::Kind::Return), Path{x, y}));
+
+  // Check that config_overrides are accessible for reads at any path.
+  EXPECT_EQ(
+      tree_at_return_x_y,
+      (TaintTree({get_taint({"1", "2"})}, config_overrides)));
+  EXPECT_EQ(tree_at_return_x_y.config_overrides(), config_overrides);
 }
 
 TEST_F(TaintAccessPathTreeTest, RawRead) {
@@ -254,6 +270,20 @@ TEST_F(TaintAccessPathTreeTest, RawRead) {
   EXPECT_EQ(
       tree.raw_read(AccessPath(Root(Root::Kind::Argument, 1))),
       (TaintTree{get_taint({"4"})}));
+
+  // Raw read with TaintTreeConfigurationOverrides.
+  TaintTreeConfigurationOverrides config_overrides{
+      {TaintTreeConfigurationOverrideOptions::MaxModelHeight, 10},
+      {TaintTreeConfigurationOverrideOptions::MaxModelWidth, 5},
+  };
+
+  tree.apply_config_overrides(config_overrides);
+  auto tree_at_this_y =
+      tree.read(AccessPath(Root(Root::Kind::Argument, 0), Path{y}));
+
+  // Check that config_overrides are accessible for reads at any path.
+  EXPECT_EQ(tree_at_this_y, (TaintTree({get_taint({"3"})}, config_overrides)));
+  EXPECT_EQ(tree_at_this_y.config_overrides(), config_overrides);
 }
 
 TEST_F(TaintAccessPathTreeTest, LessOrEqual) {
@@ -343,6 +373,26 @@ TEST_F(TaintAccessPathTreeTest, LessOrEqual) {
   EXPECT_FALSE(tree7.leq(tree5));
   EXPECT_FALSE(tree6.leq(tree7));
   EXPECT_TRUE(tree7.leq(tree6));
+
+  // Compare trees with and without config overrides.
+  TaintTreeConfigurationOverrides config_override1{
+      {TaintTreeConfigurationOverrideOptions::MaxModelHeight, 10},
+      {TaintTreeConfigurationOverrideOptions::MaxModelWidth, 5},
+  };
+  auto tree1_override1 = tree1;
+  tree1_override1.apply_config_overrides(config_override1);
+  EXPECT_TRUE(tree1.leq(tree1_override1));
+  EXPECT_FALSE(tree1_override1.leq(tree1));
+
+  // Compare trees with different config overrides
+  TaintTreeConfigurationOverrides config_override2{
+      {TaintTreeConfigurationOverrideOptions::MaxModelHeight, 20},
+      {TaintTreeConfigurationOverrideOptions::MaxModelWidth, 5},
+  };
+  auto tree1_override2 = tree1;
+  tree1_override2.apply_config_overrides(config_override2);
+  EXPECT_TRUE(tree1_override1.leq(tree1_override2));
+  EXPECT_FALSE(tree1_override2.leq(tree1_override1));
 }
 
 TEST_F(TaintAccessPathTreeTest, Equal) {
@@ -414,6 +464,28 @@ TEST_F(TaintAccessPathTreeTest, Equal) {
   EXPECT_FALSE(tree5.equals(tree7));
   EXPECT_FALSE(tree6.equals(tree7));
   EXPECT_TRUE(tree7.equals(tree7));
+
+  // Compare trees with and without config overrides.
+  TaintTreeConfigurationOverrides config_override1{
+      {TaintTreeConfigurationOverrideOptions::MaxModelHeight, 10},
+      {TaintTreeConfigurationOverrideOptions::MaxModelWidth, 5},
+  };
+  auto tree1_override1 = tree1;
+  tree1_override1.apply_config_overrides(config_override1);
+  EXPECT_TRUE(tree1_override1.equals(tree1_override1));
+  EXPECT_FALSE(tree1_override1.equals(tree1));
+  EXPECT_FALSE(tree1.equals(tree1_override1));
+
+  // Compare trees with different config overrides
+  TaintTreeConfigurationOverrides config_override2{
+      {TaintTreeConfigurationOverrideOptions::MaxModelHeight, 20},
+      {TaintTreeConfigurationOverrideOptions::MaxModelWidth, 5},
+  };
+  auto tree1_override2 = tree1;
+  tree1_override2.apply_config_overrides(config_override2);
+  EXPECT_TRUE(tree1_override2.equals(tree1_override2));
+  EXPECT_FALSE(tree1_override1.equals(tree1_override2));
+  EXPECT_FALSE(tree1_override2.equals(tree1_override1));
 }
 
 TEST_F(TaintAccessPathTreeTest, Join) {
@@ -482,10 +554,71 @@ TEST_F(TaintAccessPathTreeTest, Join) {
   EXPECT_EQ(
       tree.read(Root(Root::Kind::Argument, 2)), (TaintTree{get_taint({"20"})}));
   EXPECT_TRUE(tree.read(Root(Root::Kind::Argument, 3)).is_bottom());
+
+  // Join trees with and without config overrides.
+  TaintAccessPathTree tree1{
+      {AccessPath(Root(Root::Kind::Return)), get_taint({"1"})},
+  };
+  TaintTreeConfigurationOverrides config_override1{
+      {TaintTreeConfigurationOverrideOptions::MaxModelHeight, 10},
+      {TaintTreeConfigurationOverrideOptions::MaxModelWidth, 5},
+  };
+  auto tree1_override1 = tree1;
+  tree1_override1.apply_config_overrides(config_override1);
+  EXPECT_TRUE(tree1.config_overrides(Root(Root::Kind::Return)).is_bottom());
+  EXPECT_FALSE(
+      tree1_override1.config_overrides(Root(Root::Kind::Return)).is_bottom());
+
+  tree1.join_with(tree1_override1);
+
+  EXPECT_FALSE(tree1.config_overrides(Root(Root::Kind::Return)).is_bottom());
+  EXPECT_EQ(
+      tree1.config_overrides(Root(Root::Kind::Return)),
+      tree1_override1.config_overrides(Root(Root::Kind::Return)));
+
+  EXPECT_EQ(
+      tree1.read(Root(Root::Kind::Return)),
+      (TaintTree({{get_taint({"1"})}}, config_override1)));
+
+  // Join trees with different config overrides
+  TaintTreeConfigurationOverrides config_override2{
+      {TaintTreeConfigurationOverrideOptions::MaxModelHeight, 5},
+      {TaintTreeConfigurationOverrideOptions::MaxModelWidth, 7},
+  };
+  auto tree2 = TaintAccessPathTree{
+      {AccessPath(Root(Root::Kind::Return)), get_taint({"2"})},
+      {AccessPath(Root(Root::Kind::Argument, 0), Path{x, y}),
+       get_taint({"3", "4"})}};
+  auto tree2_override2 = tree2;
+  tree2_override2.apply_config_overrides(config_override2);
+
+  tree1.join_with(tree2);
+  EXPECT_EQ(
+      tree1.read(Root(Root::Kind::Return)),
+      (TaintTree({{get_taint({"1", "2"})}}, config_override1)));
+  // No config overrides for Argument(0) yet.
+  EXPECT_EQ(
+      tree1.read(AccessPath(Root(Root::Kind::Argument, 0), Path{x, y})),
+      (TaintTree({{get_taint({"3", "4"})}})));
+
+  tree1.join_with(tree2_override2);
+  // Config overrides for Return is the join of config_override1 and
+  // config_override2.
+  EXPECT_EQ(
+      tree1.read(Root(Root::Kind::Return)),
+      (TaintTree(
+          {{get_taint({"1", "2"})}},
+          TaintTreeConfigurationOverrides{
+              {TaintTreeConfigurationOverrideOptions::MaxModelHeight, 10},
+              {TaintTreeConfigurationOverrideOptions::MaxModelWidth, 7},
+          })));
+  // Config overrides for Argument(0) is config_override2
+  EXPECT_EQ(
+      tree1.read(AccessPath(Root(Root::Kind::Argument, 0), Path{x, y})),
+      (TaintTree({{get_taint({"3", "4"})}}, config_override2)));
 }
 
 TEST_F(TaintAccessPathTreeTest, Elements) {
-  //   using Pair = std::pair<AccessPath, IntSet>;
   using Pair = std::pair<AccessPath, Taint>;
 
   const auto x = PathElement::field("x");
@@ -595,6 +728,55 @@ TEST_F(TaintAccessPathTreeTest, Transform) {
           {AccessPath(Root(Root::Kind::Argument, 2), Path{x, y}),
            get_taint({"9", "16"})},
       }));
+
+  // Transform tree with config overrides
+  auto tree_override = TaintAccessPathTree{
+      {AccessPath(Root(Root::Kind::Return)), get_taint({"1", "2"})},
+      {AccessPath(Root(Root::Kind::Argument, 0), Path{x}),
+       get_taint({"1", "2"})},
+      {AccessPath(Root(Root::Kind::Argument, 0), Path{x, y}),
+       get_taint({"3", "4"})},
+      {AccessPath(Root(Root::Kind::Argument, 0), Path{x, z}),
+       get_taint({"5", "6"})},
+      {AccessPath(Root(Root::Kind::Argument, 1), Path{x, y}),
+       get_taint({"1", "2"})},
+      {AccessPath(Root(Root::Kind::Argument, 2)), get_taint({"1", "2"})},
+      {AccessPath(Root(Root::Kind::Argument, 2), Path{x, y}),
+       get_taint({"3", "4"})},
+  };
+  TaintTreeConfigurationOverrides config_override{
+      {TaintTreeConfigurationOverrideOptions::MaxModelHeight, 10},
+      {TaintTreeConfigurationOverrideOptions::MaxModelWidth, 5},
+  };
+  tree_override.apply_config_overrides(config_override);
+
+  tree_override.transform([](const Taint& taint) {
+    Taint result{};
+    taint.visit_frames([&result](const CallInfo&, const Frame& frame) {
+      auto kind_int = std::atoi(frame.kind()->as<NamedKind>()->name().c_str());
+
+      result.add(get_taint_config({std::to_string(kind_int * kind_int)}));
+    });
+
+    return result;
+  });
+
+  TaintAccessPathTree expected_tree = TaintAccessPathTree{
+      {AccessPath(Root(Root::Kind::Return)), get_taint({"1", "4"})},
+      {AccessPath(Root(Root::Kind::Argument, 0), Path{x}),
+       get_taint({"1", "4"})},
+      {AccessPath(Root(Root::Kind::Argument, 0), Path{x, y}),
+       get_taint({"9", "16"})},
+      {AccessPath(Root(Root::Kind::Argument, 0), Path{x, z}),
+       get_taint({"25", "36"})},
+      {AccessPath(Root(Root::Kind::Argument, 1), Path{x, y}),
+       get_taint({"1", "4"})},
+      {AccessPath(Root(Root::Kind::Argument, 2)), get_taint({"1", "4"})},
+      {AccessPath(Root(Root::Kind::Argument, 2), Path{x, y}),
+       get_taint({"9", "16"})},
+  };
+  expected_tree.apply_config_overrides(config_override);
+  EXPECT_EQ(tree_override, expected_tree);
 }
 
 TEST_F(TaintAccessPathTreeTest, CollapseInvalid) {

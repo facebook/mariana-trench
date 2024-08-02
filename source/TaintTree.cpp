@@ -76,11 +76,11 @@ void TaintTree::narrow_with(const TaintTree& other) {
 }
 
 TaintTree TaintTree::read(const Path& path) const {
-  return TaintTree(tree_.read(path));
+  return TaintTree(tree_.read(path), overrides_);
 }
 
 TaintTree TaintTree::raw_read(const Path& path) const {
-  return TaintTree(tree_.raw_read(path));
+  return TaintTree(tree_.raw_read(path), overrides_);
 }
 
 void TaintTree::write(const Path& path, Taint taint, UpdateKind kind) {
