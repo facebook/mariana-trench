@@ -44,7 +44,7 @@ class TaintAccessPathTree final
 
   template <typename Propagate> // Taint(Taint, Path::Element)
   TaintTree read(const AccessPath& access_path, Propagate&& propagate) const {
-    map_.get(access_path.root())
+    return map_.get(access_path.root())
         .read(access_path.path(), std::forward<Propagate>(propagate));
   }
 
