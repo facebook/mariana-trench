@@ -580,7 +580,7 @@ TEST_F(TaintAccessPathTreeTest, Join) {
 
   EXPECT_EQ(
       tree1.read(Root(Root::Kind::Return)),
-      (TaintTree({{get_taint({"1"})}}, config_override1)));
+      (TaintTree(get_taint({"1"}), config_override1)));
 
   // Join trees with different config overrides
   TaintTreeConfigurationOverrides config_override2{
@@ -597,11 +597,11 @@ TEST_F(TaintAccessPathTreeTest, Join) {
   tree1.join_with(tree2);
   EXPECT_EQ(
       tree1.read(Root(Root::Kind::Return)),
-      (TaintTree({{get_taint({"1", "2"})}}, config_override1)));
+      (TaintTree(get_taint({"1", "2"}), config_override1)));
   // No config overrides for Argument(0) yet.
   EXPECT_EQ(
       tree1.read(AccessPath(Root(Root::Kind::Argument, 0), Path{x, y})),
-      (TaintTree({{get_taint({"3", "4"})}})));
+      (TaintTree(get_taint({"3", "4"}))));
 
   tree1.join_with(tree2_override2);
   // Config overrides for Return is the join of config_override1 and
@@ -609,7 +609,7 @@ TEST_F(TaintAccessPathTreeTest, Join) {
   EXPECT_EQ(
       tree1.read(Root(Root::Kind::Return)),
       (TaintTree(
-          {{get_taint({"1", "2"})}},
+          get_taint({"1", "2"}),
           TaintTreeConfigurationOverrides{
               {TaintTreeConfigurationOverrideOptions::MaxModelHeight, 10},
               {TaintTreeConfigurationOverrideOptions::MaxModelWidth, 7},
@@ -617,7 +617,7 @@ TEST_F(TaintAccessPathTreeTest, Join) {
   // Config overrides for Argument(0) is config_override2
   EXPECT_EQ(
       tree1.read(AccessPath(Root(Root::Kind::Argument, 0), Path{x, y})),
-      (TaintTree({{get_taint({"3", "4"})}}, config_override2)));
+      (TaintTree(get_taint({"3", "4"}), config_override2)));
 }
 
 TEST_F(TaintAccessPathTreeTest, Elements) {
