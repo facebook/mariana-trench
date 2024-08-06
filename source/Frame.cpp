@@ -235,39 +235,50 @@ Frame Frame::apply_transform(
   if (const auto* transform_kind = kind_->as<TransformKind>()) {
     auto existing_local_transforms = transform_kind->local_transforms();
     global_transforms = transform_kind->global_transforms();
-    TransformList temp_local_transforms;
+    base_kind = transform_kind->base_kind();
+    TransformList temp_local_transforms = *local_transforms;
 
-    if (global_transforms != nullptr &&
+    if (!base_kind->is<PropagationKind>()) {
+      temp_local_transforms = TransformList::discard_unmatched_sanitizers(
+          &temp_local_transforms, transforms_factory, direction);
+    }
+
+    if (temp_local_transforms.size() != 0 && global_transforms != nullptr &&
         (existing_local_transforms == nullptr ||
          !existing_local_transforms->has_non_sanitize_transform())) {
       temp_local_transforms = TransformList::filter_global_sanitizers(
-          local_transforms, global_transforms, transforms_factory);
-      local_transforms =
-          temp_local_transforms.size() ? &temp_local_transforms : nullptr;
+          &temp_local_transforms, global_transforms, transforms_factory);
     }
 
-    // If the current kind is already a TransformKind, append existing
-    // local_transforms.
+    // Append existing local_transforms.
     if (existing_local_transforms != nullptr) {
-      temp_local_transforms =
-          TransformList::concat(local_transforms, existing_local_transforms);
-      // temp_local_transforms is guaranteed to be non-empty here (because
-      // existing_local_transforms is non-null), no need to check
-      local_transforms = &temp_local_transforms;
+      temp_local_transforms = TransformList::concat(
+          &temp_local_transforms, existing_local_transforms);
     }
 
-    // The argument local_transforms could be a pointer to stack object from the
-    // if branch above, it should not be used further, which is ensured by
-    // overwriting it with the pointer to the canonicalized transform list from
-    // the factory.
-    local_transforms = transforms_factory.canonicalize(local_transforms);
-    base_kind = transform_kind->base_kind();
+    // Canonicalize the and create the local transform list from factory if the
+    // list is not empty
+    local_transforms = temp_local_transforms.size() != 0
+        ? transforms_factory.canonicalize(&temp_local_transforms)
+        : nullptr;
+
   } else if (kind_->is<PropagationKind>()) {
     // If the current kind is PropagationKind, set the transform as a global
     // transform. This is done to track the next hops for propagation with
     // trace.
     global_transforms = local_transforms;
     local_transforms = nullptr;
+  } else {
+    TransformList temp_local_transforms =
+        TransformList::discard_unmatched_sanitizers(
+            local_transforms, transforms_factory, direction);
+    // No need to apply anything if all transforms are sanitizers and are
+    // discarded
+    if (temp_local_transforms.size() == 0) {
+      return *this;
+    }
+
+    local_transforms = transforms_factory.canonicalize(&temp_local_transforms);
   }
 
   mt_assert(base_kind != nullptr);

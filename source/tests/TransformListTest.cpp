@@ -371,4 +371,110 @@ TEST_F(TransformListTest, FilterGlobalSanitizer) {
           *context.transforms_factory),
       *context.transforms_factory->create(std::vector{sanitize_b, sanitize_a}));
 }
+
+TEST_F(TransformListTest, DiscardUnmatchedSanitizer) {
+  auto context = test::make_empty_context();
+
+  const Transform* transform_x =
+      context.transforms_factory->create_transform("X");
+
+  const Kind* kind_a = context.kind_factory->get("A");
+  const Kind* kind_b = context.kind_factory->get("B");
+
+  const Transform* sanitize_a =
+      context.transforms_factory->create_sanitizer_set_transform(
+          SanitizerSetTransform::Set{SourceSinkKind::source(kind_a)});
+  const Transform* sanitize_b =
+      context.transforms_factory->create_sanitizer_set_transform(
+          SanitizerSetTransform::Set{SourceSinkKind::sink(kind_b)});
+  const Transform* sanitize_a_b =
+      context.transforms_factory->create_sanitizer_set_transform(
+          SanitizerSetTransform::Set{
+              SourceSinkKind::source(kind_a), SourceSinkKind::sink(kind_b)});
+
+  // Should drop unmatched source sanitizer
+  EXPECT_EQ(
+      TransformList::discard_unmatched_sanitizers(
+          context.transforms_factory->create(std::vector{sanitize_a}),
+          *context.transforms_factory,
+          transforms::TransformDirection::Forward),
+      TransformList());
+
+  // Should not drop any sink sanitizer
+  EXPECT_EQ(
+      TransformList::discard_unmatched_sanitizers(
+          context.transforms_factory->create(std::vector{sanitize_b}),
+          *context.transforms_factory,
+          transforms::TransformDirection::Forward),
+      TransformList(std::vector{sanitize_b}));
+
+  // Should drop unmatched sink sanitizer
+  EXPECT_EQ(
+      TransformList::discard_unmatched_sanitizers(
+          context.transforms_factory->create(std::vector{sanitize_b}),
+          *context.transforms_factory,
+          transforms::TransformDirection::Backward),
+      TransformList());
+
+  // Should not drop any source sanitizer
+  EXPECT_EQ(
+      TransformList::discard_unmatched_sanitizers(
+          context.transforms_factory->create(std::vector{sanitize_a}),
+          *context.transforms_factory,
+          transforms::TransformDirection::Backward),
+      TransformList(std::vector{sanitize_a}));
+
+  // Should drop unmatched source sanitizer
+  EXPECT_EQ(
+      TransformList::discard_unmatched_sanitizers(
+          context.transforms_factory->create(std::vector{sanitize_a_b}),
+          *context.transforms_factory,
+          transforms::TransformDirection::Forward),
+      TransformList(std::vector{sanitize_b}));
+
+  // Should drop unmatched sink sanitizer
+  EXPECT_EQ(
+      TransformList::discard_unmatched_sanitizers(
+          context.transforms_factory->create(std::vector{sanitize_a_b}),
+          *context.transforms_factory,
+          transforms::TransformDirection::Backward),
+      TransformList(std::vector{sanitize_a}));
+
+  // Should drop unmatched source sanitizer
+  EXPECT_EQ(
+      TransformList::discard_unmatched_sanitizers(
+          context.transforms_factory->create(
+              std::vector{sanitize_a_b, transform_x}),
+          *context.transforms_factory,
+          transforms::TransformDirection::Forward),
+      TransformList(std::vector{sanitize_b, transform_x}));
+
+  // Should drop unmatched sink sanitizer
+  EXPECT_EQ(
+      TransformList::discard_unmatched_sanitizers(
+          context.transforms_factory->create(
+              std::vector{sanitize_a_b, transform_x}),
+          *context.transforms_factory,
+          transforms::TransformDirection::Backward),
+      TransformList(std::vector{sanitize_a, transform_x}));
+
+  // Should drop unmatched source sanitizer
+  EXPECT_EQ(
+      TransformList::discard_unmatched_sanitizers(
+          context.transforms_factory->create(
+              std::vector{transform_x, sanitize_a_b}),
+          *context.transforms_factory,
+          transforms::TransformDirection::Forward),
+      TransformList(std::vector{transform_x, sanitize_b}));
+
+  // Should drop unmatched sink sanitizer
+  EXPECT_EQ(
+      TransformList::discard_unmatched_sanitizers(
+          context.transforms_factory->create(
+              std::vector{transform_x, sanitize_a_b}),
+          *context.transforms_factory,
+          transforms::TransformDirection::Backward),
+      TransformList(std::vector{transform_x, sanitize_a}));
+}
+
 } // namespace marianatrench

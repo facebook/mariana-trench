@@ -70,6 +70,10 @@ class SourceSinkKind final {
     return value_.get_int() == static_cast<unsigned>(Encoding::Source);
   }
 
+  bool is_sink() const {
+    return value_.get_int() == static_cast<unsigned>(Encoding::Sink);
+  }
+
   static SourceSinkKind source(const Kind* kind) {
     return SourceSinkKind(kind, Encoding::Source);
   }

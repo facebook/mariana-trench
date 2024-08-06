@@ -11,6 +11,7 @@
 #include <mariana-trench/KindFactory.h>
 #include <mariana-trench/SourceAsTransform.h>
 #include <mariana-trench/TransformList.h>
+#include <mariana-trench/TransformOperations.h>
 #include <mariana-trench/TransformsFactory.h>
 
 namespace marianatrench {
@@ -211,4 +212,41 @@ TransformList TransformList::filter_global_sanitizers(
 
   return TransformList(std::move(result));
 }
+
+TransformList TransformList::discard_unmatched_sanitizers(
+    const TransformList* incoming,
+    const TransformsFactory& transforms_factory,
+    transforms::TransformDirection direction) {
+  // Since we call this function after TransformList::sanitizes(), which drops
+  // taints if the kinds match, we know the sanitizers are guaranteed to not
+  // match this base_kind and may be dropped with the following exceptions.
+  // - Keep unmatched sink sanitizers during forward propagation
+  // - Keep unmatched source sanitizers during backward propagation.
+
+  bool discard_source = direction == transforms::TransformDirection::Forward;
+  List result{};
+
+  for (const auto* transform : *incoming) {
+    if (const auto* sanitizer_transform =
+            transform->as<SanitizerSetTransform>()) {
+      // Filter out the source kinds
+      auto new_kinds = sanitizer_transform->kinds();
+      new_kinds.filter([discard_source](const auto& kind) {
+        return !(discard_source ? kind.is_source() : kind.is_sink());
+      });
+
+      // If the sanitizers is not entirely discarded, add the remaining kinds
+      if (!new_kinds.empty()) {
+        result.push_back(
+            transforms_factory.create_sanitizer_set_transform(new_kinds));
+      }
+    } else {
+      result.push_back(transform);
+    }
+  }
+
+  // No canonicalization needed because we removed all sanitizers
+  return TransformList(std::move(result));
+}
+
 } // namespace marianatrench

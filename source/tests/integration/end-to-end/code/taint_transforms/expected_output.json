@@ -3778,8 +3778,7 @@
               "kind" : 
               {
                 "base" : "A",
-                "global" : "TransformY",
-                "local" : "Sanitize[Source[A]]"
+                "global" : "TransformY"
               },
               "origins" : 
               [
@@ -3838,7 +3837,7 @@
               "kind" : 
               {
                 "base" : "A",
-                "global" : "Sanitize[Source[A]]:TransformY",
+                "global" : "TransformY",
                 "local" : "Sanitize[Sink[B]]"
               },
               "origins" : 
@@ -3918,7 +3917,7 @@
               "kind" : 
               {
                 "base" : "A",
-                "global" : "Sanitize[Sink[B]]:Sanitize[Source[A]]:TransformY",
+                "global" : "Sanitize[Sink[B]]:TransformY",
                 "local" : "TransformZ"
               },
               "origins" : 
@@ -4042,8 +4041,7 @@
               "kind" : 
               {
                 "base" : "A",
-                "global" : "Sanitize[Sink[B]]:TransformY",
-                "local" : "Sanitize[Source[A]]"
+                "global" : "Sanitize[Sink[B]]:TransformY"
               },
               "origins" : 
               [
@@ -4122,7 +4120,7 @@
               "kind" : 
               {
                 "base" : "A",
-                "global" : "Sanitize[Source[A]]:Sanitize[Sink[B]]:TransformY",
+                "global" : "Sanitize[Sink[B]]:TransformY",
                 "local" : "TransformZ"
               },
               "origins" : 
@@ -5030,47 +5028,6 @@
               "kind" : 
               {
                 "base" : "A",
-                "local" : "Sanitize[Source[A]]:TransformX"
-              },
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceA:()Ljava/lang/Object;",
-                  "port" : "Return"
-                }
-              ],
-              "preserves_type_context" : true
-            },
-            {
-              "callee_interval" : 
-              [
-                42,
-                43
-              ],
-              "extra_traces" : 
-              [
-                {
-                  "call_info" : 
-                  {
-                    "call_kind" : "PropagationWithTrace:Origin",
-                    "port" : "Argument(0)",
-                    "position" : 
-                    {
-                      "line" : 282,
-                      "path" : "SanitizeTransforms.java"
-                    }
-                  },
-                  "frame_type" : "sink",
-                  "kind" : 
-                  {
-                    "base" : "LocalReturn",
-                    "global" : "TransformX"
-                  }
-                }
-              ],
-              "kind" : 
-              {
-                "base" : "A",
                 "local" : "TransformX"
               },
               "origins" : 
@@ -5302,7 +5259,7 @@
               "kind" : 
               {
                 "base" : "A",
-                "local" : "Sanitize[Source[A]]:TransformX"
+                "local" : "TransformX"
               },
               "origins" : 
               [
@@ -5576,7 +5533,7 @@
               "kind" : 
               {
                 "base" : "A",
-                "local" : "Sanitize[Source[A]]:TransformX"
+                "local" : "TransformX"
               },
               "origins" : 
               [
@@ -5699,7 +5656,7 @@
               "kind" : 
               {
                 "base" : "A",
-                "global" : "TransformZ:Sanitize[Sink[B]]:Sanitize[Source[A]]:TransformY"
+                "global" : "TransformZ:Sanitize[Sink[B]]:TransformY"
               },
               "origins" : 
               [
@@ -5792,7 +5749,7 @@
               "kind" : 
               {
                 "base" : "A",
-                "global" : "TransformZ:Sanitize[Source[A]]:Sanitize[Sink[B]]:TransformY"
+                "global" : "TransformZ:Sanitize[Sink[B]]:TransformY"
               },
               "origins" : 
               [

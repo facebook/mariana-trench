@@ -229,6 +229,11 @@ class TransformList final {
       const TransformList* existing_global,
       const TransformsFactory& transforms_factory);
 
+  static TransformList discard_unmatched_sanitizers(
+      const TransformList* incoming,
+      const TransformsFactory& transforms_factory,
+      transforms::TransformDirection direction);
+
  private:
   friend class TransformsFactory;
 
