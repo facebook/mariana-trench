@@ -24,6 +24,39 @@ void LifeCycleMethodGraph::addNode(const LifecycleMethodCall& node) {
   adj_list_[node];
 }
 
+bool LifeCycleMethodGraph::operator==(const LifeCycleMethodGraph& other) const {
+  if (!(entry_point_ == other.entry_point_)) {
+    return false;
+  }
+
+  if (adj_list_.size() != other.adj_list_.size()) {
+    return false;
+  }
+
+  for (const auto& pair : adj_list_) {
+    const LifecycleMethodCall& node = pair.first;
+    const std::vector<LifecycleMethodCall>& neighbours = pair.second;
+
+    auto it = other.adj_list_.find(node);
+    if (it == other.adj_list_.end()) {
+      return false;
+    }
+
+    const std::vector<LifecycleMethodCall>& other_neighbours = it->second;
+    if (neighbours.size() != other_neighbours.size()) {
+      return false;
+    }
+
+    for (size_t i = 0; i < neighbours.size(); ++i) {
+      if (!(neighbours[i] == other_neighbours[i])) {
+        return false;
+      }
+    }
+  }
+
+  return true;
+}
+
 void LifeCycleMethodGraph::addEdge(
     const LifecycleMethodCall& from,
     const LifecycleMethodCall& to) {
@@ -41,20 +74,17 @@ LifeCycleMethodGraph LifeCycleMethodGraph::from_json(const Json::Value& value) {
     const auto& node = value[node_name];
     JsonValidation::validate_object(node, "node");
     const auto& instructions = node["instructions"];
-    JsonValidation::validate_array(instructions, "instructions");
 
     if(node_name == "entry") {
       LifecycleMethodCall entry_point = LifecycleMethodCall::from_json(instructions[0]);
       graph.entry_point_ = entry_point;
     }
 
-    for (const auto& instruction : instructions) {
+    for (const auto& instruction :JsonValidation::null_or_array(node, "instructions")) {
       LifecycleMethodCall call = LifecycleMethodCall::from_json(instruction);
       graph.addNode(call);
-      const auto& successors = node["successors"];
-      JsonValidation::validate_array(successors, "successors");
-      for (const auto& successor : successors) {
-        LifecycleMethodCall successor_call = LifecycleMethodCall::from_json(instruction);
+      for (const auto& successor : JsonValidation::null_or_array(node, "successors")) {
+        LifecycleMethodCall successor_call = LifecycleMethodCall::from_json(successor);
         graph.addEdge(call, successor_call);
       }
     }
@@ -188,7 +218,7 @@ LifecycleMethod LifecycleMethod::from_json(const Json::Value& value) {
   std::string method_name = JsonValidation::string(value, "method_name");
   if (JsonValidation::has_field(value, "callees")) {
     std::vector<LifecycleMethodCall> callees;
-    for (const auto& callee : JsonValidation::array(value, "callees")) {
+    for (const auto& callee : JsonValidation::null_or_array(value, "callees")) {
       callees.push_back(LifecycleMethodCall::from_json(callee));
     }
     return LifecycleMethod(base_class_name, method_name, callees);
@@ -226,9 +256,9 @@ bool LifecycleMethod::validate(
     return false;
   }
 
-  for (const auto& callee : callees_) {
-    callee.validate(base_class, class_hierarchies);
-  }
+  // for (const auto& callee : callees_) {
+  //   callee.validate(base_class, class_hierarchies);
+  // }
 
   return true;
 }
@@ -250,16 +280,16 @@ void LifecycleMethod::create_methods(
   // in the DexMethod's code. The register location will be used to create the
   // invoke operation for methods that take a given DexType* as its argument.
   TypeIndexMap type_index_map;
-  for (const auto& callee : callees_) {
-    const auto* type_list = callee.get_argument_types();
-    if (type_list == nullptr) {
-      ERROR(1, "Callee `{}` has invalid argument types.", callee.to_string());
-      continue;
-    }
-    for (auto* type : *type_list) {
-      type_index_map.emplace(type, type_index_map.size() + 1);
-    }
-  }
+  // for (const auto& callee : callees_) {
+  //   const auto* type_list = callee.get_argument_types();
+  //   if (type_list == nullptr) {
+  //     ERROR(1, "Callee `{}` has invalid argument types.", callee.to_string());
+  //     continue;
+  //   }
+  //   for (auto* type : *type_list) {
+  //     type_index_map.emplace(type, type_index_map.size() + 1);
+  //   }
+  // }
 
   auto* base_class_type = DexType::get_type(base_class_name_);
   // Base class should exist. See validate().
@@ -367,27 +397,27 @@ const DexMethod* MT_NULLABLE LifecycleMethod::create_dex_method(
   mt_assert(dex_klass != nullptr);
 
   int callee_count = 0;
-  for (const auto& callee : callees_) {
-    auto* dex_method = callee.get_dex_method(dex_klass);
-    if (!dex_method) {
-      // Dex method does not apply for current APK.
-      // See `LifecycleMethod::validate()`.
-      continue;
-    }
+  // for (const auto& callee : callees_) {
+  //   auto* dex_method = callee.get_dex_method(dex_klass);
+  //   if (!dex_method) {
+  //     // Dex method does not apply for current APK.
+  //     // See `LifecycleMethod::validate()`.
+  //     continue;
+  //   }
 
-    ++callee_count;
+  //   ++callee_count;
 
-    std::vector<Location> invoke_with_registers{this_location};
-    auto* type_list = callee.get_argument_types();
-    // This should have been verified at the start of `create_methods`
-    mt_assert(type_list != nullptr);
-    for (auto* type : *type_list) {
-      auto argument_register = method.get_local(type_index_map.at(type));
-      invoke_with_registers.push_back(argument_register);
-    }
-    main_block->invoke(
-        IROpcode::OPCODE_INVOKE_VIRTUAL, dex_method, invoke_with_registers);
-  }
+  //   std::vector<Location> invoke_with_registers{this_location};
+  //   auto* type_list = callee.get_argument_types();
+  //   // This should have been verified at the start of `create_methods`
+  //   mt_assert(type_list != nullptr);
+  //   for (auto* type : *type_list) {
+  //     auto argument_register = method.get_local(type_index_map.at(type));
+  //     invoke_with_registers.push_back(argument_register);
+  //   }
+  //   main_block->invoke(
+  //       IROpcode::OPCODE_INVOKE_VIRTUAL, dex_method, invoke_with_registers);
+  // }
 
   if (callee_count < 2) {
     // The point of life-cycle methods is to find flows where tainted member

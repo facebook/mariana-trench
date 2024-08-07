@@ -95,9 +95,13 @@ class LifecycleMethodCall {
 
   class LifeCycleMethodGraph {
     public:
+      LifeCycleMethodGraph() : entry_point_("", "", {}, std::nullopt) {}
       void addNode(const LifecycleMethodCall& node);
       void addEdge(const LifecycleMethodCall& from, const LifecycleMethodCall& to);
       const std::vector<LifecycleMethodCall>& getNeighbours(const LifecycleMethodCall& node) const;
+      bool operator==(const LifeCycleMethodGraph& other) const;
+
+      INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(LifeCycleMethodGraph)
 
       static LifeCycleMethodGraph from_json(const Json::Value& value);
 
@@ -149,7 +153,7 @@ class LifecycleMethod {
   explicit LifecycleMethod(
       std::string base_class_name,
       std::string method_name,
-      std::vector<LifecycleMethodCall> callees)
+      std::variant<std::vector<LifecycleMethodCall>,LifeCycleMethodGraph> callees)
       : base_class_name_(std::move(base_class_name)),
         method_name_(std::move(method_name)),
         callees_(std::move(callees)) {}
