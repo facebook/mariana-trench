@@ -49,6 +49,7 @@ module.exports = {
             'customize-sources-and-sinks',
             'rules',
             'models',
+            fbInternalOnly('fb/kss-usage'),
           ],
         },
         {
@@ -78,6 +79,7 @@ module.exports = {
         fbInternalOnly('fb/crtex'),
         fbInternalOnly('fb/alerts'),
         fbInternalOnly('fb/marianabench'),
+        fbInternalOnly('fb/kss-impl'),
       ],
     },
   ],
