@@ -20,6 +20,48 @@
 
 namespace marianatrench {
 
+void LifeCycleMethodGraph::addNode(const LifecycleMethodCall& node) {
+  adj_list_[node];
+}
+
+void LifeCycleMethodGraph::addEdge(
+    const LifecycleMethodCall& from,
+    const LifecycleMethodCall& to) {
+  adj_list_[from].push_back(to);
+}
+
+const std::vector<LifecycleMethodCall>& LifeCycleMethodGraph::getNeighbours(
+    const LifecycleMethodCall& node) const {
+  return adj_list_.at(node);
+}
+
+LifeCycleMethodGraph LifeCycleMethodGraph::from_json(const Json::Value& value) {
+  LifeCycleMethodGraph graph;
+  for (const auto& node_name : value.getMemberNames()) {
+    const auto& node = value[node_name];
+    JsonValidation::validate_object(node, "node");
+    const auto& instructions = node["instructions"];
+    JsonValidation::validate_array(instructions, "instructions");
+
+    if(node_name == "entry") {
+      LifecycleMethodCall entry_point = LifecycleMethodCall::from_json(instructions[0]);
+      graph.entry_point_ = entry_point;
+    }
+
+    for (const auto& instruction : instructions) {
+      LifecycleMethodCall call = LifecycleMethodCall::from_json(instruction);
+      graph.addNode(call);
+      const auto& successors = node["successors"];
+      JsonValidation::validate_array(successors, "successors");
+      for (const auto& successor : successors) {
+        LifecycleMethodCall successor_call = LifecycleMethodCall::from_json(instruction);
+        graph.addEdge(call, successor_call);
+      }
+    }
+  }
+  return graph;
+}
+
 LifecycleMethodCall LifecycleMethodCall::from_json(const Json::Value& value) {
   auto method_name = JsonValidation::string(value, "method_name");
   auto return_type = JsonValidation::string(value, "return_type");
@@ -142,14 +184,20 @@ bool LifecycleMethodCall::operator==(const LifecycleMethodCall& other) const {
 }
 
 LifecycleMethod LifecycleMethod::from_json(const Json::Value& value) {
-  auto base_class_name = JsonValidation::string(value, "base_class_name");
-  auto method_name = JsonValidation::string(value, "method_name");
-  std::vector<LifecycleMethodCall> callees;
-  for (const auto& callee : JsonValidation::nonempty_array(value, "callees")) {
-    callees.emplace_back(LifecycleMethodCall::from_json(callee));
+  std::string base_class_name = JsonValidation::string(value, "base_class_name");
+  std::string method_name = JsonValidation::string(value, "method_name");
+  if (JsonValidation::has_field(value, "callees")) {
+    std::vector<LifecycleMethodCall> callees;
+    for (const auto& callee : JsonValidation::array(value, "callees")) {
+      callees.push_back(LifecycleMethodCall::from_json(callee));
+    }
+    return LifecycleMethod(base_class_name, method_name, callees);
+  } else if (JsonValidation::has_field(value, "control_flow_graph")) {
+    JsonValidation::validate_object(value, "control_flow_graph");
+    LifeCycleMethodGraph graph = LifeCycleMethodGraph::from_json(JsonValidation::object(value, "control_flow_graph"));
+    return LifecycleMethod(base_class_name, method_name, graph);
   }
-
-  return LifecycleMethod(base_class_name, method_name, callees);
+  throw std::invalid_argument("Invalid JSON format for LifecycleMethod");
 }
 
 bool LifecycleMethod::validate(
