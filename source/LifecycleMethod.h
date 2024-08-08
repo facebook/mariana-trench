@@ -93,6 +93,33 @@ class LifecycleMethodCall {
   std::optional<std::string> defined_in_derived_class_;
 };
 
+  class LifeCycleMethodGraph {
+    public:
+      LifeCycleMethodGraph() : entry_point_("", "", {}, std::nullopt) {}
+      void addNode(const LifecycleMethodCall& node);
+      void addEdge(const LifecycleMethodCall& from, const LifecycleMethodCall& to);
+      const std::vector<LifecycleMethodCall>& getNeighbours(const LifecycleMethodCall& node) const;
+      bool operator==(const LifeCycleMethodGraph& other) const;
+
+      INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(LifeCycleMethodGraph)
+
+      static LifeCycleMethodGraph from_json(const Json::Value& value);
+
+    private:
+      struct NodeHasher {
+        std::size_t operator()(const LifecycleMethodCall& node) const {
+          return std::hash<std::string>{}(node.to_string());
+        }
+      };
+
+      std::unordered_map<LifecycleMethodCall, std::vector<LifecycleMethodCall>, NodeHasher> adj_list_;
+
+      // Define the entry point of the graph
+      LifecycleMethodCall entry_point_;
+
+      
+  };
+
 /**
  * A life-cycle method represents a collection of artificial DexMethods that
  * simulate the life-cycle of a class.
@@ -126,7 +153,7 @@ class LifecycleMethod {
   explicit LifecycleMethod(
       std::string base_class_name,
       std::string method_name,
-      std::vector<LifecycleMethodCall> callees)
+      std::variant<std::vector<LifecycleMethodCall>,LifeCycleMethodGraph> callees)
       : base_class_name_(std::move(base_class_name)),
         method_name_(std::move(method_name)),
         callees_(std::move(callees)) {}
@@ -174,7 +201,7 @@ class LifecycleMethod {
 
   std::string base_class_name_;
   std::string method_name_;
-  std::vector<LifecycleMethodCall> callees_;
+  std::variant<std::vector<LifecycleMethodCall>,LifeCycleMethodGraph> callees_;
   ConcurrentMap<const DexType*, const Method*> class_to_lifecycle_method_;
 };
 
