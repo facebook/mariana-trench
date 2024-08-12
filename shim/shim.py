@@ -260,13 +260,15 @@ def _build_apk_from_jar(jar_path: Path) -> Path:
     LOG.info(f"Running d8 on `{jar_path}`...")
     output = subprocess.run(
         [
-            configuration.get_d8_path(),
-            "-JXmx8G",
-            jar_path,
+            "buck2",
+            "run",
+            configuration.get_d8_target(),
+            "--",
             "--output",
             dex_file,
             "--min-api",
             "25",  # mininum api 25 corresponds to dex 37
+            jar_path,
         ],
         stderr=subprocess.PIPE,
     )
