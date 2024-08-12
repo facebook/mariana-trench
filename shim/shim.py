@@ -127,7 +127,7 @@ def _extract_jex_file_if_exists(path: Path, target: str, build_directory: Path) 
             return jar_file_path
         else:
             raise ConfigurationError(
-                message=f"Could not find jar file `{path}` in `{jex_extract_directory}`.",
+                message=f"Could not find jar file `{jar_file_path}` in `{jex_extract_directory}`.",
             )
 
     # If the target is java_binary, then the output is a JEX file
