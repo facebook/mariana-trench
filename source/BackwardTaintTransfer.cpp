@@ -58,7 +58,7 @@ bool BackwardTaintTransfer::analyze_check_cast(
   environment->write(
       aliasing.register_memory_locations(instruction->src(0)),
       std::move(taint),
-      UpdateKind::Strong);
+      UpdateKind::Weak);
 
   return false;
 }
