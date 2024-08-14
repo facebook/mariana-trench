@@ -117,9 +117,9 @@ class LifecycleMethodCall {
     public:
       LifeCycleMethodGraph() {}
       INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(LifeCycleMethodGraph)
-      void addNode(const std::string& node_name,std::vector<LifecycleMethodCall> method_calls,std::vector<std::string> successors);
+      void add_node(const std::string& node_name,std::vector<LifecycleMethodCall> method_calls,std::vector<std::string> successors);
 
-      const LifecycleGraphNode* getNode(const std::string& node_name) const;
+      const LifecycleGraphNode* get_node(const std::string& node_name) const;
       bool operator==(const LifeCycleMethodGraph& other) const;
 
 

@@ -25,7 +25,7 @@ bool LifecycleGraphNode::operator==(const LifecycleGraphNode& other) const {
           successors_ == other.successors_;
 }
 
-void LifeCycleMethodGraph::addNode(
+void LifeCycleMethodGraph::add_node(
     const std::string& node_name,
     std::vector<LifecycleMethodCall> method_calls,
     std::vector<std::string> successors) {
@@ -41,7 +41,7 @@ bool LifeCycleMethodGraph::operator==(const LifeCycleMethodGraph& other) const {
   return nodes_ == other.nodes_;
 }
 
-const LifecycleGraphNode* LifeCycleMethodGraph::getNode(const std::string& node_name) const {
+const LifecycleGraphNode* LifeCycleMethodGraph::get_node(const std::string& node_name) const {
   auto it = nodes_.find(node_name);
   if (it != nodes_.end()) {
     return &it->second;
@@ -67,7 +67,7 @@ LifeCycleMethodGraph LifeCycleMethodGraph::from_json(const Json::Value& value) {
       successors.push_back(JsonValidation::string(successor));
     }
 
-    graph.addNode(node_name, std::move(method_calls), std::move(successors));
+    graph.add_node(node_name, std::move(method_calls), std::move(successors));
   }
   return graph;
 }
