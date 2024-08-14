@@ -166,7 +166,7 @@ class LifecycleMethod {
       std::variant<std::vector<LifecycleMethodCall>,LifeCycleMethodGraph> callees)
       : base_class_name_(std::move(base_class_name)),
         method_name_(std::move(method_name)),
-        callees_(std::move(callees)) {}
+        body_(std::move(callees)) {}
 
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(LifecycleMethod)
 
@@ -211,7 +211,7 @@ class LifecycleMethod {
 
   std::string base_class_name_;
   std::string method_name_;
-  std::variant<std::vector<LifecycleMethodCall>,LifeCycleMethodGraph> callees_;
+  std::variant<std::vector<LifecycleMethodCall>,LifeCycleMethodGraph> body_;
   ConcurrentMap<const DexType*, const Method*> class_to_lifecycle_method_;
 };
 
