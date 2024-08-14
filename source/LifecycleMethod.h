@@ -93,12 +93,32 @@ class LifecycleMethodCall {
   std::optional<std::string> defined_in_derived_class_;
 };
 
+  class LifecycleGraphNode {
+    public:
+      LifecycleGraphNode(
+          std::vector<LifecycleMethodCall> method_calls,
+          std::vector<std::string> successors)
+          : method_calls_(std::move(method_calls)),
+            successors_(std::move(successors)) {}
+
+      const std::vector<LifecycleMethodCall>& method_calls() const;
+      const std::vector<std::string>& successors() const;
+      bool operator==(const LifecycleGraphNode& other) const;
+
+      INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(LifecycleGraphNode)
+
+    private:
+      std::vector<LifecycleMethodCall> method_calls_;
+      std::vector<std::string> successors_;
+};
+
+
   class LifeCycleMethodGraph {
     public:
-      LifeCycleMethodGraph() : entry_point_("", "", {}, std::nullopt) {}
-      void addNode(const LifecycleMethodCall& node);
-      void addEdge(const LifecycleMethodCall& from, const LifecycleMethodCall& to);
-      const std::vector<LifecycleMethodCall>& getNeighbours(const LifecycleMethodCall& node) const;
+      LifeCycleMethodGraph() {}
+      void addNode(const std::string& node_name,std::vector<LifecycleMethodCall> method_calls,std::vector<std::string> successors);
+
+      const LifecycleGraphNode* getNode(const std::string& node_name) const;
       bool operator==(const LifeCycleMethodGraph& other) const;
 
       INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(LifeCycleMethodGraph)
@@ -106,18 +126,8 @@ class LifecycleMethodCall {
       static LifeCycleMethodGraph from_json(const Json::Value& value);
 
     private:
-      struct NodeHasher {
-        std::size_t operator()(const LifecycleMethodCall& node) const {
-          return std::hash<std::string>{}(node.to_string());
-        }
-      };
 
-      std::unordered_map<LifecycleMethodCall, std::vector<LifecycleMethodCall>, NodeHasher> adj_list_;
-
-      // Define the entry point of the graph
-      LifecycleMethodCall entry_point_;
-
-      
+      std::unordered_map<std::string, LifecycleGraphNode> nodes_;
   };
 
 /**

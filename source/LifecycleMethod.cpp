@@ -20,74 +20,62 @@
 
 namespace marianatrench {
 
-void LifeCycleMethodGraph::addNode(const LifecycleMethodCall& node) {
-  adj_list_[node];
+const std::vector<LifecycleMethodCall>& LifecycleGraphNode::method_calls() const {
+  return method_calls_;
+}
+
+const std::vector<std::string>& LifecycleGraphNode::successors() const {
+  return successors_;
+}
+
+bool LifecycleGraphNode::operator==(const LifecycleGraphNode& other) const {
+  return method_calls_ == other.method_calls_ &&
+          successors_ == other.successors_;
+}
+
+void LifeCycleMethodGraph::addNode(
+    const std::string& node_name,
+    std::vector<LifecycleMethodCall> method_calls,
+    std::vector<std::string> successors) {
+  nodes_.emplace(
+      node_name, LifecycleGraphNode(std::move(method_calls), std::move(successors)));
 }
 
 bool LifeCycleMethodGraph::operator==(const LifeCycleMethodGraph& other) const {
-  if (!(entry_point_ == other.entry_point_)) {
+  if (nodes_.size() != other.nodes_.size()) {
     return false;
   }
 
-  if (adj_list_.size() != other.adj_list_.size()) {
-    return false;
-  }
-
-  for (const auto& pair : adj_list_) {
-    const LifecycleMethodCall& node = pair.first;
-    const std::vector<LifecycleMethodCall>& neighbours = pair.second;
-
-    auto it = other.adj_list_.find(node);
-    if (it == other.adj_list_.end()) {
-      return false;
-    }
-
-    const std::vector<LifecycleMethodCall>& other_neighbours = it->second;
-    if (neighbours.size() != other_neighbours.size()) {
-      return false;
-    }
-
-    for (size_t i = 0; i < neighbours.size(); ++i) {
-      if (!(neighbours[i] == other_neighbours[i])) {
-        return false;
-      }
-    }
-  }
-
-  return true;
+  return nodes_ == other.nodes_;
 }
 
-void LifeCycleMethodGraph::addEdge(
-    const LifecycleMethodCall& from,
-    const LifecycleMethodCall& to) {
-  adj_list_[from].push_back(to);
-}
-
-const std::vector<LifecycleMethodCall>& LifeCycleMethodGraph::getNeighbours(
-    const LifecycleMethodCall& node) const {
-  return adj_list_.at(node);
+const LifecycleGraphNode* LifeCycleMethodGraph::getNode(const std::string& node_name) const {
+  auto it = nodes_.find(node_name);
+  if (it != nodes_.end()) {
+    return &it->second;
+  }
+  return nullptr;
 }
 
 LifeCycleMethodGraph LifeCycleMethodGraph::from_json(const Json::Value& value) {
   LifeCycleMethodGraph graph;
+
   for (const auto& node_name : value.getMemberNames()) {
     const auto& node = value[node_name];
     JsonValidation::validate_object(node, "node");
     const auto& instructions = node["instructions"];
 
-    if(node_name == "entry") {
-      LifecycleMethodCall entry_point = LifecycleMethodCall::from_json(instructions[0]);
-      graph.entry_point_ = entry_point;
+    std::vector<LifecycleMethodCall> method_calls;
+    for (const auto& instruction : JsonValidation::null_or_array(node, "instructions")) {
+      method_calls.push_back(LifecycleMethodCall::from_json(instruction));
     }
 
-    for (const auto& instruction :JsonValidation::null_or_array(node, "instructions")) {
-      LifecycleMethodCall call = LifecycleMethodCall::from_json(instruction);
-      graph.addNode(call);
-      for (const auto& successor : JsonValidation::null_or_array(node, "successors")) {
-        LifecycleMethodCall successor_call = LifecycleMethodCall::from_json(successor);
-        graph.addEdge(call, successor_call);
-      }
+    std::vector<std::string> successors;
+    for (const auto& successor : JsonValidation::null_or_array(node, "successors")) {
+      successors.push_back(JsonValidation::string(successor));
     }
+
+    graph.addNode(node_name, std::move(method_calls), std::move(successors));
   }
   return graph;
 }
