@@ -34,10 +34,6 @@ void LifeCycleMethodGraph::add_node(
 }
 
 bool LifeCycleMethodGraph::operator==(const LifeCycleMethodGraph& other) const {
-  if (nodes_.size() != other.nodes_.size()) {
-    return false;
-  }
-
   return nodes_ == other.nodes_;
 }
 
