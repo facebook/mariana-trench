@@ -184,9 +184,21 @@ void infer_input_taint(
       auto& propagations = propagations_iterator->second;
 
       if (input_root.is_argument()) {
-        // Do not infer propagations Arg(i) -> Arg(i). (especially with x=0)
+        // Do not infer propagations Arg(i) -> Arg(i). (especially with i=0)
         propagations.filter_frames([input_root](const Frame& frame) {
-          auto* kind = frame.kind()->as<LocalArgumentKind>();
+          const Kind* base_kind = frame.kind();
+
+          // Also avoid inferring Arg(i) -> Sanitize[X]:LocalArgument(i)
+          if (const auto* transform_kind = frame.kind()->as<TransformKind>()) {
+            if (transform_kind->has_non_sanitize_transform()) {
+              // Non-sanitizing transforms (i.e. named transforms, or named
+              // transforms with sanitizers) will still be inferred
+              return true;
+            }
+            base_kind = transform_kind->base_kind();
+          }
+
+          const auto* kind = base_kind->as<LocalArgumentKind>();
           return kind == nullptr ||
               kind->parameter_position() != input_root.parameter_position();
         });

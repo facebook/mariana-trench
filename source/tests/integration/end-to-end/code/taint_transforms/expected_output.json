@@ -2935,37 +2935,6 @@
     "line" : 475,
     "path" : "SanitizeTransforms.java"
   },
-  "propagation" : 
-  [
-    {
-      "input" : "Argument(0).mNested",
-      "output" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Propagation",
-            "port" : "Return"
-          },
-          "kinds" : 
-          [
-            {
-              "kind" : 
-              {
-                "base" : "LocalArgument(0)",
-                "global" : "Sanitize[Source[A]]",
-                "local" : "Sanitize[Source[A]]"
-              },
-              "output_paths" : 
-              {
-                ".mNested" : 3
-              }
-            }
-          ]
-        }
-      ]
-    }
-  ],
   "sanitizers" : 
   [
     {
@@ -6912,37 +6881,7 @@
   {
     "line" : 481,
     "path" : "SanitizeTransforms.java"
-  },
-  "propagation" : 
-  [
-    {
-      "input" : "Argument(0).mNested",
-      "output" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Propagation",
-            "port" : "Return"
-          },
-          "kinds" : 
-          [
-            {
-              "kind" : 
-              {
-                "base" : "LocalArgument(0)",
-                "global" : "Sanitize[Source[A]]:Sanitize[Source[A]]"
-              },
-              "output_paths" : 
-              {
-                ".mNested" : 3
-              }
-            }
-          ]
-        }
-      ]
-    }
-  ]
+  }
 }
 {
   "method" : "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.<init>:()V",
