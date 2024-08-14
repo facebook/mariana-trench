@@ -439,35 +439,6 @@ public class SanitizeTransforms {
     sinkB(o4);
   }
 
-  /* FP case for builder pattern when "alias-memory-location-on-invoke" is present */
-
-  // Simplistic builder
-  public static final class Builder {
-    int number;
-
-    // Source "builder"
-    public Builder() {
-      number = 0;
-    }
-
-    // Sanitizes sink "build"
-    // Has "alias-memory-location-on-invoke" in its model
-    public Builder number(int n) {
-      number = n;
-      return this;
-    }
-
-    // Sink "build"
-    public SanitizeTransforms build() {
-      return new SanitizeTransforms();
-    }
-  }
-
-  // FP: MT should not report an issue here, but it does
-  static SanitizeTransforms testBuilderNoIssue() {
-    return new Builder().number(42).build();
-  }
-
   /* KSS from argument(0) to argument(0). Not supported. */
   public Object mNested;
 

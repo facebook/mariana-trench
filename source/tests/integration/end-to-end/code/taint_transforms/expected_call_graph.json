@@ -332,20 +332,6 @@
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms$Builder;.<init>:()V" : 
-  {
-    "static" : 
-    [
-      "Ljava/lang/Object;.<init>:()V"
-    ]
-  },
-  "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;" : 
-  {
-    "static" : 
-    [
-      "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.<init>:()V"
-    ]
-  },
   "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.<init>:()V" : 
   {
     "static" : 
@@ -843,18 +829,6 @@
       "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.taintWithTransformXY:()Ljava/lang/Object;"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testBuilderNoIssue:()Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;" : 
-  {
-    "static" : 
-    [
-      "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms$Builder;.<init>:()V"
-    ],
-    "virtual" : 
-    [
-      "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;",
-      "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms$Builder;.number:(I)Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms$Builder;"
-    ]
-  },
   "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformXSanitizeA:(Ljava/lang/Object;)Ljava/lang/Object;" : 
   {
     "static" : 
@@ -908,6 +882,39 @@
     "virtual" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeAThis:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder$Builder;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder;" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder;.testBuilderNoIssue:()Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder;" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder$Builder;.<init>:()V"
+    ],
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder;",
+      "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder$Builder;.number:(I)Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder$Builder;"
     ]
   },
   "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.<init>:()V" : 

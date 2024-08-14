@@ -2309,220 +2309,6 @@
   }
 }
 {
-  "generations" : 
-  [
-    {
-      "port" : "Argument(0)",
-      "taint" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Origin",
-            "position" : 
-            {
-              "end" : 0,
-              "line" : 448,
-              "path" : "SanitizeTransforms.java",
-              "start" : 0
-            }
-          },
-          "kinds" : 
-          [
-            {
-              "kind" : "Builder",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms$Builder;.<init>:()V",
-                  "port" : "Argument(0)"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms$Builder;.<init>:()V",
-  "model_generators" : 
-  [
-    "model_generators:8"
-  ],
-  "parameter_sources" : 
-  [
-    {
-      "port" : "Argument(0)",
-      "taint" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Declaration"
-          },
-          "kinds" : 
-          [
-            {
-              "kind" : "Builder",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms$Builder;.<init>:()V",
-                  "port" : "Argument(0)"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "position" : 
-  {
-    "line" : 448,
-    "path" : "SanitizeTransforms.java"
-  }
-}
-{
-  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;",
-  "model_generators" : 
-  [
-    "model_generators:9"
-  ],
-  "position" : 
-  {
-    "line" : 461,
-    "path" : "SanitizeTransforms.java"
-  },
-  "sinks" : 
-  [
-    {
-      "port" : "Argument(0)",
-      "taint" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Declaration"
-          },
-          "kinds" : 
-          [
-            {
-              "kind" : "Build",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;",
-                  "port" : "Argument(0)"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
-{
-  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms$Builder;.number:(I)Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms$Builder;",
-  "model_generators" : 
-  [
-    "model_generators:10"
-  ],
-  "modes" : 
-  [
-    "alias-memory-location-on-invoke"
-  ],
-  "position" : 
-  {
-    "line" : 455,
-    "path" : "SanitizeTransforms.java"
-  },
-  "propagation" : 
-  [
-    {
-      "input" : "Argument(0)",
-      "output" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Propagation",
-            "port" : "Return"
-          },
-          "kinds" : 
-          [
-            {
-              "kind" : 
-              {
-                "base" : "LocalReturn",
-                "local" : "Sanitize[Sink[Build]]"
-              },
-              "output_paths" : 
-              {
-                "" : 4
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "input" : "Argument(1)",
-      "output" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Propagation",
-            "port" : "Argument(0)"
-          },
-          "kinds" : 
-          [
-            {
-              "kind" : "LocalArgument(0)",
-              "output_paths" : 
-              {
-                ".number" : 3
-              }
-            }
-          ]
-        },
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Propagation",
-            "port" : "Return"
-          },
-          "kinds" : 
-          [
-            {
-              "kind" : "LocalReturn",
-              "output_paths" : 
-              {
-                ".number" : 3
-              }
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "sanitizers" : 
-  [
-    {
-      "kinds" : 
-      [
-        {
-          "kind" : "Sink[Build]"
-        }
-      ],
-      "port" : "Argument(0)",
-      "sanitize" : "propagations"
-    }
-  ]
-}
-{
   "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.<init>:()V",
   "position" : 
   {
@@ -2693,8 +2479,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "kind" : 
               {
@@ -2739,7 +2525,7 @@
             "position" : 
             {
               "end" : 25,
-              "line" : 486,
+              "line" : 457,
               "path" : "SanitizeTransforms.java",
               "start" : 19
             }
@@ -2749,8 +2535,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "kind" : "A",
               "origins" : 
@@ -2767,7 +2553,7 @@
           [
             {
               "end" : 28,
-              "line" : 486,
+              "line" : 457,
               "start" : 19
             }
           ]
@@ -2785,7 +2571,7 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sinkB:(Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 491,
+        "line" : 462,
         "path" : "SanitizeTransforms.java"
       },
       "rule" : 9,
@@ -2800,7 +2586,7 @@
             "position" : 
             {
               "end" : 13,
-              "line" : 491,
+              "line" : 462,
               "path" : "SanitizeTransforms.java",
               "start" : 10
             }
@@ -2810,8 +2596,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "kind" : "B",
               "origins" : 
@@ -2836,7 +2622,7 @@
             "position" : 
             {
               "end" : 25,
-              "line" : 486,
+              "line" : 457,
               "path" : "SanitizeTransforms.java",
               "start" : 19
             }
@@ -2846,8 +2632,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "kind" : "A",
               "origins" : 
@@ -2871,7 +2657,7 @@
           [
             {
               "end" : 28,
-              "line" : 486,
+              "line" : 457,
               "start" : 19
             }
           ]
@@ -2882,7 +2668,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeASinkIssue:()V",
   "position" : 
   {
-    "line" : 485,
+    "line" : 456,
     "path" : "SanitizeTransforms.java"
   },
   "sinks" : 
@@ -2899,7 +2685,7 @@
             "position" : 
             {
               "end" : 13,
-              "line" : 491,
+              "line" : 462,
               "path" : "SanitizeTransforms.java",
               "start" : 10
             }
@@ -2909,8 +2695,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "kind" : "B",
               "origins" : 
@@ -2932,7 +2718,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeAThis:()V",
   "position" : 
   {
-    "line" : 475,
+    "line" : 446,
     "path" : "SanitizeTransforms.java"
   },
   "sanitizers" : 
@@ -2980,8 +2766,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "extra_traces" : 
               [
@@ -3140,8 +2926,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "extra_traces" : 
               [
@@ -3338,7 +3124,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeSourceA:(Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;)Ljava/lang/Object;",
   "position" : 
   {
-    "line" : 498,
+    "line" : 469,
     "path" : "SanitizeTransforms.java"
   },
   "propagation" : 
@@ -3543,8 +3329,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "kind" : 
               {
@@ -3605,8 +3391,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "extra_traces" : 
               [
@@ -3691,8 +3477,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "extra_traces" : 
               [
@@ -3775,8 +3561,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "extra_traces" : 
               [
@@ -3858,8 +3644,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "extra_traces" : 
               [
@@ -3964,8 +3750,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "extra_traces" : 
               [
@@ -4048,8 +3834,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "distance" : 1,
               "kind" : 
@@ -4251,8 +4037,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "distance" : 1,
               "kind" : 
@@ -4469,8 +4255,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "distance" : 1,
               "kind" : 
@@ -4511,8 +4297,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "distance" : 1,
               "kind" : 
@@ -4573,8 +4359,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "kind" : "B",
               "origins" : 
@@ -4610,8 +4396,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "distance" : 1,
               "extra_traces" : 
@@ -4702,8 +4488,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "kind" : "B",
               "origins" : 
@@ -4739,8 +4525,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "distance" : 1,
               "kind" : 
@@ -4889,8 +4675,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "kind" : "B",
               "origins" : 
@@ -4925,8 +4711,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "extra_traces" : 
               [
@@ -5020,8 +4806,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "kind" : "B",
               "origins" : 
@@ -5056,8 +4842,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "extra_traces" : 
               [
@@ -5147,8 +4933,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "kind" : "B",
               "origins" : 
@@ -5183,8 +4969,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "kind" : "A",
               "origins" : 
@@ -5242,8 +5028,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "kind" : "B",
               "origins" : 
@@ -5278,8 +5064,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "extra_traces" : 
               [
@@ -5374,8 +5160,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "distance" : 1,
               "kind" : 
@@ -5415,8 +5201,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "kind" : "A",
               "origins" : 
@@ -5472,8 +5258,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "kind" : "B",
               "origins" : 
@@ -5508,8 +5294,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "extra_traces" : 
               [
@@ -5616,8 +5402,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "distance" : 1,
               "kind" : 
@@ -5657,8 +5443,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "extra_traces" : 
               [
@@ -5747,8 +5533,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "kind" : "B",
               "origins" : 
@@ -5783,8 +5569,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "extra_traces" : 
               [
@@ -5894,8 +5680,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "kind" : "B",
               "origins" : 
@@ -5987,8 +5773,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "kind" : "B",
               "origins" : 
@@ -6105,8 +5891,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "distance" : 1,
               "kind" : 
@@ -6147,8 +5933,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "distance" : 1,
               "kind" : 
@@ -6210,8 +5996,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "distance" : 1,
               "kind" : 
@@ -6252,8 +6038,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "distance" : 1,
               "kind" : 
@@ -6279,103 +6065,6 @@
   "position" : 
   {
     "line" : 179,
-    "path" : "SanitizeTransforms.java"
-  }
-}
-{
-  "issues" : 
-  [
-    {
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;",
-      "position" : 
-      {
-        "line" : 468,
-        "path" : "SanitizeTransforms.java"
-      },
-      "rule" : 13,
-      "sink_index" : "0",
-      "sinks" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Origin",
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 34,
-              "line" : 468,
-              "path" : "SanitizeTransforms.java",
-              "start" : 15
-            }
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                42,
-                43
-              ],
-              "kind" : "Build",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;",
-                  "port" : "Argument(0)"
-                }
-              ],
-              "preserves_type_context" : true
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 0,
-              "line" : 468,
-              "path" : "SanitizeTransforms.java",
-              "start" : 0
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms$Builder;.<init>:()V"
-          },
-          "kinds" : 
-          [
-            {
-              "distance" : 1,
-              "kind" : "Builder",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms$Builder;.<init>:()V",
-                  "port" : "Argument(0)"
-                }
-              ]
-            }
-          ],
-          "local_positions" : 
-          [
-            {
-              "end" : 23,
-              "line" : 468,
-              "start" : 15
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.testBuilderNoIssue:()Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;",
-  "position" : 
-  {
-    "line" : 467,
     "path" : "SanitizeTransforms.java"
   }
 }
@@ -6510,8 +6199,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "extra_traces" : 
               [
@@ -6713,8 +6402,8 @@
             {
               "callee_interval" : 
               [
-                42,
-                43
+                40,
+                41
               ],
               "extra_traces" : 
               [
@@ -6931,8 +6620,327 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.wrapSanitizeAThis:()V",
   "position" : 
   {
-    "line" : 481,
+    "line" : 452,
     "path" : "SanitizeTransforms.java"
+  }
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Argument(0)",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "position" : 
+            {
+              "end" : 0,
+              "line" : 16,
+              "path" : "SanitizeTransformsWithBuilder.java",
+              "start" : 0
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "Builder",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder$Builder;.<init>:()V",
+                  "port" : "Argument(0)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder$Builder;.<init>:()V",
+  "model_generators" : 
+  [
+    "model_generators:8"
+  ],
+  "parameter_sources" : 
+  [
+    {
+      "port" : "Argument(0)",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "Builder",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder$Builder;.<init>:()V",
+                  "port" : "Argument(0)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "position" : 
+  {
+    "line" : 16,
+    "path" : "SanitizeTransformsWithBuilder.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder;",
+  "model_generators" : 
+  [
+    "model_generators:9"
+  ],
+  "position" : 
+  {
+    "line" : 29,
+    "path" : "SanitizeTransformsWithBuilder.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(0)",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "Build",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder;",
+                  "port" : "Argument(0)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder$Builder;.number:(I)Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder$Builder;",
+  "model_generators" : 
+  [
+    "model_generators:10"
+  ],
+  "modes" : 
+  [
+    "alias-memory-location-on-invoke"
+  ],
+  "position" : 
+  {
+    "line" : 23,
+    "path" : "SanitizeTransformsWithBuilder.java"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : 
+              {
+                "base" : "LocalReturn",
+                "local" : "Sanitize[Sink[Build]]"
+              },
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input" : "Argument(1)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              {
+                ".number" : 3
+              }
+            }
+          ]
+        },
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                ".number" : 3
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "sanitizers" : 
+  [
+    {
+      "kinds" : 
+      [
+        {
+          "kind" : "Sink[Build]"
+        }
+      ],
+      "port" : "Argument(0)",
+      "sanitize" : "propagations"
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder;.<init>:()V",
+  "position" : 
+  {
+    "line" : 10,
+    "path" : "SanitizeTransformsWithBuilder.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder;",
+      "position" : 
+      {
+        "line" : 36,
+        "path" : "SanitizeTransformsWithBuilder.java"
+      },
+      "rule" : 13,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 34,
+              "line" : 36,
+              "path" : "SanitizeTransformsWithBuilder.java",
+              "start" : 15
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                44,
+                45
+              ],
+              "kind" : "Build",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder;",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 0,
+              "line" : 36,
+              "path" : "SanitizeTransformsWithBuilder.java",
+              "start" : 0
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder$Builder;.<init>:()V"
+          },
+          "kinds" : 
+          [
+            {
+              "distance" : 1,
+              "kind" : "Builder",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder$Builder;.<init>:()V",
+                  "port" : "Argument(0)"
+                }
+              ]
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 23,
+              "line" : 36,
+              "start" : 15
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder;.testBuilderNoIssue:()Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder;",
+  "position" : 
+  {
+    "line" : 35,
+    "path" : "SanitizeTransformsWithBuilder.java"
   }
 }
 {
@@ -7011,8 +7019,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "distance" : 1,
               "kind" : 
@@ -7032,8 +7040,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "distance" : 1,
               "extra_traces" : 
@@ -7112,8 +7120,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "distance" : 1,
               "extra_traces" : 
@@ -7154,8 +7162,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "distance" : 1,
               "extra_traces" : 
@@ -7543,8 +7551,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "distance" : 1,
               "kind" : "NewSource",
@@ -7709,8 +7717,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "kind" : "Sink",
               "origins" : 
@@ -7725,8 +7733,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "extra_traces" : 
               [
@@ -7808,8 +7816,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "extra_traces" : 
               [
@@ -7891,8 +7899,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "extra_traces" : 
               [
@@ -7932,8 +7940,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "extra_traces" : 
               [
@@ -8038,8 +8046,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "kind" : "Sink",
               "origins" : 
@@ -8090,8 +8098,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "kind" : "Source",
               "origins" : 
@@ -8106,8 +8114,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "extra_traces" : 
               [
@@ -8189,8 +8197,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "extra_traces" : 
               [
@@ -8230,8 +8238,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "extra_traces" : 
               [
@@ -8336,8 +8344,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "kind" : "Source",
               "origins" : 
@@ -8402,8 +8410,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "distance" : 1,
               "kind" : 
@@ -8443,8 +8451,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "extra_traces" : 
               [
@@ -8537,8 +8545,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "kind" : "Sink",
               "origins" : 
@@ -8626,8 +8634,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "kind" : "Sink",
               "origins" : 
@@ -8662,8 +8670,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "extra_traces" : 
               [
@@ -8766,8 +8774,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "distance" : 1,
               "kind" : 
@@ -8807,8 +8815,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "kind" : "Source",
               "origins" : 
@@ -8854,8 +8862,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "distance" : 1,
               "kind" : 
@@ -8895,8 +8903,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "kind" : "Source",
               "origins" : 
@@ -8988,8 +8996,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "kind" : "Source",
               "origins" : 
@@ -9070,8 +9078,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "kind" : "Source",
               "origins" : 
@@ -9127,8 +9135,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "kind" : "Sink",
               "origins" : 
@@ -9164,8 +9172,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "distance" : 1,
               "kind" : 
@@ -9215,8 +9223,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "kind" : "Sink",
               "origins" : 
@@ -9252,8 +9260,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "distance" : 1,
               "kind" : 
@@ -9314,8 +9322,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "kind" : "Sink",
               "origins" : 
@@ -9396,8 +9404,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "kind" : "Sink",
               "origins" : 
@@ -9490,8 +9498,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "distance" : 1,
               "kind" : 
@@ -9532,8 +9540,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "distance" : 1,
               "kind" : "Source",
@@ -9580,8 +9588,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "distance" : 1,
               "kind" : 
@@ -9622,8 +9630,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "distance" : 1,
               "kind" : 
@@ -9688,8 +9696,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "kind" : "Sink",
               "origins" : 
@@ -9724,8 +9732,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "kind" : "Source",
               "origins" : 
@@ -9794,8 +9802,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "kind" : "Sink",
               "origins" : 
@@ -9830,8 +9838,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "extra_traces" : 
               [
@@ -9933,8 +9941,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "kind" : "Sink",
               "origins" : 
@@ -9969,8 +9977,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "extra_traces" : 
               [
@@ -10061,8 +10069,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "distance" : 1,
               "kind" : "Sink",
@@ -10098,8 +10106,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "kind" : "Source",
               "origins" : 
@@ -10145,8 +10153,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "distance" : 1,
               "kind" : 
@@ -10186,8 +10194,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "kind" : "Source",
               "origins" : 
@@ -10251,8 +10259,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "kind" : "Sink",
               "origins" : 
@@ -10288,8 +10296,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "distance" : 1,
               "kind" : "Source",
@@ -10335,8 +10343,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "kind" : "Sink",
               "origins" : 
@@ -10372,8 +10380,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "distance" : 1,
               "kind" : 
@@ -10434,8 +10442,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "kind" : "Sink",
               "origins" : 
@@ -10470,8 +10478,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "extra_traces" : 
               [
@@ -10677,8 +10685,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "distance" : 1,
               "kind" : "Sink",
@@ -10715,8 +10723,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "distance" : 1,
               "kind" : "Source",
@@ -10776,8 +10784,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "distance" : 1,
               "kind" : "Sink",
@@ -10814,8 +10822,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "distance" : 1,
               "extra_traces" : 
@@ -11186,8 +11194,8 @@
             {
               "callee_interval" : 
               [
-                44,
-                45
+                46,
+                47
               ],
               "kind" : "NewSource",
               "origins" : 
