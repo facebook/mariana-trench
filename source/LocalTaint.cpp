@@ -416,20 +416,18 @@ LocalTaint LocalTaint::apply_transform(
     const TransformList* local_transforms,
     transforms::TransformDirection direction) const {
   FramesByKind new_frames;
-  this->visit_frames([&new_frames,
-                      &kind_factory,
-                      &transforms,
-                      &used_kinds,
-                      local_transforms,
-                      direction](const CallInfo&, const Frame& frame) {
+  this->visit_kind_frames([&new_frames,
+                           &kind_factory,
+                           &transforms,
+                           &used_kinds,
+                           local_transforms,
+                           direction](const KindFrames& frame) {
     auto new_frame = frame.apply_transform(
         kind_factory, transforms, used_kinds, local_transforms, direction);
     if (!new_frame.is_bottom()) {
       new_frames.update(
           new_frame.kind(), [&new_frame](const KindFrames& old_frames) {
-            auto frames_copy = old_frames;
-            frames_copy.add(new_frame);
-            return frames_copy;
+            return old_frames.join(new_frame);
           });
     }
   });

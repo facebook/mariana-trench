@@ -17,10 +17,11 @@
 #include <mariana-trench/FeatureMayAlwaysSet.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/JsonValidation.h>
+#include <mariana-trench/Log.h>
 #include <mariana-trench/OriginFactory.h>
 #include <mariana-trench/SanitizerSetTransform.h>
 #include <mariana-trench/TaggedRootSet.h>
-#include <mariana-trench/UsedKinds.h>
+#include <mariana-trench/TaintConfig.h>
 
 namespace marianatrench {
 
@@ -214,84 +215,6 @@ Frame Frame::update_with_propagation_trace(
       /* canonical_names */ {},
       output_paths_,
       extra_traces_);
-}
-
-Frame Frame::apply_transform(
-    const KindFactory& kind_factory,
-    const TransformsFactory& transforms_factory,
-    const UsedKinds& used_kinds,
-    const TransformList* local_transforms,
-    transforms::TransformDirection direction) const {
-  const Kind* base_kind = kind_;
-  const TransformList* global_transforms = nullptr;
-
-  // See if we can drop some taint here
-  if (local_transforms
-          ->sanitizes<TransformList::ApplicationDirection::Backward>(
-              kind_, direction)) {
-    return Frame::bottom();
-  }
-
-  if (const auto* transform_kind = kind_->as<TransformKind>()) {
-    auto existing_local_transforms = transform_kind->local_transforms();
-    global_transforms = transform_kind->global_transforms();
-    base_kind = transform_kind->base_kind();
-    TransformList temp_local_transforms = *local_transforms;
-
-    if (!base_kind->is<PropagationKind>()) {
-      temp_local_transforms = TransformList::discard_unmatched_sanitizers(
-          &temp_local_transforms, transforms_factory, direction);
-    }
-
-    if (temp_local_transforms.size() != 0 && global_transforms != nullptr &&
-        (existing_local_transforms == nullptr ||
-         !existing_local_transforms->has_non_sanitize_transform())) {
-      temp_local_transforms = TransformList::filter_global_sanitizers(
-          &temp_local_transforms, global_transforms, transforms_factory);
-    }
-
-    // Append existing local_transforms.
-    if (existing_local_transforms != nullptr) {
-      temp_local_transforms = TransformList::concat(
-          &temp_local_transforms, existing_local_transforms);
-    }
-
-    // Canonicalize the and create the local transform list from factory if the
-    // list is not empty
-    local_transforms = temp_local_transforms.size() != 0
-        ? transforms_factory.canonicalize(&temp_local_transforms)
-        : nullptr;
-
-  } else if (kind_->is<PropagationKind>()) {
-    // If the current kind is PropagationKind, set the transform as a global
-    // transform. This is done to track the next hops for propagation with
-    // trace.
-    global_transforms = local_transforms;
-    local_transforms = nullptr;
-  } else {
-    TransformList temp_local_transforms =
-        TransformList::discard_unmatched_sanitizers(
-            local_transforms, transforms_factory, direction);
-    // No need to apply anything if all transforms are sanitizers and are
-    // discarded
-    if (temp_local_transforms.size() == 0) {
-      return *this;
-    }
-
-    local_transforms = transforms_factory.canonicalize(&temp_local_transforms);
-  }
-
-  mt_assert(base_kind != nullptr);
-  const auto* new_kind = kind_factory.transform_kind(
-      base_kind, local_transforms, global_transforms);
-
-  if (!used_kinds.should_keep(new_kind)) {
-    return Frame::bottom();
-  }
-
-  Frame new_frame{*this};
-  new_frame.kind_ = new_kind;
-  return new_frame;
 }
 
 std::vector<const Feature*> Frame::materialize_via_type_of_ports(

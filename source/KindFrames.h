@@ -157,6 +157,13 @@ class KindFrames final : public sparta::AbstractDomain<KindFrames> {
       const KindFactory& kind_factory,
       const TransformsFactory& transforms_factory) const;
 
+  KindFrames apply_transform(
+      const KindFactory& kind_factory,
+      const TransformsFactory& transforms_factory,
+      const UsedKinds& used_kinds,
+      const TransformList* local_transforms,
+      transforms::TransformDirection direction) const;
+
   void filter_invalid_frames(const std::function<bool(const Kind*)>& is_valid);
 
   bool contains_kind(const Kind*) const;

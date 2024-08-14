@@ -241,13 +241,6 @@ class Frame final : public sparta::AbstractDomain<Frame> {
 
   Frame update_with_propagation_trace(const Frame& propagation_frame) const;
 
-  Frame apply_transform(
-      const KindFactory& kind_factory,
-      const TransformsFactory& transforms_factory,
-      const UsedKinds& used_kinds,
-      const TransformList* local_transforms,
-      transforms::TransformDirection direction) const;
-
   std::vector<const Feature*> materialize_via_type_of_ports(
       const Method* callee,
       const FeatureFactory* feature_factory,
