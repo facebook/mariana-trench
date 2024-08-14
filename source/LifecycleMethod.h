@@ -102,8 +102,8 @@ class LifecycleMethodCall {
             successors_(std::move(successors)) {}
       INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(LifecycleGraphNode)
 
-      const std::vector<LifecycleMethodCall>& method_calls() const;
-      const std::vector<std::string>& successors() const;
+      const std::vector<LifecycleMethodCall>& method_calls() const { return method_calls_; }
+      const std::vector<std::string>& successors() const { return successors_; }  
       bool operator==(const LifecycleGraphNode& other) const;
 
 

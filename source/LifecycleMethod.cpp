@@ -20,14 +20,6 @@
 
 namespace marianatrench {
 
-const std::vector<LifecycleMethodCall>& LifecycleGraphNode::method_calls() const {
-  return method_calls_;
-}
-
-const std::vector<std::string>& LifecycleGraphNode::successors() const {
-  return successors_;
-}
-
 bool LifecycleGraphNode::operator==(const LifecycleGraphNode& other) const {
   return method_calls_ == other.method_calls_ &&
           successors_ == other.successors_;
