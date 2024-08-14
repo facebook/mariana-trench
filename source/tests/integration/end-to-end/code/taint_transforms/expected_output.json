@@ -2511,231 +2511,6 @@
   ]
 }
 {
-  "generations" : 
-  [
-    {
-      "port" : "Argument(0).mNested",
-      "taint" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Origin",
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 25,
-              "line" : 457,
-              "path" : "SanitizeTransforms.java",
-              "start" : 19
-            }
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                40,
-                41
-              ],
-              "kind" : "A",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceA:()Ljava/lang/Object;",
-                  "port" : "Return"
-                }
-              ],
-              "preserves_type_context" : true
-            }
-          ],
-          "local_positions" : 
-          [
-            {
-              "end" : 28,
-              "line" : 457,
-              "start" : 19
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "issues" : 
-  [
-    {
-      "always_features" : 
-      [
-        "via-issue-broadening"
-      ],
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sinkB:(Ljava/lang/Object;)V",
-      "position" : 
-      {
-        "line" : 462,
-        "path" : "SanitizeTransforms.java"
-      },
-      "rule" : 9,
-      "sink_index" : "0",
-      "sinks" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Origin",
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 13,
-              "line" : 462,
-              "path" : "SanitizeTransforms.java",
-              "start" : 10
-            }
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                40,
-                41
-              ],
-              "kind" : "B",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sinkB:(Ljava/lang/Object;)V",
-                  "port" : "Argument(0)"
-                }
-              ],
-              "preserves_type_context" : true
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Origin",
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 25,
-              "line" : 457,
-              "path" : "SanitizeTransforms.java",
-              "start" : 19
-            }
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                40,
-                41
-              ],
-              "kind" : "A",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceA:()Ljava/lang/Object;",
-                  "port" : "Return"
-                }
-              ],
-              "preserves_type_context" : true
-            }
-          ],
-          "local_features" : 
-          {
-            "always_features" : 
-            [
-              "via-issue-broadening"
-            ]
-          },
-          "local_positions" : 
-          [
-            {
-              "end" : 28,
-              "line" : 457,
-              "start" : 19
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeASinkIssue:()V",
-  "position" : 
-  {
-    "line" : 456,
-    "path" : "SanitizeTransforms.java"
-  },
-  "sinks" : 
-  [
-    {
-      "port" : "Argument(0)",
-      "taint" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Origin",
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 13,
-              "line" : 462,
-              "path" : "SanitizeTransforms.java",
-              "start" : 10
-            }
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                40,
-                41
-              ],
-              "kind" : "B",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sinkB:(Ljava/lang/Object;)V",
-                  "port" : "Argument(0)"
-                }
-              ],
-              "preserves_type_context" : true
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
-{
-  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeAThis:()V",
-  "position" : 
-  {
-    "line" : 446,
-    "path" : "SanitizeTransforms.java"
-  },
-  "sanitizers" : 
-  [
-    {
-      "kinds" : 
-      [
-        {
-          "kind" : "Source[A]"
-        }
-      ],
-      "port" : "Argument(0)",
-      "sanitize" : "propagations"
-    }
-  ]
-}
-{
   "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeAToYToZToB:(Ljava/lang/Object;)V",
   "position" : 
   {
@@ -3124,7 +2899,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeSourceA:(Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;)Ljava/lang/Object;",
   "position" : 
   {
-    "line" : 469,
+    "line" : 446,
     "path" : "SanitizeTransforms.java"
   },
   "propagation" : 
@@ -6617,14 +6392,6 @@
   ]
 }
 {
-  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.wrapSanitizeAThis:()V",
-  "position" : 
-  {
-    "line" : 452,
-    "path" : "SanitizeTransforms.java"
-  }
-}
-{
   "generations" : 
   [
     {
@@ -6638,8 +6405,8 @@
             "position" : 
             {
               "end" : 0,
-              "line" : 16,
-              "path" : "SanitizeTransformsWithBuilder.java",
+              "line" : 22,
+              "path" : "SanitizeTransformsPropagationToSameMemoryLocation.java",
               "start" : 0
             }
           },
@@ -6650,7 +6417,7 @@
               "origins" : 
               [
                 {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder$Builder;.<init>:()V",
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsPropagationToSameMemoryLocation$Builder;.<init>:()V",
                   "port" : "Argument(0)"
                 }
               ]
@@ -6660,7 +6427,7 @@
       ]
     }
   ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder$Builder;.<init>:()V",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsPropagationToSameMemoryLocation$Builder;.<init>:()V",
   "model_generators" : 
   [
     "model_generators:8"
@@ -6683,7 +6450,7 @@
               "origins" : 
               [
                 {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder$Builder;.<init>:()V",
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsPropagationToSameMemoryLocation$Builder;.<init>:()V",
                   "port" : "Argument(0)"
                 }
               ]
@@ -6695,52 +6462,12 @@
   ],
   "position" : 
   {
-    "line" : 16,
-    "path" : "SanitizeTransformsWithBuilder.java"
+    "line" : 22,
+    "path" : "SanitizeTransformsPropagationToSameMemoryLocation.java"
   }
 }
 {
-  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder;",
-  "model_generators" : 
-  [
-    "model_generators:9"
-  ],
-  "position" : 
-  {
-    "line" : 29,
-    "path" : "SanitizeTransformsWithBuilder.java"
-  },
-  "sinks" : 
-  [
-    {
-      "port" : "Argument(0)",
-      "taint" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Declaration"
-          },
-          "kinds" : 
-          [
-            {
-              "kind" : "Build",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder;",
-                  "port" : "Argument(0)"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
-{
-  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder$Builder;.number:(I)Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder$Builder;",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsPropagationToSameMemoryLocation$Builder;.aliasThisOnInvoke:(I)Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsPropagationToSameMemoryLocation$Builder;",
   "model_generators" : 
   [
     "model_generators:10"
@@ -6751,8 +6478,8 @@
   ],
   "position" : 
   {
-    "line" : 23,
-    "path" : "SanitizeTransformsWithBuilder.java"
+    "line" : 30,
+    "path" : "SanitizeTransformsPropagationToSameMemoryLocation.java"
   },
   "propagation" : 
   [
@@ -6839,22 +6566,274 @@
   ]
 }
 {
-  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder;.<init>:()V",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsPropagationToSameMemoryLocation$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsPropagationToSameMemoryLocation;",
+  "model_generators" : 
+  [
+    "model_generators:9"
+  ],
   "position" : 
   {
-    "line" : 10,
-    "path" : "SanitizeTransformsWithBuilder.java"
+    "line" : 36,
+    "path" : "SanitizeTransformsPropagationToSameMemoryLocation.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(0)",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "Build",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsPropagationToSameMemoryLocation$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsPropagationToSameMemoryLocation;",
+                  "port" : "Argument(0)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsPropagationToSameMemoryLocation;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9,
+    "path" : "SanitizeTransformsPropagationToSameMemoryLocation.java"
+  }
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Argument(0).mNested",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 44,
+              "line" : 72,
+              "path" : "SanitizeTransformsPropagationToSameMemoryLocation.java",
+              "start" : 38
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                44,
+                45
+              ],
+              "kind" : "A",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceA:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 47,
+              "line" : 72,
+              "start" : 19
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "issues" : 
+  [
+    {
+      "always_features" : 
+      [
+        "via-issue-broadening"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sinkB:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 81,
+        "path" : "SanitizeTransformsPropagationToSameMemoryLocation.java"
+      },
+      "rule" : 9,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 32,
+              "line" : 81,
+              "path" : "SanitizeTransformsPropagationToSameMemoryLocation.java",
+              "start" : 29
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                44,
+                45
+              ],
+              "kind" : "B",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sinkB:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 44,
+              "line" : 72,
+              "path" : "SanitizeTransformsPropagationToSameMemoryLocation.java",
+              "start" : 38
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                44,
+                45
+              ],
+              "kind" : "A",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceA:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-issue-broadening"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 47,
+              "line" : 72,
+              "start" : 19
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsPropagationToSameMemoryLocation;.sanitizeASinkIssue:()V",
+  "position" : 
+  {
+    "line" : 71,
+    "path" : "SanitizeTransformsPropagationToSameMemoryLocation.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(0)",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 32,
+              "line" : 81,
+              "path" : "SanitizeTransformsPropagationToSameMemoryLocation.java",
+              "start" : 29
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                44,
+                45
+              ],
+              "kind" : "B",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sinkB:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsPropagationToSameMemoryLocation;.sanitizeAThis:()V",
+  "position" : 
+  {
+    "line" : 61,
+    "path" : "SanitizeTransformsPropagationToSameMemoryLocation.java"
   }
 }
 {
   "issues" : 
   [
     {
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder;",
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsPropagationToSameMemoryLocation$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsPropagationToSameMemoryLocation;",
       "position" : 
       {
-        "line" : 36,
-        "path" : "SanitizeTransformsWithBuilder.java"
+        "line" : 51,
+        "path" : "SanitizeTransformsPropagationToSameMemoryLocation.java"
       },
       "rule" : 13,
       "sink_index" : "0",
@@ -6867,9 +6846,9 @@
             "port" : "Argument(0)",
             "position" : 
             {
-              "end" : 34,
-              "line" : 36,
-              "path" : "SanitizeTransformsWithBuilder.java",
+              "end" : 45,
+              "line" : 51,
+              "path" : "SanitizeTransformsPropagationToSameMemoryLocation.java",
               "start" : 15
             }
           },
@@ -6885,7 +6864,7 @@
               "origins" : 
               [
                 {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder;",
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsPropagationToSameMemoryLocation$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsPropagationToSameMemoryLocation;",
                   "port" : "Argument(0)"
                 }
               ],
@@ -6904,11 +6883,11 @@
             "position" : 
             {
               "end" : 0,
-              "line" : 36,
-              "path" : "SanitizeTransformsWithBuilder.java",
+              "line" : 51,
+              "path" : "SanitizeTransformsPropagationToSameMemoryLocation.java",
               "start" : 0
             },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder$Builder;.<init>:()V"
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsPropagationToSameMemoryLocation$Builder;.<init>:()V"
           },
           "kinds" : 
           [
@@ -6918,7 +6897,7 @@
               "origins" : 
               [
                 {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder$Builder;.<init>:()V",
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsPropagationToSameMemoryLocation$Builder;.<init>:()V",
                   "port" : "Argument(0)"
                 }
               ]
@@ -6928,7 +6907,7 @@
           [
             {
               "end" : 23,
-              "line" : 36,
+              "line" : 51,
               "start" : 15
             }
           ]
@@ -6936,11 +6915,19 @@
       ]
     }
   ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder;.testBuilderNoIssue:()Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder;",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsPropagationToSameMemoryLocation;.testBuilderNoIssue:()Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsPropagationToSameMemoryLocation;",
   "position" : 
   {
-    "line" : 35,
-    "path" : "SanitizeTransformsWithBuilder.java"
+    "line" : 50,
+    "path" : "SanitizeTransformsPropagationToSameMemoryLocation.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsPropagationToSameMemoryLocation;.wrapSanitizeAThis:()V",
+  "position" : 
+  {
+    "line" : 67,
+    "path" : "SanitizeTransformsPropagationToSameMemoryLocation.java"
   }
 }
 {

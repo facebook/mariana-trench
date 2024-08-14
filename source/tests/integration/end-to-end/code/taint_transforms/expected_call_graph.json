@@ -347,25 +347,6 @@
       "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sinkB:(Ljava/lang/Object;)V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeASinkIssue:()V" : 
-  {
-    "static" : 
-    [
-      "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sinkB:(Ljava/lang/Object;)V",
-      "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceA:()Ljava/lang/Object;"
-    ],
-    "virtual" : 
-    [
-      "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.wrapSanitizeAThis:()V"
-    ]
-  },
-  "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeAThis:()V" : 
-  {
-    "static" : 
-    [
-      "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeSourceA:(Ljava/lang/Object;)Ljava/lang/Object;"
-    ]
-  },
   "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeAToYToZToB:(Ljava/lang/Object;)V" : 
   {
     "static" : 
@@ -877,44 +858,63 @@
       "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.transformX:(Ljava/lang/Object;)Ljava/lang/Object;"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.wrapSanitizeAThis:()V" : 
-  {
-    "virtual" : 
-    [
-      "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeAThis:()V"
-    ]
-  },
-  "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder$Builder;.<init>:()V" : 
+  "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsPropagationToSameMemoryLocation$Builder;.<init>:()V" : 
   {
     "static" : 
     [
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder;" : 
+  "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsPropagationToSameMemoryLocation$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsPropagationToSameMemoryLocation;" : 
   {
     "static" : 
     [
-      "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder;.<init>:()V"
+      "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsPropagationToSameMemoryLocation;.<init>:()V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder;.<init>:()V" : 
+  "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsPropagationToSameMemoryLocation;.<init>:()V" : 
   {
     "static" : 
     [
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder;.testBuilderNoIssue:()Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder;" : 
+  "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsPropagationToSameMemoryLocation;.sanitizeASinkIssue:()V" : 
   {
     "static" : 
     [
-      "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder$Builder;.<init>:()V"
+      "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sinkB:(Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceA:()Ljava/lang/Object;"
     ],
     "virtual" : 
     [
-      "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder;",
-      "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder$Builder;.number:(I)Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder$Builder;"
+      "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsPropagationToSameMemoryLocation;.wrapSanitizeAThis:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsPropagationToSameMemoryLocation;.sanitizeAThis:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeSourceA:(Ljava/lang/Object;)Ljava/lang/Object;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsPropagationToSameMemoryLocation;.testBuilderNoIssue:()Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsPropagationToSameMemoryLocation;" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsPropagationToSameMemoryLocation$Builder;.<init>:()V"
+    ],
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsPropagationToSameMemoryLocation$Builder;.aliasThisOnInvoke:(I)Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsPropagationToSameMemoryLocation$Builder;",
+      "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsPropagationToSameMemoryLocation$Builder;.build:()Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsPropagationToSameMemoryLocation;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsPropagationToSameMemoryLocation;.wrapSanitizeAThis:()V" : 
+  {
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsPropagationToSameMemoryLocation;.sanitizeAThis:()V"
     ]
   },
   "Lcom/facebook/marianatrench/integrationtests/TaintTransforms;.<init>:()V" : 

@@ -439,29 +439,6 @@ public class SanitizeTransforms {
     sinkB(o4);
   }
 
-  /* KSS from argument(0) to argument(0). Not supported. */
-  public Object mNested;
-
-  void sanitizeAThis() {
-    // argument(0).mNested -> Sanitize[Source[A]]:LocalArgument(0)
-    this.mNested = sanitizeSourceA(this.mNested);
-  }
-
-  void wrapSanitizeAThis() {
-    // If sanitizers were inferred, this would also have sanitizer
-    // argument(0).mNested -> Sanitize[Source[A]]:LocalArgument(0)
-    this.sanitizeAThis();
-  }
-
-  void sanitizeASinkIssue() {
-    this.mNested = sourceA();
-    // If arg(i) -> arg(i) sanitizers were applied, since argument(0).mNested
-    // is tainted by SourceA, the resulting kind would be bottom, and the output
-    // argument(0) should lose its taint.
-    this.wrapSanitizeAThis();
-    sinkB(this);
-  }
-
   /* Add same sanitizers on existing propagations */
   static Object sanitizeSourceA(SanitizeTransforms sanitizeTransforms) {
     // The same sanitizer is defined on *both* caller and callee. The caller has a local

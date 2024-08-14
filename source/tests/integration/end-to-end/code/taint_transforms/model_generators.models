@@ -207,7 +207,7 @@
       "where": [
         {
           "constraint": "signature_match",
-          "parent": "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder$Builder;",
+          "parent": "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsPropagationToSameMemoryLocation$Builder;",
           "name": "<init>"
         }
       ],
@@ -225,7 +225,7 @@
       "where": [
         {
           "constraint": "signature_match",
-          "parent": "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder$Builder;",
+          "parent": "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsPropagationToSameMemoryLocation$Builder;",
           "name": "build"
         }
       ],
@@ -243,8 +243,8 @@
       "where": [
         {
           "constraint": "signature_match",
-          "parent": "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsWithBuilder$Builder;",
-          "name": "number"
+          "parent": "Lcom/facebook/marianatrench/integrationtests/SanitizeTransformsPropagationToSameMemoryLocation$Builder;",
+          "name": "aliasThisOnInvoke"
         }
       ],
       "model": {
