@@ -197,13 +197,16 @@ LifecycleMethod LifecycleMethod::from_json(const Json::Value& value) {
     for (const auto& callee : JsonValidation::null_or_array(value, "callees")) {
       callees.push_back(LifecycleMethodCall::from_json(callee));
     }
-    return LifecycleMethod(base_class_name, method_name, callees);
+    return LifecycleMethod(base_class_name, method_name, std::move(callees));
   } else if (JsonValidation::has_field(value, "control_flow_graph")) {
     JsonValidation::validate_object(value, "control_flow_graph");
     LifeCycleMethodGraph graph = LifeCycleMethodGraph::from_json(JsonValidation::object(value, "control_flow_graph"));
-    return LifecycleMethod(base_class_name, method_name, graph);
+    return LifecycleMethod(base_class_name, method_name, std::move(graph));
   }
-  throw std::invalid_argument("Invalid JSON format for LifecycleMethod");
+  throw JsonValidationError(
+        value,
+        /* field */ std::nullopt,
+        "key `callees` or `control_flow_graph`");
 }
 
 bool LifecycleMethod::validate(
