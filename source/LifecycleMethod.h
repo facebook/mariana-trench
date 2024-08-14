@@ -100,12 +100,12 @@ class LifecycleMethodCall {
           std::vector<std::string> successors)
           : method_calls_(std::move(method_calls)),
             successors_(std::move(successors)) {}
+      INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(LifecycleGraphNode)
 
       const std::vector<LifecycleMethodCall>& method_calls() const;
       const std::vector<std::string>& successors() const;
       bool operator==(const LifecycleGraphNode& other) const;
 
-      INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(LifecycleGraphNode)
 
     private:
       std::vector<LifecycleMethodCall> method_calls_;
@@ -116,12 +116,12 @@ class LifecycleMethodCall {
   class LifeCycleMethodGraph {
     public:
       LifeCycleMethodGraph() {}
+      INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(LifeCycleMethodGraph)
       void addNode(const std::string& node_name,std::vector<LifecycleMethodCall> method_calls,std::vector<std::string> successors);
 
       const LifecycleGraphNode* getNode(const std::string& node_name) const;
       bool operator==(const LifeCycleMethodGraph& other) const;
 
-      INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(LifeCycleMethodGraph)
 
       static LifeCycleMethodGraph from_json(const Json::Value& value);
 
