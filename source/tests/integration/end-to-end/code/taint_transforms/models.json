@@ -144,5 +144,19 @@
         ]
       }
     ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeAThis:()V",
+    "sanitizers": [
+      {
+        "sanitize": "propagations",
+        "port": "Argument(0)",
+        "kinds": [
+          {
+            "kind": "Source[A]"
+          }
+        ]
+      }
+    ]
   }
 ]
