@@ -158,5 +158,19 @@
         ]
       }
     ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeSourceA:(Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;)Ljava/lang/Object;",
+    "sanitizers": [
+      {
+        "sanitize": "propagations",
+        "port": "Argument(0)",
+        "kinds": [
+          {
+            "kind": "Source[A]"
+          }
+        ]
+      }
+    ]
   }
 ]

@@ -490,4 +490,12 @@ public class SanitizeTransforms {
     this.wrapSanitizeAThis();
     sinkB(this);
   }
+
+  /* Add same sanitizers on existing propagations */
+  static Object sanitizeSourceA(SanitizeTransforms sanitizeTransforms) {
+    // The same sanitizer is defined on *both* caller and callee. The caller has a local
+    // transform, the callee has a global transform (at the call-site).
+    // The resulting model should contain only one sanitizing transform.
+    return sanitizeSourceA((Object) sanitizeTransforms);
+  }
 }

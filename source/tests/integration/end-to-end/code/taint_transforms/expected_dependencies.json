@@ -194,6 +194,7 @@
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeAToYToZToB:(Ljava/lang/Object;)V",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeATransformX:(Ljava/lang/Object;)Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeATransformXSinkB:(Ljava/lang/Object;)V",
+    "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sanitizeSourceA:(Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;)Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.sourceASanitizeA:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.taintWithYSanitizeA:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/SanitizeTransforms;.taintWithYSanitizeBSanitizeA:()Ljava/lang/Object;",
