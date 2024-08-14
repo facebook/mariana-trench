@@ -160,7 +160,7 @@ Model::Model(
     Context& context,
     Modes modes,
     Frozen frozen,
-    TaintTreeConfigurationOverrides config_overrides,
+    TaintTreeConfigurationOverrides global_config_overrides,
     const std::vector<std::pair<AccessPath, TaintConfig>>& generations,
     const std::vector<std::pair<AccessPath, TaintConfig>>& parameter_sources,
     const std::vector<std::pair<AccessPath, TaintConfig>>& sinks,
@@ -175,7 +175,10 @@ Model::Model(
     const SetterAccessPathConstantDomain& inline_as_setter,
     const ModelGeneratorNameSet& model_generators,
     const IssueSet& issues)
-    : method_(method), modes_(modes), frozen_(frozen) {
+    : method_(method),
+      modes_(modes),
+      frozen_(frozen),
+      global_config_overrides_(std::move(global_config_overrides)) {
   if (method_) {
     // Use a set of heuristics to infer the modes of this method.
 
@@ -244,11 +247,12 @@ Model::Model(
     add_issue(issue);
   }
 
-  apply_config_overrides(config_overrides);
+  apply_config_overrides(global_config_overrides_);
 }
 
 bool Model::operator==(const Model& other) const {
   return modes_ == other.modes_ && frozen_ == other.frozen_ &&
+      global_config_overrides_ == other.global_config_overrides_ &&
       generations_ == other.generations_ &&
       parameter_sources_ == other.parameter_sources_ &&
       call_effect_sources_ == other.call_effect_sources_ &&
@@ -1224,6 +1228,7 @@ void Model::freeze(Model::FreezeKind freeze_kind) {
 bool Model::leq(const Model& other) const {
   return modes_.is_subset_of(other.modes_) &&
       frozen_.is_subset_of(other.frozen_) &&
+      global_config_overrides_.leq(other.global_config_overrides_) &&
       leq_frozen(
              generations_,
              other.generations_,
@@ -1290,6 +1295,7 @@ void Model::join_with(const Model& other) {
 
   modes_ |= other.modes_;
   frozen_ |= other.frozen_;
+  global_config_overrides_.join_with(other.global_config_overrides_);
   call_effect_sources_.join_with(other.call_effect_sources_);
   call_effect_sinks_.join_with(other.call_effect_sinks_);
   global_sanitizers_.join_with(other.global_sanitizers_);
@@ -1378,7 +1384,7 @@ Model Model::from_config_json(
          "position", // Only when parsing previously emitted models.
          "modes",
          "freeze",
-         "config_overrides",
+         "global_config_overrides",
          "generations",
          "parameter_sources",
          "sources",
@@ -1417,13 +1423,13 @@ Model Model::from_config_json(
     frozen.set(*freeze_kind, true);
   }
 
-  TaintTreeConfigurationOverrides config_overrides;
-  if (value.isMember("config_overrides")) {
-    config_overrides =
-        TaintTreeConfigurationOverrides::from_json(value["config_overrides"]);
+  TaintTreeConfigurationOverrides global_config_overrides;
+  if (value.isMember("global_config_overrides")) {
+    global_config_overrides = TaintTreeConfigurationOverrides::from_json(
+        value["global_config_overrides"]);
   }
 
-  Model model(method, context, modes, frozen, config_overrides);
+  Model model(method, context, modes, frozen, global_config_overrides);
 
   std::vector<std::pair<AccessPath, Json::Value>> generation_values;
   std::vector<std::pair<AccessPath, Json::Value>> parameter_source_values;
@@ -1578,7 +1584,7 @@ Model Model::from_config_json(
         value, /* field */ std::nullopt, /* expected */ "model without issues");
   }
 
-  model.apply_config_overrides(config_overrides);
+  model.apply_config_overrides(global_config_overrides);
 
   return model;
 }
@@ -1692,7 +1698,13 @@ Model Model::from_json(const Json::Value& value, Context& context) {
     frozen.set(*freeze_kind, true);
   }
 
-  Model model(method, context, modes, frozen);
+  TaintTreeConfigurationOverrides global_config_overrides{};
+  if (value.isMember("global_config_overrides")) {
+    global_config_overrides = TaintTreeConfigurationOverrides::from_json(
+        value["global_config_overrides"]);
+  }
+
+  Model model(method, context, modes, frozen, global_config_overrides);
 
   for (const auto& generation_value :
        JsonValidation::null_or_array(value, /* field */ "generations")) {
@@ -1837,6 +1849,8 @@ Model Model::from_json(const Json::Value& value, Context& context) {
   // interest, they should be processed during that analysis instead of in
   // every subsequent analysis that depends on it.
 
+  model.apply_config_overrides(global_config_overrides);
+
   return model;
 }
 
@@ -1865,6 +1879,10 @@ Json::Value Model::to_json(ExportOriginsMode export_origins_mode) const {
       }
     }
     value["freeze"] = freeze;
+  }
+
+  if (!global_config_overrides_.is_bottom()) {
+    value["global_config_overrides"] = global_config_overrides_.to_json();
   }
 
   if (!generations_.is_bottom()) {
@@ -2098,6 +2116,9 @@ std::ostream& operator<<(std::ostream& out, const Model& model) {
       }
     }
     out << "}";
+  }
+  if (!model.global_config_overrides_.is_bottom()) {
+    out << ",\n  global_config_overrides=" << model.global_config_overrides_;
   }
   if (!model.generations_.is_bottom()) {
     out << ",\n  generations={\n";

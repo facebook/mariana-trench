@@ -797,7 +797,7 @@ ModelTemplate ModelTemplate::from_json(
       {"for_all_parameters",
        "modes",
        "freeze",
-       "config_overrides",
+       "global_config_overrides",
        "generations",
        "parameter_sources",
        "sources",

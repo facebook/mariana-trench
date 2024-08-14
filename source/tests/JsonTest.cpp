@@ -2699,7 +2699,7 @@ TEST_F(JsonTest, Model) {
                 "port": "Argument(2)"
               }
             ],
-          "config_overrides": {
+          "global_config_overrides": {
             "max_model_width": 10,
             "max_model_height": 5
           }
@@ -2762,8 +2762,12 @@ TEST_F(JsonTest, Model) {
               "max_model_width": 10,
               "max_model_height": 5
             }
-          }
-        ]
+          },
+        ],
+        "global_config_overrides": {
+          "max_model_width": 10,
+          "max_model_height": 5
+        }
       })#"));
 
   // We do not parse issues for now.

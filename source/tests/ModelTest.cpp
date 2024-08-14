@@ -611,6 +611,131 @@ TEST_F(ModelTest, LessOrEqual) {
       model_with_frozen_generation.leq(model_with_frozen_parameter_sources));
   EXPECT_FALSE(
       model_with_frozen_parameter_sources.leq(model_with_frozen_generation));
+
+  // Compare global_config_overrides
+  EXPECT_FALSE(
+      Model(
+          /* method */ nullptr,
+          context,
+          /* modes */ {},
+          /* frozen */ {},
+          /* config_overrides */
+          TaintTreeConfigurationOverrides{
+              {TaintTreeConfigurationOverrideOptions::MaxModelHeight, 5},
+              {TaintTreeConfigurationOverrideOptions::MaxModelWidth, 10}})
+          .leq(Model(
+              /* method */ nullptr,
+              context,
+              /* modes */ {},
+              /* frozen */ {},
+              /* config_overrides */ {})));
+  EXPECT_TRUE(
+      Model(
+          /* method */ nullptr,
+          context,
+          /* modes */ {},
+          /* frozen */ {},
+          /* config_overrides */
+          TaintTreeConfigurationOverrides{
+              {TaintTreeConfigurationOverrideOptions::MaxModelHeight, 5},
+              {TaintTreeConfigurationOverrideOptions::MaxModelWidth, 10}})
+          .leq(Model(
+              /* method */ nullptr,
+              context,
+              /* modes */ {},
+              /* frozen */ {},
+              /* config_overrides */ TaintTreeConfigurationOverrides::top())));
+  EXPECT_TRUE(
+      Model(
+          /* method */ nullptr,
+          context,
+          /* modes */ {},
+          /* frozen */ {},
+          /* config_overrides */
+          TaintTreeConfigurationOverrides{
+              {TaintTreeConfigurationOverrideOptions::MaxModelHeight, 2}})
+          .leq(Model(
+              /* method */ nullptr,
+              context,
+              /* modes */ {},
+              /* frozen */ {},
+              /* config_overrides */
+              TaintTreeConfigurationOverrides{
+                  {TaintTreeConfigurationOverrideOptions::MaxModelHeight,
+                   5}})));
+  EXPECT_TRUE(
+      Model(
+          /* method */ nullptr,
+          context,
+          /* modes */ {},
+          /* frozen */ {},
+          /* config_overrides */
+          TaintTreeConfigurationOverrides{
+              {TaintTreeConfigurationOverrideOptions::MaxModelHeight, 5}})
+          .leq(Model(
+              /* method */ nullptr,
+              context,
+              /* modes */ {},
+              /* frozen */ {},
+              /* config_overrides */
+              TaintTreeConfigurationOverrides{
+                  {TaintTreeConfigurationOverrideOptions::MaxModelHeight, 5},
+                  {TaintTreeConfigurationOverrideOptions::MaxModelWidth,
+                   10}})));
+  EXPECT_FALSE(
+      Model(
+          /* method */ nullptr,
+          context,
+          /* modes */ {},
+          /* frozen */ {},
+          /* config_overrides */
+          TaintTreeConfigurationOverrides{
+              {TaintTreeConfigurationOverrideOptions::MaxModelHeight, 5}})
+          .leq(Model(
+              /* method */ nullptr,
+              context,
+              /* modes */ {},
+              /* frozen */ {},
+              /* config_overrides */
+              TaintTreeConfigurationOverrides{
+                  {TaintTreeConfigurationOverrideOptions::MaxModelHeight, 2},
+                  {TaintTreeConfigurationOverrideOptions::MaxModelWidth,
+                   10}})));
+  EXPECT_FALSE(
+      Model(
+          /* method */ nullptr,
+          context,
+          /* modes */ {},
+          /* frozen */ {},
+          /* config_overrides */
+          TaintTreeConfigurationOverrides{
+              {TaintTreeConfigurationOverrideOptions::MaxModelHeight, 5}})
+          .leq(Model(
+              /* method */ nullptr,
+              context,
+              /* modes */ {},
+              /* frozen */ {},
+              /* config_overrides */
+              TaintTreeConfigurationOverrides{
+                  {TaintTreeConfigurationOverrideOptions::MaxModelWidth, 5}})));
+  EXPECT_FALSE(
+      Model(
+          /* method */ nullptr,
+          context,
+          /* modes */ {},
+          /* frozen */ {},
+          /* config_overrides */
+          TaintTreeConfigurationOverrides{
+              {TaintTreeConfigurationOverrideOptions::MaxModelWidth, 5}})
+          .leq(Model(
+              /* method */ nullptr,
+              context,
+              /* modes */ {},
+              /* frozen */ {},
+              /* config_overrides */
+              TaintTreeConfigurationOverrides{
+                  {TaintTreeConfigurationOverrideOptions::MaxModelHeight,
+                   5}})));
 }
 
 TEST_F(ModelTest, Join) {
@@ -1198,6 +1323,36 @@ TEST_F(ModelTest, Join) {
           /* parameter_sources */ {},
           /* sinks */
           {}));
+
+  // Join with TaintTreeConfigurationOverrides
+  Model model_with_global_config_overrides(
+      /* method */ nullptr,
+      context,
+      /* modes */ {},
+      /* frozen */ {},
+      /* config overrides */
+      TaintTreeConfigurationOverrides{
+          {TaintTreeConfigurationOverrideOptions::MaxModelHeight, 5},
+          {TaintTreeConfigurationOverrideOptions::MaxModelWidth, 10}});
+
+  model_with_global_config_overrides.join_with(Model(
+      /* method */ nullptr,
+      context,
+      /* modes */ {},
+      /* frozen */ {},
+      /* config_overrides */ {}));
+
+  EXPECT_EQ(
+      model_with_global_config_overrides,
+      Model(
+          /* method */ nullptr,
+          context,
+          /* modes */ {},
+          /* frozen */ {},
+          /* config overrides */
+          TaintTreeConfigurationOverrides{
+              {TaintTreeConfigurationOverrideOptions::MaxModelHeight, 5},
+              {TaintTreeConfigurationOverrideOptions::MaxModelWidth, 10}}));
 }
 
 TEST_F(ModelTest, SourceKinds) {

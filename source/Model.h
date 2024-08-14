@@ -88,6 +88,11 @@ using SanitizerSet = GroupHashedSetAbstractDomain<
  * *inline as setter* is either top, bottom or a target and value access path
  * that will be used to inline a setter method at call sites.
  *
+ * A user can specify *global config overrides* without specifying
+ * declared generation/parameter source/sink/propagation models. It is applied
+ * to _all supported_ TaintAccessPathTree fields (declared or inferred) in the
+ * model.
+ *
  * *model generators* is a set of model generator names that originated a part
  * of that model.
  */
@@ -151,7 +156,7 @@ class Model final {
       Context& context,
       Modes modes = {},
       Frozen frozen = {},
-      TaintTreeConfigurationOverrides config_overrides =
+      TaintTreeConfigurationOverrides global_config_overrides =
           TaintTreeConfigurationOverrides::bottom(),
       const std::vector<std::pair<AccessPath, TaintConfig>>& generations = {},
       const std::vector<std::pair<AccessPath, TaintConfig>>& parameter_sources =
@@ -492,6 +497,7 @@ class Model final {
   const Method* MT_NULLABLE method_;
   Modes modes_;
   Frozen frozen_;
+  TaintTreeConfigurationOverrides global_config_overrides_;
   TaintAccessPathTree generations_;
   TaintAccessPathTree parameter_sources_;
   TaintAccessPathTree sinks_;
