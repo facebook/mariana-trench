@@ -44,6 +44,10 @@ std::vector<Model> ManifestSourceGenerator::emit_method_models(
   auto exported_classes =
       manifest_class_info.component_tags |
       boost::adaptors::filtered([](const ComponentTagInfo& tag_info) {
+        // Only consider components without permissions.
+        if (!tag_info.permission.empty()) {
+          return false;
+        }
         return tag_info.is_exported == BooleanXMLAttribute::True ||
             (tag_info.is_exported == BooleanXMLAttribute::Undefined &&
              tag_info.has_intent_filters);
@@ -62,40 +66,35 @@ std::vector<Model> ManifestSourceGenerator::emit_method_models(
 
   std::vector<Model> models{};
   for (const auto* dex_klass : exported_classes) {
-    // Currently, only Activity classes are considered.
     const auto& direct_methods = dex_klass->get_dmethods();
     auto result = std::find_if(
         direct_methods.begin(),
         direct_methods.end(),
         [](const DexMethod* dex_method) {
-          return boost::ends_with(
-              dex_method->str(), "activity_lifecycle_wrapper");
+          return boost::ends_with(dex_method->str(), "_lifecycle_wrapper");
         });
 
-    if (result == direct_methods.end()) {
-      // No lifecycle method found.
-      continue;
+    if (result != direct_methods.end()) {
+      const auto* lifecycle_method = methods.get(*result);
+      // Mark lifecycle wrapper as exported. This is required to catch the flows
+      // found on the lifecycle wrapper itself.
+      Model model(lifecycle_method, context_);
+      model.add_call_effect_source(
+          AccessPath(Root(Root::Kind::CallEffectExploitability)),
+          generator::source(
+              context_,
+              /* kind */ "ExportedComponent"),
+          *context_.heuristics);
+      models.push_back(model);
     }
 
-    const auto* lifecycle_method = methods.get(*result);
-    // Mark lifecycle wrapper as exported. This is required to catch the flows
-    // found on the lifecycle wrapper itself.
-    Model model(lifecycle_method, context_);
-    model.add_call_effect_source(
-        AccessPath(Root(Root::Kind::CallEffectExploitability)),
-        generator::source(
-            context_,
-            /* kind */ "ExportedActivity"),
-        *context_.heuristics);
-    models.push_back(model);
-
-    // Mark all public methods in the class as exported.
+    // Mark all public and protected methods in the class as exported.
     for (const auto* dex_callee : dex_klass->get_all_methods()) {
       if (dex_callee == nullptr) {
         continue;
       }
 
-      if (!(dex_callee->get_access() & DexAccessFlags::ACC_PUBLIC)) {
+      if (dex_callee->get_access() & DexAccessFlags::ACC_PRIVATE) {
         continue;
       }
 
@@ -109,7 +108,7 @@ std::vector<Model> ManifestSourceGenerator::emit_method_models(
           AccessPath(Root(Root::Kind::CallEffectExploitability)),
           generator::source(
               context_,
-              /* kind */ "ExportedActivity"),
+              /* kind */ "ExportedComponent"),
           *context_.heuristics);
       models.push_back(model);
     }
