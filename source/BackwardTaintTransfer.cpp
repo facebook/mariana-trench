@@ -53,12 +53,16 @@ bool BackwardTaintTransfer::analyze_check_cast(
     taint.add_locally_inferred_features(features);
   }
 
+  auto memory_locations =
+      aliasing.register_memory_locations(instruction->src(0));
   LOG_OR_DUMP(
-      context, 4, "Tainting register {} with {}", instruction->src(0), taint);
-  environment->write(
-      aliasing.register_memory_locations(instruction->src(0)),
-      std::move(taint),
-      UpdateKind::Weak);
+      context,
+      4,
+      "Tainting register {} at {} with {}",
+      instruction->src(0),
+      memory_locations,
+      taint);
+  environment->write(memory_locations, std::move(taint), UpdateKind::Weak);
 
   return false;
 }
@@ -262,15 +266,18 @@ void taint_propagation_input(
     }
 
     auto input_register_id = instruction->src(input_parameter_position);
+    auto memory_locations =
+        aliasing.register_memory_locations(input_register_id);
     LOG_OR_DUMP(
         context,
         4,
-        "Tainting register {} path {} with {}",
+        "Tainting register {} at {} path {} with {}",
         input_register_id,
+        memory_locations,
         input_path_resolved,
         input_taint_tree);
     new_environment->write(
-        aliasing.register_memory_locations(input_register_id),
+        memory_locations,
         input_path_resolved,
         std::move(input_taint_tree),
         // We only want strong updates for Arg(x) -> Arg(x) propagations.
@@ -580,15 +587,17 @@ void check_call_flows(
     new_sinks.add_locally_inferred_features(
         locally_inferred_fulfilled_sink_features);
 
+    auto memory_locations = aliasing.register_memory_locations(*register_id);
     LOG_OR_DUMP(
         context,
         4,
-        "Tainting register {} path {} with {}",
+        "Tainting register {} at {} path {} with {}",
         *register_id,
+        memory_locations,
         path_resolved,
         new_sinks);
     environment->write(
-        aliasing.register_memory_locations(*register_id),
+        memory_locations,
         path_resolved,
         std::move(new_sinks),
         UpdateKind::Weak);
@@ -901,16 +910,17 @@ void check_flows_to_field_sink(
 
   auto field_sinks = context->field_sinks_at_callsite(*field_target, aliasing);
   if (!field_sinks.is_bottom()) {
+    auto memory_locations =
+        aliasing.register_memory_locations(instruction->src(0));
     LOG_OR_DUMP(
         context,
         4,
-        "Tainting register {} with {}",
+        "Tainting register {} at {} with {}",
         instruction->src(0),
+        memory_locations,
         field_sinks);
     environment->write(
-        aliasing.register_memory_locations(instruction->src(0)),
-        std::move(field_sinks),
-        UpdateKind::Weak);
+        memory_locations, std::move(field_sinks), UpdateKind::Weak);
   }
 }
 
@@ -954,16 +964,17 @@ bool BackwardTaintTransfer::analyze_iput(
       instruction);
   target_taint.add_local_position(position);
 
+  auto memory_locations =
+      aliasing.register_memory_locations(instruction->src(0));
   LOG_OR_DUMP(
       context,
       4,
-      "Tainting register {} with {}",
+      "Tainting register {} at {} with {}",
       instruction->src(0),
+      memory_locations,
       target_taint);
   environment->write(
-      aliasing.register_memory_locations(instruction->src(0)),
-      std::move(target_taint),
-      UpdateKind::Weak);
+      memory_locations, std::move(target_taint), UpdateKind::Weak);
 
   check_flows_to_field_sink(context, aliasing, instruction, environment);
 
@@ -1058,12 +1069,16 @@ bool BackwardTaintTransfer::analyze_aput(
       instruction);
   taint.add_locally_inferred_features_and_local_position(features, position);
 
+  auto memory_locations =
+      aliasing.register_memory_locations(instruction->src(0));
   LOG_OR_DUMP(
-      context, 4, "Tainting register {} with {}", instruction->src(0), taint);
-  environment->write(
-      aliasing.register_memory_locations(instruction->src(0)),
-      std::move(taint),
-      UpdateKind::Weak);
+      context,
+      4,
+      "Tainting register {} at {} with {}",
+      instruction->src(0),
+      memory_locations,
+      taint);
+  environment->write(memory_locations, std::move(taint), UpdateKind::Weak);
 
   return false;
 }
@@ -1099,12 +1114,16 @@ bool BackwardTaintTransfer::analyze_filled_new_array(
   taint.add_locally_inferred_features_and_local_position(features, position);
 
   for (size_t i = 0; i < instruction->srcs_size(); ++i) {
+    auto memory_locations =
+        aliasing.register_memory_locations(instruction->src(i));
     LOG_OR_DUMP(
-        context, 4, "Tainting register {} with {}", instruction->src(i), taint);
-    environment->write(
-        aliasing.register_memory_locations(instruction->src(i)),
-        taint,
-        UpdateKind::Weak);
+        context,
+        4,
+        "Tainting register {} at {} with {}",
+        instruction->src(i),
+        memory_locations,
+        taint);
+    environment->write(memory_locations, taint, UpdateKind::Weak);
   }
 
   return false;
@@ -1131,11 +1150,15 @@ static bool analyze_numerical_operator(
   taint.add_locally_inferred_features_and_local_position(features, position);
 
   for (auto register_id : instruction->srcs()) {
-    LOG_OR_DUMP(context, 4, "Tainting register {} with {}", register_id, taint);
-    environment->write(
-        aliasing.register_memory_locations(register_id),
-        taint,
-        UpdateKind::Weak);
+    auto memory_locations = aliasing.register_memory_locations(register_id);
+    LOG_OR_DUMP(
+        context,
+        4,
+        "Tainting register {} at {} with {}",
+        register_id,
+        memory_locations,
+        taint);
+    environment->write(memory_locations, taint, UpdateKind::Weak);
   }
 
   return false;
@@ -1192,13 +1215,17 @@ bool BackwardTaintTransfer::analyze_return(
 
   if (instruction->srcs_size() == 1) {
     auto register_id = instruction->src(0);
-    LOG_OR_DUMP(context, 4, "Tainting register {} with {}", register_id, taint);
+    auto memory_locations = aliasing.register_memory_locations(register_id);
+    LOG_OR_DUMP(
+        context,
+        4,
+        "Tainting register {} at {} with {}",
+        register_id,
+        memory_locations,
+        taint);
     // Using a strong update here could override and remove the LocalArgument
     // taint on Argument(0), which is necessary to infer propagations to `this`.
-    environment->write(
-        aliasing.register_memory_locations(register_id),
-        taint,
-        UpdateKind::Weak);
+    environment->write(memory_locations, taint, UpdateKind::Weak);
   }
 
   return false;

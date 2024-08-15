@@ -65,9 +65,14 @@ bool ForwardTaintTransfer::analyze_check_cast(
     taint.add_locally_inferred_features(features);
   }
 
-  LOG_OR_DUMP(context, 4, "Tainting result register with {}", taint);
-  environment->write(
-      aliasing.result_memory_location(), taint, UpdateKind::Strong);
+  auto* memory_location = aliasing.result_memory_location();
+  LOG_OR_DUMP(
+      context,
+      4,
+      "Tainting result register at {} with {}",
+      show(memory_location),
+      taint);
+  environment->write(memory_location, taint, UpdateKind::Strong);
 
   return false;
 }
@@ -91,14 +96,15 @@ bool ForwardTaintTransfer::analyze_iget(
     auto field_sources =
         context->field_sources_at_callsite(*field_target, aliasing);
     if (!field_sources.is_bottom()) {
+      auto memory_locations = aliasing.result_memory_locations();
       LOG_OR_DUMP(
           context,
           4,
-          "Tainting register {} with {}",
+          "Tainting register {} at {} with {}",
           k_result_register,
+          memory_locations,
           field_sources);
-      environment->write(
-          aliasing.result_memory_locations(), field_sources, UpdateKind::Weak);
+      environment->write(memory_locations, field_sources, UpdateKind::Weak);
     }
   }
 
@@ -123,16 +129,16 @@ bool ForwardTaintTransfer::analyze_sget(
   } else {
     auto field_sources =
         context->field_sources_at_callsite(*field_target, aliasing);
+    auto* memory_location = aliasing.result_memory_location();
     LOG_OR_DUMP(
         context,
         4,
-        "Tainting register {} with {}",
+        "Tainting register {} at {} with {}",
         k_result_register,
+        show(memory_location),
         field_sources);
     environment->write(
-        aliasing.result_memory_location(),
-        TaintTree(field_sources),
-        UpdateKind::Strong);
+        memory_location, TaintTree(field_sources), UpdateKind::Strong);
   }
 
   return false;
@@ -163,16 +169,15 @@ void apply_generations(
       case Root::Kind::Argument: {
         auto parameter_position = root.parameter_position();
         auto register_id = instruction->src(parameter_position);
+        auto memory_locations = aliasing.register_memory_locations(register_id);
         LOG_OR_DUMP(
             context,
             4,
-            "Tainting register {} with {}",
+            "Tainting register {} at {} with {}",
             register_id,
+            memory_locations,
             generations);
-        environment->write(
-            aliasing.register_memory_locations(register_id),
-            generations,
-            UpdateKind::Weak);
+        environment->write(memory_locations, generations, UpdateKind::Weak);
         break;
       }
       default:
@@ -374,15 +379,18 @@ void apply_propagations(
             auto output_parameter_position = output_root.parameter_position();
             auto output_register_id =
                 instruction->src(output_parameter_position);
+            auto memory_locations =
+                aliasing.register_memory_locations(output_register_id);
             LOG_OR_DUMP(
                 context,
                 4,
-                "Tainting register {} path {} with {}",
+                "Tainting register {} at {} path {} with {}",
                 output_register_id,
+                memory_locations,
                 output_path_resolved,
                 output_taint_tree);
             new_environment->write(
-                aliasing.register_memory_locations(output_register_id),
+                memory_locations,
                 output_path_resolved,
                 std::move(output_taint_tree),
                 callee.model.strong_write_on_propagation() ? UpdateKind::Strong
@@ -1409,12 +1417,16 @@ bool ForwardTaintTransfer::analyze_aput(
   taint.add_locally_inferred_features_and_local_position(features, position);
 
   // We use a single memory location for the array and its elements.
+  auto memory_locations =
+      aliasing.register_memory_locations(instruction->src(1));
   LOG_OR_DUMP(
-      context, 4, "Tainting register {} with {}", instruction->src(1), taint);
-  environment->write(
-      aliasing.register_memory_locations(instruction->src(1)),
-      taint,
-      UpdateKind::Weak);
+      context,
+      4,
+      "Tainting register {} at {} with {}",
+      instruction->src(1),
+      memory_locations,
+      taint);
+  environment->write(memory_locations, taint, UpdateKind::Weak);
 
   return false;
 }
@@ -1558,11 +1570,16 @@ bool ForwardTaintTransfer::analyze_const_string(
     return false;
   }
 
+  auto memory_locations = aliasing.result_memory_locations();
   LOG_OR_DUMP(
-      context, 4, "Tainting register {} with {}", k_result_register, sources);
+      context,
+      4,
+      "Tainting register {} at {} with {}",
+      k_result_register,
+      memory_locations,
+      sources);
 
-  environment->write(
-      aliasing.result_memory_locations(), sources, UpdateKind::Strong);
+  environment->write(memory_locations, sources, UpdateKind::Strong);
 
   return false;
 }
