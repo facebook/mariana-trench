@@ -39,9 +39,8 @@ std::optional<TaintTreeConfigurationOverrideOptions> string_to_option(
 } // namespace
 
 TaintTreeConfigurationOverrides::TaintTreeConfigurationOverrides(
-    std::initializer_list<std::pair<
-        TaintTreeConfigurationOverrideOptions,
-        ScalarAbstractDomain::IntType>> options)
+    std::initializer_list<
+        std::pair<TaintTreeConfigurationOverrideOptions, IntType>> options)
     : options_({}) {
   for (const auto& [option, value] : options) {
     add(option, value);
@@ -50,10 +49,15 @@ TaintTreeConfigurationOverrides::TaintTreeConfigurationOverrides(
 
 void TaintTreeConfigurationOverrides::add(
     TaintTreeConfigurationOverrideOptions option,
-    unsigned int value) {
+    IntType value) {
   options_.update(option, [value](const ScalarAbstractDomain& scalar) {
     return scalar.join(ScalarAbstractDomain(value));
   });
+}
+
+TaintTreeConfigurationOverrides::IntType TaintTreeConfigurationOverrides::get(
+    TaintTreeConfigurationOverrideOptions option) const {
+  return options_.get(option).value();
 }
 
 TaintTreeConfigurationOverrides TaintTreeConfigurationOverrides::from_json(

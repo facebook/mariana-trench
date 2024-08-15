@@ -39,6 +39,7 @@ class TaintTreeConfigurationOverrides final
   using OptionMap = sparta::PatriciaTreeMapAbstractPartition<
       TaintTreeConfigurationOverrideOptions,
       ScalarAbstractDomain>;
+  using IntType = ScalarAbstractDomain::IntType;
 
  public:
   TaintTreeConfigurationOverrides() = default;
@@ -59,7 +60,9 @@ class TaintTreeConfigurationOverrides final
       OptionMap,
       options_)
 
-  void add(TaintTreeConfigurationOverrideOptions option, unsigned int value);
+  void add(TaintTreeConfigurationOverrideOptions option, IntType value);
+
+  IntType get(TaintTreeConfigurationOverrideOptions option) const;
 
   Json::Value to_json() const;
 
