@@ -15,29 +15,30 @@ namespace marianatrench {
 namespace {
 
 // Default values for heuristics parameters.
-constexpr std::size_t join_override_threshold_default = 40;
-constexpr std::size_t android_join_override_threshold_default = 10;
-constexpr std::optional<std::size_t> warn_override_threshold_default =
+constexpr std::uint32_t join_override_threshold_default = 40;
+constexpr std::uint32_t android_join_override_threshold_default = 10;
+constexpr std::optional<std::uint32_t> warn_override_threshold_default =
     std::nullopt;
-constexpr std::size_t source_sink_tree_widening_height_default = 4;
-constexpr std::size_t generation_max_port_size_default = 4;
-constexpr std::size_t generation_max_output_path_leaves_default = 20;
-constexpr std::size_t parameter_source_max_port_size_default = 4;
-constexpr std::size_t parameter_source_max_output_path_leaves_default = 20;
-constexpr std::size_t sink_max_port_size_default = 4;
-constexpr std::size_t sink_max_input_path_leaves_default = 20;
-constexpr std::size_t call_effect_source_max_port_size_default = 4;
-constexpr std::size_t call_effect_source_max_output_path_leaves_default = 20;
-constexpr std::size_t call_effect_sink_max_port_size_default = 4;
-constexpr std::size_t call_effect_sink_max_input_path_leaves_default = 20;
-constexpr std::size_t max_number_iterations_default = 150;
-constexpr std::size_t max_depth_class_properties_default = 10;
-constexpr std::size_t max_call_chain_source_sink_distance_default = 10;
-constexpr std::size_t propagation_max_input_path_size_default = 4;
-constexpr std::size_t propagation_max_input_path_leaves_default = 4;
-constexpr std::size_t propagation_max_output_path_size_default = 4;
-constexpr std::size_t propagation_max_output_path_leaves_default = 4;
-constexpr std::size_t propagation_output_path_tree_widening_height_default = 4;
+constexpr std::uint32_t source_sink_tree_widening_height_default = 4;
+constexpr std::uint32_t generation_max_port_size_default = 4;
+constexpr std::uint32_t generation_max_output_path_leaves_default = 20;
+constexpr std::uint32_t parameter_source_max_port_size_default = 4;
+constexpr std::uint32_t parameter_source_max_output_path_leaves_default = 20;
+constexpr std::uint32_t sink_max_port_size_default = 4;
+constexpr std::uint32_t sink_max_input_path_leaves_default = 20;
+constexpr std::uint32_t call_effect_source_max_port_size_default = 4;
+constexpr std::uint32_t call_effect_source_max_output_path_leaves_default = 20;
+constexpr std::uint32_t call_effect_sink_max_port_size_default = 4;
+constexpr std::uint32_t call_effect_sink_max_input_path_leaves_default = 20;
+constexpr std::uint32_t max_number_iterations_default = 150;
+constexpr std::uint32_t max_depth_class_properties_default = 10;
+constexpr std::uint32_t max_call_chain_source_sink_distance_default = 10;
+constexpr std::uint32_t propagation_max_input_path_size_default = 4;
+constexpr std::uint32_t propagation_max_input_path_leaves_default = 4;
+constexpr std::uint32_t propagation_max_output_path_size_default = 4;
+constexpr std::uint32_t propagation_max_output_path_leaves_default = 4;
+constexpr std::uint32_t propagation_output_path_tree_widening_height_default =
+    4;
 constexpr std::uint32_t propagation_max_collapse_depth_default = 4;
 
 Heuristics& get_mutable_singleton() {

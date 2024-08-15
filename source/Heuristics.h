@@ -31,7 +31,7 @@ class Heuristics final {
    * When a method has a set of overrides greater than this threshold, we do not
    * join all overrides at call sites.
    */
-  std::size_t join_override_threshold() const {
+  std::uint32_t join_override_threshold() const {
     return join_override_threshold_;
   }
 
@@ -39,7 +39,7 @@ class Heuristics final {
    * When an android/java/google method has a set of overrides and greater than
    * this threshold, we do not join all overrides at call sites.
    */
-  std::size_t android_join_override_threshold() const {
+  std::uint32_t android_join_override_threshold() const {
     return android_join_override_threshold_;
   }
 
@@ -48,7 +48,7 @@ class Heuristics final {
    * is not marked with `NoJoinVirtualOverrides` is called at least once, we
    * print a warning.
    */
-  const std::optional<std::size_t> warn_override_threshold() const {
+  const std::optional<std::uint32_t> warn_override_threshold() const {
     return warn_override_threshold_;
   }
 
@@ -57,7 +57,7 @@ class Heuristics final {
    *
    * When reaching the maximum, we collapse the leaves to reduce the height.
    */
-  std::size_t source_sink_tree_widening_height() const {
+  std::uint32_t source_sink_tree_widening_height() const {
     return source_sink_tree_widening_height_;
   }
 
@@ -69,7 +69,7 @@ class Heuristics final {
    * collapsing all the subtrees exceeding this threshold to the node at this
    * maximum depth.
    */
-  std::size_t generation_max_port_size() const {
+  std::uint32_t generation_max_port_size() const {
     return generation_max_port_size_;
   }
 
@@ -81,7 +81,7 @@ class Heuristics final {
    * exceeds the threshold and collapse all the subtrees into the nodes at this
    * level.
    */
-  std::size_t generation_max_output_path_leaves() const {
+  std::uint32_t generation_max_output_path_leaves() const {
     return generation_max_output_path_leaves_;
   }
 
@@ -93,7 +93,7 @@ class Heuristics final {
    * to collapsing all the subtrees exceeding this threshold to the node at this
    * maximum depth.
    */
-  std::size_t parameter_source_max_port_size() const {
+  std::uint32_t parameter_source_max_port_size() const {
     return parameter_source_max_port_size_;
   }
 
@@ -105,7 +105,7 @@ class Heuristics final {
    * tree exceeds the threshold and collapse all the subtrees into the nodes at
    * this level.
    */
-  std::size_t parameter_source_max_output_path_leaves() const {
+  std::uint32_t parameter_source_max_output_path_leaves() const {
     return parameter_source_max_output_path_leaves_;
   }
 
@@ -117,7 +117,7 @@ class Heuristics final {
    * collapsing all the subtrees exceeding this threshold to the node at this
    * maximum depth.
    */
-  std::size_t sink_max_port_size() const {
+  std::uint32_t sink_max_port_size() const {
     return sink_max_port_size_;
   }
 
@@ -129,7 +129,7 @@ class Heuristics final {
    * exceeds the threshold and collapse all the subtrees into the nodes at this
    * level.
    */
-  std::size_t sink_max_input_path_leaves() const {
+  std::uint32_t sink_max_input_path_leaves() const {
     return sink_max_input_path_leaves_;
   }
 
@@ -141,7 +141,7 @@ class Heuristics final {
    * to collapsing all the subtrees exceeding this threshold to the node at this
    * maximum depth.
    */
-  std::size_t call_effect_source_max_port_size() const {
+  std::uint32_t call_effect_source_max_port_size() const {
     return call_effect_source_max_port_size_;
   }
 
@@ -154,7 +154,7 @@ class Heuristics final {
    * tree exceeds the threshold and collapse all the subtrees into the nodes at
    * this level.
    */
-  std::size_t call_effect_source_max_output_path_leaves() const {
+  std::uint32_t call_effect_source_max_output_path_leaves() const {
     return call_effect_source_max_output_path_leaves_;
   }
 
@@ -166,7 +166,7 @@ class Heuristics final {
    * to collapsing all the subtrees exceeding this threshold to the node at this
    * maximum depth.
    */
-  std::size_t call_effect_sink_max_port_size() const {
+  std::uint32_t call_effect_sink_max_port_size() const {
     return call_effect_sink_max_port_size_;
   }
 
@@ -178,14 +178,14 @@ class Heuristics final {
    * tree exceeds the threshold and collapse all the subtrees into the nodes at
    * this level.
    */
-  std::size_t call_effect_sink_max_input_path_leaves() const {
+  std::uint32_t call_effect_sink_max_input_path_leaves() const {
     return call_effect_sink_max_input_path_leaves_;
   }
 
   /**
    * Maximum number of global iterations before we abort the analysis.
    */
-  std::size_t max_number_iterations() const {
+  std::uint32_t max_number_iterations() const {
     return max_number_iterations_;
   }
 
@@ -194,19 +194,19 @@ class Heuristics final {
    *
    * This parameter cannot be set a runtime, as it used at compile time.
    */
-  constexpr static std::size_t kMaxNumberLocalPositions = 20;
+  constexpr static std::uint32_t kMaxNumberLocalPositions = 20;
 
   /**
    * Maximum depth of dependency graph traversal to find class properties.
    */
-  std::size_t max_depth_class_properties() const {
+  std::uint32_t max_depth_class_properties() const {
     return max_depth_class_properties_;
   }
 
   /**
    * Maximum number of hops that can be tracked for a call chain issue.
    */
-  std::size_t max_call_chain_source_sink_distance() const {
+  std::uint32_t max_call_chain_source_sink_distance() const {
     return max_call_chain_source_sink_distance_;
   }
 
@@ -218,7 +218,7 @@ class Heuristics final {
    * collapsing all the subtrees exceeding this threshold to the node at this
    * maximum depth.
    */
-  std::size_t propagation_max_input_path_size() const {
+  std::uint32_t propagation_max_input_path_size() const {
     return propagation_max_input_path_size_;
   }
 
@@ -230,7 +230,7 @@ class Heuristics final {
    * exceeds the threshold and collapse all the subtrees into the nodes at this
    * level.
    */
-  std::size_t propagation_max_input_path_leaves() const {
+  std::uint32_t propagation_max_input_path_leaves() const {
     return propagation_max_input_path_leaves_;
   }
 
@@ -242,7 +242,7 @@ class Heuristics final {
    * to collapsing all the subtrees exceeding this threshold to the node at this
    * maximum depth.
    */
-  std::size_t propagation_max_output_path_size() const {
+  std::uint32_t propagation_max_output_path_size() const {
     return propagation_max_output_path_size_;
   }
 
@@ -254,7 +254,7 @@ class Heuristics final {
    * tree exceeds the threshold and collapse all the subtrees into the nodes at
    * this level.
    */
-  std::size_t propagation_max_output_path_leaves() const {
+  std::uint32_t propagation_max_output_path_leaves() const {
     return propagation_max_output_path_leaves_;
   }
 
@@ -263,7 +263,7 @@ class Heuristics final {
    *
    * When reaching the maximum, we collapse the leaves to reduce the height.
    */
-  std::size_t propagation_output_path_tree_widening_height() const {
+  std::uint32_t propagation_output_path_tree_widening_height() const {
     return propagation_output_path_tree_widening_height_;
   }
 
@@ -280,28 +280,28 @@ class Heuristics final {
   void enforce_heuristics_consistency();
 
  private:
-  std::size_t join_override_threshold_;
-  std::size_t android_join_override_threshold_;
-  std::optional<std::size_t> warn_override_threshold_;
-  std::size_t source_sink_tree_widening_height_;
-  std::size_t generation_max_port_size_;
-  std::size_t generation_max_output_path_leaves_;
-  std::size_t parameter_source_max_port_size_;
-  std::size_t parameter_source_max_output_path_leaves_;
-  std::size_t sink_max_port_size_;
-  std::size_t sink_max_input_path_leaves_;
-  std::size_t call_effect_source_max_port_size_;
-  std::size_t call_effect_source_max_output_path_leaves_;
-  std::size_t call_effect_sink_max_port_size_;
-  std::size_t call_effect_sink_max_input_path_leaves_;
-  std::size_t max_number_iterations_;
-  std::size_t max_depth_class_properties_;
-  std::size_t max_call_chain_source_sink_distance_;
-  std::size_t propagation_max_input_path_size_;
-  std::size_t propagation_max_input_path_leaves_;
-  std::size_t propagation_max_output_path_size_;
-  std::size_t propagation_max_output_path_leaves_;
-  std::size_t propagation_output_path_tree_widening_height_;
+  std::uint32_t join_override_threshold_;
+  std::uint32_t android_join_override_threshold_;
+  std::optional<std::uint32_t> warn_override_threshold_;
+  std::uint32_t source_sink_tree_widening_height_;
+  std::uint32_t generation_max_port_size_;
+  std::uint32_t generation_max_output_path_leaves_;
+  std::uint32_t parameter_source_max_port_size_;
+  std::uint32_t parameter_source_max_output_path_leaves_;
+  std::uint32_t sink_max_port_size_;
+  std::uint32_t sink_max_input_path_leaves_;
+  std::uint32_t call_effect_source_max_port_size_;
+  std::uint32_t call_effect_source_max_output_path_leaves_;
+  std::uint32_t call_effect_sink_max_port_size_;
+  std::uint32_t call_effect_sink_max_input_path_leaves_;
+  std::uint32_t max_number_iterations_;
+  std::uint32_t max_depth_class_properties_;
+  std::uint32_t max_call_chain_source_sink_distance_;
+  std::uint32_t propagation_max_input_path_size_;
+  std::uint32_t propagation_max_input_path_leaves_;
+  std::uint32_t propagation_max_output_path_size_;
+  std::uint32_t propagation_max_output_path_leaves_;
+  std::uint32_t propagation_output_path_tree_widening_height_;
   std::uint32_t propagation_max_collapse_depth_;
 };
 
