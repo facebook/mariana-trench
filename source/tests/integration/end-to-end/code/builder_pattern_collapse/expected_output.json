@@ -1444,6 +1444,10 @@
   }
 }
 {
+  "global_config_overrides" : 
+  {
+    "max_model_width" : 4
+  },
   "method" : "Lcom/facebook/marianatrench/integrationtests/Test;.<init>:(Lcom/facebook/marianatrench/integrationtests/Test$Builder;)V",
   "position" : 
   {

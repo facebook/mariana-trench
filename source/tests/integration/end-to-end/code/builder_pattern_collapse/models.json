@@ -46,5 +46,11 @@
     "modes": [
       "no-collapse-on-approximate"
     ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Test;.<init>:(Lcom/facebook/marianatrench/integrationtests/Test$Builder;)V",
+    "global_config_overrides": {
+      "max_model_width": 4
+    }
   }
 ]
