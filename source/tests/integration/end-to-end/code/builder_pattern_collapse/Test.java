@@ -24,6 +24,7 @@ public class Test {
   }
 
   public Test(Test.Builder builder) {
+    // Global config override with max width = 4
     this.a = builder.a;
     this.b = builder.b;
     this.c = builder.c;
@@ -71,10 +72,15 @@ public class Test {
     }
 
     public Test buildUsingFieldsAsArguments() {
+      // Currently, the heuristics set the propagation input/output path sizes to 2.
+      // This means we infer a widen-broadened propagation of: Argument(0) -> LocalReturn
       return new Test(this.a, this.b, this.c, this.d);
     }
 
     public Test buildUsingBuilderAsArgument() {
+      // Expect config override with max width = 4 propagated from the Test(Builder) constructor.
+      // Currently, the heuristics set the propagation input/output path sizes to 2.
+      // This means we infer a widen-broadened propagation of: Argument(0) -> LocalReturn
       return new Test(this);
     }
   }
@@ -99,7 +105,12 @@ public class Test {
   }
 
   public static Test noCollapseOnApproximateBuildUsingFields() {
-    // Still the 3-field pattern, but with "no-collapse-on-approximate" enabled
+    // Still the 3-field pattern, but with "no-collapse-on-approximate" enabled.
+    // But currently, the heuristics set the propagation input/output path sizes to 2, which means
+    // that propagation through buildUsingFieldsAsArguments() is already collapsed and
+    // over-approximates. Hence, we assign the collapsed taint to precise paths .a, .b, .c. So even
+    // though we do not collapse these paths because of the "no-collapse-on-approximate" mode, we
+    // still get false positive results in the testNoCollapseOnApproximateBuildUsingFields().
     return (new Builder())
         .setA((Test) Origin.source())
         .setB((Test) Test.differentSource())
@@ -108,7 +119,24 @@ public class Test {
   }
 
   public static Test noCollapseOnApproximateBuildUsingThis() {
-    // Still the 3-field pattern, but with "no-collapse-on-approximate" enabled
+    // Still the 3-field pattern, but with "no-collapse-on-approximate" enabled.
+    // But currently, the heuristics set the propagation input/output path sizes to 2, which means
+    // that propagation through buildUsingBuilderAsArguments() is already collapsed and
+    // over-approximates. Hence, we assign the collapsed taint to precise paths .a, .b, .c. So even
+    // though we do not collapse these paths because of the "no-collapse-on-approximate" mode, we
+    // still get false positive results in the testNoCollapseOnApproximateBuildUsingThis().
+    return (new Builder())
+        .setA((Test) Origin.source())
+        .setB((Test) Test.differentSource())
+        .setC((Test) Origin.source())
+        .buildUsingBuilderAsArgument();
+  }
+
+  public static Test buildUsingThis() {
+    // Still the 3-field pattern but **without** "no-collapse-on-approximate". Since this uses the
+    // Test(Builder) constructor with the max width config override of 4, we no longer need to
+    // specify the no-collapse-on-approximate mode on the wrapper methods.
+    // Expect the same result as noCollapseOnApproximateBuildUsingThis.
     return (new Builder())
         .setA((Test) Origin.source())
         .setB((Test) Test.differentSource())
@@ -152,6 +180,7 @@ public class Test {
     Test.differentSink(output.b);
 
     // no issue, since no collapsing occurs
+    // Currently FP. See noCollapseOnApproximateBuildUsingFields()
     Test.differentSink(output.a);
     Origin.sink(output.b);
     Origin.sink(output.d);
@@ -166,6 +195,22 @@ public class Test {
     Test.differentSink(output.b);
 
     // no issue, since no collapsing occurs
+    // Currently FP. See noCollapseOnApproximateBuildUsingThis().
+    Test.differentSink(output.a);
+    Origin.sink(output.b);
+    Origin.sink(output.d);
+    Test.differentSink(output.d);
+  }
+
+  public static void testBuildUsingThis() {
+    Test output = buildUsingThis();
+
+    // issue: a has "Source" and b has "DifferentSource"
+    Origin.sink(output.a);
+    Test.differentSink(output.b);
+
+    // Expect no issue, since no collapsing occurs.
+    // Currently FP.
     Test.differentSink(output.a);
     Origin.sink(output.b);
     Origin.sink(output.d);
