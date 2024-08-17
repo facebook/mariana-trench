@@ -32,10 +32,13 @@ class TaintAccessPathTree final
 
   INCLUDE_ABSTRACT_DOMAIN_METHODS(TaintAccessPathTree, Map, map_)
 
-  /**
-   * Apply the config_overrides to the Root of the TaintTree.
-   */
+  /* Apply the config_overrides to all the Roots of the TaintTree. */
   void apply_config_overrides(
+      const TaintTreeConfigurationOverrides& config_overrides);
+
+  /* Apply the config_overrides to the Root of the TaintTree. */
+  void apply_config_overrides(
+      Root root,
       const TaintTreeConfigurationOverrides& config_overrides);
 
   const TaintTreeConfigurationOverrides& config_overrides(Root root) const;
@@ -86,7 +89,7 @@ class TaintAccessPathTree final
   }
 
  private:
-  template <typename Visitor> // void(const AccessPath&, const TaintTree&)
+  template <typename Visitor> // void(const AccessPath&, const Taint&)
   static void visit_internal(
       AccessPath& access_path,
       const TaintTree::Tree& tree,
@@ -103,11 +106,27 @@ class TaintAccessPathTree final
   }
 
  public:
-  /* Return the list of pairs (access path, taint) in the tree. */
-  std::vector<std::pair<AccessPath, const Taint&>> elements() const;
+  /**
+   * Iterate on all the roots of the tree
+   */
+  template <typename Visitor> // void(Root, const TaintTree&)
+  void visit_roots(Visitor&& visitor) const {
+    static_assert(std::is_same_v<
+                  decltype(visitor(
+                      std::declval<Root>(), std::declval<const TaintTree>())),
+                  void>);
+    mt_assert(!is_top());
+
+    for (const auto& [root, taint_tree] : map_) {
+      visitor(root, taint_tree);
+    }
+  }
 
   /* Return the list of pairs (root, taint tree) in the tree. */
   std::vector<std::pair<Root, const TaintTree&>> roots() const;
+
+  /* Return the list of pairs (access path, taint) in the tree. */
+  std::vector<std::pair<AccessPath, const Taint&>> elements() const;
 
   /* Apply the given function on all taint. */
   template <typename Function> // Taint(Taint)

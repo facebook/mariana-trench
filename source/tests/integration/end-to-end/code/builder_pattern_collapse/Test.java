@@ -79,8 +79,6 @@ public class Test {
 
     public Test buildUsingBuilderAsArgument() {
       // Expect config override with max width = 4 propagated from the Test(Builder) constructor.
-      // Currently, the heuristics set the propagation input/output path sizes to 2.
-      // This means we infer a widen-broadened propagation of: Argument(0) -> LocalReturn
       return new Test(this);
     }
   }
@@ -120,11 +118,6 @@ public class Test {
 
   public static Test noCollapseOnApproximateBuildUsingThis() {
     // Still the 3-field pattern, but with "no-collapse-on-approximate" enabled.
-    // But currently, the heuristics set the propagation input/output path sizes to 2, which means
-    // that propagation through buildUsingBuilderAsArguments() is already collapsed and
-    // over-approximates. Hence, we assign the collapsed taint to precise paths .a, .b, .c. So even
-    // though we do not collapse these paths because of the "no-collapse-on-approximate" mode, we
-    // still get false positive results in the testNoCollapseOnApproximateBuildUsingThis().
     return (new Builder())
         .setA((Test) Origin.source())
         .setB((Test) Test.differentSource())
@@ -137,6 +130,7 @@ public class Test {
     // Test(Builder) constructor with the max width config override of 4, we no longer need to
     // specify the no-collapse-on-approximate mode on the wrapper methods.
     // Expect the same result as noCollapseOnApproximateBuildUsingThis.
+    // Currently, FP as config overrides are not yet propagated.
     return (new Builder())
         .setA((Test) Origin.source())
         .setB((Test) Test.differentSource())
@@ -195,7 +189,6 @@ public class Test {
     Test.differentSink(output.b);
 
     // no issue, since no collapsing occurs
-    // Currently FP. See noCollapseOnApproximateBuildUsingThis().
     Test.differentSink(output.a);
     Origin.sink(output.b);
     Origin.sink(output.d);

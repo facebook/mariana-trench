@@ -232,6 +232,7 @@ void infer_input_taint(
       context->new_model.add_inferred_propagations(
           std::move(port),
           std::move(propagations),
+          taint_tree.config_overrides(),
           widening_features,
           context->heuristics,
           context->kind_factory,
@@ -376,6 +377,10 @@ void apply_propagation(
       propagation_frame,
       std::move(output_taint_tree),
       transforms::TransformDirection::Backward);
+
+  // Apply config overrides for the input root.
+  output_taint_tree.apply_config_overrides(
+      callee.model.propagations().config_overrides(input.root()));
 
   FeatureMayAlwaysSet features = FeatureMayAlwaysSet::make_always(
       callee.model.add_features_to_arguments(output_root));

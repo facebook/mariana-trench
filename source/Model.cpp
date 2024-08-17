@@ -413,6 +413,10 @@ Model Model::at_callsite(
   auto caller_class_interval =
       context.class_intervals->get_interval(caller->get_class());
 
+  generations_.visit_roots([&model](Root root, const TaintTree& taint_tree) {
+    model.generations_.apply_config_overrides(
+        root, taint_tree.config_overrides());
+  });
   generations_.visit(
       [&model,
        callee,
@@ -440,6 +444,9 @@ Model Model::at_callsite(
             UpdateKind::Weak);
       });
 
+  sinks_.visit_roots([&model](Root root, const TaintTree& taint_tree) {
+    model.sinks_.apply_config_overrides(root, taint_tree.config_overrides());
+  });
   sinks_.visit([&model,
                 callee,
                 call_position,
@@ -501,6 +508,10 @@ Model Model::at_callsite(
         }
       });
 
+  propagations_.visit_roots([&model](Root root, const TaintTree& taint_tree) {
+    model.propagations_.apply_config_overrides(
+        root, taint_tree.config_overrides());
+  });
   propagations_.visit(
       [&model,
        callee,
@@ -539,6 +550,8 @@ Model Model::at_callsite(
   if (inline_as_setter_.is_bottom()) {
     model.inline_as_setter_.set_to_top();
   }
+
+  model.apply_config_overrides(global_config_overrides_);
 
   return model;
 }
@@ -953,6 +966,7 @@ void Model::add_propagation(
 void Model::add_inferred_propagations(
     AccessPath input_path,
     Taint local_taint,
+    const TaintTreeConfigurationOverrides& config_overrides,
     const FeatureMayAlwaysSet& widening_features,
     const Heuristics& heuristics,
     const KindFactory& kind_factory,
@@ -975,6 +989,9 @@ void Model::add_inferred_propagations(
           sanitizer, kind_factory, transforms_factory);
     }
   }
+
+  // Apply config overrides
+  propagations_.apply_config_overrides(input_path.root(), config_overrides);
 
   update_taint_tree(
       propagations_,

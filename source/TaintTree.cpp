@@ -107,6 +107,15 @@ void TaintTree::write(const Path& path, Taint taint, UpdateKind kind) {
 
 void TaintTree::write(const Path& path, TaintTree tree, UpdateKind kind) {
   tree_.write(path, std::move(tree.tree_), kind);
+  switch (kind) {
+    case UpdateKind::Strong: {
+      overrides_ = tree.overrides_;
+    } break;
+
+    case UpdateKind::Weak: {
+      overrides_.join_with(std::move(tree.overrides_));
+    } break;
+  }
 }
 
 std::vector<std::pair<Path, const Taint&>> TaintTree::elements() const {

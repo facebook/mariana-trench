@@ -301,6 +301,7 @@ class Model final {
   void add_inferred_propagations(
       AccessPath input_path,
       Taint local_taint,
+      const TaintTreeConfigurationOverrides& config_overrides,
       const FeatureMayAlwaysSet& widening_features,
       const Heuristics& heuristics,
       const KindFactory& kind_factory,
