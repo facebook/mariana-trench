@@ -2136,10 +2136,17 @@ std::ostream& operator<<(std::ostream& out, const Model& model) {
     out << ",\n  generations={\n";
     for (const auto& binding : model.generations_.elements()) {
       const AccessPath& port = binding.first;
+      const auto& config_overrides =
+          model.generations_.config_overrides(port.root());
       binding.second.visit_frames(
-          [&out, port](const CallInfo& call_info, const Frame& generation) {
+          [&out, &config_overrides, &port](
+              const CallInfo& call_info, const Frame& generation) {
             out << "    " << port << ": call_info=" << call_info
-                << ", generation=" << generation << ",\n";
+                << ", generation=" << generation;
+            if (!config_overrides.is_bottom()) {
+              out << ", overrides=" << config_overrides;
+            }
+            out << ",\n";
           });
     }
     out << "  }";
@@ -2148,11 +2155,17 @@ std::ostream& operator<<(std::ostream& out, const Model& model) {
     out << ",\n  parameter_sources={\n";
     for (const auto& binding : model.parameter_sources_.elements()) {
       const AccessPath& port = binding.first;
+      const auto& config_overrides =
+          model.parameter_sources_.config_overrides(port.root());
       binding.second.visit_frames(
-          [&out, &port](
+          [&out, &config_overrides, &port](
               const CallInfo& call_info, const Frame& parameter_source) {
             out << "    " << port << ": call_info=" << call_info
-                << ", parameter_source=" << parameter_source << ",\n";
+                << ", parameter_source=" << parameter_source;
+            if (!config_overrides.is_bottom()) {
+              out << ", overrides=" << config_overrides;
+            }
+            out << ",\n";
           });
     }
     out << "  }";
@@ -2161,10 +2174,16 @@ std::ostream& operator<<(std::ostream& out, const Model& model) {
     out << ",\n  sinks={\n";
     for (const auto& binding : model.sinks_.elements()) {
       const AccessPath& port = binding.first;
+      const auto& config_overrides = model.sinks_.config_overrides(port.root());
       binding.second.visit_frames(
-          [&out, &port](const CallInfo& call_info, const Frame& sink) {
+          [&out, &config_overrides, &port](
+              const CallInfo& call_info, const Frame& sink) {
             out << "    " << port << ": call_info=" << call_info
-                << ", sink=" << sink << ",\n";
+                << ", sink=" << sink;
+            if (!config_overrides.is_bottom()) {
+              out << ", overrides=" << config_overrides;
+            }
+            out << ",\n";
           });
     }
     out << "  }";
@@ -2179,10 +2198,17 @@ std::ostream& operator<<(std::ostream& out, const Model& model) {
     out << ",\n  propagation={\n";
     for (const auto& binding : model.propagations_.elements()) {
       const AccessPath& input_path = binding.first;
+      const auto& config_overrides =
+          model.propagations_.config_overrides(input_path.root());
       binding.second.visit_frames(
-          [&out, &input_path](const CallInfo& call_info, const Frame& output) {
+          [&out, &config_overrides, &input_path](
+              const CallInfo& call_info, const Frame& output) {
             out << "    " << input_path << ": call_info=" << call_info
-                << ", output=" << output << ",\n";
+                << ", output=" << output;
+            if (!config_overrides.is_bottom()) {
+              out << ", overrides=" << config_overrides;
+            }
+            out << ",\n";
           });
     }
     out << "  }";
