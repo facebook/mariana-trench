@@ -5,10 +5,28 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <algorithm>
+
 #include <mariana-trench/FeatureFactory.h>
 #include <mariana-trench/TaintTree.h>
 
 namespace marianatrench {
+
+namespace {
+
+std::optional<std::size_t> calculate_override(
+    const TaintTreeConfigurationOverrides& global_config_overrides,
+    const TaintTreeConfigurationOverrides& config_overrides,
+    TaintTreeConfigurationOverrideOptions option) {
+  if (global_config_overrides.is_bottom() && config_overrides.is_bottom()) {
+    return std::nullopt;
+  }
+
+  return static_cast<std::size_t>(std::max(
+      global_config_overrides.get(option), config_overrides.get(option)));
+}
+
+} // namespace
 
 Taint TaintTreeConfiguration::transform_on_widening_collapse(Taint taint) {
   // Add the feature as a may-feature, otherwise we would break the widening
@@ -156,8 +174,33 @@ void TaintTree::collapse_deeper_than(
 }
 
 void TaintTree::limit_leaves(
-    std::size_t max_leaves,
+    std::size_t default_max_leaves,
     const FeatureMayAlwaysSet& broadening_features) {
+  limit_leaves(
+      default_max_leaves,
+      TaintTreeConfigurationOverrides::bottom(),
+      broadening_features);
+}
+
+void TaintTree::limit_leaves(
+    std::size_t default_max_leaves,
+    const TaintTreeConfigurationOverrides& global_config_overrides,
+    const FeatureMayAlwaysSet& broadening_features) {
+  // Select the override to use (if any)
+  auto override_max_leaves = calculate_override(
+      global_config_overrides,
+      overrides_,
+      TaintTreeConfigurationOverrideOptions::MaxModelWidth);
+  auto max_leaves =
+      override_max_leaves ? *override_max_leaves : default_max_leaves;
+
+  // Update the override options if it is different from the default heuristic.
+  if (max_leaves != default_max_leaves) {
+    overrides_.add(
+        TaintTreeConfigurationOverrideOptions::MaxModelWidth, max_leaves);
+  }
+
+  // Limit the number of leaves on the tree to the selected max_leaves.
   tree_.limit_leaves(max_leaves, [&broadening_features](Taint taint) {
     taint.add_locally_inferred_features(broadening_features);
     taint.update_maximum_collapse_depth(CollapseDepth::zero());

@@ -162,7 +162,12 @@ class TaintTree final : public sparta::AbstractDomain<TaintTree> {
 
   /* Collapse children that have more than `max_leaves` leaves. */
   void limit_leaves(
-      std::size_t max_leaves,
+      std::size_t default_max_leaves,
+      const FeatureMayAlwaysSet& broadening_features);
+
+  void limit_leaves(
+      std::size_t default_max_leaves,
+      const TaintTreeConfigurationOverrides& global_config_overrides,
       const FeatureMayAlwaysSet& broadening_features);
 
   void update_maximum_collapse_depth(CollapseDepth collapse_depth);

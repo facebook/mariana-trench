@@ -88,10 +88,23 @@ std::vector<std::pair<Root, const TaintTree&>> TaintAccessPathTree::roots()
 }
 
 void TaintAccessPathTree::limit_leaves(
-    std::size_t max_leaves,
+    std::size_t default_max_leaves,
     const FeatureMayAlwaysSet& broadening_features) {
-  map_.transform([max_leaves, &broadening_features](TaintTree taint_tree) {
-    taint_tree.limit_leaves(max_leaves, broadening_features);
+  limit_leaves(
+      default_max_leaves,
+      TaintTreeConfigurationOverrides::bottom(),
+      broadening_features);
+}
+
+void TaintAccessPathTree::limit_leaves(
+    std::size_t default_max_leaves,
+    const TaintTreeConfigurationOverrides& global_config_overrides,
+    const FeatureMayAlwaysSet& broadening_features) {
+  map_.transform([default_max_leaves,
+                  &global_config_overrides,
+                  &broadening_features](TaintTree taint_tree) {
+    taint_tree.limit_leaves(
+        default_max_leaves, global_config_overrides, broadening_features);
     return taint_tree;
   });
 }

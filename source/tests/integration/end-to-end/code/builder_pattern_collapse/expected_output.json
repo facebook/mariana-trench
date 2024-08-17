@@ -1457,7 +1457,11 @@
   "propagation" : 
   [
     {
-      "input" : "Argument(1)",
+      "config_overrides" : 
+      {
+        "max_model_width" : 4
+      },
+      "input" : "Argument(1).a",
       "output" : 
       [
         {
@@ -1472,20 +1476,91 @@
               "kind" : "LocalArgument(0)",
               "output_paths" : 
               {
-                ".a" : 0,
-                ".b" : 0,
-                ".c" : 0,
-                ".d" : 0
+                ".a" : 1
               }
             }
-          ],
-          "local_features" : 
+          ]
+        }
+      ]
+    },
+    {
+      "config_overrides" : 
+      {
+        "max_model_width" : 4
+      },
+      "input" : "Argument(1).b",
+      "output" : 
+      [
+        {
+          "call_info" : 
           {
-            "always_features" : 
-            [
-              "via-widen-broadening"
-            ]
-          }
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              {
+                ".b" : 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "config_overrides" : 
+      {
+        "max_model_width" : 4
+      },
+      "input" : "Argument(1).c",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              {
+                ".c" : 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "config_overrides" : 
+      {
+        "max_model_width" : 4
+      },
+      "input" : "Argument(1).d",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              {
+                ".d" : 1
+              }
+            }
+          ]
         }
       ]
     }

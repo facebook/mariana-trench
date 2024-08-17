@@ -276,7 +276,7 @@ bool Model::operator!=(const Model& other) const {
 }
 
 Model Model::instantiate(const Method* method, Context& context) const {
-  Model model(method, context, modes_, frozen_);
+  Model model(method, context, modes_, frozen_, global_config_overrides_);
 
   for (const auto& [port, generation_taint] : generations_.elements()) {
     model.add_generation(port, generation_taint, *context.heuristics);
@@ -357,6 +357,7 @@ Model Model::at_callsite(
   Model model;
   model.modes_ = modes_;
   model.frozen_ = frozen_;
+  model.global_config_overrides_ = global_config_overrides_;
 
   auto maximum_source_sink_distance =
       context.options->maximum_source_sink_distance();
@@ -546,6 +547,7 @@ Model Model::initial_model_for_iteration() const {
   Model model;
   model.method_ = method_;
   model.modes_ = modes_;
+  model.global_config_overrides_ = global_config_overrides_;
   model.global_sanitizers_ = global_sanitizers_;
   model.port_sanitizers_ = port_sanitizers_;
   model.model_generators_ = model_generators_;
@@ -643,16 +645,28 @@ void Model::approximate(
   if (no_collapse_on_approximate()) {
     return;
   }
+
   // Limit the number of leaves in each taint tree when
   // Mode::NoCollapseOnApproximate is not set
   generations_.limit_leaves(
-      heuristics.generation_max_output_path_leaves(), widening_features);
+      heuristics.generation_max_output_path_leaves(),
+      global_config_overrides_,
+      widening_features);
 
   parameter_sources_.limit_leaves(
-      heuristics.parameter_source_max_output_path_leaves(), widening_features);
+      heuristics.parameter_source_max_output_path_leaves(),
+      global_config_overrides_,
+      widening_features);
 
   sinks_.limit_leaves(
-      heuristics.sink_max_input_path_leaves(), widening_features);
+      heuristics.sink_max_input_path_leaves(),
+      global_config_overrides_,
+      widening_features);
+
+  propagations_.limit_leaves(
+      heuristics.propagation_max_input_path_leaves(),
+      global_config_overrides_,
+      widening_features);
 
   call_effect_sources_.limit_leaves(
       heuristics.call_effect_source_max_output_path_leaves(),
@@ -660,13 +674,11 @@ void Model::approximate(
 
   call_effect_sinks_.limit_leaves(
       heuristics.call_effect_sink_max_input_path_leaves(), widening_features);
-
-  propagations_.limit_leaves(
-      heuristics.propagation_max_input_path_leaves(), widening_features);
 }
 
 bool Model::empty() const {
-  return modes_.empty() && frozen_.empty() && generations_.is_bottom() &&
+  return modes_.empty() && frozen_.empty() &&
+      global_config_overrides_.is_bottom() && generations_.is_bottom() &&
       parameter_sources_.is_bottom() && sinks_.is_bottom() &&
       call_effect_sources_.is_bottom() && call_effect_sinks_.is_bottom() &&
       propagations_.is_bottom() && global_sanitizers_.is_bottom() &&
