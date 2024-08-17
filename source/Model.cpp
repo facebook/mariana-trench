@@ -852,11 +852,13 @@ void Model::add_generation(
 void Model::add_inferred_generations(
     AccessPath port,
     Taint generations,
+    const TaintTreeConfigurationOverrides& config_overrides,
     const FeatureMayAlwaysSet& widening_features,
     const Heuristics& heuristics) {
   auto sanitized_generations = apply_source_sink_sanitizers(
       SanitizerKind::Sources, std::move(generations), port.root());
   if (!sanitized_generations.is_bottom()) {
+    generations_.apply_config_overrides(config_overrides);
     update_taint_tree(
         generations_,
         std::move(port),

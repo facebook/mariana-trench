@@ -231,6 +231,7 @@ class Model final {
   void add_inferred_generations(
       AccessPath port,
       Taint generations,
+      const TaintTreeConfigurationOverrides& config_overrides,
       const FeatureMayAlwaysSet& widening_features,
       const Heuristics& heuristics);
   const TaintAccessPathTree& generations() const {

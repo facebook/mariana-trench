@@ -130,7 +130,6 @@ public class Test {
     // Test(Builder) constructor with the max width config override of 4, we no longer need to
     // specify the no-collapse-on-approximate mode on the wrapper methods.
     // Expect the same result as noCollapseOnApproximateBuildUsingThis.
-    // Currently, FP as config overrides are not yet propagated.
     return (new Builder())
         .setA((Test) Origin.source())
         .setB((Test) Test.differentSource())
@@ -203,7 +202,6 @@ public class Test {
     Test.differentSink(output.b);
 
     // Expect no issue, since no collapsing occurs.
-    // Currently FP.
     Test.differentSink(output.a);
     Origin.sink(output.b);
     Origin.sink(output.d);
