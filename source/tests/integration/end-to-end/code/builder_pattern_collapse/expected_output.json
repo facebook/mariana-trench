@@ -6242,9 +6242,7 @@
     {
       "always_features" : 
       [
-        "via-cast:Lcom/facebook/marianatrench/integrationtests/Test;",
-        "via-issue-broadening",
-        "via-widen-broadening"
+        "via-cast:Lcom/facebook/marianatrench/integrationtests/Test;"
       ],
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Test;.toSinkFields:(Lcom/facebook/marianatrench/integrationtests/Test;)V",
       "position" : 
@@ -6260,7 +6258,7 @@
           "call_info" : 
           {
             "call_kind" : "CallSite",
-            "port" : "Argument(0)",
+            "port" : "Argument(0).a",
             "position" : 
             {
               "end" : 22,
@@ -6273,10 +6271,35 @@
           "kinds" : 
           [
             {
-              "always_features" : 
+              "distance" : 2,
+              "kind" : "Sink",
+              "origins" : 
               [
-                "via-widen-broadening"
-              ],
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Argument(0).c",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 309,
+              "path" : "Test.java",
+              "start" : 17
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Test;.toSinkFields:(Lcom/facebook/marianatrench/integrationtests/Test;)V"
+          },
+          "kinds" : 
+          [
+            {
               "distance" : 2,
               "kind" : "Sink",
               "origins" : 
@@ -6328,8 +6351,7 @@
           {
             "always_features" : 
             [
-              "via-cast:Lcom/facebook/marianatrench/integrationtests/Test;",
-              "via-issue-broadening"
+              "via-cast:Lcom/facebook/marianatrench/integrationtests/Test;"
             ]
           },
           "local_positions" : 
@@ -6377,8 +6399,7 @@
           {
             "always_features" : 
             [
-              "via-cast:Lcom/facebook/marianatrench/integrationtests/Test;",
-              "via-issue-broadening"
+              "via-cast:Lcom/facebook/marianatrench/integrationtests/Test;"
             ]
           },
           "local_positions" : 
@@ -6395,9 +6416,7 @@
     {
       "always_features" : 
       [
-        "via-cast:Lcom/facebook/marianatrench/integrationtests/Test;",
-        "via-issue-broadening",
-        "via-widen-broadening"
+        "via-cast:Lcom/facebook/marianatrench/integrationtests/Test;"
       ],
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Test;.toSinkFields:(Lcom/facebook/marianatrench/integrationtests/Test;)V",
       "position" : 
@@ -6413,7 +6432,7 @@
           "call_info" : 
           {
             "call_kind" : "CallSite",
-            "port" : "Argument(0)",
+            "port" : "Argument(0).b",
             "position" : 
             {
               "end" : 22,
@@ -6426,10 +6445,6 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-widen-broadening"
-              ],
               "distance" : 2,
               "kind" : "DifferentSink",
               "origins" : 
@@ -6481,8 +6496,7 @@
           {
             "always_features" : 
             [
-              "via-cast:Lcom/facebook/marianatrench/integrationtests/Test;",
-              "via-issue-broadening"
+              "via-cast:Lcom/facebook/marianatrench/integrationtests/Test;"
             ]
           },
           "local_positions" : 
@@ -6490,55 +6504,6 @@
             {
               "end" : 44,
               "line" : 300,
-              "start" : 15
-            }
-          ]
-        },
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Origin",
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 41,
-              "line" : 302,
-              "path" : "Test.java",
-              "start" : 27
-            }
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                38,
-                39
-              ],
-              "kind" : "DifferentSource",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Test;.differentSource:()Ljava/lang/Object;",
-                  "port" : "Return"
-                }
-              ],
-              "preserves_type_context" : true
-            }
-          ],
-          "local_features" : 
-          {
-            "always_features" : 
-            [
-              "via-cast:Lcom/facebook/marianatrench/integrationtests/Test;",
-              "via-issue-broadening"
-            ]
-          },
-          "local_positions" : 
-          [
-            {
-              "end" : 44,
-              "line" : 302,
               "start" : 15
             }
           ]
@@ -6746,7 +6711,11 @@
   "sinks" : 
   [
     {
-      "port" : "Argument(0)",
+      "config_overrides" : 
+      {
+        "max_model_width" : 3
+      },
+      "port" : "Argument(0).a",
       "taint" : 
       [
         {
@@ -6782,15 +6751,18 @@
               ],
               "preserves_type_context" : false
             }
-          ],
-          "local_features" : 
-          {
-            "always_features" : 
-            [
-              "via-widen-broadening"
-            ]
-          }
-        },
+          ]
+        }
+      ]
+    },
+    {
+      "config_overrides" : 
+      {
+        "max_model_width" : 3
+      },
+      "port" : "Argument(0).b",
+      "taint" : 
+      [
         {
           "call_info" : 
           {
@@ -6824,15 +6796,18 @@
               ],
               "preserves_type_context" : false
             }
-          ],
-          "local_features" : 
-          {
-            "always_features" : 
-            [
-              "via-widen-broadening"
-            ]
-          }
-        },
+          ]
+        }
+      ]
+    },
+    {
+      "config_overrides" : 
+      {
+        "max_model_width" : 3
+      },
+      "port" : "Argument(0).c",
+      "taint" : 
+      [
         {
           "call_info" : 
           {
@@ -6866,14 +6841,7 @@
               ],
               "preserves_type_context" : false
             }
-          ],
-          "local_features" : 
-          {
-            "always_features" : 
-            [
-              "via-widen-broadening"
-            ]
-          }
+          ]
         }
       ]
     }

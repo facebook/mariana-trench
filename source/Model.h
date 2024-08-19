@@ -261,6 +261,7 @@ class Model final {
   void add_inferred_sinks(
       AccessPath port,
       Taint sinks,
+      const TaintTreeConfigurationOverrides& config_overrides,
       const FeatureMayAlwaysSet& widening_features,
       const Heuristics& heuristics);
   const TaintAccessPathTree& sinks() const {

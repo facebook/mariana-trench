@@ -159,6 +159,8 @@ void apply_generations(
       "Processing generations for call to `{}`",
       show(callee.method_reference));
 
+  // We operate on TaintTrees at the roots() directly, so config overrides are
+  // implicitly propagated.
   for (const auto& [root, generations] : callee.model.generations().roots()) {
     switch (root.kind()) {
       case Root::Kind::Return: {

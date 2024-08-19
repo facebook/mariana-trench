@@ -305,7 +305,7 @@ public class Test {
     // .a: Source -> Sink issue
     // .b: DifferentSource -> DifferentSink issue
     // .c: Source -> Sink issue
-    // .d: No issue => Currently FP
+    // .d: No issue
     toSinkFields(output);
   }
 }

@@ -893,11 +893,15 @@ void Model::add_sink(
 void Model::add_inferred_sinks(
     AccessPath port,
     Taint sinks,
+    const TaintTreeConfigurationOverrides& config_overrides,
     const FeatureMayAlwaysSet& widening_features,
     const Heuristics& heuristics) {
   auto sanitized_sinks = apply_source_sink_sanitizers(
       SanitizerKind::Sinks, std::move(sinks), port.root());
   if (!sanitized_sinks.is_bottom()) {
+    // Apply config overrides
+    sinks_.apply_config_overrides(port.root(), config_overrides);
+
     update_taint_tree(
         sinks_,
         std::move(port),

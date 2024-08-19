@@ -167,6 +167,7 @@ void infer_input_taint(
         context->new_model.add_inferred_sinks(
             std::move(port),
             std::move(sinks),
+            taint_tree.config_overrides(),
             widening_features,
             context->heuristics);
       }
@@ -545,7 +546,7 @@ void check_call_flows(
     BackwardTaintEnvironment* environment,
     const std::function<std::optional<Register>(Root)>& get_register,
     const DexMethodRef* callee_method_reference,
-    const TaintAccessPathTree& sinks,
+    const TaintAccessPathTree& sinks_tree,
     const std::vector<std::optional<std::string>>& source_constant_arguments,
     const FeatureMayAlwaysSet& extra_features,
     const FulfilledPartialKindState& fulfilled_partial_sinks) {
@@ -555,7 +556,7 @@ void check_call_flows(
       "Processing sinks for call to `{}`",
       show(callee_method_reference));
 
-  for (const auto& [port, sinks] : sinks.elements()) {
+  for (const auto& [port, sinks] : sinks_tree.elements()) {
     auto register_id = get_register(port.root());
     if (!register_id) {
       continue;
@@ -592,6 +593,10 @@ void check_call_flows(
     new_sinks.add_locally_inferred_features(
         locally_inferred_fulfilled_sink_features);
 
+    // Apply config overrides
+    auto new_sink_tree =
+        TaintTree(new_sinks, sinks_tree.config_overrides(port.root()));
+
     auto memory_locations = aliasing.register_memory_locations(*register_id);
     LOG_OR_DUMP(
         context,
@@ -600,11 +605,11 @@ void check_call_flows(
         *register_id,
         memory_locations,
         path_resolved,
-        new_sinks);
+        new_sink_tree);
     environment->write(
         memory_locations,
         path_resolved,
-        std::move(new_sinks),
+        std::move(new_sink_tree),
         UpdateKind::Weak);
   }
 }
