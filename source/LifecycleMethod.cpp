@@ -236,7 +236,6 @@ bool LifecycleMethod::validate(
   }
 
   if (const auto* callees = std::get_if<std::vector<LifecycleMethodCall>>(&body_)) {
-    // handle *callees
     for (const auto& callee : *callees) {
       callee.validate(base_class, class_hierarchies);
     }
