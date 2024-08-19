@@ -8,7 +8,8 @@
 package com.facebook.marianatrench.integrationtests;
 
 public class Test {
-  // 4 fields, configure generation_max_output_path_leaves = 2
+  // 4 fields, Heuristics configured with max sizes for generations/sinks/propagations less than 4.
+  // Check heuristics.json
   public Test a;
   public Test b;
   public Test c;
@@ -29,6 +30,23 @@ public class Test {
     this.b = builder.b;
     this.c = builder.c;
     this.d = builder.d;
+  }
+
+  private static Test withSources() {
+    // Global config override with max width = 3
+    Test result = new Test();
+    result.a = (Test) Origin.source();
+    result.b = (Test) Test.differentSource();
+    result.c = (Test) Origin.source();
+
+    return result;
+  }
+
+  public static void sinkFields(Test test) {
+    // Global config override with max width = 3
+    Origin.sink(test.a);
+    Test.differentSink(test.b);
+    Origin.sink(test.c);
   }
 
   private static Object differentSource() {
@@ -135,6 +153,16 @@ public class Test {
         .setB((Test) Test.differentSource())
         .setC((Test) Origin.source())
         .buildUsingBuilderAsArgument();
+  }
+
+  public static Test buildWithSources() {
+    // withSources() has max width config overrides of 3. We should infer generations with the
+    // same config overrides.
+    return Test.withSources();
+  }
+
+  public static void toSinkFields(Test test) {
+    Test.sinkFields(test);
   }
 
   public static void testCollapseOnBuilder() {
@@ -249,5 +277,35 @@ public class Test {
     // - result memory location after call to doNotInlineAsSetter() is: .a.b = tainted
     // FP issue (as expected) as x.a.b is tainted so x.a.b.d is also tainted.
     Origin.sink(x.a.b.d);
+  }
+
+  public void testbuildWithSources() {
+    Test output = buildWithSources();
+
+    // issue: a has "Source" and b has "DifferentSource"
+    Origin.sink(output.a);
+    Test.differentSink(output.b);
+
+    // Expect no issue, since no collapsing occurs.
+    Test.differentSink(output.a);
+    Origin.sink(output.b);
+    Test.differentSink(output.c);
+    Origin.sink(output.d);
+    Test.differentSink(output.d);
+  }
+
+  public void testToSinkFields() {
+    Test output = new Test();
+    output.a = (Test) Origin.source();
+    output.b = (Test) Test.differentSource();
+    output.c = (Test) Origin.source();
+    output.d = (Test) Test.differentSource();
+
+    // Expect:
+    // .a: Source -> Sink issue
+    // .b: DifferentSource -> DifferentSink issue
+    // .c: Source -> Sink issue
+    // .d: No issue => Currently FP
+    toSinkFields(output);
   }
 }

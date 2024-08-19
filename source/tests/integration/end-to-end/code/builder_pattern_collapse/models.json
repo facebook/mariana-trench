@@ -52,5 +52,17 @@
     "global_config_overrides": {
       "max_model_width": 4
     }
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Test;.withSources:()Lcom/facebook/marianatrench/integrationtests/Test;",
+    "global_config_overrides": {
+      "max_model_width": 3
+    }
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Test;.sinkFields:(Lcom/facebook/marianatrench/integrationtests/Test;)V",
+    "global_config_overrides": {
+      "max_model_width": 3
+    }
   }
 ]

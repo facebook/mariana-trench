@@ -275,6 +275,13 @@
       "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.setC:(Lcom/facebook/marianatrench/integrationtests/Test;)Lcom/facebook/marianatrench/integrationtests/Test$Builder;"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/Test;.buildWithSources:()Lcom/facebook/marianatrench/integrationtests/Test;" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Test;.withSources:()Lcom/facebook/marianatrench/integrationtests/Test;"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/Test;.collapseOnBuilder:()Lcom/facebook/marianatrench/integrationtests/Test;" : 
   {
     "static" : 
@@ -343,6 +350,14 @@
       "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.buildUsingFieldsAsArguments:()Lcom/facebook/marianatrench/integrationtests/Test;",
       "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.setA:(Lcom/facebook/marianatrench/integrationtests/Test;)Lcom/facebook/marianatrench/integrationtests/Test$Builder;",
       "Lcom/facebook/marianatrench/integrationtests/Test$Builder;.setB:(Lcom/facebook/marianatrench/integrationtests/Test;)Lcom/facebook/marianatrench/integrationtests/Test$Builder;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Test;.sinkFields:(Lcom/facebook/marianatrench/integrationtests/Test;)V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Test;.differentSink:(Ljava/lang/Object;)V"
     ]
   },
   "Lcom/facebook/marianatrench/integrationtests/Test;.testBuildUsingThis:()V" : 
@@ -414,6 +429,41 @@
       "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "Lcom/facebook/marianatrench/integrationtests/Test;.differentSink:(Ljava/lang/Object;)V",
       "Lcom/facebook/marianatrench/integrationtests/Test;.noCollapseOnBuilder:()Lcom/facebook/marianatrench/integrationtests/Test;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Test;.testToSinkFields:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/Test;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/Test;.differentSource:()Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/Test;.toSinkFields:(Lcom/facebook/marianatrench/integrationtests/Test;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Test;.testbuildWithSources:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Test;.buildWithSources:()Lcom/facebook/marianatrench/integrationtests/Test;",
+      "Lcom/facebook/marianatrench/integrationtests/Test;.differentSink:(Ljava/lang/Object;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Test;.toSinkFields:(Lcom/facebook/marianatrench/integrationtests/Test;)V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Test;.sinkFields:(Lcom/facebook/marianatrench/integrationtests/Test;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Test;.withSources:()Lcom/facebook/marianatrench/integrationtests/Test;" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/Test;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/Test;.differentSource:()Ljava/lang/Object;"
     ]
   },
   "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V" : 
