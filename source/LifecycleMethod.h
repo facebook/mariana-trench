@@ -53,7 +53,7 @@ class LifecycleMethodCall {
 
   static LifecycleMethodCall from_json(const Json::Value& value);
 
-  const std::string get_method_name() const { return method_name_; }
+  const std::string& get_method_name() const { return method_name_; }
 
   void validate(
       const DexClass* base_class,
