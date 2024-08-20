@@ -42,8 +42,7 @@ class TaintTree final : public sparta::AbstractDomain<TaintTree> {
 
   explicit TaintTree(
       Tree tree,
-      TaintTreeConfigurationOverrides config_overrides =
-          TaintTreeConfigurationOverrides::bottom())
+      TaintTreeConfigurationOverrides config_overrides)
       : tree_(std::move(tree)), overrides_(std::move(config_overrides)) {}
 
  public:
