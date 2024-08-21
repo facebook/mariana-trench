@@ -303,7 +303,8 @@ Types::Types(const Options& options, const DexStoresVector& stores) {
     type_analyzer::global::GlobalTypeAnalysis analysis(
         /* max_global_analysis_iteration */ 10,
         /* use_multiple_callee_callgraph */ true,
-        /* only_aggregate_safely_inferrable_fields */ false);
+        /* only_aggregate_safely_inferrable_fields */ false,
+        /* enforce_iteration_refinement */ false);
     global_type_analyzer_ = analysis.analyze(scope);
 
     LOG(1,
