@@ -152,6 +152,7 @@ void apply_generations(
     ForwardTaintEnvironment* environment,
     const IRInstruction* instruction,
     const CalleeModel& callee,
+    const std::function<std::optional<Register>(Root)>& get_register,
     TaintTree& result_taint) {
   LOG_OR_DUMP(
       context,
@@ -169,14 +170,18 @@ void apply_generations(
         break;
       }
       case Root::Kind::Argument: {
-        auto parameter_position = root.parameter_position();
-        auto register_id = instruction->src(parameter_position);
-        auto memory_locations = aliasing.register_memory_locations(register_id);
+        auto register_id = get_register(root);
+        if (!register_id) {
+          // No register to taint
+          break;
+        }
+        auto memory_locations =
+            aliasing.register_memory_locations(*register_id);
         LOG_OR_DUMP(
             context,
             4,
             "Tainting register {} at {} with {}",
-            register_id,
+            *register_id,
             memory_locations,
             generations);
         environment->write(memory_locations, generations, UpdateKind::Weak);
@@ -1029,6 +1034,21 @@ void check_artificial_calls_flows(
 
     context->fulfilled_partial_sinks.store_artificial_call(
         &artificial_callee, std::move(fulfilled_partial_sinks));
+
+    // Consider also applying other parts of the model as in analyze_invoke
+    // (e.g. add_features_to_arguments, propagations, etc.). In theory, an
+    // artificial call/shim should be handled like a real call. Main difference
+    // is that its returned value is never used (i.e. `result_taint` can be
+    // ignored).
+    TaintTree result_taint;
+    apply_generations(
+        context,
+        aliasing,
+        environment,
+        instruction,
+        callee,
+        get_register,
+        result_taint);
   }
 }
 
@@ -1193,7 +1213,16 @@ bool ForwardTaintTransfer::analyze_invoke(
   }
 
   apply_generations(
-      context, aliasing, environment, instruction, callee, result_taint);
+      context,
+      aliasing,
+      environment,
+      instruction,
+      callee,
+      /* get_register */
+      [instruction](Root parameter_position) -> std::optional<Register> {
+        return instruction->src(parameter_position.parameter_position());
+      },
+      result_taint);
 
   if (callee.resolved_base_method &&
       callee.resolved_base_method->returns_void()) {
