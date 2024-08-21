@@ -25,5 +25,23 @@
         "output": "Argument(0)"
       }
     ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/ShimsWithArgumentGenerations;.sourceOnArgument0:(Ljava/lang/Object;)V",
+    "generations": [
+      {
+        "kind": "Source",
+        "port": "Argument(0)"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/ShimsWithArgumentGenerations;.sourceOnArgument1:(ILjava/lang/Object;)V",
+    "generations": [
+      {
+        "kind": "Source",
+        "port": "Argument(1)"
+      }
+    ]
   }
 ]

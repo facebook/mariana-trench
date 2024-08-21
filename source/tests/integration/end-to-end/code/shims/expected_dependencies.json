@@ -218,6 +218,9 @@
     "Lcom/facebook/marianatrench/integrationtests/HandlerTwo;.handleMessage:(Ljava/lang/Object;)V",
     "Lcom/facebook/marianatrench/integrationtests/ShimTarget;.multipleArguments:(ILjava/lang/String;Ljava/lang/Object;)V",
     "Lcom/facebook/marianatrench/integrationtests/ShimTarget;.staticMethod:(Ljava/lang/Object;)V",
+    "Lcom/facebook/marianatrench/integrationtests/ShimsWithArgumentGenerations;.issue1:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ShimsWithArgumentGenerations;.issue2:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ShimsWithThisGenerations;.sourceAndSinkOnThis:()V",
     "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides$1;.onReceive:(Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;Ljava/lang/Object;)V",
     "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides$2;.onReceive:(Ljava/lang/Object;)V"
   ],
@@ -240,6 +243,7 @@
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testParameterMappingNoIssue:()Lcom/facebook/marianatrench/integrationtests/ParameterMapping;",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testSetArguments:()V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testStaticShimTarget:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ShimsWithThisGenerations;.sourceAndSinkOnThis:()V",
     "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides;.testShimOnAnonymousClass:()V",
     "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides;.testShimWithAnonymousClassArgument:()V"
   ],
@@ -308,6 +312,31 @@
   [
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testMessageHandlerOneWithHop:()Lcom/facebook/marianatrench/integrationtests/Messenger;",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testMessageHandlerTwoWithHop:()Lcom/facebook/marianatrench/integrationtests/Messenger;"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/ShimsWithArgumentGenerations;.shimToSourceOnArgument0:(Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/ShimsWithArgumentGenerations;.issue1:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/ShimsWithArgumentGenerations;.shimToSourceOnArgument1:(Ljava/lang/Object;I)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/ShimsWithArgumentGenerations;.issue2:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/ShimsWithArgumentGenerations;.sourceOnArgument0:(Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/ShimsWithArgumentGenerations;.issue1:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/ShimsWithArgumentGenerations;.sourceOnArgument1:(ILjava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/ShimsWithArgumentGenerations;.issue2:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/ShimsWithThisGenerations;.shimToSourceAndSinkOnThis:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/ShimsWithThisGenerations;.noIssueViaShim:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/ShimsWithThisGenerations;.sourceAndSinkOnThis:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/ShimsWithThisGenerations;.noIssueViaShim:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ShimsWithThisGenerations;.noIssueWithoutShim:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides$1;.<init>:()V" : 
   [
@@ -383,6 +412,8 @@
     "Lcom/facebook/marianatrench/integrationtests/Shims;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testParameterMappingIssue:()Lcom/facebook/marianatrench/integrationtests/ParameterMapping;",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testParameterMappingNoIssue:()Lcom/facebook/marianatrench/integrationtests/ParameterMapping;",
+    "Lcom/facebook/marianatrench/integrationtests/ShimsWithArgumentGenerations;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ShimsWithThisGenerations;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides$2;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides;.<init>:()V",
     "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V",

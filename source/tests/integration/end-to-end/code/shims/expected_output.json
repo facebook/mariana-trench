@@ -1116,8 +1116,8 @@
             {
               "callee_interval" : 
               [
-                70,
-                71
+                74,
+                75
               ],
               "distance" : 1,
               "kind" : "Sink",
@@ -3730,6 +3730,377 @@
   }
 }
 {
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ShimsWithArgumentGenerations;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9,
+    "path" : "ShimsWithArgumentGenerations.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ShimsWithArgumentGenerations;.issue1:()V",
+  "position" : 
+  {
+    "line" : 20,
+    "path" : "ShimsWithArgumentGenerations.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ShimsWithArgumentGenerations;.issue2:()V",
+  "position" : 
+  {
+    "line" : 26,
+    "path" : "ShimsWithArgumentGenerations.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ShimsWithArgumentGenerations;.shimToSourceOnArgument0:(Ljava/lang/Object;)V",
+  "position" : 
+  {
+    "line" : 14,
+    "path" : "ShimsWithArgumentGenerations.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ShimsWithArgumentGenerations;.shimToSourceOnArgument1:(Ljava/lang/Object;I)V",
+  "position" : 
+  {
+    "line" : 17,
+    "path" : "ShimsWithArgumentGenerations.java"
+  }
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Argument(0)",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "Source",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/ShimsWithArgumentGenerations;.sourceOnArgument0:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ShimsWithArgumentGenerations;.sourceOnArgument0:(Ljava/lang/Object;)V",
+  "position" : 
+  {
+    "line" : 10,
+    "path" : "ShimsWithArgumentGenerations.java"
+  }
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Argument(1)",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "Source",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/ShimsWithArgumentGenerations;.sourceOnArgument1:(ILjava/lang/Object;)V",
+                  "port" : "Argument(1)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ShimsWithArgumentGenerations;.sourceOnArgument1:(ILjava/lang/Object;)V",
+  "position" : 
+  {
+    "line" : 12,
+    "path" : "ShimsWithArgumentGenerations.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ShimsWithThisGenerations;.<init>:()V",
+  "position" : 
+  {
+    "line" : 32,
+    "path" : "ShimsWithArgumentGenerations.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ShimsWithThisGenerations;.noIssueViaShim:()V",
+  "position" : 
+  {
+    "line" : 48,
+    "path" : "ShimsWithArgumentGenerations.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(0).mField",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Argument(0).mField",
+            "position" : 
+            {
+              "line" : 49,
+              "path" : "ShimsWithArgumentGenerations.java"
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ShimsWithThisGenerations;.sourceAndSinkOnThis:()V"
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                72,
+                73
+              ],
+              "distance" : 1,
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : false
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-shim:Lcom/facebook/marianatrench/integrationtests/ShimsWithThisGenerations;.shimToSourceAndSinkOnThis:()V"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Argument(0).mField",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Argument(0).mField",
+            "position" : 
+            {
+              "line" : 55,
+              "path" : "ShimsWithArgumentGenerations.java"
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ShimsWithThisGenerations;.sourceAndSinkOnThis:()V"
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                72,
+                73
+              ],
+              "distance" : 1,
+              "kind" : "Source",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ShimsWithThisGenerations;.noIssueWithoutShim:()V",
+  "position" : 
+  {
+    "line" : 54,
+    "path" : "ShimsWithArgumentGenerations.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(0).mField",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Argument(0).mField",
+            "position" : 
+            {
+              "line" : 55,
+              "path" : "ShimsWithArgumentGenerations.java"
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/ShimsWithThisGenerations;.sourceAndSinkOnThis:()V"
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                72,
+                73
+              ],
+              "distance" : 1,
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ShimsWithThisGenerations;.shimToSourceAndSinkOnThis:()V",
+  "position" : 
+  {
+    "line" : 42,
+    "path" : "ShimsWithArgumentGenerations.java"
+  }
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Argument(0).mField",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "line" : 40,
+              "path" : "ShimsWithArgumentGenerations.java"
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                72,
+                73
+              ],
+              "kind" : "Source",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "line" : 40
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/ShimsWithThisGenerations;.sourceAndSinkOnThis:()V",
+  "position" : 
+  {
+    "line" : 38,
+    "path" : "ShimsWithArgumentGenerations.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(0).mField",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "line" : 39,
+              "path" : "ShimsWithArgumentGenerations.java"
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                72,
+                73
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
   "method" : "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides$1;.<init>:()V",
   "position" : 
   {
@@ -3855,8 +4226,8 @@
             {
               "callee_interval" : 
               [
-                70,
-                71
+                74,
+                75
               ],
               "kind" : "Sink",
               "origins" : 
@@ -3974,8 +4345,8 @@
             {
               "callee_interval" : 
               [
-                72,
-                73
+                76,
+                77
               ],
               "kind" : "Source",
               "origins" : 
@@ -4074,8 +4445,8 @@
             {
               "callee_interval" : 
               [
-                72,
-                73
+                76,
+                77
               ],
               "kind" : "Source",
               "origins" : 
