@@ -20,6 +20,56 @@
 
 namespace marianatrench {
 
+bool LifecycleGraphNode::operator==(const LifecycleGraphNode& other) const {
+  return method_calls_ == other.method_calls_ &&
+      successors_ == other.successors_;
+}
+
+void LifeCycleMethodGraph::add_node(
+    const std::string& node_name,
+    std::vector<LifecycleMethodCall> method_calls,
+    std::vector<std::string> successors) {
+  nodes_.emplace(
+      node_name,
+      LifecycleGraphNode(std::move(method_calls), std::move(successors)));
+}
+
+bool LifeCycleMethodGraph::operator==(const LifeCycleMethodGraph& other) const {
+  return nodes_ == other.nodes_;
+}
+
+const LifecycleGraphNode* MT_NULLABLE
+LifeCycleMethodGraph::get_node(const std::string& node_name) const {
+  auto it = nodes_.find(node_name);
+  if (it != nodes_.end()) {
+    return &it->second;
+  }
+  return nullptr;
+}
+
+LifeCycleMethodGraph LifeCycleMethodGraph::from_json(const Json::Value& value) {
+  LifeCycleMethodGraph graph;
+
+  for (const auto& node_name : value.getMemberNames()) {
+    const auto& node = value[node_name];
+
+    std::vector<LifecycleMethodCall> method_calls;
+    for (const auto& instruction :
+         JsonValidation::null_or_array(node, "instructions")) {
+      method_calls.push_back(LifecycleMethodCall::from_json(instruction));
+    }
+
+    std::vector<std::string> successors;
+    for (const auto& successor :
+         JsonValidation::null_or_array(node, "successors")) {
+      successors.push_back(JsonValidation::string(successor));
+    }
+
+    graph.add_node(node_name, std::move(method_calls), std::move(successors));
+  }
+  return graph;
+}
+
 LifecycleMethodCall LifecycleMethodCall::from_json(const Json::Value& value) {
   auto method_name = JsonValidation::string(value, "method_name");
   auto return_type = JsonValidation::string(value, "return_type");
@@ -142,14 +192,26 @@ bool LifecycleMethodCall::operator==(const LifecycleMethodCall& other) const {
 }
 
 LifecycleMethod LifecycleMethod::from_json(const Json::Value& value) {
-  auto base_class_name = JsonValidation::string(value, "base_class_name");
-  auto method_name = JsonValidation::string(value, "method_name");
-  std::vector<LifecycleMethodCall> callees;
-  for (const auto& callee : JsonValidation::nonempty_array(value, "callees")) {
-    callees.emplace_back(LifecycleMethodCall::from_json(callee));
+  std::string base_class_name =
+      JsonValidation::string(value, "base_class_name");
+  std::string method_name = JsonValidation::string(value, "method_name");
+  if (JsonValidation::has_field(value, "callees")) {
+    std::vector<LifecycleMethodCall> callees;
+    for (const auto& callee :
+         JsonValidation::nonempty_array(value, "callees")) {
+      callees.push_back(LifecycleMethodCall::from_json(callee));
+    }
+    return LifecycleMethod(base_class_name, method_name, std::move(callees));
+  } else if (JsonValidation::has_field(value, "control_flow_graph")) {
+    JsonValidation::validate_object(value, "control_flow_graph");
+    LifeCycleMethodGraph graph = LifeCycleMethodGraph::from_json(
+        JsonValidation::object(value, "control_flow_graph"));
+    return LifecycleMethod(base_class_name, method_name, std::move(graph));
   }
-
-  return LifecycleMethod(base_class_name, method_name, callees);
+  throw JsonValidationError(
+      value,
+      /* field */ std::nullopt,
+      "key `callees` or `control_flow_graph`");
 }
 
 bool LifecycleMethod::validate(
@@ -178,8 +240,15 @@ bool LifecycleMethod::validate(
     return false;
   }
 
-  for (const auto& callee : callees_) {
-    callee.validate(base_class, class_hierarchies);
+  if (const auto* callees =
+          std::get_if<std::vector<LifecycleMethodCall>>(&body_)) {
+    for (const auto& callee : *callees) {
+      callee.validate(base_class, class_hierarchies);
+    }
+  } else {
+    // TODO:handle graph
+    const auto& graph = std::get<LifeCycleMethodGraph>(body_);
+    static_cast<void>(graph); // hide unused variable warning.
   }
 
   return true;
@@ -202,15 +271,20 @@ void LifecycleMethod::create_methods(
   // in the DexMethod's code. The register location will be used to create the
   // invoke operation for methods that take a given DexType* as its argument.
   TypeIndexMap type_index_map;
-  for (const auto& callee : callees_) {
-    const auto* type_list = callee.get_argument_types();
-    if (type_list == nullptr) {
-      ERROR(1, "Callee `{}` has invalid argument types.", callee.to_string());
-      continue;
+  if (const auto* callees =
+          std::get_if<std::vector<LifecycleMethodCall>>(&body_)) {
+    for (const auto& callee : *callees) {
+      const auto* type_list = callee.get_argument_types();
+      if (type_list == nullptr) {
+        ERROR(1, "Callee `{}` has invalid argument types.", callee.to_string());
+        continue;
+      }
+      for (auto* type : *type_list) {
+        type_index_map.emplace(type, type_index_map.size() + 1);
+      }
     }
-    for (auto* type : *type_list) {
-      type_index_map.emplace(type, type_index_map.size() + 1);
-    }
+  } else {
+    // TODO: Handle graph
   }
 
   auto* base_class_type = DexType::get_type(base_class_name_);
@@ -298,7 +372,7 @@ std::vector<const Method*> LifecycleMethod::get_methods_for_type(
 
 bool LifecycleMethod::operator==(const LifecycleMethod& other) const {
   return base_class_name_ == other.base_class_name_ &&
-      method_name_ == other.method_name_ && callees_ == other.callees_;
+      method_name_ == other.method_name_ && body_ == other.body_;
 }
 
 const DexMethod* MT_NULLABLE LifecycleMethod::create_dex_method(
@@ -319,26 +393,32 @@ const DexMethod* MT_NULLABLE LifecycleMethod::create_dex_method(
   mt_assert(dex_klass != nullptr);
 
   int callee_count = 0;
-  for (const auto& callee : callees_) {
-    auto* dex_method = callee.get_dex_method(dex_klass);
-    if (!dex_method) {
-      // Dex method does not apply for current APK.
-      // See `LifecycleMethod::validate()`.
-      continue;
-    }
 
-    ++callee_count;
+  if (const auto* callees =
+          std::get_if<std::vector<LifecycleMethodCall>>(&body_)) {
+    for (const auto& callee : *callees) {
+      auto* dex_method = callee.get_dex_method(dex_klass);
+      if (!dex_method) {
+        // Dex method does not apply for current APK.
+        // See `LifecycleMethod::validate()`.
+        continue;
+      }
 
-    std::vector<Location> invoke_with_registers{this_location};
-    auto* type_list = callee.get_argument_types();
-    // This should have been verified at the start of `create_methods`
-    mt_assert(type_list != nullptr);
-    for (auto* type : *type_list) {
-      auto argument_register = method.get_local(type_index_map.at(type));
-      invoke_with_registers.push_back(argument_register);
+      ++callee_count;
+
+      std::vector<Location> invoke_with_registers{this_location};
+      auto* type_list = callee.get_argument_types();
+      // This should have been verified at the start of `create_methods`
+      mt_assert(type_list != nullptr);
+      for (auto* type : *type_list) {
+        auto argument_register = method.get_local(type_index_map.at(type));
+        invoke_with_registers.push_back(argument_register);
+      }
+      main_block->invoke(
+          IROpcode::OPCODE_INVOKE_VIRTUAL, dex_method, invoke_with_registers);
     }
-    main_block->invoke(
-        IROpcode::OPCODE_INVOKE_VIRTUAL, dex_method, invoke_with_registers);
+  } else {
+    // TODO: Handle graph
   }
 
   if (callee_count < 2) {

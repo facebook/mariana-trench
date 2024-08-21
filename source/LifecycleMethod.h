@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <variant>
+
 #include <fmt/format.h>
 #include <json/json.h>
 
@@ -53,6 +55,10 @@ class LifecycleMethodCall {
 
   static LifecycleMethodCall from_json(const Json::Value& value);
 
+  const std::string& get_method_name() const {
+    return method_name_;
+  }
+
   void validate(
       const DexClass* base_class,
       const ClassHierarchies& class_hierarchies) const;
@@ -93,6 +99,49 @@ class LifecycleMethodCall {
   std::optional<std::string> defined_in_derived_class_;
 };
 
+class LifecycleGraphNode {
+ public:
+  LifecycleGraphNode(
+      std::vector<LifecycleMethodCall> method_calls,
+      std::vector<std::string> successors)
+      : method_calls_(std::move(method_calls)),
+        successors_(std::move(successors)) {}
+
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(LifecycleGraphNode)
+
+  const std::vector<LifecycleMethodCall>& method_calls() const {
+    return method_calls_;
+  }
+  const std::vector<std::string>& successors() const {
+    return successors_;
+  }
+  bool operator==(const LifecycleGraphNode& other) const;
+
+ private:
+  std::vector<LifecycleMethodCall> method_calls_;
+  std::vector<std::string> successors_;
+};
+
+class LifeCycleMethodGraph {
+ public:
+  LifeCycleMethodGraph() {}
+
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(LifeCycleMethodGraph)
+
+  void add_node(
+      const std::string& node_name,
+      std::vector<LifecycleMethodCall> method_calls,
+      std::vector<std::string> successors);
+
+  const LifecycleGraphNode* get_node(const std::string& node_name) const;
+  bool operator==(const LifeCycleMethodGraph& other) const;
+
+  static LifeCycleMethodGraph from_json(const Json::Value& value);
+
+ private:
+  std::unordered_map<std::string, LifecycleGraphNode> nodes_;
+};
+
 /**
  * A life-cycle method represents a collection of artificial DexMethods that
  * simulate the life-cycle of a class.
@@ -126,10 +175,11 @@ class LifecycleMethod {
   explicit LifecycleMethod(
       std::string base_class_name,
       std::string method_name,
-      std::vector<LifecycleMethodCall> callees)
+      std::variant<std::vector<LifecycleMethodCall>, LifeCycleMethodGraph>
+          callees)
       : base_class_name_(std::move(base_class_name)),
         method_name_(std::move(method_name)),
-        callees_(std::move(callees)) {}
+        body_(std::move(callees)) {}
 
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(LifecycleMethod)
 
@@ -174,7 +224,7 @@ class LifecycleMethod {
 
   std::string base_class_name_;
   std::string method_name_;
-  std::vector<LifecycleMethodCall> callees_;
+  std::variant<std::vector<LifecycleMethodCall>, LifeCycleMethodGraph> body_;
   ConcurrentMap<const DexType*, const Method*> class_to_lifecycle_method_;
 };
 
