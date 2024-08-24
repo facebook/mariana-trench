@@ -62,6 +62,8 @@ class Options final {
   const std::vector<std::string>& lifecycles_paths() const;
   const std::vector<std::string>& shims_paths() const;
   const std::string& graphql_metadata_paths() const;
+  const std::optional<std::string>& third_party_library_package_ids_path()
+      const;
   const std::vector<std::string>& proguard_configuration_paths() const;
   const std::optional<std::string>& generated_models_directory() const;
 
@@ -138,6 +140,7 @@ class Options final {
   std::vector<std::string> lifecycles_paths_;
   std::vector<std::string> shims_paths_;
   std::string graphql_metadata_paths_;
+  std::optional<std::string> third_party_library_package_ids_path_;
   std::vector<std::string> proguard_configuration_paths_;
 
   std::vector<std::string> generator_configuration_paths_;

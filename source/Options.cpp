@@ -199,6 +199,11 @@ Options::Options(const Json::Value& json) {
     graphql_metadata_paths_ = "";
   }
 
+  if (json.isMember("third-party-library-package-ids-path")) {
+    third_party_library_package_ids_path_ = check_path_exists(
+        JsonValidation::string(json, "third-party-library-package-ids-path"));
+  }
+
   if (json.isMember("proguard-configuration-paths")) {
     proguard_configuration_paths_ = parse_paths_list(
         JsonValidation::string(json, "proguard-configuration-paths"),
@@ -361,6 +366,11 @@ const std::vector<std::string>& Options::shims_paths() const {
 
 const std::string& Options::graphql_metadata_paths() const {
   return graphql_metadata_paths_;
+}
+
+const std::optional<std::string>&
+Options::third_party_library_package_ids_path() const {
+  return third_party_library_package_ids_path_;
 }
 
 const std::vector<std::string>& Options::proguard_configuration_paths() const {

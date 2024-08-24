@@ -411,6 +411,12 @@ def _add_configuration_arguments(parser: argparse.ArgumentParser) -> None:
         help="A json file containing graphql metadata mapping information.",
     )
     configuration_arguments.add_argument(
+        "--third-party-library-package-ids-path",
+        type=str,
+        default=None,
+        help="A json file containing list of third party library package ids.",
+    )
+    configuration_arguments.add_argument(
         "--shims-paths",
         type=_separated_paths_exist,
         default=None,
@@ -664,6 +670,11 @@ def _get_command_options_json(
 
     if arguments.graphql_metadata_paths:
         options["graphql-metadata-paths"] = arguments.graphql_metadata_paths
+
+    if arguments.third_party_library_package_ids_path:
+        options["third-party-library-package-ids-path"] = (
+            arguments.third_party_library_package_ids_path
+        )
 
     if arguments.source_exclude_directories:
         options["source-exclude-directories"] = arguments.source_exclude_directories
