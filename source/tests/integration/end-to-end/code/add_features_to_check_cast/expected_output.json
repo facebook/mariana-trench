@@ -964,7 +964,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.arrayAllocate:(I)V",
   "position" : 
   {
-    "line" : 44,
+    "line" : 47,
     "path" : "AddFeatureToCheckCast.java"
   },
   "sinks" : 
@@ -981,7 +981,7 @@
             "position" : 
             {
               "end" : 0,
-              "line" : 45,
+              "line" : 48,
               "path" : "AddFeatureToCheckCast.java",
               "start" : 0
             }
@@ -1011,7 +1011,7 @@
           [
             {
               "end" : 0,
-              "line" : 45,
+              "line" : 48,
               "start" : 0
             }
           ]
@@ -1067,7 +1067,7 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.toSink:(Ljava/lang/String;)V",
       "position" : 
       {
-        "line" : 32,
+        "line" : 35,
         "path" : "AddFeatureToCheckCast.java"
       },
       "rule" : 1,
@@ -1082,7 +1082,7 @@
             "position" : 
             {
               "end" : 20,
-              "line" : 32,
+              "line" : 35,
               "path" : "AddFeatureToCheckCast.java",
               "start" : 11
             },
@@ -1120,7 +1120,7 @@
             "position" : 
             {
               "end" : 45,
-              "line" : 31,
+              "line" : 34,
               "path" : "AddFeatureToCheckCast.java",
               "start" : 40
             }
@@ -1158,7 +1158,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.testInterProcedural:()V",
   "position" : 
   {
-    "line" : 30,
+    "line" : 33,
     "path" : "AddFeatureToCheckCast.java"
   }
 }
@@ -1174,7 +1174,7 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.arrayAllocate:(I)V",
       "position" : 
       {
-        "line" : 37,
+        "line" : 40,
         "path" : "AddFeatureToCheckCast.java"
       },
       "rule" : 2,
@@ -1189,7 +1189,7 @@
             "position" : 
             {
               "end" : 21,
-              "line" : 37,
+              "line" : 40,
               "path" : "AddFeatureToCheckCast.java",
               "start" : 18
             },
@@ -1231,7 +1231,7 @@
             "position" : 
             {
               "end" : 41,
-              "line" : 36,
+              "line" : 39,
               "path" : "AddFeatureToCheckCast.java",
               "start" : 36
             }
@@ -1266,7 +1266,7 @@
           [
             {
               "end" : 0,
-              "line" : 37,
+              "line" : 40,
               "start" : 0
             }
           ]
@@ -1277,7 +1277,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.testInterproceduralWithViaNumerical:()V",
   "position" : 
   {
-    "line" : 35,
+    "line" : 38,
     "path" : "AddFeatureToCheckCast.java"
   }
 }
@@ -1389,10 +1389,14 @@
   "issues" : 
   [
     {
+      "always_features" : 
+      [
+        "via-cast:Ljava/lang/String;"
+      ],
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 22,
+        "line" : 25,
         "path" : "AddFeatureToCheckCast.java"
       },
       "rule" : 1,
@@ -1407,7 +1411,7 @@
             "position" : 
             {
               "end" : 21,
-              "line" : 22,
+              "line" : 25,
               "path" : "AddFeatureToCheckCast.java",
               "start" : 16
             }
@@ -1466,7 +1470,14 @@
               ],
               "preserves_type_context" : true
             }
-          ]
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-cast:Ljava/lang/String;"
+            ]
+          }
         }
       ]
     }
@@ -1490,7 +1501,7 @@
       "callee" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
       "position" : 
       {
-        "line" : 27,
+        "line" : 30,
         "path" : "AddFeatureToCheckCast.java"
       },
       "rule" : 2,
@@ -1505,7 +1516,7 @@
             "position" : 
             {
               "end" : 0,
-              "line" : 27,
+              "line" : 30,
               "path" : "AddFeatureToCheckCast.java",
               "start" : 0
             }
@@ -1536,7 +1547,7 @@
             "position" : 
             {
               "end" : 41,
-              "line" : 26,
+              "line" : 29,
               "path" : "AddFeatureToCheckCast.java",
               "start" : 36
             }
@@ -1572,7 +1583,7 @@
           [
             {
               "end" : 0,
-              "line" : 27,
+              "line" : 30,
               "start" : 0
             }
           ]
@@ -1583,7 +1594,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.testWithViaNumerical:()V",
   "position" : 
   {
-    "line" : 25,
+    "line" : 28,
     "path" : "AddFeatureToCheckCast.java"
   }
 }
@@ -1591,7 +1602,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/AddFeatureToCheckCast;.toSink:(Ljava/lang/String;)V",
   "position" : 
   {
-    "line" : 40,
+    "line" : 43,
     "path" : "AddFeatureToCheckCast.java"
   },
   "sinks" : 
@@ -1608,7 +1619,7 @@
             "position" : 
             {
               "end" : 11,
-              "line" : 41,
+              "line" : 44,
               "path" : "AddFeatureToCheckCast.java",
               "start" : 9
             }

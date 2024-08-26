@@ -38,7 +38,7 @@ bool BackwardTaintTransfer::analyze_check_cast(
   log_instruction(context, instruction);
   const auto& aliasing = context->aliasing.get(instruction);
 
-  auto taint = environment->read(aliasing.result_memory_location());
+  auto taint = environment->read(aliasing.result_memory_locations());
 
   // Add via-cast feature as configured by the program options.
   auto allowed_features = context->options.allow_via_cast_features();

@@ -46,12 +46,12 @@ bool ForwardAliasTransfer::analyze_check_cast(
   log_instruction(context, instruction);
   mt_assert(instruction->srcs_size() == 1);
 
-  // We want to consider the cast as creating a different memory location,
-  // so it can have a different taint.
-  auto memory_location = context->memory_factory.make_location(instruction);
+  // check-cast acts as a passthrough for the input register.
+  auto input_memory_locations =
+      environment->memory_locations(instruction->src(0));
   LOG_OR_DUMP(
-      context, 4, "Setting result register to {}", show(memory_location));
-  environment->assign(k_result_register, memory_location);
+      context, 4, "Setting result register to {}", input_memory_locations);
+  environment->assign(k_result_register, input_memory_locations);
 
   return false;
 }

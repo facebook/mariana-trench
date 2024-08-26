@@ -2630,6 +2630,7 @@
     {
       "always_features" : 
       [
+        "via-value:s1",
         "via-value:unknown"
       ],
       "callee" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.sinkViaString:(Ljava/lang/String;Ljava/lang/Object;)V",
@@ -2707,7 +2708,7 @@
             {
               "always_features" : 
               [
-                "via-value:unknown"
+                "via-value:s1"
               ],
               "callee_interval" : 
               [
@@ -2729,7 +2730,7 @@
           {
             "always_features" : 
             [
-              "via-value:unknown"
+              "via-value:s1"
             ]
           }
         }

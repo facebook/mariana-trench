@@ -65,7 +65,7 @@ bool ForwardTaintTransfer::analyze_check_cast(
     taint.add_locally_inferred_features(features);
   }
 
-  auto* memory_location = aliasing.result_memory_location();
+  auto memory_location = aliasing.result_memory_locations();
   LOG_OR_DUMP(
       context,
       4,

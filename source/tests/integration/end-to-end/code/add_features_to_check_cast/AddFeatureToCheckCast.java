@@ -18,7 +18,10 @@ public class AddFeatureToCheckCast {
 
   void testStringNoViaCast() {
     Object source = Origin.source();
-    String source_str = (String) source; // Should not attach feature to the original location.
+    String source_str = (String) source;
+    // Does not use the casted `source_str`, but will contain check-cast due to aliasing. Result
+    // can be interpreted as "This object flowed through check-cast but may not be the casted
+    // result. However, they share the underlying reference".
     Origin.sink(source);
   }
 
