@@ -123,6 +123,12 @@ class Model final {
     // Alias existing memory location on method invokes.
     AliasMemoryLocationOnInvoke,
 
+    // Alias memory locations based on inferred propagations. Example: A
+    // propagation "argument(1) -> argument(0).$field" will mean "this.$field
+    // stores a reference to the object at argument(1)". Aliasing will treat
+    // their corresponding registers as pointing to the same memory locations.
+    AliasMemoryLocationOnPropagation,
+
     // Perform a strong write on propagation
     StrongWriteOnPropagation,
 
@@ -375,6 +381,7 @@ class Model final {
   bool no_join_virtual_overrides() const;
   bool no_collapse_on_propagation() const;
   bool alias_memory_location_on_invoke() const;
+  bool alias_memory_location_on_propagation() const;
   bool strong_write_on_propagation() const;
   bool no_collapse_on_approximate() const;
   Modes modes() const {
@@ -534,7 +541,7 @@ inline Model::Frozen operator|(
 std::string model_mode_to_string(Model::Mode mode);
 std::optional<Model::Mode> string_to_model_mode(const std::string& mode);
 
-constexpr std::array<Model::Mode, 9> k_all_modes = {
+constexpr std::array<Model::Mode, 10> k_all_modes = {
     Model::Mode::SkipAnalysis,
     Model::Mode::AddViaObscureFeature,
     Model::Mode::TaintInTaintOut,
@@ -542,6 +549,7 @@ constexpr std::array<Model::Mode, 9> k_all_modes = {
     Model::Mode::NoJoinVirtualOverrides,
     Model::Mode::NoCollapseOnPropagation,
     Model::Mode::AliasMemoryLocationOnInvoke,
+    Model::Mode::AliasMemoryLocationOnPropagation,
     Model::Mode::StrongWriteOnPropagation,
     Model::Mode::NoCollapseOnApproximate,
 };
