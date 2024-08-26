@@ -1,0 +1,26 @@
+[
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+    "generations": [
+      {
+        "kind": "Source",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+    "sinks": [
+      {
+        "kind": "Sink",
+        "port": "Argument(0)"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/KotlinAnonymousFunction$issue$lambda$1;.<init>:(Lkotlin/jvm/internal/Ref$ObjectRef;)V",
+    "modes": [
+      "alias-memory-location-on-propagation"
+    ]
+  }
+]
