@@ -41,30 +41,42 @@ std::vector<Model> ManifestSourceGenerator::emit_method_models(
 
   const auto manifest_class_info = android_resources->get_manifest_class_info();
 
-  auto exported_classes =
-      manifest_class_info.component_tags |
-      boost::adaptors::filtered([](const ComponentTagInfo& tag_info) {
-        // Only consider components without permissions.
-        if (!tag_info.permission.empty()) {
-          return false;
-        }
-        return tag_info.is_exported == BooleanXMLAttribute::True ||
-            (tag_info.is_exported == BooleanXMLAttribute::Undefined &&
-             tag_info.has_intent_filters);
-      }) |
-      boost::adaptors::transformed([](const ComponentTagInfo& tag_info) {
-        const auto* dex_klass = type_class(redex::get_type(tag_info.classname));
-        if (dex_klass == nullptr) {
-          LOG(5,
-              "Could not find dex type for classname: {}",
-              tag_info.classname);
-        }
-        return dex_klass;
-      }) |
-      boost::adaptors::filtered(
-          [](const DexClass* dex_class) { return dex_class != nullptr; });
+  ConcurrentSet<const DexClass*> exported_classes;
+  for (const ComponentTagInfo& tag_info : manifest_class_info.component_tags) {
+    if (!tag_info.permission.empty()) {
+      continue;
+    }
+    if (tag_info.is_exported == BooleanXMLAttribute::True ||
+        (tag_info.is_exported == BooleanXMLAttribute::Undefined &&
+         tag_info.has_intent_filters)) {
+      const auto* dex_klass = type_class(redex::get_type(tag_info.classname));
+      if (dex_klass == nullptr) {
+        LOG(5, "Could not find dex type for classname: {}", tag_info.classname);
+      } else {
+        exported_classes.emplace(dex_klass);
+      }
+    }
+  }
 
-  std::vector<Model> models{};
+  ConcurrentSet<const DexClass*> nested_exported_classes;
+  for (auto& scope : DexStoreClassesIterator(context_.stores)) {
+    walk::parallel::classes(
+        scope, [&exported_classes, &nested_exported_classes](DexClass* clazz) {
+          for (const DexClass* exported_class : exported_classes) {
+            auto dex_klass_prefix = exported_class->get_name()->str_copy();
+            dex_klass_prefix.erase(dex_klass_prefix.length() - 1);
+
+            if (boost::starts_with(show(clazz), dex_klass_prefix)) {
+              nested_exported_classes.emplace(clazz);
+            }
+          }
+        });
+  }
+
+  exported_classes.insert(
+      nested_exported_classes.begin(), nested_exported_classes.end());
+
+  std::vector<Model> models;
   for (const auto* dex_klass : exported_classes) {
     const auto& direct_methods = dex_klass->get_dmethods();
     auto result = std::find_if(
@@ -113,7 +125,6 @@ std::vector<Model> ManifestSourceGenerator::emit_method_models(
       models.push_back(model);
     }
   }
-
   return models;
 }
 
