@@ -214,11 +214,10 @@ LifecycleMethod LifecycleMethod::from_json(const Json::Value& value) {
       "key `callees` or `control_flow_graph`");
 }
 
-bool LifeCycleMethodGraph::validate() const {
+void LifeCycleMethodGraph::validate() const {
   if (get_node("entry") == nullptr) {
     throw LifecycleMethodValidationError(
         "Entry point entry is not a valid node in the lifecycle graph.");
-    return false;
   }
 
   for (const auto& [node_name, node] : get_nodes()) {
@@ -233,7 +232,6 @@ bool LifeCycleMethodGraph::validate() const {
               "Node `{}` has a successor `{}` that is not a valid node in the lifecycle graph.",
               node_name,
               successor_name));
-          return false;
         }
       }
     }
@@ -259,10 +257,7 @@ bool LifeCycleMethodGraph::validate() const {
   if (visited.size() != get_nodes().size()) {
     throw LifecycleMethodValidationError(
         "Not all nodes are reachable from the entry point entry in the lifecycle graph.");
-    return false;
   }
-
-  return true;
 }
 
 bool LifecycleMethod::validate(
@@ -284,10 +279,10 @@ bool LifecycleMethod::validate(
     // config, or the class definition doesn't exist in the APK, but the type
     // does. Loading the corresponding JAR helps with the latter, and it is
     // required for resolving callees to the right `DexMethod`.
-    throw LifecycleMethodValidationError(
-        fmt::format(
+    ERROR(
+        1,
         "Could not convert base class type `{}` into DexClass.",
-        base_class_type->str()));
+        base_class_type->str());
     return false;
   }
 
@@ -297,11 +292,9 @@ bool LifecycleMethod::validate(
       callee.validate(base_class, class_hierarchies);
     }
   } else {
-    // TODO:handle graph
     const auto& graph = std::get<LifeCycleMethodGraph>(body_);
-    
-    return graph.validate();
-
+    graph.validate();
+    return true;
   }
 
   return true;
