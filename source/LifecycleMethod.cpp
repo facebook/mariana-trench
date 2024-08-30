@@ -214,7 +214,9 @@ LifecycleMethod LifecycleMethod::from_json(const Json::Value& value) {
       "key `callees` or `control_flow_graph`");
 }
 
-void LifeCycleMethodGraph::validate() const {
+void LifeCycleMethodGraph::validate(
+    const DexClass* base_class,
+    const ClassHierarchies& class_hierarchies) const {
   if (get_node("entry") == nullptr) {
     throw LifecycleMethodValidationError(
         "Entry point entry is not a valid node in the lifecycle graph.");
@@ -293,7 +295,7 @@ bool LifecycleMethod::validate(
     }
   } else {
     const auto& graph = std::get<LifeCycleMethodGraph>(body_);
-    graph.validate();
+    graph.validate(base_class, class_hierarchies);
     return true;
   }
 
