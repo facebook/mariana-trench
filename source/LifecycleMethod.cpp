@@ -233,10 +233,10 @@ bool LifecycleMethod::validate(
     // config, or the class definition doesn't exist in the APK, but the type
     // does. Loading the corresponding JAR helps with the latter, and it is
     // required for resolving callees to the right `DexMethod`.
-    ERROR(
-        1,
+    throw LifecycleMethodValidationError(
+        fmt::format(
         "Could not convert base class type `{}` into DexClass.",
-        base_class_type->str());
+        base_class_type->str()));
     return false;
   }
 
@@ -249,8 +249,7 @@ bool LifecycleMethod::validate(
     // TODO:handle graph
     const auto& graph = std::get<LifeCycleMethodGraph>(body_);
     if (graph.get_node("entry") == nullptr) {
-      ERROR(
-          1,
+      throw LifecycleMethodValidationError(
           "Entry point entry is not a valid node in the lifecycle graph.");
       return false;
     }
@@ -262,11 +261,11 @@ bool LifecycleMethod::validate(
 
         for (const auto& successor_name : node.successors()) {
           if (graph.get_node(successor_name) == nullptr) {
-            ERROR(
-                1,
+            throw LifecycleMethodValidationError(
+                fmt::format(
                 "Node `{}` has a successor `{}` that is not a valid node in the lifecycle graph.",
                 node_name,
-                successor_name);
+                successor_name));
             return false;
           }
         }
@@ -291,8 +290,7 @@ bool LifecycleMethod::validate(
 
     // Check if all nodes were visited
     if (visited.size() != graph.get_nodes().size()) {
-      ERROR(
-          1,
+      throw LifecycleMethodValidationError(
           "Not all nodes are reachable from the entry point entry in the lifecycle graph.");
       return false;
     }
