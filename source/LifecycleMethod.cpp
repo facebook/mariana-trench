@@ -214,6 +214,57 @@ LifecycleMethod LifecycleMethod::from_json(const Json::Value& value) {
       "key `callees` or `control_flow_graph`");
 }
 
+bool LifeCycleMethodGraph::validate() const {
+  if (get_node("entry") == nullptr) {
+    throw LifecycleMethodValidationError(
+        "Entry point entry is not a valid node in the lifecycle graph.");
+    return false;
+  }
+
+  for (const auto& [node_name, node] : get_nodes()) {
+      for (const auto& method_call : node.method_calls()) {
+        method_call.validate(base_class, class_hierarchies);
+      }
+
+      for (const auto& successor_name : node.successors()) {
+        if (get_node(successor_name) == nullptr) {
+          throw LifecycleMethodValidationError(
+              fmt::format(
+              "Node `{}` has a successor `{}` that is not a valid node in the lifecycle graph.",
+              node_name,
+              successor_name));
+          return false;
+        }
+      }
+    }
+
+  std::unordered_set<std::string> visited;
+  std::stack<std::string> stack;
+  stack.push("entry");
+
+  while (!stack.empty()) {
+    const std::string current_node = stack.top();
+    stack.pop();
+
+    if (visited.count(current_node) == 0) {
+      visited.insert(current_node);
+      const auto* node = get_node(current_node);
+      for (const auto& successor : node->successors()) {
+        stack.push(successor);
+      }
+    }
+  }
+
+  // Check if all nodes were visited
+  if (visited.size() != get_nodes().size()) {
+    throw LifecycleMethodValidationError(
+        "Not all nodes are reachable from the entry point entry in the lifecycle graph.");
+    return false;
+  }
+
+  return true;
+}
+
 bool LifecycleMethod::validate(
     const ClassHierarchies& class_hierarchies) const {
   const auto* base_class_type = DexType::get_type(base_class_name_);
@@ -248,52 +299,8 @@ bool LifecycleMethod::validate(
   } else {
     // TODO:handle graph
     const auto& graph = std::get<LifeCycleMethodGraph>(body_);
-    if (graph.get_node("entry") == nullptr) {
-      throw LifecycleMethodValidationError(
-          "Entry point entry is not a valid node in the lifecycle graph.");
-      return false;
-    }
-
-    for (const auto& [node_name, node] : graph.get_nodes()) {
-        for (const auto& method_call : node.method_calls()) {
-          method_call.validate(base_class, class_hierarchies);
-        }
-
-        for (const auto& successor_name : node.successors()) {
-          if (graph.get_node(successor_name) == nullptr) {
-            throw LifecycleMethodValidationError(
-                fmt::format(
-                "Node `{}` has a successor `{}` that is not a valid node in the lifecycle graph.",
-                node_name,
-                successor_name));
-            return false;
-          }
-        }
-      }
-
-    std::unordered_set<std::string> visited;
-    std::stack<std::string> stack;
-    stack.push("entry");
-
-    while (!stack.empty()) {
-      const std::string current_node = stack.top();
-      stack.pop();
-
-      if (visited.count(current_node) == 0) {
-        visited.insert(current_node);
-        const auto* node = graph.get_node(current_node);
-        for (const auto& successor : node->successors()) {
-          stack.push(successor);
-        }
-      }
-    }
-
-    // Check if all nodes were visited
-    if (visited.size() != graph.get_nodes().size()) {
-      throw LifecycleMethodValidationError(
-          "Not all nodes are reachable from the entry point entry in the lifecycle graph.");
-      return false;
-    }
+    
+    return graph.validate();
 
   }
 

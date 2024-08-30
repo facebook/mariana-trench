@@ -138,6 +138,7 @@ class LifeCycleMethodGraph {
   const std::unordered_map<std::string, LifecycleGraphNode>& get_nodes() const {
     return nodes_;
   }
+  bool validate() const;
 
   static LifeCycleMethodGraph from_json(const Json::Value& value);
 
