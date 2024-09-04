@@ -1,0 +1,40 @@
+[
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+    "generations": [
+      {
+        "kind": "Source",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+    "sinks": [
+      {
+        "kind": "Sink",
+        "port": "Argument(0)"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/InvalidPathBroadening;.taintInTaintOut:(Lcom/facebook/marianatrench/integrationtests/ObjectA;)Lcom/facebook/marianatrench/integrationtests/ObjectB;",
+    "modes": [
+      "taint-in-taint-out",
+      "no-collapse-on-propagation"
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Dictionary;.set:(Ljava/lang/String;Ljava/lang/Object;)V",
+    "modes": [
+      "no-collapse-on-propagation",
+      "skip-analysis"
+    ],
+    "propagation": [
+      {
+        "input": "Argument(2)",
+        "output": "Argument(0)[<Argument(1)>]"
+      }
+    ]
+  }
+]
