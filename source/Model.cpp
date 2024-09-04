@@ -583,25 +583,36 @@ void Model::collapse_invalid_paths(Context& context) {
                       Path::Element path_element) {
     FieldTypesAccumulator current_field_types;
 
-    if (path_element.is_field()) {
-      for (const auto* previous_field_type : previous_field_types) {
-        if (previous_field_type == type::java_lang_Object()) {
-          // Object is too generic to determine the set of possible field names.
-          continue;
-        }
+    if (!path_element.is_field() || previous_field_types.empty()) {
+      // For non-field types (e.g. array access), always assume it is valid.
+      //
+      // If previous_field_types is empty, type information of parent path is
+      // unknown. The parent could either be a non-field access path, or a
+      // field whose type information is unavailable. Assume this is valid to
+      // avoid over-collapsing.
+      return std::make_pair(true, current_field_types);
+    }
 
-        const auto& cached_types = context.field_cache->field_types(
-            previous_field_type, path_element.name());
-        current_field_types.insert(cached_types.begin(), cached_types.end());
+    for (const auto* previous_field_type : previous_field_types) {
+      if (previous_field_type == type::java_lang_Object() ||
+          !context.field_cache->has_class_info(previous_field_type)) {
+        // If any of the previous field types are too generic (Object) or lack
+        // details about fields in the class (e.g. external class not loaded
+        // in system jar), assume valid to avoid over-collapsing.
+        return std::make_pair(true, FieldTypesAccumulator{});
       }
 
-      if (current_field_types.empty()) {
-        LOG(5,
-            "Model for method `{}` has invalid path element `{}`",
-            show(method_),
-            show(path_element));
-        return std::make_pair(false, current_field_types);
-      }
+      const auto& cached_types = context.field_cache->field_types(
+          previous_field_type, path_element.name());
+      current_field_types.insert(cached_types.begin(), cached_types.end());
+    }
+
+    if (current_field_types.empty()) {
+      LOG(5,
+          "Model for method `{}` has invalid path element `{}`",
+          show(method_),
+          show(path_element));
+      return std::make_pair(false, current_field_types);
     }
 
     return std::make_pair(true, current_field_types);

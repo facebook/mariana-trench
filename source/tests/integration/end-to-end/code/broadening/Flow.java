@@ -19,7 +19,6 @@ public class Flow {
     // Collapse source flows into sink
     Origin.sink(test);
 
-    // Collapsed source flows into return sink
     return test;
   }
 

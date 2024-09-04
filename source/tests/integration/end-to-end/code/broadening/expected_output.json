@@ -1038,7 +1038,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/Flow$Tree;.<init>:(Lcom/facebook/marianatrench/integrationtests/Flow;)V",
   "position" : 
   {
-    "line" : 42,
+    "line" : 41,
     "path" : "Flow.java"
   },
   "propagation" : 
@@ -1079,7 +1079,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/Flow$Tree;.<init>:(Lcom/facebook/marianatrench/integrationtests/Flow;Lcom/facebook/marianatrench/integrationtests/Flow$1;)V",
   "position" : 
   {
-    "line" : 42,
+    "line" : 41,
     "path" : "Flow.java"
   },
   "propagation" : 
@@ -1135,7 +1135,7 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 40,
+        "line" : 39,
         "path" : "Flow.java"
       },
       "rule" : 1,
@@ -1150,7 +1150,7 @@
             "position" : 
             {
               "end" : 29,
-              "line" : 40,
+              "line" : 39,
               "path" : "Flow.java",
               "start" : 16
             }
@@ -1186,7 +1186,7 @@
             "position" : 
             {
               "end" : 31,
-              "line" : 38,
+              "line" : 37,
               "path" : "Flow.java",
               "start" : 26
             }
@@ -1221,12 +1221,12 @@
           [
             {
               "end" : 24,
-              "line" : 39,
+              "line" : 38,
               "start" : 21
             },
             {
               "end" : 34,
-              "line" : 38,
+              "line" : 37,
               "start" : 19
             }
           ]
@@ -1237,7 +1237,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.broadened_issue_propagation:()V",
   "position" : 
   {
-    "line" : 36,
+    "line" : 35,
     "path" : "Flow.java"
   },
   "sinks" : 
@@ -1254,7 +1254,7 @@
             "position" : 
             {
               "end" : 29,
-              "line" : 40,
+              "line" : 39,
               "path" : "Flow.java",
               "start" : 16
             }
@@ -1290,12 +1290,12 @@
           [
             {
               "end" : 0,
-              "line" : 37,
+              "line" : 36,
               "start" : 0
             },
             {
               "end" : 24,
-              "line" : 39,
+              "line" : 38,
               "start" : 21
             }
           ]
@@ -1308,7 +1308,7 @@
   "generations" : 
   [
     {
-      "port" : "Return",
+      "port" : "Return.tainted",
       "taint" : 
       [
         {
@@ -1343,13 +1343,6 @@
               "preserves_type_context" : true
             }
           ],
-          "local_features" : 
-          {
-            "always_features" : 
-            [
-              "via-invalid-path-broadening"
-            ]
-          },
           "local_positions" : 
           [
             {
@@ -1473,7 +1466,7 @@
       "callee" : "return",
       "position" : 
       {
-        "line" : 23,
+        "line" : 22,
         "path" : "Flow.java"
       },
       "rule" : 1,
@@ -1487,7 +1480,7 @@
             "position" : 
             {
               "end" : 0,
-              "line" : 23,
+              "line" : 22,
               "path" : "Flow.java",
               "start" : 0
             }
@@ -1612,7 +1605,7 @@
             "position" : 
             {
               "end" : 0,
-              "line" : 23,
+              "line" : 22,
               "path" : "Flow.java",
               "start" : 0
             }
@@ -1737,7 +1730,7 @@
             "port" : "Return",
             "position" : 
             {
-              "line" : 32,
+              "line" : 31,
               "path" : "Flow.java"
             }
           },
@@ -1770,10 +1763,10 @@
           "local_positions" : 
           [
             {
-              "line" : 32
+              "line" : 31
             },
             {
-              "line" : 33
+              "line" : 32
             }
           ]
         }
@@ -1783,7 +1776,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.broadened_source:()Ljava/lang/Object;",
   "position" : 
   {
-    "line" : 30,
+    "line" : 29,
     "path" : "Flow.java"
   },
   "propagation" : 
@@ -1828,7 +1821,7 @@
   ],
   "position" : 
   {
-    "line" : 26,
+    "line" : 25,
     "path" : "Flow.java"
   },
   "propagation" : 
@@ -1872,7 +1865,7 @@
             "port" : "Return",
             "position" : 
             {
-              "line" : 54,
+              "line" : 53,
               "path" : "Flow.java"
             }
           },
@@ -1906,7 +1899,7 @@
           "local_positions" : 
           [
             {
-              "line" : 54
+              "line" : 53
             }
           ]
         }
@@ -1916,7 +1909,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/Flow;.widened_source_sink_depth:(Lcom/facebook/marianatrench/integrationtests/Flow$Tree;)Lcom/facebook/marianatrench/integrationtests/Flow$Tree;",
   "position" : 
   {
-    "line" : 51,
+    "line" : 50,
     "path" : "Flow.java"
   },
   "propagation" : 
@@ -1965,7 +1958,7 @@
             "port" : "Argument(0)",
             "position" : 
             {
-              "line" : 52,
+              "line" : 51,
               "path" : "Flow.java"
             }
           },

@@ -39,6 +39,13 @@ class FieldCache final {
    */
   const Types& field_types(const DexType* klass, const DexString* field) const;
 
+  /**
+   * Returns true iff there is some field entry for the class in the cache. The
+   * absence of a field entry (i.e. return value false) indicates that there is
+   * insufficient information about `klass` for `field_types(...)` to be useful.
+   */
+  bool has_class_info(const DexType* klass) const;
+
  private:
   UniquePointerConcurrentMap<const DexType*, FieldTypeMap> field_cache_;
   Types empty_types_;

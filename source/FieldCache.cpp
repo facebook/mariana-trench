@@ -120,4 +120,8 @@ const FieldCache::Types& FieldCache::field_types(
   return empty_types_;
 }
 
+bool FieldCache::has_class_info(const DexType* klass) const {
+  return field_cache_.get(klass, /* default */ nullptr) != nullptr;
+}
+
 } // namespace marianatrench

@@ -1000,14 +1000,14 @@
   "generations" : 
   [
     {
-      "port" : "Argument(0).$source",
+      "port" : "Argument(0).$source.element",
       "taint" : 
       [
         {
           "call_info" : 
           {
             "call_kind" : "CallSite",
-            "port" : "Argument(0).$source",
+            "port" : "Argument(0).$source.element",
             "position" : 
             {
               "line" : 19,
@@ -1020,7 +1020,6 @@
             {
               "always_features" : 
               [
-                "via-invalid-path-broadening",
                 "via-obscure"
               ],
               "callee_interval" : 
@@ -1055,7 +1054,7 @@
   "generations" : 
   [
     {
-      "port" : "Argument(0).$source",
+      "port" : "Argument(0).$source.element",
       "taint" : 
       [
         {
@@ -1092,7 +1091,6 @@
           {
             "always_features" : 
             [
-              "via-invalid-path-broadening",
               "via-obscure"
             ]
           },

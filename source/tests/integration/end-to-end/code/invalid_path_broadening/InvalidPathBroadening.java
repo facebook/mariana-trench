@@ -49,7 +49,7 @@ public class InvalidPathBroadening {
     ObjectB objB = taintInTaintOut(objA);
 
     // ObjectB does not have mField1, but the return type is Object so broadening should not happen.
-    // mField1 is a valid field in some derived class of Object. Currently a bug.
+    // mField1 is a valid field in some derived class of Object.
     return (Object) objB;
   }
 
@@ -76,7 +76,7 @@ public class InvalidPathBroadening {
 
     // return[key].mField1 is tainted
     // mField1 should not be dropped. The type of dictionary["key"] is not resolved during
-    // invalid path broadening, so precision should be maintained. Currently a bug.
+    // invalid path broadening, so precision should be maintained.
     return dictionary;
   }
 }

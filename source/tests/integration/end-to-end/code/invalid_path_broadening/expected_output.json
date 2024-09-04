@@ -1075,7 +1075,7 @@
   "generations" : 
   [
     {
-      "port" : "Return[key]",
+      "port" : "Return[key].mField1",
       "taint" : 
       [
         {
@@ -1108,13 +1108,6 @@
               "preserves_type_context" : true
             }
           ],
-          "local_features" : 
-          {
-            "always_features" : 
-            [
-              "via-invalid-path-broadening"
-            ]
-          },
           "local_positions" : 
           [
             {
@@ -1139,7 +1132,7 @@
   "generations" : 
   [
     {
-      "port" : "Return",
+      "port" : "Return.mField1",
       "taint" : 
       [
         {
@@ -1172,13 +1165,6 @@
               "preserves_type_context" : true
             }
           ],
-          "local_features" : 
-          {
-            "always_features" : 
-            [
-              "via-invalid-path-broadening"
-            ]
-          },
           "local_positions" : 
           [
             {
@@ -1203,7 +1189,7 @@
   "generations" : 
   [
     {
-      "port" : "Return",
+      "port" : "Return.mField1",
       "taint" : 
       [
         {
@@ -1236,13 +1222,6 @@
               "preserves_type_context" : true
             }
           ],
-          "local_features" : 
-          {
-            "always_features" : 
-            [
-              "via-invalid-path-broadening"
-            ]
-          },
           "local_positions" : 
           [
             {
