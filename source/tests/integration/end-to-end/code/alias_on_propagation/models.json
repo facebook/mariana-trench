@@ -22,5 +22,26 @@
     "modes": [
       "alias-memory-location-on-propagation"
     ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.<init>:(Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;)V",
+    "modes": [
+      "alias-memory-location-on-propagation"
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.<init>:(Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Ref;)V",
+    "modes": [
+      "alias-memory-location-on-propagation"
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.taintRef:()V",
+    "generations": [
+      {
+        "kind": "Source",
+        "port": "Argument(0).ref.intValue"
+      }
+    ]
   }
 ]

@@ -203,6 +203,101 @@
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Ref;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Ref;.<init>:()V",
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.<init>:(Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Ref;)V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Ref;.<init>:()V",
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.<init>:(Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;)V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Ref;.<init>:()V",
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation;.falseNegative:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.<init>:(Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Ref;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+    ],
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Ref;.getIntValue:()I",
+      "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.getRef:()Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Ref;",
+      "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.taintRef:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation;.issueFalseNegative:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Ref;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.<init>:(Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Ref;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+    ],
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Ref;.getIntValue:()I",
+      "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.taintRef:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation;.taintAliasReadOriginalFalseNegative:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.<init>:(Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+    ],
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.getRef:()Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Ref;",
+      "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.taintRef:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation;.taintOriginalReadAliasFalseNegative:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.<init>:(Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+    ],
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.getRef:()Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Ref;",
+      "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.taintRef:()V"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/KotlinAnonymousFunction$issue$lambda$1;.invoke:()Ljava/lang/Object;" : 
   {
     "virtual" : 

@@ -953,6 +953,338 @@
   }
 }
 {
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Ref;.<init>:()V",
+  "position" : 
+  {
+    "line" : 15,
+    "path" : "AliasOnPropagation.kt"
+  }
+}
+{
+  "inline_as_getter" : "Argument(0).intValue",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Ref;.getIntValue:()I",
+  "position" : 
+  {
+    "line" : 16,
+    "path" : "AliasOnPropagation.kt"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0).intValue",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "inline_as_setter" : 
+  {
+    "target" : "Argument(0).intValue",
+    "value" : "Argument(1)"
+  },
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Ref;.setIntValue:(I)V",
+  "position" : 
+  {
+    "line" : 16,
+    "path" : "AliasOnPropagation.kt"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(1)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              {
+                ".intValue" : 3
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.<init>:()V",
+  "position" : 
+  {
+    "line" : 22,
+    "path" : "AliasOnPropagation.kt"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.<init>:(Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Ref;)V",
+  "modes" : 
+  [
+    "alias-memory-location-on-propagation"
+  ],
+  "position" : 
+  {
+    "line" : 27,
+    "path" : "AliasOnPropagation.kt"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(1)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              {
+                ".ref" : 3
+              }
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-obscure"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.<init>:(Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;)V",
+  "modes" : 
+  [
+    "alias-memory-location-on-propagation"
+  ],
+  "position" : 
+  {
+    "line" : 34,
+    "path" : "AliasOnPropagation.kt"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(1).ref",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              {
+                ".ref" : 3
+              }
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-obscure"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
+{
+  "inline_as_getter" : "Argument(0).ref",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.getRef:()Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Ref;",
+  "position" : 
+  {
+    "line" : 20,
+    "path" : "AliasOnPropagation.kt"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0).ref",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.setRef:(Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Ref;)V",
+  "position" : 
+  {
+    "line" : 20,
+    "path" : "AliasOnPropagation.kt"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(1)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              {
+                ".ref" : 3
+              }
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-obscure"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Argument(0).ref.intValue",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "Source",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.taintRef:()V",
+                  "port" : "Argument(0).ref.intValue"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.taintRef:()V",
+  "position" : 
+  {
+    "line" : 39,
+    "path" : "AliasOnPropagation.kt"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation;.<init>:()V",
+  "position" : 
+  {
+    "line" : 14,
+    "path" : "AliasOnPropagation.kt"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation;.falseNegative:()V",
+  "position" : 
+  {
+    "line" : 100,
+    "path" : "AliasOnPropagation.kt"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation;.issueFalseNegative:()V",
+  "position" : 
+  {
+    "line" : 48,
+    "path" : "AliasOnPropagation.kt"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation;.taintAliasReadOriginalFalseNegative:()V",
+  "position" : 
+  {
+    "line" : 88,
+    "path" : "AliasOnPropagation.kt"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation;.taintOriginalReadAliasFalseNegative:()V",
+  "position" : 
+  {
+    "line" : 60,
+    "path" : "AliasOnPropagation.kt"
+  }
+}
+{
   "method" : "Lcom/facebook/marianatrench/integrationtests/KotlinAnonymousFunction$issue$lambda$1;.<init>:(Lkotlin/jvm/internal/Ref$ObjectRef;)V",
   "modes" : 
   [

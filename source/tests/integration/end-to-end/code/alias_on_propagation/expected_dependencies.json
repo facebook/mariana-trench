@@ -31,6 +31,47 @@
     "Landroid/content/Intent;.getBundleExtra:(Ljava/lang/String;)Landroid/os/Bundle;",
     "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Ref;.<init>:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.<init>:(Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Ref;)V",
+    "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.<init>:(Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;)V",
+    "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation;.issueFalseNegative:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Ref;.getIntValue:()I" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation;.falseNegative:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation;.issueFalseNegative:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.<init>:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation;.falseNegative:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation;.taintAliasReadOriginalFalseNegative:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation;.taintOriginalReadAliasFalseNegative:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.<init>:(Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Ref;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation;.falseNegative:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation;.issueFalseNegative:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.<init>:(Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation;.taintAliasReadOriginalFalseNegative:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation;.taintOriginalReadAliasFalseNegative:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.getRef:()Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Ref;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation;.falseNegative:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation;.taintAliasReadOriginalFalseNegative:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation;.taintOriginalReadAliasFalseNegative:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.taintRef:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation;.falseNegative:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation;.issueFalseNegative:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation;.taintAliasReadOriginalFalseNegative:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation;.taintOriginalReadAliasFalseNegative:()V"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/KotlinAnonymousFunction$issue$lambda$1;.<init>:(Lkotlin/jvm/internal/Ref$ObjectRef;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/KotlinAnonymousFunction;.issue:()V"
@@ -45,6 +86,10 @@
   ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V" : 
   [
+    "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation;.falseNegative:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation;.issueFalseNegative:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation;.taintAliasReadOriginalFalseNegative:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation;.taintOriginalReadAliasFalseNegative:()V",
     "Lcom/facebook/marianatrench/integrationtests/KotlinAnonymousFunction;.issue:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;" : 
@@ -91,6 +136,11 @@
     "Lcom/facebook/auth/datastore/LoggedInUserAuthDataStore;.<init>:()V",
     "Lcom/facebook/base/activity/FragmentBaseActivityUtil;.<init>:()V",
     "Lcom/facebook/content/SecureContextHelper;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Ref;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.<init>:(Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Ref;)V",
+    "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.<init>:(Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;)V",
+    "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/KotlinAnonymousFunction;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
