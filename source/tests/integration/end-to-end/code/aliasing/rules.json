@@ -1,0 +1,46 @@
+[
+  {
+    "name": "Flow",
+    "code": 1,
+    "description": "",
+    "sources": [
+      "Source1"
+    ],
+    "sinks": [
+      "Sink"
+    ]
+  },
+  {
+    "name": "Flow",
+    "code": 2,
+    "description": "",
+    "sources": [
+      "Source2"
+    ],
+    "sinks": [
+      "Sink"
+    ]
+  },
+  {
+    "name": "Flow",
+    "code": 3,
+    "description": "",
+    "sources": [
+      "Source3"
+    ],
+    "sinks": [
+      "Sink"
+    ]
+  },
+  {
+    "name": "Flow",
+    "code": 4,
+    "description": "",
+    "sources": [
+      "Source4"
+    ],
+    "sinks": [
+      "Sink"
+    ]
+  }
+]

@@ -1,0 +1,83 @@
+[
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+    "generations": [
+      {
+        "kind": "Source",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.source1:()Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;",
+    "generations": [
+      {
+        "kind": "Source1",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.source2:()Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;",
+    "generations": [
+      {
+        "kind": "Source2",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.source3:()Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;",
+    "generations": [
+      {
+        "kind": "Source3",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.source1:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+    "generations": [
+      {
+        "kind": "Source1",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.source2:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+    "generations": [
+      {
+        "kind": "Source2",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.source3:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+    "generations": [
+      {
+        "kind": "Source3",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Tree;.generationSource4:()V",
+    "generations": [
+      {
+        "kind": "Source4",
+        "port": "Argument(0)"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+    "sinks": [
+      {
+        "kind": "Sink",
+        "port": "Argument(0)"
+      }
+    ]
+  }
+]

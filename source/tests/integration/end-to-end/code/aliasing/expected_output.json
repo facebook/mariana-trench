@@ -1,0 +1,5370 @@
+// @generated
+{
+  "method" : "Landroid/app/Activity;.<init>:()V",
+  "position" : 
+  {
+    "line" : 13
+  }
+}
+{
+  "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
+  "position" : 
+  {
+    "line" : 22
+  }
+}
+{
+  "method" : "Landroid/app/Activity;.onCreate:()V",
+  "position" : 
+  {
+    "line" : 15
+  }
+}
+{
+  "method" : "Landroid/app/Activity;.onCreate:(Landroid/os/Bundle;)V",
+  "position" : 
+  {
+    "line" : 17
+  }
+}
+{
+  "method" : "Landroid/app/Activity;.onStart:()V",
+  "position" : 
+  {
+    "line" : 19
+  }
+}
+{
+  "method" : "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V",
+  "position" : 
+  {
+    "line" : 26
+  }
+}
+{
+  "method" : "Landroid/content/ContentProvider;.<init>:()V",
+  "position" : 
+  {
+    "line" : 12
+  }
+}
+{
+  "method" : "Landroid/content/ContentProvider;.query:(Landroid/net/Uri;[Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;)Landroid/database/Cursor;",
+  "position" : 
+  {
+    "line" : 15
+  }
+}
+{
+  "method" : "Landroid/content/Context;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9
+  }
+}
+{
+  "method" : "Landroid/content/Context;.startActivity:(Landroid/content/Intent;)V",
+  "position" : 
+  {
+    "line" : 11
+  }
+}
+{
+  "method" : "Landroid/content/Intent;.<init>:()V",
+  "position" : 
+  {
+    "line" : 17
+  }
+}
+{
+  "method" : "Landroid/content/Intent;.<init>:(Landroid/content/Context;Ljava/lang/Class;)V",
+  "position" : 
+  {
+    "line" : 21
+  }
+}
+{
+  "method" : "Landroid/content/Intent;.<init>:(Ljava/lang/String;Landroid/net/Uri;)V",
+  "position" : 
+  {
+    "line" : 19
+  }
+}
+{
+  "method" : "Landroid/content/Intent;.getBundleExtra:(Ljava/lang/String;)Landroid/os/Bundle;",
+  "position" : 
+  {
+    "line" : 58
+  }
+}
+{
+  "method" : "Landroid/content/Intent;.getData:()Landroid/net/Uri;",
+  "position" : 
+  {
+    "line" : 50
+  }
+}
+{
+  "method" : "Landroid/content/Intent;.getDataString:()Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 24
+  }
+}
+{
+  "method" : "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;",
+  "position" : 
+  {
+    "line" : 54
+  }
+}
+{
+  "method" : "Landroid/content/Intent;.getFlags:()I",
+  "position" : 
+  {
+    "line" : 28
+  }
+}
+{
+  "method" : "Landroid/content/Intent;.getIntExtra:(Ljava/lang/String;)I",
+  "position" : 
+  {
+    "line" : 42
+  }
+}
+{
+  "method" : "Landroid/content/Intent;.getIntExtra:(Ljava/lang/String;I)I",
+  "position" : 
+  {
+    "line" : 46
+  }
+}
+{
+  "method" : "Landroid/content/Intent;.getStringExtra:(Ljava/lang/String;)Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 38
+  }
+}
+{
+  "method" : "Landroid/content/Intent;.hasExtra:(Ljava/lang/String;)Z",
+  "position" : 
+  {
+    "line" : 34
+  }
+}
+{
+  "method" : "Landroid/content/Intent;.putExtra:(Ljava/lang/String;Ljava/lang/String;)V",
+  "position" : 
+  {
+    "line" : 65
+  }
+}
+{
+  "method" : "Landroid/content/Intent;.putExtra:(Ljava/lang/String;Z)V",
+  "position" : 
+  {
+    "line" : 67
+  }
+}
+{
+  "method" : "Landroid/content/Intent;.putExtras:(Landroid/os/Bundle;)V",
+  "position" : 
+  {
+    "line" : 63
+  }
+}
+{
+  "method" : "Landroid/content/Intent;.setData:(Landroid/net/Uri;)V",
+  "position" : 
+  {
+    "line" : 61
+  }
+}
+{
+  "method" : "Landroid/content/Intent;.setFlags:(I)V",
+  "position" : 
+  {
+    "line" : 31
+  }
+}
+{
+  "method" : "Landroid/database/Cursor;.<init>:()V",
+  "position" : 
+  {
+    "line" : 11
+  }
+}
+{
+  "method" : "Landroid/location/Location;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9
+  }
+}
+{
+  "method" : "Landroid/location/Location;.getLatitude:()D",
+  "position" : 
+  {
+    "line" : 12
+  }
+}
+{
+  "method" : "Landroid/location/Location;.getLongitude:()D",
+  "position" : 
+  {
+    "line" : 16
+  }
+}
+{
+  "method" : "Landroid/location/Location;.toString:()Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 20
+  }
+}
+{
+  "method" : "Landroid/location/LocationListener;.onLocationChanged:(Landroid/location/Location;)V",
+  "modes" : 
+  [
+    "add-via-obscure-feature",
+    "skip-analysis"
+  ],
+  "position" : {}
+}
+{
+  "method" : "Landroid/net/Uri$Builder;.<init>:()V",
+  "position" : 
+  {
+    "line" : 51
+  }
+}
+{
+  "method" : "Landroid/net/Uri$Builder;.build:()Landroid/net/Uri;",
+  "position" : 
+  {
+    "line" : 72
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0).host",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                ".host" : 3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input" : "Argument(0).path",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                ".path" : 3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input" : "Argument(0).scheme",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                ".scheme" : 3
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Landroid/net/Uri$Builder;.host:(Ljava/lang/String;)Landroid/net/Uri$Builder;",
+  "position" : 
+  {
+    "line" : 62
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input" : "Argument(1)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              {
+                ".host" : 3
+              }
+            }
+          ]
+        },
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                ".host" : 3
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Landroid/net/Uri$Builder;.path:(Ljava/lang/String;)Landroid/net/Uri$Builder;",
+  "position" : 
+  {
+    "line" : 67
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input" : "Argument(1)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              {
+                ".path" : 3
+              }
+            }
+          ]
+        },
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                ".path" : 3
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Landroid/net/Uri$Builder;.scheme:(Ljava/lang/String;)Landroid/net/Uri$Builder;",
+  "position" : 
+  {
+    "line" : 54
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input" : "Argument(1)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              {
+                ".scheme" : 3
+              }
+            }
+          ]
+        },
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                ".scheme" : 3
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Landroid/net/Uri;.<init>:()V",
+  "position" : 
+  {
+    "line" : 14
+  }
+}
+{
+  "method" : "Landroid/net/Uri;.<init>:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V",
+  "position" : 
+  {
+    "line" : 16
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(1)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              {
+                ".scheme" : 3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input" : "Argument(2)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              {
+                ".host" : 3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input" : "Argument(3)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              {
+                ".path" : 3
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Landroid/net/Uri;.decode:(Ljava/lang/String;)Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 27
+  }
+}
+{
+  "inline_as_getter" : "Argument(0).host",
+  "method" : "Landroid/net/Uri;.getHost:()Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 35
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0).host",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Landroid/net/Uri;.getQueryParameter:(Ljava/lang/String;)Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 39
+  }
+}
+{
+  "inline_as_getter" : "Argument(0).scheme",
+  "method" : "Landroid/net/Uri;.getScheme:()Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 31
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0).scheme",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Landroid/net/Uri;.parse:(Ljava/lang/String;)Landroid/net/Uri;",
+  "position" : 
+  {
+    "line" : 23
+  }
+}
+{
+  "method" : "Landroid/net/Uri;.toString:()Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 43
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0).host",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input" : "Argument(0).path",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input" : "Argument(0).scheme",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Landroid/os/Bundle;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9
+  }
+}
+{
+  "method" : "Landroid/os/Bundle;.containsKey:(Ljava/lang/String;)Z",
+  "position" : 
+  {
+    "line" : 20
+  }
+}
+{
+  "method" : "Landroid/os/Bundle;.getString:(Ljava/lang/String;)Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 12
+  }
+}
+{
+  "method" : "Landroid/os/Bundle;.putBoolean:(Ljava/lang/String;Ljava/lang/Boolean;)V",
+  "position" : 
+  {
+    "line" : 17
+  }
+}
+{
+  "method" : "Landroid/os/Bundle;.putString:(Ljava/lang/String;Ljava/lang/String;)V",
+  "position" : 
+  {
+    "line" : 15
+  }
+}
+{
+  "method" : "Landroid/text/TextUtils;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9
+  }
+}
+{
+  "method" : "Landroid/text/TextUtils;.isEmpty:(Ljava/lang/String;)Z",
+  "position" : 
+  {
+    "line" : 11
+  }
+}
+{
+  "method" : "Landroid/util/Log;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9
+  }
+}
+{
+  "method" : "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I",
+  "position" : 
+  {
+    "line" : 12
+  }
+}
+{
+  "method" : "Landroid/webkit/WebViewClient;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9
+  }
+}
+{
+  "method" : "Landroid/webkit/WebViewClient;.onPageFinished:(Ljava/lang/String;)V",
+  "position" : 
+  {
+    "line" : 11
+  }
+}
+{
+  "method" : "Landroidx/fragment/app/FragmentActivity;.<init>:()V",
+  "position" : 
+  {
+    "line" : 11
+  }
+}
+{
+  "method" : "Landroidx/fragment/app/FragmentActivity;.onActivityCreate:()V",
+  "position" : 
+  {
+    "line" : 13
+  }
+}
+{
+  "method" : "Lcom/facebook/auth/datastore/LoggedInUserAuthDataStore;.<init>:()V",
+  "position" : 
+  {
+    "line" : 11
+  }
+}
+{
+  "method" : "Lcom/facebook/auth/datastore/LoggedInUserAuthDataStore;.getLoggedInUser:()Lcom/facebook/user/model/User;",
+  "position" : 
+  {
+    "line" : 18
+  }
+}
+{
+  "method" : "Lcom/facebook/auth/datastore/LoggedInUserAuthDataStore;.isLoggedIn:()Z",
+  "position" : 
+  {
+    "line" : 14
+  }
+}
+{
+  "method" : "Lcom/facebook/base/activity/FragmentBaseActivityUtil;.<init>:()V",
+  "position" : 
+  {
+    "line" : 11
+  }
+}
+{
+  "method" : "Lcom/facebook/base/activity/FragmentBaseActivityUtil;.getDefaultActivityIntent:()Landroid/content/Intent;",
+  "position" : 
+  {
+    "line" : 14
+  }
+}
+{
+  "method" : "Lcom/facebook/content/SecureContextHelper;.<init>:()V",
+  "position" : 
+  {
+    "line" : 13
+  }
+}
+{
+  "method" : "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
+  "position" : 
+  {
+    "line" : 15
+  }
+}
+{
+  "method" : "Lcom/facebook/content/SecureContextHelper;.startFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V",
+  "position" : 
+  {
+    "line" : 17
+  }
+}
+{
+  "method" : "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
+  "position" : 
+  {
+    "line" : 19
+  }
+}
+{
+  "method" : "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V",
+  "position" : 
+  {
+    "line" : 22
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;.<init>:()V",
+  "position" : 
+  {
+    "line" : 10,
+    "path" : "AliasingJava.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;.<init>:(Lcom/facebook/marianatrench/integrationtests/AliasingJava$1;)V",
+  "position" : 
+  {
+    "line" : 10,
+    "path" : "AliasingJava.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9,
+    "path" : "AliasingJava.java"
+  }
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "Source1",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.source1:()Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;",
+                  "port" : "Return"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.source1:()Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;",
+  "position" : 
+  {
+    "line" : 19,
+    "path" : "AliasingJava.java"
+  }
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "Source2",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.source2:()Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;",
+                  "port" : "Return"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.source2:()Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;",
+  "position" : 
+  {
+    "line" : 23,
+    "path" : "AliasingJava.java"
+  }
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "Source3",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.source3:()Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;",
+                  "port" : "Return"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.source3:()Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;",
+  "position" : 
+  {
+    "line" : 27,
+    "path" : "AliasingJava.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "always_features" : 
+      [
+        "via-issue-broadening"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 43,
+        "path" : "AliasingJava.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 25,
+              "line" : 43,
+              "path" : "AliasingJava.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                38,
+                39
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 33,
+              "path" : "AliasingJava.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                38,
+                39
+              ],
+              "kind" : "Source1",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.source1:()Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-issue-broadening"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 22,
+              "line" : 36,
+              "start" : 17
+            },
+            {
+              "end" : 25,
+              "line" : 33,
+              "start" : 16
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testSimple1:()V",
+  "position" : 
+  {
+    "line" : 31,
+    "path" : "AliasingJava.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 62,
+        "path" : "AliasingJava.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 29,
+              "line" : 62,
+              "path" : "AliasingJava.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                38,
+                39
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 48,
+              "path" : "AliasingJava.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                38,
+                39
+              ],
+              "kind" : "Source1",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.source1:()Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 25,
+              "line" : 48,
+              "start" : 16
+            },
+            {
+              "end" : 26,
+              "line" : 51,
+              "start" : 17
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 66,
+        "path" : "AliasingJava.java"
+      },
+      "rule" : 3,
+      "sink_index" : "1",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 24,
+              "line" : 66,
+              "path" : "AliasingJava.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                38,
+                39
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 54,
+              "path" : "AliasingJava.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                38,
+                39
+              ],
+              "kind" : "Source3",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.source3:()Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 25,
+              "line" : 54,
+              "start" : 16
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testSimple2:()V",
+  "position" : 
+  {
+    "line" : 46,
+    "path" : "AliasingJava.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.<init>:()V",
+  "position" : 
+  {
+    "line" : 50,
+    "path" : "AliasingKotlin.kt"
+  }
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "Source1",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.source1:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+                  "port" : "Return"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.source1:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+  "position" : 
+  {
+    "line" : 52,
+    "path" : "AliasingKotlin.kt"
+  }
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "Source2",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.source2:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+                  "port" : "Return"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.source2:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+  "position" : 
+  {
+    "line" : 56,
+    "path" : "AliasingKotlin.kt"
+  }
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "Source3",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.source3:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+                  "port" : "Return"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.source3:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+  "position" : 
+  {
+    "line" : 60,
+    "path" : "AliasingKotlin.kt"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "always_features" : 
+      [
+        "via-obscure"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 176,
+        "path" : "AliasingKotlin.kt"
+      },
+      "rule" : 1,
+      "sink_index" : "3",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 24,
+              "line" : 176,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 174,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Source1",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.source1:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-obscure"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 0,
+              "line" : 174,
+              "start" : 0
+            },
+            {
+              "end" : 0,
+              "line" : 176,
+              "start" : 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "always_features" : 
+      [
+        "via-obscure",
+        "via-propagation-broadening",
+        "via-widen-broadening"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 161,
+        "path" : "AliasingKotlin.kt"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 33,
+              "line" : 161,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 149,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Source1",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.source1:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-obscure",
+              "via-propagation-broadening",
+              "via-widen-broadening"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 0,
+              "line" : 149,
+              "start" : 0
+            },
+            {
+              "end" : 0,
+              "line" : 161,
+              "start" : 0
+            },
+            {
+              "end" : 37,
+              "line" : 157,
+              "start" : 33
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "always_features" : 
+      [
+        "via-obscure",
+        "via-propagation-broadening",
+        "via-widen-broadening"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 161,
+        "path" : "AliasingKotlin.kt"
+      },
+      "rule" : 2,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 33,
+              "line" : 161,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 150,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Source2",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.source2:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-obscure",
+              "via-propagation-broadening",
+              "via-widen-broadening"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 0,
+              "line" : 150,
+              "start" : 0
+            },
+            {
+              "end" : 0,
+              "line" : 161,
+              "start" : 0
+            },
+            {
+              "end" : 37,
+              "line" : 157,
+              "start" : 33
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "always_features" : 
+      [
+        "via-obscure",
+        "via-propagation-broadening",
+        "via-widen-broadening"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 167,
+        "path" : "AliasingKotlin.kt"
+      },
+      "rule" : 1,
+      "sink_index" : "1",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 37,
+              "line" : 167,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 149,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Source1",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.source1:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-obscure",
+              "via-propagation-broadening",
+              "via-widen-broadening"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 0,
+              "line" : 149,
+              "start" : 0
+            },
+            {
+              "end" : 0,
+              "line" : 167,
+              "start" : 0
+            },
+            {
+              "end" : 37,
+              "line" : 157,
+              "start" : 33
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "always_features" : 
+      [
+        "via-obscure",
+        "via-propagation-broadening",
+        "via-widen-broadening"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 167,
+        "path" : "AliasingKotlin.kt"
+      },
+      "rule" : 2,
+      "sink_index" : "1",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 37,
+              "line" : 167,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 150,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Source2",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.source2:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-obscure",
+              "via-propagation-broadening",
+              "via-widen-broadening"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 0,
+              "line" : 150,
+              "start" : 0
+            },
+            {
+              "end" : 0,
+              "line" : 167,
+              "start" : 0
+            },
+            {
+              "end" : 37,
+              "line" : 157,
+              "start" : 33
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "always_features" : 
+      [
+        "via-obscure",
+        "via-propagation-broadening",
+        "via-widen-broadening"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 171,
+        "path" : "AliasingKotlin.kt"
+      },
+      "rule" : 1,
+      "sink_index" : "2",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 33,
+              "line" : 171,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 149,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Source1",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.source1:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-obscure",
+              "via-propagation-broadening",
+              "via-widen-broadening"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 0,
+              "line" : 149,
+              "start" : 0
+            },
+            {
+              "end" : 0,
+              "line" : 171,
+              "start" : 0
+            },
+            {
+              "end" : 37,
+              "line" : 157,
+              "start" : 33
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "always_features" : 
+      [
+        "via-obscure",
+        "via-propagation-broadening",
+        "via-widen-broadening"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 171,
+        "path" : "AliasingKotlin.kt"
+      },
+      "rule" : 2,
+      "sink_index" : "2",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 33,
+              "line" : 171,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 150,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Source2",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.source2:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-obscure",
+              "via-propagation-broadening",
+              "via-widen-broadening"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 0,
+              "line" : 150,
+              "start" : 0
+            },
+            {
+              "end" : 0,
+              "line" : 171,
+              "start" : 0
+            },
+            {
+              "end" : 37,
+              "line" : 157,
+              "start" : 33
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "always_features" : 
+      [
+        "via-obscure",
+        "via-propagation-broadening",
+        "via-widen-broadening"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 178,
+        "path" : "AliasingKotlin.kt"
+      },
+      "rule" : 1,
+      "sink_index" : "4",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 33,
+              "line" : 178,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 149,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Source1",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.source1:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-obscure",
+              "via-propagation-broadening",
+              "via-widen-broadening"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 0,
+              "line" : 149,
+              "start" : 0
+            },
+            {
+              "end" : 0,
+              "line" : 178,
+              "start" : 0
+            },
+            {
+              "end" : 37,
+              "line" : 157,
+              "start" : 33
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "always_features" : 
+      [
+        "via-obscure",
+        "via-propagation-broadening",
+        "via-widen-broadening"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 178,
+        "path" : "AliasingKotlin.kt"
+      },
+      "rule" : 2,
+      "sink_index" : "4",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 33,
+              "line" : 178,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 150,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Source2",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.source2:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-obscure",
+              "via-propagation-broadening",
+              "via-widen-broadening"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 0,
+              "line" : 150,
+              "start" : 0
+            },
+            {
+              "end" : 0,
+              "line" : 178,
+              "start" : 0
+            },
+            {
+              "end" : 37,
+              "line" : 157,
+              "start" : 33
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.testCollapsePropagations:()V",
+  "position" : 
+  {
+    "line" : 146,
+    "path" : "AliasingKotlin.kt"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "always_features" : 
+      [
+        "via-obscure"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 204,
+        "path" : "AliasingKotlin.kt"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 28,
+              "line" : 204,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 183,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Source1",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.source1:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-obscure"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 0,
+              "line" : 183,
+              "start" : 0
+            },
+            {
+              "end" : 0,
+              "line" : 204,
+              "start" : 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "always_features" : 
+      [
+        "via-obscure"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 207,
+        "path" : "AliasingKotlin.kt"
+      },
+      "rule" : 2,
+      "sink_index" : "1",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 28,
+              "line" : 207,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 184,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Source2",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.source2:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-obscure"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 0,
+              "line" : 184,
+              "start" : 0
+            },
+            {
+              "end" : 0,
+              "line" : 207,
+              "start" : 0
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.testConditionalAliasing:(Lcom/facebook/marianatrench/integrationtests/Tree;)V",
+  "position" : 
+  {
+    "line" : 181,
+    "path" : "AliasingKotlin.kt"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "always_features" : 
+      [
+        "via-obscure"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 126,
+        "path" : "AliasingKotlin.kt"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 35,
+              "line" : 126,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 117,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Source1",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.source1:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-obscure"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 0,
+              "line" : 117,
+              "start" : 0
+            },
+            {
+              "end" : 0,
+              "line" : 126,
+              "start" : 0
+            },
+            {
+              "end" : 41,
+              "line" : 122,
+              "start" : 37
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "always_features" : 
+      [
+        "via-obscure"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 126,
+        "path" : "AliasingKotlin.kt"
+      },
+      "rule" : 2,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 35,
+              "line" : 126,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 118,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Source2",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.source2:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-obscure"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 0,
+              "line" : 118,
+              "start" : 0
+            },
+            {
+              "end" : 0,
+              "line" : 126,
+              "start" : 0
+            },
+            {
+              "end" : 41,
+              "line" : 122,
+              "start" : 37
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "always_features" : 
+      [
+        "via-obscure"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 132,
+        "path" : "AliasingKotlin.kt"
+      },
+      "rule" : 1,
+      "sink_index" : "1",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 39,
+              "line" : 132,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 117,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Source1",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.source1:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-obscure"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 0,
+              "line" : 117,
+              "start" : 0
+            },
+            {
+              "end" : 0,
+              "line" : 132,
+              "start" : 0
+            },
+            {
+              "end" : 41,
+              "line" : 122,
+              "start" : 37
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "always_features" : 
+      [
+        "via-obscure"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 132,
+        "path" : "AliasingKotlin.kt"
+      },
+      "rule" : 2,
+      "sink_index" : "1",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 39,
+              "line" : 132,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 118,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Source2",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.source2:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-obscure"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 0,
+              "line" : 118,
+              "start" : 0
+            },
+            {
+              "end" : 0,
+              "line" : 132,
+              "start" : 0
+            },
+            {
+              "end" : 41,
+              "line" : 122,
+              "start" : 37
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "always_features" : 
+      [
+        "via-obscure"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 136,
+        "path" : "AliasingKotlin.kt"
+      },
+      "rule" : 1,
+      "sink_index" : "2",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 35,
+              "line" : 136,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 117,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Source1",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.source1:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-obscure"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 0,
+              "line" : 117,
+              "start" : 0
+            },
+            {
+              "end" : 0,
+              "line" : 136,
+              "start" : 0
+            },
+            {
+              "end" : 41,
+              "line" : 122,
+              "start" : 37
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "always_features" : 
+      [
+        "via-obscure"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 136,
+        "path" : "AliasingKotlin.kt"
+      },
+      "rule" : 2,
+      "sink_index" : "2",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 35,
+              "line" : 136,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 118,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Source2",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.source2:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-obscure"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 0,
+              "line" : 118,
+              "start" : 0
+            },
+            {
+              "end" : 0,
+              "line" : 136,
+              "start" : 0
+            },
+            {
+              "end" : 41,
+              "line" : 122,
+              "start" : 37
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "always_features" : 
+      [
+        "via-obscure"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 141,
+        "path" : "AliasingKotlin.kt"
+      },
+      "rule" : 1,
+      "sink_index" : "3",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 24,
+              "line" : 141,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 139,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Source1",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.source1:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-obscure"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 0,
+              "line" : 139,
+              "start" : 0
+            },
+            {
+              "end" : 0,
+              "line" : 141,
+              "start" : 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "always_features" : 
+      [
+        "via-obscure"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 143,
+        "path" : "AliasingKotlin.kt"
+      },
+      "rule" : 1,
+      "sink_index" : "4",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 35,
+              "line" : 143,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 117,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Source1",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.source1:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-obscure"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 0,
+              "line" : 117,
+              "start" : 0
+            },
+            {
+              "end" : 0,
+              "line" : 143,
+              "start" : 0
+            },
+            {
+              "end" : 41,
+              "line" : 122,
+              "start" : 37
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "always_features" : 
+      [
+        "via-obscure"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 143,
+        "path" : "AliasingKotlin.kt"
+      },
+      "rule" : 2,
+      "sink_index" : "4",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 35,
+              "line" : 143,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 118,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Source2",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.source2:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-obscure"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 0,
+              "line" : 118,
+              "start" : 0
+            },
+            {
+              "end" : 0,
+              "line" : 143,
+              "start" : 0
+            },
+            {
+              "end" : 41,
+              "line" : 122,
+              "start" : 37
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.testNoCollapsePropagations:()V",
+  "position" : 
+  {
+    "line" : 114,
+    "path" : "AliasingKotlin.kt"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "always_features" : 
+      [
+        "via-issue-broadening",
+        "via-obscure"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 76,
+        "path" : "AliasingKotlin.kt"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 25,
+              "line" : 76,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 66,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Source1",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.source1:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-issue-broadening",
+              "via-obscure"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 0,
+              "line" : 66,
+              "start" : 0
+            },
+            {
+              "end" : 0,
+              "line" : 69,
+              "start" : 0
+            },
+            {
+              "end" : 0,
+              "line" : 76,
+              "start" : 0
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.testSimple1:()V",
+  "position" : 
+  {
+    "line" : 64,
+    "path" : "AliasingKotlin.kt"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "always_features" : 
+      [
+        "via-obscure"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 95,
+        "path" : "AliasingKotlin.kt"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 29,
+              "line" : 95,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 81,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Source1",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.source1:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-obscure"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 0,
+              "line" : 81,
+              "start" : 0
+            },
+            {
+              "end" : 0,
+              "line" : 84,
+              "start" : 0
+            },
+            {
+              "end" : 0,
+              "line" : 95,
+              "start" : 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "always_features" : 
+      [
+        "via-obscure"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 99,
+        "path" : "AliasingKotlin.kt"
+      },
+      "rule" : 1,
+      "sink_index" : "1",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 24,
+              "line" : 99,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 81,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Source1",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.source1:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-obscure"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 0,
+              "line" : 81,
+              "start" : 0
+            },
+            {
+              "end" : 0,
+              "line" : 99,
+              "start" : 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "always_features" : 
+      [
+        "via-obscure"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 99,
+        "path" : "AliasingKotlin.kt"
+      },
+      "rule" : 3,
+      "sink_index" : "1",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 24,
+              "line" : 99,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 87,
+              "path" : "AliasingKotlin.kt",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                40,
+                41
+              ],
+              "kind" : "Source3",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.source3:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-obscure"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 0,
+              "line" : 87,
+              "start" : 0
+            },
+            {
+              "end" : 0,
+              "line" : 99,
+              "start" : 0
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.testSimple2:()V",
+  "position" : 
+  {
+    "line" : 79,
+    "path" : "AliasingKotlin.kt"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.testSimpleTaintTreeGeneration:()V",
+  "position" : 
+  {
+    "line" : 102,
+    "path" : "AliasingKotlin.kt"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9
+  }
+}
+{
+  "inline_as_getter" : "Argument(0)",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sanitize:(Ljava/lang/Object;)Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 17
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+  "position" : 
+  {
+    "line" : 14
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(0)",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 11
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Tree;.<init>:()V",
+  "position" : 
+  {
+    "line" : 11,
+    "path" : "AliasingKotlin.kt"
+  }
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Argument(0)",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "Source4",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Tree;.generationSource4:()V",
+                  "port" : "Argument(0)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Tree;.generationSource4:()V",
+  "position" : 
+  {
+    "line" : 47,
+    "path" : "AliasingKotlin.kt"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Tree;.getBar:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+  "position" : 
+  {
+    "line" : 13,
+    "path" : "AliasingKotlin.kt"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0).bar",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Tree;.getBaz:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+  "position" : 
+  {
+    "line" : 14,
+    "path" : "AliasingKotlin.kt"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0).baz",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Tree;.getBiz:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+  "position" : 
+  {
+    "line" : 15,
+    "path" : "AliasingKotlin.kt"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0).biz",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Tree;.getBuzz:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+  "position" : 
+  {
+    "line" : 16,
+    "path" : "AliasingKotlin.kt"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0).buzz",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Tree;.getFoo:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+  "position" : 
+  {
+    "line" : 12,
+    "path" : "AliasingKotlin.kt"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0).foo",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Tree;.setBar:(Lcom/facebook/marianatrench/integrationtests/Tree;)V",
+  "position" : 
+  {
+    "line" : 13,
+    "path" : "AliasingKotlin.kt"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(1)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              {
+                ".bar" : 3
+              }
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-obscure"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Tree;.setBaz:(Lcom/facebook/marianatrench/integrationtests/Tree;)V",
+  "position" : 
+  {
+    "line" : 14,
+    "path" : "AliasingKotlin.kt"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(1)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              {
+                ".baz" : 3
+              }
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-obscure"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Tree;.setBiz:(Lcom/facebook/marianatrench/integrationtests/Tree;)V",
+  "position" : 
+  {
+    "line" : 15,
+    "path" : "AliasingKotlin.kt"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(1)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              {
+                ".biz" : 3
+              }
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-obscure"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Tree;.setBuzz:(Lcom/facebook/marianatrench/integrationtests/Tree;)V",
+  "position" : 
+  {
+    "line" : 16,
+    "path" : "AliasingKotlin.kt"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(1)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              {
+                ".buzz" : 3
+              }
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-obscure"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Tree;.setFoo:(Lcom/facebook/marianatrench/integrationtests/Tree;)V",
+  "position" : 
+  {
+    "line" : 12,
+    "path" : "AliasingKotlin.kt"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(1)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              {
+                ".foo" : 3
+              }
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-obscure"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Tree;.titoCollapsed:(Lcom/facebook/marianatrench/integrationtests/Tree;)V",
+  "position" : 
+  {
+    "line" : 31,
+    "path" : "AliasingKotlin.kt"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(1)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              {
+                ".foo" : 0
+              }
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-obscure",
+              "via-widen-broadening"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Tree;.titoNoCollapsed:(Lcom/facebook/marianatrench/integrationtests/Tree;)V",
+  "position" : 
+  {
+    "line" : 19,
+    "path" : "AliasingKotlin.kt"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(1).bar",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              {
+                ".foo" : 3
+              }
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-obscure"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "input" : "Argument(1).baz",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              {
+                ".foo" : 3
+              }
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-obscure"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "input" : "Argument(1).biz",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              {
+                ".foo" : 3
+              }
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-obscure"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "input" : "Argument(1).foo",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              {
+                ".foo" : 3
+              }
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-obscure"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V",
+  "position" : 
+  {
+    "line" : 14
+  }
+}
+{
+  "method" : "Lcom/facebook/secure/context/IntentLauncher;.launchActivity:(Landroid/content/Intent;Landroid/content/Context;)Z",
+  "position" : 
+  {
+    "line" : 17
+  }
+}
+{
+  "method" : "Lcom/facebook/secure/context/SecureContextHelperV2;.<init>:()V",
+  "position" : 
+  {
+    "line" : 11
+  }
+}
+{
+  "method" : "Lcom/facebook/secure/context/SecureContextHelperV2;.get:()Lcom/facebook/secure/context/SecureContextHelperV2;",
+  "position" : 
+  {
+    "line" : 14
+  }
+}
+{
+  "method" : "Lcom/facebook/secure/context/SecureContextHelperV2;.inAppBrowser:()Lcom/facebook/secure/context/IntentLauncher;",
+  "position" : 
+  {
+    "line" : 22
+  }
+}
+{
+  "method" : "Lcom/facebook/secure/context/SecureContextHelperV2;.internal:()Lcom/facebook/secure/context/IntentLauncher;",
+  "position" : 
+  {
+    "line" : 18
+  }
+}
+{
+  "method" : "Lcom/facebook/user/model/User;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9
+  }
+}
+{
+  "method" : "Lcom/facebook/user/model/User;.getId:()Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 12
+  }
+}
+{
+  "method" : "Lcom/instagram/common/analytics/IgAnalyticsLogger;.<init>:()V",
+  "position" : 
+  {
+    "line" : 11
+  }
+}
+{
+  "method" : "Lcom/instagram/common/analytics/IgAnalyticsLogger;.getInstance:()Lcom/instagram/common/analytics/IgAnalyticsLogger;",
+  "position" : 
+  {
+    "line" : 14
+  }
+}
+{
+  "method" : "Lcom/instagram/common/analytics/IgAnalyticsLogger;.reportEvent:(Lcom/instagram/common/analytics/intf/AnalyticsEvent;)V",
+  "position" : 
+  {
+    "line" : 17
+  }
+}
+{
+  "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9
+  }
+}
+{
+  "inline_as_getter" : "Argument(0)",
+  "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
+  "position" : 
+  {
+    "line" : 16
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.obtain:(Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
+  "position" : 
+  {
+    "line" : 12
+  }
+}
+{
+  "method" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
+  "modes" : 
+  [
+    "skip-analysis"
+  ],
+  "position" : {}
+}
+{
+  "method" : "Ljava/lang/Integer;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9
+  }
+}
+{
+  "method" : "Ljava/lang/Integer;.intValue:()I",
+  "position" : 
+  {
+    "line" : 11
+  }
+}
+{
+  "method" : "Ljava/lang/Object;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9
+  }
+}
+{
+  "method" : "Ljava/lang/Object;.equals:(Ljava/lang/Object;)Z",
+  "position" : 
+  {
+    "line" : 16
+  }
+}
+{
+  "method" : "Ljava/lang/Object;.hashCode:()I",
+  "position" : 
+  {
+    "line" : 20
+  }
+}
+{
+  "method" : "Ljava/lang/Object;.toString:()Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 12
+  }
+}
+{
+  "method" : "Ljava/lang/Runnable;.run:()V",
+  "modes" : 
+  [
+    "add-via-obscure-feature",
+    "skip-analysis"
+  ],
+  "position" : {}
+}
+{
+  "method" : "Ljava/lang/String;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9
+  }
+}
+{
+  "method" : "Ljava/lang/String;.charAt:(I)C",
+  "position" : 
+  {
+    "line" : 44
+  }
+}
+{
+  "method" : "Ljava/lang/String;.concat:(Ljava/lang/String;)Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 52
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input" : "Argument(1)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Ljava/lang/String;.contains:(Ljava/lang/String;)Z",
+  "position" : 
+  {
+    "line" : 36
+  }
+}
+{
+  "method" : "Ljava/lang/String;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 60
+  }
+}
+{
+  "method" : "Ljava/lang/String;.indexOf:(Ljava/lang/String;)I",
+  "position" : 
+  {
+    "line" : 24
+  }
+}
+{
+  "method" : "Ljava/lang/String;.isEmpty:()Z",
+  "position" : 
+  {
+    "line" : 40
+  }
+}
+{
+  "method" : "Ljava/lang/String;.length:()I",
+  "position" : 
+  {
+    "line" : 32
+  }
+}
+{
+  "method" : "Ljava/lang/String;.startsWith:(Ljava/lang/String;)Z",
+  "position" : 
+  {
+    "line" : 28
+  }
+}
+{
+  "method" : "Ljava/lang/String;.subSequence:(II)Ljava/lang/CharSequence;",
+  "position" : 
+  {
+    "line" : 48
+  }
+}
+{
+  "method" : "Ljava/lang/String;.substring:(I)Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 16
+  }
+}
+{
+  "method" : "Ljava/lang/String;.substring:(II)Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 20
+  }
+}
+{
+  "method" : "Ljava/lang/String;.valueOf:(Ljava/lang/Object;)Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 12
+  }
+}
+{
+  "method" : "Ljava/lang/StringBuilder;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9
+  }
+}
+{
+  "inline_as_getter" : "Argument(0)",
+  "method" : "Ljava/lang/StringBuilder;.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;",
+  "position" : 
+  {
+    "line" : 12
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Ljava/lang/Thread;.<init>:(Ljava/lang/Runnable;)V",
+  "position" : 
+  {
+    "line" : 13
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(1)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              {
+                ".target" : 3
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Ljava/lang/Thread;.run:()V",
+  "position" : 
+  {
+    "line" : 19
+  }
+}
+{
+  "method" : "Ljava/lang/Thread;.start:()V",
+  "position" : 
+  {
+    "line" : 24
+  }
+}
+{
+  "method" : "Ljava/text/MessageFormat;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9
+  }
+}
+{
+  "method" : "Ljava/text/MessageFormat;.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 12
+  }
+}
+{
+  "method" : "Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+  "modes" : 
+  [
+    "add-via-obscure-feature",
+    "skip-analysis"
+  ],
+  "position" : {}
+}
+{
+  "method" : "Ljava/util/TreeMap;.<init>:()V",
+  "position" : 
+  {
+    "line" : 10
+  }
+}
+{
+  "method" : "Ljava/util/TreeMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 14
+  }
+}
