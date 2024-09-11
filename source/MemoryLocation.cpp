@@ -52,7 +52,7 @@ MemoryLocation* MemoryLocation::make_field(const Path& path) {
 }
 
 MemoryLocation* MemoryLocation::root() {
-  // By defaut, this is a root memory location.
+  // By default, this is a root memory location.
   return this;
 }
 
