@@ -78,4 +78,60 @@ public class Intrinsics {
   public static void checkHasClass(String internalName, String requiredVersion) {
     throw new RuntimeException();
   }
+
+  public static void throwNpe() {
+    throw new RuntimeException();
+  }
+
+  public static void throwNpe(String message) {
+    throw new RuntimeException();
+  }
+
+  public static void throwJavaNpe() {
+    throw new RuntimeException();
+  }
+
+  public static void throwJavaNpe(String message) {
+    throw new RuntimeException();
+  }
+
+  public static void throwUninitializedProperty(String message) {
+    throw new RuntimeException();
+  }
+
+  public static void throwUninitializedPropertyAccessException(String propertyName) {
+    throw new RuntimeException();
+  }
+
+  public static void throwAssert() {
+    throw new RuntimeException();
+  }
+
+  public static void throwAssert(String message) {
+    throw new RuntimeException();
+  }
+
+  public static void throwIllegalArgument() {
+    throw new RuntimeException();
+  }
+
+  public static void throwIllegalArgument(String message) {
+    throw new RuntimeException();
+  }
+
+  public static void throwIllegalState() {
+    throw new RuntimeException();
+  }
+
+  public static void throwIllegalState(String message) {
+    throw new RuntimeException();
+  }
+
+  public static void throwUndefinedForReified() {
+    throw new RuntimeException();
+  }
+
+  public static void throwUndefinedForReified(String message) {
+    throw new RuntimeException();
+  }
 }

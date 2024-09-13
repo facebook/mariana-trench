@@ -431,6 +431,41 @@
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/Tree;.getBar:()Lcom/facebook/marianatrench/integrationtests/Tree;" : 
+  {
+    "static" : 
+    [
+      "Lkotlin/jvm/internal/Intrinsics;.throwUninitializedPropertyAccessException:(Ljava/lang/String;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Tree;.getBaz:()Lcom/facebook/marianatrench/integrationtests/Tree;" : 
+  {
+    "static" : 
+    [
+      "Lkotlin/jvm/internal/Intrinsics;.throwUninitializedPropertyAccessException:(Ljava/lang/String;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Tree;.getBiz:()Lcom/facebook/marianatrench/integrationtests/Tree;" : 
+  {
+    "static" : 
+    [
+      "Lkotlin/jvm/internal/Intrinsics;.throwUninitializedPropertyAccessException:(Ljava/lang/String;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Tree;.getBuzz:()Lcom/facebook/marianatrench/integrationtests/Tree;" : 
+  {
+    "static" : 
+    [
+      "Lkotlin/jvm/internal/Intrinsics;.throwUninitializedPropertyAccessException:(Ljava/lang/String;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Tree;.getFoo:()Lcom/facebook/marianatrench/integrationtests/Tree;" : 
+  {
+    "static" : 
+    [
+      "Lkotlin/jvm/internal/Intrinsics;.throwUninitializedPropertyAccessException:(Ljava/lang/String;)V"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/Tree;.setBar:(Lcom/facebook/marianatrench/integrationtests/Tree;)V" : 
   {
     "static" : 

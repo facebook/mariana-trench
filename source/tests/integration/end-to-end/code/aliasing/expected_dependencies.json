@@ -270,5 +270,13 @@
     "Lcom/facebook/marianatrench/integrationtests/Tree;.setFoo:(Lcom/facebook/marianatrench/integrationtests/Tree;)V",
     "Lcom/facebook/marianatrench/integrationtests/Tree;.titoCollapsed:(Lcom/facebook/marianatrench/integrationtests/Tree;)V",
     "Lcom/facebook/marianatrench/integrationtests/Tree;.titoNoCollapsed:(Lcom/facebook/marianatrench/integrationtests/Tree;)V"
+  ],
+  "Lkotlin/jvm/internal/Intrinsics;.throwUninitializedPropertyAccessException:(Ljava/lang/String;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/Tree;.getBar:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+    "Lcom/facebook/marianatrench/integrationtests/Tree;.getBaz:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+    "Lcom/facebook/marianatrench/integrationtests/Tree;.getBiz:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+    "Lcom/facebook/marianatrench/integrationtests/Tree;.getBuzz:()Lcom/facebook/marianatrench/integrationtests/Tree;",
+    "Lcom/facebook/marianatrench/integrationtests/Tree;.getFoo:()Lcom/facebook/marianatrench/integrationtests/Tree;"
   ]
 }
