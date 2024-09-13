@@ -6,6 +6,7 @@
  */
 
 #include <mariana-trench/ForwardAliasTransfer.h>
+#include <mariana-trench/KotlinHeuristics.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/TransferCall.h>
 
@@ -346,7 +347,9 @@ bool ForwardAliasTransfer::analyze_aget(
 
 namespace {
 
-bool has_side_effect(const MethodItemEntry& instruction) {
+bool has_side_effect_with_heuristics(
+    const MethodContext* context,
+    const MethodItemEntry& instruction) {
   switch (instruction.type) {
     case MFLOW_OPCODE:
       switch (instruction.insn->opcode()) {
@@ -377,6 +380,18 @@ bool has_side_effect(const MethodItemEntry& instruction) {
         case OPCODE_IGET_CHAR:
         case OPCODE_IGET_SHORT:
           return false;
+
+        case OPCODE_INVOKE_STATIC: {
+          auto call_target =
+              context->call_graph.callee(context->method(), instruction.insn);
+          if (auto* resolved_callee = call_target.resolved_base_callee()) {
+            return KotlinHeuristics::method_has_side_effects(
+                resolved_callee->dex_method());
+          }
+          // Call could not be resolved. Default to has side-effects.
+          return true;
+        }
+
         default:
           return true;
       }
@@ -419,8 +434,8 @@ bool is_safe_to_inline(MethodContext* context, bool allow_iput) {
   auto found = std::find_if(
       entry_block->begin(),
       entry_block->end(),
-      [allow_iput](const auto& instruction) {
-        return has_side_effect(instruction) &&
+      [allow_iput, context](const auto& instruction) {
+        return has_side_effect_with_heuristics(context, instruction) &&
             (!allow_iput || !is_iput_instruction(instruction));
       });
   if (found != entry_block->end()) {

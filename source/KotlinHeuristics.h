@@ -23,6 +23,11 @@ class KotlinHeuristics final {
    * callee
    */
   static bool skip_parameter_type_overrides(const DexMethod* callee);
+
+  /**
+   * Check if callee is a known kotlin method without side effects
+   */
+  static bool method_has_side_effects(const DexMethod* callee);
 };
 
 } // namespace marianatrench

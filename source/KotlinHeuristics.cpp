@@ -71,4 +71,8 @@ bool KotlinHeuristics::skip_parameter_type_overrides(const DexMethod* callee) {
   return get_kotlin_util_singleton().check_not_null_methods.count(callee) != 0;
 }
 
+bool KotlinHeuristics::method_has_side_effects(const DexMethod* callee) {
+  return get_kotlin_util_singleton().check_not_null_methods.count(callee) == 0;
+}
+
 } // namespace marianatrench
