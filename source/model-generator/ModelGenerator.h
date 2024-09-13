@@ -182,7 +182,7 @@ std::unordered_set<std::string_view> get_parents_from_class(
     DexClass* dex_class,
     bool include_interfaces);
 std::unordered_set<std::string_view> get_custom_parents_from_class(
-    DexClass* dex_class);
+    const DexClass* dex_class);
 std::string get_outer_class(std::string_view classname);
 
 bool is_numeric_data_type(const DataType& type);

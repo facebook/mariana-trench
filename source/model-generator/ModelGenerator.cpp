@@ -146,7 +146,7 @@ std::unordered_set<std::string_view> generator::get_parents_from_class(
 }
 
 std::unordered_set<std::string_view> generator::get_custom_parents_from_class(
-    DexClass* dex_class) {
+    const DexClass* dex_class) {
   std::unordered_set<std::string_view> parent_classes;
 
   while (true) {

@@ -21,6 +21,32 @@
 
 namespace marianatrench {
 
+namespace {
+
+static const std::unordered_set<std::string> permission_base_class_prefixes = {
+    "Lcom/facebook/secure/content/FbPermissions",
+    "Lcom/facebook/secure/content/Secure",
+    "Lcom/oculus/content/OculusFbPermissions",
+    "Lcom/facebook/secure/service/FbPermissions",
+    "Lcom/facebook/secure/ktx/service/FbPermissions",
+    "Lcom/oculus/security/basecomponent/OculusFbPermission",
+    "Lcom/facebook/secure/content/FbPermissions",
+    "Lcom/facebook/secure/receiver/Family",
+    "Lcom/facebook/secure/receiver/Internal"};
+
+bool has_secure_base_class(const DexClass* dex_class) {
+  auto parent_classes = generator::get_custom_parents_from_class(dex_class);
+  for (const auto& parent_class : parent_classes) {
+    for (const auto& class_prefix : permission_base_class_prefixes) {
+      if (boost::starts_with(parent_class, class_prefix)) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+} // namespace
+
 ManifestSourceGenerator::ManifestSourceGenerator(Context& context)
     : ModelGenerator("manifest_source_generator", context) {
   mt_assert_log(
@@ -52,7 +78,7 @@ std::vector<Model> ManifestSourceGenerator::emit_method_models(
       const auto* dex_klass = type_class(redex::get_type(tag_info.classname));
       if (dex_klass == nullptr) {
         LOG(5, "Could not find dex type for classname: {}", tag_info.classname);
-      } else {
+      } else if (!has_secure_base_class(dex_klass)) {
         exported_classes.emplace(dex_klass);
       }
     }
