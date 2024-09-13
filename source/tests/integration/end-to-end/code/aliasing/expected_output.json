@@ -3862,101 +3862,6 @@
         "line" : 99,
         "path" : "AliasingKotlin.kt"
       },
-      "rule" : 1,
-      "sink_index" : "1",
-      "sinks" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Origin",
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 24,
-              "line" : 99,
-              "path" : "AliasingKotlin.kt",
-              "start" : 16
-            }
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                40,
-                41
-              ],
-              "kind" : "Sink",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-                  "port" : "Argument(0)"
-                }
-              ],
-              "preserves_type_context" : true
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Origin",
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 22,
-              "line" : 81,
-              "path" : "AliasingKotlin.kt",
-              "start" : 16
-            }
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                40,
-                41
-              ],
-              "kind" : "Source1",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.source1:()Lcom/facebook/marianatrench/integrationtests/Tree;",
-                  "port" : "Return"
-                }
-              ],
-              "preserves_type_context" : true
-            }
-          ],
-          "local_positions" : 
-          [
-            {
-              "end" : 0,
-              "line" : 81,
-              "start" : 0
-            },
-            {
-              "end" : 0,
-              "line" : 99,
-              "start" : 0
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-      "position" : 
-      {
-        "line" : 99,
-        "path" : "AliasingKotlin.kt"
-      },
       "rule" : 3,
       "sink_index" : "1",
       "sinks" : 
@@ -4359,6 +4264,11 @@
   ]
 }
 {
+  "inline_as_setter" : 
+  {
+    "target" : "Argument(0).bar",
+    "value" : "Argument(1)"
+  },
   "method" : "Lcom/facebook/marianatrench/integrationtests/Tree;.setBar:(Lcom/facebook/marianatrench/integrationtests/Tree;)V",
   "position" : 
   {
@@ -4393,6 +4303,11 @@
   ]
 }
 {
+  "inline_as_setter" : 
+  {
+    "target" : "Argument(0).baz",
+    "value" : "Argument(1)"
+  },
   "method" : "Lcom/facebook/marianatrench/integrationtests/Tree;.setBaz:(Lcom/facebook/marianatrench/integrationtests/Tree;)V",
   "position" : 
   {
@@ -4427,6 +4342,11 @@
   ]
 }
 {
+  "inline_as_setter" : 
+  {
+    "target" : "Argument(0).biz",
+    "value" : "Argument(1)"
+  },
   "method" : "Lcom/facebook/marianatrench/integrationtests/Tree;.setBiz:(Lcom/facebook/marianatrench/integrationtests/Tree;)V",
   "position" : 
   {
@@ -4461,6 +4381,11 @@
   ]
 }
 {
+  "inline_as_setter" : 
+  {
+    "target" : "Argument(0).buzz",
+    "value" : "Argument(1)"
+  },
   "method" : "Lcom/facebook/marianatrench/integrationtests/Tree;.setBuzz:(Lcom/facebook/marianatrench/integrationtests/Tree;)V",
   "position" : 
   {
@@ -4495,6 +4420,11 @@
   ]
 }
 {
+  "inline_as_setter" : 
+  {
+    "target" : "Argument(0).foo",
+    "value" : "Argument(1)"
+  },
   "method" : "Lcom/facebook/marianatrench/integrationtests/Tree;.setFoo:(Lcom/facebook/marianatrench/integrationtests/Tree;)V",
   "position" : 
   {

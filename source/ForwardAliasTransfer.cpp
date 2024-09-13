@@ -381,6 +381,10 @@ bool has_side_effect_with_heuristics(
         case OPCODE_IGET_SHORT:
           return false;
 
+        case OPCODE_CONST_STRING:
+          return KotlinHeuristics::const_string_has_side_effect(
+              instruction.insn);
+
         case OPCODE_INVOKE_STATIC: {
           auto call_target =
               context->call_graph.callee(context->method(), instruction.insn);

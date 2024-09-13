@@ -1154,6 +1154,11 @@
   ]
 }
 {
+  "inline_as_setter" : 
+  {
+    "target" : "Argument(0).ref",
+    "value" : "Argument(1)"
+  },
   "method" : "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.setRef:(Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Ref;)V",
   "position" : 
   {

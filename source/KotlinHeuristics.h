@@ -8,6 +8,7 @@
 #pragma once
 
 #include <DexClass.h>
+#include <IRInstruction.h>
 
 namespace marianatrench {
 
@@ -28,6 +29,12 @@ class KotlinHeuristics final {
    * Check if callee is a known kotlin method without side effects
    */
   static bool method_has_side_effects(const DexMethod* callee);
+
+  /**
+   * Check if const-string instruction is a known kotlin generated string
+   * without side effects
+   */
+  static bool const_string_has_side_effect(const IRInstruction* instruction);
 };
 
 } // namespace marianatrench

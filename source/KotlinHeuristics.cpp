@@ -8,6 +8,9 @@
 #include <string>
 #include <unordered_set>
 
+#include <IROpcode.h>
+
+#include <mariana-trench/Assert.h>
 #include <mariana-trench/KotlinHeuristics.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Redex.h>
@@ -73,6 +76,14 @@ bool KotlinHeuristics::skip_parameter_type_overrides(const DexMethod* callee) {
 
 bool KotlinHeuristics::method_has_side_effects(const DexMethod* callee) {
   return get_kotlin_util_singleton().check_not_null_methods.count(callee) == 0;
+}
+
+bool KotlinHeuristics::const_string_has_side_effect(
+    const IRInstruction* instruction) {
+  mt_assert(opcode::is_const_string(instruction->opcode()));
+  // const-string "<set-?>" is generated within setter methods for lateinit var
+  // to make sure the objects are initialized correctly.
+  return instruction->get_string()->str() != "<set-?>";
 }
 
 } // namespace marianatrench
