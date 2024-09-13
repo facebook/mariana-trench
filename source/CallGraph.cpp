@@ -25,6 +25,7 @@
 #include <mariana-trench/FeatureSet.h>
 #include <mariana-trench/JsonReaderWriter.h>
 #include <mariana-trench/JsonValidation.h>
+#include <mariana-trench/KotlinHeuristics.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Methods.h>
 #include <mariana-trench/shim-generator/Shim.h>
@@ -285,7 +286,9 @@ const Method* get_callee_from_resolved_call(
 
     // No need to use type overrides since we don't have the code.
     callee = method_factory.get(dex_callee);
-  } else if (options.disable_parameter_type_overrides()) {
+  } else if (
+      options.disable_parameter_type_overrides() ||
+      KotlinHeuristics::skip_parameter_type_overrides(dex_callee)) {
     callee = method_factory.get(dex_callee);
   } else {
     // Analyze the callee with these particular types.
