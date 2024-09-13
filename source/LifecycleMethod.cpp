@@ -430,7 +430,7 @@ const DexMethod* MT_NULLABLE LifecycleMethod::create_dex_method(
       /* name */ DexString::make_string(method_name_),
       /* proto */
       DexProto::make_proto(type::_void(), get_argument_types(type_index_map)),
-      /* access */ DexAccessFlags::ACC_PRIVATE);
+      /* access */ DexAccessFlags::ACC_PUBLIC);
 
   auto this_location = method.get_local(0);
   auto* main_block = method.get_main_block();

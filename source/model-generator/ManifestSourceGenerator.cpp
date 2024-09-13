@@ -104,28 +104,6 @@ std::vector<Model> ManifestSourceGenerator::emit_method_models(
 
   std::vector<Model> models;
   for (const auto* dex_klass : exported_classes) {
-    const auto& direct_methods = dex_klass->get_dmethods();
-    auto result = std::find_if(
-        direct_methods.begin(),
-        direct_methods.end(),
-        [](const DexMethod* dex_method) {
-          return boost::ends_with(dex_method->str(), "_lifecycle_wrapper");
-        });
-
-    if (result != direct_methods.end()) {
-      const auto* lifecycle_method = methods.get(*result);
-      // Mark lifecycle wrapper as exported. This is required to catch the flows
-      // found on the lifecycle wrapper itself.
-      Model model(lifecycle_method, context_);
-      model.add_call_effect_source(
-          AccessPath(Root(Root::Kind::CallEffectExploitability)),
-          generator::source(
-              context_,
-              /* kind */ "ExportedComponent"),
-          *context_.heuristics);
-      models.push_back(model);
-    }
-
     // Mark all public and protected methods in the class as exported.
     for (const auto* dex_callee : dex_klass->get_all_methods()) {
       if (dex_callee == nullptr) {
