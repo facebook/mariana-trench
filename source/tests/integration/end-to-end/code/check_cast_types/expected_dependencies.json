@@ -183,7 +183,8 @@
     "Ljava/lang/StringBuilder;.<init>:()V",
     "Ljava/lang/Thread;.<init>:(Ljava/lang/Runnable;)V",
     "Ljava/text/MessageFormat;.<init>:()V",
-    "Ljava/util/TreeMap;.<init>:()V"
+    "Ljava/util/TreeMap;.<init>:()V",
+    "Lkotlin/jvm/internal/Intrinsics;.<init>:()V"
   ],
   "Ljava/lang/Runnable;.run:()V" : 
   [
@@ -200,5 +201,22 @@
   "Ljava/lang/Thread;.run:()V" : 
   [
     "Ljava/lang/Thread;.run:()V"
+  ],
+  "Lkotlin/jvm/internal/Intrinsics;.checkNotNull:(Ljava/lang/Object;Ljava/lang/String;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.issueFromCastedType:(Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;)V",
+    "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.issueFromDerivedType:()V",
+    "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.issueFromVirtualBaseType:()V",
+    "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.noIssueFromCastedType:(Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;)V",
+    "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.noIssueFromDerivedType:()V"
+  ],
+  "Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;.run:(Ljava/lang/Object;)V",
+    "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$DerivedNoSink;.run:(Ljava/lang/Object;)V",
+    "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$DerivedWithSink;.run:(Ljava/lang/Object;)V",
+    "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.issueFromCastedType:(Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;)V",
+    "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.noIssueFromCastedType:(Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;)V",
+    "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.shimmed:(Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;Ljava/lang/Object;)V"
   ]
 }

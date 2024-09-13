@@ -154,7 +154,8 @@
     "Ljava/lang/StringBuilder;.<init>:()V",
     "Ljava/lang/Thread;.<init>:(Ljava/lang/Runnable;)V",
     "Ljava/text/MessageFormat;.<init>:()V",
-    "Ljava/util/TreeMap;.<init>:()V"
+    "Ljava/util/TreeMap;.<init>:()V",
+    "Lkotlin/jvm/internal/Intrinsics;.<init>:()V"
   ],
   "Ljava/lang/Runnable;.run:()V" : 
   [
@@ -171,5 +172,15 @@
   "Ljava/lang/Thread;.run:()V" : 
   [
     "Ljava/lang/Thread;.run:()V"
+  ],
+  "Lkotlin/jvm/internal/Intrinsics;.checkNotNull:(Ljava/lang/Object;Ljava/lang/String;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/KotlinAnonymousFunction$issue$lambda$1;.invoke:()V"
+  ],
+  "Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.<init>:(Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Ref;)V",
+    "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.<init>:(Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;)V",
+    "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.setRef:(Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Ref;)V"
   ]
 }

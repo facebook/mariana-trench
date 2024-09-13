@@ -241,7 +241,8 @@
     "Ljava/lang/StringBuilder;.<init>:()V",
     "Ljava/lang/Thread;.<init>:(Ljava/lang/Runnable;)V",
     "Ljava/text/MessageFormat;.<init>:()V",
-    "Ljava/util/TreeMap;.<init>:()V"
+    "Ljava/util/TreeMap;.<init>:()V",
+    "Lkotlin/jvm/internal/Intrinsics;.<init>:()V"
   ],
   "Ljava/lang/Runnable;.run:()V" : 
   [
@@ -258,5 +259,16 @@
   "Ljava/lang/Thread;.run:()V" : 
   [
     "Ljava/lang/Thread;.run:()V"
+  ],
+  "Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.testConditionalAliasing:(Lcom/facebook/marianatrench/integrationtests/Tree;)V",
+    "Lcom/facebook/marianatrench/integrationtests/Tree;.setBar:(Lcom/facebook/marianatrench/integrationtests/Tree;)V",
+    "Lcom/facebook/marianatrench/integrationtests/Tree;.setBaz:(Lcom/facebook/marianatrench/integrationtests/Tree;)V",
+    "Lcom/facebook/marianatrench/integrationtests/Tree;.setBiz:(Lcom/facebook/marianatrench/integrationtests/Tree;)V",
+    "Lcom/facebook/marianatrench/integrationtests/Tree;.setBuzz:(Lcom/facebook/marianatrench/integrationtests/Tree;)V",
+    "Lcom/facebook/marianatrench/integrationtests/Tree;.setFoo:(Lcom/facebook/marianatrench/integrationtests/Tree;)V",
+    "Lcom/facebook/marianatrench/integrationtests/Tree;.titoCollapsed:(Lcom/facebook/marianatrench/integrationtests/Tree;)V",
+    "Lcom/facebook/marianatrench/integrationtests/Tree;.titoNoCollapsed:(Lcom/facebook/marianatrench/integrationtests/Tree;)V"
   ]
 }

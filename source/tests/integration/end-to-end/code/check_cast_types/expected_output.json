@@ -1791,14 +1791,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "local_features" : 
-          {
-            "always_features" : 
-            [
-              "via-obscure"
-            ]
-          }
+          ]
         }
       ]
     }
@@ -1818,7 +1811,6 @@
     {
       "always_features" : 
       [
-        "via-obscure",
         "via-shim:Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.shimmed:(Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;Ljava/lang/Object;)V"
       ],
       "callee" : "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$DerivedWithSink;.run:(Ljava/lang/Object;)V",
@@ -1848,10 +1840,6 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-obscure"
-              ],
               "callee_interval" : 
               [
                 45,
@@ -1911,14 +1899,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "local_features" : 
-          {
-            "always_features" : 
-            [
-              "via-obscure"
-            ]
-          }
+          ]
         }
       ]
     }
@@ -1936,7 +1917,6 @@
     {
       "always_features" : 
       [
-        "via-obscure",
         "via-shim:Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.shimmed:(Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;Ljava/lang/Object;)V"
       ],
       "callee" : "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$DerivedWithSink;.run:(Ljava/lang/Object;)V",
@@ -1966,10 +1946,6 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-obscure"
-              ],
               "callee_interval" : 
               [
                 45,
@@ -2029,14 +2005,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "local_features" : 
-          {
-            "always_features" : 
-            [
-              "via-obscure"
-            ]
-          }
+          ]
         }
       ]
     }
@@ -2054,7 +2023,6 @@
     {
       "always_features" : 
       [
-        "via-obscure",
         "via-shim:Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.shimmed:(Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;Ljava/lang/Object;)V"
       ],
       "callee" : "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;.run:(Ljava/lang/Object;)V",
@@ -2084,10 +2052,6 @@
           "kinds" : 
           [
             {
-              "always_features" : 
-              [
-                "via-obscure"
-              ],
               "callee_interval" : 
               [
                 45,
@@ -2147,14 +2111,7 @@
               ],
               "preserves_type_context" : true
             }
-          ],
-          "local_features" : 
-          {
-            "always_features" : 
-            [
-              "via-obscure"
-            ]
-          }
+          ]
         }
       ]
     }
@@ -2752,5 +2709,96 @@
   "position" : 
   {
     "line" : 14
+  }
+}
+{
+  "method" : "Lkotlin/jvm/internal/Intrinsics;.<init>:()V",
+  "position" : 
+  {
+    "line" : 10
+  }
+}
+{
+  "method" : "Lkotlin/jvm/internal/Intrinsics;.checkExpressionValueIsNotNull:(Ljava/lang/Object;Ljava/lang/String;)V",
+  "position" : 
+  {
+    "line" : 25
+  }
+}
+{
+  "method" : "Lkotlin/jvm/internal/Intrinsics;.checkFieldIsNotNull:(Ljava/lang/Object;Ljava/lang/String;)V",
+  "position" : 
+  {
+    "line" : 56
+  }
+}
+{
+  "method" : "Lkotlin/jvm/internal/Intrinsics;.checkFieldIsNotNull:(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;)V",
+  "position" : 
+  {
+    "line" : 50
+  }
+}
+{
+  "method" : "Lkotlin/jvm/internal/Intrinsics;.checkHasClass:(Ljava/lang/String;)V",
+  "position" : 
+  {
+    "line" : 74
+  }
+}
+{
+  "method" : "Lkotlin/jvm/internal/Intrinsics;.checkHasClass:(Ljava/lang/String;Ljava/lang/String;)V",
+  "position" : 
+  {
+    "line" : 78
+  }
+}
+{
+  "method" : "Lkotlin/jvm/internal/Intrinsics;.checkNotNull:(Ljava/lang/Object;)V",
+  "position" : 
+  {
+    "line" : 13
+  }
+}
+{
+  "method" : "Lkotlin/jvm/internal/Intrinsics;.checkNotNull:(Ljava/lang/Object;Ljava/lang/String;)V",
+  "position" : 
+  {
+    "line" : 19
+  }
+}
+{
+  "method" : "Lkotlin/jvm/internal/Intrinsics;.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V",
+  "position" : 
+  {
+    "line" : 31
+  }
+}
+{
+  "method" : "Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V",
+  "position" : 
+  {
+    "line" : 68
+  }
+}
+{
+  "method" : "Lkotlin/jvm/internal/Intrinsics;.checkParameterIsNotNull:(Ljava/lang/Object;Ljava/lang/String;)V",
+  "position" : 
+  {
+    "line" : 62
+  }
+}
+{
+  "method" : "Lkotlin/jvm/internal/Intrinsics;.checkReturnedValueIsNotNull:(Ljava/lang/Object;Ljava/lang/String;)V",
+  "position" : 
+  {
+    "line" : 44
+  }
+}
+{
+  "method" : "Lkotlin/jvm/internal/Intrinsics;.checkReturnedValueIsNotNull:(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;)V",
+  "position" : 
+  {
+    "line" : 38
   }
 }

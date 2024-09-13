@@ -390,6 +390,13 @@
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
+  "Lkotlin/jvm/internal/Intrinsics;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
   "Lsimple/logging/SimpleLogging;.<init>:()V" : 
   {
     "static" : 

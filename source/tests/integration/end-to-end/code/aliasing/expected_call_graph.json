@@ -322,7 +322,8 @@
     "static" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-      "Lcom/facebook/marianatrench/integrationtests/Tree;.<init>:()V"
+      "Lcom/facebook/marianatrench/integrationtests/Tree;.<init>:()V",
+      "Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V"
     ],
     "virtual" : 
     [
@@ -430,8 +431,47 @@
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/Tree;.setBar:(Lcom/facebook/marianatrench/integrationtests/Tree;)V" : 
+  {
+    "static" : 
+    [
+      "Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Tree;.setBaz:(Lcom/facebook/marianatrench/integrationtests/Tree;)V" : 
+  {
+    "static" : 
+    [
+      "Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Tree;.setBiz:(Lcom/facebook/marianatrench/integrationtests/Tree;)V" : 
+  {
+    "static" : 
+    [
+      "Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Tree;.setBuzz:(Lcom/facebook/marianatrench/integrationtests/Tree;)V" : 
+  {
+    "static" : 
+    [
+      "Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Tree;.setFoo:(Lcom/facebook/marianatrench/integrationtests/Tree;)V" : 
+  {
+    "static" : 
+    [
+      "Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/Tree;.titoCollapsed:(Lcom/facebook/marianatrench/integrationtests/Tree;)V" : 
   {
+    "static" : 
+    [
+      "Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V"
+    ],
     "virtual" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/Tree;.getBar:()Lcom/facebook/marianatrench/integrationtests/Tree;",
@@ -444,6 +484,10 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/Tree;.titoNoCollapsed:(Lcom/facebook/marianatrench/integrationtests/Tree;)V" : 
   {
+    "static" : 
+    [
+      "Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V"
+    ],
     "virtual" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/Tree;.getBar:()Lcom/facebook/marianatrench/integrationtests/Tree;",
@@ -574,6 +618,13 @@
     ]
   },
   "Ljava/util/TreeMap;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lkotlin/jvm/internal/Intrinsics;.<init>:()V" : 
   {
     "static" : 
     [

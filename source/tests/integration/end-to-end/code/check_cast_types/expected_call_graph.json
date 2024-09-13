@@ -324,11 +324,25 @@
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;.run:(Ljava/lang/Object;)V" : 
+  {
+    "static" : 
+    [
+      "Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$DerivedNoSink;.<init>:()V" : 
   {
     "static" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$DerivedNoSink;.run:(Ljava/lang/Object;)V" : 
+  {
+    "static" : 
+    [
+      "Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V"
     ]
   },
   "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$DerivedWithSink;.<init>:()V" : 
@@ -342,7 +356,8 @@
   {
     "static" : 
     [
-      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V"
     ]
   },
   "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.<init>:()V" : 
@@ -360,7 +375,9 @@
     ],
     "static" : 
     [
-      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+      "Lkotlin/jvm/internal/Intrinsics;.checkNotNull:(Ljava/lang/Object;Ljava/lang/String;)V",
+      "Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V"
     ],
     "virtual" : 
     [
@@ -376,7 +393,8 @@
     "static" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$DerivedWithSink;.<init>:()V",
-      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+      "Lkotlin/jvm/internal/Intrinsics;.checkNotNull:(Ljava/lang/Object;Ljava/lang/String;)V"
     ],
     "virtual" : 
     [
@@ -393,7 +411,8 @@
     [
       "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$DerivedNoSink;.<init>:()V",
       "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$DerivedWithSink;.<init>:()V",
-      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+      "Lkotlin/jvm/internal/Intrinsics;.checkNotNull:(Ljava/lang/Object;Ljava/lang/String;)V"
     ],
     "virtual" : 
     [
@@ -408,7 +427,9 @@
     ],
     "static" : 
     [
-      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+      "Lkotlin/jvm/internal/Intrinsics;.checkNotNull:(Ljava/lang/Object;Ljava/lang/String;)V",
+      "Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V"
     ],
     "virtual" : 
     [
@@ -424,11 +445,19 @@
     "static" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$DerivedNoSink;.<init>:()V",
-      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+      "Lkotlin/jvm/internal/Intrinsics;.checkNotNull:(Ljava/lang/Object;Ljava/lang/String;)V"
     ],
     "virtual" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.shimmed:(Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;Ljava/lang/Object;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.shimmed:(Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;Ljava/lang/Object;)V" : 
+  {
+    "static" : 
+    [
+      "Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V"
     ]
   },
   "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V" : 
@@ -566,6 +595,13 @@
     ]
   },
   "Ljava/util/TreeMap;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lkotlin/jvm/internal/Intrinsics;.<init>:()V" : 
   {
     "static" : 
     [
