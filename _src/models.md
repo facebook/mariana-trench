@@ -73,11 +73,7 @@ For the parameters and return types use the following table to pick the correct 
 - F - float
 - D - double (64 bits)
 
-Classes take the form `Lpackage/name/ClassName;` - where the leading `L` indicates that it is a class type, `package/name/` is the package that the class is in. A nested class will take the form `Lpackage/name/ClassName$NestedClassName` (the `$` will need to be double escaped `\\$` in json regex).
-
-> **NOTE 1:** Instance (i.e, non-static) method parameters are indexed starting from 1! The 0th parameter is the `this` parameter in dalvik byte-code. For static method parameters, indices start from 0.
-
-> **NOTE 2:** In a constructor (\<init\> method), parameters are also indexed starting from 1. The 0th parameter refers to the instance being constructed, similar to the `this` reference.
+Classes take the form `Lpackage/name/ClassName;` - where the leading `L` indicates that it is a class type, `package/name/` is the package that the class is in. A nested class will take the form `Lpackage/name/ClassName$NestedClassName;` (the `$` will need to be double escaped `\\$` in json regex).
 
 ### Access path format
 
@@ -88,7 +84,7 @@ An access path is composed of a root and a path.
 The root is either:
 
 - `Return`, representing the returned value;
-- `Argument(x)` (where `x` is an integer), representing the parameter number `x`;
+- `Argument(x)` (where `x` is an integer), representing the parameter number `x`. **Note** that `Argument(0)` represents the implicit `this` parameter for instance methods;
 
 The path is a (possibly empty) list of path elements. A path element can be any of the following kinds:
 
@@ -105,6 +101,10 @@ Examples:
 - `Argument(1)[<Argument(2)>]` corresponds to an _index_ of the dictionary like second parameter whose value is resolved from the third parameter;
 - `Return` corresponds to the returned value;
 - `Return.x` corresponds to the field `x` of the returned value;
+
+> **NOTE 1:** Instance (i.e, non-static) method parameters are indexed starting from 1! The 0th parameter is the `this` parameter in Dalvik byte-code. For static method parameters, indices start from 0.
+
+> **NOTE 2:** In a constructor (`<init>` method), parameters are also indexed starting from 1. The 0th parameter refers to the instance being constructed, similar to the `this` reference.
 
 ### Kinds
 
