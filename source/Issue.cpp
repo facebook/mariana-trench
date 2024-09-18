@@ -157,7 +157,14 @@ Json::Value Issue::to_json(ExportOriginsMode export_origins_mode) const {
   value["rule"] = Json::Value(rule_->code());
   value["position"] = position_->to_json();
   value["sink_index"] = std::to_string(sink_index_);
-  value["callee"] = callee_;
+  if (std::holds_alternative<std::string>(callee_)) {
+    value["callee"] = std::get<std::string>(callee_);
+  } else if (std::holds_alternative<const ExploitabilityOrigin*>(callee_)) {
+    value["exploitability_origin"] =
+        std::get<const ExploitabilityOrigin*>(callee_)->to_json();
+  } else {
+    mt_unreachable();
+  }
 
   JsonValidation::update_object(value, features().to_json());
 
@@ -172,8 +179,16 @@ std::ostream& operator<<(std::ostream& out, const Issue& issue) {
   } else {
     out << "null";
   }
-  return out << ", callee=" << show(issue.callee_)
-             << ", sink_index=" << issue.sink_index_
+  out << ", callee=";
+  if (std::holds_alternative<std::string>(issue.callee_)) {
+    out << std::get<std::string>(issue.callee_);
+  } else if (std::holds_alternative<const ExploitabilityOrigin*>(
+                 issue.callee_)) {
+    out << std::get<const ExploitabilityOrigin*>(issue.callee_)->to_string();
+  } else {
+    mt_unreachable();
+  }
+  return out << ", sink_index=" << issue.sink_index_
              << ", position=" << show(issue.position_) << ")";
 }
 

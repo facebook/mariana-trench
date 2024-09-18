@@ -41,6 +41,8 @@ class MethodContext final {
     return previous_model.method();
   }
 
+  const Position* position() const;
+
   bool dump() const {
     return dump_;
   }

@@ -437,7 +437,7 @@ void create_issue(
     const Rule* rule,
     const Position* position,
     TextualOrderIndex sink_index,
-    std::string_view callee,
+    Issue::Callee callee,
     const FeatureMayAlwaysSet& extra_features) {
   // Skip creating issue if there are parameter type overrides.
   // The issue should be found in the copy of the Method that does not have
@@ -466,7 +466,7 @@ void create_issue(
       Taint{std::move(source)},
       Taint{std::move(sink)},
       rule,
-      callee,
+      std::move(callee),
       sink_index,
       position);
   LOG_OR_DUMP(context, 4, "Found issue: {}", issue);
@@ -495,7 +495,7 @@ void check_source_sink_rules(
         rule,
         position,
         sink_index,
-        callee,
+        std::string(callee),
         extra_features);
   }
 }
@@ -513,7 +513,7 @@ void check_fulfilled_exploitability_rules(
     const Taint& exploitability_source_taint,
     const TransformKind* source_as_transform_sink_kind,
     const Taint& source_as_transform_sink_taint,
-    const Position* position,
+    const Position* method_position,
     TextualOrderIndex sink_index,
     std::string_view callee,
     const FeatureMayAlwaysSet& extra_features) {
@@ -565,9 +565,9 @@ void check_fulfilled_exploitability_rules(
           exploitability_source_taint,
           issue_sink_taint,
           rule,
-          exploitability_origin->position(),
+          method_position,
           sink_index,
-          exploitability_origin->issue_handle_callee(),
+          exploitability_origin,
           extra_features_copy);
     }
   }
@@ -689,6 +689,10 @@ void check_exploitability_rules(
         callee,
         extra_features);
   } else {
+    // Exploitability rule can be fullfilled to the same exploitability_root
+    // through multiple call-sites in the current method. Since we want to
+    // group those issues together, we use the method's position here.
+    const auto* method_position = context->position();
     check_fulfilled_exploitability_rules(
         context,
         instruction,
@@ -696,7 +700,7 @@ void check_exploitability_rules(
         source_taint,
         source_as_transform_sink,
         sink_taint,
-        position,
+        method_position,
         sink_index,
         callee,
         extra_features);
@@ -756,7 +760,7 @@ void check_multi_source_multi_sink_rules(
           partial_rule,
           position,
           sink_index,
-          callee,
+          std::string(callee),
           extra_features);
     } else {
       LOG_OR_DUMP(

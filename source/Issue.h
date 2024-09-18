@@ -26,6 +26,9 @@ constexpr std::string_view k_unresolved_callee = "unresolved";
 
 class Issue final : public sparta::AbstractDomain<Issue> {
  public:
+  using Callee = std::variant<std::string, const ExploitabilityOrigin*>;
+
+ public:
   /* Create the bottom issue. */
   explicit Issue()
       : sources_(Taint::bottom()),
@@ -39,13 +42,13 @@ class Issue final : public sparta::AbstractDomain<Issue> {
       Taint sources,
       Taint sinks,
       const Rule* rule,
-      std::string_view callee,
+      Callee callee,
       TextualOrderIndex sink_index,
       const Position* position)
       : sources_(std::move(sources)),
         sinks_(std::move(sinks)),
         rule_(rule),
-        callee_(std::string(callee)),
+        callee_(std::move(callee)),
         sink_index_(sink_index),
         position_(position) {}
 
@@ -63,7 +66,7 @@ class Issue final : public sparta::AbstractDomain<Issue> {
     return rule_;
   }
 
-  const std::string& callee() const {
+  const Callee& callee() const {
     return callee_;
   }
 
@@ -145,7 +148,7 @@ class Issue final : public sparta::AbstractDomain<Issue> {
   Taint sources_;
   Taint sinks_;
   const Rule* MT_NULLABLE rule_;
-  std::string callee_;
+  Callee callee_;
   TextualOrderIndex sink_index_;
   const Position* MT_NULLABLE position_;
 };

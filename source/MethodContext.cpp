@@ -155,6 +155,10 @@ Taint propagate_field_or_literal_taint(
 
 } // namespace
 
+const Position* MethodContext::position() const {
+  return positions.get(method());
+}
+
 Taint MethodContext::field_sources_at_callsite(
     const FieldTarget& field_target,
     const InstructionAliasResults& aliasing) const {
