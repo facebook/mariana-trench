@@ -512,7 +512,7 @@ void check_fulfilled_exploitability_rules(
     const Kind* exploitability_source_kind,
     const Taint& exploitability_source_taint,
     const TransformKind* source_as_transform_sink_kind,
-    Taint& source_as_transform_sink_taint,
+    const Taint& source_as_transform_sink_taint,
     const Position* position,
     TextualOrderIndex sink_index,
     std::string_view callee,
@@ -535,7 +535,8 @@ void check_fulfilled_exploitability_rules(
       source_as_transform_sink_taint.exploitability_origins();
   mt_assert(!exploitability_origins.is_bottom());
 
-  source_as_transform_sink_taint.transform_frames(
+  auto issue_sink_taint = source_as_transform_sink_taint;
+  issue_sink_taint.transform_frames(
       [](Frame frame) { return frame.without_exploitability_origins(); });
 
   // Create an issue per exploitability-origin for fulfilled exploitability
@@ -562,7 +563,7 @@ void check_fulfilled_exploitability_rules(
       create_issue(
           context,
           exploitability_source_taint,
-          source_as_transform_sink_taint,
+          issue_sink_taint,
           rule,
           position,
           sink_index,
@@ -628,9 +629,9 @@ void check_partially_fulfilled_exploitability_rules(
   auto* caller_position = context->positions.get(context->method());
 
   // Check for trivially fulfilled case.
-  for (auto& [source_kind, source_taint] :
+  for (const auto& [source_kind, source_taint] :
        exploitability_sources.partition_by_kind()) {
-    for (auto& [sink_kind, sink_taint] :
+    for (const auto& [sink_kind, sink_taint] :
          transformed_sink_with_extra_trace.partition_by_kind()) {
       check_fulfilled_exploitability_rules(
           context,
