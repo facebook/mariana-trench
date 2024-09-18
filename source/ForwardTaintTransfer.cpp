@@ -565,7 +565,7 @@ void check_fulfilled_exploitability_rules(
           exploitability_source_taint,
           issue_sink_taint,
           rule,
-          position,
+          exploitability_origin->position(),
           sink_index,
           exploitability_origin->issue_handle_callee(),
           extra_features_copy);
