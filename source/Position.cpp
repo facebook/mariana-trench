@@ -5,6 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <fmt/format.h>
+
 #include <Show.h>
 
 #include <mariana-trench/JsonValidation.h>
@@ -37,18 +39,21 @@ bool Position::operator!=(const Position& other) const {
   return !this->operator==(other);
 }
 
+std::string Position::to_string() const {
+  std::string out = "Position(";
+  if (path_ != nullptr) {
+    out.append(fmt::format("path=`{}`,", show(path_)));
+  }
+  if (line_ != k_unknown_line) {
+    out.append("line={}", line_);
+  }
+  out.append(")");
+
+  return out;
+}
+
 std::ostream& operator<<(std::ostream& out, const Position& position) {
-  out << "Position(";
-  if (position.path_ != nullptr) {
-    out << "path=`" << show(position.path_) << "`";
-    if (position.line_ != k_unknown_line) {
-      out << ", ";
-    }
-  }
-  if (position.line_ != k_unknown_line) {
-    out << "line=" << position.line_;
-  }
-  return out << ")";
+  return out << position.to_string();
 }
 
 const Position* Position::from_json(

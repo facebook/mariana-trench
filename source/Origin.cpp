@@ -31,10 +31,12 @@ const Origin* Origin::from_json(const Json::Value& value, Context& context) {
     return context.origin_factory->string_origin(
         JsonValidation::string(value, "method"));
   } else if (
-      value.isMember("exploitability_root") && value.isMember("callee")) {
+      value.isMember("exploitability_root") && value.isMember("callee") &&
+      value.isMember("position")) {
     return context.origin_factory->exploitability_origin(
         Method::from_json(value["exploitability_root"], context),
-        JsonValidation::string(value, "callee"));
+        JsonValidation::string(value, "callee"),
+        Position::from_json(value["position"], context));
   }
 
   throw JsonValidationError(
@@ -105,9 +107,10 @@ Json::Value StringOrigin::to_json() const {
 
 std::string ExploitabilityOrigin::to_string() const {
   return fmt::format(
-      "exploitability_root={},callee={}",
+      "exploitability_root={},callee={},position={}",
       exploitability_root_->show(),
-      callee_->str());
+      callee_->str(),
+      position_->to_string());
 }
 
 std::optional<std::string> ExploitabilityOrigin::to_model_validator_string()
@@ -123,6 +126,7 @@ Json::Value ExploitabilityOrigin::to_json() const {
   auto value = Json::Value(Json::objectValue);
   value["exploitability_root"] = exploitability_root_->to_json();
   value["callee"] = callee_->str_copy();
+  value["position"] = position_->to_json(/* with_path */ true);
   return value;
 }
 

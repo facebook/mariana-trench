@@ -31,7 +31,8 @@ Taint apply_source_as_transform_to_sink(
     const Taint& source_taint,
     const TransformList* source_as_transform,
     const Taint& sink_taint,
-    std::string_view callee);
+    std::string_view callee,
+    const Position* position);
 
 } // namespace transforms
 } // namespace marianatrench

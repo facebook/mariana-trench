@@ -159,7 +159,8 @@ class Frame final : public sparta::AbstractDomain<Frame> {
 
   void add_exploitability_origin(
       const Method* exploitability_root,
-      std::string_view callee);
+      std::string_view callee,
+      const Position* position);
 
   const OriginSet& origins() const {
     return origins_;

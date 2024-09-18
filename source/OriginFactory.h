@@ -35,7 +35,8 @@ class OriginFactory final {
 
   const ExploitabilityOrigin* exploitability_origin(
       const Method* exploitability_root,
-      std::string_view callee) const;
+      std::string_view callee,
+      const Position* position) const;
 
   static const OriginFactory& singleton();
 
@@ -53,9 +54,9 @@ class OriginFactory final {
       crtex_origins_;
   UniquePointerFactory<const DexString*, StringOrigin> string_origins_;
   UniquePointerFactory<
-      std::tuple<const Method*, const DexString*>,
+      std::tuple<const Method*, const DexString*, const Position*>,
       ExploitabilityOrigin,
-      TupleHash<const Method*, const DexString*>>
+      TupleHash<const Method*, const DexString*, const Position*>>
       exploitability_origins_;
 };
 

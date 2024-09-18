@@ -68,6 +68,8 @@ class Position final {
     return end_;
   }
 
+  std::string to_string() const;
+
   friend std::ostream& operator<<(std::ostream& out, const Position& kind);
 
   static const Position* from_json(const Json::Value& value, Context& context);

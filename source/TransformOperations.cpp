@@ -81,7 +81,8 @@ Taint apply_source_as_transform_to_sink(
     const Taint& source_taint,
     const TransformList* source_as_transform,
     const Taint& sink_taint,
-    std::string_view callee) {
+    std::string_view callee,
+    const Position* position) {
   // Direction of applying on sink should be the same as backward transform
   auto transformed_sink_taint = sink_taint.apply_transform(
       context->kind_factory,
@@ -96,7 +97,7 @@ Taint apply_source_as_transform_to_sink(
 
   // Add extra trace and exploitability origin to source frame
   transformed_sink_taint.update_with_extra_trace_and_exploitability_origin(
-      source_taint, FrameType::source(), context->method(), callee);
+      source_taint, FrameType::source(), context->method(), callee, position);
 
   LOG(5, "Materialized source-as-transform sink: {}", transformed_sink_taint);
 

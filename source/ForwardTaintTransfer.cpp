@@ -608,7 +608,12 @@ void check_partially_fulfilled_exploitability_rules(
 
   auto transformed_sink_with_extra_trace =
       transforms::apply_source_as_transform_to_sink(
-          context, source_taint, source_as_transform, sink_taint, callee);
+          context,
+          source_taint,
+          source_as_transform,
+          sink_taint,
+          callee,
+          position);
 
   // Collapse taint tree as exploitability port does not use paths.
   auto exploitability_sources =

@@ -231,7 +231,8 @@ class Taint final : public sparta::AbstractDomain<Taint> {
       const Taint& source_taint,
       FrameType frame_type,
       const Method* exploitability_root,
-      std::string_view callee);
+      std::string_view callee,
+      const Position* position);
 
   OriginSet exploitability_origins() const;
 

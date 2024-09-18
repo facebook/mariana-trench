@@ -34,12 +34,14 @@ const StringOrigin* OriginFactory::string_origin(std::string_view name) const {
 
 const ExploitabilityOrigin* OriginFactory::exploitability_origin(
     const Method* exploitability_root,
-    std::string_view callee) const {
+    std::string_view callee,
+    const Position* position) const {
   const auto* dex_callee = DexString::make_string(callee);
   return exploitability_origins_.create(
-      std::make_tuple(exploitability_root, dex_callee),
+      std::make_tuple(exploitability_root, dex_callee, position),
       exploitability_root,
-      dex_callee);
+      dex_callee,
+      position);
 }
 
 const OriginFactory& OriginFactory::singleton() {

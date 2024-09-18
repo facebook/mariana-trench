@@ -13,6 +13,7 @@
 #include <mariana-trench/Field.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Method.h>
+#include <mariana-trench/Position.h>
 
 namespace marianatrench {
 
@@ -164,8 +165,11 @@ class ExploitabilityOrigin final : public Origin {
  public:
   explicit ExploitabilityOrigin(
       const Method* exploitability_root,
-      const DexString* callee)
-      : exploitability_root_(exploitability_root), callee_(callee) {}
+      const DexString* callee,
+      const Position* position)
+      : exploitability_root_(exploitability_root),
+        callee_(callee),
+        position_(position) {}
 
   DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ExploitabilityOrigin)
 
@@ -179,8 +183,8 @@ class ExploitabilityOrigin final : public Origin {
     return callee_;
   }
 
-  const Method* exploitability_root() const {
-    return exploitability_root_;
+  const Position* position() const {
+    return position_;
   }
 
   std::string issue_handle_callee() const;
@@ -188,6 +192,7 @@ class ExploitabilityOrigin final : public Origin {
  private:
   const Method* exploitability_root_;
   const DexString* callee_;
+  const Position* position_;
 };
 
 } // namespace marianatrench
