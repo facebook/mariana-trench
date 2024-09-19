@@ -148,8 +148,14 @@ class StringOrigin final : public Origin {
  * Similar to how method/field/string origins are first added when creating
  * user-declared models (see Taint::add_origins_if_declaration()),
  * exploitability-origins are added when we first infer the source-as-transform
- * sinks. It tracks the (caller method + sink callee) pair where
- * the source-as-transform sink was materialized/originated.
+ * sinks. It tracks the (caller method + sink callee + position) tuple where
+ * the source-as-transform sink was materialized/originated. This helps us track
+ * the information related to the original source/sink flow and is used in the
+ * computation of issue grouping (and hence issue handles) when the
+ * exploitability rule is fulfilled. We create one issue per
+ * exploitability-origin and use it as the "callee" of the Issue, maintaining
+ * the issue grouping from the original source/sink flow. See
+ * exploitability_rules integration test for more information.
  *
  * From the SAPP UI perspective: Similar to how method/field/string origins
  * indicates the leaf frames of the source/sink traces, exploitability-origins
@@ -182,12 +188,6 @@ class ExploitabilityOrigin final : public Origin {
   const DexString* callee() const {
     return callee_;
   }
-
-  const Position* position() const {
-    return position_;
-  }
-
-  std::string issue_handle_callee() const;
 
  private:
   const Method* exploitability_root_;

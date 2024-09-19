@@ -118,10 +118,6 @@ std::optional<std::string> ExploitabilityOrigin::to_model_validator_string()
   return std::nullopt;
 }
 
-std::string ExploitabilityOrigin::issue_handle_callee() const {
-  return fmt::format("{}:{}", exploitability_root_->show(), callee_->str());
-}
-
 Json::Value ExploitabilityOrigin::to_json() const {
   auto value = Json::Value(Json::objectValue);
   value["exploitability_root"] = exploitability_root_->to_json();
