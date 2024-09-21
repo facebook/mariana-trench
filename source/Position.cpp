@@ -45,8 +45,15 @@ std::string Position::to_string() const {
     out.append(fmt::format("path=`{}`,", show(path_)));
   }
   if (line_ != k_unknown_line) {
-    out.append("line={}", line_);
+    out.append("line={},", line_);
   }
+  if (start_ != k_unknown_start) {
+    out.append("start={},", start_);
+  }
+  if (end_ != k_unknown_end) {
+    out.append("end={}", end_);
+  }
+
   out.append(")");
 
   return out;
