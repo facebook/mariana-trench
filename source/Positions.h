@@ -63,6 +63,9 @@ class Positions final {
       int start = k_unknown_start,
       int end = k_unknown_end) const;
 
+  const Position*
+  get(const std::string* MT_NULLABLE path, int line, int start, int end) const;
+
   const Position* get(
       const Position* position,
       std::optional<Root> port,

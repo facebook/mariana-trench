@@ -14,8 +14,13 @@ namespace marianatrench {
 class Highlights {
  public:
   /*
-   * Add a start and end column to the positions involved in issues so that they
-   * can be highlighted in the Zoncolan UI
+   * Updates the positions involved in issues. This uses the instruction and
+   * port stored in the position to add a start and end column so that they can
+   * be highlighted in the SAPP UI. Also removes the instruction and port from
+   * the position since the position json does not include them. Doing so can
+   * change the grouping in the final result but will maintain consistency
+   * between the final analysis results and the json output for SAPP UI and
+   * avoids discrepancies.
    */
   static void augment_positions(Registry&, const Context& context);
 

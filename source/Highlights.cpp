@@ -217,7 +217,7 @@ LocalPositionSet augment_local_positions(
     }
     auto bounds = Highlights::get_local_position_bounds(*local_position, lines);
     new_local_positions.add(context.positions->get(
-        local_position, bounds.line, bounds.start, bounds.end));
+        local_position->path(), bounds.line, bounds.start, bounds.end));
   }
   return Highlights::filter_overlapping_highlights(new_local_positions);
 }
@@ -235,7 +235,7 @@ const Position* augment_frame_position(
   auto bounds = Highlights::get_callee_highlight_bounds(
       callee->dex_method(), lines, position->line(), callee_port->root());
   return context.positions->get(
-      position, bounds.line, bounds.start, bounds.end);
+      position->path(), bounds.line, bounds.start, bounds.end);
 }
 
 Taint augment_taint_positions(
@@ -247,10 +247,19 @@ Taint augment_taint_positions(
           const Method* callee,
           const AccessPath* MT_NULLABLE callee_port,
           const Position* MT_NULLABLE position) {
-        if (callee_port == nullptr || position == nullptr) {
-          // Cannot determine position if callee port and existing position
-          // are unknown. Return the original position.
+        if (position == nullptr) {
+          // Unknown position.
           return position;
+        }
+
+        if (callee_port == nullptr) {
+          // Cannot determine position if callee port is unknown. Return the
+          // original position without instruction and port.
+          return context.positions->get(
+              position->path(),
+              position->line(),
+              position->start(),
+              position->end());
         }
         return augment_frame_position(
             callee, callee_port, position, lines, context);
@@ -271,19 +280,33 @@ TaintAccessPathTree augment_taint_tree_positions(
 }
 
 IssueSet augment_issue_positions(
-    IssueSet issues,
+    const IssueSet& issues,
     const FileLines& lines,
     const Context& context) {
-  issues.transform([&lines, &context](Issue issue) {
-    return Issue(
+  IssueSet result{};
+
+  for (const auto& issue : issues) {
+    // We do not use IssueSet::transform() and instead build a new set here. The
+    // transform() method of the underlying GroupHashedSetAbstractDomain is only
+    // safe if the elements are updated without affecting the grouping. But
+    // since we remove the instruction and port from position, the issue
+    // grouping can potentially change.
+    const auto* issue_position = issue.position();
+    mt_assert(issue_position != nullptr);
+    result.add(Issue(
         augment_taint_positions(issue.sources(), lines, context),
         augment_taint_positions(issue.sinks(), lines, context),
         issue.rule(),
         issue.callee(),
         issue.sink_index(),
-        issue.position());
-  });
-  return issues;
+        context.positions->get(
+            issue_position->path(),
+            issue_position->line(),
+            issue_position->start(),
+            issue_position->end())));
+  }
+
+  return result;
 }
 
 /**
@@ -506,42 +529,6 @@ Bounds Highlights::get_callee_highlight_bounds(
       callee_name_bounds);
 }
 
-void Highlights::augment_positions(Registry& registry, const Context& context) {
-  auto current_path = std::filesystem::current_path();
-  std::filesystem::current_path(context.options->source_root_directory());
-
-  auto issue_files_to_methods = get_issue_files_to_methods(context, registry);
-  auto file_queue =
-      sparta::work_queue<const std::string*>([&](const std::string* filepath) {
-        std::ifstream stream(*filepath);
-        if (stream.bad()) {
-          WARNING(1, "File {} was not found.", *filepath);
-          return;
-        }
-        auto lines = FileLines(stream);
-        for (const auto* method : issue_files_to_methods.get(filepath, {})) {
-          const auto old_model = registry.get(method);
-          auto new_model = old_model;
-          new_model.set_issues(
-              augment_issue_positions(old_model.issues(), lines, context));
-          new_model.set_sinks(
-              augment_taint_tree_positions(old_model.sinks(), lines, context));
-          new_model.set_generations(augment_taint_tree_positions(
-              old_model.generations(), lines, context));
-          new_model.set_parameter_sources(augment_taint_tree_positions(
-              old_model.parameter_sources(), lines, context));
-          registry.set(new_model);
-        }
-      });
-
-  for (const auto& [filepath, _] : issue_files_to_methods) {
-    file_queue.add_item(filepath);
-  }
-  file_queue.run_all();
-
-  std::filesystem::current_path(current_path);
-}
-
 LocalPositionSet Highlights::filter_overlapping_highlights(
     const LocalPositionSet& local_positions) {
   mt_assert(local_positions.is_value());
@@ -585,6 +572,42 @@ LocalPositionSet Highlights::filter_overlapping_highlights(
     }
   }
   return new_local_positions;
+}
+
+void Highlights::augment_positions(Registry& registry, const Context& context) {
+  auto current_path = std::filesystem::current_path();
+  std::filesystem::current_path(context.options->source_root_directory());
+
+  auto issue_files_to_methods = get_issue_files_to_methods(context, registry);
+  auto file_queue =
+      sparta::work_queue<const std::string*>([&](const std::string* filepath) {
+        std::ifstream stream(*filepath);
+        if (stream.bad()) {
+          WARNING(1, "File {} was not found.", *filepath);
+          return;
+        }
+        auto lines = FileLines(stream);
+        for (const auto* method : issue_files_to_methods.get(filepath, {})) {
+          const auto old_model = registry.get(method);
+          auto new_model = old_model;
+          new_model.set_issues(
+              augment_issue_positions(old_model.issues(), lines, context));
+          new_model.set_sinks(
+              augment_taint_tree_positions(old_model.sinks(), lines, context));
+          new_model.set_generations(augment_taint_tree_positions(
+              old_model.generations(), lines, context));
+          new_model.set_parameter_sources(augment_taint_tree_positions(
+              old_model.parameter_sources(), lines, context));
+          registry.set(new_model);
+        }
+      });
+
+  for (const auto& [filepath, _] : issue_files_to_methods) {
+    file_queue.add_item(filepath);
+  }
+  file_queue.run_all();
+
+  std::filesystem::current_path(current_path);
 }
 
 } // namespace marianatrench

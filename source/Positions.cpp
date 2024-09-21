@@ -485,6 +485,21 @@ const Position* Positions::get(
 }
 
 const Position* Positions::get(
+    const std::string* MT_NULLABLE path,
+    int line,
+    int start,
+    int end) const {
+  auto new_position = Position(
+      /* path */ path != nullptr ? paths_.insert(*path).first : nullptr,
+      /* line */ line,
+      /* port */ std::nullopt,
+      /* instruction */ nullptr,
+      /* start */ start,
+      /* end */ end);
+  return positions_.insert(new_position).first;
+};
+
+const Position* Positions::get(
     const Position* position,
     std::optional<Root> port,
     const IRInstruction* instruction) const {
