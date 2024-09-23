@@ -24,7 +24,7 @@ namespace {
 void dfs_on_hierarchy(
     const ClassHierarchy& class_hierarchy,
     const DexType* current_node,
-    std::uint32_t& dfs_order,
+    std::int32_t& dfs_order,
     std::unordered_map<const DexType*, ClassIntervals::Interval>& result) {
   auto lower_bound = dfs_order;
 
@@ -67,7 +67,7 @@ ClassIntervals::ClassIntervals(
   // dfs_order does not intersect between different trees.
   const auto* root = type::java_lang_Object();
 
-  std::uint32_t dfs_order = MIN_INTERVAL;
+  std::int32_t dfs_order = MIN_INTERVAL;
   dfs_on_hierarchy(class_hierarchy, root, dfs_order, class_intervals_);
 
   if (options.dump_class_intervals()) {
@@ -108,14 +108,11 @@ Json::Value ClassIntervals::interval_to_json(const Interval& interval) {
     return interval_json;
   }
 
-  // Use the int64 constructor. This allows comparison against a Json::Value
-  // object returned from parsing a JSON string. Otherwise, we could end up
-  // comparing a Json::UInt type against a Json::Int type and fail equality
-  // check even for the same integer value.
-  interval_json.append(
-      Json::Value(static_cast<int64_t>(interval.lower_bound())));
-  interval_json.append(
-      Json::Value(static_cast<int64_t>(interval.upper_bound())));
+  // When this is read back in `interval_from_json()`, it should have Json::Int
+  // type. Note that comparing a Json::UInt type against a Json::Int type will
+  // fail equality checks even for the same integer value.
+  interval_json.append(Json::Value(interval.lower_bound()));
+  interval_json.append(Json::Value(interval.upper_bound()));
 
   return interval_json;
 }
@@ -132,10 +129,8 @@ ClassIntervals::Interval ClassIntervals::interval_from_json(
         value, /* field */ std::nullopt, "array of size 2 for class interval");
   }
 
-  // to_json() converts it to int64_t for Json comparison purposes, but the
-  // underlying type supports only uint32, so it is parsed as that.
-  auto lower_bound = JsonValidation::unsigned_integer(bounds[0]);
-  auto upper_bound = JsonValidation::unsigned_integer(bounds[1]);
+  auto lower_bound = JsonValidation::integer(bounds[0]);
+  auto upper_bound = JsonValidation::integer(bounds[1]);
 
   if (lower_bound == Interval::MIN && upper_bound == Interval::MAX) {
     return Interval::top();

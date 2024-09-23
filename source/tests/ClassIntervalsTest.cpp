@@ -54,26 +54,26 @@ TEST_F(ClassIntervalsTest, IntervalComputation) {
   auto context = test_context(scope);
 
   auto interval_a = context.class_intervals->get_interval(a->get_type());
-  EXPECT_EQ(ClassIntervals::Interval::finite(2, 7), interval_a);
+  EXPECT_EQ(ClassIntervals::Interval::finite(1, 6), interval_a);
 
   auto interval_a1 = context.class_intervals->get_interval(a1->get_type());
-  EXPECT_EQ(ClassIntervals::Interval::finite(3, 4), interval_a1);
+  EXPECT_EQ(ClassIntervals::Interval::finite(2, 3), interval_a1);
 
   auto interval_a2 = context.class_intervals->get_interval(a2->get_type());
-  EXPECT_EQ(ClassIntervals::Interval::finite(5, 6), interval_a2);
+  EXPECT_EQ(ClassIntervals::Interval::finite(4, 5), interval_a2);
 
   auto interval_b = context.class_intervals->get_interval(b->get_type());
-  EXPECT_EQ(ClassIntervals::Interval::finite(8, 13), interval_b);
+  EXPECT_EQ(ClassIntervals::Interval::finite(7, 12), interval_b);
 
   auto interval_b1 = context.class_intervals->get_interval(b1->get_type());
-  EXPECT_EQ(ClassIntervals::Interval::finite(9, 12), interval_b1);
+  EXPECT_EQ(ClassIntervals::Interval::finite(8, 11), interval_b1);
 
   auto interval_b1_1 = context.class_intervals->get_interval(b1_1->get_type());
-  EXPECT_EQ(ClassIntervals::Interval::finite(10, 11), interval_b1_1);
+  EXPECT_EQ(ClassIntervals::Interval::finite(9, 10), interval_b1_1);
 
   auto interval_object =
       context.class_intervals->get_interval(type::java_lang_Object());
-  EXPECT_EQ(ClassIntervals::Interval::finite(1, 14), interval_object);
+  EXPECT_EQ(ClassIntervals::Interval::finite(0, 13), interval_object);
 }
 
 TEST_F(ClassIntervalsTest, ClassIntervalSerializationDeserialization) {

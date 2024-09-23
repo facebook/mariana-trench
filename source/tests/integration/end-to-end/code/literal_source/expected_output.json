@@ -1228,8 +1228,8 @@
             {
               "callee_interval" : 
               [
-                36,
-                37
+                35,
+                36
               ],
               "kind" : "Logging",
               "origins" : 
@@ -1261,8 +1261,8 @@
             {
               "callee_interval" : 
               [
-                0,
-                4294967295
+                -2147483648,
+                2147483647
               ],
               "kind" : "GoogleAPIKey",
               "origins" : 
@@ -1317,8 +1317,8 @@
             {
               "callee_interval" : 
               [
-                36,
-                37
+                35,
+                36
               ],
               "kind" : "Partial:TestSink:aci",
               "origins" : 
@@ -1354,8 +1354,8 @@
             {
               "callee_interval" : 
               [
-                36,
-                37
+                35,
+                36
               ],
               "kind" : "AttackerControlledInput",
               "origins" : 
@@ -1419,8 +1419,8 @@
               ],
               "callee_interval" : 
               [
-                36,
-                37
+                35,
+                36
               ],
               "kind" : "Partial:TestSink:aci",
               "origins" : 
@@ -1456,8 +1456,8 @@
             {
               "callee_interval" : 
               [
-                36,
-                37
+                35,
+                36
               ],
               "kind" : "AttackerControlledInput",
               "origins" : 
@@ -1536,8 +1536,8 @@
             {
               "callee_interval" : 
               [
-                36,
-                37
+                35,
+                36
               ],
               "kind" : "Partial:TestSink:regex",
               "origins" : 
@@ -1570,8 +1570,8 @@
             {
               "callee_interval" : 
               [
-                0,
-                4294967295
+                -2147483648,
+                2147483647
               ],
               "kind" : "Regex",
               "origins" : 
@@ -1626,8 +1626,8 @@
             {
               "callee_interval" : 
               [
-                36,
-                37
+                35,
+                36
               ],
               "kind" : "Partial:TestSink:aci",
               "origins" : 
@@ -1663,8 +1663,8 @@
             {
               "callee_interval" : 
               [
-                36,
-                37
+                35,
+                36
               ],
               "kind" : "AttackerControlledInput",
               "origins" : 
@@ -1720,8 +1720,8 @@
             {
               "callee_interval" : 
               [
-                36,
-                37
+                35,
+                36
               ],
               "kind" : "Partial:TestSink:regex",
               "origins" : 
@@ -1754,8 +1754,8 @@
             {
               "callee_interval" : 
               [
-                0,
-                4294967295
+                -2147483648,
+                2147483647
               ],
               "kind" : "Regex",
               "origins" : 
@@ -1810,8 +1810,8 @@
             {
               "callee_interval" : 
               [
-                36,
-                37
+                35,
+                36
               ],
               "kind" : "Partial:TestSink:aci",
               "origins" : 
@@ -1847,8 +1847,8 @@
             {
               "callee_interval" : 
               [
-                36,
-                37
+                35,
+                36
               ],
               "kind" : "AttackerControlledInput",
               "origins" : 
@@ -1912,8 +1912,8 @@
               ],
               "callee_interval" : 
               [
-                36,
-                37
+                35,
+                36
               ],
               "kind" : "Partial:TestSink:aci",
               "origins" : 
@@ -1949,8 +1949,8 @@
             {
               "callee_interval" : 
               [
-                36,
-                37
+                35,
+                36
               ],
               "kind" : "AttackerControlledInput",
               "origins" : 

@@ -42,13 +42,14 @@ namespace marianatrench {
  */
 class ClassIntervals final {
  private:
-  // 0 is the lower/min bound of the unsigned interval and is internally used
-  // by sparta::IntervalDomain to represent an interval that is unbounded below.
-  // Class intervals are bounded, so the the interval should not fall below 1.
-  static constexpr std::uint32_t MIN_INTERVAL = 1;
+  // NOTE: std::numeric_limits<std::int32_t>::min() is internally used by
+  // sparta::IntervalDomain to represent an interval that is unbounded below.
+  // Class intervals are bounded, and by convention, represented by non-negative
+  // integers.
+  static constexpr std::int32_t MIN_INTERVAL = 0;
 
  public:
-  using Interval = sparta::IntervalDomain<std::uint32_t>;
+  using Interval = sparta::IntervalDomain<std::int32_t>;
 
   explicit ClassIntervals(
       const Options& options,
