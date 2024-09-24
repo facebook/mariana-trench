@@ -15,6 +15,7 @@
 #include <Resolver.h>
 #include <Walkers.h>
 
+#include <mariana-trench/AccessPathFactory.h>
 #include <mariana-trench/FeatureFactory.h>
 #include <mariana-trench/Fields.h>
 #include <mariana-trench/JsonValidation.h>

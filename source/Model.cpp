@@ -11,6 +11,7 @@
 #include <Show.h>
 #include <TypeUtil.h>
 
+#include <mariana-trench/AccessPathFactory.h>
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/ClassHierarchies.h>
 #include <mariana-trench/ClassProperties.h>

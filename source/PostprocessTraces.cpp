@@ -11,6 +11,7 @@
 #include <mariana-trench/Methods.h>
 #include <mariana-trench/PostprocessTraces.h>
 #include <mariana-trench/Registry.h>
+#include <mariana-trench/TransformsFactory.h>
 
 namespace marianatrench {
 

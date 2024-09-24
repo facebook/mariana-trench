@@ -20,7 +20,9 @@
 #include <mariana-trench/CallClassIntervalContext.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/IncludeMacros.h>
+#include <mariana-trench/Sanitizer.h>
 #include <mariana-trench/TaintConfig.h>
+#include <mariana-trench/TransformKind.h>
 
 namespace marianatrench {
 

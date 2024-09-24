@@ -19,8 +19,6 @@
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/OriginFactory.h>
-#include <mariana-trench/SanitizerSetTransform.h>
-#include <mariana-trench/TaggedRootSet.h>
 #include <mariana-trench/TaintConfig.h>
 
 namespace marianatrench {

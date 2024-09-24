@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <mariana-trench/AccessPathFactory.h>
 #include <mariana-trench/ArtificialMethods.h>
 #include <mariana-trench/CallGraph.h>
 #include <mariana-trench/ClassProperties.h>

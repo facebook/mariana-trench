@@ -16,13 +16,10 @@
 #include <sparta/HashedSetAbstractDomain.h>
 
 #include <mariana-trench/Access.h>
-#include <mariana-trench/AccessPathFactory.h>
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/CallClassIntervalContext.h>
 #include <mariana-trench/CallInfo.h>
-#include <mariana-trench/CallKind.h>
 #include <mariana-trench/CanonicalName.h>
-#include <mariana-trench/ClassIntervals.h>
 #include <mariana-trench/Compiler.h>
 #include <mariana-trench/ExportOriginsMode.h>
 #include <mariana-trench/ExtraTraceSet.h>
@@ -31,16 +28,12 @@
 #include <mariana-trench/FeatureSet.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Kind.h>
-#include <mariana-trench/KindFactory.h>
 #include <mariana-trench/Method.h>
 #include <mariana-trench/OriginSet.h>
 #include <mariana-trench/PathTreeDomain.h>
-#include <mariana-trench/PatriciaTreeSetAbstractDomain.h>
 #include <mariana-trench/Position.h>
-#include <mariana-trench/Sanitizer.h>
+#include <mariana-trench/PropagationKind.h>
 #include <mariana-trench/TaggedRootSet.h>
-#include <mariana-trench/TransformKind.h>
-#include <mariana-trench/TransformsFactory.h>
 
 namespace marianatrench {
 

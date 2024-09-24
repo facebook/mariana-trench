@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <mariana-trench/AccessPathFactory.h>
 #include <mariana-trench/Context.h>
 #include <mariana-trench/ExtraTraceSet.h>
 #include <mariana-trench/JsonValidation.h>
