@@ -135,6 +135,37 @@
           "constraint": "signature_match",
           "parent": "Landroid/content/Intent;",
           "names": [
+            "getData",
+            "getDataString"
+          ]
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-collapse-on-propagation",
+          "skip-analysis"
+        ],
+        "freeze": [
+          "propagation"
+        ],
+        "propagation": [
+          {
+            "input": "Argument(0)",
+            "output": "Return",
+            "features": [
+              "via-intent-data-getter"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroid/content/Intent;",
+          "names": [
             "getParcelableArrayExtra",
             "getParcelableArrayListExtra",
             "getParcelableExtra",
