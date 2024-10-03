@@ -92,8 +92,11 @@ Taint apply_source_as_transform_to_sink(
       TransformDirection::Backward);
 
   // Add additional features
-  transformed_sink_taint.add_locally_inferred_features(
-      FeatureMayAlwaysSet{context->feature_factory.get_exploitability_root()});
+  FeatureMayAlwaysSet additional_features{
+      context->feature_factory.get_exploitability_root()};
+  // Features found in the source branch should be a part of the final issue.
+  additional_features.add(source_taint.features_joined());
+  transformed_sink_taint.add_locally_inferred_features(additional_features);
 
   // Add extra trace and exploitability origin to source frame
   transformed_sink_taint.update_with_extra_trace_and_exploitability_origin(
