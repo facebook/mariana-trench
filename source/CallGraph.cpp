@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <unordered_map>
 
+#include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 #include <re2/re2.h>
 
@@ -484,6 +485,14 @@ void process_shim_lifecycle(
 
   const auto& local_extends =
       types.register_local_extends(caller, instruction, receiver_register);
+  std::vector<std::string> local_extends_string;
+  for (const auto& local_extends_type : local_extends) {
+    local_extends_string.push_back(show(local_extends_type));
+  }
+  const auto types_logging = fmt::format(
+      "Receiver type: `{}`, Local extends: {}",
+      show(receiver_type),
+      boost::join(local_extends_string, ","));
 
   auto target_lifecycle_methods = result->second.get_methods_for_type(
       receiver_type, local_extends, class_hierarchies);
@@ -491,10 +500,11 @@ void process_shim_lifecycle(
     EventLogger::log_event(
         "shim_lifecycle_target_method_not_found",
         fmt::format(
-            "Could not resolve any method for shim lifecycle target: {} at instruction: {} in caller: {}",
+            "Could not resolve any method for shim lifecycle target: `{}` at instruction: `{}` in caller: `{}`. {}",
             shim_lifecycle,
             show(instruction),
-            caller->show()));
+            caller->show(),
+            types_logging));
     return;
   } else if (
       target_lifecycle_methods.size() >= heuristics.join_override_threshold()) {
@@ -505,14 +515,25 @@ void process_shim_lifecycle(
     EventLogger::log_event(
         "shim_lifecycle_target_too_many_overrides",
         fmt::format(
-            "Shim lifecycle target: {} resolved to {} methods at instruction: {} in caller: {} "
-            "which exceeds the join override threshold of {}. Shim not created.",
+            "Shim lifecycle target: `{}` resolved to {} methods at instruction: `{}` in caller: `{}` "
+            "which exceeds the join override threshold of {}. Shim not created. {}",
             method_name,
             target_lifecycle_methods.size(),
             show(instruction),
             caller->show(),
-            heuristics.join_override_threshold()));
+            heuristics.join_override_threshold(),
+            types_logging));
     return;
+  } else {
+    EventLogger::log_event(
+        "shim_lifecycle_target_found",
+        fmt::format(
+            "Shim lifecycle target: `{}` resolved to `{}` methods at instruction `{}` in caller: `{}`. {}",
+            method_name,
+            target_lifecycle_methods.size(),
+            show(instruction),
+            caller->show(),
+            types_logging));
   }
 
   for (const auto* lifecycle_method : target_lifecycle_methods) {
