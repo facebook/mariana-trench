@@ -22,8 +22,10 @@
 #include <mariana-trench/Timer.h>
 #include <mariana-trench/model-generator/BuilderPatternGenerator.h>
 #include <mariana-trench/model-generator/ContentProviderGenerator.h>
+#include <mariana-trench/model-generator/DFASourceGenerator.h>
 #include <mariana-trench/model-generator/JoinOverrideGenerator.h>
 #include <mariana-trench/model-generator/JsonModelGenerator.h>
+#include <mariana-trench/model-generator/ManifestSourceGenerator.h>
 #include <mariana-trench/model-generator/ModelGenerator.h>
 #include <mariana-trench/model-generator/ModelGeneratorConfiguration.h>
 #include <mariana-trench/model-generator/ModelGeneratorName.h>
@@ -124,6 +126,9 @@ ModelGeneration::make_builtin_model_generators(
       std::make_unique<BuilderPatternGenerator>(context));
   builtin_generators.push_back(
       std::make_unique<JoinOverrideGenerator>(context));
+  builtin_generators.push_back(
+      std::make_unique<ManifestSourceGenerator>(context));
+  builtin_generators.push_back(std::make_unique<DFASourceGenerator>(context));
 
   std::unordered_map<const ModelGeneratorName*, std::unique_ptr<ModelGenerator>>
       builtin_generator_map;
