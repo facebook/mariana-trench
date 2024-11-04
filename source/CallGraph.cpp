@@ -452,10 +452,10 @@ void process_shim_lifecycle(
     const LifecycleMethods& lifecycle_methods,
     const ClassHierarchies& class_hierarchies,
     const FeatureFactory& feature_factory,
+    const Heuristics& heuristics,
     std::unordered_map<std::string, TextualOrderIndex>&
         sink_textual_order_index,
-    std::vector<ArtificialCallee>& artificial_callees,
-    const Heuristics& heuristics) {
+    std::vector<ArtificialCallee>& artificial_callees) {
   const auto& method_name = shim_lifecycle.method_name();
   auto receiver_register = shim_lifecycle.receiver_register(instruction);
 
@@ -551,7 +551,7 @@ void process_shim_lifecycle(
   }
 }
 
-std::vector<ArtificialCallee> shim_artificial_callees(
+void add_shim_artificial_callees(
     const Method* caller,
     const Method* callee,
     const IRInstruction* instruction,
@@ -562,11 +562,10 @@ std::vector<ArtificialCallee> shim_artificial_callees(
     const ClassHierarchies& class_hierarchies,
     const FeatureFactory& feature_factory,
     const Shim& shim,
+    const Heuristics& heuristics,
     std::unordered_map<std::string, TextualOrderIndex>&
         sink_textual_order_index,
-    const Heuristics& heuristics) {
-  std::vector<ArtificialCallee> artificial_callees;
-
+    std::vector<ArtificialCallee>& artificial_callees) {
   for (const auto& shim_target : shim.targets()) {
     process_shim_target(
         caller,
@@ -608,9 +607,9 @@ std::vector<ArtificialCallee> shim_artificial_callees(
         lifecycle_methods,
         class_hierarchies,
         feature_factory,
+        heuristics,
         sink_textual_order_index,
-        artificial_callees,
-        heuristics);
+        artificial_callees);
   }
 
   for (const auto& shim_target : shim.intent_routing_targets()) {
@@ -629,8 +628,6 @@ std::vector<ArtificialCallee> shim_artificial_callees(
         /* extra_features */
         FeatureSet{feature_factory.get_intent_routing_feature()});
   }
-
-  return artificial_callees;
 }
 
 bool is_field_instruction(const IRInstruction* instruction) {
@@ -730,7 +727,7 @@ InstructionCallGraphInformation process_instruction(
       sink_textual_order_index);
 
   if (auto shim = shims.get_shim_for_caller(original_callee, caller)) {
-    instruction_information.artificial_callees = shim_artificial_callees(
+    add_shim_artificial_callees(
         caller,
         resolved_callee,
         instruction,
@@ -741,8 +738,9 @@ InstructionCallGraphInformation process_instruction(
         class_hierarchies,
         feature_factory,
         *shim,
+        heuristics,
         sink_textual_order_index,
-        heuristics);
+        instruction_information.artificial_callees);
   }
 
   auto call_index =
