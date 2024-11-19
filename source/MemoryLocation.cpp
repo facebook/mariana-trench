@@ -124,7 +124,10 @@ InstructionMemoryLocation::InstructionMemoryLocation(
 }
 
 std::string InstructionMemoryLocation::str() const {
-  return fmt::format("InstructionMemoryLocation(`{}`)", show(instruction_));
+  return fmt::format(
+      "InstructionMemoryLocation(`{}`)@{}",
+      show(instruction_),
+      fmt::ptr(instruction_));
 }
 
 std::optional<std::string> InstructionMemoryLocation::get_constant() const {

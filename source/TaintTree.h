@@ -187,8 +187,11 @@ class TaintTree final : public sparta::AbstractDomain<TaintTree> {
   }
 
   friend std::ostream& operator<<(std::ostream& out, const TaintTree& tree) {
-    return out << "TaintTree(tree=" << tree.tree_
-               << ", overrides=" << tree.overrides_ << ")";
+    out << "TaintTree(";
+    if (!tree.overrides_.is_bottom()) {
+      out << "overrides=" << tree.overrides_ << ", ";
+    }
+    return out << "tree=" << tree.tree_ << ")";
   }
 
  private:
