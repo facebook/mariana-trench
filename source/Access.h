@@ -376,6 +376,9 @@ class Path final {
   explicit Path(std::initializer_list<Element> elements)
       : elements_(elements) {}
 
+  explicit Path(ConstIterator begin, ConstIterator end)
+      : elements_{begin, end} {}
+
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Path)
 
   bool operator==(const Path& other) const;

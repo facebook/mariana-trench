@@ -1025,6 +1025,34 @@ class AbstractTreeDomain final
 
  public:
   /**
+   * Return the subtree at the given path and the remaining path elements if the
+   * full path did not exist in the tree.
+   *
+   * Elements are NOT propagated down to children.
+   */
+  std::pair<Path, AbstractTreeDomain> raw_read_max_path(
+      const Path& path) const {
+    return raw_read_max_path_internal(path.begin(), path.end());
+  }
+
+ private:
+  std::pair<Path, AbstractTreeDomain> raw_read_max_path_internal(
+      Path::ConstIterator begin,
+      Path::ConstIterator end) const {
+    if (is_bottom() || begin == end) {
+      return std::make_pair(Path{begin, end}, *this);
+    }
+
+    auto subtree = children_.at(*begin);
+    if (subtree.is_bottom()) {
+      return std::make_pair(Path{begin, end}, *this);
+    }
+
+    return subtree.raw_read_max_path_internal(std::next(begin), end);
+  }
+
+ public:
+  /**
    * Transforms the tree so it only contains branches present in `mold`.
    *
    * When a branch is not present in `mold`, it is collapsed in its parent.

@@ -2030,6 +2030,70 @@ TEST_F(AbstractTreeDomainTest, RawRead) {
   EXPECT_EQ(tree.raw_read(Path{x, y}), IntSetTree::bottom());
 }
 
+TEST_F(AbstractTreeDomainTest, RawReadMaxPath) {
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+  const auto z = PathElement::field("z");
+
+  // Reads from empty tree.
+  auto tree = IntSetTree{};
+  EXPECT_EQ(tree.raw_read_max_path(Path{}), (std::make_pair(Path{}, tree)));
+  EXPECT_EQ(
+      tree.raw_read_max_path(Path{x, y}), (std::make_pair(Path{x, y}, tree)));
+
+  tree = IntSetTree{
+      {Path{}, IntSet{1}},
+      {Path{x}, IntSet{2}},
+      {Path{x, z}, IntSet{3}},
+      {Path{y}, IntSet{4}},
+      {Path{x, y, z}, IntSet{5}}, // empty intermediate node y
+  };
+
+  // Read existing paths.
+  EXPECT_EQ(tree.raw_read_max_path(Path{}), (std::make_pair(Path{}, tree)));
+  EXPECT_EQ(
+      tree.raw_read_max_path(Path{x}),
+      (std::make_pair(
+          Path{},
+          IntSetTree{
+              {Path{}, IntSet{2}},
+              {Path{z}, IntSet{3}},
+              {Path{y, z}, IntSet{5}},
+          })));
+  EXPECT_EQ(
+      tree.raw_read_max_path(Path{x, z}),
+      (std::make_pair(Path{}, IntSetTree{IntSet{3}})));
+  EXPECT_EQ(
+      tree.raw_read_max_path(Path{y}),
+      (std::make_pair(Path{}, IntSetTree{IntSet{4}})));
+  EXPECT_EQ(
+      tree.raw_read_max_path(Path{x, y}),
+      (std::make_pair(
+          Path{},
+          IntSetTree{
+              {Path{z}, IntSet{5}},
+          })));
+
+  // Read path with empty intermediate node.
+  EXPECT_EQ(
+      tree.raw_read_max_path(Path{x, y, z}),
+      (std::make_pair(Path{}, IntSetTree{{IntSet{5}}})));
+
+  // Read incomplete paths.
+  EXPECT_EQ(
+      tree.raw_read_max_path(Path{x, z, y}),
+      (std::make_pair(Path{y}, IntSetTree{IntSet{3}})));
+  EXPECT_EQ(
+      tree.raw_read_max_path(Path{y, z}),
+      (std::make_pair(Path{z}, IntSetTree{IntSet{4}})));
+  EXPECT_EQ(
+      tree.raw_read_max_path(Path{y, z}),
+      (std::make_pair(Path{z}, tree.raw_read(Path{y}))));
+
+  // Read non-existing paths.
+  EXPECT_EQ(tree.raw_read_max_path(Path{z}), (std::make_pair(Path{z}, tree)));
+}
+
 TEST_F(AbstractTreeDomainTest, Elements) {
   using Pair = std::pair<Path, IntSet>;
 
