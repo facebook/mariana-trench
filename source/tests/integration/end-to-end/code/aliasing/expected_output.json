@@ -956,7 +956,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;.<init>:()V",
   "position" : 
   {
-    "line" : 10,
+    "line" : 12,
     "path" : "AliasingJava.java"
   }
 }
@@ -964,7 +964,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;.<init>:(Lcom/facebook/marianatrench/integrationtests/AliasingJava$1;)V",
   "position" : 
   {
-    "line" : 10,
+    "line" : 12,
     "path" : "AliasingJava.java"
   }
 }
@@ -972,7 +972,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.<init>:()V",
   "position" : 
   {
-    "line" : 9,
+    "line" : 11,
     "path" : "AliasingJava.java"
   }
 }
@@ -1008,7 +1008,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.source1:()Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;",
   "position" : 
   {
-    "line" : 19,
+    "line" : 20,
     "path" : "AliasingJava.java"
   }
 }
@@ -1044,7 +1044,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.source2:()Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;",
   "position" : 
   {
-    "line" : 23,
+    "line" : 24,
     "path" : "AliasingJava.java"
   }
 }
@@ -1080,7 +1080,739 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.source3:()Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;",
   "position" : 
   {
-    "line" : 27,
+    "line" : 28,
+    "path" : "AliasingJava.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "always_features" : 
+      [
+        "via-issue-broadening"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 164,
+        "path" : "AliasingJava.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 25,
+              "line" : 164,
+              "path" : "AliasingJava.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                37,
+                38
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 150,
+              "path" : "AliasingJava.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                37,
+                38
+              ],
+              "kind" : "Source1",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.source1:()Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-issue-broadening"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 22,
+              "line" : 154,
+              "start" : 17
+            },
+            {
+              "end" : 25,
+              "line" : 150,
+              "start" : 16
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "always_features" : 
+      [
+        "via-issue-broadening"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 164,
+        "path" : "AliasingJava.java"
+      },
+      "rule" : 2,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 25,
+              "line" : 164,
+              "path" : "AliasingJava.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                37,
+                38
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 151,
+              "path" : "AliasingJava.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                37,
+                38
+              ],
+              "kind" : "Source2",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.source2:()Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-issue-broadening"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 22,
+              "line" : 154,
+              "start" : 17
+            },
+            {
+              "end" : 25,
+              "line" : 151,
+              "start" : 16
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testAliasCycle:()V",
+  "position" : 
+  {
+    "line" : 148,
+    "path" : "AliasingJava.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 209,
+        "path" : "AliasingJava.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 29,
+              "line" : 209,
+              "path" : "AliasingJava.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                37,
+                38
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 23,
+              "line" : 178,
+              "path" : "AliasingJava.java",
+              "start" : 17
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                37,
+                38
+              ],
+              "kind" : "Source1",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.source1:()Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 26,
+              "line" : 178,
+              "start" : 17
+            },
+            {
+              "end" : 33,
+              "line" : 186,
+              "start" : 19
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 214,
+        "path" : "AliasingJava.java"
+      },
+      "rule" : 3,
+      "sink_index" : "1",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 29,
+              "line" : 214,
+              "path" : "AliasingJava.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                37,
+                38
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 27,
+              "line" : 195,
+              "path" : "AliasingJava.java",
+              "start" : 21
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                37,
+                38
+              ],
+              "kind" : "Source3",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.source3:()Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 30,
+              "line" : 195,
+              "start" : 21
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "always_features" : 
+      [
+        "via-issue-broadening"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 209,
+        "path" : "AliasingJava.java"
+      },
+      "rule" : 2,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 29,
+              "line" : 209,
+              "path" : "AliasingJava.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                37,
+                38
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 23,
+              "line" : 181,
+              "path" : "AliasingJava.java",
+              "start" : 17
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                37,
+                38
+              ],
+              "kind" : "Source2",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.source2:()Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-issue-broadening"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 26,
+              "line" : 181,
+              "start" : 17
+            },
+            {
+              "end" : 29,
+              "line" : 189,
+              "start" : 23
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "always_features" : 
+      [
+        "via-issue-broadening"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 219,
+        "path" : "AliasingJava.java"
+      },
+      "rule" : 1,
+      "sink_index" : "2",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 33,
+              "line" : 219,
+              "path" : "AliasingJava.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                37,
+                38
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 23,
+              "line" : 178,
+              "path" : "AliasingJava.java",
+              "start" : 17
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                37,
+                38
+              ],
+              "kind" : "Source1",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.source1:()Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-issue-broadening"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 23,
+              "line" : 193,
+              "start" : 17
+            },
+            {
+              "end" : 26,
+              "line" : 178,
+              "start" : 17
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "always_features" : 
+      [
+        "via-issue-broadening"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 219,
+        "path" : "AliasingJava.java"
+      },
+      "rule" : 3,
+      "sink_index" : "2",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 33,
+              "line" : 219,
+              "path" : "AliasingJava.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                37,
+                38
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 27,
+              "line" : 195,
+              "path" : "AliasingJava.java",
+              "start" : 21
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                37,
+                38
+              ],
+              "kind" : "Source3",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.source3:()Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-issue-broadening"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "end" : 30,
+              "line" : 195,
+              "start" : 21
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testDifferentRootMemoryLocationsAtDifferentDepths:()V",
+  "position" : 
+  {
+    "line" : 176,
     "path" : "AliasingJava.java"
   }
 }
@@ -1146,7 +1878,7 @@
             "position" : 
             {
               "end" : 22,
-              "line" : 33,
+              "line" : 34,
               "path" : "AliasingJava.java",
               "start" : 16
             }
@@ -1181,12 +1913,12 @@
           [
             {
               "end" : 22,
-              "line" : 36,
+              "line" : 37,
               "start" : 17
             },
             {
               "end" : 25,
-              "line" : 33,
+              "line" : 34,
               "start" : 16
             }
           ]
@@ -1197,7 +1929,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testSimple1:()V",
   "position" : 
   {
-    "line" : 31,
+    "line" : 32,
     "path" : "AliasingJava.java"
   }
 }
@@ -1208,7 +1940,7 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 62,
+        "line" : 89,
         "path" : "AliasingJava.java"
       },
       "rule" : 1,
@@ -1223,7 +1955,7 @@
             "position" : 
             {
               "end" : 29,
-              "line" : 62,
+              "line" : 89,
               "path" : "AliasingJava.java",
               "start" : 16
             }
@@ -1259,7 +1991,7 @@
             "position" : 
             {
               "end" : 22,
-              "line" : 48,
+              "line" : 50,
               "path" : "AliasingJava.java",
               "start" : 16
             }
@@ -1287,12 +2019,12 @@
           [
             {
               "end" : 25,
-              "line" : 48,
+              "line" : 50,
               "start" : 16
             },
             {
               "end" : 26,
-              "line" : 51,
+              "line" : 60,
               "start" : 17
             }
           ]
@@ -1303,7 +2035,7 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 66,
+        "line" : 103,
         "path" : "AliasingJava.java"
       },
       "rule" : 3,
@@ -1318,7 +2050,7 @@
             "position" : 
             {
               "end" : 24,
-              "line" : 66,
+              "line" : 103,
               "path" : "AliasingJava.java",
               "start" : 16
             }
@@ -1354,7 +2086,7 @@
             "position" : 
             {
               "end" : 22,
-              "line" : 54,
+              "line" : 76,
               "path" : "AliasingJava.java",
               "start" : 16
             }
@@ -1382,7 +2114,7 @@
           [
             {
               "end" : 25,
-              "line" : 54,
+              "line" : 76,
               "start" : 16
             }
           ]
@@ -1394,6 +2126,297 @@
   "position" : 
   {
     "line" : 46,
+    "path" : "AliasingJava.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 143,
+        "path" : "AliasingJava.java"
+      },
+      "rule" : 1,
+      "sink_index" : "1",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 25,
+              "line" : 143,
+              "path" : "AliasingJava.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                37,
+                38
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 120,
+              "path" : "AliasingJava.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                37,
+                38
+              ],
+              "kind" : "Source1",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.source1:()Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 25,
+              "line" : 120,
+              "start" : 16
+            },
+            {
+              "end" : 28,
+              "line" : 127,
+              "start" : 19
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 143,
+        "path" : "AliasingJava.java"
+      },
+      "rule" : 2,
+      "sink_index" : "1",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 25,
+              "line" : 143,
+              "path" : "AliasingJava.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                37,
+                38
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 121,
+              "path" : "AliasingJava.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                37,
+                38
+              ],
+              "kind" : "Source2",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.source2:()Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 25,
+              "line" : 121,
+              "start" : 16
+            },
+            {
+              "end" : 28,
+              "line" : 129,
+              "start" : 19
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 145,
+        "path" : "AliasingJava.java"
+      },
+      "rule" : 3,
+      "sink_index" : "2",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 24,
+              "line" : 145,
+              "path" : "AliasingJava.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                37,
+                38
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 22,
+              "line" : 141,
+              "path" : "AliasingJava.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                37,
+                38
+              ],
+              "kind" : "Source3",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.source3:()Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 25,
+              "line" : 141,
+              "start" : 16
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testWeakUpdateForAlias:()V",
+  "position" : 
+  {
+    "line" : 118,
     "path" : "AliasingJava.java"
   }
 }

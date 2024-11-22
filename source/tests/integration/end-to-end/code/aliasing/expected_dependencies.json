@@ -40,22 +40,34 @@
     "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.source1:()Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;",
     "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.source2:()Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;",
     "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.source3:()Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;",
+    "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testAliasCycle:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testDifferentRootMemoryLocationsAtDifferentDepths:()V",
     "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testSimple1:()V",
-    "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testSimple2:()V"
+    "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testSimple2:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testWeakUpdateForAlias:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.source1:()Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;" : 
   [
+    "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testAliasCycle:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testDifferentRootMemoryLocationsAtDifferentDepths:()V",
     "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testSimple1:()V",
-    "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testSimple2:()V"
+    "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testSimple2:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testWeakUpdateForAlias:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.source2:()Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;" : 
   [
+    "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testAliasCycle:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testDifferentRootMemoryLocationsAtDifferentDepths:()V",
     "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testSimple1:()V",
-    "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testSimple2:()V"
+    "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testSimple2:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testWeakUpdateForAlias:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.source3:()Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testSimple2:()V"
+    "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testAliasCycle:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testDifferentRootMemoryLocationsAtDifferentDepths:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testSimple2:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testWeakUpdateForAlias:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.source1:()Lcom/facebook/marianatrench/integrationtests/Tree;" : 
   [
@@ -82,8 +94,11 @@
   ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V" : 
   [
+    "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testAliasCycle:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testDifferentRootMemoryLocationsAtDifferentDepths:()V",
     "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testSimple1:()V",
     "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testSimple2:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testWeakUpdateForAlias:()V",
     "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.testCollapsePropagations:()V",
     "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.testConditionalAliasing:(Lcom/facebook/marianatrench/integrationtests/Tree;)V",
     "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.testNoCollapsePropagations:()V",
