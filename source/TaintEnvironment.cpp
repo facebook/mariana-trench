@@ -11,14 +11,16 @@
 
 namespace marianatrench {
 
-std::ostream& operator<<(std::ostream& out, const TaintEnvironment& taint) {
-  if (taint.is_bottom()) {
+std::ostream& operator<<(
+    std::ostream& out,
+    const TaintEnvironment& environment) {
+  if (environment.is_bottom()) {
     return out << "_|_";
-  } else if (taint.is_top()) {
+  } else if (environment.is_top()) {
     return out << "T";
   } else {
     out << "TaintEnvironment(";
-    for (const auto& entry : taint.bindings()) {
+    for (const auto& entry : environment.environment_.bindings()) {
       out << "\n  " << show(entry.first) << " -> " << entry.second;
     }
     return out << "\n)";
