@@ -47,8 +47,9 @@ using ArgumentTypeEnvironment =
  * contained in the method to the ArgumentTypeEnvironments representing the
  * arguments passed to the callee.
  */
-using ArgumentTypePartition = sparta::
-    HashedAbstractPartition<const IRInstruction*, ArgumentTypeEnvironment>;
+using ArgumentTypePartition =
+    sparta::HashedAbstractPartition<const IRInstruction*,
+                                    ArgumentTypeEnvironment>;
 
 constexpr const IRInstruction* CURRENT_PARTITION_LABEL = nullptr;
 
@@ -57,9 +58,8 @@ constexpr const IRInstruction* CURRENT_PARTITION_LABEL = nullptr;
  * passed into the code. The env of the registers holding the params are
  * populated after calling this.
  */
-DexTypeEnvironment env_with_params(
-    const IRCode* code,
-    const ArgumentTypeEnvironment& args);
+DexTypeEnvironment env_with_params(const IRCode* code,
+                                   const ArgumentTypeEnvironment& args);
 
 /*
  * Performs interprocedural DexType analysis of stack / register values.
@@ -78,9 +78,8 @@ class GlobalTypeAnalyzer : public sparta::ParallelMonotonicFixpointIterator<
     m_wps.reset(wps);
   }
 
-  void analyze_node(
-      const call_graph::NodeId& node,
-      ArgumentTypePartition* current_partition) const override;
+  void analyze_node(const call_graph::NodeId& node,
+                    ArgumentTypePartition* current_partition) const override;
 
   ArgumentTypePartition analyze_edge(
       const call_graph::EdgeId& edge,
@@ -93,17 +92,13 @@ class GlobalTypeAnalyzer : public sparta::ParallelMonotonicFixpointIterator<
   std::unique_ptr<local::LocalTypeAnalyzer> get_replayable_local_analysis(
       const DexMethod*) const;
 
-  const WholeProgramState& get_whole_program_state() const {
-    return *m_wps;
-  }
+  const WholeProgramState& get_whole_program_state() const { return *m_wps; }
 
   void set_whole_program_state(std::unique_ptr<WholeProgramState> wps) {
     m_wps = std::move(wps);
   }
 
-  const call_graph::Graph& get_call_graph() {
-    return *m_call_graph;
-  }
+  const call_graph::Graph& get_call_graph() { return *m_call_graph; }
 
   bool is_reachable(const DexMethod* method) const;
 
@@ -143,9 +138,7 @@ class GlobalTypeAnalysis {
             only_aggregate_safely_inferrable_fields),
         m_enforce_iteration_refinement(enforce_iteration_refinement) {}
 
-  void run(const Scope& scope) {
-    analyze(scope);
-  }
+  void run(const Scope& scope) { analyze(scope); }
 
   std::unique_ptr<GlobalTypeAnalyzer> analyze(const Scope&);
 

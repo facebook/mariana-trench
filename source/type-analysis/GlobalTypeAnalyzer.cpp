@@ -36,20 +36,17 @@ void trace_whole_program_state(WholeProgramState& wps) {
   }
 }
 
-void trace_whole_program_state_diff(
-    const WholeProgramState& old_wps,
-    const WholeProgramState& new_wps) {
+void trace_whole_program_state_diff(const WholeProgramState& old_wps,
+                                    const WholeProgramState& new_wps) {
   if (traceEnabled(TYPE, 3)) {
-    TRACE(
-        TYPE,
-        3,
-        "[wps] field partition diff\n%s",
-        old_wps.print_field_partition_diff(new_wps).c_str());
-    TRACE(
-        TYPE,
-        3,
-        "[wps] method partition diff\n%s",
-        old_wps.print_method_partition_diff(new_wps).c_str());
+    TRACE(TYPE,
+          3,
+          "[wps] field partition diff\n%s",
+          old_wps.print_field_partition_diff(new_wps).c_str());
+    TRACE(TYPE,
+          3,
+          "[wps] method partition diff\n%s",
+          old_wps.print_method_partition_diff(new_wps).c_str());
   }
 }
 
@@ -127,14 +124,13 @@ namespace type_analyzer {
 
 namespace global {
 
-DexTypeEnvironment env_with_params(
-    const IRCode* code,
-    const ArgumentTypeEnvironment& args) {
+DexTypeEnvironment env_with_params(const IRCode* code,
+                                   const ArgumentTypeEnvironment& args) {
   size_t idx = 0;
   DexTypeEnvironment env;
-  boost::sub_range<IRList> param_instructions = code->editable_cfg_built()
-      ? code->cfg().get_param_instructions()
-      : code->get_param_instructions();
+  boost::sub_range<IRList> param_instructions =
+      code->editable_cfg_built() ? code->cfg().get_param_instructions()
+                                 : code->get_param_instructions();
   for (auto& mie : InstructionIterable(param_instructions)) {
     env.set(mie.insn->dest(), args.get(idx++));
   }
@@ -144,8 +140,8 @@ DexTypeEnvironment env_with_params(
 void GlobalTypeAnalyzer::analyze_node(
     const call_graph::NodeId& node,
     ArgumentTypePartition* current_partition) const {
-  current_partition->set(
-      CURRENT_PARTITION_LABEL, ArgumentTypeEnvironment::bottom());
+  current_partition->set(CURRENT_PARTITION_LABEL,
+                         ArgumentTypeEnvironment::bottom());
   always_assert(current_partition->is_bottom());
 
   const DexMethod* method = node->method();
@@ -212,11 +208,11 @@ ArgumentTypePartition GlobalTypeAnalyzer::analyze_edge(
   ArgumentTypePartition entry_state_at_dest;
   auto insn = edge->invoke_insn();
   if (insn == nullptr) {
-    entry_state_at_dest.set(
-        CURRENT_PARTITION_LABEL, ArgumentTypeEnvironment::top());
+    entry_state_at_dest.set(CURRENT_PARTITION_LABEL,
+                            ArgumentTypeEnvironment::top());
   } else {
-    entry_state_at_dest.set(
-        CURRENT_PARTITION_LABEL, exit_state_at_source.get(insn));
+    entry_state_at_dest.set(CURRENT_PARTITION_LABEL,
+                            exit_state_at_source.get(insn));
   }
   return entry_state_at_dest;
 }
@@ -228,10 +224,9 @@ GlobalTypeAnalyzer::get_internal_local_analysis(const DexMethod* method) const {
   if (m_call_graph->has_node(method)) {
     args = this->get_entry_state_at(m_call_graph->node(method));
   }
-  return analyze_method(
-      method,
-      this->get_whole_program_state(),
-      args.get(CURRENT_PARTITION_LABEL));
+  return analyze_method(method,
+                        this->get_whole_program_state(),
+                        args.get(CURRENT_PARTITION_LABEL));
 }
 
 std::unique_ptr<local::LocalTypeAnalyzer>
@@ -242,11 +237,10 @@ GlobalTypeAnalyzer::get_replayable_local_analysis(
   if (m_call_graph->has_node(method)) {
     args = this->get_entry_state_at(m_call_graph->node(method));
   }
-  return analyze_method(
-      method,
-      this->get_whole_program_state(),
-      args.get(CURRENT_PARTITION_LABEL),
-      true);
+  return analyze_method(method,
+                        this->get_whole_program_state(),
+                        args.get(CURRENT_PARTITION_LABEL),
+                        true);
 }
 
 bool GlobalTypeAnalyzer::is_reachable(const DexMethod* method) const {
@@ -259,14 +253,14 @@ bool GlobalTypeAnalyzer::is_reachable(const DexMethod* method) const {
   return !args_domain.is_bottom();
 }
 
-using CombinedAnalyzer = InstructionAnalyzerCombiner<
-    WholeProgramAwareAnalyzer,
-    local::CtorFieldAnalyzer,
-    local::RegisterTypeAnalyzer>;
+using CombinedAnalyzer =
+    InstructionAnalyzerCombiner<WholeProgramAwareAnalyzer,
+                                local::CtorFieldAnalyzer,
+                                local::RegisterTypeAnalyzer>;
 
-using CombinedReplayAnalyzer = InstructionAnalyzerCombiner<
-    WholeProgramAwareAnalyzer,
-    local::RegisterTypeAnalyzer>;
+using CombinedReplayAnalyzer =
+    InstructionAnalyzerCombiner<WholeProgramAwareAnalyzer,
+                                local::RegisterTypeAnalyzer>;
 
 std::unique_ptr<local::LocalTypeAnalyzer> GlobalTypeAnalyzer::analyze_method(
     const DexMethod* method,
@@ -291,11 +285,12 @@ std::unique_ptr<local::LocalTypeAnalyzer> GlobalTypeAnalyzer::analyze_method(
     ctor_type = method->get_class();
   }
   TRACE(TYPE, 5, "%s", SHOW(code.cfg()));
-  auto local_ta = is_replayable
-      ? std::make_unique<local::LocalTypeAnalyzer>(
-            code.cfg(), CombinedReplayAnalyzer(&wps, nullptr))
-      : std::make_unique<local::LocalTypeAnalyzer>(
-            code.cfg(), CombinedAnalyzer(&wps, ctor_type, nullptr));
+  auto local_ta =
+      is_replayable
+          ? std::make_unique<local::LocalTypeAnalyzer>(
+                code.cfg(), CombinedReplayAnalyzer(&wps, nullptr))
+          : std::make_unique<local::LocalTypeAnalyzer>(
+                code.cfg(), CombinedAnalyzer(&wps, ctor_type, nullptr));
   local_ta->run(env);
 
   return local_ta;
@@ -415,23 +410,21 @@ void GlobalTypeAnalysis::find_any_init_reachables(
         continue;
       }
       if (!cg->has_node(method)) {
-        TRACE(
-            TYPE,
-            5,
-            "[any init reachables] missing node in cg %s",
-            SHOW(method));
+        TRACE(TYPE,
+              5,
+              "[any init reachables] missing node in cg %s",
+              SHOW(method));
         continue;
       }
       auto callees = resolve_callees_in_graph(*cg, insn);
       for (const DexMethod* callee : callees) {
         bool trace_callbacks_in_callee_cls =
             is_leaking_this_in_ctor(method, callee);
-        scan_any_init_reachables(
-            *cg,
-            method_override_graph,
-            callee,
-            trace_callbacks_in_callee_cls,
-            m_any_init_reachables);
+        scan_any_init_reachables(*cg,
+                                 method_override_graph,
+                                 callee,
+                                 trace_callbacks_in_callee_cls,
+                                 m_any_init_reachables);
       }
     }
   });
@@ -463,16 +456,17 @@ void GlobalTypeAnalysis::find_any_init_reachables(
 std::unique_ptr<GlobalTypeAnalyzer> GlobalTypeAnalysis::analyze(
     const Scope& scope) {
   auto method_override_graph = mog::build_graph(scope);
-  auto cg = m_use_multiple_callee_callgraph
-      ? std::make_shared<call_graph::Graph>(
-            call_graph::multiple_callee_graph(*method_override_graph, scope, 5))
-      : std::make_shared<call_graph::Graph>(
-            call_graph::single_callee_graph(*method_override_graph, scope));
-  TRACE(
-      TYPE,
-      2,
-      "[global] multiple callee graph %zu",
-      (size_t)m_use_multiple_callee_callgraph);
+  auto cg =
+      m_use_multiple_callee_callgraph
+          ? std::make_shared<call_graph::Graph>(
+                call_graph::multiple_callee_graph(
+                    *method_override_graph, scope, 5))
+          : std::make_shared<call_graph::Graph>(
+                call_graph::single_callee_graph(*method_override_graph, scope));
+  TRACE(TYPE,
+        2,
+        "[global] multiple callee graph %zu",
+        (size_t)m_use_multiple_callee_callgraph);
   // Rebuild all CFGs here -- this should be more efficient than doing them
   // within FixpointIterator::analyze_node(), since that can get called
   // multiple times for a given method
@@ -495,8 +489,8 @@ std::unique_ptr<GlobalTypeAnalyzer> GlobalTypeAnalysis::analyze(
   EligibleIfields eligible_ifields;
   if (m_only_aggregate_safely_inferrable_fields) {
     eligible_ifields =
-        constant_propagation::gather_safely_inferable_ifield_candidates(
-            scope, {});
+        constant_propagation::gather_safely_inferable_ifield_candidates(scope,
+                                                                        {});
   }
   size_t iteration_cnt = 0;
 
@@ -504,21 +498,21 @@ std::unique_ptr<GlobalTypeAnalyzer> GlobalTypeAnalysis::analyze(
     // Build an approximation of all the field values and method return values.
     TRACE(TYPE, 2, "[global] Collecting WholeProgramState");
     auto wps = m_use_multiple_callee_callgraph
-        ? std::make_unique<WholeProgramState>(
-              scope,
-              *gta,
-              non_true_virtuals,
-              m_any_init_reachables,
-              eligible_ifields,
-              m_only_aggregate_safely_inferrable_fields,
-              cg)
-        : std::make_unique<WholeProgramState>(
-              scope,
-              *gta,
-              non_true_virtuals,
-              m_any_init_reachables,
-              eligible_ifields,
-              m_only_aggregate_safely_inferrable_fields);
+                   ? std::make_unique<WholeProgramState>(
+                         scope,
+                         *gta,
+                         non_true_virtuals,
+                         m_any_init_reachables,
+                         eligible_ifields,
+                         m_only_aggregate_safely_inferrable_fields,
+                         cg)
+                   : std::make_unique<WholeProgramState>(
+                         scope,
+                         *gta,
+                         non_true_virtuals,
+                         m_any_init_reachables,
+                         eligible_ifields,
+                         m_only_aggregate_safely_inferrable_fields);
     trace_whole_program_state(*wps);
     trace_stats(*wps);
     trace_whole_program_state_diff(gta->get_whole_program_state(), *wps);
@@ -541,12 +535,11 @@ std::unique_ptr<GlobalTypeAnalyzer> GlobalTypeAnalysis::analyze(
 
   global_analysis_iterations = iteration_cnt;
 
-  TRACE(
-      TYPE,
-      1,
-      "[global] Finished in %zu global iterations (max %zu)",
-      iteration_cnt,
-      m_max_global_analysis_iteration);
+  TRACE(TYPE,
+        1,
+        "[global] Finished in %zu global iterations (max %zu)",
+        iteration_cnt,
+        m_max_global_analysis_iteration);
   return gta;
 }
 
@@ -554,12 +547,11 @@ void GlobalTypeAnalysis::trace_stats(WholeProgramState& wps) {
   if (!traceEnabled(TYPE, 2)) {
     return;
   }
-  TRACE(
-      TYPE,
-      2,
-      "[global] wps stats: fields resolved %zu; methods resolved %zu",
-      wps.get_num_resolved_fields(),
-      wps.get_num_resolved_methods());
+  TRACE(TYPE,
+        2,
+        "[global] wps stats: fields resolved %zu; methods resolved %zu",
+        wps.get_num_resolved_fields(),
+        wps.get_num_resolved_methods());
 }
 
 } // namespace global

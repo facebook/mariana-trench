@@ -38,9 +38,7 @@ struct GlobalTypeAnalysisTest : public test::Test {
   }
 
  protected:
-  void prepare_scope(Scope& scope) {
-    scope.push_back(m_cls_o);
-  }
+  void prepare_scope(Scope& scope) { scope.push_back(m_cls_o); }
 
   DexTypeDomain get_type_domain(const std::string& type_name) {
     return DexTypeDomain::create_not_null(
@@ -103,8 +101,8 @@ TEST_F(GlobalTypeAnalysisTest, SimpleArgumentPassingTest) {
   EXPECT_TRUE(foo_arg_env.is_top());
   auto bar_arg_env =
       gta.get_entry_state_at(graph.node(meth_bar)).get(CURRENT_PARTITION_LABEL);
-  EXPECT_EQ(
-      bar_arg_env, ArgumentTypeEnvironment({{0, get_type_domain("LO;")}}));
+  EXPECT_EQ(bar_arg_env,
+            ArgumentTypeEnvironment({{0, get_type_domain("LO;")}}));
 }
 
 TEST_F(GlobalTypeAnalysisTest, ArgumentPassingJoinWithNullTest) {
@@ -281,18 +279,15 @@ TEST_F(GlobalTypeAnalysisTest, SimpleFieldTypeTest) {
   GlobalTypeAnalysis analysis;
   auto gta = analysis.analyze(scope);
   auto wps = gta->get_whole_program_state();
-  EXPECT_EQ(
-      wps.get_field_type(field_1),
-      get_type_domain("LO;").join(DexTypeDomain::null()));
-  EXPECT_EQ(
-      wps.get_return_type(meth_bar),
-      get_type_domain("LO;").join(DexTypeDomain::null()));
+  EXPECT_EQ(wps.get_field_type(field_1),
+            get_type_domain("LO;").join(DexTypeDomain::null()));
+  EXPECT_EQ(wps.get_return_type(meth_bar),
+            get_type_domain("LO;").join(DexTypeDomain::null()));
   auto lta = gta->get_replayable_local_analysis(meth_foo);
   auto code = meth_foo->get_code();
   auto foo_exit_env = lta->get_exit_state_at(code->cfg().exit_block());
-  EXPECT_EQ(
-      foo_exit_env.get_reg_environment().get(1),
-      get_type_domain("LO;").join(DexTypeDomain::null()));
+  EXPECT_EQ(foo_exit_env.get_reg_environment().get(1),
+            get_type_domain("LO;").join(DexTypeDomain::null()));
 }
 
 TEST_F(GlobalTypeAnalysisTest, ClinitSimpleTest) {
@@ -381,11 +376,11 @@ TEST_F(GlobalTypeAnalysisTest, StaticFieldWithEncodedValueTest) {
   ClassCreator creator(cls_a);
   creator.set_super(type::java_lang_Object());
 
-  auto field_1 = DexField::make_field("LA;.f1:LO;")
-                     ->make_concrete(
-                         ACC_PUBLIC | ACC_STATIC | ACC_FINAL,
-                         std::unique_ptr<DexEncodedValue>(
-                             new DexEncodedValueBit(DEVT_NULL, false)));
+  auto field_1 =
+      DexField::make_field("LA;.f1:LO;")
+          ->make_concrete(ACC_PUBLIC | ACC_STATIC | ACC_FINAL,
+                          std::unique_ptr<DexEncodedValue>(
+                              new DexEncodedValueBit(DEVT_NULL, false)));
   creator.add_field(field_1);
 
   auto field_2 =
@@ -481,23 +476,19 @@ TEST_F(GlobalTypeAnalysisTest, StaticFieldWithEncodedValueTest) {
   EXPECT_EQ(wps.get_field_type(field_1), DexTypeDomain::null());
   EXPECT_EQ(wps.get_return_type(meth_bar), DexTypeDomain::null());
 
-  EXPECT_EQ(
-      wps.get_field_type(field_2),
-      DexTypeDomain::create_not_null(type::java_lang_String())
-          .join(DexTypeDomain::null()));
-  EXPECT_EQ(
-      wps.get_return_type(meth_baz),
-      DexTypeDomain::create_not_null(type::java_lang_String())
-          .join(DexTypeDomain::null()));
+  EXPECT_EQ(wps.get_field_type(field_2),
+            DexTypeDomain::create_not_null(type::java_lang_String())
+                .join(DexTypeDomain::null()));
+  EXPECT_EQ(wps.get_return_type(meth_baz),
+            DexTypeDomain::create_not_null(type::java_lang_String())
+                .join(DexTypeDomain::null()));
 
-  EXPECT_EQ(
-      wps.get_field_type(field_3),
-      DexTypeDomain::create_not_null(type::java_lang_Class())
-          .join(DexTypeDomain::null()));
-  EXPECT_EQ(
-      wps.get_return_type(meth_buk),
-      DexTypeDomain::create_not_null(type::java_lang_Class())
-          .join(DexTypeDomain::null()));
+  EXPECT_EQ(wps.get_field_type(field_3),
+            DexTypeDomain::create_not_null(type::java_lang_Class())
+                .join(DexTypeDomain::null()));
+  EXPECT_EQ(wps.get_return_type(meth_buk),
+            DexTypeDomain::create_not_null(type::java_lang_Class())
+                .join(DexTypeDomain::null()));
 }
 
 } // namespace marianatrench

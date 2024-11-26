@@ -52,14 +52,13 @@ class WholeProgramState {
       const EligibleIfields& eligible_ifields,
       const bool only_aggregate_safely_inferrable_fields);
 
-  WholeProgramState(
-      const Scope&,
-      const global::GlobalTypeAnalyzer&,
-      const InsertOnlyConcurrentSet<DexMethod*>&,
-      const ConcurrentSet<const DexMethod*>&,
-      const EligibleIfields&,
-      const bool,
-      std::shared_ptr<const call_graph::Graph> call_graph);
+  WholeProgramState(const Scope&,
+                    const global::GlobalTypeAnalyzer&,
+                    const InsertOnlyConcurrentSet<DexMethod*>&,
+                    const ConcurrentSet<const DexMethod*>&,
+                    const EligibleIfields&,
+                    const bool,
+                    std::shared_ptr<const call_graph::Graph> call_graph);
 
   void set_to_top() {
     m_field_partition.set_to_top();
@@ -68,7 +67,7 @@ class WholeProgramState {
 
   bool leq(const WholeProgramState& other) const {
     return m_field_partition.leq(other.m_field_partition) &&
-        m_method_partition.leq(other.m_method_partition);
+           m_method_partition.leq(other.m_method_partition);
   }
 
   /*
@@ -143,12 +142,10 @@ class WholeProgramState {
    */
   bool can_use_nullness_results(const DexMethod* method) const {
     return !method::is_init(method) && !method::is_clinit(method) &&
-        !is_any_init_reachable(method);
+           !is_any_init_reachable(method);
   }
 
-  bool has_call_graph() const {
-    return !!m_call_graph;
-  }
+  bool has_call_graph() const { return !!m_call_graph; }
 
   DexTypeDomain get_return_type_from_cg(const IRInstruction* insn) const {
     auto callees = call_graph::resolve_callees_in_graph(*m_call_graph, insn);
@@ -179,9 +176,8 @@ class WholeProgramState {
 
   std::string print_method_partition_diff(const WholeProgramState& other) const;
 
-  friend std::ostream& operator<<(
-      std::ostream& out,
-      const WholeProgramState& wps) {
+  friend std::ostream& operator<<(std::ostream& out,
+                                  const WholeProgramState& wps) {
     out << wps.m_field_partition << std::endl;
     out << wps.m_method_partition;
     return out;
@@ -195,17 +191,15 @@ class WholeProgramState {
   }
 
  private:
-  void analyze_clinits_and_ctors(
-      const Scope&,
-      const global::GlobalTypeAnalyzer&,
-      const EligibleIfields&,
-      DexTypeFieldPartition*);
+  void analyze_clinits_and_ctors(const Scope&,
+                                 const global::GlobalTypeAnalyzer&,
+                                 const EligibleIfields&,
+                                 DexTypeFieldPartition*);
   void setup_known_method_returns();
 
-  void collect(
-      const Scope& scope,
-      const global::GlobalTypeAnalyzer&,
-      const EligibleIfields&);
+  void collect(const Scope& scope,
+               const global::GlobalTypeAnalyzer&,
+               const EligibleIfields&);
 
   void collect_field_types(
       const IRInstruction* insn,
@@ -244,25 +238,22 @@ class WholeProgramState {
   bool m_only_aggregate_safely_inferrable_fields = false;
 };
 
-class WholeProgramAwareAnalyzer final : public InstructionAnalyzerBase<
-                                            WholeProgramAwareAnalyzer,
-                                            DexTypeEnvironment,
-                                            const WholeProgramState*> {
+class WholeProgramAwareAnalyzer final
+    : public InstructionAnalyzerBase<WholeProgramAwareAnalyzer,
+                                     DexTypeEnvironment,
+                                     const WholeProgramState*> {
  public:
-  static bool analyze_iget(
-      const WholeProgramState* whole_program_state,
-      const IRInstruction* insn,
-      DexTypeEnvironment* env);
+  static bool analyze_iget(const WholeProgramState* whole_program_state,
+                           const IRInstruction* insn,
+                           DexTypeEnvironment* env);
 
-  static bool analyze_sget(
-      const WholeProgramState* whole_program_state,
-      const IRInstruction* insn,
-      DexTypeEnvironment* env);
+  static bool analyze_sget(const WholeProgramState* whole_program_state,
+                           const IRInstruction* insn,
+                           DexTypeEnvironment* env);
 
-  static bool analyze_invoke(
-      const WholeProgramState* whole_program_state,
-      const IRInstruction* insn,
-      DexTypeEnvironment* env);
+  static bool analyze_invoke(const WholeProgramState* whole_program_state,
+                             const IRInstruction* insn,
+                             DexTypeEnvironment* env);
 };
 
 } // namespace type_analyzer

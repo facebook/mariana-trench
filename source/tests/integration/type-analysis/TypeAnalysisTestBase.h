@@ -31,14 +31,13 @@ class TypeAnalysisTestBase : public RedexIntegrationTest {
 
   DexMethod* get_method(const std::string& name, const std::string& rtype) {
     std::string full_name = "Lcom/facebook/redextest/" + name +
-        ":()Lcom/facebook/redextest/" + rtype + ";";
+                            ":()Lcom/facebook/redextest/" + rtype + ";";
     return DexMethod::get_method(full_name)->as_def();
   }
 
-  DexMethod* get_method(
-      const std::string& name,
-      const std::string& params,
-      const std::string& rtype) {
+  DexMethod* get_method(const std::string& name,
+                        const std::string& params,
+                        const std::string& rtype) {
     std::string full_name =
         "Lcom/facebook/redextest/" + name + ":(" + params + ")" + rtype;
     return DexMethod::get_method(full_name)->as_def();
@@ -55,9 +54,8 @@ class TypeAnalysisTestBase : public RedexIntegrationTest {
         DexType::make_type(DexString::make_string(full_name)));
   }
 
-  DexTypeDomain get_type_domain_simple(
-      const std::string& type_name,
-      bool is_not_null = false) {
+  DexTypeDomain get_type_domain_simple(const std::string& type_name,
+                                       bool is_not_null = false) {
     if (is_not_null) {
       return DexTypeDomain::create_not_null(
           DexType::make_type(DexString::make_string(type_name)));

@@ -56,9 +56,7 @@ struct TempDir {
     return *this;
   }
 
-  void release() {
-    released = true;
-  }
+  void release() { released = true; }
 
   std::string path;
   bool released{true};
@@ -82,24 +80,23 @@ inline void copy_file(const std::string& from, const std::string& to) {
 
 inline std::string get_env(const char* name) {
   const char* env_file = std::getenv(name);
-  always_assert_log(
-      env_file != nullptr,
-      "Environment variable %s not set%s",
-      name,
-      []() -> std::string {
+  always_assert_log(env_file != nullptr,
+                    "Environment variable %s not set%s",
+                    name,
+                    []() -> std::string {
 #if __has_include(<unistd.h>)
-        extern char** environ;
-        std::string tmp;
-        for (auto** env = environ; *env != nullptr; ++env) {
-          tmp += "\n ";
-          tmp += *env;
-        }
-        return tmp;
+                      extern char** environ;
+                      std::string tmp;
+                      for (auto** env = environ; *env != nullptr; ++env) {
+                        tmp += "\n ";
+                        tmp += *env;
+                      }
+                      return tmp;
 #else
         return "";
 #endif
-      }()
-                  .c_str());
+                    }()
+                                .c_str());
   return env_file;
 }
 
@@ -136,9 +133,7 @@ struct RedexIntegrationTest : public test::Test {
     configfiles_out_dir = make_tmp_dir("RedexIntegrationTest%%%%%%%%");
   }
 
-  std::string& get_configfiles_out_dir() {
-    return configfiles_out_dir.path;
-  }
+  std::string& get_configfiles_out_dir() { return configfiles_out_dir.path; }
 
   // NOTE: The defaults for RedexOptions are technically bad, as the
   //       PassManager survives the `run_passes` call, at which point
@@ -159,12 +154,11 @@ struct RedexIntegrationTest : public test::Test {
   }
 
   template <typename MgrFn>
-  void run_passes(
-      const std::vector<Pass*>& passes,
-      std::unique_ptr<keep_rules::ProguardConfiguration> pg_config,
-      const Json::Value& json_conf,
-      const MgrFn& mgr_fn,
-      const RedexOptions& redex_options = RedexOptions{}) {
+  void run_passes(const std::vector<Pass*>& passes,
+                  std::unique_ptr<keep_rules::ProguardConfiguration> pg_config,
+                  const Json::Value& json_conf,
+                  const MgrFn& mgr_fn,
+                  const RedexOptions& redex_options = RedexOptions{}) {
     run_passes(
         passes,
         std::move(pg_config),
@@ -175,13 +169,12 @@ struct RedexIntegrationTest : public test::Test {
   }
 
   template <typename ConfFn, typename MgrFn>
-  void run_passes(
-      const std::vector<Pass*>& passes,
-      std::unique_ptr<keep_rules::ProguardConfiguration> pg_config,
-      const Json::Value& json_conf,
-      const ConfFn& conf_fn,
-      const MgrFn& mgr_fn,
-      const RedexOptions& redex_options = RedexOptions{}) {
+  void run_passes(const std::vector<Pass*>& passes,
+                  std::unique_ptr<keep_rules::ProguardConfiguration> pg_config,
+                  const Json::Value& json_conf,
+                  const ConfFn& conf_fn,
+                  const MgrFn& mgr_fn,
+                  const RedexOptions& redex_options = RedexOptions{}) {
     conf = std::make_unique<ConfigFiles>(json_conf);
     conf->parse_global_config();
 
@@ -214,59 +207,51 @@ struct RedexIntegrationTest : public test::Test {
   }
 
   template <typename C>
-  DexField* find_ifield(
-      const C& clazzes,
-      const char* cls,
-      const char* type,
-      const char* name) {
+  DexField* find_ifield(const C& clazzes,
+                        const char* cls,
+                        const char* type,
+                        const char* name) {
     const auto* c = find_class(clazzes, cls);
     const auto& ifields = c->get_ifields();
-    const auto it = std::find(
-        ifields.begin(),
-        ifields.end(),
-        DexField::make_field(
-            DexType::make_type(cls),
-            DexString::make_string(name),
-            DexType::make_type(type)));
+    const auto it = std::find(ifields.begin(),
+                              ifields.end(),
+                              DexField::make_field(DexType::make_type(cls),
+                                                   DexString::make_string(name),
+                                                   DexType::make_type(type)));
     return it == ifields.end() ? nullptr : *it;
   }
 
   template <typename C>
-  DexMethod* find_dmethod(
-      const C& clazzes,
-      const char* cls,
-      const char* rtype,
-      const char* name,
-      const std::vector<const char*>& args) {
+  DexMethod* find_dmethod(const C& clazzes,
+                          const char* cls,
+                          const char* rtype,
+                          const char* name,
+                          const std::vector<const char*>& args) {
     const auto* c = find_class(clazzes, cls);
     const auto& dmethods = c->get_dmethods();
-    const auto it = std::find(
-        dmethods.begin(),
-        dmethods.end(),
-        DexMethod::make_method(cls, name, rtype, args));
+    const auto it = std::find(dmethods.begin(),
+                              dmethods.end(),
+                              DexMethod::make_method(cls, name, rtype, args));
     return it == dmethods.end() ? nullptr : *it;
   }
 
   template <typename C>
-  DexMethod* find_vmethod(
-      const C& clazzes,
-      const char* cls,
-      const char* rtype,
-      const char* name,
-      const std::vector<const char*>& args) {
+  DexMethod* find_vmethod(const C& clazzes,
+                          const char* cls,
+                          const char* rtype,
+                          const char* name,
+                          const std::vector<const char*>& args) {
     const auto* c = find_class(clazzes, cls);
     const auto& vmethods = c->get_vmethods();
-    const auto it = std::find(
-        vmethods.begin(),
-        vmethods.end(),
-        DexMethod::make_method(cls, name, rtype, args));
+    const auto it = std::find(vmethods.begin(),
+                              vmethods.end(),
+                              DexMethod::make_method(cls, name, rtype, args));
     return it == vmethods.end() ? nullptr : *it;
   }
 
   std::unique_ptr<keep_rules::ProguardConfiguration>
-  process_and_get_proguard_config(
-      const std::vector<DexClasses>& dexen,
-      const std::string& config) {
+  process_and_get_proguard_config(const std::vector<DexClasses>& dexen,
+                                  const std::string& config) {
     auto pg_config = std::make_unique<keep_rules::ProguardConfiguration>();
     std::istringstream pg_config_text(config);
     keep_rules::proguard_parser::parse(pg_config_text, pg_config.get());
