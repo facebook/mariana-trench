@@ -7,14 +7,15 @@
 
 #include <gtest/gtest.h>
 
-#include "DexClass.h"
-#include "GlobalTypeAnalyzer.h"
-#include "TypeAnalysisTestBase.h"
+#include <DexClass.h>
+
+#include <mariana-trench/tests/integration/type-analysis/TypeAnalysisTestBase.h>
+#include <mariana-trench/type-analysis/GlobalTypeAnalyzer.h>
+
+namespace marianatrench {
 
 using namespace type_analyzer;
 using namespace type_analyzer::global;
-
-using TypeSet = sparta::PatriciaTreeSet<const DexType*>;
 
 class GlobalTypeAnalysisTest : public TypeAnalysisTestBase {};
 
@@ -432,3 +433,5 @@ TEST_F(GlobalTypeAnalysisTest, InvokeInInitRegressionTest) {
   const auto& set_domain = rtype.get_set_domain();
   EXPECT_EQ(set_domain.get_types(), get_type_set({get_type("TestP$C")}));
 }
+
+} // namespace marianatrench

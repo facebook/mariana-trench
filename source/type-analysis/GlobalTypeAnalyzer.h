@@ -9,11 +9,14 @@
 
 #include <sparta/HashedAbstractPartition.h>
 
-#include "CallGraph.h"
-#include "DexTypeEnvironment.h"
-#include "LocalTypeAnalyzer.h"
-#include "MethodOverrideGraph.h"
-#include "WholeProgramState.h"
+#include <CallGraph.h>
+#include <DexTypeEnvironment.h>
+#include <MethodOverrideGraph.h>
+
+#include <mariana-trench/type-analysis/LocalTypeAnalyzer.h>
+#include <mariana-trench/type-analysis/WholeProgramState.h>
+
+namespace marianatrench {
 
 namespace type_analyzer {
 
@@ -177,3 +180,5 @@ class GlobalTypeAnalysis {
 } // namespace global
 
 } // namespace type_analyzer
+
+} // namespace marianatrench

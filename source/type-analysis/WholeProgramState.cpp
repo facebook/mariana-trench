@@ -5,13 +5,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include "WholeProgramState.h"
+#include <BaseIRAnalyzer.h>
+#include <Resolver.h>
+#include <Show.h>
+#include <Walkers.h>
 
-#include "BaseIRAnalyzer.h"
-#include "GlobalTypeAnalyzer.h"
-#include "Resolver.h"
-#include "Show.h"
-#include "Walkers.h"
+#include <mariana-trench/type-analysis/GlobalTypeAnalyzer.h>
+#include <mariana-trench/type-analysis/WholeProgramState.h>
+
+namespace marianatrench {
 
 using namespace type_analyzer;
 
@@ -541,3 +543,5 @@ bool WholeProgramAwareAnalyzer::analyze_invoke(
 }
 
 } // namespace type_analyzer
+
+} // namespace marianatrench

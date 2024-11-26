@@ -9,9 +9,11 @@
 
 #include <boost/optional/optional_io.hpp>
 
-#include "BaseIRAnalyzer.h"
-#include "DexTypeEnvironment.h"
-#include "InstructionAnalyzer.h"
+#include <BaseIRAnalyzer.h>
+#include <DexTypeEnvironment.h>
+#include <InstructionAnalyzer.h>
+
+namespace marianatrench {
 
 namespace type_analyzer {
 
@@ -139,3 +141,5 @@ class CtorFieldAnalyzer final : public InstructionAnalyzerBase<
 } // namespace local
 
 } // namespace type_analyzer
+
+} // namespace marianatrench

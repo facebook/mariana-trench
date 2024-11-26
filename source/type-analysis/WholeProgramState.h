@@ -11,15 +11,17 @@
 
 #include <sparta/HashedAbstractPartition.h>
 
-#include "CallGraph.h"
-#include "ConcurrentContainers.h"
-#include "DexTypeEnvironment.h"
-#include "InstructionAnalyzer.h"
-#include "Trace.h"
+#include <CallGraph.h>
+#include <ConcurrentContainers.h>
+#include <DexTypeEnvironment.h>
+#include <InstructionAnalyzer.h>
+#include <Trace.h>
 
 std::ostream& operator<<(std::ostream& out, const DexField& field);
 
 std::ostream& operator<<(std::ostream& out, const DexMethod& method);
+
+namespace marianatrench {
 
 namespace type_analyzer {
 
@@ -264,3 +266,5 @@ class WholeProgramAwareAnalyzer final : public InstructionAnalyzerBase<
 };
 
 } // namespace type_analyzer
+
+} // namespace marianatrench

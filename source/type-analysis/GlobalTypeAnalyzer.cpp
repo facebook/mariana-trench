@@ -5,18 +5,21 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include "GlobalTypeAnalyzer.h"
-#include "ConcurrentContainers.h"
+#include <ConcurrentContainers.h>
 
-#include "ControlFlow.h"
-#include "IFieldAnalysisUtil.h"
-#include "IRCode.h"
-#include "IRInstruction.h"
+#include <ControlFlow.h>
+#include <IFieldAnalysisUtil.h>
+#include <IRCode.h>
+#include <IRInstruction.h>
 
-#include "Resolver.h"
-#include "Show.h"
-#include "Trace.h"
-#include "Walkers.h"
+#include <Resolver.h>
+#include <Show.h>
+#include <Trace.h>
+#include <Walkers.h>
+
+#include <mariana-trench/type-analysis/GlobalTypeAnalyzer.h>
+
+namespace marianatrench {
 
 namespace mog = method_override_graph;
 
@@ -562,3 +565,5 @@ void GlobalTypeAnalysis::trace_stats(WholeProgramState& wps) {
 } // namespace global
 
 } // namespace type_analyzer
+
+} // namespace marianatrench

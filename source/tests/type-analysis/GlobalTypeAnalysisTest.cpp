@@ -5,19 +5,21 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include "GlobalTypeAnalyzer.h"
+#include <CallGraph.h>
+#include <Creators.h>
+#include <IRAssembler.h>
+#include <MethodOverrideGraph.h>
+#include <Walkers.h>
 
-#include "CallGraph.h"
-#include "Creators.h"
-#include "IRAssembler.h"
-#include "MethodOverrideGraph.h"
-#include "RedexTest.h"
-#include "Walkers.h"
+#include <mariana-trench/tests/Test.h>
+#include <mariana-trench/type-analysis/GlobalTypeAnalyzer.h>
+
+namespace marianatrench {
 
 using namespace type_analyzer;
 using namespace type_analyzer::global;
 
-struct GlobalTypeAnalysisTest : public RedexTest {
+struct GlobalTypeAnalysisTest : public test::Test {
  public:
   GlobalTypeAnalysisTest() {
     auto cls_o = DexType::make_type("LO;");
@@ -497,3 +499,5 @@ TEST_F(GlobalTypeAnalysisTest, StaticFieldWithEncodedValueTest) {
       DexTypeDomain::create_not_null(type::java_lang_Class())
           .join(DexTypeDomain::null()));
 }
+
+} // namespace marianatrench

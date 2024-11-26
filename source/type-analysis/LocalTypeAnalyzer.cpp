@@ -5,14 +5,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include "LocalTypeAnalyzer.h"
-
 #include <ostream>
 #include <sstream>
 
-#include "Resolver.h"
-#include "Show.h"
-#include "Trace.h"
+#include <Resolver.h>
+#include <Show.h>
+#include <Trace.h>
+
+#include <mariana-trench/type-analysis/LocalTypeAnalyzer.h>
+
+namespace marianatrench {
 
 using namespace type_analyzer;
 
@@ -299,3 +301,5 @@ bool CtorFieldAnalyzer::analyze_invoke(
 } // namespace local
 
 } // namespace type_analyzer
+
+} // namespace marianatrench
