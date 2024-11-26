@@ -21,7 +21,7 @@ TEST_F(KindFramesTest, Add) {
 
   Scope scope;
   auto* one = context.methods->create(
-      redex::create_void_method(scope, "LClass;", "one"));
+      marianatrench::redex::create_void_method(scope, "LClass;", "one"));
   auto* leaf =
       context.access_path_factory->get(AccessPath(Root(Root::Kind::Leaf)));
   auto* one_origin = context.origin_factory->method_origin(one, leaf);

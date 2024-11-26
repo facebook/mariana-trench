@@ -24,7 +24,7 @@ TEST_F(ModelValidatorTest, ModelValidators) {
 
   Scope scope;
   auto* method = context.methods->create(
-      redex::create_void_method(scope, "LClass;", "one"));
+      marianatrench::redex::create_void_method(scope, "LClass;", "one"));
 
   SourceSinkRule rule_1(
       "rule 1",
@@ -165,7 +165,7 @@ TEST_F(ModelValidatorTest, ExpectIssueExpectNoIssue) {
 
   Scope scope;
   auto* method = context.methods->create(
-      redex::create_void_method(scope, "LClass;", "one"));
+      marianatrench::redex::create_void_method(scope, "LClass;", "one"));
   const auto* argument0 =
       context.access_path_factory->get(AccessPath(Root::argument(0)));
   const auto* source_origin =

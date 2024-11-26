@@ -24,7 +24,7 @@ TEST_F(FrameTest, FrameConstructor) {
 
 TEST_F(FrameTest, FrameLeq) {
   Scope scope;
-  auto dex_fields = redex::create_fields(
+  auto dex_fields = marianatrench::redex::create_fields(
       scope,
       /* class_name */ "LClassThree;",
       /* fields */
@@ -35,9 +35,9 @@ TEST_F(FrameTest, FrameLeq) {
   auto context = test::make_context(store);
 
   auto* one = context.methods->create(
-      redex::create_void_method(scope, "LClass;", "one"));
+      marianatrench::redex::create_void_method(scope, "LClass;", "one"));
   auto* two = context.methods->create(
-      redex::create_void_method(scope, "LOther;", "two"));
+      marianatrench::redex::create_void_method(scope, "LOther;", "two"));
 
   auto* leaf =
       context.access_path_factory->get(AccessPath(Root(Root::Kind::Leaf)));
@@ -269,7 +269,7 @@ TEST_F(FrameTest, FrameEquals) {
 
 TEST_F(FrameTest, FrameJoin) {
   Scope scope;
-  auto dex_fields = redex::create_fields(
+  auto dex_fields = marianatrench::redex::create_fields(
       scope,
       /* class_name */ "LClassThree;",
       /* fields */
@@ -280,9 +280,9 @@ TEST_F(FrameTest, FrameJoin) {
   auto context = test::make_context(store);
 
   auto* one = context.methods->create(
-      redex::create_void_method(scope, "LClass;", "one"));
+      marianatrench::redex::create_void_method(scope, "LClass;", "one"));
   auto* two = context.methods->create(
-      redex::create_void_method(scope, "LOther;", "two"));
+      marianatrench::redex::create_void_method(scope, "LOther;", "two"));
   auto* field_one = context.fields->get(dex_fields[0]);
   auto* field_two = context.fields->get(dex_fields[1]);
   auto* leaf =
@@ -490,7 +490,7 @@ TEST_F(FrameTest, FrameJoin) {
 
 TEST_F(FrameTest, FrameWithKind) {
   Scope scope;
-  auto dex_fields = redex::create_field(
+  auto dex_fields = marianatrench::redex::create_field(
       scope,
       /* class_name */ "LClassThree;",
       /* fields */
@@ -500,7 +500,7 @@ TEST_F(FrameTest, FrameWithKind) {
   auto context = test::make_context(store);
 
   auto* two = context.methods->create(
-      redex::create_void_method(scope, "LOther;", "two"));
+      marianatrench::redex::create_void_method(scope, "LOther;", "two"));
 
   auto* field = context.fields->get(dex_fields);
   auto kind_a = context.kind_factory->get("TestSourceA");
@@ -538,7 +538,7 @@ TEST_F(FrameTest, SerializationDeserialization) {
   auto context = test::make_context(store);
 
   const auto* callee = context.methods->create(
-      redex::create_void_method(scope, "LClass;", "callee"));
+      marianatrench::redex::create_void_method(scope, "LClass;", "callee"));
   const auto* callee_port =
       context.access_path_factory->get(AccessPath(Root(Root::Kind::Return)));
 

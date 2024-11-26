@@ -56,22 +56,23 @@ Context test_class_hierarchies(const Scope& scope) {
 TEST_F(ClassHierarchiesTest, ClassHierarchies) {
   Scope scope;
 
-  auto* dex_parent = redex::create_void_method(scope, "LParent;", "f");
-  auto* dex_child_one = redex::create_void_method(
+  auto* dex_parent =
+      marianatrench::redex::create_void_method(scope, "LParent;", "f");
+  auto* dex_child_one = marianatrench::redex::create_void_method(
       scope,
       "LChildOne;",
       "f",
       /* parameter_types */ "",
       /* return_type */ "V",
       /* super */ dex_parent->get_class());
-  auto* dex_child_two = redex::create_void_method(
+  auto* dex_child_two = marianatrench::redex::create_void_method(
       scope,
       "LChildTwo;",
       "f",
       /* parameter_types */ "",
       /* return_type */ "V",
       /* super */ dex_parent->get_class());
-  auto* dex_child_one_child = redex::create_void_method(
+  auto* dex_child_one_child = marianatrench::redex::create_void_method(
       scope,
       "LChildOneChild;",
       "f",
@@ -99,22 +100,23 @@ TEST_F(ClassHierarchiesTest, ClassHierarchies) {
 TEST_F(ClassHierarchiesTest, JsonSerializationDeserialization) {
   Scope scope;
 
-  auto* dex_parent = redex::create_void_method(scope, "LParent;", "f");
-  auto* dex_child_one = redex::create_void_method(
+  auto* dex_parent =
+      marianatrench::redex::create_void_method(scope, "LParent;", "f");
+  auto* dex_child_one = marianatrench::redex::create_void_method(
       scope,
       "LChildOne;",
       "f",
       /* parameter_types */ "",
       /* return_type */ "V",
       /* super */ dex_parent->get_class());
-  auto* dex_child_two = redex::create_void_method(
+  auto* dex_child_two = marianatrench::redex::create_void_method(
       scope,
       "LChildTwo;",
       "f",
       /* parameter_types */ "",
       /* return_type */ "V",
       /* super */ dex_parent->get_class());
-  auto* dex_child_one_child = redex::create_void_method(
+  auto* dex_child_one_child = marianatrench::redex::create_void_method(
       scope,
       "LChildOneChild;",
       "f",

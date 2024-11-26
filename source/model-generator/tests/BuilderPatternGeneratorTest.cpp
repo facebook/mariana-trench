@@ -44,7 +44,7 @@ TEST_F(BuilderPatternGeneratorTest, BuilderPatternModels) {
   DexStore store("stores");
   store.add_classes(scope);
   auto context = test::make_context(store);
-  auto dex_methods = redex::create_methods(
+  auto dex_methods = marianatrench::redex::create_methods(
       scope,
       "LClass;",
       {

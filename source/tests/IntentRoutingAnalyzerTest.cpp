@@ -73,7 +73,7 @@ std::vector<const Method*> get_methods(
 
 TEST_F(IntentRoutingAnalyzerTest, IntentRoutingConstraint) {
   Scope scope;
-  auto intent_methods = redex::create_methods(
+  auto intent_methods = marianatrench::redex::create_methods(
       scope,
       "Landroid/content/Intent;",
       {
@@ -90,7 +90,7 @@ TEST_F(IntentRoutingAnalyzerTest, IntentRoutingConstraint) {
             )
             ))",
       });
-  auto dex_methods = redex::create_methods(
+  auto dex_methods = marianatrench::redex::create_methods(
       scope,
       "LClass;",
       {
@@ -144,7 +144,7 @@ TEST_F(IntentRoutingAnalyzerTest, IntentRoutingConstraint) {
 
 TEST_F(IntentRoutingAnalyzerTest, IntentRoutingSetClass) {
   Scope scope;
-  auto intent_methods = redex::create_methods(
+  auto intent_methods = marianatrench::redex::create_methods(
       scope,
       "Landroid/content/Intent;",
       {
@@ -161,7 +161,7 @@ TEST_F(IntentRoutingAnalyzerTest, IntentRoutingSetClass) {
             )
             ))",
       });
-  auto dex_methods = redex::create_methods(
+  auto dex_methods = marianatrench::redex::create_methods(
       scope,
       "LClass;",
       {
@@ -201,7 +201,7 @@ TEST_F(IntentRoutingAnalyzerTest, IntentRoutingSetClass) {
 
 TEST_F(IntentRoutingAnalyzerTest, IntentRoutingGetIntent) {
   Scope scope;
-  auto dex_methods = redex::create_methods(
+  auto dex_methods = marianatrench::redex::create_methods(
       scope,
       "LClass;",
       {
@@ -249,7 +249,7 @@ TEST_F(IntentRoutingAnalyzerTest, IntentRoutingGetIntent) {
 
 TEST_F(IntentRoutingAnalyzerTest, IntentRoutingServiceIntent) {
   Scope scope;
-  auto dex_methods = redex::create_methods(
+  auto dex_methods = marianatrench::redex::create_methods(
       scope,
       "LClass;",
       {

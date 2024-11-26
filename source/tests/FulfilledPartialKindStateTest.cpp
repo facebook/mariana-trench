@@ -24,7 +24,7 @@ TEST_F(FulfilledPartialKindStateTest, Basic) {
 
   // Make method context.
   auto registry = Registry(context);
-  auto* dex_method = redex::create_void_method(
+  auto* dex_method = marianatrench::redex::create_void_method(
       scope,
       /* class_name */ "MyClass;",
       /* method_name */ "<init>",

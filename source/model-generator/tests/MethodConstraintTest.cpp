@@ -36,7 +36,7 @@ TEST_F(MethodConstraintTest, MethodPatternConstraintSatisfy) {
   auto context = test::make_empty_context();
 
   auto* method = context.methods->create(
-      redex::create_void_method(scope, "method", method_name));
+      marianatrench::redex::create_void_method(scope, "method", method_name));
 
   EXPECT_TRUE(MethodPatternConstraint(method_name).satisfy(method));
   EXPECT_TRUE(MethodPatternConstraint("[A-Za-z]+").satisfy(method));
@@ -49,7 +49,7 @@ TEST_F(MethodConstraintTest, ParentConstraintSatisfy) {
   std::string class_name = "Landroid/util/Log;";
   auto context = test::make_empty_context();
   auto* method = context.methods->create(
-      redex::create_void_method(scope, class_name, "method"));
+      marianatrench::redex::create_void_method(scope, class_name, "method"));
 
   EXPECT_TRUE(
       ParentConstraint(std::make_unique<TypePatternConstraint>(class_name))
@@ -67,7 +67,7 @@ TEST_F(MethodConstraintTest, AllOfMethodConstraintSatisfy) {
   std::string class_name = "Landroid/util/Log;";
   std::string method_name = "println";
   auto* method = context.methods->create(
-      redex::create_void_method(scope, class_name, method_name));
+      marianatrench::redex::create_void_method(scope, class_name, method_name));
 
   EXPECT_TRUE(AllOfMethodConstraint({}).satisfy(method));
 
@@ -114,7 +114,7 @@ TEST_F(MethodConstraintTest, AnyOfMethodConstraintSatisfy) {
   std::string class_name = "Landroid/util/Log;";
   std::string method_name = "println";
   auto* method = context.methods->create(
-      redex::create_void_method(scope, class_name, method_name));
+      marianatrench::redex::create_void_method(scope, class_name, method_name));
 
   EXPECT_TRUE(AnyOfMethodConstraint({}).satisfy(method));
 
@@ -161,7 +161,7 @@ TEST_F(MethodConstraintTest, NotMethodConstraintSatisfy) {
   std::string class_name = "Landroid/util/Log;";
   std::string method_name = "println";
   auto* method = context.methods->create(
-      redex::create_void_method(scope, class_name, method_name));
+      marianatrench::redex::create_void_method(scope, class_name, method_name));
 
   EXPECT_TRUE(
       NotMethodConstraint(std::make_unique<MethodPatternConstraint>("printLn"))
@@ -175,7 +175,7 @@ TEST_F(MethodConstraintTest, NotMethodConstraintSatisfy) {
 TEST_F(MethodConstraintTest, NumberParametersConstraintSatisfy) {
   Scope scope;
   auto context = test::make_empty_context();
-  auto methods = redex::create_methods(
+  auto methods = marianatrench::redex::create_methods(
       scope,
       "LClass;",
       {
@@ -208,20 +208,20 @@ TEST_F(MethodConstraintTest, NumberParametersConstraintSatisfy) {
 
 TEST_F(MethodConstraintTest, NumberOverridesConstraintSatisfy) {
   Scope scope;
-  auto* dex_base_method = redex::create_void_method(
+  auto* dex_base_method = marianatrench::redex::create_void_method(
       scope,
       /* class_name */ "LClass;",
       /* method */ "onReceive",
       /* parameter_type */ "Landroid/content/Context;Landroid/content/Intent;",
       /* return_type */ "V");
-  auto* dex_first_overriding_method = redex::create_void_method(
+  auto* dex_first_overriding_method = marianatrench::redex::create_void_method(
       scope,
       /* class_name */ "LSubclass;",
       /* method */ "onReceive",
       /* parameter_type */ "Landroid/content/Context;Landroid/content/Intent;",
       /* return_type */ "V",
       /* super */ dex_base_method->get_class());
-  auto* dex_second_overriding_method = redex::create_void_method(
+  auto* dex_second_overriding_method = marianatrench::redex::create_void_method(
       scope,
       /* class_name */ "LSubSubclass;",
       /* method */ "onReceive",
@@ -252,7 +252,7 @@ TEST_F(MethodConstraintTest, NumberOverridesConstraintSatisfy) {
 TEST_F(MethodConstraintTest, IsStaticConstraintSatisfy) {
   Scope scope;
   auto context = test::make_empty_context();
-  auto methods = redex::create_methods(
+  auto methods = marianatrench::redex::create_methods(
       scope,
       "LClass;",
       {
@@ -278,7 +278,7 @@ TEST_F(MethodConstraintTest, IsStaticConstraintSatisfy) {
 TEST_F(MethodConstraintTest, IsNativeConstraintSatisfy) {
   Scope scope;
   auto context = test::make_empty_context();
-  auto methods = redex::create_methods(
+  auto methods = marianatrench::redex::create_methods(
       scope,
       "LClass;",
       {
@@ -310,7 +310,7 @@ TEST_F(MethodConstraintTest, IsNativeConstraintSatisfy) {
 TEST_F(MethodConstraintTest, HasCodeConstraintSatisfy) {
   Scope scope;
   auto context = test::make_empty_context();
-  auto methods = redex::create_methods(scope, "LClass;", {R"(
+  auto methods = marianatrench::redex::create_methods(scope, "LClass;", {R"(
             (method (public) "LClass;.method_1:()V"
               (
                 (return-void)
@@ -326,7 +326,7 @@ TEST_F(MethodConstraintTest, HasCodeConstraintSatisfy) {
 TEST_F(MethodConstraintTest, NthParameterConstraintSatisfy) {
   Scope scope;
   auto context = test::make_empty_context();
-  auto methods = redex::create_methods(
+  auto methods = marianatrench::redex::create_methods(
       scope,
       "LClass;",
       {
@@ -355,7 +355,7 @@ TEST_F(MethodConstraintTest, NthParameterConstraintSatisfy) {
 TEST_F(MethodConstraintTest, AnyParameterConstraintSatisfy) {
   Scope scope;
   auto context = test::make_empty_context();
-  auto methods = redex::create_methods(
+  auto methods = marianatrench::redex::create_methods(
       scope,
       "LClass;",
       {
@@ -391,7 +391,7 @@ TEST_F(MethodConstraintTest, AnyParameterConstraintSatisfy) {
 TEST_F(MethodConstraintTest, SignaturePatternConstraintSatisfy) {
   Scope scope;
   auto context = test::make_empty_context();
-  auto methods = redex::create_methods(
+  auto methods = marianatrench::redex::create_methods(
       scope,
       "Landroid/app/Fragment;",
       {
@@ -418,7 +418,7 @@ TEST_F(MethodConstraintTest, SignaturePatternConstraintSatisfy) {
 TEST_F(MethodConstraintTest, SignatureMatchConstraintSatisfy) {
   Scope scope;
   auto context = test::make_empty_context();
-  auto methods = redex::create_methods(
+  auto methods = marianatrench::redex::create_methods(
       scope,
       "LClass;",
       {
@@ -450,7 +450,7 @@ TEST_F(MethodConstraintTest, SignatureMatchConstraintSatisfy) {
 TEST_F(MethodConstraintTest, SignatureMultipleMethodMatchConstraintSatisfy) {
   Scope scope;
   auto context = test::make_empty_context();
-  auto class_methods = redex::create_methods(
+  auto class_methods = marianatrench::redex::create_methods(
       scope,
       "LClass;",
       {
@@ -484,7 +484,7 @@ TEST_F(MethodConstraintTest, SignatureMultipleMethodMatchConstraintSatisfy) {
   EXPECT_TRUE(constraint->satisfy(context.methods->create(class_methods[0])));
   EXPECT_TRUE(constraint->satisfy(context.methods->create(class_methods[1])));
   EXPECT_FALSE(constraint->satisfy(context.methods->create(class_methods[2])));
-  auto other_class_methods = redex::create_methods(
+  auto other_class_methods = marianatrench::redex::create_methods(
       scope,
       "LOtherClass;",
       {
@@ -518,7 +518,7 @@ TEST_F(MethodConstraintTest, SignatureMultipleMethodMatchConstraintSatisfy) {
 TEST_F(MethodConstraintTest, SignatureMultipleParentMatchConstraintSatisfy) {
   Scope scope;
   auto context = test::make_empty_context();
-  auto class_methods = redex::create_methods(
+  auto class_methods = marianatrench::redex::create_methods(
       scope,
       "LClass;",
       {
@@ -536,7 +536,7 @@ TEST_F(MethodConstraintTest, SignatureMultipleParentMatchConstraintSatisfy) {
             ))",
       });
 
-  auto other_class_methods = redex::create_methods(
+  auto other_class_methods = marianatrench::redex::create_methods(
       scope,
       "LOtherClass;",
       {
@@ -547,7 +547,7 @@ TEST_F(MethodConstraintTest, SignatureMultipleParentMatchConstraintSatisfy) {
             )
             ))",
       });
-  auto unrelated_class_methods = redex::create_methods(
+  auto unrelated_class_methods = marianatrench::redex::create_methods(
       scope,
       "LUnrelatedClass;",
       {
@@ -577,7 +577,7 @@ TEST_F(MethodConstraintTest, SignatureMultipleParentMatchConstraintSatisfy) {
 TEST_F(MethodConstraintTest, SignatureMatchExtendsConstraintSatisfy) {
   Scope scope;
   auto context = test::make_empty_context();
-  auto class_methods = redex::create_methods(
+  auto class_methods = marianatrench::redex::create_methods(
       scope,
       "LClass;",
       {
@@ -612,9 +612,9 @@ TEST_F(MethodConstraintTest, SignatureMatchExtendsConstraintSatisfy) {
             ))",
   };
 
-  auto subclass_methods = redex::create_methods(
+  auto subclass_methods = marianatrench::redex::create_methods(
       scope, "LSubclass;", subclass_method_names, class_dex_type);
-  auto unrelated_class_methods = redex::create_methods(
+  auto unrelated_class_methods = marianatrench::redex::create_methods(
       scope,
       "LUnrelatedClass;",
       {
@@ -724,7 +724,7 @@ TEST_F(MethodConstraintTest, SuperConstraintSatisfy) {
 TEST_F(MethodConstraintTest, ReturnConstraint) {
   Scope scope;
   auto context = test::make_empty_context();
-  auto methods = redex::create_methods(
+  auto methods = marianatrench::redex::create_methods(
       scope,
       "LClass;",
       {
@@ -756,7 +756,7 @@ TEST_F(MethodConstraintTest, ReturnConstraint) {
 TEST_F(MethodConstraintTest, VisibilityMethodConstraint) {
   Scope scope;
   auto context = test::make_empty_context();
-  auto methods = redex::create_methods(
+  auto methods = marianatrench::redex::create_methods(
       scope,
       "LClass;",
       {
@@ -2064,10 +2064,10 @@ TEST_F(MethodConstraintTest, MethodConstraintFromJson) {
 
 TEST_F(MethodConstraintTest, MethodPatternConstraintMaySatisfy) {
   Scope scope;
-  auto* method_a =
-      redex::create_void_method(scope, "class_name", "method_name_a");
-  auto* method_b =
-      redex::create_void_method(scope, "class_name_b", "method_name_b");
+  auto* method_a = marianatrench::redex::create_void_method(
+      scope, "class_name", "method_name_a");
+  auto* method_b = marianatrench::redex::create_void_method(
+      scope, "class_name_b", "method_name_b");
   DexStore store("test-stores");
   store.add_classes(scope);
   auto context = test::make_context(store);
@@ -2089,9 +2089,9 @@ TEST_F(MethodConstraintTest, MethodPatternConstraintMaySatisfy) {
 
 TEST_F(MethodConstraintTest, ParentConstraintMaySatisfy) {
   Scope scope;
-  auto* method_a =
-      redex::create_void_method(scope, "LClass;", "method_name_a", "", "V");
-  auto* method_b = redex::create_void_method(
+  auto* method_a = marianatrench::redex::create_void_method(
+      scope, "LClass;", "method_name_a", "", "V");
+  auto* method_b = marianatrench::redex::create_void_method(
       scope, "LSubClass;", "method_name_b", "", "V", method_a->get_class());
   DexStore store("test-stores");
   auto interface = DexType::make_type("LInterface;");
@@ -2168,9 +2168,10 @@ TEST_F(MethodConstraintTest, ParentConstraintMaySatisfy) {
 
 TEST_F(MethodConstraintTest, AllOfMethodConstraintMaySatisfy) {
   Scope scope;
-  auto* method_a =
-      redex::create_void_method(scope, "class_name", "method_name_a");
-  redex::create_void_method(scope, "class_name_b", "method_name_b");
+  auto* method_a = marianatrench::redex::create_void_method(
+      scope, "class_name", "method_name_a");
+  marianatrench::redex::create_void_method(
+      scope, "class_name_b", "method_name_b");
   DexStore store("test-stores");
   store.add_classes(scope);
   auto context = test::make_context(store);
@@ -2228,10 +2229,10 @@ TEST_F(MethodConstraintTest, AllOfMethodConstraintMaySatisfy) {
 
 TEST_F(MethodConstraintTest, AnyOfMethodConstraintMaySatisfy) {
   Scope scope;
-  auto* method_a =
-      redex::create_void_method(scope, "class_name", "method_name_a");
-  auto* method_b =
-      redex::create_void_method(scope, "class_name_b", "method_name_b");
+  auto* method_a = marianatrench::redex::create_void_method(
+      scope, "class_name", "method_name_a");
+  auto* method_b = marianatrench::redex::create_void_method(
+      scope, "class_name_b", "method_name_b");
   DexStore store("test-stores");
   store.add_classes(scope);
   auto context = test::make_context(store);
@@ -2289,9 +2290,10 @@ TEST_F(MethodConstraintTest, AnyOfMethodConstraintMaySatisfy) {
 
 TEST_F(MethodConstraintTest, NotMethodConstraintMaySatisfy) {
   Scope scope;
-  redex::create_void_method(scope, "class_name", "method_name_a");
-  auto* method_b =
-      redex::create_void_method(scope, "class_name_b", "method_name_b");
+  marianatrench::redex::create_void_method(
+      scope, "class_name", "method_name_a");
+  auto* method_b = marianatrench::redex::create_void_method(
+      scope, "class_name_b", "method_name_b");
   DexStore store("test-stores");
   store.add_classes(scope);
   auto context = test::make_context(store);
@@ -2321,7 +2323,7 @@ TEST_F(MethodConstraintTest, NotMethodConstraintMaySatisfy) {
 TEST_F(MethodConstraintTest, HasAnnotationConstraintMaySatisfy) {
   Scope scope;
   std::vector<std::string> a_annotations = {"Ljava/annotation/A;"};
-  auto* method_a = redex::create_void_method(
+  auto* method_a = marianatrench::redex::create_void_method(
       scope,
       "class_name",
       "method_name_a",
@@ -2335,7 +2337,7 @@ TEST_F(MethodConstraintTest, HasAnnotationConstraintMaySatisfy) {
       /* annotations */ a_annotations);
 
   std::vector<std::string> b_annotations = {"Ljava/annotation/B;"};
-  auto* method_b = redex::create_void_method(
+  auto* method_b = marianatrench::redex::create_void_method(
       scope,
       "class_name_b",
       "method_name_b",
@@ -2350,7 +2352,7 @@ TEST_F(MethodConstraintTest, HasAnnotationConstraintMaySatisfy) {
   std::vector<std::string> a_and_b_annotations = {
       "Ljava/annotation/A;", "Ljava/annotation/B;"};
 
-  auto* method_a_and_b = redex::create_void_method(
+  auto* method_a_and_b = marianatrench::redex::create_void_method(
       scope,
       "class_name_a_and_b",
       "method_name_a_and_b",

@@ -217,17 +217,17 @@ TEST_F(JsonTest, AccessPath) {
 
 TEST_F(JsonTest, Method) {
   Scope scope;
-  auto* dex_method = redex::create_void_method(
+  auto* dex_method = marianatrench::redex::create_void_method(
       scope,
       /* class_name */ "LData;",
       /* method_name */ "method",
       /* parameter_types */ "LData;LData;",
       /* return_type*/ "V");
-  redex::create_void_method(
+  marianatrench::redex::create_void_method(
       scope,
       /* class_name */ "LString;",
       /* method_name */ "<init>");
-  redex::create_void_method(
+  marianatrench::redex::create_void_method(
       scope,
       /* class_name */ "LInteger;",
       /* method_name */ "<init>");
@@ -318,7 +318,8 @@ TEST_F(JsonTest, Method) {
         ]
       })",
       context.methods->create(
-          dex_method, {{1, redex::get_or_make_type("LNonExisting;")}}),
+          dex_method,
+          {{1, marianatrench::redex::get_or_make_type("LNonExisting;")}}),
       context);
   EXPECT_JSON_EQ(
       Method,
@@ -331,7 +332,8 @@ TEST_F(JsonTest, Method) {
           }
         ]
       })",
-      context.methods->create(dex_method, {{0, redex::get_type("LString;")}}),
+      context.methods->create(
+          dex_method, {{0, marianatrench::redex::get_type("LString;")}}),
       context);
   EXPECT_JSON_EQ(
       Method,
@@ -350,8 +352,8 @@ TEST_F(JsonTest, Method) {
       })",
       context.methods->create(
           dex_method,
-          {{0, redex::get_type("LString;")},
-           {1, redex::get_type("LInteger;")}}),
+          {{0, marianatrench::redex::get_type("LString;")},
+           {1, marianatrench::redex::get_type("LInteger;")}}),
       context);
 
   const auto* non_existant_method = Method::from_json(
@@ -367,7 +369,7 @@ TEST_F(JsonTest, Method) {
 
 TEST_F(JsonTest, Field) {
   Scope scope;
-  const auto* dex_field = redex::create_field(
+  const auto* dex_field = marianatrench::redex::create_field(
       scope,
       /* class_name */ "LBase;",
       /* fields */
@@ -396,7 +398,7 @@ TEST_F(JsonTest, Field) {
 
 TEST_F(JsonTest, Position) {
   Scope scope;
-  auto* dex_method = redex::create_void_method(
+  auto* dex_method = marianatrench::redex::create_void_method(
       scope,
       /* class_name */ "LData;",
       /* method_name */ "method",
@@ -816,7 +818,7 @@ TEST_F(JsonTest, LocalPositionSet) {
 TEST_F(JsonTest, TaintConfig) {
   Scope scope;
   auto* dex_source_one =
-      redex::create_void_method(scope, "LClassOne;", "source");
+      marianatrench::redex::create_void_method(scope, "LClassOne;", "source");
 
   DexStore store("stores");
   store.add_classes(scope);
@@ -1657,7 +1659,7 @@ TEST_F(JsonTest, LifeCycleMethodGraphFromJson) {
 
 TEST_F(JsonTest, Model) {
   Scope scope;
-  auto* dex_method = redex::create_void_method(
+  auto* dex_method = marianatrench::redex::create_void_method(
       scope,
       /* class_name */ "LData;",
       /* method_name */ "method",
@@ -2929,7 +2931,7 @@ TEST_F(JsonTest, Model) {
 
 TEST_F(JsonTest, FieldModel) {
   Scope scope;
-  const auto* dex_field = redex::create_field(
+  const auto* dex_field = marianatrench::redex::create_field(
       scope,
       /* class_name */ "LBase;",
       /* fields */
@@ -3218,11 +3220,11 @@ TEST_F(JsonTest, LifecycleMethods) {
 
 TEST_F(JsonTest, CallEffectModel) {
   Scope scope;
-  auto* dex_entry_method = redex::create_void_method(
+  auto* dex_entry_method = marianatrench::redex::create_void_method(
       scope,
       /* class_name */ "LEntry;",
       /* method_name */ "method");
-  auto* dex_exit_method = redex::create_void_method(
+  auto* dex_exit_method = marianatrench::redex::create_void_method(
       scope,
       /* class_name */ "LExit;",
       /* method_name */ "method");
@@ -3388,7 +3390,7 @@ TEST_F(JsonTest, ExtraTraceTest) {
 
   const auto* kind = context.kind_factory->get("TestKind");
   const auto* callee = context.methods->create(
-      redex::create_void_method(scope, "LClass;", "one"));
+      marianatrench::redex::create_void_method(scope, "LClass;", "one"));
   mt_assert(callee != nullptr);
   const auto* call_position = context.positions->get("ExtraTrace.java", 1);
   const auto* callee_port = context.access_path_factory->get(

@@ -30,7 +30,7 @@ class DataCastFeatureGeneratorTest : public test::Test {};
 TEST_F(DataCastFeatureGeneratorTest, CastToInt) {
   Scope scope;
 
-  auto* dex_method = redex::create_void_method(
+  auto* dex_method = marianatrench::redex::create_void_method(
       scope,
       /* class_name */
       "Ljava/lang/Integer;",
@@ -78,7 +78,7 @@ TEST_F(DataCastFeatureGeneratorTest, CastToInt) {
 TEST_F(DataCastFeatureGeneratorTest, CastToBool) {
   Scope scope;
 
-  auto* dex_method = redex::create_void_method(
+  auto* dex_method = marianatrench::redex::create_void_method(
       scope,
       /* class_name */
       "Ljava/lang/Boolean;",

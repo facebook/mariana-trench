@@ -22,7 +22,7 @@ class FieldConstraintTest : public test::Test {};
 TEST_F(FieldConstraintTest, FieldNameConstraintSatisfy) {
   std::string field_name = "field_name";
   Scope scope;
-  auto dex_field = redex::create_field(
+  auto dex_field = marianatrench::redex::create_field(
       scope, "LClass;", /* field */ {field_name, type::java_lang_String()});
   DexStore store("stores");
   store.add_classes(scope);
@@ -38,7 +38,7 @@ TEST_F(FieldConstraintTest, FieldNameConstraintSatisfy) {
 
 TEST_F(FieldConstraintTest, SignaturePatternFieldConstraintSatisfy) {
   Scope scope;
-  auto dex_field = redex::create_field(
+  auto dex_field = marianatrench::redex::create_field(
       scope, "LClass;", /* field */ {"field_name", type::java_lang_String()});
   DexStore store("stores");
   store.add_classes(scope);
@@ -57,7 +57,7 @@ TEST_F(FieldConstraintTest, SignaturePatternFieldConstraintSatisfy) {
 TEST_F(FieldConstraintTest, HasAnnotationFieldConstraintSatisfy) {
   std::string field_name = "field_name";
   Scope scope;
-  auto dex_field = redex::create_field(
+  auto dex_field = marianatrench::redex::create_field(
       scope,
       "LClass;",
       /* field */
@@ -86,9 +86,9 @@ TEST_F(FieldConstraintTest, HasAnnotationFieldConstraintSatisfy) {
 
 TEST_F(FieldConstraintTest, IsStaticFieldConstraintSatisfy) {
   Scope scope;
-  auto dex_field_public = redex::create_field(
+  auto dex_field_public = marianatrench::redex::create_field(
       scope, "LClassB;", /* field */ {"field", type::java_lang_String()});
-  auto dex_field_static = redex::create_field(
+  auto dex_field_static = marianatrench::redex::create_field(
       scope,
       "LClassA;",
       /* field */ {"field", type::java_lang_String()},
@@ -106,7 +106,7 @@ TEST_F(FieldConstraintTest, IsStaticFieldConstraintSatisfy) {
 
 TEST_F(FieldConstraintTest, ParentFieldConstraintSatisfy) {
   Scope scope;
-  auto dex_field = redex::create_field(
+  auto dex_field = marianatrench::redex::create_field(
       scope, "LClass;", /* field */ {"field_name", type::java_lang_String()});
   DexStore store("stores");
   store.add_classes(scope);
@@ -125,7 +125,7 @@ TEST_F(FieldConstraintTest, ParentFieldConstraintSatisfy) {
 TEST_F(FieldConstraintTest, AllOfFieldConstraintSatisfy) {
   std::string field_name = "field_name";
   Scope scope;
-  auto dex_field = redex::create_field(
+  auto dex_field = marianatrench::redex::create_field(
       scope, "LClass;", {field_name, type::java_lang_String()});
   DexStore store("stores");
   store.add_classes(scope);
@@ -170,7 +170,7 @@ TEST_F(FieldConstraintTest, AllOfFieldConstraintSatisfy) {
 TEST_F(FieldConstraintTest, NotFieldConstraintSatisfy) {
   std::string field_name = "field_name";
   Scope scope;
-  auto dex_field = redex::create_field(
+  auto dex_field = marianatrench::redex::create_field(
       scope, "LClass;", {field_name, type::java_lang_String()});
   DexStore store("stores");
   store.add_classes(scope);
@@ -193,7 +193,7 @@ TEST_F(FieldConstraintTest, NotFieldConstraintSatisfy) {
 TEST_F(FieldConstraintTest, AnyOfFieldConstraintSatisfy) {
   std::string field_name = "field_name";
   Scope scope;
-  auto dex_field = redex::create_field(
+  auto dex_field = marianatrench::redex::create_field(
       scope, "LClass;", {field_name, type::java_lang_String()});
   DexStore store("stores");
   store.add_classes(scope);

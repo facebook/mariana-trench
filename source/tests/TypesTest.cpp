@@ -81,7 +81,8 @@ Context test_types(
   DexStore store("test_store");
   store.add_classes(scope);
   context.stores = {store};
-  redex::process_proguard_configurations(*context.options, context.stores);
+  marianatrench::redex::process_proguard_configurations(
+      *context.options, context.stores);
   context.artificial_methods = std::make_unique<ArtificialMethods>(
       *context.kind_factory, context.stores);
   context.methods = std::make_unique<Methods>(context.stores);
@@ -125,7 +126,7 @@ std::unordered_map<int, const DexType*> register_types_for_method(
 TEST_F(TypesTest, LocalIputTypes) {
   Scope scope;
 
-  auto* dex_method = redex::create_method(scope, "LClass;", R"(
+  auto* dex_method = marianatrench::redex::create_method(scope, "LClass;", R"(
     (method (public) "LClass;.foo:()V"
      (
       (load-param-object v0)
@@ -155,8 +156,8 @@ TEST_F(TypesTest, LocalIputTypes) {
 TEST_F(TypesTest, LocalInvokeDirectTypes) {
   Scope scope;
 
-  redex::create_void_method(scope, "LCallee;", "callee");
-  auto* dex_caller = redex::create_method(
+  marianatrench::redex::create_void_method(scope, "LCallee;", "callee");
+  auto* dex_caller = marianatrench::redex::create_method(
       scope,
       "LCaller;",
       R"(
@@ -183,15 +184,16 @@ TEST_F(TypesTest, LocalInvokeDirectTypes) {
 TEST_F(TypesTest, LocalInvokeVirtualTypes) {
   Scope scope;
 
-  auto* dex_callee = redex::create_void_method(scope, "LCallee;", "callee");
-  redex::create_void_method(
+  auto* dex_callee =
+      marianatrench::redex::create_void_method(scope, "LCallee;", "callee");
+  marianatrench::redex::create_void_method(
       scope,
       /* class_name */ "LSubclass;",
       /* method */ "callee",
       /* parameter_types */ "",
       /* return_type */ "V",
       /* super */ dex_callee->get_class());
-  auto* dex_caller = redex::create_method(
+  auto* dex_caller = marianatrench::redex::create_method(
       scope,
       "LCaller;",
       R"(
@@ -205,7 +207,7 @@ TEST_F(TypesTest, LocalInvokeVirtualTypes) {
         )
         )
       )");
-  auto* dex_missing_invoke = redex::create_method(
+  auto* dex_missing_invoke = marianatrench::redex::create_method(
       scope,
       "LNotACaller;",
       R"(
@@ -237,15 +239,16 @@ TEST_F(TypesTest, LocalInvokeVirtualTypes) {
 TEST_F(TypesTest, GlobalInvokeVirtualTypes) {
   Scope scope;
 
-  auto* dex_callee = redex::create_void_method(scope, "LCallee;", "callee");
-  redex::create_void_method(
+  auto* dex_callee =
+      marianatrench::redex::create_void_method(scope, "LCallee;", "callee");
+  marianatrench::redex::create_void_method(
       scope,
       /* class_name */ "LCalleeSubclass;",
       /* method */ "callee",
       /* parameter_types */ "",
       /* return_type */ "V",
       /* super */ dex_callee->get_class());
-  auto* dex_caller = redex::create_method(
+  auto* dex_caller = marianatrench::redex::create_method(
       scope,
       "LCaller;",
       R"(
@@ -264,7 +267,7 @@ TEST_F(TypesTest, GlobalInvokeVirtualTypes) {
             )
           )
       )");
-  auto* dex_entry_caller = redex::create_method(
+  auto* dex_entry_caller = marianatrench::redex::create_method(
       scope,
       "LEntryCaller;",
       R"(
@@ -320,9 +323,9 @@ TEST_F(TypesTest, GlobalInvokeVirtualTypes) {
 
 TEST_F(TypesTest, NoProguardNarrowedGlobalFieldTypes) {
   Scope scope;
-  auto* dex_virtual_method1 =
-      redex::create_void_method(scope, "LSuper;", "virtual_method");
-  redex::create_void_method(
+  auto* dex_virtual_method1 = marianatrench::redex::create_void_method(
+      scope, "LSuper;", "virtual_method");
+  marianatrench::redex::create_void_method(
       scope,
       "LSubclass;",
       "virtual_method",
@@ -335,7 +338,7 @@ TEST_F(TypesTest, NoProguardNarrowedGlobalFieldTypes) {
   // only in virtual method bodies/clinit methods and their callees (which redex
   // sets as entry points in addtion to the entry points specified in the
   // proguard)
-  auto* dex_virtual_method2 = redex::create_methods_and_fields(
+  auto* dex_virtual_method2 = marianatrench::redex::create_methods_and_fields(
       scope,
       "LBase;",
       {{
@@ -371,7 +374,7 @@ TEST_F(TypesTest, NoProguardNarrowedGlobalFieldTypes) {
             (return-object v0)
           )
         ))"}};
-  auto klass = redex::create_methods(
+  auto klass = marianatrench::redex::create_methods(
       scope, "LClass;", method_bodies, dex_virtual_method2->get_type());
 
   auto* dex_method2 = klass.at(1);
@@ -391,8 +394,8 @@ TEST_F(TypesTest, NoProguardNarrowedGlobalFieldTypes) {
 TEST_F(TypesTest, InvokeWithLocalReflectionArgument) {
   Scope scope;
 
-  redex::create_class(scope, "LReflect;");
-  auto dex_methods = redex::create_methods(
+  marianatrench::redex::create_class(scope, "LReflect;");
+  auto dex_methods = marianatrench::redex::create_methods(
       scope,
       "LCaller;",
       {
@@ -432,8 +435,8 @@ TEST_F(TypesTest, InvokeWithLocalReflectionArgument) {
 TEST_F(TypesTest, InvokeWithHopReflectionArgument) {
   Scope scope;
 
-  redex::create_class(scope, "LReflect;");
-  redex::create_method(
+  marianatrench::redex::create_class(scope, "LReflect;");
+  marianatrench::redex::create_method(
       scope,
       "LCallee;",
       R"(
@@ -447,7 +450,7 @@ TEST_F(TypesTest, InvokeWithHopReflectionArgument) {
             )
             ))");
 
-  auto dex_caller = redex::create_method(
+  auto dex_caller = marianatrench::redex::create_method(
       scope,
       "LCaller;",
       R"(

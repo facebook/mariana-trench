@@ -22,19 +22,19 @@ TEST_F(HighlightsTest, TestGeneratedBounds) {
   using Bounds = Highlights::Bounds;
   using FileLines = Highlights::FileLines;
   Scope scope;
-  auto* dex_method = redex::create_void_method(
+  auto* dex_method = marianatrench::redex::create_void_method(
       scope,
       /* class_name */ "LClass;",
       /* method_name */ "method",
       /* parameter_types */ "Ljava/lang/Object;",
       /* return_type */ "Ljava/lang/Object;");
-  auto* dex_method_e = redex::create_void_method(
+  auto* dex_method_e = marianatrench::redex::create_void_method(
       scope,
       /* class_name */ "LLog;",
       /* method_name */ "e",
       /* parameter_types */ "Ljava/lang/Object;",
       /* return_type */ "Ljava/lang/Object;");
-  auto* dex_static_method = redex::create_void_method(
+  auto* dex_static_method = marianatrench::redex::create_void_method(
       scope,
       /* class_name */ "LClassTwo;",
       /* method_name */ "method_two",
@@ -42,14 +42,14 @@ TEST_F(HighlightsTest, TestGeneratedBounds) {
       /* return_type */ "Ljava/lang/Object;",
       /* super */ nullptr,
       /* is_static */ true);
-  auto* dex_init_method = redex::create_void_method(
+  auto* dex_init_method = marianatrench::redex::create_void_method(
       scope,
       /* class_name */ "LPackage/name/Class;",
       /* method_name */ "<init>",
       /* parameter_types */ "Ljava/lang/Object;",
       /* return_type */ "Ljava/lang/Object;");
   // Ivalid class name provided
-  auto* dex_init_method_invalid = redex::create_void_method(
+  auto* dex_init_method_invalid = marianatrench::redex::create_void_method(
       scope,
       /* class_name */ ";",
       /* method_name */ "<init>",

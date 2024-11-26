@@ -29,7 +29,7 @@ TEST_F(CallInfoTest, CallInfoSerializationDeserialization) {
 
   {
     const auto* callee = context.methods->create(
-        redex::create_void_method(scope, "LClass;", "one"));
+        marianatrench::redex::create_void_method(scope, "LClass;", "one"));
     const auto* callee_port = context.access_path_factory->get(
         AccessPath(Root(Root::Kind::Argument, 0)));
     const auto* call_position = context.positions->get(std::nullopt, 1);

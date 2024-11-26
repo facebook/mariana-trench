@@ -90,13 +90,13 @@ TEST_F(RegistryTest, remove_kinds) {
 
 TEST_F(RegistryTest, JoinWith) {
   Scope scope;
-  auto* dex_method = redex::create_void_method(
+  auto* dex_method = marianatrench::redex::create_void_method(
       scope,
       /* class_name */ "LClass;",
       /* method_name */ "method",
       /* parameter_types */ "Ljava/lang/Object;",
       /* return_type */ "Ljava/lang/Object;");
-  const auto* dex_field = redex::create_field(
+  const auto* dex_field = marianatrench::redex::create_field(
       scope, "LClassA;", {"field", type::java_lang_String()});
 
   DexStore store("store");
@@ -191,13 +191,13 @@ TEST_F(RegistryTest, ConstructorUseJoin) {
   using PortTaint = std::pair<AccessPath, Taint>;
 
   Scope scope;
-  auto* dex_method = redex::create_void_method(
+  auto* dex_method = marianatrench::redex::create_void_method(
       scope,
       /* class_name */ "LClass;",
       /* method_name */ "method",
       /* parameter_types */ "Ljava/lang/Object;Ljava/lang/Object;",
       /* return_type */ "Ljava/lang/Object;");
-  const auto* dex_field = redex::create_field(
+  const auto* dex_field = marianatrench::redex::create_field(
       scope, "LClassA;", {"field", type::java_lang_String()});
 
   DexStore store("store");

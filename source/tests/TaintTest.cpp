@@ -24,9 +24,9 @@ TEST_F(TaintTest, Insertion) {
 
   Scope scope;
   auto* method_one = context.methods->create(
-      redex::create_void_method(scope, "LClass;", "one"));
+      marianatrench::redex::create_void_method(scope, "LClass;", "one"));
   const auto* method_two = context.methods->create(
-      redex::create_void_method(scope, "LOther;", "two"));
+      marianatrench::redex::create_void_method(scope, "LOther;", "two"));
   const auto* leaf =
       context.access_path_factory->get(AccessPath(Root(Root::Kind::Leaf)));
   const auto* return_port =
@@ -252,7 +252,7 @@ TEST_F(TaintTest, Leq) {
 
   Scope scope;
   auto* method_one = context.methods->create(
-      redex::create_void_method(scope, "LClass;", "one"));
+      marianatrench::redex::create_void_method(scope, "LClass;", "one"));
 
   const auto* test_kind_one = context.kind_factory->get("TestSinkOne");
   const auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
@@ -603,7 +603,7 @@ TEST_F(TaintTest, Equals) {
 
   Scope scope;
   const auto* method_one = context.methods->create(
-      redex::create_void_method(scope, "LClass;", "one"));
+      marianatrench::redex::create_void_method(scope, "LClass;", "one"));
 
   const auto* test_kind_one = context.kind_factory->get("TestSinkOne");
   const auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
@@ -706,7 +706,7 @@ TEST_F(TaintTest, JoinWith) {
 
   Scope scope;
   const auto* method_one = context.methods->create(
-      redex::create_void_method(scope, "LClass;", "one"));
+      marianatrench::redex::create_void_method(scope, "LClass;", "one"));
 
   const auto* test_kind_one = context.kind_factory->get("TestSinkOne");
   const auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
@@ -942,7 +942,7 @@ TEST_F(TaintTest, Difference) {
   const auto* method_two =
       context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
   const auto* method_three = context.methods->create(
-      redex::create_void_method(scope, "LThree;", "three"));
+      marianatrench::redex::create_void_method(scope, "LThree;", "three"));
 
   const auto* test_kind_one = context.kind_factory->get("TestSinkOne");
   const auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
@@ -1906,9 +1906,9 @@ TEST_F(TaintTest, AddMethodOrigins) {
 
 TEST_F(TaintTest, AddFieldOrigins) {
   Scope scope;
-  const auto* field_one = redex::create_field(
+  const auto* field_one = marianatrench::redex::create_field(
       scope, "LClassA", {"field_one", type::java_lang_String()});
-  const auto* field_two = redex::create_field(
+  const auto* field_two = marianatrench::redex::create_field(
       scope, "LClassB", {"field_two", type::java_lang_String()});
 
   DexStore store("stores");
@@ -2075,9 +2075,9 @@ TEST_F(TaintTest, Propagate) {
   const auto* method_two =
       context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
   const auto* method_three = context.methods->create(
-      redex::create_void_method(scope, "LThree;", "three"));
+      marianatrench::redex::create_void_method(scope, "LThree;", "three"));
   const auto* four = context.methods->create(
-      redex::create_void_method(scope, "LFour;", "four"));
+      marianatrench::redex::create_void_method(scope, "LFour;", "four"));
 
   const auto* test_kind_one = context.kind_factory->get("TestSinkOne");
   const auto* test_kind_two = context.kind_factory->get("TestSinkTwo");
@@ -2649,9 +2649,9 @@ TEST_F(TaintTest, TransformKind) {
   const auto* method_one =
       context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
   const auto* method_two = context.methods->create(
-      redex::create_void_method(scope, "LTwo;", "method_two"));
+      marianatrench::redex::create_void_method(scope, "LTwo;", "method_two"));
   const auto* method_three = context.methods->create(
-      redex::create_void_method(scope, "LThree;", "three"));
+      marianatrench::redex::create_void_method(scope, "LThree;", "three"));
 
   const auto* test_position_one = context.positions->get(std::nullopt, 1);
   const auto* feature_one = context.feature_factory->get("FeatureOne");
@@ -2986,7 +2986,7 @@ TEST_F(TaintTest, UpdateNonDeclarationPositions) {
   const auto* method_two =
       context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
   const auto* method_three = context.methods->create(
-      redex::create_void_method(scope, "LThree;", "three"));
+      marianatrench::redex::create_void_method(scope, "LThree;", "three"));
 
   const auto* leaf_port =
       context.access_path_factory->get(AccessPath(Root(Root::Kind::Leaf)));

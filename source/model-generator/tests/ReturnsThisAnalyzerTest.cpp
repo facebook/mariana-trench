@@ -43,7 +43,7 @@ std::vector<const Method*> get_methods(
 TEST_F(ReturnsThisAnalyzerTest, ReturnsThisConstraint) {
   auto context = test::make_empty_context();
   Scope scope;
-  auto dex_methods = redex::create_methods(
+  auto dex_methods = marianatrench::redex::create_methods(
       scope,
       "LClass;",
       {
@@ -83,7 +83,7 @@ TEST_F(ReturnsThisAnalyzerTest, ReturnsThisConstraint) {
 TEST_F(ReturnsThisAnalyzerTest, MultipleReturns) {
   auto context = test::make_empty_context();
   Scope scope;
-  auto dex_methods = redex::create_methods(
+  auto dex_methods = marianatrench::redex::create_methods(
       scope,
       "LClass;",
       {

@@ -61,22 +61,23 @@ Context test_overrides(const Scope& scope) {
 TEST_F(OverridesTest, Overrides) {
   Scope scope;
 
-  auto* dex_callee = redex::create_void_method(scope, "LCallee;", "callee");
-  auto* dex_override_one = redex::create_void_method(
+  auto* dex_callee =
+      marianatrench::redex::create_void_method(scope, "LCallee;", "callee");
+  auto* dex_override_one = marianatrench::redex::create_void_method(
       scope,
       "LSubclassOne;",
       "callee",
       /* parameter_types */ "",
       /* return_type */ "V",
       /* super */ dex_callee->get_class());
-  auto* dex_override_two = redex::create_void_method(
+  auto* dex_override_two = marianatrench::redex::create_void_method(
       scope,
       "LSubclassTwo;",
       "callee",
       /* parameter_types */ "",
       /* return_type */ "V",
       /* super */ dex_callee->get_class());
-  auto* dex_indirect_override = redex::create_void_method(
+  auto* dex_indirect_override = marianatrench::redex::create_void_method(
       scope,
       "LIndirectSubclass;",
       "callee",
@@ -105,22 +106,23 @@ TEST_F(OverridesTest, Overrides) {
 TEST_F(OverridesTest, JsonSerializationDeserialization) {
   Scope scope;
 
-  auto* dex_callee = redex::create_void_method(scope, "LCallee;", "callee");
-  auto* dex_override_one = redex::create_void_method(
+  auto* dex_callee =
+      marianatrench::redex::create_void_method(scope, "LCallee;", "callee");
+  auto* dex_override_one = marianatrench::redex::create_void_method(
       scope,
       "LSubclassOne;",
       "callee",
       /* parameter_types */ "",
       /* return_type */ "V",
       /* super */ dex_callee->get_class());
-  auto* dex_override_two = redex::create_void_method(
+  auto* dex_override_two = marianatrench::redex::create_void_method(
       scope,
       "LSubclassTwo;",
       "callee",
       /* parameter_types */ "",
       /* return_type */ "V",
       /* super */ dex_callee->get_class());
-  auto* dex_indirect_override = redex::create_void_method(
+  auto* dex_indirect_override = marianatrench::redex::create_void_method(
       scope,
       "LIndirectSubclass;",
       "callee",

@@ -53,20 +53,20 @@ std::unordered_map<StringType, std::vector<const Method*>> sort_mapping(
 
 TEST_F(ModelGeneratorTest, MappingGenerator) {
   Scope scope;
-  auto* dex_base_method = redex::create_void_method(
+  auto* dex_base_method = marianatrench::redex::create_void_method(
       scope,
       /* class_name */ "LClass;",
       /* method */ "onReceive",
       /* parameter_type */ "Landroid/content/Context;Landroid/content/Intent;",
       /* return_type */ "V");
-  auto* dex_first_overriding_method = redex::create_void_method(
+  auto* dex_first_overriding_method = marianatrench::redex::create_void_method(
       scope,
       /* class_name */ "LSubclass;",
       /* method */ "onReceive",
       /* parameter_type */ "Landroid/content/Context;Landroid/content/Intent;",
       /* return_type */ "V",
       /* super */ dex_base_method->get_class());
-  auto* dex_second_overriding_method = redex::create_void_method(
+  auto* dex_second_overriding_method = marianatrench::redex::create_void_method(
       scope,
       /* class_name */ "LSubSubclass;",
       /* method */ "onReceive",

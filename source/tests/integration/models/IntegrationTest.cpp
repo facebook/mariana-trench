@@ -439,15 +439,18 @@ TEST_P(IntegrationTest, ReturnsExpectedModel) {
   // Create redex classes.
   for (const auto& source : sorted_sources) {
     auto* super = source.super ? DexType::get_type(*source.super) : nullptr;
-    std::vector<redex::DexMethodSpecification> method_specifications;
+    std::vector<marianatrench::redex::DexMethodSpecification>
+        method_specifications;
     for (const auto& method : source.methods) {
-      method_specifications.push_back(redex::DexMethodSpecification{method});
+      method_specifications.push_back(
+          marianatrench::redex::DexMethodSpecification{method});
     }
     for (const auto& method : source.abstract_methods) {
-      method_specifications.push_back(redex::DexMethodSpecification{
-          /* body */ method, /* abstract */ true});
+      method_specifications.push_back(
+          marianatrench::redex::DexMethodSpecification{
+              /* body */ method, /* abstract */ true});
     }
-    const auto new_methods = redex::create_methods(
+    const auto new_methods = marianatrench::redex::create_methods(
         scope,
         /* class_name */ source.class_name,
         /* methods */ method_specifications,

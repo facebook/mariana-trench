@@ -101,8 +101,9 @@ std::unordered_set<const Method*> resolved_base_callees(
 TEST_F(DependenciesTest, InvokeVirtual) {
   Scope scope;
 
-  auto* dex_callee = redex::create_void_method(scope, "LCallee;", "callee");
-  auto* dex_caller = redex::create_method(scope, "LCaller;", R"(
+  auto* dex_callee =
+      marianatrench::redex::create_void_method(scope, "LCallee;", "callee");
+  auto* dex_caller = marianatrench::redex::create_method(scope, "LCaller;", R"(
     (method (public) "LCaller;.caller:()V"
      (
       (load-param-object v0)
@@ -131,8 +132,9 @@ TEST_F(DependenciesTest, InvokeVirtual) {
 TEST_F(DependenciesTest, InvokeDirect) {
   Scope scope;
 
-  auto* dex_callee = redex::create_void_method(scope, "LCallee;", "callee");
-  auto* dex_caller = redex::create_method(scope, "LCaller;", R"(
+  auto* dex_callee =
+      marianatrench::redex::create_void_method(scope, "LCallee;", "callee");
+  auto* dex_caller = marianatrench::redex::create_method(scope, "LCaller;", R"(
     (method (public) "LCaller;.caller:()V"
      (
       (load-param-object v0)
@@ -164,7 +166,7 @@ TEST_F(DependenciesTest, InvokeDirect) {
 TEST_F(DependenciesTest, Recursion) {
   Scope scope;
 
-  auto* dex_recursive = redex::create_method(
+  auto* dex_recursive = marianatrench::redex::create_method(
       scope,
       "LRecursive;",
       R"(
@@ -196,10 +198,10 @@ TEST_F(DependenciesTest, MultipleCallees) {
   Scope scope;
 
   auto* dex_callee_one =
-      redex::create_void_method(scope, "LCalleeOne;", "callee");
+      marianatrench::redex::create_void_method(scope, "LCalleeOne;", "callee");
   auto* dex_callee_two =
-      redex::create_void_method(scope, "LCalleeTwo;", "callee");
-  auto* dex_caller = redex::create_method(scope, "LCaller;", R"(
+      marianatrench::redex::create_void_method(scope, "LCalleeTwo;", "callee");
+  auto* dex_caller = marianatrench::redex::create_method(scope, "LCaller;", R"(
     (method (public) "LCaller;.caller:()V"
      (
       (load-param-object v0)
@@ -240,8 +242,9 @@ TEST_F(DependenciesTest, MultipleCallees) {
 TEST_F(DependenciesTest, MultipleCallers) {
   Scope scope;
 
-  auto* dex_callee = redex::create_void_method(scope, "LCallee;", "callee");
-  auto* dex_caller_one = redex::create_method(
+  auto* dex_callee =
+      marianatrench::redex::create_void_method(scope, "LCallee;", "callee");
+  auto* dex_caller_one = marianatrench::redex::create_method(
       scope,
       "LCallerOne;",
       R"(
@@ -253,7 +256,7 @@ TEST_F(DependenciesTest, MultipleCallers) {
        )
       )
     )");
-  auto* dex_caller_two = redex::create_method(
+  auto* dex_caller_two = marianatrench::redex::create_method(
       scope,
       "LCallerTwo;",
       R"(
@@ -295,8 +298,9 @@ TEST_F(DependenciesTest, MultipleCallers) {
 TEST_F(DependenciesTest, Transitive) {
   Scope scope;
 
-  auto* dex_callee = redex::create_void_method(scope, "LCallee;", "callee");
-  auto* dex_caller = redex::create_method(
+  auto* dex_callee =
+      marianatrench::redex::create_void_method(scope, "LCallee;", "callee");
+  auto* dex_caller = marianatrench::redex::create_method(
       scope,
       "LCaller;",
       R"(
@@ -308,7 +312,7 @@ TEST_F(DependenciesTest, Transitive) {
        )
       )
     )");
-  auto* dex_indirect = redex::create_method(
+  auto* dex_indirect = marianatrench::redex::create_method(
       scope,
       "LIndirect;",
       R"(
@@ -351,15 +355,16 @@ TEST_F(DependenciesTest, Transitive) {
 TEST_F(DependenciesTest, DependenciesWithInheritance) {
   Scope scope;
 
-  auto* dex_callee = redex::create_void_method(scope, "LCallee;", "callee");
-  auto* dex_override = redex::create_void_method(
+  auto* dex_callee =
+      marianatrench::redex::create_void_method(scope, "LCallee;", "callee");
+  auto* dex_override = marianatrench::redex::create_void_method(
       scope,
       "LSubclassOne;",
       "callee",
       /* parameter_types */ "",
       /* return_type */ "V",
       /* super */ dex_callee->get_class());
-  auto* dex_caller = redex::create_method(
+  auto* dex_caller = marianatrench::redex::create_method(
       scope,
       "LCaller;",
       R"(
@@ -398,15 +403,15 @@ TEST_F(DependenciesTest, DependenciesWithInheritance) {
 TEST_F(DependenciesTest, DependenciesWithParameterTypeOverrides) {
   Scope scope;
 
-  auto* dex_override_callee =
-      redex::create_void_method(scope, "LOverrideCallee;", "override_callee");
+  auto* dex_override_callee = marianatrench::redex::create_void_method(
+      scope, "LOverrideCallee;", "override_callee");
 
-  auto* dex_callee = redex::create_void_method(
+  auto* dex_callee = marianatrench::redex::create_void_method(
       scope,
       "LCallee;",
       "callee",
       /* parameter_types */ "LData;");
-  auto* dex_override = redex::create_method(
+  auto* dex_override = marianatrench::redex::create_method(
       scope,
       "LSubclass;",
       R"(
@@ -419,7 +424,7 @@ TEST_F(DependenciesTest, DependenciesWithParameterTypeOverrides) {
       )",
       /* super */ dex_callee->get_class());
 
-  auto* dex_caller = redex::create_method(
+  auto* dex_caller = marianatrench::redex::create_method(
       scope,
       "LCaller;",
       R"(
@@ -500,27 +505,27 @@ TEST_F(DependenciesTest, VirtualCallResolution) {
 
   Scope scope;
 
-  auto* dex_callee = redex::create_void_method(
+  auto* dex_callee = marianatrench::redex::create_void_method(
       scope,
       "LCallee;",
       "callee",
       /* parameter_types */ "LData;",
       /* return_type */ "V");
-  auto* dex_override_one = redex::create_void_method(
+  auto* dex_override_one = marianatrench::redex::create_void_method(
       scope,
       "LSubclassOne;",
       "callee",
       /* parameter_types */ "LData;",
       /* return_type */ "V",
       /* super */ dex_callee->get_class());
-  auto* dex_override_two = redex::create_void_method(
+  auto* dex_override_two = marianatrench::redex::create_void_method(
       scope,
       "LSubclassTwo;",
       "callee",
       /* parameter_types */ "LData;",
       /* return_type */ "V",
       /* super */ dex_override_one->get_class());
-  auto* dex_override_three = redex::create_void_method(
+  auto* dex_override_three = marianatrench::redex::create_void_method(
       scope,
       "LSubclassThree;",
       "callee",
@@ -528,7 +533,7 @@ TEST_F(DependenciesTest, VirtualCallResolution) {
       /* return_type */ "V",
       /* super */ dex_override_one->get_class());
 
-  auto* dex_caller = redex::create_method(
+  auto* dex_caller = marianatrench::redex::create_method(
       scope,
       "LCaller;",
       R"(
@@ -600,20 +605,20 @@ TEST_F(DependenciesTest, NoJoinVirtualOverrides) {
 
   Scope scope;
 
-  auto* dex_callee = redex::create_void_method(
+  auto* dex_callee = marianatrench::redex::create_void_method(
       scope,
       "LCallee;",
       "callee",
       /* parameter_types */ "LData;",
       /* return_type */ "V");
-  auto* dex_override_one = redex::create_void_method(
+  auto* dex_override_one = marianatrench::redex::create_void_method(
       scope,
       "LSubclassOne;",
       "callee",
       /* parameter_types */ "LData;",
       /* return_type */ "V",
       /* super */ dex_callee->get_class());
-  auto* dex_override_two = redex::create_void_method(
+  auto* dex_override_two = marianatrench::redex::create_void_method(
       scope,
       "LSubclassTwo;",
       "callee",
@@ -621,7 +626,7 @@ TEST_F(DependenciesTest, NoJoinVirtualOverrides) {
       /* return_type */ "V",
       /* super */ dex_override_one->get_class());
 
-  auto* dex_caller = redex::create_method(
+  auto* dex_caller = marianatrench::redex::create_method(
       scope,
       "LCaller;",
       R"(
@@ -691,13 +696,13 @@ TEST_F(DependenciesTest, SuperCallResolution) {
 
   Scope scope;
 
-  auto* dex_callee = redex::create_void_method(
+  auto* dex_callee = marianatrench::redex::create_void_method(
       scope,
       "LCallee;",
       "callee",
       /* parameter_types */ "LData;",
       /* return_type */ "V");
-  auto* dex_override_one = redex::create_method(
+  auto* dex_override_one = marianatrench::redex::create_method(
       scope,
       "LSubclassOne;",
       R"(
@@ -711,7 +716,7 @@ TEST_F(DependenciesTest, SuperCallResolution) {
       )
     )",
       /* super */ dex_callee->get_class());
-  auto* dex_override_two = redex::create_method(
+  auto* dex_override_two = marianatrench::redex::create_method(
       scope,
       "LSubclassTwo;",
       R"(
@@ -766,13 +771,13 @@ TEST_F(DependenciesTest, SuperCallResolution) {
 TEST_F(DependenciesTest, ArtificialCalleesInvoke) {
   Scope scope;
 
-  auto* dex_callee = redex::create_void_method(
+  auto* dex_callee = marianatrench::redex::create_void_method(
       scope,
       "LCallee;",
       "callee",
       /* parameter_types */ "LData;");
 
-  auto dex_anonymous = redex::create_methods(
+  auto dex_anonymous = marianatrench::redex::create_methods(
       scope,
       "LAnonymous$1;",
       {
@@ -795,14 +800,14 @@ TEST_F(DependenciesTest, ArtificialCalleesInvoke) {
   auto* dex_anonymous_one = dex_anonymous.at(0);
   auto* dex_anonymous_two = dex_anonymous.at(1);
 
-  auto* dex_thread_init = redex::create_void_method(
+  auto* dex_thread_init = marianatrench::redex::create_void_method(
       scope,
       "LThread;",
       "<init>",
       /* parameter_types */ "LRunnable;");
   dex_thread_init->set_code(nullptr);
 
-  auto* dex_caller = redex::create_method(
+  auto* dex_caller = marianatrench::redex::create_method(
       scope,
       "LCaller;",
       R"(
@@ -889,13 +894,13 @@ TEST_F(DependenciesTest, ArtificialCalleesInvoke) {
 TEST_F(DependenciesTest, ArtificialCalleesIput) {
   Scope scope;
 
-  auto* dex_callee = redex::create_void_method(
+  auto* dex_callee = marianatrench::redex::create_void_method(
       scope,
       "LCallee;",
       "callee",
       /* parameter_types */ "LData;");
 
-  auto dex_anonymous = redex::create_methods(
+  auto dex_anonymous = marianatrench::redex::create_methods(
       scope,
       "LAnonymous$1;",
       {
@@ -918,7 +923,7 @@ TEST_F(DependenciesTest, ArtificialCalleesIput) {
   auto* dex_anonymous_one = dex_anonymous.at(0);
   auto* dex_anonymous_two = dex_anonymous.at(1);
 
-  auto* dex_task = redex::create_method(
+  auto* dex_task = marianatrench::redex::create_method(
       scope,
       "LTask;",
       R"(

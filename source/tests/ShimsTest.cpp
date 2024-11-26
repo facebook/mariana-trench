@@ -93,7 +93,7 @@ SerializedMultimap serialize_methods_to_routed_intents(
 
 TEST_F(ShimsTest, TestBuildCrossComponentAnalysisShims) {
   Scope scope;
-  auto intent_methods = redex::create_methods(
+  auto intent_methods = marianatrench::redex::create_methods(
       scope,
       "Landroid/content/Intent;",
       {
@@ -116,7 +116,7 @@ TEST_F(ShimsTest, TestBuildCrossComponentAnalysisShims) {
             )
             ))",
       });
-  auto dex_methods = redex::create_methods(
+  auto dex_methods = marianatrench::redex::create_methods(
       scope,
       "LClass;",
       {
@@ -216,7 +216,7 @@ TEST_F(ShimsTest, TestBuildCrossComponentAnalysisShims) {
 
 TEST_F(ShimsTest, TestGetShimForCaller) {
   Scope scope;
-  auto intent_methods = redex::create_methods(
+  auto intent_methods = marianatrench::redex::create_methods(
       scope,
       "Landroid/content/Intent;",
       {
@@ -226,7 +226,7 @@ TEST_F(ShimsTest, TestGetShimForCaller) {
               (return-void)
             )
             ))"});
-  auto routing_class_methods = redex::create_methods(
+  auto routing_class_methods = marianatrench::redex::create_methods(
       scope,
       "LClass;",
       {
@@ -251,7 +251,7 @@ TEST_F(ShimsTest, TestGetShimForCaller) {
             )
             ))"});
 
-  auto routed_class_methods = redex::create_methods(
+  auto routed_class_methods = marianatrench::redex::create_methods(
       scope,
       "LRouteTo;",
       {

@@ -21,7 +21,7 @@ TEST_F(OriginTest, CallInfoSerializationDeserialization) {
 
   // Field needs to be part of scope to be accessible using
   // context.fields->get(DexField*)
-  const auto* dex_field = redex::create_field(
+  const auto* dex_field = marianatrench::redex::create_field(
       scope,
       "LClassWithField;",
       {.field_name = "mField", .field_type = type::java_lang_String()});
@@ -32,7 +32,7 @@ TEST_F(OriginTest, CallInfoSerializationDeserialization) {
 
   {
     const auto* method = context.methods->create(
-        redex::create_void_method(scope, "LClass;", "one"));
+        marianatrench::redex::create_void_method(scope, "LClass;", "one"));
     const auto* port = context.access_path_factory->get(
         AccessPath(Root(Root::Kind::Argument, 0)));
     const auto* origin = context.origin_factory->method_origin(method, port);

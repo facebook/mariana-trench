@@ -114,8 +114,9 @@ TEST_F(StronglyConnectedComponentsTest, DiamondGraph) {
    *   \    /
    *   Bottom
    */
-  auto* dex_bottom = redex::create_void_method(scope, "LBottom;", "bottom");
-  auto* dex_left = redex::create_method(scope, "LLeft;", R"(
+  auto* dex_bottom =
+      marianatrench::redex::create_void_method(scope, "LBottom;", "bottom");
+  auto* dex_left = marianatrench::redex::create_method(scope, "LLeft;", R"(
     (method (public) "LLeft;.left:()V"
      (
       (load-param-object v0)
@@ -124,7 +125,7 @@ TEST_F(StronglyConnectedComponentsTest, DiamondGraph) {
      )
     )
   )");
-  auto* dex_right = redex::create_method(scope, "LRight;", R"(
+  auto* dex_right = marianatrench::redex::create_method(scope, "LRight;", R"(
     (method (public) "LRight;.right:()V"
      (
       (load-param-object v0)
@@ -133,7 +134,7 @@ TEST_F(StronglyConnectedComponentsTest, DiamondGraph) {
      )
     )
   )");
-  auto* dex_top = redex::create_method(scope, "LTop;", R"(
+  auto* dex_top = marianatrench::redex::create_method(scope, "LTop;", R"(
     (method (public) "LTop;.top:()V"
      (
       (load-param-object v0)
@@ -177,8 +178,9 @@ TEST_F(StronglyConnectedComponentsTest, Recursive) {
    *   \    /
    *   Bottom
    */
-  auto* dex_bottom = redex::create_void_method(scope, "LBottom;", "bottom");
-  auto* dex_left = redex::create_method(scope, "LLeft;", R"(
+  auto* dex_bottom =
+      marianatrench::redex::create_void_method(scope, "LBottom;", "bottom");
+  auto* dex_left = marianatrench::redex::create_method(scope, "LLeft;", R"(
     (method (public) "LLeft;.left:()V"
      (
       (load-param-object v0)
@@ -188,7 +190,7 @@ TEST_F(StronglyConnectedComponentsTest, Recursive) {
      )
     )
   )");
-  auto* dex_right = redex::create_method(scope, "LRight;", R"(
+  auto* dex_right = marianatrench::redex::create_method(scope, "LRight;", R"(
     (method (public) "LRight;.right:()V"
      (
       (load-param-object v0)
@@ -198,7 +200,7 @@ TEST_F(StronglyConnectedComponentsTest, Recursive) {
      )
     )
   )");
-  auto* dex_top = redex::create_method(scope, "LTop;", R"(
+  auto* dex_top = marianatrench::redex::create_method(scope, "LTop;", R"(
     (method (public) "LTop;.top:()V"
      (
       (load-param-object v0)

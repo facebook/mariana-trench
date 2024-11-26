@@ -22,8 +22,8 @@ class ParameterConstraintTest : public test::Test {};
 TEST_F(ParameterConstraintTest, AllOfParameterConstraintSatisfy) {
   std::string class_name = "Landroid/util/Log;";
   auto type = DexType::make_type(DexString::make_string(class_name));
-  auto annotations_set =
-      redex::create_annotation_set({class_name}, "annotation test");
+  auto annotations_set = marianatrench::redex::create_annotation_set(
+      {class_name}, "annotation test");
 
   EXPECT_TRUE(
       AllOfParameterConstraint({}).satisfy(annotations_set.get(), type));
@@ -72,8 +72,8 @@ TEST_F(ParameterConstraintTest, AllOfParameterConstraintSatisfy) {
 TEST_F(ParameterConstraintTest, AnyOfParameterConstraintSatisfy) {
   std::string class_name = "Landroid/util/Log;";
   auto type = DexType::make_type(DexString::make_string(class_name));
-  auto annotations_set =
-      redex::create_annotation_set({class_name}, "annotation test");
+  auto annotations_set = marianatrench::redex::create_annotation_set(
+      {class_name}, "annotation test");
 
   EXPECT_TRUE(
       AnyOfParameterConstraint({}).satisfy(annotations_set.get(), type));
@@ -130,8 +130,8 @@ TEST_F(ParameterConstraintTest, AnyOfParameterConstraintSatisfy) {
 TEST_F(ParameterConstraintTest, NotParameterConstraintSatisfy) {
   std::string class_name = "Landroid/util/Log;";
   auto type = DexType::make_type(DexString::make_string(class_name));
-  auto annotations_set =
-      redex::create_annotation_set({class_name}, "annotation test");
+  auto annotations_set = marianatrench::redex::create_annotation_set(
+      {class_name}, "annotation test");
 
   EXPECT_TRUE(
       NotParameterConstraint(std::make_unique<HasAnnotationParameterConstraint>(
@@ -147,8 +147,8 @@ TEST_F(ParameterConstraintTest, NotParameterConstraintSatisfy) {
 TEST_F(ParameterConstraintTest, HasAnnotationParameterConstraintSatisfy) {
   std::string class_name = "Landroid/util/Log;";
   auto type = DexType::make_type(DexString::make_string(class_name));
-  auto annotations_set =
-      redex::create_annotation_set({class_name}, "annotation test");
+  auto annotations_set = marianatrench::redex::create_annotation_set(
+      {class_name}, "annotation test");
 
   EXPECT_TRUE(HasAnnotationParameterConstraint(class_name, {"[a-z ]*"})
                   .satisfy(annotations_set.get(), type));

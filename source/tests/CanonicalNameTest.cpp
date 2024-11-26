@@ -20,7 +20,7 @@ TEST_F(CanonicalNameTest, Instantiate) {
   Scope scope;
   auto context = test::make_empty_context();
   const auto* method = context.methods->create(
-      redex::create_void_method(scope, "LClass;", "one"));
+      marianatrench::redex::create_void_method(scope, "LClass;", "one"));
   const auto* method2 = context.methods->create(redex::create_void_method(
       scope, "Lcom/facebook/graphql/calls/SomeMutationData;", "setSomeField"));
   const auto* feature1 = context.feature_factory->get("feature1");

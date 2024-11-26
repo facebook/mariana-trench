@@ -126,7 +126,7 @@ TEST_F(ModelTest, ModelConstructor) {
   store.add_classes(scope);
   auto context = test::make_context(store);
 
-  auto* dex_untracked_constructor = redex::create_void_method(
+  auto* dex_untracked_constructor = marianatrench::redex::create_void_method(
       scope,
       /* class_name */ "LUntrackedClassWithConstructor;",
       /* method_name */ "<init>",
@@ -150,13 +150,14 @@ TEST_F(ModelTest, ModelConstructor) {
                context.kind_factory->local_argument(0))}},
       }));
 
-  auto* dex_untracked_method_returning_void = redex::create_void_method(
-      scope,
-      /* class_name */ "LUntrackedClassWithMeturnReturningVoid;",
-      /* method_name */ "returns_void",
-      /* parameter_types */ "LData;LData;",
-      /* return_type*/ "V",
-      /* super */ nullptr);
+  auto* dex_untracked_method_returning_void =
+      marianatrench::redex::create_void_method(
+          scope,
+          /* class_name */ "LUntrackedClassWithMeturnReturningVoid;",
+          /* method_name */ "returns_void",
+          /* parameter_types */ "LData;LData;",
+          /* return_type*/ "V",
+          /* super */ nullptr);
   auto* untracked_method_returning_void =
       context.methods->create(dex_untracked_method_returning_void);
   auto model_with_untracked_method_returning_void = Model(
@@ -174,13 +175,14 @@ TEST_F(ModelTest, ModelConstructor) {
                context.kind_factory->local_argument(0))}},
       }));
 
-  auto* dex_untracked_method_returning_data = redex::create_void_method(
-      scope,
-      /* class_name */ "LUntrackedClassWithMethodReturningData;",
-      /* method_name */ "returns_data",
-      /* parameter_types */ "LData;LData;",
-      /* return_type*/ "LData;",
-      /* super */ nullptr);
+  auto* dex_untracked_method_returning_data =
+      marianatrench::redex::create_void_method(
+          scope,
+          /* class_name */ "LUntrackedClassWithMethodReturningData;",
+          /* method_name */ "returns_data",
+          /* parameter_types */ "LData;LData;",
+          /* return_type*/ "LData;",
+          /* super */ nullptr);
   auto* untracked_method_returning_data =
       context.methods->create(dex_untracked_method_returning_data);
   auto model_with_untracked_method_returning_data = Model(
@@ -207,7 +209,7 @@ TEST_F(ModelTest, ModelConstructor) {
                context.kind_factory->local_argument(0))}},
       }));
 
-  auto* dex_untracked_static_method = redex::create_void_method(
+  auto* dex_untracked_static_method = marianatrench::redex::create_void_method(
       scope,
       /* class_name */ "LUntrackedClassWithStaticMethod;",
       /* method_name */ "static_method",
@@ -1523,7 +1525,7 @@ TEST_F(ModelTest, SerializationDeserialization) {
   auto context = test::make_context(store);
 
   const auto* method = context.methods->create(
-      redex::create_void_method(scope, "LClass;", "method"));
+      marianatrench::redex::create_void_method(scope, "LClass;", "method"));
   const auto* source_kind = context.kind_factory->get("TestSource");
   const auto* sink_kind = context.kind_factory->get("TestSink");
 

@@ -44,8 +44,9 @@ class CallGraphTest : public test::Test {};
 TEST_F(CallGraphTest, CallIndices) {
   Scope scope;
 
-  auto* dex_callee = redex::create_void_method(scope, "LUtil;", "call");
-  auto* inherited_dex_method = redex::create_void_method(
+  auto* dex_callee =
+      marianatrench::redex::create_void_method(scope, "LUtil;", "call");
+  auto* inherited_dex_method = marianatrench::redex::create_void_method(
       scope,
       "LParent;",
       "inherited_method",
@@ -53,15 +54,16 @@ TEST_F(CallGraphTest, CallIndices) {
       /* return_type */ "V",
       /* super */ nullptr,
       /* is_static */ true);
-  redex::create_class(
+  marianatrench::redex::create_class(
       scope,
       "LChild1;",
       /* super */ inherited_dex_method->get_class());
-  redex::create_class(
+  marianatrench::redex::create_class(
       scope,
       "LChild2;",
       /* super */ inherited_dex_method->get_class());
-  auto* dex_method = redex::create_method(scope, "LMainActivity;", R"(
+  auto* dex_method =
+      marianatrench::redex::create_method(scope, "LMainActivity;", R"(
     (method (public) "LMainActivity;.onCreate:()V"
      (
       (load-param-object v0)
@@ -113,8 +115,8 @@ TEST_F(CallGraphTest, CallIndices) {
 TEST_F(CallGraphTest, ArtificialCallIndices) {
   Scope scope;
 
-  redex::create_void_method(scope, "LUtil;", "call");
-  auto anonymous_class_callees = redex::create_methods(
+  marianatrench::redex::create_void_method(scope, "LUtil;", "call");
+  auto anonymous_class_callees = marianatrench::redex::create_methods(
       scope,
       "LMainActivity$1;",
       {R"(
@@ -133,7 +135,7 @@ TEST_F(CallGraphTest, ArtificialCallIndices) {
           (return-void)
         ))
     )"});
-  auto anonymous_class_for_iput_callees = redex::create_methods(
+  auto anonymous_class_for_iput_callees = marianatrench::redex::create_methods(
       scope,
       "LMainActivity$2;",
       {R"(
@@ -156,7 +158,7 @@ TEST_F(CallGraphTest, ArtificialCallIndices) {
   // When a method with no code (external method/abstract method) gets an
   // anonymous class as a callee, then we add artificial calls to all of its
   // methods
-  redex::create_void_method(
+  marianatrench::redex::create_void_method(
       scope,
       "LThing;",
       "method",
@@ -168,7 +170,8 @@ TEST_F(CallGraphTest, ArtificialCallIndices) {
       /* is_native */ false,
       /* is_abstract */ true);
 
-  auto* dex_method = redex::create_method(scope, "LMainActivity;", R"(
+  auto* dex_method =
+      marianatrench::redex::create_method(scope, "LMainActivity;", R"(
     (method (public) "LMainActivity;.onCreate:()V"
      (
       (load-param-object v0)
@@ -237,8 +240,8 @@ TEST_F(CallGraphTest, ShimCallIndices) {
   Scope scope;
 
   auto dex_shimmed_method1 =
-      redex::create_void_method(scope, "LShimmed1;", "method");
-  auto dex_shimmed_method2 = redex::create_void_method(
+      marianatrench::redex::create_void_method(scope, "LShimmed1;", "method");
+  auto dex_shimmed_method2 = marianatrench::redex::create_void_method(
       scope,
       "LShimmed2;",
       "static_method",
@@ -248,10 +251,11 @@ TEST_F(CallGraphTest, ShimCallIndices) {
       /* is_static */ true);
 
   // Note: shim is defined in file: tests/shims.json
-  redex::create_void_method(
+  marianatrench::redex::create_void_method(
       scope, "LExample;", "methodToShim", /* parameter_types */ "LShimmed1;");
 
-  auto* dex_method = redex::create_method(scope, "LMainActivity;", R"(
+  auto* dex_method =
+      marianatrench::redex::create_method(scope, "LMainActivity;", R"(
     (method (public) "LMainActivity;.onCreate:()V"
      (
       (load-param-object v0)
@@ -310,20 +314,21 @@ TEST_F(CallGraphTest, ShimCallIndices) {
 
 TEST_F(CallGraphTest, FieldIndices) {
   Scope scope;
-  auto* dex_inherited_field = redex::create_field(
+  auto* dex_inherited_field = marianatrench::redex::create_field(
       scope, "LParent;", {"mInherited", type::java_lang_Object()});
-  redex::create_class(
+  marianatrench::redex::create_class(
       scope, "LChild1;", /* super */ dex_inherited_field->get_class());
-  redex::create_class(
+  marianatrench::redex::create_class(
       scope, "LChild2;", /* super */ dex_inherited_field->get_class());
-  auto* dex_static_field = redex::create_field(
+  auto* dex_static_field = marianatrench::redex::create_field(
       scope,
       "LClass;",
       {"mStatic", type::java_lang_Object()},
       /* super */ nullptr,
       /* is_static */ true);
 
-  auto* dex_method = redex::create_method(scope, "LMainActivity;", R"(
+  auto* dex_method =
+      marianatrench::redex::create_method(scope, "LMainActivity;", R"(
     (method (public) "LMainActivity;.onCreate:()V"
      (
       (load-param-object v0)
@@ -369,9 +374,10 @@ TEST_F(CallGraphTest, FieldIndices) {
 
 TEST_F(CallGraphTest, ReturnIndices) {
   Scope scope;
-  redex::create_class(
+  marianatrench::redex::create_class(
       scope, "LSomething;", /* super */ type::java_lang_Object());
-  auto* dex_method = redex::create_method(scope, "LMainActivity;", R"(
+  auto* dex_method =
+      marianatrench::redex::create_method(scope, "LMainActivity;", R"(
     (method (public) "LMainActivity;.someMethod:(I)Ljava/lang/Object;"
      (
       (load-param v4)
@@ -406,9 +412,10 @@ TEST_F(CallGraphTest, ReturnIndices) {
 
 TEST_F(CallGraphTest, ArrayAllocation) {
   Scope scope;
-  redex::create_class(
+  marianatrench::redex::create_class(
       scope, "LSomething;", /* super */ type::java_lang_Object());
-  auto* dex_method = redex::create_method(scope, "LMainActivity;", R"(
+  auto* dex_method =
+      marianatrench::redex::create_method(scope, "LMainActivity;", R"(
     (method (public) "LMainActivity;.someMethod:()V"
      (
       (load-param v0)

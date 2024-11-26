@@ -51,9 +51,9 @@ TEST_F(IssueSetTest, Insertion) {
 
   Scope scope;
   const auto* one = context.methods->create(
-      redex::create_void_method(scope, "LClass;", "one"));
+      marianatrench::redex::create_void_method(scope, "LClass;", "one"));
   const auto* two = context.methods->create(
-      redex::create_void_method(scope, "LOther;", "two"));
+      marianatrench::redex::create_void_method(scope, "LOther;", "two"));
   const auto* leaf =
       context.access_path_factory->get(AccessPath(Root(Root::Kind::Leaf)));
   const auto* return_port =

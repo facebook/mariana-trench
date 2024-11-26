@@ -91,7 +91,7 @@ TEST_F(ExtraTraceTest, CallInfoSerializationDeserialization) {
 
   const auto* kind = context.kind_factory->get("TestKind");
   const auto* callee = context.methods->create(
-      redex::create_void_method(scope, "LClass;", "one"));
+      marianatrench::redex::create_void_method(scope, "LClass;", "one"));
   const auto* call_position = context.positions->get(std::nullopt, 1);
   const auto* callee_port = context.access_path_factory->get(
       AccessPath(Root(Root::Kind::Argument, 0)));

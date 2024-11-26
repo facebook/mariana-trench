@@ -29,7 +29,7 @@ TEST_F(ForwardTaintEnvironmentTest, LessOrEqualSuperSet) {
 
   Scope scope;
   auto* method = context.methods->create(
-      redex::create_void_method(scope, "LClass;", "method"));
+      marianatrench::redex::create_void_method(scope, "LClass;", "method"));
   auto* return_port =
       context.access_path_factory->get(AccessPath(Root(Root::Kind::Return)));
   auto* method_origin =
@@ -66,7 +66,7 @@ TEST_F(ForwardTaintEnvironmentTest, LessOrEqualDifferentSources) {
 
   Scope scope;
   auto* method = context.methods->create(
-      redex::create_void_method(scope, "LClass;", "method"));
+      marianatrench::redex::create_void_method(scope, "LClass;", "method"));
   auto* return_port =
       context.access_path_factory->get(AccessPath(Root(Root::Kind::Return)));
   auto* method_origin =
@@ -100,7 +100,7 @@ TEST_F(ForwardTaintEnvironmentTest, JoinSuperSet) {
 
   Scope scope;
   auto* method = context.methods->create(
-      redex::create_void_method(scope, "LClass;", "method"));
+      marianatrench::redex::create_void_method(scope, "LClass;", "method"));
   auto* return_port =
       context.access_path_factory->get(AccessPath(Root(Root::Kind::Return)));
   auto* method_origin =
@@ -134,7 +134,7 @@ TEST_F(ForwardTaintEnvironmentTest, JoinTwoDifferent) {
 
   Scope scope;
   auto* method = context.methods->create(
-      redex::create_void_method(scope, "LClass;", "method"));
+      marianatrench::redex::create_void_method(scope, "LClass;", "method"));
   auto* return_port =
       context.access_path_factory->get(AccessPath(Root(Root::Kind::Return)));
   auto* method_origin =
@@ -182,7 +182,7 @@ TEST_F(ForwardTaintEnvironmentTest, JoinTwoEnvironmentWithDifferentSources) {
 
   Scope scope;
   auto* method = context.methods->create(
-      redex::create_void_method(scope, "LClass;", "method"));
+      marianatrench::redex::create_void_method(scope, "LClass;", "method"));
   auto* return_port =
       context.access_path_factory->get(AccessPath(Root(Root::Kind::Return)));
   auto* method_origin =

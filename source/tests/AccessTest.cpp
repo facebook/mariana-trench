@@ -225,7 +225,7 @@ TEST_F(AccessTest, Canonicalize) {
       /* super */ nullptr,
       /* is_static */ true));
   auto non_static_method = context.methods->create(
-      redex::create_void_method(scope, "class_b", "method_b"));
+      marianatrench::redex::create_void_method(scope, "class_b", "method_b"));
 
   auto return_root = Root(Root::Kind::Return);
   auto return_path = AccessPath(return_root, Path{PathElement::field("x")});

@@ -147,8 +147,10 @@ TEST_F(ClassPropertiesTest, InvokeUtil) {
   Scope scope;
 
   // MainActivity[exported]::onCreate() --> Util::call()
-  auto* dex_util = redex::create_void_method(scope, "LUtil;", "call");
-  auto* dex_activity = redex::create_method(scope, "LMainActivity;", R"(
+  auto* dex_util =
+      marianatrench::redex::create_void_method(scope, "LUtil;", "call");
+  auto* dex_activity =
+      marianatrench::redex::create_method(scope, "LMainActivity;", R"(
     (method (public) "LMainActivity;.onCreate:()V"
      (
       (load-param-object v0)
@@ -185,8 +187,9 @@ TEST_F(ClassPropertiesTest, MultipleCallers) {
   // MainActivity[exported]::onCreate() --> Util::call()
   // ParentActivity[unexported]::onCreate() --> Util::call()
   // Other::onCreate() --> Util::call()
-  auto* dex_util = redex::create_void_method(scope, "LUtil;", "call");
-  auto* dex_other = redex::create_method(scope, "LOther;", R"(
+  auto* dex_util =
+      marianatrench::redex::create_void_method(scope, "LUtil;", "call");
+  auto* dex_other = marianatrench::redex::create_method(scope, "LOther;", R"(
     (method (public) "LOther;.onCreate:()V"
      (
       (load-param-object v0)
@@ -195,7 +198,8 @@ TEST_F(ClassPropertiesTest, MultipleCallers) {
      )
     )
   )");
-  auto* dex_main_activity = redex::create_method(scope, "LMainActivity;", R"(
+  auto* dex_main_activity =
+      marianatrench::redex::create_method(scope, "LMainActivity;", R"(
     (method (public) "LMainActivity;.onCreate:()V"
      (
       (load-param-object v0)
@@ -205,7 +209,7 @@ TEST_F(ClassPropertiesTest, MultipleCallers) {
     )
   )");
   auto* dex_parent_activity =
-      redex::create_method(scope, "LParentActivity;", R"(
+      marianatrench::redex::create_method(scope, "LParentActivity;", R"(
     (method (public) "LParentActivity;.onCreate:()V"
      (
       (load-param-object v0)
@@ -255,8 +259,8 @@ TEST_F(ClassPropertiesTest, MultipleCallersMultipleHops) {
   //   -->UtilInner::call()
   // ParentActivity[unexported]::onCreate() --> UtilInner::call()
   auto* dex_util_inner =
-      redex::create_void_method(scope, "LUtilInner;", "call");
-  auto* dex_util = redex::create_method(scope, "LUtil;", R"(
+      marianatrench::redex::create_void_method(scope, "LUtilInner;", "call");
+  auto* dex_util = marianatrench::redex::create_method(scope, "LUtil;", R"(
     (method (public) "LUtil;.firstHop:()V"
      (
       (load-param-object v0)
@@ -265,7 +269,8 @@ TEST_F(ClassPropertiesTest, MultipleCallersMultipleHops) {
      )
     )
   )");
-  auto* dex_main_activity = redex::create_method(scope, "LMainActivity;", R"(
+  auto* dex_main_activity =
+      marianatrench::redex::create_method(scope, "LMainActivity;", R"(
     (method (public) "LMainActivity;.onCreate:()V"
      (
       (load-param-object v0)
@@ -275,7 +280,7 @@ TEST_F(ClassPropertiesTest, MultipleCallersMultipleHops) {
     )
   )");
   auto* dex_parent_activity =
-      redex::create_method(scope, "LParentActivity;", R"(
+      marianatrench::redex::create_method(scope, "LParentActivity;", R"(
     (method (public) "LParentActivity;.onCreate:()V"
      (
       (load-param-object v0)
@@ -326,8 +331,10 @@ TEST_F(ClassPropertiesTest, UnexportedHop) {
   // MainActivity[exported]::onCreate()
   //   --> ParentActivity[unexported]::onCreate()
   //   --> Util::call()
-  auto* dex_util = redex::create_void_method(scope, "LUtil;", "call");
-  auto* dex_main_activity = redex::create_method(scope, "LMainActivity;", R"(
+  auto* dex_util =
+      marianatrench::redex::create_void_method(scope, "LUtil;", "call");
+  auto* dex_main_activity =
+      marianatrench::redex::create_method(scope, "LMainActivity;", R"(
     (method (public) "LMainActivity;.onCreate:()V"
      (
       (load-param-object v0)
@@ -337,7 +344,7 @@ TEST_F(ClassPropertiesTest, UnexportedHop) {
     )
   )");
   auto* dex_parent_activity =
-      redex::create_method(scope, "LParentActivity;", R"(
+      marianatrench::redex::create_method(scope, "LParentActivity;", R"(
     (method (public) "LParentActivity;.onCreate:()V"
      (
       (load-param-object v0)
@@ -388,8 +395,10 @@ TEST_F(ClassPropertiesTest, Cyclic) {
   // Activity2::onCreate()
   //   --> MainActivity::onCreate()
   //   --> Util::call()
-  auto* dex_util = redex::create_void_method(scope, "LUtil;", "call");
-  auto* dex_activity1 = redex::create_method(scope, "LActivity1;", R"(
+  auto* dex_util =
+      marianatrench::redex::create_void_method(scope, "LUtil;", "call");
+  auto* dex_activity1 =
+      marianatrench::redex::create_method(scope, "LActivity1;", R"(
     (method (public) "LActivity1;.onCreate:()V"
      (
       (load-param-object v0)
@@ -399,7 +408,8 @@ TEST_F(ClassPropertiesTest, Cyclic) {
      )
     )
   )");
-  auto* dex_activity2 = redex::create_method(scope, "LActivity2;", R"(
+  auto* dex_activity2 =
+      marianatrench::redex::create_method(scope, "LActivity2;", R"(
     (method (public) "LActivity2;.onCreate:()V"
      (
       (load-param-object v0)
@@ -409,7 +419,8 @@ TEST_F(ClassPropertiesTest, Cyclic) {
      )
     )
   )");
-  auto* dex_main_activity = redex::create_method(scope, "LMainActivity;", R"(
+  auto* dex_main_activity =
+      marianatrench::redex::create_method(scope, "LMainActivity;", R"(
     (method (public) "LMainActivity;.onCreate:()V"
      (
       (load-param-object v0)
@@ -456,9 +467,10 @@ TEST_F(ClassPropertiesTest, NestedClass) {
 
   // MainActivity[exported]
   //   MainActivity$NestedClass::call() --> Util::call()
-  auto* dex_util = redex::create_void_method(scope, "LUtil;", "call");
-  auto* dex_activity =
-      redex::create_method(scope, "LMainActivity$NestedClass;", R"(
+  auto* dex_util =
+      marianatrench::redex::create_void_method(scope, "LUtil;", "call");
+  auto* dex_activity = marianatrench::redex::create_method(
+      scope, "LMainActivity$NestedClass;", R"(
     (method (public) "LMainActivity$NestedClass;.call:()V"
      (
       (load-param-object v0)

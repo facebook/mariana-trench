@@ -41,15 +41,18 @@ TEST_F(ClassIntervalsTest, IntervalComputation) {
 
   // BaseA -> DerivedA1
   //       -> DerivedA2
-  const auto* a = redex::create_class(scope, "LBaseA;");
-  const auto* a1 = redex::create_class(scope, "LDerivedA1;", a->get_type());
-  const auto* a2 = redex::create_class(scope, "LDerivedA2;", a->get_type());
+  const auto* a = marianatrench::redex::create_class(scope, "LBaseA;");
+  const auto* a1 =
+      marianatrench::redex::create_class(scope, "LDerivedA1;", a->get_type());
+  const auto* a2 =
+      marianatrench::redex::create_class(scope, "LDerivedA2;", a->get_type());
 
   // BaseB -> DerivedB1 -> DerivedB1_1
-  const auto* b = redex::create_class(scope, "LBaseB;");
-  const auto* b1 = redex::create_class(scope, "LDerivedB1;", b->get_type());
-  const auto* b1_1 =
-      redex::create_class(scope, "LDerivedB1_1;", b1->get_type());
+  const auto* b = marianatrench::redex::create_class(scope, "LBaseB;");
+  const auto* b1 =
+      marianatrench::redex::create_class(scope, "LDerivedB1;", b->get_type());
+  const auto* b1_1 = marianatrench::redex::create_class(
+      scope, "LDerivedB1_1;", b1->get_type());
 
   auto context = test_context(scope);
 

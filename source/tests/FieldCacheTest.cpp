@@ -58,44 +58,47 @@ Context test_fields(const Scope& scope) {
 TEST_F(FieldCacheTest, FieldCache) {
   Scope scope;
 
-  redex::create_fields(
+  marianatrench::redex::create_fields(
       scope,
       /* class_name */ "LBase;",
       /* fields */
       {{"mBase", type::java_lang_String()}});
-  redex::create_fields(
+  marianatrench::redex::create_fields(
       scope,
       /* class_name */ "LDerived;",
       /* fields */
       {{"mDerived", type::java_lang_String()},
-       {"mBase", redex::get_type("LBase;")}},
-      /* super */ redex::get_type("LBase;"));
+       {"mBase", marianatrench::redex::get_type("LBase;")}},
+      /* super */ marianatrench::redex::get_type("LBase;"));
 
   auto context = test_fields(scope);
   const auto& field_cache = *context.field_cache;
 
   EXPECT_THAT(
       field_cache.field_types(
-          redex::get_type("LBase;"), DexString::make_string("mBase")),
+          marianatrench::redex::get_type("LBase;"),
+          DexString::make_string("mBase")),
       testing::UnorderedElementsAre(
-          type::java_lang_String(), redex::get_type("LBase;")));
+          type::java_lang_String(), marianatrench::redex::get_type("LBase;")));
   EXPECT_TRUE(field_cache
                   .field_types(
-                      redex::get_type("LBase;"),
+                      marianatrench::redex::get_type("LBase;"),
                       DexString::make_string("mFieldDoesNotExist"))
                   .empty());
   EXPECT_THAT(
       field_cache.field_types(
-          redex::get_type("LDerived;"), DexString::make_string("mDerived")),
+          marianatrench::redex::get_type("LDerived;"),
+          DexString::make_string("mDerived")),
       testing::UnorderedElementsAre(type::java_lang_String()));
   EXPECT_THAT(
       field_cache.field_types(
-          redex::get_type("LDerived;"), DexString::make_string("mBase")),
+          marianatrench::redex::get_type("LDerived;"),
+          DexString::make_string("mBase")),
       testing::UnorderedElementsAre(
-          type::java_lang_String(), redex::get_type("LBase;")));
+          type::java_lang_String(), marianatrench::redex::get_type("LBase;")));
   EXPECT_TRUE(field_cache
                   .field_types(
-                      redex::get_type("LClassDoesNotExist;"),
+                      marianatrench::redex::get_type("LClassDoesNotExist;"),
                       DexString::make_string("mSomething"))
                   .empty());
 }
