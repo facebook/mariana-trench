@@ -8,9 +8,7 @@
 package com.facebook.redextest;
 
 class Base {
-  int getVal() {
-    return 0;
-  }
+  int getVal() { return 0; }
 }
 
 class SubOne extends Base {
@@ -29,13 +27,9 @@ class SubTwo extends Base {
 
 class TestA {
 
-  public Base getSubOne() {
-    return new SubOne();
-  }
+  public Base getSubOne() { return new SubOne(); }
 
-  public Base getSubTwo() {
-    return new SubTwo();
-  }
+  public Base getSubTwo() { return new SubTwo(); }
 
   public Base passThrough(Base b) {
     int two = 1 + 1;
@@ -52,22 +46,13 @@ class TestA {
 
 class TestB {
 
-  public String passNull(String a) {
-    return a;
-  }
+  public String passNull(String a) { return a; }
 
-  public String passString(String a) {
-    return a;
-  }
+  public String passString(String a) { return a; }
 
-  public Class passClass(Class cls) {
-    return cls;
-  }
+  public Class passClass(Class cls) { return cls; }
 
-  public String getStringArrayComponent(String[] sa) {
-    return sa[0];
-  }
-
+  public String getStringArrayComponent(String[] sa) { return sa[0]; }
   public String[] getNestedStringArrayComponent(String[][] nsa) {
     return nsa[0];
   }
@@ -100,13 +85,12 @@ class TestC {
       remove();
     }
 
-    mMonitor =
-        new Receiver() {
-          @Override
-          public void onChange() {
-            int yo = 1 + 1;
-          }
-        };
+    mMonitor = new Receiver() {
+      @Override
+      public void onChange() {
+        int yo = 1 + 1;
+      }
+    };
   }
 
   void remove() {
@@ -123,14 +107,10 @@ class TestC {
 
 class TestD {
 
-  static class State {
-    Base mVal;
-  }
+  static class State { Base mVal; }
 
   static class Base {
-    void update(State s) {
-      s.mVal = null;
-    }
+    void update(State s) { s.mVal = null; }
   }
 
   static class Sub extends Base {
@@ -150,27 +130,19 @@ class TestD {
 class TestE {
 
   static class Base {
-    int foo() {
-      return 0;
-    }
+    int foo() { return 0; }
   }
 
   static class SubOne extends Base {
-    int foo() {
-      return 1;
-    }
+    int foo() { return 1; }
   }
 
   static class SubTwo extends Base {
-    int foo() {
-      return 2;
-    }
+    int foo() { return 2; }
   }
 
   static class SubThree extends Base {
-    int foo() {
-      return 3;
-    }
+    int foo() { return 3; }
   }
 
   Base returnSubTypes(int arg) {
@@ -241,48 +213,34 @@ class TestG {
 class TestH {
 
   static class Base {}
-
   static class SubOne extends Base {}
-
   static class SubTwo extends Base {}
 
   static final Base BASE = initBase();
 
   Base mBase;
 
-  static Base initBase() {
-    return new Base();
-  }
+  static Base initBase() { return new Base(); }
 
   Base returnSubOne() {
     mBase = new SubOne();
     return mBase;
   }
 
-  Base rereturnSubOne() {
-    return returnSubOne();
-  }
+  Base rereturnSubOne() { return returnSubOne(); }
 
-  Base foo() {
-    return rereturnSubOne();
-  }
+  Base foo() { return rereturnSubOne(); }
 
   Base returnSubTwo() {
     mBase = new SubTwo();
     return mBase;
   }
 
-  Base rereturnSubTwo() {
-    return returnSubTwo();
-  }
+  Base rereturnSubTwo() { return returnSubTwo(); }
 
-  Base bar() {
-    return rereturnSubTwo();
-  }
+  Base bar() { return rereturnSubTwo(); }
 
-  Base baz() {
-    return BASE;
-  }
+  Base baz() { return BASE; }
 
   static void main() {
     final TestH t = new TestH();
@@ -297,9 +255,7 @@ class TestH {
  */
 class TestI {
   static class Foo {
-    String yield() {
-      return "foo";
-    }
+    String yield() { return "foo"; }
   }
 
   static class One {
@@ -310,15 +266,9 @@ class TestI {
       m1 = f1;
       m2 = f2;
     }
-
     // Unreachable
-    One(final Foo f1) {
-      m1 = f1;
-    }
-
-    String yield() {
-      return m1.yield() + m2.yield();
-    }
+    One(final Foo f1) { m1 = f1; }
+    String yield() { return m1.yield() + m2.yield(); }
   }
 
   static class Two {
@@ -329,14 +279,8 @@ class TestI {
       m1 = f1;
       m2 = f2;
     }
-
-    Two(final Foo f1) {
-      m1 = f1;
-    }
-
-    String yield() {
-      return m1.yield() + m2.yield();
-    }
+    Two(final Foo f1) { m1 = f1; }
+    String yield() { return m1.yield() + m2.yield(); }
   }
 
   static void main() {
@@ -354,33 +298,25 @@ class TestI {
 
 class TestJ {
 
-  static byte[] createByteArray() {
-    return new byte[5];
-  }
+  static byte[] createByteArray() { return new byte[5]; }
 
-  static void main() {
-    byte[] ba = createByteArray();
-  }
+  static void main() { byte[] ba = createByteArray(); }
 }
 
 class TestK {
   static class A {}
-
   static class B extends A {}
 
   static class Foo {
     A f;
-
     Foo() {
       f = new B();
     }
-
     Foo(Foo other) {
       f = new A();
       other.f = new B();
     }
   }
-
   static void main() {
     Foo f1 = new Foo();
     Foo f2 = new Foo(f1);
@@ -392,16 +328,13 @@ class TestL {
 
   static class Foo {
     A f;
-
     Foo() {
       f = new A();
     }
-
     Foo(Foo other) {
       other.f = new A();
     }
   }
-
   static void main() {
     Foo f1 = new Foo();
     Foo f2 = new Foo(f1);
@@ -424,24 +357,21 @@ class TestM {
   }
 }
 
-interface Callback {
-  void invoke(int tag);
-}
+interface Callback { void invoke(int tag); }
 
 class TestN {
   static class A {}
 
   static A danceWithArray1() {
     final A[] array = new A[1];
-    Callback cb =
-        new Callback() {
-          @Override
-          public void invoke(int tag) {
-            if (tag > 0) {
-              array[0] = new A();
-            }
-          }
-        };
+    Callback cb = new Callback() {
+      @Override
+      public void invoke(int tag) {
+        if (tag > 0) {
+          array[0] = new A();
+        }
+      }
+    };
     cb.invoke(1);
     return array[0];
   }
@@ -466,27 +396,18 @@ class TestN {
 
 class TestO {
   static interface I {}
-
   static class A implements I {}
-
   static class B implements I {}
 
   static class Base {
-    I same() {
-      return new B();
-    }
-
-    I diff() {
-      return new A();
-    }
+    I same() { return new B(); }
+    I diff() { return new A(); }
   }
-
   static class Sub extends Base {
     @Override
     I same() {
       return new B();
     }
-
     @Override
     I diff() {
       return new B();
@@ -519,22 +440,15 @@ class TestO {
   }
 }
 
-class TestP {
+class TestP { 
   static class C {}
-
   TestP() {
     foo();
     obj1 = new C();
   }
-
   final C obj1;
-
   private void foo() {}
-
-  C bar() {
-    return obj1;
-  }
-
+  C bar() { return obj1; }
   public static void main() {
     TestP x = new TestP();
     x.bar();
