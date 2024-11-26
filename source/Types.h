@@ -12,7 +12,6 @@
 #include <boost/container/flat_map.hpp>
 
 #include <DexClass.h>
-#include <GlobalTypeAnalyzer.h>
 
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Compiler.h>
@@ -20,6 +19,7 @@
 #include <mariana-trench/Method.h>
 #include <mariana-trench/Options.h>
 #include <mariana-trench/UniquePointerConcurrentMap.h>
+#include <mariana-trench/type-analysis/GlobalTypeAnalyzer.h>
 
 namespace marianatrench {
 
@@ -148,7 +148,7 @@ class Types final {
       environments_;
   mutable UniquePointerConcurrentMap<const DexMethod*, TypeEnvironments>
       const_class_environments_;
-  std::unique_ptr<type_analyzer::global::GlobalTypeAnalyzer>
+  std::unique_ptr<marianatrench::type_analyzer::global::GlobalTypeAnalyzer>
       global_type_analyzer_;
   std::vector<std::string> log_method_types_;
 };
