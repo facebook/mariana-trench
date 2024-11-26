@@ -74,6 +74,16 @@ class TaintEnvironment final : public sparta::AbstractDomain<TaintEnvironment> {
       TaintTree taint,
       UpdateKind kind);
 
+  PointsToTree resolve_aliases(MemoryLocation* root_memory_location) const;
+
+ private:
+  void resolve_aliases_internal(
+      MemoryLocation* memory_location,
+      const Path& path,
+      const AliasingProperties& properties,
+      PointsToTree& resolved_aliases,
+      std::unordered_set<MemoryLocation*>& visited) const;
+
   friend std::ostream& operator<<(
       std::ostream& out,
       const marianatrench::TaintEnvironment& taint);
