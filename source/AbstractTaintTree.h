@@ -48,6 +48,10 @@ class AbstractTaintTree final
 
   void write(const Path& path, AbstractTaintTree tree, UpdateKind kind);
 
+  void write_taint_tree(const Path& path, TaintTree tree, UpdateKind kind);
+
+  void write_alias_tree(const Path& path, PointsToTree tree, UpdateKind kind);
+
   const TaintTree& taint() const {
     return taint_;
   }

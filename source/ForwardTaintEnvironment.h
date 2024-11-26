@@ -22,17 +22,17 @@ class ForwardTaintEnvironment final
     : public sparta::AbstractDomain<ForwardTaintEnvironment> {
  public:
   /* Create the bottom environment. */
-  ForwardTaintEnvironment() : taint_(TaintEnvironment::bottom()) {}
+  ForwardTaintEnvironment() : environment_(TaintEnvironment::bottom()) {}
 
   explicit ForwardTaintEnvironment(TaintEnvironment taint)
-      : taint_(std::move(taint)) {}
+      : environment_(std::move(taint)) {}
 
   static ForwardTaintEnvironment initial();
 
   INCLUDE_ABSTRACT_DOMAIN_METHODS(
       ForwardTaintEnvironment,
       TaintEnvironment,
-      taint_)
+      environment_)
 
   TaintTree read(MemoryLocation* memory_location) const;
 
@@ -85,7 +85,7 @@ class ForwardTaintEnvironment final
       const ForwardTaintEnvironment& environment);
 
  private:
-  TaintEnvironment taint_;
+  TaintEnvironment environment_;
 };
 
 } // namespace marianatrench

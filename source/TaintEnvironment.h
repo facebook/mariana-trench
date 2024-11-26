@@ -9,16 +9,16 @@
 
 #include <sparta/PatriciaTreeMapAbstractPartition.h>
 
+#include <mariana-trench/AbstractTaintTree.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/MemoryLocation.h>
-#include <mariana-trench/TaintTree.h>
 
 namespace marianatrench {
 
 class TaintEnvironment final : public sparta::AbstractDomain<TaintEnvironment> {
  private:
-  using Map =
-      sparta::PatriciaTreeMapAbstractPartition<MemoryLocation*, TaintTree>;
+  using Map = sparta::
+      PatriciaTreeMapAbstractPartition<MemoryLocation*, AbstractTaintTree>;
 
  public:
   /* Create a bottom environment */
@@ -38,26 +38,41 @@ class TaintEnvironment final : public sparta::AbstractDomain<TaintEnvironment> {
 
   INCLUDE_ABSTRACT_DOMAIN_METHODS(TaintEnvironment, Map, environment_)
 
-  const TaintTree& get(MemoryLocation* root_memory_location) const {
+  const AbstractTaintTree& get(MemoryLocation* root_memory_location) const {
     // TaintTree's are only stored at root memory locations.
     mt_assert(root_memory_location->root() == root_memory_location);
     return environment_.get(root_memory_location);
   }
 
-  void set(MemoryLocation* root_memory_location, const TaintTree& tree) {
+  /** Helper that wraps the TaintTree as AbstractTaintTree for now. */
+  void set(MemoryLocation* root_memory_location, TaintTree tree) {
     mt_assert(root_memory_location->root() == root_memory_location);
-    environment_.set(root_memory_location, tree);
+    environment_.set(root_memory_location, AbstractTaintTree{std::move(tree)});
   }
 
-  template <typename Operation> // TaintTree(const TaintTree&)
+  template <typename Operation> // AbstractTaintTree(const AbstractTaintTree&)
   void update(MemoryLocation* root_memory_location, Operation&& operation) {
     static_assert(std::is_same_v<
                   decltype(operation(std::declval<TaintTree&&>())),
-                  TaintTree>);
+                  AbstractTaintTree>);
     mt_assert(root_memory_location->root() == root_memory_location);
     environment_.update(
         root_memory_location, std::forward<Operation>(operation));
   }
+
+  /** Helper that writes to the TaintTree only for now. */
+  void write(
+      MemoryLocation* memory_location,
+      const Path& path,
+      Taint taint,
+      UpdateKind kind);
+
+  /** Helper that writes to the TaintTree only for now. */
+  void write(
+      MemoryLocation* memory_location,
+      const Path& path,
+      TaintTree taint,
+      UpdateKind kind);
 
   friend std::ostream& operator<<(
       std::ostream& out,

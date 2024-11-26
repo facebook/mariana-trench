@@ -71,6 +71,20 @@ void AbstractTaintTree::write(
   aliases_.write(path, std::move(tree.aliases_), kind);
 }
 
+void AbstractTaintTree::write_taint_tree(
+    const Path& path,
+    TaintTree tree,
+    UpdateKind kind) {
+  taint_.write(path, std::move(tree), kind);
+}
+
+void AbstractTaintTree::write_alias_tree(
+    const Path& path,
+    PointsToTree tree,
+    UpdateKind kind) {
+  aliases_.write(path, std::move(tree), kind);
+}
+
 void AbstractTaintTree::add_local_position(const Position* position) {
   if (position == nullptr) {
     return;

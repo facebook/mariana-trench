@@ -11,6 +11,40 @@
 
 namespace marianatrench {
 
+void TaintEnvironment::write(
+    MemoryLocation* memory_location,
+    const Path& path,
+    Taint taint,
+    UpdateKind kind) {
+  Path full_path = memory_location->path();
+  full_path.extend(path);
+
+  environment_.update(
+      memory_location->root(),
+      [&full_path, &taint, kind](const AbstractTaintTree& tree) {
+        auto copy = tree;
+        copy.write_taint_tree(full_path, TaintTree{std::move(taint)}, kind);
+        return copy;
+      });
+}
+
+void TaintEnvironment::write(
+    MemoryLocation* memory_location,
+    const Path& path,
+    TaintTree taint,
+    UpdateKind kind) {
+  Path full_path = memory_location->path();
+  full_path.extend(path);
+
+  environment_.update(
+      memory_location->root(),
+      [&full_path, &taint, kind](const AbstractTaintTree& tree) {
+        auto copy = tree;
+        copy.write_taint_tree(full_path, std::move(taint), kind);
+        return copy;
+      });
+}
+
 std::ostream& operator<<(
     std::ostream& out,
     const TaintEnvironment& environment) {

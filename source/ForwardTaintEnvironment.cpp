@@ -17,7 +17,9 @@ ForwardTaintEnvironment ForwardTaintEnvironment::initial() {
 }
 
 TaintTree ForwardTaintEnvironment::read(MemoryLocation* memory_location) const {
-  return taint_.get(memory_location->root()).read(memory_location->path());
+  return environment_.get(memory_location->root())
+      .taint()
+      .read(memory_location->path());
 }
 
 TaintTree ForwardTaintEnvironment::read(
@@ -26,7 +28,7 @@ TaintTree ForwardTaintEnvironment::read(
   Path full_path = memory_location->path();
   full_path.extend(path);
 
-  return taint_.get(memory_location->root()).read(full_path);
+  return environment_.get(memory_location->root()).taint().read(full_path);
 }
 
 TaintTree ForwardTaintEnvironment::read(
@@ -53,13 +55,7 @@ void ForwardTaintEnvironment::write(
     MemoryLocation* memory_location,
     TaintTree taint,
     UpdateKind kind) {
-  taint_.update(
-      memory_location->root(),
-      [memory_location, &taint, kind](const TaintTree& tree) {
-        auto copy = tree;
-        copy.write(memory_location->path(), std::move(taint), kind);
-        return copy;
-      });
+  environment_.write(memory_location, Path{}, std::move(taint), kind);
 }
 
 void ForwardTaintEnvironment::write(
@@ -67,16 +63,7 @@ void ForwardTaintEnvironment::write(
     const Path& path,
     TaintTree taint,
     UpdateKind kind) {
-  Path full_path = memory_location->path();
-  full_path.extend(path);
-
-  taint_.update(
-      memory_location->root(),
-      [&full_path, &taint, kind](const TaintTree& tree) {
-        auto copy = tree;
-        copy.write(full_path, std::move(taint), kind);
-        return copy;
-      });
+  environment_.write(memory_location, path, std::move(taint), kind);
 }
 
 void ForwardTaintEnvironment::write(
@@ -84,16 +71,7 @@ void ForwardTaintEnvironment::write(
     const Path& path,
     Taint taint,
     UpdateKind kind) {
-  Path full_path = memory_location->path();
-  full_path.extend(path);
-
-  taint_.update(
-      memory_location->root(),
-      [&full_path, &taint, kind](const TaintTree& tree) {
-        auto copy = tree;
-        copy.write(full_path, std::move(taint), kind);
-        return copy;
-      });
+  environment_.write(memory_location, path, std::move(taint), kind);
 }
 
 void ForwardTaintEnvironment::write(
@@ -165,7 +143,7 @@ void ForwardTaintEnvironment::write(
 std::ostream& operator<<(
     std::ostream& out,
     const ForwardTaintEnvironment& environment) {
-  return out << environment.taint_;
+  return out << environment.environment_;
 }
 
 } // namespace marianatrench
