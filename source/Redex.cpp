@@ -41,8 +41,9 @@ std::vector<DexMethod*> create_methods(
     if (!method.annotations.empty()) {
       dex_method->make_non_concrete();
       dex_method->set_external();
-      dex_method->attach_annotation_set(
+      auto res = dex_method->attach_annotation_set(
           redex::create_annotation_set(method.annotations));
+      always_assert(res);
     }
     if (method.abstract) {
       dex_method->set_code(nullptr);
@@ -66,8 +67,10 @@ std::vector<const DexField*> create_fields(
         /* container */ klass,
         /* name */ DexString::make_string(field_name),
         /* type */ field_type));
-    field->attach_annotation_set(
+    auto res = field->attach_annotation_set(
         redex::create_annotation_set(field_annotations));
+    always_assert(res);
+
     auto* concrete_field = field->make_concrete(
         is_static ? DexAccessFlags::ACC_STATIC : DexAccessFlags::ACC_PUBLIC,
         nullptr);
