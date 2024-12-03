@@ -77,12 +77,6 @@ class PointsToTree final : public sparta::AbstractDomain<PointsToTree> {
 
   std::pair<Path, PointsToTree> raw_read_max_path(const Path& path) const;
 
-  /* Write the given memory_location as a points-to set at the given path. */
-  void write(
-      const Path& path,
-      const MemoryLocation* memory_location,
-      UpdateKind kind);
-
   /* Write the given points-to set at the given path. */
   void
   write(const Path& path, const PointsToSet& points_to_set, UpdateKind kind);

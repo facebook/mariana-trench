@@ -11,18 +11,18 @@
 
 namespace marianatrench {
 
-PointsToSet::PointsToSet(MemoryLocation* memory_location) {
+PointsToSet::PointsToSet(RootMemoryLocation* memory_location) {
   set_internal(memory_location, AliasingProperties::empty());
 }
 
 PointsToSet::PointsToSet(
-    MemoryLocation* memory_location,
+    RootMemoryLocation* memory_location,
     AliasingProperties properties) {
   set_internal(memory_location, std::move(properties));
 }
 
 PointsToSet::PointsToSet(
-    std::initializer_list<MemoryLocation*> memory_locations) {
+    std::initializer_list<RootMemoryLocation*> memory_locations) {
   for (auto* memory_location : memory_locations) {
     set_internal(memory_location, AliasingProperties::empty());
   }
@@ -30,7 +30,9 @@ PointsToSet::PointsToSet(
 
 PointsToSet::PointsToSet(const MemoryLocationsDomain& memory_locations) {
   for (auto* memory_location : memory_locations) {
-    set_internal(memory_location, AliasingProperties::empty());
+    auto* root_memory_location = memory_location->as<RootMemoryLocation>();
+    mt_assert(root_memory_location != nullptr);
+    set_internal(root_memory_location, AliasingProperties::empty());
   }
 }
 

@@ -20,13 +20,13 @@ namespace marianatrench {
 class PointsToSet final : public sparta::AbstractDomain<PointsToSet> {
  private:
   using Map = sparta::
-      PatriciaTreeMapAbstractPartition<MemoryLocation*, AliasingProperties>;
+      PatriciaTreeMapAbstractPartition<RootMemoryLocation*, AliasingProperties>;
 
  public:
   // C++ container concept member types
-  using key_type = MemoryLocation*;
+  using key_type = RootMemoryLocation*;
   using mapped_type = AliasingProperties;
-  using value_type = std::pair<const MemoryLocation*, AliasingProperties>;
+  using value_type = std::pair<const RootMemoryLocation*, AliasingProperties>;
   using iterator = typename Map::MapType::iterator;
   using const_iterator = iterator;
   using difference_type = std::ptrdiff_t;
@@ -40,13 +40,14 @@ class PointsToSet final : public sparta::AbstractDomain<PointsToSet> {
  public:
   PointsToSet() : map_(Map::bottom()) {}
 
-  explicit PointsToSet(MemoryLocation* memory_location);
+  explicit PointsToSet(RootMemoryLocation* memory_location);
 
   explicit PointsToSet(
-      MemoryLocation* memory_location,
+      RootMemoryLocation* memory_location,
       AliasingProperties properties);
 
-  explicit PointsToSet(std::initializer_list<MemoryLocation*> memory_locations);
+  explicit PointsToSet(
+      std::initializer_list<RootMemoryLocation*> memory_locations);
 
   explicit PointsToSet(const MemoryLocationsDomain& memory_locations);
 
@@ -81,10 +82,9 @@ class PointsToSet final : public sparta::AbstractDomain<PointsToSet> {
 
  private:
   void set_internal(
-      MemoryLocation* memory_location,
+      RootMemoryLocation* memory_location,
       AliasingProperties&& properties) {
     mt_assert(!properties.is_top());
-    mt_assert(!memory_location->is<FieldMemoryLocation>());
     map_.set(memory_location, std::move(properties));
   }
 

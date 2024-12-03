@@ -22,6 +22,7 @@
 
 namespace marianatrench {
 
+class RootMemoryLocation;
 class FieldMemoryLocation;
 
 class MemoryLocation {
@@ -59,13 +60,15 @@ class MemoryLocation {
    *
    * This is either a parameter or an instruction result.
    */
-  virtual MemoryLocation* root();
+  virtual RootMemoryLocation* root() = 0;
+
+  virtual bool is_root() const;
 
   /**
    * Return the path (i.e, list of fields) from the root to this memory
    * location.
    */
-  virtual const Path& path();
+  virtual const Path& path() = 0;
 
   /**
    * Return the access path that this memory location describes.
@@ -86,7 +89,15 @@ class MemoryLocation {
       fields_;
 };
 
-class ParameterMemoryLocation : public MemoryLocation {
+class RootMemoryLocation : public MemoryLocation {
+ public:
+  RootMemoryLocation* root() override;
+  const Path& path() override;
+
+  bool is_root() const override;
+};
+
+class ParameterMemoryLocation : public RootMemoryLocation {
  public:
   explicit ParameterMemoryLocation(ParameterPosition position);
 
@@ -122,7 +133,7 @@ class FieldMemoryLocation final : public MemoryLocation {
     return field_;
   }
 
-  MemoryLocation* root() override;
+  RootMemoryLocation* root() override;
 
   const Path& path() override;
 
@@ -130,12 +141,12 @@ class FieldMemoryLocation final : public MemoryLocation {
   MemoryLocation* parent_;
   const DexString* field_;
 
-  MemoryLocation* root_;
+  RootMemoryLocation* root_;
   Path path_;
 };
 
 /* Memory location representing the result of an instruction. */
-class InstructionMemoryLocation final : public MemoryLocation {
+class InstructionMemoryLocation final : public RootMemoryLocation {
  public:
   explicit InstructionMemoryLocation(const IRInstruction* instruction);
 

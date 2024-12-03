@@ -18,7 +18,7 @@ namespace marianatrench {
 class TaintEnvironment final : public sparta::AbstractDomain<TaintEnvironment> {
  private:
   using Map = sparta::
-      PatriciaTreeMapAbstractPartition<MemoryLocation*, AbstractTaintTree>;
+      PatriciaTreeMapAbstractPartition<RootMemoryLocation*, AbstractTaintTree>;
 
  public:
   /* Create a bottom environment */
@@ -30,7 +30,7 @@ class TaintEnvironment final : public sparta::AbstractDomain<TaintEnvironment> {
 
  public:
   explicit TaintEnvironment(
-      std::initializer_list<std::pair<MemoryLocation*, TaintTree>> l) {
+      std::initializer_list<std::pair<RootMemoryLocation*, TaintTree>> l) {
     for (const auto& p : l) {
       set(p.first, p.second);
     }
@@ -38,24 +38,21 @@ class TaintEnvironment final : public sparta::AbstractDomain<TaintEnvironment> {
 
   INCLUDE_ABSTRACT_DOMAIN_METHODS(TaintEnvironment, Map, environment_)
 
-  const AbstractTaintTree& get(MemoryLocation* root_memory_location) const {
+  const AbstractTaintTree& get(RootMemoryLocation* root_memory_location) const {
     // TaintTree's are only stored at root memory locations.
-    mt_assert(root_memory_location->root() == root_memory_location);
     return environment_.get(root_memory_location);
   }
 
   /** Helper that wraps the TaintTree as AbstractTaintTree for now. */
-  void set(MemoryLocation* root_memory_location, TaintTree tree) {
-    mt_assert(root_memory_location->root() == root_memory_location);
+  void set(RootMemoryLocation* root_memory_location, TaintTree tree) {
     environment_.set(root_memory_location, AbstractTaintTree{std::move(tree)});
   }
 
   template <typename Operation> // AbstractTaintTree(const AbstractTaintTree&)
-  void update(MemoryLocation* root_memory_location, Operation&& operation) {
+  void update(RootMemoryLocation* root_memory_location, Operation&& operation) {
     static_assert(std::is_same_v<
                   decltype(operation(std::declval<TaintTree&&>())),
                   AbstractTaintTree>);
-    mt_assert(root_memory_location->root() == root_memory_location);
     environment_.update(
         root_memory_location, std::forward<Operation>(operation));
   }
@@ -74,11 +71,11 @@ class TaintEnvironment final : public sparta::AbstractDomain<TaintEnvironment> {
       TaintTree taint,
       UpdateKind kind);
 
-  PointsToTree resolve_aliases(MemoryLocation* root_memory_location) const;
+  PointsToTree resolve_aliases(RootMemoryLocation* root_memory_location) const;
 
  private:
   void resolve_aliases_internal(
-      MemoryLocation* memory_location,
+      RootMemoryLocation* memory_location,
       const Path& path,
       const AliasingProperties& properties,
       PointsToTree& resolved_aliases,

@@ -46,9 +46,7 @@ void TaintEnvironment::write(
 }
 
 PointsToTree TaintEnvironment::resolve_aliases(
-    MemoryLocation* root_memory_location) const {
-  mt_assert(root_memory_location == root_memory_location->root());
-
+    RootMemoryLocation* root_memory_location) const {
   PointsToTree resolved_aliases{};
   // Track visited to detect back edges and avoid infinite loops.
   std::unordered_set<MemoryLocation*> visited{};
@@ -73,7 +71,7 @@ PointsToTree TaintEnvironment::resolve_aliases(
 }
 
 void TaintEnvironment::resolve_aliases_internal(
-    MemoryLocation* memory_location,
+    RootMemoryLocation* memory_location,
     const Path& path,
     const AliasingProperties& aliasing_properties,
     PointsToTree& resolved_aliases,
@@ -99,9 +97,7 @@ void TaintEnvironment::resolve_aliases_internal(
       PointsToSet{memory_location, aliasing_properties},
       UpdateKind::Weak);
 
-  auto points_to_tree = environment_.get(memory_location->root())
-                            .aliases()
-                            .raw_read(memory_location->path());
+  auto points_to_tree = environment_.get(memory_location).aliases();
 
   if (points_to_tree.is_bottom()) {
     visited.erase(memory_location);

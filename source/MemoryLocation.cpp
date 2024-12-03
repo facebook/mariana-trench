@@ -51,15 +51,8 @@ MemoryLocation* MemoryLocation::make_field(const Path& path) {
   return current;
 }
 
-MemoryLocation* MemoryLocation::root() {
-  // By default, this is a root memory location.
-  return this;
-}
-
-const Path& MemoryLocation::path() {
-  // By default, this is a root memory location.
-  static const Path empty_path;
-  return empty_path;
+bool MemoryLocation::is_root() const {
+  return false;
 }
 
 std::optional<AccessPath> MemoryLocation::access_path() {
@@ -75,6 +68,19 @@ std::ostream& operator<<(
     std::ostream& out,
     const MemoryLocation& memory_location) {
   return out << memory_location.str();
+}
+
+RootMemoryLocation* RootMemoryLocation::root() {
+  return this;
+}
+
+bool RootMemoryLocation::is_root() const {
+  return true;
+}
+
+const Path& RootMemoryLocation::path() {
+  static const Path empty_path;
+  return empty_path;
 }
 
 ParameterMemoryLocation::ParameterMemoryLocation(ParameterPosition position)
@@ -109,7 +115,7 @@ std::string FieldMemoryLocation::str() const {
       "FieldMemoryLocation({}, `{}`)", parent_->str(), show(field_));
 }
 
-MemoryLocation* FieldMemoryLocation::root() {
+RootMemoryLocation* FieldMemoryLocation::root() {
   return root_;
 }
 
