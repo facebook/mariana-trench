@@ -35,6 +35,28 @@
       "where": [
         {
           "constraint": "signature_match",
+          "parent": "Landroidx/browser/customtabs/CustomTabsIntent$Builder;",
+          "name": "build"
+        }
+      ],
+      "model": {
+        "sanitizers": [
+          {
+            "sanitize": "sources",
+            "kinds": [
+              {
+                "kind": "PutParcelable"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
           "parent": "Landroid/content/Intent;",
           "name": "putExtra"
         },
