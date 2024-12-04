@@ -36,6 +36,13 @@ class TaintEnvironment final : public sparta::AbstractDomain<TaintEnvironment> {
     }
   }
 
+  explicit TaintEnvironment(
+      std::initializer_list<std::pair<RootMemoryLocation*, PointsToTree>> l) {
+    for (const auto& p : l) {
+      set(p.first, p.second);
+    }
+  }
+
   INCLUDE_ABSTRACT_DOMAIN_METHODS(TaintEnvironment, Map, environment_)
 
   const AbstractTaintTree& get(RootMemoryLocation* root_memory_location) const {
@@ -45,6 +52,10 @@ class TaintEnvironment final : public sparta::AbstractDomain<TaintEnvironment> {
 
   /** Helper that wraps the TaintTree as AbstractTaintTree for now. */
   void set(RootMemoryLocation* root_memory_location, TaintTree tree) {
+    environment_.set(root_memory_location, AbstractTaintTree{std::move(tree)});
+  }
+
+  void set(RootMemoryLocation* root_memory_location, PointsToTree tree) {
     environment_.set(root_memory_location, AbstractTaintTree{std::move(tree)});
   }
 
@@ -71,6 +82,13 @@ class TaintEnvironment final : public sparta::AbstractDomain<TaintEnvironment> {
       TaintTree taint,
       UpdateKind kind);
 
+  /**
+   * Resolve all possible aliases for the points-to tree at the given
+   * root_memory_location.
+   *
+   * Expands all the memory locations to their corresponding points-to trees in
+   * the environment and builds a single points-to tree.
+   */
   PointsToTree resolve_aliases(RootMemoryLocation* root_memory_location) const;
 
  private:
@@ -80,6 +98,37 @@ class TaintEnvironment final : public sparta::AbstractDomain<TaintEnvironment> {
       const AliasingProperties& properties,
       PointsToTree& resolved_aliases,
       std::unordered_set<MemoryLocation*>& visited) const;
+
+ public:
+  /**
+   * Resolve the alias for a given memory location.
+   *
+   * If the memory location is a root memory location, resolves to itself.
+   * Otherwise, it is a field memory location and resolves to the points-to set
+   * in the deepest node in the points-to environment.
+   *
+   * This differs from resolve_aliases in that it only expands the points-to
+   * tree along the path of the field memory location and hence is not a
+   * complete resolution.
+   */
+  PointsToSet points_to(MemoryLocation* memory_location) const;
+
+  /**
+   * Resolve the alias for a all memory locations in the given memory locations
+   * domain.
+   */
+  PointsToSet points_to(const MemoryLocationsDomain& memory_locations) const;
+
+  /**
+   * Create an alias from memory location at path field to the points_tos set.
+   *
+   * Writes the points_tos set at the deeps node in the points-to environment.
+   */
+  void write(
+      MemoryLocation* memory_location,
+      const DexString* field,
+      const PointsToSet& points_tos,
+      UpdateKind kind);
 
   friend std::ostream& operator<<(
       std::ostream& out,

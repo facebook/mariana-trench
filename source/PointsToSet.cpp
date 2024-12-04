@@ -61,8 +61,7 @@ std::ostream& operator<<(std::ostream& out, const PointsToSet& points_to_set) {
   out << "PointsToSet{";
   for (const auto& [memory_location, properties] :
        points_to_set.map_.bindings()) {
-    out << "memory_location=" << show(memory_location) << ",properties={"
-        << properties << "}";
+    out << show(memory_location) << " -> " << properties << ", ";
   }
 
   return out << "}";

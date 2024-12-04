@@ -23,6 +23,9 @@ class AbstractTaintTree final
   explicit AbstractTaintTree(TaintTree taint)
       : taint_(std::move(taint)), aliases_(PointsToTree::bottom()) {}
 
+  explicit AbstractTaintTree(PointsToTree aliases)
+      : taint_(TaintTree::bottom()), aliases_(std::move(aliases)) {}
+
   explicit AbstractTaintTree(TaintTree taint, PointsToTree aliases)
       : taint_(std::move(taint)), aliases_(std::move(aliases)) {}
 

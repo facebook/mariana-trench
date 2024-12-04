@@ -80,6 +80,16 @@ class ForwardTaintEnvironment final
       Taint taint,
       UpdateKind kind);
 
+  PointsToSet points_to(MemoryLocation* memory_location) const;
+
+  PointsToSet points_to(const MemoryLocationsDomain& memory_locations) const;
+
+  void write(
+      MemoryLocation* memory_location,
+      const DexString* field,
+      const PointsToSet& points_tos,
+      UpdateKind kind);
+
   friend std::ostream& operator<<(
       std::ostream& out,
       const ForwardTaintEnvironment& environment);

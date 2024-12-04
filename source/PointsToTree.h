@@ -57,6 +57,10 @@ class PointsToTree final : public sparta::AbstractDomain<PointsToTree> {
   explicit PointsToTree(PointsToSet points_to_set)
       : tree_(std::move(points_to_set)) {}
 
+  explicit PointsToTree(
+      std::initializer_list<std::pair<Path, PointsToSet>> edges)
+      : tree_(Tree(edges)) {}
+
   INCLUDE_ABSTRACT_DOMAIN_METHODS(PointsToTree, Tree, tree_)
 
  public:
