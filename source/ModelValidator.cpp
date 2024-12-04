@@ -19,6 +19,12 @@ Json::Value ModelValidatorResult::to_json() const {
   auto result = Json::Value(Json::objectValue);
   result["valid"] = valid_;
   result["annotation"] = annotation_;
+  if (is_false_negative_) {
+    result["isFalseNegative"] = is_false_negative_;
+  }
+  if (is_false_positive_) {
+    result["isFalsePositive"] = is_false_positive_;
+  }
   return result;
 }
 
@@ -343,7 +349,11 @@ ExpectIssue ExpectIssue::from_annotation(
 
 ModelValidatorResult ExpectIssue::validate(const Model& model) const {
   bool valid = issue_properties_.validate_presence(model);
-  return ModelValidatorResult(valid, /* annotation */ show());
+  return ModelValidatorResult(
+      valid,
+      /* annotation */ show(),
+      /* is_false_negative */ false,
+      /* is_false_positive */ is_false_classification_);
 }
 
 std::string ExpectIssue::show() const {
@@ -363,7 +373,11 @@ ExpectNoIssue ExpectNoIssue::from_annotation(
 
 ModelValidatorResult ExpectNoIssue::validate(const Model& model) const {
   bool valid = !issue_properties_.validate_presence(model);
-  return ModelValidatorResult(valid, /* annotation */ show());
+  return ModelValidatorResult(
+      valid,
+      /* annotation */ show(),
+      /* is_false_negative */ is_false_classification_,
+      /* is_false_positive */ false);
 }
 
 std::string ExpectNoIssue::show() const {

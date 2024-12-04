@@ -70,8 +70,15 @@ TEST_F(ModelValidatorTest, ModelValidators) {
         R"#({
               "method": "LClass;.one:()V",
               "validators": [
-                { "valid": true, "annotation": "ExpectIssue(code=1, isFalsePositive=false)" },
-                { "valid": true, "annotation": "ExpectIssue(code=1, sourceKinds={TestSource}, isFalsePositive=true)" }
+                {
+                  "valid": true,
+                  "annotation": "ExpectIssue(code=1, isFalsePositive=false)"
+                },
+                {
+                  "valid": true,
+                  "annotation": "ExpectIssue(code=1, sourceKinds={TestSource}, isFalsePositive=true)",
+                  "isFalsePositive": true
+                }
               ]
             })#");
     EXPECT_EQ(test::sorted_json(expected), test::sorted_json(result));
@@ -103,8 +110,15 @@ TEST_F(ModelValidatorTest, ModelValidators) {
         R"#({
               "method": "LClass;.one:()V",
               "validators": [
-                { "valid": true, "annotation": "ExpectIssue(code=1, isFalsePositive=false)" },
-                { "valid": false, "annotation": "ExpectIssue(code=2, isFalsePositive=true)" }
+                {
+                  "valid": true,
+                  "annotation": "ExpectIssue(code=1, isFalsePositive=false)",
+                },
+                {
+                  "valid": false,
+                  "annotation": "ExpectIssue(code=2, isFalsePositive=true)",
+                  "isFalsePositive": true
+                }
               ]
             })#");
     EXPECT_EQ(test::sorted_json(expected), test::sorted_json(result));
@@ -128,7 +142,11 @@ TEST_F(ModelValidatorTest, ModelValidators) {
         R"#({
               "method": "LClass;.one:()V",
               "validators": [
-                { "valid": false, "annotation": "ExpectNoIssue(code=1, isFalseNegative=true)" }
+                {
+                  "valid": false,
+                  "annotation": "ExpectNoIssue(code=1, isFalseNegative=true)",
+                  "isFalseNegative": true
+                }
               ]
             })#");
     EXPECT_EQ(test::sorted_json(expected), test::sorted_json(result));
@@ -160,8 +178,15 @@ TEST_F(ModelValidatorTest, ModelValidators) {
         R"#({
               "method": "LClass;.one:()V",
               "validators": [
-                { "valid": true, "annotation": "ExpectIssue(code=1, isFalsePositive=false)" },
-                { "valid": true, "annotation": "ExpectNoIssue(code=2, isFalseNegative=true)" }
+                {
+                  "valid": true,
+                  "annotation": "ExpectIssue(code=1, isFalsePositive=false)"
+                },
+                {
+                  "valid": true,
+                  "annotation": "ExpectNoIssue(code=2, isFalseNegative=true)",
+                  "isFalseNegative": true
+                }
               ]
             })#");
     EXPECT_EQ(test::sorted_json(expected), test::sorted_json(result));

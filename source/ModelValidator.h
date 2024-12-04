@@ -25,8 +25,15 @@ class ModelValidator;
 
 class ModelValidatorResult {
  public:
-  explicit ModelValidatorResult(bool valid, std::string annotation)
-      : valid_(valid), annotation_(std::move(annotation)) {}
+  explicit ModelValidatorResult(
+      bool valid,
+      std::string annotation,
+      bool is_false_negative,
+      bool is_false_positive)
+      : valid_(valid),
+        annotation_(std::move(annotation)),
+        is_false_negative_(is_false_negative),
+        is_false_positive_(is_false_positive) {}
 
   MOVE_CONSTRUCTOR_ONLY(ModelValidatorResult)
 
@@ -34,11 +41,34 @@ class ModelValidatorResult {
     return valid_;
   }
 
+  bool is_false_negative() const {
+    return is_false_negative_;
+  }
+
+  bool is_false_positive() const {
+    return is_false_positive_;
+  }
+
   Json::Value to_json() const;
 
  private:
   bool valid_;
   std::string annotation_;
+
+  // The false negative and false positive flags are used downstream to compute
+  // confidence. False negatives contribute to the numerator, while false
+  // positives should be excluded from the denominator since they do not
+  // contribute meaningfully to the set of "issues we should be finding".
+  //
+  // NOTE: In theory, these are not the same as is_false_classification_ in
+  // ModelValidator. ModelValidators represent how we expect the analysis to
+  // behave, these results represent how the analysis actually behaves (includes
+  // `valid_` flag). In practice however, `valid_` should always be true,
+  // otherwise there is a test failure that needs to be fixed. Therefore, these
+  // flags simply reflect is_false_classification_ for now.
+
+  bool is_false_negative_;
+  bool is_false_positive_;
 };
 
 class ModelValidatorsResult {
