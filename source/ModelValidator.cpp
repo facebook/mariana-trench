@@ -203,15 +203,21 @@ void gather_strings(
   }
 }
 
-} // namespace
+struct AnnotationFields final {
+  IssueProperties issue_properties;
 
-ExpectIssue ExpectIssue::from_annotation(
+  // Whether the annotation was denoted a false [positive|negative]
+  bool is_false_classification;
+};
+
+AnnotationFields parse_annotation(
     const EncodedAnnotations& annotation_elements) {
   int code = -1;
   std::set<std::string> source_kinds;
   std::set<std::string> sink_kinds;
   std::set<std::string> source_origins;
   std::set<std::string> sink_origins;
+  bool is_false_classification = false;
 
   for (const auto& annotation_element : annotation_elements) {
     const auto* annotation_key = annotation_element.string;
@@ -229,9 +235,8 @@ ExpectIssue ExpectIssue::from_annotation(
     } else if (
         annotation_key->str() == "isFalsePositive" ||
         annotation_key->str() == "isFalseNegative") {
-      // No-op. This is a flag to document whether the expected issue is a false
-      // positive (or false negative for ExpectNoIssue). It has no bearing on
-      // validation.
+      mt_assert(annotation_element.encoded_value->evtype() == DEVT_BOOLEAN);
+      is_false_classification = annotation_element.encoded_value->value();
     } else {
       // Do not fail in case new fields have been added to annotation, in which
       // case, the error is expected to resolve on the next release
@@ -242,15 +247,15 @@ ExpectIssue ExpectIssue::from_annotation(
     }
   }
 
-  return ExpectIssue(
-      code,
-      std::move(source_kinds),
-      std::move(sink_kinds),
-      std::move(source_origins),
-      std::move(sink_origins));
+  return AnnotationFields{
+      .issue_properties = IssueProperties(
+          code,
+          std::move(source_kinds),
+          std::move(sink_kinds),
+          std::move(source_origins),
+          std::move(sink_origins)),
+      .is_false_classification = is_false_classification};
 }
-
-namespace {
 
 bool includes_issue_kinds(
     const std::unordered_set<const Kind*>& issue_kinds,
@@ -292,27 +297,21 @@ bool includes_origins(
 
 } // namespace
 
-ModelValidatorResult ExpectIssue::validate(const Model& model) const {
+bool IssueProperties::validate_presence(const Model& model) const {
   const auto& issues = model.issues();
-  bool valid =
-      std::any_of(issues.begin(), issues.end(), [this](const Issue& issue) {
-        // Issue (hence rule) should not be bottom() at this point.
-        const auto* rule = issue.rule();
-        mt_assert(rule != nullptr);
-        return rule->code() == code_ &&
-            includes_issue_kinds(issue.sources().kinds(), source_kinds_) &&
-            includes_issue_kinds(issue.sinks().kinds(), sink_kinds_) &&
-            includes_origins(issue.sources(), source_origins_) &&
-            includes_origins(issue.sinks(), sink_origins_);
-      });
-  return ModelValidatorResult(valid, /* annotation */ show());
+  return std::any_of(issues.begin(), issues.end(), [this](const Issue& issue) {
+    // Issue (hence rule) should not be bottom() at this point.
+    const auto* rule = issue.rule();
+    mt_assert(rule != nullptr);
+    return rule->code() == code_ &&
+        includes_issue_kinds(issue.sources().kinds(), source_kinds_) &&
+        includes_issue_kinds(issue.sinks().kinds(), sink_kinds_) &&
+        includes_origins(issue.sources(), source_origins_) &&
+        includes_origins(issue.sinks(), sink_origins_);
+  });
 }
 
-std::string ExpectIssue::show() const {
-  return fmt::format("ExpectIssue({})", show_parameters());
-}
-
-std::string ExpectIssue::show_parameters() const {
+std::string IssueProperties::show() const {
   std::stringstream parameters_string;
   parameters_string << "code=" << code_;
   if (!source_kinds_.empty()) {
@@ -334,19 +333,44 @@ std::string ExpectIssue::show_parameters() const {
   return parameters_string.str();
 }
 
+ExpectIssue ExpectIssue::from_annotation(
+    const EncodedAnnotations& annotation_elements) {
+  auto annotation = parse_annotation(annotation_elements);
+  return ExpectIssue(
+      /* is_false_positive */ annotation.is_false_classification,
+      std::move(annotation.issue_properties));
+}
+
+ModelValidatorResult ExpectIssue::validate(const Model& model) const {
+  bool valid = issue_properties_.validate_presence(model);
+  return ModelValidatorResult(valid, /* annotation */ show());
+}
+
+std::string ExpectIssue::show() const {
+  return fmt::format(
+      "ExpectIssue({}, isFalsePositive={})",
+      issue_properties_.show(),
+      is_false_classification_);
+}
+
 ExpectNoIssue ExpectNoIssue::from_annotation(
     const EncodedAnnotations& annotation_elements) {
-  auto expect_issue = ExpectIssue::from_annotation(annotation_elements);
-  return ExpectNoIssue(std::move(expect_issue));
+  auto annotation = parse_annotation(annotation_elements);
+  return ExpectNoIssue(
+      /* is_false_negative */ annotation.is_false_classification,
+      std::move(annotation.issue_properties));
 }
 
 ModelValidatorResult ExpectNoIssue::validate(const Model& model) const {
-  return ModelValidatorResult(
-      !expect_issue_.validate(model).is_valid(), /* annotation */ show());
+  bool valid = !issue_properties_.validate_presence(model);
+  return ModelValidatorResult(valid, /* annotation */ show());
 }
 
 std::string ExpectNoIssue::show() const {
-  return fmt::format("ExpectNoIssue({})", expect_issue_.show_parameters());
+  return fmt::format(
+      "ExpectNoIssue({}, isFalseNegative={})",
+      issue_properties_.show(),
+      is_false_classification_);
 }
 
 } // namespace marianatrench

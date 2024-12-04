@@ -87,23 +87,37 @@ class ModelValidators final {
 };
 
 /**
- * Used for validating @Expected* annotations in the APK (if any) against the
- * models emitted at the end of the analysis. Each @Expected* annotation type
+ * Used for validating @Expect* annotations in the APK (if any) against the
+ * models emitted at the end of the analysis. Each @Expect* annotation type
  * should inherit from this class.
  */
 class ModelValidator {
  public:
-  ModelValidator() = default;
+  explicit ModelValidator(bool is_false_classification)
+      : is_false_classification_(is_false_classification) {}
+
   MOVE_CONSTRUCTOR_ONLY_VIRTUAL_DESTRUCTOR(ModelValidator)
 
   virtual ModelValidatorResult validate(const Model& model) const = 0;
 
   virtual std::string show() const = 0;
+
+ protected:
+  // i.e. is_false_[positive|negative]. Classification type depends on whether
+  // the validator is looking for the presence or absence of a model. If
+  // looking for presence (e.g. ExpectIssue), flag represents is_false_positive,
+  // and vice versa.
+  bool is_false_classification_;
 };
 
-class ExpectIssue final : public ModelValidator {
+/**
+ * Represents the properties of an issue that need to be validated by a
+ * ModelValidator. Whether validation is based on the absence/presence of these
+ * properties depends on the ModelValidator's type.
+ */
+class IssueProperties final {
  public:
-  explicit ExpectIssue(
+  explicit IssueProperties(
       int code,
       std::set<std::string> source_kinds,
       std::set<std::string> sink_kinds,
@@ -118,16 +132,14 @@ class ExpectIssue final : public ModelValidator {
     mt_assert(code != -1);
   }
 
-  MOVE_CONSTRUCTOR_ONLY(ExpectIssue)
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(IssueProperties)
 
-  static ExpectIssue from_annotation(
-      const EncodedAnnotations& annotation_elements);
+  /**
+   * Validates the presence of an issue in the given model.
+   */
+  bool validate_presence(const Model& model) const;
 
-  ModelValidatorResult validate(const Model& model) const override;
-
-  std::string show() const override;
-
-  std::string show_parameters() const;
+  std::string show() const;
 
  private:
   int code_;
@@ -139,10 +151,32 @@ class ExpectIssue final : public ModelValidator {
   std::set<std::string> sink_origins_;
 };
 
+class ExpectIssue final : public ModelValidator {
+ public:
+  explicit ExpectIssue(bool is_false_positive, IssueProperties issue_properties)
+      : ModelValidator(is_false_positive),
+        issue_properties_(std::move(issue_properties)) {}
+
+  MOVE_CONSTRUCTOR_ONLY(ExpectIssue)
+
+  static ExpectIssue from_annotation(
+      const EncodedAnnotations& annotation_elements);
+
+  ModelValidatorResult validate(const Model& model) const override;
+
+  std::string show() const override;
+
+ private:
+  IssueProperties issue_properties_;
+};
+
 class ExpectNoIssue final : public ModelValidator {
  public:
-  explicit ExpectNoIssue(ExpectIssue expect_issue)
-      : expect_issue_(std::move(expect_issue)) {}
+  explicit ExpectNoIssue(
+      bool is_false_negative,
+      IssueProperties issue_properties)
+      : ModelValidator(is_false_negative),
+        issue_properties_(std::move(issue_properties)) {}
 
   MOVE_CONSTRUCTOR_ONLY(ExpectNoIssue)
 
@@ -154,8 +188,7 @@ class ExpectNoIssue final : public ModelValidator {
   std::string show() const override;
 
  private:
-  // ExpectNoIssue is simply a negation of ExpectIssue.
-  ExpectIssue expect_issue_;
+  IssueProperties issue_properties_;
 };
 
 } // namespace marianatrench
