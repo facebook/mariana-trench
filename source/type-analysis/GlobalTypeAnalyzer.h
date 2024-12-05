@@ -10,9 +10,9 @@
 #include <sparta/HashedAbstractPartition.h>
 
 #include <CallGraph.h>
-#include <DexTypeEnvironment.h>
 #include <MethodOverrideGraph.h>
 
+#include <mariana-trench/type-analysis/DexTypeEnvironment.h>
 #include <mariana-trench/type-analysis/LocalTypeAnalyzer.h>
 #include <mariana-trench/type-analysis/WholeProgramState.h>
 

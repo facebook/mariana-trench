@@ -13,9 +13,10 @@
 
 #include <CallGraph.h>
 #include <ConcurrentContainers.h>
-#include <DexTypeEnvironment.h>
 #include <InstructionAnalyzer.h>
 #include <Trace.h>
+
+#include <mariana-trench/type-analysis/DexTypeEnvironment.h>
 
 std::ostream& operator<<(std::ostream& out, const DexField& field);
 

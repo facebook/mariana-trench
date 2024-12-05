@@ -9,9 +9,8 @@
 
 #include <sparta/PatriciaTreeSet.h>
 
-#include <DexTypeEnvironment.h>
-
 #include <mariana-trench/tests/integration/type-analysis/RedexTest.h>
+#include <mariana-trench/type-analysis/DexTypeEnvironment.h>
 
 namespace marianatrench {
 

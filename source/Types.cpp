@@ -11,7 +11,6 @@
 #include <boost/iterator/filter_iterator.hpp>
 #include <fmt/format.h>
 
-#include <DexTypeEnvironment.h>
 #include <ReflectionAnalysis.h>
 #include <Show.h>
 #include <TypeInference.h>
@@ -24,6 +23,7 @@
 #include <mariana-trench/Options.h>
 #include <mariana-trench/Timer.h>
 #include <mariana-trench/Types.h>
+#include <mariana-trench/type-analysis/DexTypeEnvironment.h>
 
 namespace marianatrench {
 

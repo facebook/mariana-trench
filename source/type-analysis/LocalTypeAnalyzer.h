@@ -10,8 +10,9 @@
 #include <boost/optional/optional_io.hpp>
 
 #include <BaseIRAnalyzer.h>
-#include <DexTypeEnvironment.h>
 #include <InstructionAnalyzer.h>
+
+#include <mariana-trench/type-analysis/DexTypeEnvironment.h>
 
 namespace marianatrench {
 
