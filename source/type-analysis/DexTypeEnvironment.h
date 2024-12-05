@@ -182,8 +182,13 @@ std::ostream& operator<<(std::ostream& output, const DexType* dex_type);
  *
  * Small Set DexTypeDomain
  *
+ * Max size of this set is chosen to match the join override threshold in
+ * Mariana Trench's Heuristics. If the number of overrides exceeds this at a
+ * call-site, various over-approximations happen. It is unlikely that type
+ * analysis needs to track more types than this as a result. That aside, the
+ * larger the number, the more precise types can be.
+ *
  */
-constexpr size_t MAX_SET_SIZE = 4;
 
 class SmallSetDexTypeDomain final
     : public sparta::AbstractDomain<SmallSetDexTypeDomain> {

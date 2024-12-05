@@ -11,6 +11,7 @@
 #include <Show.h>
 
 #include <mariana-trench/Compiler.h>
+#include <mariana-trench/Heuristics.h>
 #include <mariana-trench/type-analysis/DexTypeEnvironment.h>
 
 namespace marianatrench {
@@ -219,7 +220,7 @@ void SmallSetDexTypeDomain::join_with(const SmallSetDexTypeDomain& other) {
     return;
   }
   m_types.union_with(other.m_types);
-  if (m_types.size() > MAX_SET_SIZE) {
+  if (m_types.size() >= Heuristics::singleton().join_override_threshold()) {
     set_to_top();
   }
 }
@@ -237,7 +238,8 @@ void SmallSetDexTypeDomain::widen_with(const SmallSetDexTypeDomain& other) {
     m_types = other.m_types;
     return;
   }
-  if (m_types.size() + other.m_types.size() > MAX_SET_SIZE) {
+  if (m_types.size() + other.m_types.size() >
+      Heuristics::singleton().join_override_threshold()) {
     set_to_top();
     return;
   }
