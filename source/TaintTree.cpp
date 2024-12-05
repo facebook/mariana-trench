@@ -239,4 +239,18 @@ void TaintTree::apply_config_overrides(
   overrides_.join_with(config_overrides);
 }
 
+void TaintTree::apply_aliasing_properties(
+    const AliasingProperties& properties) {
+  if (properties.is_bottom() || properties.is_empty()) {
+    return;
+  }
+
+  tree_.transform([&properties](Taint taint) {
+    taint.add_locally_inferred_features(properties.locally_inferred_features());
+    taint.add_local_positions(properties.local_positions());
+
+    return taint;
+  });
+}
+
 } // namespace marianatrench

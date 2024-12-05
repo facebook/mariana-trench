@@ -8,6 +8,7 @@
 #pragma once
 
 #include <mariana-trench/AbstractTreeDomain.h>
+#include <mariana-trench/AliasingProperties.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Taint.h>
 #include <mariana-trench/TaintTreeConfigurationOverrides.h>
@@ -179,6 +180,8 @@ class TaintTree final : public sparta::AbstractDomain<TaintTree> {
 
   void apply_config_overrides(
       const TaintTreeConfigurationOverrides& config_overrides);
+
+  void apply_aliasing_properties(const AliasingProperties& properties);
 
   /* Apply the given function on all taint. */
   template <typename Function> // Taint(Taint)

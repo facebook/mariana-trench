@@ -158,6 +158,8 @@ class Taint final : public sparta::AbstractDomain<Taint> {
 
   void add_local_position(const Position* position);
 
+  void add_local_positions(const LocalPositionSet& positions);
+
   void set_local_positions(const LocalPositionSet& positions);
 
   LocalPositionSet local_positions() const;

@@ -209,6 +209,14 @@ void LocalTaint::add_local_position(const Position* position) {
   local_positions_.add(position);
 }
 
+void LocalTaint::add_local_positions(const LocalPositionSet& positions) {
+  if (call_kind().is_propagation()) {
+    return; // Do not add local positions on propagations.
+  }
+
+  local_positions_.join_with(positions);
+}
+
 void LocalTaint::set_local_positions(LocalPositionSet positions) {
   if (call_kind().is_propagation()) {
     return; // Do not add local positions on propagations.

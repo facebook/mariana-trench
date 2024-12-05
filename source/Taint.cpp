@@ -89,6 +89,12 @@ void Taint::add_local_position(const Position* position) {
   });
 }
 
+void Taint::add_local_positions(const LocalPositionSet& positions) {
+  map_.transform([&positions](LocalTaint* local_taint) -> void {
+    local_taint->add_local_positions(positions);
+  });
+}
+
 void Taint::set_local_positions(const LocalPositionSet& positions) {
   map_.transform([&positions](LocalTaint* local_taint) -> void {
     local_taint->set_local_positions(positions);
