@@ -220,9 +220,12 @@ const DexType* MT_NULLABLE select_precise_singleton_type(
   return globally_inferred_type;
 }
 
-std::unordered_set<const DexType*> get_small_set_dex_types(
-    const DexType* locally_inferred_type,
-    const DexType* MT_NULLABLE globally_inferred_type,
+/**
+ * Filters `small_set_dex_domain` to only types that are derived from
+ * `singleton_type`.
+ */
+std::unordered_set<const DexType*> filter_valid_derived_types(
+    const DexType* singleton_type,
     const SmallSetDexTypeDomain& small_set_dex_domain) {
   std::unordered_set<const DexType*> result{};
 
@@ -238,17 +241,14 @@ std::unordered_set<const DexType*> get_small_set_dex_types(
     return result;
   }
 
-  const DexType* singleton_type = globally_inferred_type != nullptr
-      ? globally_inferred_type
-      : locally_inferred_type;
-
-  mt_assert(singleton_type != nullptr);
-
   auto is_valid_type = [singleton_type](const DexType* type) {
-    // Global types analysis ends up storing sibling types in the
+    // Global type analysis ends up storing sibling types in the
     // SmallSetDexTypeDomain in some cases, usually when generic interfaces are
     // involved. We only consider the 'type' in SmallSetDexTypeDomain as valid
     // if it is derived from singleton_type.
+    // Since we select the more precise of the locally_inferred_type and the
+    // globally_inferred_type as the singleton_type, this may filter out
+    // types tracked as valid by the global type analysis.
     return type::check_cast(type, /* base_type */ singleton_type);
   };
 
@@ -492,22 +492,12 @@ std::unique_ptr<TypeEnvironments> Types::infer_types_for_method(
           continue;
         }
 
-        // Collect all compatible types for ir_register from global type
-        // analysis.
-        auto small_set_dex_types = get_small_set_dex_types(
-            locally_inferred_type,
-            globally_inferred_type,
-            globally_inferred_type_domain.get_set_domain());
-
         // Refine the TypeValue if possible.
-        if (!small_set_dex_types.empty()) {
-          if (globally_inferred_type != nullptr) {
-            result_type_value->set_singleton_type(globally_inferred_type);
-          }
-          result_type_value->set_local_extends(std::move(small_set_dex_types));
-        } else if (precise_singleton_type != locally_inferred_type) {
-          result_type_value->set_singleton_type(precise_singleton_type);
-        }
+        result_type_value->set_singleton_type(precise_singleton_type);
+        auto valid_derived_types = filter_valid_derived_types(
+            precise_singleton_type,
+            globally_inferred_type_domain.get_set_domain());
+        result_type_value->set_local_extends(std::move(valid_derived_types));
 
         LOG(log_method ? 0 : 5,
             "Refined types in: Caller: {} \nInstruction: {}\nReg {}\n  Singleton Type : {}\n  Local extends: {}",
