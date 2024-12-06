@@ -151,7 +151,6 @@ void apply_generations(
     MethodContext* context,
     const InstructionAliasResults& aliasing,
     ForwardTaintEnvironment* environment,
-    const IRInstruction* instruction,
     const CalleeModel& callee,
     const std::function<std::optional<Register>(Root)>& get_register,
     TaintTree& result_taint) {
@@ -516,7 +515,6 @@ void check_fulfilled_exploitability_rules(
     const Taint& source_as_transform_sink_taint,
     const Position* method_position,
     TextualOrderIndex sink_index,
-    std::string_view callee,
     const FeatureMayAlwaysSet& extra_features) {
   mt_assert(source_as_transform_sink_kind->has_source_as_transform());
 
@@ -649,7 +647,6 @@ void check_partially_fulfilled_exploitability_rules(
           /* source_as_transform_sink_taint */ sink_taint,
           position,
           sink_index,
-          callee,
           extra_features);
     }
   }
@@ -703,7 +700,6 @@ void check_exploitability_rules(
         sink_taint,
         method_position,
         sink_index,
-        callee,
         extra_features);
   }
 }
@@ -1053,13 +1049,7 @@ void check_artificial_calls_flows(
     // ignored).
     TaintTree result_taint;
     apply_generations(
-        context,
-        aliasing,
-        environment,
-        instruction,
-        callee,
-        get_register,
-        result_taint);
+        context, aliasing, environment, callee, get_register, result_taint);
   }
 }
 
@@ -1227,7 +1217,6 @@ bool ForwardTaintTransfer::analyze_invoke(
       context,
       aliasing,
       environment,
-      instruction,
       callee,
       /* get_register */
       [instruction](Root parameter_position) -> std::optional<Register> {
