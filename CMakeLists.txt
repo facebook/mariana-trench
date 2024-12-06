@@ -109,8 +109,9 @@ file(GLOB library_sources
      "source/*.def"
      "source/*.cpp"
      "source/constraints/*.cpp"
+     "source/model-generator/*.cpp"
      "source/shim-generator/*.cpp"
-     "source/model-generator/*.cpp")
+     "source/type-analysis/*.cpp")
 list(FILTER library_sources EXCLUDE REGEX ".*/source/Main.cpp")
 add_library(mariana-trench-library STATIC ${library_sources})
 target_link_libraries(mariana-trench-library PUBLIC
