@@ -65,6 +65,34 @@
       "where": [
         {
           "constraint": "signature_match",
+          "parents": [
+            "Lcom/facebook/secure/secureresult/FBSecureResult$Companion;",
+            "Lcom/facebook/secure/secureresult/FBSecureResult;"
+          ],
+          "name": "setFamilyResult"
+        }
+      ],
+      "model": {
+        "sanitizers": [
+          {
+            "sanitize": "sinks",
+            "kinds": [
+              {
+                "kind": "ActivityExitNode"
+              },
+              {
+                "kind": "SetResult"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
           "parent": "Landroidx/activity/result/ActivityResult;",
           "name": "<init>"
         },
