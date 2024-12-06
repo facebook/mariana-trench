@@ -22,8 +22,7 @@ class ShimGenerator final {
  public:
   ShimGenerator(
       std::unique_ptr<AllOfMethodConstraint> constraint,
-      ShimTemplate shim_template,
-      const Methods* methods);
+      ShimTemplate shim_template);
 
   /* Returns a vector of duplicate shims. */
   void emit_method_shims(
@@ -60,7 +59,6 @@ class ShimGenerator final {
  private:
   std::unique_ptr<AllOfMethodConstraint> constraint_;
   ShimTemplate shim_template_;
-  const Methods* methods_;
 };
 
 } // namespace marianatrench

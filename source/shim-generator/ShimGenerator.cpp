@@ -16,11 +16,9 @@ namespace marianatrench {
 
 ShimGenerator::ShimGenerator(
     std::unique_ptr<AllOfMethodConstraint> constraint,
-    ShimTemplate shim_template,
-    const Methods* methods)
+    ShimTemplate shim_template)
     : constraint_(std::move(constraint)),
-      shim_template_(std::move(shim_template)),
-      methods_(methods) {}
+      shim_template_(std::move(shim_template)) {}
 
 std::optional<InstantiatedShim> ShimGenerator::visit_method(
     const Method* method) const {
@@ -29,7 +27,7 @@ std::optional<InstantiatedShim> ShimGenerator::visit_method(
         "Method `{}{}` satisfies all constraints in shim model generator",
         method->is_static() ? "(static) " : "",
         method->show());
-    return shim_template_.instantiate(methods_, method);
+    return shim_template_.instantiate(method);
   }
 
   return std::nullopt;

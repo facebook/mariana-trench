@@ -257,7 +257,6 @@ TargetTemplate TargetTemplate::from_json(const Json::Value& callee) {
 }
 
 std::optional<ShimTargetVariant> TargetTemplate::instantiate(
-    const Methods* methods,
     const ShimMethod& shim_method) const {
   switch (kind_) {
     case Kind::DEFINED:
@@ -320,7 +319,6 @@ ShimTemplate ShimTemplate::from_json(const Json::Value& shim_json) {
 }
 
 std::optional<InstantiatedShim> ShimTemplate::instantiate(
-    const Methods* methods,
     const Method* method_to_shim) const {
   LOG(5, "Instantiating ShimTemplate for {}", method_to_shim->show());
 
@@ -328,7 +326,7 @@ std::optional<InstantiatedShim> ShimTemplate::instantiate(
   auto shim = InstantiatedShim(method_to_shim);
 
   for (const auto& target_template : targets_) {
-    if (auto shim_target = target_template.instantiate(methods, shim_method)) {
+    if (auto shim_target = target_template.instantiate(shim_method)) {
       shim.add_target(*shim_target);
     }
   }

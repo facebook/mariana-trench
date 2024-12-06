@@ -41,8 +41,7 @@ std::vector<ShimGenerator> get_shim_generators(
       shims.push_back(ShimGenerator(
           std::make_unique<AllOfMethodConstraint>(std::move(shim_constraints)),
           ShimTemplate::from_json(
-              JsonValidation::object(shim_definition, "shim")),
-          context.methods.get()));
+              JsonValidation::object(shim_definition, "shim"))));
     } else {
       auto error =
           fmt::format("Shim models for `{}` are not supported.", find_name);

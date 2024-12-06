@@ -72,7 +72,6 @@ class TargetTemplate final {
   static TargetTemplate from_json(const Json::Value& callee);
 
   std::optional<ShimTargetVariant> instantiate(
-      const Methods* methods,
       const ShimMethod& shim_method) const;
 
   std::string_view target() const {
@@ -108,7 +107,6 @@ class ShimTemplate final {
   static ShimTemplate from_json(const Json::Value& shim_json);
 
   std::optional<InstantiatedShim> instantiate(
-      const Methods* methods,
       const Method* method_to_shim) const;
 
  private:
