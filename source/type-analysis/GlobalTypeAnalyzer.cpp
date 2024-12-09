@@ -372,6 +372,14 @@ bool is_leaking_this_in_ctor(const DexMethod* caller, const DexMethod* callee) {
   return false;
 }
 
+GlobalTypeAnalysis GlobalTypeAnalysis::make_default() {
+  return marianatrench::type_analyzer::global::GlobalTypeAnalysis(
+      /* max_global_analysis_iteration */ 10,
+      /* use_multiple_callee_callgraph */ true,
+      /* only_aggregate_safely_inferrable_fields */ false,
+      /* enforce_iteration_refinement */ false);
+}
+
 /*
  * The nullness analysis has an issue. That is in a method reachable from a
  * clinit or ctor in the call graph, a read of a field that is not yet

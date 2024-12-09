@@ -300,11 +300,8 @@ Types::Types(const Options& options, const DexStoresVector& stores) {
 
   if (!options.disable_global_type_analysis()) {
     Timer global_timer;
-    marianatrench::type_analyzer::global::GlobalTypeAnalysis analysis(
-        /* max_global_analysis_iteration */ 10,
-        /* use_multiple_callee_callgraph */ true,
-        /* only_aggregate_safely_inferrable_fields */ false,
-        /* enforce_iteration_refinement */ false);
+    auto analysis = marianatrench::type_analyzer::global::GlobalTypeAnalysis::
+        make_default();
     global_type_analyzer_ = analysis.analyze(scope);
 
     LOG(1,

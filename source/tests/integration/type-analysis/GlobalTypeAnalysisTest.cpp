@@ -23,7 +23,7 @@ TEST_F(GlobalTypeAnalysisTest, ReturnTypeTest) {
   auto scope = build_class_scope(stores);
   set_root_method("Lcom/facebook/redextest/TestA;.foo:()I");
 
-  GlobalTypeAnalysis analysis;
+  auto analysis = GlobalTypeAnalysis::make_default();
   auto gta = analysis.analyze(scope);
   auto wps = gta->get_whole_program_state();
 
@@ -50,7 +50,7 @@ TEST_F(GlobalTypeAnalysisTest, ConstsAndAGETTest) {
   auto scope = build_class_scope(stores);
   set_root_method("Lcom/facebook/redextest/TestB;.main:()V");
 
-  GlobalTypeAnalysis analysis;
+  auto analysis = GlobalTypeAnalysis::make_default();
   auto gta = analysis.analyze(scope);
   auto wps = gta->get_whole_program_state();
 
@@ -88,7 +88,7 @@ TEST_F(GlobalTypeAnalysisTest, NullableFieldTypeTest) {
   auto scope = build_class_scope(stores);
   set_root_method("Lcom/facebook/redextest/TestC;.main:()V");
 
-  GlobalTypeAnalysis analysis;
+  auto analysis = GlobalTypeAnalysis::make_default();
   auto gta = analysis.analyze(scope);
   auto wps = gta->get_whole_program_state();
 
@@ -109,7 +109,7 @@ TEST_F(GlobalTypeAnalysisTest, TrueVirtualFieldTypeTest) {
   auto scope = build_class_scope(stores);
   set_root_method("Lcom/facebook/redextest/TestD;.main:()V");
 
-  GlobalTypeAnalysis analysis;
+  auto analysis = GlobalTypeAnalysis::make_default();
   auto gta = analysis.analyze(scope);
   auto wps = gta->get_whole_program_state();
 
@@ -117,21 +117,13 @@ TEST_F(GlobalTypeAnalysisTest, TrueVirtualFieldTypeTest) {
   auto field_val =
       get_field("TestD$State;.mVal:Lcom/facebook/redextest/TestD$Base;");
   EXPECT_TRUE(wps.get_field_type(field_val).is_top());
-
-  // Multiple callee call graph
-  GlobalTypeAnalysis analysis1(10, true);
-  auto gta1 = analysis1.analyze(scope);
-  auto wps1 = gta1->get_whole_program_state();
-
-  // Multiple callee call graph can propagate via true virtual calls
-  EXPECT_TRUE(wps1.get_field_type(field_val).is_top());
 }
 
 TEST_F(GlobalTypeAnalysisTest, SmallSetDexTypeDomainTest) {
   auto scope = build_class_scope(stores);
   set_root_method("Lcom/facebook/redextest/TestE;.main:()V");
 
-  GlobalTypeAnalysis analysis;
+  auto analysis = GlobalTypeAnalysis::make_default();
   auto gta = analysis.analyze(scope);
   auto wps = gta->get_whole_program_state();
 
@@ -151,7 +143,7 @@ TEST_F(GlobalTypeAnalysisTest, ConstNullnessDomainTest) {
   auto scope = build_class_scope(stores);
   set_root_method("Lcom/facebook/redextest/TestF;.main:()V");
 
-  GlobalTypeAnalysis analysis;
+  auto analysis = GlobalTypeAnalysis::make_default();
   auto gta = analysis.analyze(scope);
   auto wps = gta->get_whole_program_state();
   auto meth_foo = get_method("TestF;.foo", "", "I");
@@ -165,7 +157,7 @@ TEST_F(GlobalTypeAnalysisTest, ArrayConstNullnessDomainTest) {
   auto scope = build_class_scope(stores);
   set_root_method("Lcom/facebook/redextest/TestG;.main:()V");
 
-  GlobalTypeAnalysis analysis;
+  auto analysis = GlobalTypeAnalysis::make_default();
   auto gta = analysis.analyze(scope);
   auto wps = gta->get_whole_program_state();
   auto meth_foo =
@@ -184,7 +176,7 @@ TEST_F(GlobalTypeAnalysisTest, ArrayConstNullnessDomainTest) {
 TEST_F(GlobalTypeAnalysisTest, ClinitFieldAnalyzerTest) {
   auto scope = build_class_scope(stores);
   set_root_method("Lcom/facebook/redextest/TestH;.main:()V");
-  GlobalTypeAnalysis analysis;
+  auto analysis = GlobalTypeAnalysis::make_default();
   auto gta = analysis.analyze(scope);
   auto wps = gta->get_whole_program_state();
 
@@ -222,7 +214,7 @@ TEST_F(GlobalTypeAnalysisTest, ClinitFieldAnalyzerTest) {
 TEST_F(GlobalTypeAnalysisTest, IFieldsNullnessTest) {
   auto scope = build_class_scope(stores);
   set_root_method("Lcom/facebook/redextest/TestI;.main:()V");
-  GlobalTypeAnalysis analysis;
+  auto analysis = GlobalTypeAnalysis::make_default();
   auto gta = analysis.analyze(scope);
   auto wps = gta->get_whole_program_state();
 
@@ -234,8 +226,12 @@ TEST_F(GlobalTypeAnalysisTest, IFieldsNullnessTest) {
             SingletonDexTypeDomain(get_type("TestI$Foo")));
   auto one_m2 = get_field("TestI$One;.m2:Lcom/facebook/redextest/TestI$Foo;");
   ftype = wps.get_field_type(one_m2);
-  EXPECT_TRUE(ftype.is_top());
+  // Because only_aggregate_safely_inferrable_fields = false, type is available.
+  // Otherwise, it would be top()
+  EXPECT_FALSE(ftype.is_top());
   EXPECT_TRUE(ftype.is_nullable());
+  EXPECT_EQ(ftype.get_single_domain(),
+            SingletonDexTypeDomain(get_type("TestI$Foo")));
 
   auto two_m1 = get_field("TestI$Two;.m1:Lcom/facebook/redextest/TestI$Foo;");
   ftype = wps.get_field_type(two_m1);
@@ -253,7 +249,7 @@ TEST_F(GlobalTypeAnalysisTest, IFieldsNullnessTest) {
 TEST_F(GlobalTypeAnalysisTest, PrimitiveArrayTest) {
   auto scope = build_class_scope(stores);
   set_root_method("Lcom/facebook/redextest/TestJ;.main:()V");
-  GlobalTypeAnalysis analysis;
+  auto analysis = GlobalTypeAnalysis::make_default();
   auto gta = analysis.analyze(scope);
   auto wps = gta->get_whole_program_state();
 
@@ -268,20 +264,27 @@ TEST_F(GlobalTypeAnalysisTest, PrimitiveArrayTest) {
 TEST_F(GlobalTypeAnalysisTest, InstanceSensitiveCtorTest) {
   auto scope = build_class_scope(stores);
   set_root_method("Lcom/facebook/redextest/TestK;.main:()V");
-  GlobalTypeAnalysis analysis;
+  auto analysis = GlobalTypeAnalysis::make_default();
   auto gta = analysis.analyze(scope);
   auto wps = gta->get_whole_program_state();
 
   auto field_f = get_field("TestK$Foo;.f:Lcom/facebook/redextest/TestK$A;");
   auto ftype = wps.get_field_type(field_f);
-  EXPECT_TRUE(ftype.is_top());
+  // Because only_aggregate_safely_inferrable_fields = false, type is available.
+  // Otherwise, it would be top()
+  EXPECT_FALSE(ftype.is_top());
   EXPECT_TRUE(ftype.is_nullable());
+  EXPECT_EQ(ftype.get_single_domain(),
+            SingletonDexTypeDomain(get_type("TestK$A")));
+  const auto& set_domain = ftype.get_set_domain();
+  EXPECT_EQ(set_domain.get_types(),
+            get_type_set({get_type("TestK$A"), get_type("TestK$B")}));
 }
 
 TEST_F(GlobalTypeAnalysisTest, InstanceSensitiveCtorNullnessTest) {
   auto scope = build_class_scope(stores);
   set_root_method("Lcom/facebook/redextest/TestL;.main:()V");
-  GlobalTypeAnalysis analysis;
+  auto analysis = GlobalTypeAnalysis::make_default();
   auto gta = analysis.analyze(scope);
   auto wps = gta->get_whole_program_state();
 
@@ -294,7 +297,7 @@ TEST_F(GlobalTypeAnalysisTest, InstanceSensitiveCtorNullnessTest) {
 TEST_F(GlobalTypeAnalysisTest, ArrayNullnessEscapeTest) {
   auto scope = build_class_scope(stores);
   set_root_method("Lcom/facebook/redextest/TestM;.main:()V");
-  GlobalTypeAnalysis analysis;
+  auto analysis = GlobalTypeAnalysis::make_default();
   auto gta = analysis.analyze(scope);
   auto wps = gta->get_whole_program_state();
 
@@ -312,7 +315,7 @@ TEST_F(GlobalTypeAnalysisTest, ArrayNullnessEscapeTest) {
 TEST_F(GlobalTypeAnalysisTest, ArrayNullnessEscape2Test) {
   auto scope = build_class_scope(stores);
   set_root_method("Lcom/facebook/redextest/TestN;.main:()V");
-  GlobalTypeAnalysis analysis;
+  auto analysis = GlobalTypeAnalysis::make_default();
 
   auto gta = analysis.analyze(scope);
   auto wps = gta->get_whole_program_state();
@@ -341,7 +344,7 @@ TEST_F(GlobalTypeAnalysisTest, ArrayNullnessEscape2Test) {
 TEST_F(GlobalTypeAnalysisTest, MultipleCalleeTest) {
   auto scope = build_class_scope(stores);
   set_root_method("Lcom/facebook/redextest/TestO;.main:()V");
-  GlobalTypeAnalysis analysis(10, true);
+  auto analysis = GlobalTypeAnalysis::make_default();
 
   auto gta = analysis.analyze(scope);
   auto wps = gta->get_whole_program_state();
@@ -405,7 +408,7 @@ TEST_F(GlobalTypeAnalysisTest, InvokeInInitRegressionTest) {
   auto scope = build_class_scope(stores);
   set_root_method("Lcom/facebook/redextest/TestP;.main:()V");
 
-  GlobalTypeAnalysis analysis;
+  auto analysis = GlobalTypeAnalysis::make_default();
   auto gta = analysis.analyze(scope);
   auto wps = gta->get_whole_program_state();
 

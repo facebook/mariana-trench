@@ -208,7 +208,7 @@ TEST_F(GlobalTypeAnalysisTest, ReturnTypeTest) {
       *method_override_graph::build_graph(scope), scope);
   walk::code(scope, [](DexMethod*, IRCode& code) { code.build_cfg(); });
 
-  GlobalTypeAnalysis analysis;
+  auto analysis = GlobalTypeAnalysis::make_default();
   auto gta = analysis.analyze(scope);
   auto wps = gta->get_whole_program_state();
   EXPECT_EQ(wps.get_return_type(meth_bar), get_type_domain("LO;"));
@@ -276,7 +276,7 @@ TEST_F(GlobalTypeAnalysisTest, SimpleFieldTypeTest) {
       *method_override_graph::build_graph(scope), scope);
   walk::code(scope, [](DexMethod*, IRCode& code) { code.build_cfg(); });
 
-  GlobalTypeAnalysis analysis;
+  auto analysis = GlobalTypeAnalysis::make_default();
   auto gta = analysis.analyze(scope);
   auto wps = gta->get_whole_program_state();
   EXPECT_EQ(wps.get_field_type(field_1),
@@ -357,7 +357,7 @@ TEST_F(GlobalTypeAnalysisTest, ClinitSimpleTest) {
       *method_override_graph::build_graph(scope), scope);
   walk::code(scope, [](DexMethod*, IRCode& code) { code.build_cfg(); });
 
-  GlobalTypeAnalysis analysis;
+  auto analysis = GlobalTypeAnalysis::make_default();
   auto gta = analysis.analyze(scope);
   auto wps = gta->get_whole_program_state();
   EXPECT_TRUE(wps.get_field_type(field_1).is_top());
@@ -470,7 +470,7 @@ TEST_F(GlobalTypeAnalysisTest, StaticFieldWithEncodedValueTest) {
       *method_override_graph::build_graph(scope), scope);
   walk::code(scope, [](DexMethod*, IRCode& code) { code.build_cfg(); });
 
-  GlobalTypeAnalysis analysis;
+  auto analysis = GlobalTypeAnalysis::make_default();
   auto gta = analysis.analyze(scope);
   auto wps = gta->get_whole_program_state();
   EXPECT_EQ(wps.get_field_type(field_1), DexTypeDomain::null());

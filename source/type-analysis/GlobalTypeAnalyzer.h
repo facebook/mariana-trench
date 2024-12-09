@@ -126,7 +126,7 @@ class GlobalTypeAnalyzer : public sparta::ParallelMonotonicFixpointIterator<
 };
 
 class GlobalTypeAnalysis {
- public:
+ private:
   explicit GlobalTypeAnalysis(
       size_t max_global_analysis_iteration = 10,
       bool use_multiple_callee_callgraph = false,
@@ -137,6 +137,14 @@ class GlobalTypeAnalysis {
         m_only_aggregate_safely_inferrable_fields(
             only_aggregate_safely_inferrable_fields),
         m_enforce_iteration_refinement(enforce_iteration_refinement) {}
+
+ public:
+  /**
+   * Special constructor to create the global type analyzer configured
+   * explicitly for Mariana Trench (vs. default Redex configuration in
+   * constructor above).
+   */
+  static GlobalTypeAnalysis make_default();
 
   void run(const Scope& scope) { analyze(scope); }
 
