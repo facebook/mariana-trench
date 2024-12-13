@@ -81,6 +81,197 @@
       "where": [
         {
           "constraint": "signature_match",
+          "parents": [
+            "Ljava/util/Set;",
+            "Ljava/util/List;",
+            "Ljava/util/ArrayList",
+            "Ljava/util/HashSet;",
+            "Ljava/util/AbstractSequentialList;",
+            "Ljava/lang/Iterable;"
+          ],
+          "name": "iterator"
+        }
+      ],
+      "model": {
+        "freeze": [
+          "propagation"
+        ],
+        "propagation": [
+          {
+            "input": "Argument(0)",
+            "output": "Return"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parents": [
+            "Ljava/util/ArrayList;",
+            "Ljava/util/HashSet;",
+            "Ljava/util/List;",
+            "Ljava/util/LinkedList;",
+            "Ljava/util/Set;"
+          ],
+          "names": [
+            "add",
+            "addAll"
+          ]
+        },
+        {
+          "constraint": "number_parameters",
+          "inner": {
+            "constraint": "==",
+            "value": 2
+          }
+        }
+      ],
+      "model": {
+        "freeze": [
+          "propagation"
+        ],
+        "propagation": [
+          {
+            "input": "Argument(1)",
+            "output": "Argument(0)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parents": [
+            "Ljava/util/ArrayList;",
+            "Ljava/util/HashSet;",
+            "Ljava/util/List;",
+            "Ljava/util/LinkedList;",
+            "Ljava/util/Set;"
+          ],
+          "names": [
+            "add",
+            "addAll"
+          ]
+        },
+        {
+          "constraint": "number_parameters",
+          "inner": {
+            "constraint": "==",
+            "value": 3
+          }
+        }
+      ],
+      "model": {
+        "freeze": [
+          "propagation"
+        ],
+        "propagation": [
+          {
+            "input": "Argument(2)",
+            "output": "Argument(0)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Ljava/util/Iterator;",
+          "name": "next"
+        }
+      ],
+      "model": {
+        "modes": [
+          "skip-analysis"
+        ],
+        "freeze": [
+          "propagation"
+        ],
+        "propagation": [
+          {
+            "input": "Argument(0)",
+            "output": "Return"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Ljava/lang/StringBuilder;",
+          "name": "toString"
+        }
+      ],
+      "model": {
+        "freeze": [
+          "propagation"
+        ],
+        "propagation": [
+          {
+            "input": "Argument(0)",
+            "output": "Return"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Ljava/lang/StringBuilder;",
+          "name": "append"
+        }
+      ],
+      "model": {
+        "freeze": [
+          "propagation"
+        ],
+        "propagation": [
+          {
+            "input": "Argument(0)",
+            "output": "Return"
+          },
+          {
+            "input": "Argument(1)",
+            "output": "Return"
+          },
+          {
+            "input": "Argument(1)",
+            "output": "Argument(0)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Ljava/lang/StringBuilder;",
+          "name": "setLength"
+        }
+      ],
+      "model": {
+        "freeze": [
+          "propagation"
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
           "parent": "Landroid/content/Intent;",
           "names": [
             "getBooleanArrayExtra",
@@ -124,6 +315,34 @@
             "features": [
               "via-intent-extra-getter"
             ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroid/content/ComponentName;",
+          "name": "<init>"
+        },
+        {
+          "constraint": "number_parameters",
+          "inner": {
+            "constraint": "==",
+            "value": 3
+          }
+        }
+      ],
+      "model": {
+        "freeze": [
+          "propagation"
+        ],
+        "propagation": [
+          {
+            "input": "Argument(2)",
+            "output": "Argument(0)"
           }
         ]
       }

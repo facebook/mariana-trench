@@ -18,6 +18,9 @@
         }
       ],
       "model": {
+        "freeze": [
+          "propagation"
+        ],
         "propagation": [
           {
             "input": "Argument(0)",
@@ -47,6 +50,9 @@
         }
       ],
       "model": {
+        "freeze": [
+          "propagation"
+        ],
         "propagation": [
           {
             "input": "Argument(0)",
@@ -74,6 +80,9 @@
         }
       ],
       "model": {
+        "freeze": [
+          "propagation"
+        ],
         "propagation": [
           {
             "input": "Argument(0)",
@@ -101,6 +110,9 @@
         }
       ],
       "model": {
+        "freeze": [
+          "propagation"
+        ],
         "propagation": [
           {
             "input": "Argument(0)",

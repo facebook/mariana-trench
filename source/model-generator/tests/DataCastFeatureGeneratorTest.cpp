@@ -64,6 +64,7 @@ TEST_F(DataCastFeatureGeneratorTest, CastToInt) {
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */
           FeatureSet{context.feature_factory->get("cast:numeric")})});
+  expected_model.freeze(Model::FreezeKind::Propagations);
   expected_model.add_model_generator(
       context.model_generator_name_factory->create(
           "DataCastFeatureGenerator", 2));
@@ -110,6 +111,7 @@ TEST_F(DataCastFeatureGeneratorTest, CastToBool) {
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */
           FeatureSet{context.feature_factory->get("cast:boolean")})});
+  expected_model.freeze(Model::FreezeKind::Propagations);
   expected_model.add_model_generator(
       context.model_generator_name_factory->create(
           "DataCastFeatureGenerator", 3));
