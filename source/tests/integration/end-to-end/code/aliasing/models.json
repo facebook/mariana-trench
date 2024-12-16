@@ -63,11 +63,38 @@
     ]
   },
   {
-    "method": "Lcom/facebook/marianatrench/integrationtests/Tree;.generationSource4:()V",
+    "method": "Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;.generationOnFoo:()V",
+    "generations": [
+      {
+        "kind": "Source4",
+        "port": "Argument(0).foo"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.generationOnArg:(Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;)V",
     "generations": [
       {
         "kind": "Source4",
         "port": "Argument(0)"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.generationOnArgFooBar:(Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;)V",
+    "generations": [
+      {
+        "kind": "Source4",
+        "port": "Argument(0).foo.bar"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.generationOnArgBar:(Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;)V",
+    "generations": [
+      {
+        "kind": "Source4",
+        "port": "Argument(0).bar"
       }
     ]
   },

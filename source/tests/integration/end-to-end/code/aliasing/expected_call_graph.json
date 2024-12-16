@@ -267,6 +267,55 @@
       "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testGenerationOnArgAfterAlias:(Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;Z)V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;.<init>:(Lcom/facebook/marianatrench/integrationtests/AliasingJava$1;)V",
+      "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.generationOnArg:(Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testGenerationOnArgBarAfterAlias:(Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;Z)V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;.<init>:(Lcom/facebook/marianatrench/integrationtests/AliasingJava$1;)V",
+      "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.generationOnArgBar:(Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testGenerationOnArgBeforeAlias:(Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;Z)V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;.<init>:(Lcom/facebook/marianatrench/integrationtests/AliasingJava$1;)V",
+      "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.generationOnArg:(Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testGenerationOnArgFooBarBeforeAlias:(Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;Z)V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;.<init>:(Lcom/facebook/marianatrench/integrationtests/AliasingJava$1;)V",
+      "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.generationOnArgFooBar:(Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testGenerationOnThisFooBeforeAlias:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;.<init>:(Lcom/facebook/marianatrench/integrationtests/AliasingJava$1;)V",
+      "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.source1:()Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+    ],
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;.generationOnFoo:()V"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testSimple1:()V" : 
   {
     "static" : 

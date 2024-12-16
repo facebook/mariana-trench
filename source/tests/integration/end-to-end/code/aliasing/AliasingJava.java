@@ -15,6 +15,8 @@ public class AliasingJava {
     public Tree bar;
     public Tree baz;
     public Tree biz;
+
+    public void generationOnFoo() {}
   }
 
   private static Tree source1() {
@@ -28,6 +30,12 @@ public class AliasingJava {
   private static Tree source3() {
     return new Tree();
   }
+
+  private static void generationOnArg(Tree arg) {}
+
+  private static void generationOnArgFooBar(Tree arg) {}
+
+  private static void generationOnArgBar(Tree arg) {}
 
   static void testSimple1() {
     Tree input = new Tree();
@@ -169,7 +177,15 @@ public class AliasingJava {
     Origin.sink(input.baz.bar);
 
     // Should have issues for Source1, Source2, and Source3.
-    // Currently we break the cycle and do not widen, so only find 1 issue for Source1.
+    // Currently a FN as we break the cycle and do not widen.
+    // Deep read taint tree at root memory location of output is:
+    // TaintTree(tree={{}
+    //   `.bar` -> {Source3}
+    //   `.foo` -> {{}
+    //     `.bar` -> {Source2}
+    //     `.foo` -> {Source1}
+    // })
+    // No issues for output.foo.baz.
     Origin.sink(output.foo.baz);
   }
 
@@ -217,5 +233,83 @@ public class AliasingJava {
     // output.bar -> input1 -> .foo = Source1
     //                         .foo.bar = Source3
     Origin.sink(output.bar.foo.bar);
+  }
+
+  static void testGenerationOnThisFooBeforeAlias() {
+    Tree input = new Tree();
+    input.generationOnFoo();
+
+    Tree output = new Tree();
+    output.bar = input.foo;
+
+    // Expect 1 issue for Source4.
+    // FN without shallow read on iput.
+    Origin.sink(output.bar);
+
+    output.bar.baz = source1();
+    // Expect 2 issues for Source1 and Source4.
+    Origin.sink(input.foo.baz);
+  }
+
+  static void testGenerationOnArgBeforeAlias(Tree parameter, boolean condition) {
+    if (condition) {
+      generationOnArg(parameter.foo.bar);
+    } else {
+      parameter.foo = new Tree();
+    }
+
+    Tree x = new Tree();
+    x.foo = parameter.foo.bar;
+
+    Origin.sink(x);
+  }
+
+  static void testGenerationOnArgAfterAlias(Tree parameter, boolean condition) {
+    Tree tmp = new Tree();
+
+    if (condition) {
+      parameter.foo = new Tree();
+    } else {
+      tmp = parameter.foo;
+    }
+
+    Tree x = new Tree();
+    x.foo = parameter.foo;
+    if (condition) {
+      generationOnArg(tmp.bar);
+    }
+
+    Origin.sink(x.foo);
+  }
+
+  static void testGenerationOnArgFooBarBeforeAlias(Tree parameter, boolean condition) {
+    if (condition) {
+      generationOnArgFooBar(parameter);
+    } else {
+      parameter.foo = new Tree();
+    }
+
+    Tree x = new Tree();
+    x.foo = parameter.foo.bar;
+
+    // FN without shallow read on iput.
+    Origin.sink(x);
+  }
+
+  static void testGenerationOnArgBarAfterAlias(Tree parameter, boolean condition) {
+    Tree tmp = new Tree();
+    if (condition) {
+      parameter.foo = new Tree();
+    } else {
+      tmp = parameter.foo;
+    }
+
+    Tree x = new Tree();
+    x.foo = parameter.foo;
+    if (condition) {
+      generationOnArgBar(tmp);
+    }
+
+    Origin.sink(x.foo);
   }
 }
