@@ -9,15 +9,15 @@
 
 #include <IRInstruction.h>
 
+#include <mariana-trench/PointsToEnvironment.h>
 #include <mariana-trench/Redex.h>
-#include <mariana-trench/TaintEnvironment.h>
 #include <mariana-trench/tests/Test.h>
 
 namespace marianatrench {
 
-class TaintEnvironmentTest : public test::Test {};
+class PointsToEnvironmentTest : public test::Test {};
 
-TEST_F(TaintEnvironmentTest, ReadAndWritePointsToTreeSimple) {
+TEST_F(PointsToEnvironmentTest, ReadAndWritePointsToTreeSimple) {
   // Setup instructions to create memory locations
   auto i0 = std::make_unique<IRInstruction>(OPCODE_CONST);
   auto i1 = std::make_unique<IRInstruction>(OPCODE_CONST_CLASS);
@@ -36,7 +36,7 @@ TEST_F(TaintEnvironmentTest, ReadAndWritePointsToTreeSimple) {
   //
   // Tests for field assignments to instruction memory locations.
   //
-  auto environment = TaintEnvironment::bottom();
+  auto environment = PointsToEnvironment::bottom();
 
   // Test strong write to field of a root memory location.
   // eg. r0.x = im0();
@@ -77,11 +77,9 @@ TEST_F(TaintEnvironmentTest, ReadAndWritePointsToTreeSimple) {
   EXPECT_EQ(environment.points_to(r0_x), im0_im1_set);
   EXPECT_EQ(environment.points_to(r0_x_y), im2_set);
   EXPECT_EQ(
-      environment.get(im0.get()).aliases().raw_read(Path{y}),
-      PointsToTree{im2_set});
+      environment.get(im0.get()).raw_read(Path{y}), PointsToTree{im2_set});
   EXPECT_EQ(
-      environment.get(im1.get()).aliases().raw_read(Path{y}),
-      PointsToTree{im2_set});
+      environment.get(im1.get()).raw_read(Path{y}), PointsToTree{im2_set});
   EXPECT_EQ(
       environment.resolve_aliases(r0.get()),
       (PointsToTree{
@@ -93,7 +91,7 @@ TEST_F(TaintEnvironmentTest, ReadAndWritePointsToTreeSimple) {
   // Test current state of the taint environment
   EXPECT_EQ(
       environment,
-      (TaintEnvironment{
+      (PointsToEnvironment{
           {r0.get(),
            PointsToTree{
                {Path{x}, im0_im1_set},
@@ -127,7 +125,7 @@ TEST_F(TaintEnvironmentTest, ReadAndWritePointsToTreeSimple) {
   // Test current state of the taint environment
   EXPECT_EQ(
       environment,
-      (TaintEnvironment{
+      (PointsToEnvironment{
           {r0.get(),
            PointsToTree{
                {Path{x}, im2_set},
@@ -142,7 +140,7 @@ TEST_F(TaintEnvironmentTest, ReadAndWritePointsToTreeSimple) {
            }}}));
 }
 
-TEST_F(TaintEnvironmentTest, ChainingPointsToTree) {
+TEST_F(PointsToEnvironmentTest, ChainingPointsToTree) {
   // Setup instructions to create memory locations
   auto i0 = std::make_unique<IRInstruction>(OPCODE_CONST);
   auto i1 = std::make_unique<IRInstruction>(OPCODE_CONST_CLASS);
@@ -170,7 +168,7 @@ TEST_F(TaintEnvironmentTest, ChainingPointsToTree) {
   // Tests for field assignments to other memory locations with existing
   // points-to trees (chaining aliases in the taint environment)
   //
-  auto environment = TaintEnvironment::bottom();
+  auto environment = PointsToEnvironment::bottom();
   auto r1 = std::make_unique<ParameterMemoryLocation>(1);
   const auto a = PathElement::field("a");
   const auto b = PathElement::field("b");
@@ -218,7 +216,7 @@ TEST_F(TaintEnvironmentTest, ChainingPointsToTree) {
   // Test current state of the taint environment
   EXPECT_EQ(
       environment,
-      (TaintEnvironment{
+      (PointsToEnvironment{
           {r0.get(), PointsToTree{{Path{x}, r1_set}}},
           {r1.get(), PointsToTree{{Path{a}, im1_set}}},
           {im1.get(), PointsToTree{{Path{b}, im2_set}}},
@@ -270,7 +268,7 @@ TEST_F(TaintEnvironmentTest, ChainingPointsToTree) {
   auto im1_tree = PointsToTree{
       {Path{b}, PointsToSet{im2.get()}},
   };
-  auto expected = TaintEnvironment{
+  auto expected = PointsToEnvironment{
       {r0.get(), r0_tree},
       {r1.get(), r1_tree},
       {r2.get(), r2_tree},
@@ -305,7 +303,9 @@ TEST_F(TaintEnvironmentTest, ChainingPointsToTree) {
       (PointsToTree{{Path{}, PointsToSet{im1.get()}}, {Path{b}, im2_set}}));
 }
 
-TEST_F(TaintEnvironmentTest, OverlappingWithEmptyIntermediateNodePointsToTree) {
+TEST_F(
+    PointsToEnvironmentTest,
+    OverlappingWithEmptyIntermediateNodePointsToTree) {
   // Setup instructions to create memory locations
   auto i0 = std::make_unique<IRInstruction>(OPCODE_CONST);
   auto i1 = std::make_unique<IRInstruction>(OPCODE_CONST_CLASS);
@@ -337,7 +337,7 @@ TEST_F(TaintEnvironmentTest, OverlappingWithEmptyIntermediateNodePointsToTree) {
   auto im2_set = PointsToSet{im2.get()};
 
   // Setup to test the current state of the environment
-  auto environment = TaintEnvironment::bottom();
+  auto environment = PointsToEnvironment::bottom();
   environment.write(im1.get(), b.name(), im2_set, UpdateKind::Strong);
   environment.write(r0.get(), x.name(), r1_set, UpdateKind::Strong);
   environment.write(r1.get(), a.name(), im1_set, UpdateKind::Strong);
@@ -346,7 +346,7 @@ TEST_F(TaintEnvironmentTest, OverlappingWithEmptyIntermediateNodePointsToTree) {
 
   EXPECT_EQ(
       environment,
-      (TaintEnvironment{
+      (PointsToEnvironment{
           {r0.get(), PointsToTree{{Path{x}, PointsToSet{r1.get()}}}},
           {r1.get(), PointsToTree{{Path{a}, PointsToSet{im1.get()}}}},
           {r2.get(),
@@ -430,7 +430,7 @@ TEST_F(TaintEnvironmentTest, OverlappingWithEmptyIntermediateNodePointsToTree) {
   auto im3_tree = PointsToTree{
       {Path{z}, r3_set},
   };
-  auto expected = TaintEnvironment{
+  auto expected = PointsToEnvironment{
       {r0.get(), r0_tree},
       {r1.get(), r1_tree},
       {r2.get(), r2_tree},
@@ -565,7 +565,7 @@ TEST_F(TaintEnvironmentTest, OverlappingWithEmptyIntermediateNodePointsToTree) {
       {Path{e}, im0_set},
   };
 
-  // Expected: TaintEnvironment(
+  // Expected: PointsToEnvironment(
   //   r0(ParameterMemoryLocation(0)) =>
   //     `.x` -> r1(ParameterMemoryLocation(1))
   //
@@ -594,7 +594,7 @@ TEST_F(TaintEnvironmentTest, OverlappingWithEmptyIntermediateNodePointsToTree) {
   //
   //   im5(IGET) =>
   //     `.e` -> im0(CONST)
-  expected = TaintEnvironment{
+  expected = PointsToEnvironment{
       {r0.get(), r0_tree},
       {r1.get(), r1_tree},
       {r2.get(), r2_tree},
