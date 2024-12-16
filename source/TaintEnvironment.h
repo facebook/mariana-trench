@@ -78,6 +78,32 @@ class TaintEnvironment final : public sparta::AbstractDomain<TaintEnvironment> {
       TaintTree taint,
       UpdateKind kind);
 
+  /**
+   * Build a complete taint tree for the given memory location.
+   * This merges all the taint trees reachable from the given memory location
+   * via the resolved aliases points-to tree.
+   */
+  TaintTree deep_read(
+      const ResolvedAliasesMap& resolved_aliases,
+      MemoryLocation* memory_location) const;
+
+  /**
+   * Build a complete taint tree for the given memory locations domain.
+   * This joins all the deep read taint trees in the memory locations domain.
+   */
+  TaintTree deep_read(
+      const ResolvedAliasesMap& resolved_aliases,
+      const MemoryLocationsDomain& memory_locations) const;
+
+  /**
+   * Read the specified path from the complete taint tree built for the given
+   * memory locations domain.
+   */
+  TaintTree deep_read(
+      const ResolvedAliasesMap& resolved_aliases,
+      const MemoryLocationsDomain& memory_locations,
+      const Path& path) const;
+
   friend std::ostream& operator<<(
       std::ostream& out,
       const marianatrench::TaintEnvironment& taint);

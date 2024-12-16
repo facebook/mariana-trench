@@ -12,6 +12,7 @@
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/MemoryLocation.h>
 #include <mariana-trench/MemoryLocationEnvironment.h>
+#include <mariana-trench/PointsToEnvironment.h>
 #include <mariana-trench/Taint.h>
 #include <mariana-trench/TaintEnvironment.h>
 #include <mariana-trench/TaintTree.h>
@@ -79,6 +80,19 @@ class ForwardTaintEnvironment final
       const Path& path,
       Taint taint,
       UpdateKind kind);
+
+  TaintTree deep_read(
+      const ResolvedAliasesMap& resolved_aliases,
+      MemoryLocation* memory_location) const;
+
+  TaintTree deep_read(
+      const ResolvedAliasesMap& resolved_aliases,
+      const MemoryLocationsDomain& memory_locations) const;
+
+  TaintTree deep_read(
+      const ResolvedAliasesMap& resolved_aliases,
+      const MemoryLocationsDomain& memory_locations,
+      const Path& path) const;
 
   friend std::ostream& operator<<(
       std::ostream& out,

@@ -5,8 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <Show.h>
-
+#include <mariana-trench/AliasingProperties.h>
 #include <mariana-trench/TaintEnvironment.h>
 
 namespace marianatrench {
@@ -80,6 +79,44 @@ void TaintEnvironment::write(
   for (auto* memory_location : memory_locations.elements()) {
     write(memory_location, path, taint, kind);
   }
+}
+
+TaintTree TaintEnvironment::deep_read(
+    const ResolvedAliasesMap& resolved_aliases,
+    MemoryLocation* memory_location) const {
+  TaintTree result{};
+  auto points_to_tree = resolved_aliases.get(memory_location->root());
+  points_to_tree.visit(
+      [this, &result](const Path& path, const PointsToSet& points_to_set) {
+        for (const auto& [points_to, properties] : points_to_set) {
+          auto taint = this->read(points_to);
+          taint.apply_aliasing_properties(properties);
+          result.write(path, std::move(taint), UpdateKind::Weak);
+        }
+      });
+
+  return result.read(memory_location->path());
+}
+
+TaintTree TaintEnvironment::deep_read(
+    const ResolvedAliasesMap& resolved_aliases,
+    const MemoryLocationsDomain& memory_locations) const {
+  TaintTree result{};
+  for (auto* memory_location : memory_locations) {
+    result.join_with(deep_read(resolved_aliases, memory_location));
+  }
+  return result;
+}
+
+TaintTree TaintEnvironment::deep_read(
+    const ResolvedAliasesMap& resolved_aliases,
+    const MemoryLocationsDomain& memory_locations,
+    const Path& path) const {
+  TaintTree result{};
+  for (auto* memory_location : memory_locations) {
+    result.join_with(deep_read(resolved_aliases, memory_location).read(path));
+  }
+  return result;
 }
 
 std::ostream& operator<<(

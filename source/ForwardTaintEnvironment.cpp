@@ -98,6 +98,48 @@ void ForwardTaintEnvironment::write(
   write(memory_locations, path, TaintTree{std::move(taint)}, kind);
 }
 
+TaintTree ForwardTaintEnvironment::deep_read(
+    const ResolvedAliasesMap& resolved_aliases,
+    MemoryLocation* memory_location) const {
+  auto taint_tree = environment_.deep_read(resolved_aliases, memory_location);
+
+  LOG(5,
+      "Deep read of memory location {} resolves to: {}",
+      show(memory_location),
+      taint_tree);
+
+  return taint_tree;
+}
+
+TaintTree ForwardTaintEnvironment::deep_read(
+    const ResolvedAliasesMap& resolved_aliases,
+    const MemoryLocationsDomain& memory_locations) const {
+  auto taint_tree = environment_.deep_read(resolved_aliases, memory_locations);
+
+  LOG(5,
+      "Deep read of memory location {} resolves to: {}",
+      memory_locations,
+      taint_tree);
+
+  return taint_tree;
+}
+
+TaintTree ForwardTaintEnvironment::deep_read(
+    const ResolvedAliasesMap& resolved_aliases,
+    const MemoryLocationsDomain& memory_locations,
+    const Path& path) const {
+  auto taint_tree =
+      environment_.deep_read(resolved_aliases, memory_locations, path);
+
+  LOG(5,
+      "Deep read of memory location {} at path {} resolves to: {}",
+      memory_locations,
+      path,
+      taint_tree);
+
+  return taint_tree;
+}
+
 std::ostream& operator<<(
     std::ostream& out,
     const ForwardTaintEnvironment& environment) {
