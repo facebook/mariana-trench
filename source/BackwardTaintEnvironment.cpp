@@ -71,7 +71,6 @@ BackwardTaintEnvironment BackwardTaintEnvironment::initial(
 TaintTree BackwardTaintEnvironment::read(
     MemoryLocation* memory_location) const {
   return environment_.get(memory_location->root())
-      .taint()
       .read(memory_location->path(), propagate_output_path);
 }
 
@@ -82,7 +81,6 @@ TaintTree BackwardTaintEnvironment::read(
   full_path.extend(path);
 
   return environment_.get(memory_location->root())
-      .taint()
       .read(full_path, propagate_output_path);
 }
 
@@ -115,7 +113,7 @@ void BackwardTaintEnvironment::write(
     const Path& path,
     Taint taint,
     UpdateKind kind) {
-  environment_.write(memory_location, path, std::move(taint), kind);
+  write(memory_location, path, TaintTree{std::move(taint)}, kind);
 }
 
 void BackwardTaintEnvironment::write(

@@ -11,21 +11,38 @@
 
 namespace marianatrench {
 
-void TaintEnvironment::write(
+TaintTree TaintEnvironment::read(MemoryLocation* memory_location) const {
+  return environment_.get(memory_location->root())
+      .read(memory_location->path());
+}
+
+TaintTree TaintEnvironment::read(
     MemoryLocation* memory_location,
-    const Path& path,
-    Taint taint,
-    UpdateKind kind) {
+    const Path& path) const {
   Path full_path = memory_location->path();
   full_path.extend(path);
 
-  environment_.update(
-      memory_location->root(),
-      [&full_path, &taint, kind](const AbstractTaintTree& tree) {
-        auto copy = tree;
-        copy.write_taint_tree(full_path, TaintTree{std::move(taint)}, kind);
-        return copy;
-      });
+  return environment_.get(memory_location->root()).read(full_path);
+}
+
+TaintTree TaintEnvironment::read(
+    const MemoryLocationsDomain& memory_locations) const {
+  TaintTree taint;
+  for (auto* memory_location : memory_locations.elements()) {
+    taint.join_with(read(memory_location));
+  }
+  return taint;
+}
+
+TaintTree TaintEnvironment::read(
+    const MemoryLocationsDomain& memory_locations,
+    const Path& path) const {
+  TaintTree taint;
+  for (auto* memory_location : memory_locations.elements()) {
+    taint.join_with(read(memory_location, path));
+  }
+
+  return taint;
 }
 
 void TaintEnvironment::write(
@@ -38,11 +55,31 @@ void TaintEnvironment::write(
 
   environment_.update(
       memory_location->root(),
-      [&full_path, &taint, kind](const AbstractTaintTree& tree) {
+      [&full_path, &taint, kind](const TaintTree& tree) {
         auto copy = tree;
-        copy.write_taint_tree(full_path, std::move(taint), kind);
+        copy.write(full_path, std::move(taint), kind);
         return copy;
       });
+}
+
+void TaintEnvironment::write(
+    const MemoryLocationsDomain& memory_locations,
+    const Path& path,
+    TaintTree taint,
+    UpdateKind kind) {
+  if (memory_locations.empty()) {
+    return;
+  }
+
+  if (kind == UpdateKind::Strong && memory_locations.singleton() == nullptr) {
+    // In practice, only one of the memory location is affected, so we must
+    // treat this as a weak update, even if a strong update was requested.
+    kind = UpdateKind::Weak;
+  }
+
+  for (auto* memory_location : memory_locations.elements()) {
+    write(memory_location, path, taint, kind);
+  }
 }
 
 std::ostream& operator<<(

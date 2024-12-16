@@ -9,16 +9,17 @@
 
 #include <sparta/PatriciaTreeMapAbstractPartition.h>
 
-#include <mariana-trench/AbstractTaintTree.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/MemoryLocation.h>
+#include <mariana-trench/PointsToEnvironment.h>
+#include <mariana-trench/TaintTree.h>
 
 namespace marianatrench {
 
 class TaintEnvironment final : public sparta::AbstractDomain<TaintEnvironment> {
  private:
-  using Map = sparta::
-      PatriciaTreeMapAbstractPartition<RootMemoryLocation*, AbstractTaintTree>;
+  using Map =
+      sparta::PatriciaTreeMapAbstractPartition<RootMemoryLocation*, TaintTree>;
 
  public:
   /* Create a bottom environment */
@@ -38,35 +39,41 @@ class TaintEnvironment final : public sparta::AbstractDomain<TaintEnvironment> {
 
   INCLUDE_ABSTRACT_DOMAIN_METHODS(TaintEnvironment, Map, environment_)
 
-  const AbstractTaintTree& get(RootMemoryLocation* root_memory_location) const {
-    // TaintTree's are only stored at root memory locations.
+  const TaintTree& get(RootMemoryLocation* root_memory_location) const {
     return environment_.get(root_memory_location);
   }
 
-  /** Helper that wraps the TaintTree as AbstractTaintTree for now. */
   void set(RootMemoryLocation* root_memory_location, TaintTree tree) {
-    environment_.set(root_memory_location, AbstractTaintTree{std::move(tree)});
+    environment_.set(root_memory_location, std::move(tree));
   }
 
-  template <typename Operation> // AbstractTaintTree(const AbstractTaintTree&)
+  template <typename Operation> // TaintTree(const TaintTree&)
   void update(RootMemoryLocation* root_memory_location, Operation&& operation) {
     static_assert(std::is_same_v<
                   decltype(operation(std::declval<TaintTree&&>())),
-                  AbstractTaintTree>);
+                  TaintTree>);
     environment_.update(
         root_memory_location, std::forward<Operation>(operation));
   }
 
-  /** Helper that writes to the TaintTree only for now. */
+  TaintTree read(MemoryLocation* memory_location) const;
+
+  TaintTree read(MemoryLocation* memory_location, const Path& path) const;
+
+  TaintTree read(const MemoryLocationsDomain& memory_locations) const;
+
+  TaintTree read(
+      const MemoryLocationsDomain& memory_locations,
+      const Path& path) const;
+
   void write(
       MemoryLocation* memory_location,
       const Path& path,
-      Taint taint,
+      TaintTree taint,
       UpdateKind kind);
 
-  /** Helper that writes to the TaintTree only for now. */
   void write(
-      MemoryLocation* memory_location,
+      const MemoryLocationsDomain& memory_locations,
       const Path& path,
       TaintTree taint,
       UpdateKind kind);
