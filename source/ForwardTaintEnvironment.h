@@ -94,6 +94,38 @@ class ForwardTaintEnvironment final
       const MemoryLocationsDomain& memory_locations,
       const Path& path) const;
 
+  void deep_write(
+      const ResolvedAliasesMap& resolved_aliases,
+      MemoryLocation* memory_location,
+      TaintTree taint,
+      UpdateKind kind);
+
+  void deep_write(
+      const ResolvedAliasesMap& resolved_aliases,
+      MemoryLocation* memory_location,
+      const Path& path,
+      TaintTree taint,
+      UpdateKind kind);
+
+  void deep_write(
+      const ResolvedAliasesMap& resolved_aliases,
+      const MemoryLocationsDomain& memory_locations,
+      TaintTree taint,
+      UpdateKind kind);
+
+  void deep_write(
+      const ResolvedAliasesMap& resolved_aliases,
+      const MemoryLocationsDomain& memory_locations,
+      Taint taint,
+      UpdateKind kind);
+
+  void deep_write(
+      const ResolvedAliasesMap& resolved_aliases,
+      const MemoryLocationsDomain& memory_locations,
+      const Path& path,
+      TaintTree taint,
+      UpdateKind kind);
+
   friend std::ostream& operator<<(
       std::ostream& out,
       const ForwardTaintEnvironment& environment);

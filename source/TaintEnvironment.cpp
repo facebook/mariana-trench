@@ -119,6 +119,76 @@ TaintTree TaintEnvironment::deep_read(
   return result;
 }
 
+void TaintEnvironment::deep_write(
+    const ResolvedAliasesMap& resolved_aliases,
+    MemoryLocation* memory_location,
+    const Path& path,
+    TaintTree taint,
+    UpdateKind kind) {
+  LOG(5,
+      "{} update taint tree at: {} path `{}` with {}",
+      kind == UpdateKind::Strong ? "Strong" : "Weak",
+      show(memory_location),
+      path,
+      taint);
+
+  const auto& points_to_tree = resolved_aliases.get(memory_location->root());
+
+  auto [remaining_path, target_memory_locations] =
+      points_to_tree.raw_read_max_path(memory_location->path());
+
+  Path full_path = remaining_path;
+  full_path.extend(path);
+
+  if (kind == UpdateKind::Strong && target_memory_locations.root().size() > 1) {
+    // In practice, only one of the memory location is affected, so we must
+    // treat this as a weak update, even if a strong update was requested.
+    kind = UpdateKind::Weak;
+  }
+
+  for (const auto& [target_memory_location, properties] :
+       target_memory_locations.root()) {
+    taint.apply_aliasing_properties(properties);
+
+    LOG(5,
+        "{} updating taint tree of {}. Root: {}, {} with: {}",
+        kind == UpdateKind::Strong ? "Strong" : "Weak",
+        show(target_memory_location),
+        show(target_memory_location->root()),
+        full_path,
+        taint);
+
+    environment_.update(
+        target_memory_location,
+        [&full_path, &taint, kind](const TaintTree& tree) {
+          auto copy = tree;
+          copy.write(full_path, taint, kind);
+          return copy;
+        });
+  }
+}
+
+void TaintEnvironment::deep_write(
+    const ResolvedAliasesMap& resolved_aliases,
+    const MemoryLocationsDomain& memory_locations,
+    const Path& path,
+    TaintTree taint,
+    UpdateKind kind) {
+  if (memory_locations.empty()) {
+    return;
+  }
+
+  if (kind == UpdateKind::Strong && memory_locations.singleton() == nullptr) {
+    // In practice, only one of the memory location is affected, so we must
+    // treat this as a weak update, even if a strong update was requested.
+    kind = UpdateKind::Weak;
+  }
+
+  for (auto* memory_location : memory_locations.elements()) {
+    deep_write(resolved_aliases, memory_location, path, taint, kind);
+  }
+}
+
 std::ostream& operator<<(
     std::ostream& out,
     const TaintEnvironment& environment) {

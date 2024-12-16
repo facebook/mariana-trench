@@ -104,6 +104,30 @@ class TaintEnvironment final : public sparta::AbstractDomain<TaintEnvironment> {
       const MemoryLocationsDomain& memory_locations,
       const Path& path) const;
 
+  /**
+   * Write the given taint tree at the deepest memory locations reachable from
+   * the root. The deepest memory location is found using the resolved aliases
+   * points-to tree.
+   */
+  void deep_write(
+      const ResolvedAliasesMap& resolved_aliases,
+      MemoryLocation* memory_location,
+      const Path& path,
+      TaintTree taint,
+      UpdateKind kind);
+
+  /**
+   * Write the given taint tree at the deepest memory locations reachable from
+   * the roots in the memory locations domain. The deepest memory location is
+   * found using the resolved aliases points-to tree.
+   */
+  void deep_write(
+      const ResolvedAliasesMap& resolved_aliases,
+      const MemoryLocationsDomain& memory_locations,
+      const Path& path,
+      TaintTree taint,
+      UpdateKind kind);
+
   friend std::ostream& operator<<(
       std::ostream& out,
       const marianatrench::TaintEnvironment& taint);
