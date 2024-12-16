@@ -9,7 +9,7 @@
       "generations" :
       [
         {
-          "port" : "Argument(0).successor.successor",
+          "port" : "Argument(0).successor",
           "taint" :
           [
             {
@@ -42,6 +42,13 @@
                   "preserves_type_context" : true
                 }
               ],
+              "local_features" :
+              {
+                "always_features" :
+                [
+                  "via-widen-broadening"
+                ]
+              },
               "local_positions" :
               [
                 {

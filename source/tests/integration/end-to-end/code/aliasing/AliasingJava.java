@@ -243,7 +243,6 @@ public class AliasingJava {
     output.bar = input.foo;
 
     // Expect 1 issue for Source4.
-    // FN without shallow read on iput.
     Origin.sink(output.bar);
 
     output.bar.baz = source1();
@@ -292,7 +291,6 @@ public class AliasingJava {
     Tree x = new Tree();
     x.foo = parameter.foo.bar;
 
-    // FN without shallow read on iput.
     Origin.sink(x);
   }
 

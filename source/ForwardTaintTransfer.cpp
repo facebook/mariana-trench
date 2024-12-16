@@ -1356,6 +1356,34 @@ bool ForwardTaintTransfer::analyze_iput(
   const auto& aliasing = context->aliasing.get(instruction);
 
   check_flows_to_field_sink(context, environment, instruction);
+  // Shallow read and deep_write to correctly track any taint on the "flat"
+  // representation at the root of the source memory location.
+  auto taint = environment->read(
+      aliasing.register_memory_locations(instruction->src(0)));
+
+  // Store the taint in the memory location(s) representing the field
+  auto* field_name = instruction->get_field()->get_name();
+  auto target_memory_locations =
+      aliasing.register_memory_locations(instruction->src(1));
+
+  for (auto* memory_location : target_memory_locations.elements()) {
+    auto* field_memory_location = memory_location->make_field(field_name);
+    auto taint_copy = taint;
+    add_field_features(context, taint_copy, field_memory_location);
+
+    LOG_OR_DUMP(
+        context,
+        4,
+        "Tainting {} with {} update kind: UpdateKind::Weak",
+        show(field_memory_location),
+        taint_copy);
+    environment->deep_write(
+        aliasing.resolved_aliases(),
+        field_memory_location,
+        taint_copy,
+        UpdateKind::Weak);
+  }
+
   check_artificial_calls_flows(context, aliasing, instruction, environment);
   check_artificial_call_effect_flows(context, aliasing, instruction);
 
