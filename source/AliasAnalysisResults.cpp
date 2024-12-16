@@ -11,20 +11,27 @@
 
 #include <mariana-trench/AliasAnalysisResults.h>
 #include <mariana-trench/Assert.h>
+#include <mariana-trench/Log.h>
 
 namespace marianatrench {
 
 InstructionAliasResults::InstructionAliasResults(
     RegisterMemoryLocationsMap register_memory_locations_map,
+    ResolvedAliasesMap aliases,
     std::optional<MemoryLocationsDomain> result_memory_locations,
     DexPosition* MT_NULLABLE position)
     : register_memory_locations_map_(std::move(register_memory_locations_map)),
+      aliases_(std::move(aliases)),
       result_memory_locations_(std::move(result_memory_locations)),
       position_(position) {}
 
 const RegisterMemoryLocationsMap&
 InstructionAliasResults::register_memory_locations_map() const {
   return register_memory_locations_map_;
+}
+
+const ResolvedAliasesMap& InstructionAliasResults::resolved_aliases() const {
+  return aliases_;
 }
 
 MemoryLocationsDomain InstructionAliasResults::register_memory_locations(
@@ -79,9 +86,35 @@ const InstructionAliasResults& AliasAnalysisResults::get(
   return it->second;
 }
 
+std::ostream& operator<<(
+    std::ostream& out,
+    const InstructionAliasResults& results) {
+  out << "InstructionAliasResults(\nregister_memory_locations_map={\n";
+  for (const auto& [register_id, memory_locations] :
+       results.register_memory_locations_map()) {
+    out << fmt::format("{} -> {},\n", register_id, memory_locations);
+  }
+
+  out << "},\nresolved_aliases={\n";
+  for (const auto& [memory_location, aliases] : results.resolved_aliases()) {
+    out << fmt::format("{} -> {},\n", show(memory_location), aliases);
+  }
+
+  out << "},\nresult_memory_locations="
+      << show(results.result_memory_location_or_null());
+
+  out << ",\nposition=" << show(results.position());
+
+  return out << ")";
+}
+
 void AliasAnalysisResults::store(
     const IRInstruction* instruction,
     InstructionAliasResults results) {
+  LOG(5,
+      "Storing instruction alias results for `{}`: {}",
+      show(instruction),
+      results);
   instructions_.insert_or_assign(instruction, std::move(results));
 }
 

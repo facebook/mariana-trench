@@ -90,4 +90,9 @@ void add_field_features(
     TaintTree& taint_tree,
     const FieldMemoryLocation* field_memory_location);
 
+/* Get the locally inferred feature to add to the aliasing memory location */
+FeatureMayAlwaysSet get_field_features(
+    MethodContext* context,
+    const FieldMemoryLocation* field_memory_location);
+
 } // namespace marianatrench

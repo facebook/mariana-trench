@@ -132,6 +132,12 @@ void PointsToEnvironment::write(
   auto [remaining_path, target_memory_locations] =
       resolved_aliases.raw_read_max_path(memory_location->path());
 
+  if (kind == UpdateKind::Strong && target_memory_locations.root().size() > 1) {
+    // In practice, only one of the memory location is affected, so we must
+    // treat this as a weak update, even if a strong update was requested.
+    kind = UpdateKind::Weak;
+  }
+
   Path full_path = remaining_path;
   full_path.append(PathElement::field(field));
 

@@ -384,15 +384,24 @@ bool is_inner_class_this(const FieldMemoryLocation* location) {
 
 } // namespace
 
+FeatureMayAlwaysSet get_field_features(
+    MethodContext* context,
+    const FieldMemoryLocation* field_memory_location) {
+  if (!is_inner_class_this(field_memory_location)) {
+    return FeatureMayAlwaysSet::bottom();
+  }
+  return FeatureMayAlwaysSet::make_always(
+      {context->feature_factory.get("via-inner-class-this")});
+}
+
 void add_field_features(
     MethodContext* context,
     TaintTree& taint_tree,
     const FieldMemoryLocation* field_memory_location) {
-  if (!is_inner_class_this(field_memory_location)) {
+  auto features = get_field_features(context, field_memory_location);
+  if (features.is_bottom()) {
     return;
   }
-  auto features = FeatureMayAlwaysSet::make_always(
-      {context->feature_factory.get("via-inner-class-this")});
   taint_tree.add_locally_inferred_features(features);
 }
 

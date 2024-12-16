@@ -8,6 +8,7 @@
 #include <mariana-trench/ForwardAliasTransfer.h>
 #include <mariana-trench/KotlinHeuristics.h>
 #include <mariana-trench/Log.h>
+#include <mariana-trench/Positions.h>
 #include <mariana-trench/TransferCall.h>
 
 namespace marianatrench {
@@ -65,12 +66,41 @@ bool ForwardAliasTransfer::analyze_iget(
   mt_assert(instruction->srcs_size() == 1);
   mt_assert(instruction->has_field());
 
-  // Read source memory locations that represents the field.
-  auto memory_locations = environment->memory_locations(
-      /* register */ instruction->src(0),
-      /* field */ instruction->get_field()->get_name());
-  LOG_OR_DUMP(context, 4, "Setting result register to {}", memory_locations);
-  environment->assign(k_result_register, memory_locations);
+  // Read source memory locations that stores the fields.
+  auto source_memory_locations =
+      environment->memory_locations(instruction->src(0));
+
+  auto* field = instruction->get_field()->get_name();
+  MemoryLocationsDomain field_memory_locations;
+
+  // Check if root memory location exists for this field access and
+  // create otherwise.
+  for (auto* memory_location : source_memory_locations.elements()) {
+    auto* field_memory_location = memory_location->make_field(field);
+    field_memory_locations.add(field_memory_location);
+    if (environment->points_to(field_memory_location).is_bottom()) {
+      auto* root_memory_location =
+          context->memory_factory.make_location(instruction);
+
+      environment->write(
+          memory_location,
+          field,
+          PointsToSet{root_memory_location},
+          UpdateKind::Strong);
+
+      LOG_OR_DUMP(
+          context,
+          4,
+          "Updated points-to tree at memory location: {} field: {} with new root memory location {}",
+          show(root_memory_location),
+          show(memory_location),
+          show(field));
+    }
+  }
+
+  LOG_OR_DUMP(
+      context, 4, "Setting result register to {}", field_memory_locations);
+  environment->assign(k_result_register, field_memory_locations);
 
   return false;
 }
@@ -236,6 +266,45 @@ bool ForwardAliasTransfer::analyze_iput(
     ForwardAliasEnvironment* environment) {
   log_instruction(context, instruction);
 
+  // Update the points-to environment
+  auto source_memory_locations =
+      environment->memory_locations(instruction->src(0));
+
+  auto* field_name = instruction->get_field()->get_name();
+  auto target_memory_locations =
+      environment->memory_locations(instruction->src(1));
+  bool is_singleton = target_memory_locations.singleton() != nullptr;
+
+  auto points_to = environment->points_to(source_memory_locations);
+  auto* position = context->positions.get(
+      context->method(),
+      environment->last_position(),
+      Root(Root::Kind::Return),
+      instruction);
+  points_to.add_local_position(position);
+
+  for (auto* memory_location : target_memory_locations.elements()) {
+    // TODO: T142954672 FieldMemoryLocation can widen consecutive duplicate
+    // paths. Identify when widening and always weak update for widened memory
+    // locations.
+    auto* field_memory_location = memory_location->make_field(field_name);
+    points_to.add_locally_inferred_features(
+        get_field_features(context, field_memory_location));
+
+    LOG(5,
+        "{} updating PointsToTree at {} with {}",
+        is_singleton ? "Strong" : "Weak",
+        show(memory_location),
+        points_to);
+
+    environment->write(
+        memory_location,
+        field_name,
+        points_to,
+        is_singleton ? UpdateKind::Strong : UpdateKind::Weak);
+  }
+
+  // Handle field_write to infer inline as setter.
   const auto& current_field_write = environment->field_write();
   if (!current_field_write.is_bottom()) {
     // We have already seen a `iput` before.
@@ -245,6 +314,7 @@ bool ForwardAliasTransfer::analyze_iput(
 
   environment->set_field_write(
       infer_field_write(context, instruction, environment));
+
   return false;
 }
 
@@ -336,7 +406,9 @@ bool ForwardAliasTransfer::analyze_aget(
   log_instruction(context, instruction);
   mt_assert(instruction->srcs_size() == 2);
 
-  // We use a single memory location for the array and its elements.
+  // aget v0, v1 reads the value from array at v0 at index v1.
+  // We use a single memory location for the array and its elements and ignore
+  // the index.
   auto memory_locations =
       environment->memory_locations(/* register */ instruction->src(0));
   LOG_OR_DUMP(context, 4, "Setting result register to {}", memory_locations);

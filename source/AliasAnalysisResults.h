@@ -17,6 +17,7 @@
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/MemoryLocation.h>
 #include <mariana-trench/MemoryLocationEnvironment.h>
+#include <mariana-trench/PointsToEnvironment.h>
 
 namespace marianatrench {
 
@@ -25,6 +26,7 @@ class InstructionAliasResults final {
  public:
   InstructionAliasResults(
       RegisterMemoryLocationsMap register_memory_locations_map,
+      ResolvedAliasesMap aliases,
       std::optional<MemoryLocationsDomain> result_memory_locations,
       DexPosition* MT_NULLABLE position);
 
@@ -33,6 +35,10 @@ class InstructionAliasResults final {
   /* Mapping from registers to their memory locations *before* the instruction
    * (precondition). */
   const RegisterMemoryLocationsMap& register_memory_locations_map() const;
+
+  /* Mapping from root memory locations to the corresponding resolved points-to
+   * tree after analyzing the instruction */
+  const ResolvedAliasesMap& resolved_aliases() const;
 
   /* Memory locations pointed by the given register *before* the instruction. */
   MemoryLocationsDomain register_memory_locations(Register register_id) const;
@@ -51,8 +57,13 @@ class InstructionAliasResults final {
   /* Position of the instruction, or nullptr. */
   DexPosition* MT_NULLABLE position() const;
 
+  friend std::ostream& operator<<(
+      std::ostream& out,
+      const InstructionAliasResults& instruction_alias_results);
+
  private:
   RegisterMemoryLocationsMap register_memory_locations_map_;
+  ResolvedAliasesMap aliases_;
   std::optional<MemoryLocationsDomain> result_memory_locations_;
   DexPosition* MT_NULLABLE position_;
 };
