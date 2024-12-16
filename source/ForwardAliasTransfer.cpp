@@ -70,7 +70,7 @@ bool ForwardAliasTransfer::analyze_iget(
   auto source_memory_locations =
       environment->memory_locations(instruction->src(0));
 
-  auto* field = instruction->get_field()->get_name();
+  const auto* field = instruction->get_field()->get_name();
   MemoryLocationsDomain field_memory_locations;
 
   // Check if root memory location exists for this field access and
@@ -242,7 +242,7 @@ SetterAccessPathConstantDomain infer_field_write(
     return SetterAccessPathConstantDomain::top();
   }
 
-  auto* field_name = instruction->get_field()->get_name();
+  const auto* field_name = instruction->get_field()->get_name();
   target_access_path->append(PathElement::field(field_name));
 
   // If size of access_path is greater than the max output path size of the
@@ -270,7 +270,7 @@ bool ForwardAliasTransfer::analyze_iput(
   auto source_memory_locations =
       environment->memory_locations(instruction->src(0));
 
-  auto* field_name = instruction->get_field()->get_name();
+  const auto* field_name = instruction->get_field()->get_name();
   auto target_memory_locations =
       environment->memory_locations(instruction->src(1));
   bool is_singleton = target_memory_locations.singleton() != nullptr;

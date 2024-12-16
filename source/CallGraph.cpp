@@ -112,7 +112,7 @@ resolve_field_access(const Method* caller, const IRInstruction* instruction) {
       opcode::is_an_iput(instruction->opcode()) ||
       opcode::is_an_sput(instruction->opcode()));
 
-  DexFieldRef* dex_field_reference = instruction->get_field();
+  const DexFieldRef* dex_field_reference = instruction->get_field();
   mt_assert_log(
       dex_field_reference != nullptr,
       "Field access (iget, sget, iput) instruction has no field reference");

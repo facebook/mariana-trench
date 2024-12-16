@@ -1362,7 +1362,7 @@ bool ForwardTaintTransfer::analyze_iput(
       aliasing.register_memory_locations(instruction->src(0)));
 
   // Store the taint in the memory location(s) representing the field
-  auto* field_name = instruction->get_field()->get_name();
+  const auto* field_name = instruction->get_field()->get_name();
   auto target_memory_locations =
       aliasing.register_memory_locations(instruction->src(1));
 
