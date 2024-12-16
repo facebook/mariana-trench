@@ -12,6 +12,8 @@
 #include <mariana-trench/AliasingProperties.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/MemoryLocation.h>
+#include <mariana-trench/MemoryLocationEnvironment.h>
+#include <mariana-trench/Method.h>
 #include <mariana-trench/PointsToTree.h>
 
 namespace marianatrench {
@@ -109,6 +111,65 @@ class PointsToEnvironment final
 
  private:
   Map environment_;
+};
+
+/**
+ * Mapping from root memory locations to the resolved points-to tree using
+ * a concise representation.
+ */
+class ResolvedAliasesMap final {
+ private:
+  using Map = boost::container::flat_map<RootMemoryLocation*, PointsToTree>;
+
+ public:
+  using iterator = typename Map::const_iterator;
+  using const_iterator = iterator;
+  using key_type = Map::key_type;
+  using mapped_type = Map::value_type;
+  using value_type = std::pair<const key_type, mapped_type>;
+  using difference_type = std::ptrdiff_t;
+  using size_type = std::size_t;
+  using const_reference = const value_type&;
+  using const_pointer = const value_type*;
+
+ private:
+  explicit ResolvedAliasesMap(Map map) : map_(std::move(map)) {}
+
+ public:
+  /**
+   * Delete default constructor so that only way to create this is using the
+   * named constructors.
+   */
+  ResolvedAliasesMap() = delete;
+
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ResolvedAliasesMap)
+
+  iterator begin() const {
+    return map_.begin();
+  }
+
+  iterator end() const {
+    return map_.end();
+  }
+
+  /**
+   * Returns the resolved points-to tree for the given root memory location.
+   */
+  PointsToTree get(RootMemoryLocation* root_memory_location) const;
+
+  /**
+   * Builds the map of resolved points-to trees for the root memory locations
+   * used by the instruction.
+   */
+  static ResolvedAliasesMap from_environments(
+      const Method* method,
+      MemoryFactory& memory_factory,
+      const MemoryLocationEnvironment& memory_locations_environment,
+      const PointsToEnvironment& points_to_environment,
+      const IRInstruction* instruction);
+
+ private:
+  Map map_;
 };
 
 } // namespace marianatrench

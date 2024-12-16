@@ -107,6 +107,7 @@ void PointsToEnvironment::resolve_aliases_internal(
         // The root element of the PointsToTree of a root memory location is
         // always empty.
         mt_assert(!inner_path.empty() || points_to_set.is_bottom());
+
         for (const auto& [points_to, properties] : points_to_set) {
           // Compute the full path for the resolved_aliases tree.
           Path full_path = path;
@@ -137,7 +138,7 @@ void PointsToEnvironment::write(
   for (const auto& [target_memory_location, _properties] :
        target_memory_locations.root()) {
     environment_.update(
-        target_memory_location->root(),
+        target_memory_location,
         [&full_path, &points_tos, kind](const PointsToTree& tree) {
           auto copy = tree;
           // Wrap with a PointsToTree to break aliases (i.e. discard
@@ -163,6 +164,62 @@ std::ostream& operator<<(
     }
     return out << "\n)";
   }
+}
+
+ResolvedAliasesMap ResolvedAliasesMap::from_environments(
+    const Method* method,
+    MemoryFactory& memory_factory,
+    const MemoryLocationEnvironment& memory_locations_environment,
+    const PointsToEnvironment& points_to_environment,
+    const IRInstruction* instruction) {
+  LOG(5,
+      "Building ResolvedAliasesMap for instruction `{}` from points-to environment: {}",
+      show(instruction),
+      points_to_environment);
+
+  Map result{};
+
+  for (Register register_id : instruction->srcs()) {
+    for (auto* source_memory_location :
+         memory_locations_environment.get(register_id)) {
+      if (result.find(source_memory_location->root()) != result.end()) {
+        continue;
+      }
+
+      auto points_to_tree =
+          points_to_environment.resolve_aliases(source_memory_location->root());
+
+      result.insert_or_assign(source_memory_location->root(), points_to_tree);
+    }
+  }
+
+  if (!method->is_static() && opcode::is_a_return(instruction->opcode())) {
+    // analyze return infers generations on the `this` parameter so we need to
+    // provide the memory locations and the associated resolved points-to tree.
+    auto* this_memory_location = memory_factory.make_parameter(0);
+    auto points_to_tree =
+        points_to_environment.resolve_aliases(this_memory_location);
+
+    result.insert_or_assign(this_memory_location, points_to_tree);
+  }
+
+  return ResolvedAliasesMap{std::move(result)};
+}
+
+PointsToTree ResolvedAliasesMap::get(
+    RootMemoryLocation* root_memory_location) const {
+  auto it = map_.find(root_memory_location);
+  if (it == map_.end()) {
+    LOG(4,
+        "No resolved aliases for root memory location `{}`",
+        show(root_memory_location));
+
+    // When no aliases (i.e. points-to tree) is present, the memory location
+    // resolves to itself.
+    return PointsToTree{PointsToSet{root_memory_location}};
+  }
+
+  return it->second;
 }
 
 } // namespace marianatrench
