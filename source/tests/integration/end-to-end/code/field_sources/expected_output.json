@@ -1513,6 +1513,14 @@
               ],
               "preserves_type_context" : true
             }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 45,
+              "line" : 38,
+              "start" : 30
+            }
           ]
         }
       ]

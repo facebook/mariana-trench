@@ -4600,16 +4600,6 @@
           "local_positions" : 
           [
             {
-              "end" : 30,
-              "line" : 244,
-              "start" : 10
-            },
-            {
-              "end" : 32,
-              "line" : 247,
-              "start" : 10
-            },
-            {
               "end" : 49,
               "line" : 241,
               "start" : 10
@@ -4718,16 +4708,6 @@
               "end" : 16,
               "line" : 258,
               "start" : 4
-            },
-            {
-              "end" : 30,
-              "line" : 244,
-              "start" : 10
-            },
-            {
-              "end" : 32,
-              "line" : 247,
-              "start" : 10
             },
             {
               "end" : 49,

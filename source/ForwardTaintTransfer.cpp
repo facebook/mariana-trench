@@ -34,6 +34,12 @@ bool ForwardTaintTransfer::analyze_default(
   log_instruction(context, instruction);
 
   if (instruction->has_dest() || instruction->has_move_result_any()) {
+    // Forward alias analysis creates a fresh memory location and assigns it to
+    // the dest/result register i.e. They do not alias any existing memory
+    // locations. Also, since we can retrieve that memory location directly from
+    // the memory factory, we do not store aliasing results for this
+    // instruction. Hence we directly use write() api without resolved aliases
+    // map here.
     auto* memory_location = context->memory_factory.make_location(instruction);
     LOG_OR_DUMP(context, 4, "Tainting {} with {{}}", show(memory_location));
     environment->write(
@@ -73,7 +79,8 @@ bool ForwardTaintTransfer::analyze_check_cast(
       "Tainting result register at {} with {}",
       show(memory_location),
       taint);
-  environment->write(memory_location, taint, UpdateKind::Strong);
+  environment->deep_write(
+      aliasing.resolved_aliases(), memory_location, taint, UpdateKind::Strong);
 
   return false;
 }
@@ -105,7 +112,11 @@ bool ForwardTaintTransfer::analyze_iget(
           k_result_register,
           memory_locations,
           field_sources);
-      environment->write(memory_locations, field_sources, UpdateKind::Weak);
+      environment->deep_write(
+          aliasing.resolved_aliases(),
+          memory_locations,
+          field_sources,
+          UpdateKind::Weak);
     }
   }
 
@@ -138,8 +149,11 @@ bool ForwardTaintTransfer::analyze_sget(
         k_result_register,
         show(memory_location),
         field_sources);
-    environment->write(
-        memory_location, TaintTree(field_sources), UpdateKind::Strong);
+    environment->deep_write(
+        aliasing.resolved_aliases(),
+        memory_location,
+        TaintTree(field_sources),
+        UpdateKind::Strong);
   }
 
   return false;
@@ -184,7 +198,11 @@ void apply_generations(
             *register_id,
             memory_locations,
             generations);
-        environment->write(memory_locations, generations, UpdateKind::Weak);
+        environment->deep_write(
+            aliasing.resolved_aliases(),
+            memory_locations,
+            generations,
+            UpdateKind::Weak);
         break;
       }
       default:
@@ -226,13 +244,17 @@ void apply_add_features_to_arguments(
     auto register_id = instruction->src(parameter_position);
     auto memory_locations = aliasing.register_memory_locations(register_id);
     for (auto* memory_location : memory_locations.elements()) {
-      auto taint = previous_environment->read(memory_location);
+      auto taint = previous_environment->deep_read(
+          aliasing.resolved_aliases(), memory_location);
       taint.add_locally_inferred_features_and_local_position(
           features, position);
       // This is using a strong update, since a weak update would turn
       // the always-features we want to add into may-features.
-      new_environment->write(
-          memory_location, std::move(taint), UpdateKind::Strong);
+      new_environment->deep_write(
+          aliasing.resolved_aliases(),
+          memory_location,
+          std::move(taint),
+          UpdateKind::Strong);
     }
   }
 }
@@ -277,7 +299,8 @@ void apply_propagations(
     }
 
     auto input_register_id = instruction->src(input_parameter_position);
-    auto input_taint_tree = previous_environment->read(
+    auto input_taint_tree = previous_environment->deep_read(
+        aliasing.resolved_aliases(),
         aliasing.register_memory_locations(input_register_id),
         input_path.path().resolve(source_constant_arguments));
 
@@ -400,7 +423,8 @@ void apply_propagations(
                 memory_locations,
                 output_path_resolved,
                 output_taint_tree);
-            new_environment->write(
+            new_environment->deep_write(
+                aliasing.resolved_aliases(),
                 memory_locations,
                 output_path_resolved,
                 std::move(output_taint_tree),
@@ -418,14 +442,17 @@ void apply_propagations(
 
 void apply_inline_setter(
     MethodContext* context,
+    const InstructionAliasResults& aliasing,
     const SetterInlineMemoryLocations& setter,
     const ForwardTaintEnvironment* previous_environment,
     ForwardTaintEnvironment* environment,
     TaintTree& result_taint) {
-  auto taint = previous_environment->read(setter.value);
+  auto taint = previous_environment->deep_read(
+      aliasing.resolved_aliases(), setter.value);
   taint.add_local_position(setter.position);
   LOG_OR_DUMP(context, 4, "Tainting {} with {}", show(setter.target), taint);
-  environment->write(setter.target, taint, UpdateKind::Strong);
+  environment->deep_write(
+      aliasing.resolved_aliases(), setter.target, taint, UpdateKind::Strong);
 
   result_taint = TaintTree::bottom();
 }
@@ -874,7 +901,8 @@ void check_call_flows(
 
     Taint sources =
         environment
-            ->read(
+            ->deep_read(
+                aliasing.resolved_aliases(),
                 aliasing.register_memory_locations(*register_id),
                 port.path().resolve(source_constant_arguments))
             .collapse(FeatureMayAlwaysSet{
@@ -972,7 +1000,10 @@ void check_flows_to_array_allocation(
        parameter_position++) {
     auto register_id = instruction->src(parameter_position);
     Taint sources =
-        environment->read(aliasing.register_memory_locations(register_id))
+        environment
+            ->deep_read(
+                aliasing.resolved_aliases(),
+                aliasing.register_memory_locations(register_id))
             .collapse(FeatureMayAlwaysSet{
                 context->feature_factory.get_issue_broadening_feature()});
     // Fulfilled partial sinks ignored. No partial sinks for array allocation.
@@ -1200,7 +1231,12 @@ bool ForwardTaintTransfer::analyze_invoke(
           callee);
       setter) {
     apply_inline_setter(
-        context, *setter, &previous_environment, environment, result_taint);
+        context,
+        aliasing,
+        *setter,
+        &previous_environment,
+        environment,
+        result_taint);
   } else {
     apply_propagations(
         context,
@@ -1239,7 +1275,11 @@ bool ForwardTaintTransfer::analyze_invoke(
     auto* memory_location = aliasing.result_memory_location();
     LOG_OR_DUMP(
         context, 4, "Tainting {} with {}", show(memory_location), result_taint);
-    environment->write(memory_location, result_taint, UpdateKind::Weak);
+    environment->deep_write(
+        aliasing.resolved_aliases(),
+        memory_location,
+        result_taint,
+        UpdateKind::Weak);
   }
 
   check_artificial_calls_flows(
@@ -1253,16 +1293,11 @@ namespace {
 
 void check_flows_to_field_sink(
     MethodContext* context,
-    const IRInstruction* instruction,
-    const TaintTree& source_taint,
-    const Position* position) {
+    ForwardTaintEnvironment* environment,
+    const IRInstruction* instruction) {
   mt_assert(
       opcode::is_an_sput(instruction->opcode()) ||
       opcode::is_an_iput(instruction->opcode()));
-
-  if (source_taint.is_bottom()) {
-    return;
-  }
 
   const auto field_target =
       context->call_graph.resolved_field_access(context->method(), instruction);
@@ -1281,6 +1316,20 @@ void check_flows_to_field_sink(
   if (field_sinks.is_bottom()) {
     return;
   }
+
+  auto source_taint = environment->deep_read(
+      aliasing.resolved_aliases(),
+      aliasing.register_memory_locations(instruction->src(0)));
+
+  if (source_taint.is_bottom()) {
+    return;
+  }
+
+  auto* position = context->positions.get(
+      context->method(),
+      aliasing.position(),
+      Root(Root::Kind::Return),
+      instruction);
 
   for (const auto& [port, sources] : source_taint.elements()) {
     check_sources_sinks_flows(
@@ -1303,43 +1352,10 @@ bool ForwardTaintTransfer::analyze_iput(
     const IRInstruction* instruction,
     ForwardTaintEnvironment* environment) {
   log_instruction(context, instruction);
+  // iput is handled in forward alias analysis and is no-op for taint.
   const auto& aliasing = context->aliasing.get(instruction);
 
-  auto taint = environment->read(
-      aliasing.register_memory_locations(instruction->src(0)));
-  auto* position = context->positions.get(
-      context->method(),
-      aliasing.position(),
-      Root(Root::Kind::Return),
-      instruction);
-  taint.add_local_position(position);
-
-  check_flows_to_field_sink(context, instruction, taint, position);
-
-  // Store the taint in the memory location(s) representing the field
-  auto* field_name = instruction->get_field()->get_name();
-  auto target_memory_locations =
-      aliasing.register_memory_locations(instruction->src(1));
-  bool is_singleton = target_memory_locations.singleton() != nullptr;
-
-  for (auto* memory_location : target_memory_locations.elements()) {
-    auto* field_memory_location = memory_location->make_field(field_name);
-    auto taint_copy = taint;
-    add_field_features(context, taint_copy, field_memory_location);
-
-    LOG_OR_DUMP(
-        context,
-        4,
-        "Tainting {} with {} update kind: {}",
-        show(field_memory_location),
-        taint_copy,
-        (is_singleton ? "Strong" : "Weak"));
-    environment->write(
-        field_memory_location,
-        taint_copy,
-        is_singleton ? UpdateKind::Strong : UpdateKind::Weak);
-  }
-
+  check_flows_to_field_sink(context, environment, instruction);
   check_artificial_calls_flows(context, aliasing, instruction, environment);
   check_artificial_call_effect_flows(context, aliasing, instruction);
 
@@ -1351,20 +1367,12 @@ bool ForwardTaintTransfer::analyze_sput(
     const IRInstruction* instruction,
     ForwardTaintEnvironment* environment) {
   log_instruction(context, instruction);
-  const auto& aliasing = context->aliasing.get(instruction);
 
-  auto taint = environment->read(
-      aliasing.register_memory_locations(instruction->src(0)));
-  if (taint.is_bottom()) {
-    return false;
-  }
-  auto* position = context->positions.get(
-      context->method(),
-      aliasing.position(),
-      Root(Root::Kind::Return),
-      instruction);
-  taint.add_local_position(position);
-  check_flows_to_field_sink(context, instruction, taint, position);
+  // analyze_sput() only checks for flows to field sinks defined on static
+  // fields. We do not handle taint propagations through writes to static
+  // fields (i.e. globals).
+  check_flows_to_field_sink(context, environment, instruction);
+
   return false;
 }
 
@@ -1439,7 +1447,8 @@ bool ForwardTaintTransfer::analyze_aput(
   log_instruction(context, instruction);
   const auto& aliasing = context->aliasing.get(instruction);
 
-  auto taint = environment->read(
+  auto taint = environment->deep_read(
+      aliasing.resolved_aliases(),
       aliasing.register_memory_locations(instruction->src(0)));
 
   auto features = FeatureMayAlwaysSet::make_always(
@@ -1451,7 +1460,9 @@ bool ForwardTaintTransfer::analyze_aput(
       instruction);
   taint.add_locally_inferred_features_and_local_position(features, position);
 
-  // We use a single memory location for the array and its elements.
+  // aput v0, v1, v2 implies propagation from v0 to array at v1 at index v2.
+  // We use a single memory location for the array and its elements and ignore
+  // the index.
   auto memory_locations =
       aliasing.register_memory_locations(instruction->src(1));
   LOG_OR_DUMP(
@@ -1461,7 +1472,8 @@ bool ForwardTaintTransfer::analyze_aput(
       instruction->src(1),
       memory_locations,
       taint);
-  environment->write(memory_locations, taint, UpdateKind::Weak);
+  environment->deep_write(
+      aliasing.resolved_aliases(), memory_locations, taint, UpdateKind::Weak);
 
   return false;
 }
@@ -1494,10 +1506,16 @@ bool ForwardTaintTransfer::analyze_filled_new_array(
       instruction);
 
   mt_assert(instruction->srcs_size() >= 1);
-  auto taint = environment->read(
+  // filled-new-array v0, v1, ..., [<Type> creates a new array for type <Type>
+  // and assigns the values from the range of input registers v0, v1, ...
+  // We join the taints from all the input locations and create a single memory
+  // location for the array and its elements (ignoring the indices).
+  auto taint = environment->deep_read(
+      aliasing.resolved_aliases(),
       aliasing.register_memory_locations(instruction->src(0)));
   for (size_t i = 1; i < instruction->srcs_size(); ++i) {
-    taint.join_with(environment->read(
+    taint.join_with(environment->deep_read(
+        aliasing.resolved_aliases(),
         aliasing.register_memory_locations(instruction->src(i))));
   }
 
@@ -1522,8 +1540,9 @@ static bool analyze_numerical_operator(
 
   TaintTree taint;
   for (auto register_id : instruction->srcs()) {
-    taint.join_with(
-        environment->read(aliasing.register_memory_locations(register_id)));
+    taint.join_with(environment->deep_read(
+        aliasing.resolved_aliases(),
+        aliasing.register_memory_locations(register_id)));
   }
 
   auto features = FeatureMayAlwaysSet::make_always(
@@ -1642,11 +1661,14 @@ bool ForwardTaintTransfer::analyze_return(
     auto register_id = instruction->src(0);
     auto memory_locations = aliasing.register_memory_locations(register_id);
     infer_output_taint(
-        context, Root(Root::Kind::Return), environment->read(memory_locations));
+        context,
+        Root(Root::Kind::Return),
+        environment->deep_read(aliasing.resolved_aliases(), memory_locations));
 
     for (const auto& [path, sinks] : return_sinks.elements()) {
       Taint sources =
-          environment->read(memory_locations, path)
+          environment
+              ->deep_read(aliasing.resolved_aliases(), memory_locations, path)
               .collapse(FeatureMayAlwaysSet{
                   context->feature_factory.get_issue_broadening_feature()});
       // Fulfilled partial sinks are not expected to be produced here. Return
@@ -1668,7 +1690,9 @@ bool ForwardTaintTransfer::analyze_return(
     infer_output_taint(
         context,
         Root(Root::Kind::Argument, 0),
-        environment->read(context->memory_factory.make_parameter(0)));
+        environment->deep_read(
+            aliasing.resolved_aliases(),
+            context->memory_factory.make_parameter(0)));
   }
 
   return false;
