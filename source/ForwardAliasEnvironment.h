@@ -17,6 +17,8 @@
 #include <mariana-trench/Compiler.h>
 #include <mariana-trench/MemoryLocation.h>
 #include <mariana-trench/MemoryLocationEnvironment.h>
+#include <mariana-trench/PointsToEnvironment.h>
+#include <mariana-trench/PointsToTree.h>
 #include <mariana-trench/SetterAccessPathConstantDomain.h>
 
 namespace marianatrench {
@@ -37,6 +39,7 @@ class ForwardAliasEnvironment final
 
   ForwardAliasEnvironment(
       MemoryLocationEnvironment memory_locations,
+      PointsToEnvironment aliases,
       DexPositionDomain position,
       LastParameterLoadDomain last_parameter_load,
       SetterAccessPathConstantDomain field_write);
@@ -80,6 +83,8 @@ class ForwardAliasEnvironment final
 
   const MemoryLocationEnvironment& memory_location_environment() const;
 
+  const PointsToEnvironment& points_to_environment() const;
+
   DexPosition* MT_NULLABLE last_position() const;
   void set_last_position(DexPosition* position);
   const LastParameterLoadDomain& last_parameter_loaded() const;
@@ -89,12 +94,23 @@ class ForwardAliasEnvironment final
 
   void increment_last_parameter_loaded();
 
+  PointsToSet points_to(MemoryLocation* memory_location) const;
+
+  PointsToSet points_to(const MemoryLocationsDomain& memory_locations) const;
+
+  void write(
+      MemoryLocation* memory_location,
+      const DexString* field,
+      const PointsToSet& points_tos,
+      UpdateKind kind);
+
   friend std::ostream& operator<<(
       std::ostream& out,
       const ForwardAliasEnvironment& environment);
 
  private:
   MemoryLocationEnvironment memory_locations_;
+  PointsToEnvironment aliases_;
   DexPositionDomain position_;
   LastParameterLoadDomain last_parameter_load_;
 
