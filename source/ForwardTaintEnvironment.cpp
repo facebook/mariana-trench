@@ -140,42 +140,6 @@ void ForwardTaintEnvironment::write(
   }
 }
 
-PointsToSet ForwardTaintEnvironment::points_to(
-    MemoryLocation* memory_location) const {
-  auto points_tos = environment_.points_to(memory_location);
-
-  LOG(5,
-      "Resolved points-to for memory location {} to {}",
-      show(memory_location),
-      points_tos);
-
-  return points_tos;
-}
-
-PointsToSet ForwardTaintEnvironment::points_to(
-    const MemoryLocationsDomain& memory_locations) const {
-  auto points_tos = environment_.points_to(memory_locations);
-  LOG(5,
-      "Resolved points-to for memory location {} to {}",
-      show(memory_locations),
-      points_tos);
-  return points_tos;
-}
-
-void ForwardTaintEnvironment::write(
-    MemoryLocation* memory_location,
-    const DexString* field,
-    const PointsToSet& points_tos,
-    UpdateKind kind) {
-  LOG(5,
-      "{} updating PointsToTree at {} with {}",
-      kind == UpdateKind::Strong ? "Strong" : "Weak",
-      show(memory_location),
-      points_tos);
-
-  environment_.write(memory_location, field, points_tos, kind);
-}
-
 std::ostream& operator<<(
     std::ostream& out,
     const ForwardTaintEnvironment& environment) {
