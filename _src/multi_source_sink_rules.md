@@ -3,6 +3,7 @@ id: multi-source-sink-rules
 title: Multi-Source, Multi-Sink Rules
 sidebar_label: Multi-Source, Multi-Sink Rules
 ---
+### Multi-Source, Multi-Sink Rules
 
 Multi-source multi-sink rules are used to track the flow of taint from multiple sources to multiple sinks. This can, for example, be useful if you want to track both the source types "SensitiveData" and "WorldReadableFileLocation" to an IO operation as displayed in the code below.
 
