@@ -5,6 +5,7 @@ sidebar_label: Rules
 ---
 
 import MultiSourceSinkRule from './multi_source_sink_rules.md';
+import ExploitabilityRules from './exploitability_rules.md';
 
 <!-- Careful saving this file, weird formatting happens to json blocks -->
 
@@ -60,3 +61,5 @@ The flow will only be created if UriQueryParameter flows through IntentData and 
 See [Models and Model Generators](./models.md#propagation-with-transforms) for how to model transforms.
 
 <MultiSourceSinkRule />
+
+<ExploitabilityRules />
