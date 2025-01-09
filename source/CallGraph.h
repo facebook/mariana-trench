@@ -226,6 +226,13 @@ struct FieldTarget {
   friend std::ostream& operator<<(std::ostream& out, const FieldTarget& callee);
 };
 
+struct CallGraphStats {
+  int num_virtual_callsites = 0;
+  double average_targets_per_virtual_callsite = 0;
+  int p50_targets_per_virtual_callsite = 0;
+  int p90_targets_per_virtual_callsite = 0;
+};
+
 class CallGraph final {
  public:
   explicit CallGraph(
@@ -300,6 +307,9 @@ class CallGraph final {
       bool with_overrides = true,
       const std::size_t batch_size =
           JsonValidation::k_default_shard_limit) const;
+
+  CallGraphStats compute_stats() const;
+  void log_call_graph_stats() const;
 
  private:
   const Types& types_;

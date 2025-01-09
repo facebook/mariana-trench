@@ -458,4 +458,63 @@ TEST_F(CallGraphTest, ArrayAllocation) {
       expected_array_allocation_indices.end()));
 }
 
+TEST_F(CallGraphTest, Stats) {
+  Scope scope;
+
+  marianatrench::redex::create_void_method(scope, "LUtil;", "call");
+  auto* inherited_dex_method = marianatrench::redex::create_void_method(
+      scope,
+      "LParent;",
+      "inherited_method",
+      /* parameter_types */ "",
+      /* return_type */ "V",
+      /* super */ nullptr);
+  marianatrench::redex::create_void_method(
+      scope,
+      "LChild1;",
+      "inherited_method",
+      /* parameter_types */ "",
+      /* return_type */ "V",
+      /* super */ inherited_dex_method->get_class());
+  marianatrench::redex::create_void_method(
+      scope,
+      "LChild2;",
+      "inherited_method",
+      /* parameter_types */ "",
+      /* return_type */ "V",
+      /* super */ inherited_dex_method->get_class());
+  marianatrench::redex::create_method(scope, "LMainActivity;", R"(
+    (method (public) "LMainActivity;.onCreate:(LParent;LChild1;)V"
+     (
+      (load-param-object v0)
+      (load-param-object v1)
+      (load-param-object v2)
+      (invoke-virtual (v1) "LParent;.unresolved_method:()V")
+      (invoke-direct (v0) "LUtil;.call:()V")
+      (invoke-direct (v2) "LParent;.inherited_method:()V")
+      (invoke-virtual (v2) "LChild1;.inherited_method:()V")
+      (invoke-virtual (v2) "LChild1;.inherited_method:()V")
+      (invoke-virtual (v1) "LParent;.inherited_method:()V")
+      (invoke-virtual (v1) "LParent;.inherited_method:()V")
+      (invoke-virtual (v2) "LChild1;.inherited_method:()V")
+      (return-void)
+     )
+    )
+  )");
+  DexStore store("stores");
+  store.add_classes(scope);
+
+  auto context = test::make_context(store);
+  auto stats = context.call_graph->compute_stats();
+
+  EXPECT_EQ(stats.num_virtual_callsites, 5);
+  // The first 3 call-sites are ignored (unresolved or not virtual).
+  // Calls to Parent.*() resolve to 3 targets (Parent, Child1, Child2).
+  // Calls to Child1.*() resolve to 1 target.
+  // Histogram of num targets per call-site: [1, 1, 3, 3, 1]
+  EXPECT_DOUBLE_EQ(stats.average_targets_per_virtual_callsite, 9 / 5.0);
+  EXPECT_EQ(stats.p50_targets_per_virtual_callsite, 1);
+  EXPECT_EQ(stats.p90_targets_per_virtual_callsite, 3);
+}
+
 } // namespace marianatrench
