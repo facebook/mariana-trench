@@ -67,16 +67,8 @@
       "where": [
         {
           "constraint": "signature_match",
-          "extends": "Landroid/webkit/WebView;",
+          "parent": "Landroid/webkit/WebView;",
           "name": "loadUrl"
-        },
-        {
-          "constraint": "not",
-          "inner": {
-            "constraint": "signature_match",
-            "extends": "Lcom/facebook/secure/securewebview/SecureWebView;",
-            "name": "loadUrl"
-          }
         }
       ],
       "model": {
