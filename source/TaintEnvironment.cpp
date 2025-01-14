@@ -125,20 +125,23 @@ void TaintEnvironment::deep_write(
     const Path& path,
     TaintTree taint,
     UpdateKind kind) {
+  const auto& points_to_tree = resolved_aliases.get(memory_location->root());
+
+  auto full_path = memory_location->path();
+  full_path.extend(path);
+
   LOG(5,
       "{} update taint tree at: {} path `{}` with {}",
       kind == UpdateKind::Strong ? "Strong" : "Weak",
-      show(memory_location),
-      path,
+      show(memory_location->root()),
+      full_path,
       taint);
 
-  const auto& points_to_tree = resolved_aliases.get(memory_location->root());
-
-  auto [remaining_path, target_memory_locations] =
-      points_to_tree.raw_read_max_path(memory_location->path());
-
-  Path full_path = remaining_path;
-  full_path.extend(path);
+  // Manually destructuring a pair as cpp17 doesn't allow us to capture
+  // destructured variables in lambda below.
+  auto raw_read_result = points_to_tree.raw_read_max_path(full_path);
+  auto remaining_path = raw_read_result.first;
+  auto target_memory_locations = raw_read_result.second;
 
   if (kind == UpdateKind::Strong && target_memory_locations.root().size() > 1) {
     // In practice, only one of the memory location is affected, so we must
@@ -148,21 +151,21 @@ void TaintEnvironment::deep_write(
 
   for (const auto& [target_memory_location, properties] :
        target_memory_locations.root()) {
-    taint.apply_aliasing_properties(properties);
+    auto taint_to_write = taint;
+    taint_to_write.apply_aliasing_properties(properties);
 
     LOG(5,
-        "{} updating taint tree of {}. Root: {}, {} with: {}",
+        "{} updating taint tree of {} at {} with: {}",
         kind == UpdateKind::Strong ? "Strong" : "Weak",
         show(target_memory_location),
-        show(target_memory_location->root()),
-        full_path,
-        taint);
+        remaining_path,
+        taint_to_write);
 
     environment_.update(
         target_memory_location,
-        [&full_path, &taint, kind](const TaintTree& tree) {
+        [&remaining_path, &taint_to_write, kind](const TaintTree& tree) {
           auto copy = tree;
-          copy.write(full_path, taint, kind);
+          copy.write(remaining_path, std::move(taint_to_write), kind);
           return copy;
         });
   }
