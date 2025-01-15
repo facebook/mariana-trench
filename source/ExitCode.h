@@ -27,7 +27,7 @@ class ExitCode {
                                                                             \
   static int NAME(const std::string& message) {                             \
     std::cerr << "MarianaTrench " << #NAME << ": " << message << std::endl; \
-    marianatrench::EventLogger::log_event(#NAME, message);                  \
+    marianatrench::EventLogger::log_event(#NAME, message, 1);               \
     return NAME();                                                          \
   }
 #include "ExitCodes.def"

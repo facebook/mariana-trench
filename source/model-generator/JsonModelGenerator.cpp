@@ -161,7 +161,8 @@ JsonModelGenerator::JsonModelGenerator(
     } else {
       auto error = fmt::format("Models for `{}` are not supported.", find_name);
       ERROR(1, error);
-      EventLogger::log_event("model_generator_error", error);
+      EventLogger::log_event(
+          "model_generator_error", error, /* verbosity_level */ 1);
     }
   }
 }

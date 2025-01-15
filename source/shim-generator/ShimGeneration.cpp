@@ -46,7 +46,8 @@ std::vector<ShimGenerator> get_shim_generators(
       auto error =
           fmt::format("Shim models for `{}` are not supported.", find_name);
       ERROR(1, error);
-      EventLogger::log_event("shim_generator_error", error);
+      EventLogger::log_event(
+          "shim_generator_error", error, /* verbosity level */ 1);
     }
   }
 
@@ -76,7 +77,8 @@ Shims ShimGeneration::run(
       auto error = fmt::format(
           "Unable to parse shim generator at `{}`: {}", path, exception.what());
       WARNING(3, error);
-      EventLogger::log_event("shim_generator_error", error);
+      EventLogger::log_event(
+          "shim_generator_error", error, /* verbosity_level */ 3);
     }
   }
 

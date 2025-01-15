@@ -138,7 +138,7 @@ ClassProperties::ClassProperties(
     // Redex may assert, or throw `std::runtime_error` if the file is missing.
     auto error = fmt::format("Manifest could not be parsed: {}", e.what());
     ERROR(1, error);
-    EventLogger::log_event("manifest_error", error, 1);
+    EventLogger::log_event("manifest_error", error, /* verbosity_level */ 1);
   }
 
   std::mutex mutex;

@@ -341,7 +341,8 @@ void process_shim_target(
             "Could not resolve method for shim target: {} at instruction {} in caller: {}",
             shim_target,
             show(instruction),
-            caller->show()));
+            caller->show()),
+        /* verbosity_level */ 1);
     return;
   }
 
@@ -401,7 +402,8 @@ void process_shim_reflection(
             "Could not resolve receiver type for shim reflection target: {} at instruction: {} in caller: {}",
             shim_reflection,
             show(instruction),
-            caller->show()));
+            caller->show()),
+        /* verbosity_level */ 1);
     return;
   }
 
@@ -418,7 +420,8 @@ void process_shim_reflection(
             "Could not resolve method for shim reflection target: {} at instruction {} in caller: {}",
             shim_reflection,
             show(instruction),
-            caller->show()));
+            caller->show()),
+        /* verbosity_level */ 1);
     return;
   }
 
@@ -469,7 +472,8 @@ void process_shim_lifecycle(
             "Could not resolve receiver type for shim lifecycle target: {} at instruction: {} in caller: {}",
             shim_lifecycle,
             show(instruction),
-            caller->show()));
+            caller->show()),
+        /* verbosity_level */ 1);
     return;
   }
 
@@ -479,7 +483,8 @@ void process_shim_lifecycle(
     // name, or not providing life-cycles JSON, etc.
     EventLogger::log_event(
         "shim_lifecycle_method_not_found",
-        fmt::format("Specified lifecycle method not found: `{}`", method_name));
+        fmt::format("Specified lifecycle method not found: `{}`", method_name),
+        /* verbosity_level */ 1);
     return;
   }
 
@@ -504,7 +509,8 @@ void process_shim_lifecycle(
             shim_lifecycle,
             show(instruction),
             caller->show(),
-            types_logging));
+            types_logging),
+        /* verbosity_level */ 1);
     return;
   } else if (
       target_lifecycle_methods.size() >= heuristics.join_override_threshold()) {
@@ -522,7 +528,8 @@ void process_shim_lifecycle(
             show(instruction),
             caller->show(),
             heuristics.join_override_threshold(),
-            types_logging));
+            types_logging),
+        /* verbosity_level */ 1);
     return;
   } else {
     EventLogger::log_event(
@@ -533,7 +540,8 @@ void process_shim_lifecycle(
             target_lifecycle_methods.size(),
             show(instruction),
             caller->show(),
-            types_logging));
+            types_logging),
+        /* verbosity_level */ 1);
   }
 
   for (const auto* lifecycle_method : target_lifecycle_methods) {
@@ -1533,60 +1541,74 @@ void CallGraph::log_call_graph_stats() const {
   EventLogger::log_event(
       "call_graph_num_virtual_callsites",
       /* message */ "",
-      /* value */ stats.virtual_callsites_stats.total);
+      /* value */ stats.virtual_callsites_stats.total,
+      /* verbosity_level */ 1);
   EventLogger::log_event(
       "call_graph_average_targets_per_virtual_callsite",
       /* message */ "",
-      /* value */ stats.virtual_callsites_stats.average);
+      /* value */ stats.virtual_callsites_stats.average,
+      /* verbosity_level */ 1);
   EventLogger::log_event(
       "call_graph_p50_targets_per_virtual_callsite",
       /* message */ "",
-      /* value */ stats.virtual_callsites_stats.p50);
+      /* value */ stats.virtual_callsites_stats.p50,
+      /* verbosity_level */ 1);
   EventLogger::log_event(
       "call_graph_p90_targets_per_virtual_callsite",
       /* message */ "",
-      /* value */ stats.virtual_callsites_stats.p90);
+      /* value */ stats.virtual_callsites_stats.p90,
+      /* verbosity_level */ 1);
   EventLogger::log_event(
       "call_graph_p99_targets_per_virtual_callsite",
       /* message */ "",
-      /* value */ stats.virtual_callsites_stats.p99);
+      /* value */ stats.virtual_callsites_stats.p99,
+      /* verbosity_level */ 1);
   EventLogger::log_event(
       "call_graph_min_targets_per_virtual_callsite",
       /* message */ "",
-      /* value */ stats.virtual_callsites_stats.min);
+      /* value */ stats.virtual_callsites_stats.min,
+      /* verbosity_level */ 1);
   EventLogger::log_event(
       "call_graph_max_targets_per_virtual_callsite",
       /* message */ "",
-      /* value */ stats.virtual_callsites_stats.max);
+      /* value */ stats.virtual_callsites_stats.max,
+      /* verbosity_level */ 1);
 
   EventLogger::log_event(
       "call_graph_num_artificial_callsites",
       /* message */ "",
-      /* value */ stats.artificial_callsites_stats.total);
+      /* value */ stats.artificial_callsites_stats.total,
+      /* verbosity_level */ 1);
   EventLogger::log_event(
       "call_graph_average_targets_per_artificial_callsite",
       /* message */ "",
-      /* value */ stats.artificial_callsites_stats.average);
+      /* value */ stats.artificial_callsites_stats.average,
+      /* verbosity_level */ 1);
   EventLogger::log_event(
       "call_graph_p50_targets_per_artificial_callsite",
       /* message */ "",
-      /* value */ stats.artificial_callsites_stats.p50);
+      /* value */ stats.artificial_callsites_stats.p50,
+      /* verbosity_level */ 1);
   EventLogger::log_event(
       "call_graph_p90_targets_per_artificial_callsite",
       /* message */ "",
-      /* value */ stats.artificial_callsites_stats.p90);
+      /* value */ stats.artificial_callsites_stats.p90,
+      /* verbosity_level */ 1);
   EventLogger::log_event(
       "call_graph_p99_targets_per_artificial_callsite",
       /* message */ "",
-      /* value */ stats.artificial_callsites_stats.p99);
+      /* value */ stats.artificial_callsites_stats.p99,
+      /* verbosity_level */ 1);
   EventLogger::log_event(
       "call_graph_min_targets_per_artificial_callsite",
       /* message */ "",
-      /* value */ stats.artificial_callsites_stats.min);
+      /* value */ stats.artificial_callsites_stats.min,
+      /* verbosity_level */ 1);
   EventLogger::log_event(
       "call_graph_max_targets_per_artificial_callsite",
       /* message */ "",
-      /* value */ stats.artificial_callsites_stats.max);
+      /* value */ stats.artificial_callsites_stats.max,
+      /* verbosity_level */ 1);
 }
 
 } // namespace marianatrench

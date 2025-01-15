@@ -38,7 +38,8 @@ class ModelConsistencyError {
  public:
   static void raise(const std::string& what) {
     ERROR(1, "Model Consistency Error: {}", what);
-    EventLogger::log_event("model_consistency_error", what);
+    EventLogger::log_event(
+        "model_consistency_error", what, /* verbosity_level */ 1);
   }
 };
 

@@ -389,7 +389,7 @@ std::unique_ptr<TypeEnvironments> Types::infer_local_types_for_method(
         method->show(),
         rethrown_exception.what());
     ERROR(1, error);
-    EventLogger::log_event("type_inference", error);
+    EventLogger::log_event("type_inference", error, /* verbosity_level */ 1);
 
     return std::make_unique<TypeEnvironments>();
   }

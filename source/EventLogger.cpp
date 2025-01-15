@@ -14,7 +14,30 @@ namespace marianatrench {
 void EventLogger::log_event(
     const std::string& event,
     const std::string& message,
+    int verbosity_level) {
+  LOG(verbosity_level, "[{}]: Message: {}.", event, message);
+}
+
+void EventLogger::log_event(
+    const std::string& event,
+    const std::string& message,
     int value,
+    int verbosity_level) {
+  LOG(verbosity_level, "[{}]: Message: {}. Value: {}", event, message, value);
+}
+
+void EventLogger::log_event(
+    const std::string& event,
+    const std::string& message,
+    std::size_t value,
+    int verbosity_level) {
+  LOG(verbosity_level, "[{}]: Message: {}. Value: {}", event, message, value);
+}
+
+void EventLogger::log_event(
+    const std::string& event,
+    const std::string& message,
+    double value,
     int verbosity_level) {
   LOG(verbosity_level, "[{}]: Message: {}. Value: {}", event, message, value);
 }

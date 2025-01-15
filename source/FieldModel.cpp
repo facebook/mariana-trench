@@ -22,7 +22,8 @@ class FieldModelConsistencyError {
  public:
   static void raise(const std::string& what) {
     ERROR(1, "Field Model Consistency Error: {}", what);
-    EventLogger::log_event("field_model_consistency_error", what);
+    EventLogger::log_event(
+        "field_model_consistency_error", what, /* verbosity_level */ 1);
   }
 };
 

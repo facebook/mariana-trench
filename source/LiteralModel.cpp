@@ -17,7 +17,8 @@ class LiteralModelConsistencyError {
  public:
   static void raise(const std::string& what) {
     ERROR(1, "Literal Model Consistency Error: {}", what);
-    EventLogger::log_event("regex_model_consistency_error", what);
+    EventLogger::log_event(
+        "regex_model_consistency_error", what, /* verbosity_level */ 1);
   }
 };
 

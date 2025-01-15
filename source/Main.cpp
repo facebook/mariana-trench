@@ -69,7 +69,7 @@ int main(int argc, char* argv[]) {
         std::rethrow_exception(exception);
       } catch (const std::exception& rethrown_exception) {
         marianatrench::EventLogger::log_event(
-            "redex_error", rethrown_exception.what());
+            "redex_error", rethrown_exception.what(), /* verbosity_level */ 1);
         std::cerr << rethrown_exception.what() << std::endl;
       }
     }

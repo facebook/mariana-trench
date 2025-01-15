@@ -95,7 +95,9 @@ make_model_generators(
             "Unable to parse generator at `{}`: {}", entry.path(), e.what());
         LOG(1, error);
         EventLogger::log_event(
-            "model_generator_error", fmt::format("{}\n{}", error, e.what()));
+            "model_generator_error",
+            fmt::format("{}\n{}", error, e.what()),
+            /* verbosity_level */ 1);
       }
     }
   }
