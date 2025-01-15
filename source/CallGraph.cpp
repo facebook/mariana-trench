@@ -1144,7 +1144,7 @@ CallGraph::CallGraph(
         options.call_graph_output_path(), /* with_overrides */ false);
   }
 
-  log_call_graph_stats();
+  log_call_graph_stats(heuristics);
 }
 
 std::vector<CallTarget> CallGraph::callees(const Method* caller) const {
@@ -1436,7 +1436,9 @@ void CallGraph::dump_call_graph(
 
 namespace {
 
-CallGraphStats::StatTypes compute_stat_types(std::vector<int>&& histogram) {
+CallGraphStats::StatTypes compute_stat_types(
+    std::vector<std::size_t>&& histogram,
+    std::size_t threshold) {
   CallGraphStats::StatTypes stats;
   stats.total = histogram.size();
   if (histogram.size() == 0) {
@@ -1459,6 +1461,16 @@ CallGraphStats::StatTypes compute_stat_types(std::vector<int>&& histogram) {
   stats.min = histogram.front();
   stats.max = histogram.back();
 
+  // Value should be 0% if nothing is above the threshold.
+  stats.percentage_above_threshold = 0;
+  for (std::size_t i = 0; i < histogram.size(); i++) {
+    if (histogram[i] > threshold) {
+      stats.percentage_above_threshold =
+          (1 - (i / (double)histogram.size())) * 100;
+      break;
+    }
+  }
+
   return stats;
 }
 
@@ -1466,34 +1478,38 @@ CallGraphStats::StatTypes compute_virtual_callsite_stats(
     const ConcurrentMap<
         const Method*,
         std::unordered_map<const IRInstruction*, CallTarget>>&
-        resolved_base_callees) {
-  std::vector<int> num_resolved_targets_per_virtual_callsite;
+        resolved_base_callees,
+    std::size_t join_override_threshold) {
+  std::vector<std::size_t> num_resolved_targets_per_virtual_callsite;
   for (const auto& [method, instruction_target] : resolved_base_callees) {
     for (const auto& [_instruction, call_target] : instruction_target) {
       if (!call_target.resolved() || !call_target.is_virtual()) {
         continue;
       }
       auto overrides = call_target.overrides();
-      // Note: The resolved callee is always one of the targets.
-      int num_resolved_targets =
-          1 + std::distance(overrides.begin(), overrides.end());
+      auto num_overrides = std::distance(overrides.begin(), overrides.end());
+      // Note: The resolved callee is always one of the targets. Hence +1.
+      std::size_t num_resolved_targets =
+          1 + static_cast<std::size_t>(num_overrides);
       num_resolved_targets_per_virtual_callsite.emplace_back(
           num_resolved_targets);
     }
   }
   return compute_stat_types(
-      std::move(num_resolved_targets_per_virtual_callsite));
+      std::move(num_resolved_targets_per_virtual_callsite),
+      join_override_threshold);
 }
 
 CallGraphStats::StatTypes compute_artificial_callee_stats(
     const ConcurrentMap<
         const Method*,
         std::unordered_map<const IRInstruction*, ArtificialCallees>>&
-        artificial_callees) {
-  std::vector<int> num_artificial_callees_per_callsite;
+        artificial_callees,
+    std::size_t join_override_threshold) {
+  std::vector<std::size_t> num_artificial_callees_per_callsite;
   for (const auto& [_method, instruction_target] : artificial_callees) {
     for (const auto& [_instruction, callees] : instruction_target) {
-      int num_resolved_targets = 0;
+      std::size_t num_resolved_targets = 0;
       for (const auto& artificial_callee : callees) {
         if (!artificial_callee.call_target.resolved()) {
           continue;
@@ -1501,8 +1517,9 @@ CallGraphStats::StatTypes compute_artificial_callee_stats(
         ++num_resolved_targets; // The resolved_callee is one of the targets.
         if (artificial_callee.call_target.is_virtual()) {
           auto overrides = artificial_callee.call_target.overrides();
-          num_resolved_targets +=
+          auto num_overrides =
               std::distance(overrides.begin(), overrides.end());
+          num_resolved_targets += static_cast<std::size_t>(num_overrides);
         }
       }
       mt_assert_log(
@@ -1511,7 +1528,8 @@ CallGraphStats::StatTypes compute_artificial_callee_stats(
       num_artificial_callees_per_callsite.emplace_back(num_resolved_targets);
     }
   }
-  return compute_stat_types(std::move(num_artificial_callees_per_callsite));
+  return compute_stat_types(
+      std::move(num_artificial_callees_per_callsite), join_override_threshold);
 }
 
 } // namespace
@@ -1524,20 +1542,24 @@ CallGraphStats::CallGraphStats(
     ConcurrentMap<
         const Method*,
         std::unordered_map<const IRInstruction*, ArtificialCallees>>
-        artificial_callees) {
-  virtual_callsites_stats =
-      compute_virtual_callsite_stats(resolved_base_callees);
-  artificial_callsites_stats =
-      compute_artificial_callee_stats(artificial_callees);
+        artificial_callees,
+    int join_override_threshold) {
+  virtual_callsites_stats = compute_virtual_callsite_stats(
+      resolved_base_callees, join_override_threshold);
+  artificial_callsites_stats = compute_artificial_callee_stats(
+      artificial_callees, join_override_threshold);
 }
 
-CallGraphStats CallGraph::compute_stats() const {
-  CallGraphStats stats(resolved_base_callees_, artificial_callees_);
+CallGraphStats CallGraph::compute_stats(
+    std::size_t join_override_threshold) const {
+  CallGraphStats stats(
+      resolved_base_callees_, artificial_callees_, join_override_threshold);
   return stats;
 }
 
-void CallGraph::log_call_graph_stats() const {
-  auto stats = compute_stats();
+void CallGraph::log_call_graph_stats(const Heuristics& heuristics) const {
+  auto stats = compute_stats(heuristics.join_override_threshold());
+
   EventLogger::log_event(
       "call_graph_num_virtual_callsites",
       /* message */ "",
@@ -1572,6 +1594,11 @@ void CallGraph::log_call_graph_stats() const {
       "call_graph_max_targets_per_virtual_callsite",
       /* message */ "",
       /* value */ stats.virtual_callsites_stats.max,
+      /* verbosity_level */ 1);
+  EventLogger::log_event(
+      "call_graph_pct_above_threshold_for_virtual_callsite",
+      /* message */ "",
+      /* value */ stats.virtual_callsites_stats.percentage_above_threshold,
       /* verbosity_level */ 1);
 
   EventLogger::log_event(
@@ -1608,6 +1635,15 @@ void CallGraph::log_call_graph_stats() const {
       "call_graph_max_targets_per_artificial_callsite",
       /* message */ "",
       /* value */ stats.artificial_callsites_stats.max,
+      /* verbosity_level */ 1);
+  // NOTE: This stat might be meaningless for artificial callsites since we
+  // explicitly disallow creating artifical callees when it exceeds the
+  // threshold. It would be more meaningful to count the "too_many_overrides"
+  // event.
+  EventLogger::log_event(
+      "call_graph_pct_above_threshold_for_artificial_callsite",
+      /* message */ "",
+      /* value */ stats.artificial_callsites_stats.percentage_above_threshold,
       /* verbosity_level */ 1);
 }
 

@@ -235,6 +235,10 @@ struct CallGraphStats {
     std::size_t p99 = 0;
     std::size_t min = 0;
     std::size_t max = 0;
+
+    // Fraction of values that exceed a given threshold. The threshold value
+    // depends on the stat type.
+    double percentage_above_threshold = 0;
   };
 
   CallGraphStats(
@@ -245,7 +249,8 @@ struct CallGraphStats {
       ConcurrentMap<
           const Method*,
           std::unordered_map<const IRInstruction*, ArtificialCallees>>
-          artificial_callees);
+          artificial_callees,
+      int join_override_threshold);
 
  public:
   // Stats computed based on resolved_base_callees_ (actual callsites)
@@ -330,8 +335,8 @@ class CallGraph final {
       const std::size_t batch_size =
           JsonValidation::k_default_shard_limit) const;
 
-  CallGraphStats compute_stats() const;
-  void log_call_graph_stats() const;
+  CallGraphStats compute_stats(std::size_t join_override_threshold) const;
+  void log_call_graph_stats(const Heuristics& heuristics) const;
 
  private:
   const Types& types_;

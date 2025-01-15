@@ -505,19 +505,45 @@ TEST_F(CallGraphTest, VirtualCalleeStats) {
   store.add_classes(scope);
 
   auto context = test::make_context(store);
-  auto stats = context.call_graph->compute_stats();
+  {
+    auto stats = context.call_graph->compute_stats(/* override_threshold */ 2);
 
-  EXPECT_EQ(stats.virtual_callsites_stats.total, 5);
-  // The first 3 call-sites are ignored (unresolved or not virtual).
-  // Calls to Parent.*() resolve to 3 targets (Parent, Child1, Child2).
-  // Calls to Child1.*() resolve to 1 target.
-  // Histogram of num targets per call-site: [1, 1, 3, 3, 1]
-  EXPECT_DOUBLE_EQ(stats.virtual_callsites_stats.average, 9 / 5.0);
-  EXPECT_EQ(stats.virtual_callsites_stats.p50, 1);
-  EXPECT_EQ(stats.virtual_callsites_stats.p90, 3);
-  EXPECT_EQ(stats.virtual_callsites_stats.p99, 3);
-  EXPECT_EQ(stats.virtual_callsites_stats.min, 1);
-  EXPECT_EQ(stats.virtual_callsites_stats.max, 3);
+    EXPECT_EQ(stats.virtual_callsites_stats.total, 5);
+    // The first 3 call-sites are ignored (unresolved or not virtual).
+    // Calls to Parent.*() resolve to 3 targets (Parent, Child1, Child2).
+    // Calls to Child1.*() resolve to 1 target.
+    // Histogram of num targets per call-site: [1, 1, 3, 3, 1]
+    EXPECT_DOUBLE_EQ(stats.virtual_callsites_stats.average, 9 / 5.0);
+    EXPECT_EQ(stats.virtual_callsites_stats.p50, 1);
+    EXPECT_EQ(stats.virtual_callsites_stats.p90, 3);
+    EXPECT_EQ(stats.virtual_callsites_stats.p99, 3);
+    EXPECT_EQ(stats.virtual_callsites_stats.min, 1);
+    EXPECT_EQ(stats.virtual_callsites_stats.max, 3);
+    EXPECT_DOUBLE_EQ(
+        stats.virtual_callsites_stats.percentage_above_threshold,
+        100 * 2 / 5.0);
+  }
+
+  {
+    // Verify with smaller override threshold.
+    auto stats = context.call_graph->compute_stats(/* override_threshold */ 0);
+    EXPECT_DOUBLE_EQ(
+        stats.virtual_callsites_stats.percentage_above_threshold, 100);
+  }
+
+  {
+    // Verify with larger override threshold.
+    auto stats = context.call_graph->compute_stats(/* override_threshold */ 4);
+    EXPECT_DOUBLE_EQ(
+        stats.virtual_callsites_stats.percentage_above_threshold, 0);
+  }
+
+  {
+    // Verify override threshold is exclusive, i.e. strictly > 3.
+    auto stats = context.call_graph->compute_stats(/* override_threshold */ 3);
+    EXPECT_DOUBLE_EQ(
+        stats.virtual_callsites_stats.percentage_above_threshold, 0);
+  }
 }
 
 TEST_F(CallGraphTest, ArtificialCalleeStats) {
@@ -588,7 +614,7 @@ TEST_F(CallGraphTest, ArtificialCalleeStats) {
   store.add_classes(scope);
 
   auto context = test::make_context(store);
-  auto stats = context.call_graph->compute_stats();
+  auto stats = context.call_graph->compute_stats(/* override_threshold */ 5);
 
   // 5 callsites with artificial callees: four invokes and one iput.
   // Histogram: [2, 2, 1, 1, 1]
@@ -599,6 +625,8 @@ TEST_F(CallGraphTest, ArtificialCalleeStats) {
   EXPECT_EQ(stats.artificial_callsites_stats.p99, 2);
   EXPECT_EQ(stats.artificial_callsites_stats.min, 1);
   EXPECT_EQ(stats.artificial_callsites_stats.max, 2);
+  EXPECT_DOUBLE_EQ(
+      stats.artificial_callsites_stats.percentage_above_threshold, 0);
 }
 
 } // namespace marianatrench
