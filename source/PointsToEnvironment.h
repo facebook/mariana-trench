@@ -168,6 +168,8 @@ class ResolvedAliasesMap final {
       const PointsToEnvironment& points_to_environment,
       const IRInstruction* instruction);
 
+  friend std::ostream& operator<<(std::ostream& out, const ResolvedAliasesMap&);
+
  private:
   Map map_;
 };

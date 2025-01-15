@@ -192,6 +192,11 @@ ResolvedAliasesMap ResolvedAliasesMap::from_environments(
         continue;
       }
 
+      LOG(5,
+          "Resolving aliases for register: {} with root memory location: {}",
+          register_id,
+          show(source_memory_location->root()));
+
       auto points_to_tree =
           points_to_environment.resolve_aliases(source_memory_location->root());
 
@@ -203,13 +208,24 @@ ResolvedAliasesMap ResolvedAliasesMap::from_environments(
     // analyze return infers generations on the `this` parameter so we need to
     // provide the memory locations and the associated resolved points-to tree.
     auto* this_memory_location = memory_factory.make_parameter(0);
+
+    LOG(5,
+        "Resolving aliases for `this` memory location: {}",
+        show(this_memory_location));
+
     auto points_to_tree =
         points_to_environment.resolve_aliases(this_memory_location);
 
     result.insert_or_assign(this_memory_location, points_to_tree);
   }
 
-  return ResolvedAliasesMap{std::move(result)};
+  auto resolved_aliases_map = ResolvedAliasesMap{std::move(result)};
+  LOG(5,
+      "ResolvedAliasesMap for instruction `{}` is: {}",
+      show(instruction),
+      resolved_aliases_map);
+
+  return resolved_aliases_map;
 }
 
 PointsToTree ResolvedAliasesMap::get(
@@ -226,6 +242,17 @@ PointsToTree ResolvedAliasesMap::get(
   }
 
   return it->second;
+}
+
+std::ostream& operator<<(
+    std::ostream& out,
+    const ResolvedAliasesMap& resolved_aliases) {
+  out << "ResolvedAliasesMap(";
+  for (const auto& [root_memory_location, points_to_tree] :
+       resolved_aliases.map_) {
+    out << "\n  " << show(root_memory_location) << " -> " << points_to_tree;
+  }
+  return out << ")";
 }
 
 } // namespace marianatrench
