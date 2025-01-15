@@ -1426,11 +1426,41 @@ void CallGraph::dump_call_graph(
       get_json_line);
 }
 
-CallGraphStats CallGraph::compute_stats() const {
-  CallGraphStats stats;
+namespace {
 
+CallGraphStats::StatTypes compute_stat_types(std::vector<int>&& histogram) {
+  CallGraphStats::StatTypes stats;
+  stats.total = histogram.size();
+  if (histogram.size() == 0) {
+    // Can't do math with a 0 denominator.
+    return stats;
+  }
+
+  std::sort(histogram.begin(), histogram.end());
+  auto total_sum = std::accumulate(histogram.begin(), histogram.end(), 0);
+  stats.average = total_sum / (double)stats.total;
+
+  // Note: Percentile indices are rounded down for convenience. Total is
+  // typically large enough (>1000) that this doesn't matter.
+  std::size_t p50_index = stats.total / 2;
+  stats.p50 = histogram[p50_index];
+  std::size_t p90_index = stats.total * 0.9;
+  stats.p90 = histogram[p90_index];
+  std::size_t p99_index = stats.total * 0.99;
+  stats.p99 = histogram[p99_index];
+  stats.min = histogram.front();
+  stats.max = histogram.back();
+
+  return stats;
+}
+
+CallGraphStats::StatTypes compute_virtual_callsite_stats(
+    const ConcurrentMap<
+        const Method*,
+        std::unordered_map<const IRInstruction*, CallTarget>>&
+        resolved_base_callees) {
   std::vector<int> num_resolved_targets_per_virtual_callsite;
-  for (const auto& [method, instruction_target] : resolved_base_callees_) {
+  for (const auto& [method, instruction_target] : resolved_base_callees) {
     for (const auto& [_instruction, call_target] : instruction_target) {
       if (!call_target.resolved() || !call_target.is_virtual()) {
         continue;
@@ -1443,33 +1473,58 @@ CallGraphStats CallGraph::compute_stats() const {
           num_resolved_targets);
     }
   }
+  return compute_stat_types(
+      std::move(num_resolved_targets_per_virtual_callsite));
+}
 
-  stats.num_virtual_callsites =
-      num_resolved_targets_per_virtual_callsite.size();
-  if (num_resolved_targets_per_virtual_callsite.size() == 0) {
-    // Can't do math with a 0 denominator.
-    // Unlikely to occur if analyzing anything meaningful.
-    return stats;
+CallGraphStats::StatTypes compute_artificial_callee_stats(
+    const ConcurrentMap<
+        const Method*,
+        std::unordered_map<const IRInstruction*, ArtificialCallees>>&
+        artificial_callees) {
+  std::vector<int> num_artificial_callees_per_callsite;
+  for (const auto& [_method, instruction_target] : artificial_callees) {
+    for (const auto& [_instruction, callees] : instruction_target) {
+      int num_resolved_targets = 0;
+      for (const auto& artificial_callee : callees) {
+        if (!artificial_callee.call_target.resolved()) {
+          continue;
+        }
+        ++num_resolved_targets; // The resolved_callee is one of the targets.
+        if (artificial_callee.call_target.is_virtual()) {
+          auto overrides = artificial_callee.call_target.overrides();
+          num_resolved_targets +=
+              std::distance(overrides.begin(), overrides.end());
+        }
+      }
+      mt_assert_log(
+          num_resolved_targets != 0,
+          "Expected shims to resolve to at least 1 target");
+      num_artificial_callees_per_callsite.emplace_back(num_resolved_targets);
+    }
   }
+  return compute_stat_types(std::move(num_artificial_callees_per_callsite));
+}
 
-  std::sort(
-      num_resolved_targets_per_virtual_callsite.begin(),
-      num_resolved_targets_per_virtual_callsite.end());
-  int total_call_targets = std::accumulate(
-      num_resolved_targets_per_virtual_callsite.begin(),
-      num_resolved_targets_per_virtual_callsite.end(),
-      0);
-  stats.average_targets_per_virtual_callsite =
-      total_call_targets / (double)stats.num_virtual_callsites;
+} // namespace
 
-  // Note: P50 and P90 indices are rounded down for convenience. Number of
-  // callsites are typically over 10k.
-  int p50_index = stats.num_virtual_callsites / 2;
-  stats.p50_targets_per_virtual_callsite =
-      num_resolved_targets_per_virtual_callsite[p50_index];
-  int p90_index = stats.num_virtual_callsites * 0.9;
-  stats.p90_targets_per_virtual_callsite =
-      num_resolved_targets_per_virtual_callsite[p90_index];
+CallGraphStats::CallGraphStats(
+    const ConcurrentMap<
+        const Method*,
+        std::unordered_map<const IRInstruction*, CallTarget>>&
+        resolved_base_callees,
+    ConcurrentMap<
+        const Method*,
+        std::unordered_map<const IRInstruction*, ArtificialCallees>>
+        artificial_callees) {
+  virtual_callsites_stats =
+      compute_virtual_callsite_stats(resolved_base_callees);
+  artificial_callsites_stats =
+      compute_artificial_callee_stats(artificial_callees);
+}
+
+CallGraphStats CallGraph::compute_stats() const {
+  CallGraphStats stats(resolved_base_callees_, artificial_callees_);
   return stats;
 }
 
@@ -1478,19 +1533,60 @@ void CallGraph::log_call_graph_stats() const {
   EventLogger::log_event(
       "call_graph_num_virtual_callsites",
       /* message */ "",
-      /* value */ stats.num_virtual_callsites);
+      /* value */ stats.virtual_callsites_stats.total);
   EventLogger::log_event(
       "call_graph_average_targets_per_virtual_callsite",
       /* message */ "",
-      /* value */ stats.average_targets_per_virtual_callsite);
+      /* value */ stats.virtual_callsites_stats.average);
   EventLogger::log_event(
       "call_graph_p50_targets_per_virtual_callsite",
       /* message */ "",
-      /* value */ stats.p50_targets_per_virtual_callsite);
+      /* value */ stats.virtual_callsites_stats.p50);
   EventLogger::log_event(
       "call_graph_p90_targets_per_virtual_callsite",
       /* message */ "",
-      /* value */ stats.p90_targets_per_virtual_callsite);
+      /* value */ stats.virtual_callsites_stats.p90);
+  EventLogger::log_event(
+      "call_graph_p99_targets_per_virtual_callsite",
+      /* message */ "",
+      /* value */ stats.virtual_callsites_stats.p99);
+  EventLogger::log_event(
+      "call_graph_min_targets_per_virtual_callsite",
+      /* message */ "",
+      /* value */ stats.virtual_callsites_stats.min);
+  EventLogger::log_event(
+      "call_graph_max_targets_per_virtual_callsite",
+      /* message */ "",
+      /* value */ stats.virtual_callsites_stats.max);
+
+  EventLogger::log_event(
+      "call_graph_num_artificial_callsites",
+      /* message */ "",
+      /* value */ stats.artificial_callsites_stats.total);
+  EventLogger::log_event(
+      "call_graph_average_targets_per_artificial_callsite",
+      /* message */ "",
+      /* value */ stats.artificial_callsites_stats.average);
+  EventLogger::log_event(
+      "call_graph_p50_targets_per_artificial_callsite",
+      /* message */ "",
+      /* value */ stats.artificial_callsites_stats.p50);
+  EventLogger::log_event(
+      "call_graph_p90_targets_per_artificial_callsite",
+      /* message */ "",
+      /* value */ stats.artificial_callsites_stats.p90);
+  EventLogger::log_event(
+      "call_graph_p99_targets_per_artificial_callsite",
+      /* message */ "",
+      /* value */ stats.artificial_callsites_stats.p99);
+  EventLogger::log_event(
+      "call_graph_min_targets_per_artificial_callsite",
+      /* message */ "",
+      /* value */ stats.artificial_callsites_stats.min);
+  EventLogger::log_event(
+      "call_graph_max_targets_per_artificial_callsite",
+      /* message */ "",
+      /* value */ stats.artificial_callsites_stats.max);
 }
 
 } // namespace marianatrench

@@ -227,10 +227,32 @@ struct FieldTarget {
 };
 
 struct CallGraphStats {
-  int num_virtual_callsites = 0;
-  double average_targets_per_virtual_callsite = 0;
-  int p50_targets_per_virtual_callsite = 0;
-  int p90_targets_per_virtual_callsite = 0;
+  struct StatTypes {
+    std::size_t total = 0;
+    double average = 0;
+    std::size_t p50 = 0;
+    std::size_t p90 = 0;
+    std::size_t p99 = 0;
+    std::size_t min = 0;
+    std::size_t max = 0;
+  };
+
+  CallGraphStats(
+      const ConcurrentMap<
+          const Method*,
+          std::unordered_map<const IRInstruction*, CallTarget>>&
+          resolved_base_callees,
+      ConcurrentMap<
+          const Method*,
+          std::unordered_map<const IRInstruction*, ArtificialCallees>>
+          artificial_callees);
+
+ public:
+  // Stats computed based on resolved_base_callees_ (actual callsites)
+  StatTypes virtual_callsites_stats;
+  // Stats computed based on artificial_callees_ (user-defined shims and calls
+  // to anonymous class methods)
+  StatTypes artificial_callsites_stats;
 };
 
 class CallGraph final {
