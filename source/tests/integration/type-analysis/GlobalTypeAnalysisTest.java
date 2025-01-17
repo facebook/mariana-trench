@@ -440,7 +440,7 @@ class TestO {
   }
 }
 
-class TestP { 
+class TestP {
   static class C {}
   TestP() {
     foo();
@@ -452,5 +452,28 @@ class TestP {
   public static void main() {
     TestP x = new TestP();
     x.bar();
+  }
+}
+
+
+class TestQ {
+  static class Base {}
+  static class Derived1 extends Base {
+    public static Derived1 INSTANCE = new Derived1();
+  }
+  static class Derived2 extends Base {
+    public static Derived2 INSTANCE = new Derived2();
+  }
+
+  // Possible return types [Derived1, Derived2]
+  public static Base foo(int arg) {
+    if (arg > 1) {
+      return Derived1.INSTANCE;
+    }
+    return Derived2.INSTANCE;
+  }
+
+  public static void main() {
+    TestQ.foo(0);
   }
 }

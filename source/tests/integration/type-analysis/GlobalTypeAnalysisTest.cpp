@@ -437,4 +437,24 @@ TEST_F(GlobalTypeAnalysisTest, InvokeInInitRegressionTest) {
   EXPECT_EQ(set_domain.get_types(), get_type_set({get_type("TestP$C")}));
 }
 
+TEST_F(GlobalTypeAnalysisTest, StaticFieldTypes) {
+  auto scope = build_class_scope(stores);
+  set_root_method("Lcom/facebook/redextest/TestQ;.main:()V");
+
+  auto options = test::make_default_options();
+  auto analysis = GlobalTypeAnalysis::make_default();
+  auto gta = analysis.analyze(scope, *options);
+  auto wps = gta->get_whole_program_state();
+
+  auto meth =
+      get_method(/* name */ "TestQ;.foo",
+                 /* params */ "I",
+                 /* return_type */ "Lcom/facebook/redextest/TestQ$Base;");
+  auto rtype = wps.get_return_type(meth);
+  EXPECT_TRUE(rtype.is_nullable());
+  const auto& single_domain = rtype.get_single_domain();
+  EXPECT_TRUE(single_domain.is_top());
+  const auto& set_domain = rtype.get_set_domain();
+  EXPECT_TRUE(set_domain.is_top());
+}
 } // namespace marianatrench
