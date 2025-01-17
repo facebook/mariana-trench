@@ -5,6 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <filesystem>
+
 #include <ConcurrentContainers.h>
 
 #include <ControlFlow.h>
@@ -17,6 +19,10 @@
 #include <Trace.h>
 #include <Walkers.h>
 
+#include <json/json.h>
+
+#include <mariana-trench/JsonReaderWriter.h>
+#include <mariana-trench/Log.h>
 #include <mariana-trench/type-analysis/GlobalTypeAnalyzer.h>
 
 namespace marianatrench {
@@ -461,8 +467,55 @@ void GlobalTypeAnalysis::find_any_init_reachables(
       TYPE, 2, "[any init reachables] size %zu", m_any_init_reachables.size());
 }
 
+namespace {
+std::string node_id_to_string(call_graph::NodeId node) {
+  if (node->is_entry()) {
+    return "ENTRY";
+  } else if (node->is_exit()) {
+    return "EXIT";
+  }
+  return show(node->method());
+}
+
+void dump_call_graph(const call_graph::Graph& cg,
+                     const std::filesystem::path& output_path) {
+  LOG(1, "Writing GTA call graph to `{}`", output_path.native());
+
+  const auto* entry = cg.entry();
+  if (entry == nullptr) {
+    LOG(1, "Call graph with no entry node. Not writing call graph.");
+    return;
+  }
+
+  std::vector<call_graph::NodeId> nodes;
+  std::unordered_set<call_graph::NodeId> visited;
+  auto call_graph = Json::Value(Json::objectValue);
+  nodes.push_back(entry);
+  visited.insert(entry);
+  while (!nodes.empty()) {
+    const auto* node = nodes.back();
+    nodes.pop_back();
+
+    auto callees = Json::Value(Json::arrayValue);
+    for (const auto* edge : node->callees()) {
+      const auto* callee = edge->callee();
+      callees.append(node_id_to_string(callee));
+      if (visited.find(callee) == visited.end()) {
+        nodes.push_back(callee);
+        visited.insert(callee);
+      }
+    }
+
+    call_graph[node_id_to_string(node)] = callees;
+  }
+
+  JsonWriter::write_json_file(output_path, call_graph);
+}
+
+} // namespace
+
 std::unique_ptr<GlobalTypeAnalyzer> GlobalTypeAnalysis::analyze(
-    const Scope& scope) {
+    const Scope& scope, const Options& options) {
   auto method_override_graph = mog::build_graph(scope);
   auto cg =
       m_use_multiple_callee_callgraph
@@ -475,6 +528,11 @@ std::unique_ptr<GlobalTypeAnalyzer> GlobalTypeAnalysis::analyze(
         2,
         "[global] multiple callee graph %zu",
         (size_t)m_use_multiple_callee_callgraph);
+
+  if (options.dump_gta_call_graph()) {
+    dump_call_graph(*cg, options.gta_call_graph_output_path());
+  }
+
   // Rebuild all CFGs here -- this should be more efficient than doing them
   // within FixpointIterator::analyze_node(), since that can get called
   // multiple times for a given method

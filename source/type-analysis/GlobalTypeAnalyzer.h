@@ -12,6 +12,7 @@
 #include <CallGraph.h>
 #include <MethodOverrideGraph.h>
 
+#include <mariana-trench/Options.h>
 #include <mariana-trench/type-analysis/DexTypeEnvironment.h>
 #include <mariana-trench/type-analysis/LocalTypeAnalyzer.h>
 #include <mariana-trench/type-analysis/WholeProgramState.h>
@@ -146,9 +147,12 @@ class GlobalTypeAnalysis {
    */
   static GlobalTypeAnalysis make_default();
 
-  void run(const Scope& scope) { analyze(scope); }
+  void run(const Scope& scope, const Options& options) {
+    analyze(scope, options);
+  }
 
-  std::unique_ptr<GlobalTypeAnalyzer> analyze(const Scope&);
+  std::unique_ptr<GlobalTypeAnalyzer> analyze(const Scope&,
+                                              const Options& options);
 
   size_t get_global_analysis_iterations() const {
     return global_analysis_iterations;

@@ -302,7 +302,7 @@ Types::Types(const Options& options, const DexStoresVector& stores) {
     Timer global_timer;
     auto analysis = marianatrench::type_analyzer::global::GlobalTypeAnalysis::
         make_default();
-    global_type_analyzer_ = analysis.analyze(scope);
+    global_type_analyzer_ = analysis.analyze(scope, options);
 
     LOG(1,
         "Global analysis {:.2f}s. Memory used, RSS: {:.2f}GB",

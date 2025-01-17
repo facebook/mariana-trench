@@ -140,6 +140,7 @@ Options::Options(
       dump_class_intervals_(false),
       dump_overrides_(false),
       dump_call_graph_(false),
+      dump_gta_call_graph_(false),
       dump_dependencies_(false),
       dump_methods_(false),
       dump_coverage_info_(false),
@@ -302,6 +303,8 @@ Options::Options(const Json::Value& json) {
       JsonValidation::optional_boolean(json, "dump-overrides", false);
   dump_call_graph_ =
       JsonValidation::optional_boolean(json, "dump-call-graph", false);
+  dump_gta_call_graph_ =
+      JsonValidation::optional_boolean(json, "dump-gta-call-graph", false);
   dump_dependencies_ =
       JsonValidation::optional_boolean(json, "dump-dependencies", false);
   dump_methods_ = JsonValidation::optional_boolean(json, "dump-methods", false);
@@ -441,6 +444,10 @@ const std::filesystem::path Options::call_graph_output_path() const {
   return output_directory_;
 }
 
+const std::filesystem::path Options::gta_call_graph_output_path() const {
+  return output_directory_ / "gta_call_graph.json";
+}
+
 const std::filesystem::path Options::class_hierarchies_output_path() const {
   return output_directory_ / "class_hierarchies.json";
 }
@@ -556,6 +563,10 @@ bool Options::dump_overrides() const {
 
 bool Options::dump_call_graph() const {
   return dump_call_graph_;
+}
+
+bool Options::dump_gta_call_graph() const {
+  return dump_gta_call_graph_;
 }
 
 bool Options::dump_dependencies() const {

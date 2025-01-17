@@ -599,6 +599,11 @@ def _add_debug_arguments(parser: argparse.ArgumentParser) -> None:
         help="Dump the call graph in `call_graph.json`.",
     )
     debug_arguments.add_argument(
+        "--dump-gta-call-graph",
+        action="store_true",
+        help="Dump the GTA (global type analysis) call graph in `gta_call_graph.json`.",
+    )
+    debug_arguments.add_argument(
         "--dump-dependencies",
         action="store_true",
         help="Dump the dependency graph in `dependencies.json`.",
@@ -764,6 +769,9 @@ def _get_command_options_json(
 
     if arguments.dump_call_graph:
         options["dump-call-graph"] = True
+
+    if arguments.dump_gta_call_graph:
+        options["dump-gta-call-graph"] = True
 
     if arguments.dump_dependencies:
         options["dump-dependencies"] = True
