@@ -566,6 +566,13 @@ def _add_debug_arguments(parser: argparse.ArgumentParser) -> None:
         help="The logging verbosity.",
     )
     debug_arguments.add_argument(
+        "--gta-verbosity",
+        type=int,
+        default=0,
+        metavar="[0-10]",
+        help="The logging verbosity for global type analysis (GTA). Disabled by default (value=0)",
+    )
+    debug_arguments.add_argument(
         "--gdb", action="store_true", help="Run the analyzer inside gdb."
     )
     debug_arguments.add_argument(
@@ -626,7 +633,10 @@ def _add_debug_arguments(parser: argparse.ArgumentParser) -> None:
 
 
 def _set_environment_variables(arguments: argparse.Namespace) -> None:
-    trace_settings = [f"MARIANA_TRENCH:{arguments.verbosity}"]
+    trace_settings = [
+        f"MARIANA_TRENCH:{arguments.verbosity}",
+        f"TYPE:{arguments.gta_verbosity}",
+    ]
     if "TRACE" in os.environ:
         trace_settings.insert(0, os.environ["TRACE"])
     os.environ["TRACE"] = ",".join(trace_settings)

@@ -33,12 +33,18 @@ using namespace type_analyzer;
 
 namespace {
 
-void trace_whole_program_state(WholeProgramState& wps) {
+void trace_whole_program_state(WholeProgramState& wps,
+                               const std::vector<std::string>& methods) {
   if (traceEnabled(TYPE, 10)) {
     std::ostringstream out;
     out << wps;
-    TRACE(TYPE, 5, "[wps] aggregated whole program state");
-    TRACE(TYPE, 5, "%s", out.str().c_str());
+    TRACE(TYPE, 10, "[wps] aggregated whole program state");
+    TRACE(TYPE, 10, "%s", out.str().c_str());
+  } else if (methods.size() > 0) {
+    auto partial_wps = wps.get_methods_matching(methods);
+    std::ostringstream out;
+    out << partial_wps;
+    TRACE(TYPE, 0, "[wps] for matching methods: %s", out.str().c_str());
   }
 }
 
@@ -579,7 +585,7 @@ std::unique_ptr<GlobalTypeAnalyzer> GlobalTypeAnalysis::analyze(
                          m_any_init_reachables,
                          eligible_ifields,
                          m_only_aggregate_safely_inferrable_fields);
-    trace_whole_program_state(*wps);
+    trace_whole_program_state(*wps, options.log_method_types());
     trace_stats(*wps);
     trace_whole_program_state_diff(gta->get_whole_program_state(), *wps);
     // If this approximation is not better than the previous one, we are done.

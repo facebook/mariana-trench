@@ -111,6 +111,9 @@ class WholeProgramState {
     return domain;
   }
 
+  DexTypeMethodPartition get_methods_matching(
+      const std::vector<std::string>& method_names) const;
+
   size_t get_num_resolved_fields() {
     size_t cnt = 0;
     for (auto& pair : m_field_partition.bindings()) {

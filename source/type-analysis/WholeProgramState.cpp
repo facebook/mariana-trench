@@ -219,6 +219,26 @@ std::string WholeProgramState::show_field(const DexField* f) { return show(f); }
 std::string WholeProgramState::show_method(const DexMethod* m) {
   return show(m);
 }
+
+DexTypeMethodPartition WholeProgramState::get_methods_matching(
+    const std::vector<std::string>& method_names) const {
+  DexTypeMethodPartition method_partition;
+  for (const auto& bindings : m_method_partition.bindings()) {
+    const auto* method = bindings.first;
+    bool matches =
+        std::any_of(method_names.cbegin(),
+                    method_names.cend(),
+                    [method](const auto& pattern) {
+                      auto method_name = show(method);
+                      return method_name.find(pattern) != std::string::npos;
+                    });
+    if (matches) {
+      method_partition.set(method, bindings.second);
+    }
+  }
+  return method_partition;
+}
+
 void WholeProgramState::setup_known_method_returns() {
   for (auto& p : STATIC_METHOD_TO_TYPE_MAP) {
     auto method = DexMethod::make_method(p.first);

@@ -429,6 +429,11 @@ std::unique_ptr<TypeEnvironments> Types::infer_types_for_method(
       per_method_global_type_analyzer->analyze_instruction(
           instruction, &current_state);
 
+      LOG(log_method ? 0 : 5,
+          "GTA: Analyzed instruction `{}`. RegEnv: {}",
+          show(instruction),
+          show(current_state.get_reg_environment()));
+
       if (!is_interesting_opcode(instruction->opcode())) {
         continue;
       }
