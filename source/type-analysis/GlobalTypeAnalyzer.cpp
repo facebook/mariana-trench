@@ -266,7 +266,8 @@ bool GlobalTypeAnalyzer::is_reachable(const DexMethod* method) const {
 }
 
 using CombinedAnalyzer =
-    InstructionAnalyzerCombiner<WholeProgramAwareAnalyzer,
+    InstructionAnalyzerCombiner<local::ClinitFieldAnalyzer,
+                                WholeProgramAwareAnalyzer,
                                 local::CtorFieldAnalyzer,
                                 local::RegisterTypeAnalyzer>;
 
@@ -292,8 +293,11 @@ std::unique_ptr<local::LocalTypeAnalyzer> GlobalTypeAnalyzer::analyze_method(
   }
 
   auto env = env_with_params(&code, args);
+  DexType* clinit_type{nullptr};
   DexType* ctor_type{nullptr};
-  if (method::is_init(method)) {
+  if (method::is_clinit(method)) {
+    clinit_type = method->get_class();
+  } else if (method::is_init(method)) {
     ctor_type = method->get_class();
   }
   TRACE(TYPE, 5, "%s", SHOW(code.cfg()));
@@ -302,7 +306,8 @@ std::unique_ptr<local::LocalTypeAnalyzer> GlobalTypeAnalyzer::analyze_method(
           ? std::make_unique<local::LocalTypeAnalyzer>(
                 code.cfg(), CombinedReplayAnalyzer(&wps, nullptr))
           : std::make_unique<local::LocalTypeAnalyzer>(
-                code.cfg(), CombinedAnalyzer(&wps, ctor_type, nullptr));
+                code.cfg(),
+                CombinedAnalyzer(clinit_type, &wps, ctor_type, nullptr));
   local_ta->run(env);
 
   return local_ta;

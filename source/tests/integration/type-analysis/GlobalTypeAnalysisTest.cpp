@@ -191,8 +191,11 @@ TEST_F(GlobalTypeAnalysisTest, ClinitFieldAnalyzerTest) {
   auto field_sbase =
       get_field("TestH;.BASE:Lcom/facebook/redextest/TestH$Base;");
   auto ftype = wps.get_field_type(field_sbase);
-  EXPECT_TRUE(ftype.is_top());
+  EXPECT_FALSE(ftype.is_top());
   EXPECT_TRUE(ftype.is_nullable());
+  EXPECT_EQ(ftype.get_single_domain(),
+            SingletonDexTypeDomain(get_type("TestH$Base")));
+  EXPECT_EQ(ftype.get_set_domain(), get_small_set_domain({"TestH$Base"}));
 
   auto field_mbase =
       get_field("TestH;.mBase:Lcom/facebook/redextest/TestH$Base;");
@@ -215,8 +218,11 @@ TEST_F(GlobalTypeAnalysisTest, ClinitFieldAnalyzerTest) {
   auto meth_baz =
       get_method("TestH;.baz", "", "Lcom/facebook/redextest/TestH$Base;");
   rtype = wps.get_return_type(meth_baz);
-  EXPECT_TRUE(rtype.is_top());
+  EXPECT_FALSE(rtype.is_top());
   EXPECT_TRUE(rtype.is_nullable());
+  EXPECT_EQ(rtype.get_single_domain(),
+            SingletonDexTypeDomain(get_type("TestH$Base")));
+  EXPECT_EQ(rtype.get_set_domain(), get_small_set_domain({"TestH$Base"}));
 }
 
 TEST_F(GlobalTypeAnalysisTest, IFieldsNullnessTest) {
@@ -453,8 +459,10 @@ TEST_F(GlobalTypeAnalysisTest, StaticFieldTypes) {
   auto rtype = wps.get_return_type(meth);
   EXPECT_TRUE(rtype.is_nullable());
   const auto& single_domain = rtype.get_single_domain();
-  EXPECT_TRUE(single_domain.is_top());
+  EXPECT_EQ(single_domain, SingletonDexTypeDomain(get_type("TestQ$Base")));
   const auto& set_domain = rtype.get_set_domain();
-  EXPECT_TRUE(set_domain.is_top());
+  EXPECT_EQ(
+      set_domain.get_types(),
+      get_type_set({get_type("TestQ$Derived1"), get_type("TestQ$Derived2")}));
 }
 } // namespace marianatrench
