@@ -1205,7 +1205,7 @@ bool ForwardTaintTransfer::analyze_invoke(
       instruction,
       aliasing,
       &previous_environment,
-      instruction->srcs_vec(),
+      instruction->srcs_copy(),
       callee,
       source_constant_arguments,
       /* extra_features */ {},

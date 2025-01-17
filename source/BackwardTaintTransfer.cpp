@@ -866,7 +866,7 @@ bool BackwardTaintTransfer::analyze_invoke(
       context,
       aliasing,
       environment,
-      instruction->srcs_vec(),
+      instruction->srcs_copy(),
       callee,
       source_constant_arguments,
       /* extra_features */ {},
