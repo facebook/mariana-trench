@@ -41,8 +41,6 @@ std::vector<Model> TaintInTaintOutGenerator::visit_method(
     }
   }
 
-  const auto class_name = generator::get_class_name(method);
-
   const auto method_signature = method->show();
   if (boost::ends_with(method_signature, ".size:()I") ||
       boost::ends_with(method_signature, ".hashCode:()I") ||
@@ -54,30 +52,11 @@ std::vector<Model> TaintInTaintOutGenerator::visit_method(
   for (ParameterPosition parameter_position = 0;
        parameter_position < method->number_of_parameters();
        parameter_position++) {
-    // This logic sanitizes Argument(0) -> Return on specific classes
-    if (parameter_position == 0 && !method->is_static() &&
-        (boost::ends_with(class_name, "Context;") ||
-         boost::ends_with(class_name, "ContextThemeWrapper;") ||
-         boost::ends_with(class_name, "ContextWrapper;") ||
-         boost::ends_with(class_name, "Activity;") ||
-         boost::ends_with(class_name, "Service;") ||
-         boost::ends_with(class_name, "WebView;") ||
-         boost::ends_with(class_name, "Fragment;") ||
-         boost::ends_with(class_name, "WebViewClient;") ||
-         boost::ends_with(class_name, "ContentProvider;") ||
-         boost::ends_with(class_name, "BroadcastReceiver;"))) {
-      continue;
-    }
-
     auto parameter_type = method->parameter_type(parameter_position);
     if (parameter_type == nullptr) {
       continue;
     }
     auto parameter_type_string = parameter_type->str();
-    if (parameter_type_string == "Landroid/content/Context;") {
-      continue;
-    }
-
     std::vector<std::string> feature_set{"via-obscure-taint-in-taint-out"};
     auto return_type = generator::get_return_type_string(method);
     if (return_type != std::nullopt) {
