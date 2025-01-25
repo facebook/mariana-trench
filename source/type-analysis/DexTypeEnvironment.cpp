@@ -220,7 +220,7 @@ void SmallSetDexTypeDomain::join_with(const SmallSetDexTypeDomain& other) {
     return;
   }
   m_types.union_with(other.m_types);
-  if (m_types.size() >= Heuristics::singleton().join_override_threshold()) {
+  if (m_types.size() > Heuristics::singleton().join_override_threshold()) {
     set_to_top();
   }
 }
