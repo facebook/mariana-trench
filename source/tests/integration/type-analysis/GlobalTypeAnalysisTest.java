@@ -477,3 +477,19 @@ class TestQ {
     TestQ.foo(0);
   }
 }
+
+class TestR {
+  static class Base {}
+  static class Derived1 extends Base {}
+  static class Derived2 extends Base {}
+
+  Base passThrough(Base base) { return base; }
+  public void root(Derived1 derived1) {
+    passThrough(derived1);
+  }
+
+ static Base staticPassThrough(Base base) { return base; }
+ public static void staticRoot(Derived2 derived2) {
+   staticPassThrough(derived2);
+ }
+}
