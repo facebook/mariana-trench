@@ -488,13 +488,8 @@ TEST_F(GlobalTypeAnalysisTest, EntryPointArgumentTypes) {
     auto rtype = wps.get_return_type(meth);
     EXPECT_TRUE(rtype.is_nullable());
     const auto& single_domain = rtype.get_single_domain();
-    EXPECT_TRUE(single_domain.is_top());
-    // The following would be more precise, but is not inferred as root method
-    // arguments are assumed to be "top" rather than their method signature
-    // type.
-    // EXPECT_EQ(
-    //     single_domain,
-    //     SingletonDexTypeDomain(get_type("TestR$Derived1")));
+    EXPECT_EQ(single_domain,
+              SingletonDexTypeDomain(get_type("TestR$Derived1")));
 
     // The SmallSetDexTypeDomain should be top for root method arguments since
     // their precise types are unknown.
@@ -510,10 +505,8 @@ TEST_F(GlobalTypeAnalysisTest, EntryPointArgumentTypes) {
     auto rtype = wps.get_return_type(meth);
     EXPECT_TRUE(rtype.is_nullable());
     const auto& single_domain = rtype.get_single_domain();
-    EXPECT_TRUE(single_domain.is_top());
-    // EXPECT_EQ(
-    //     single_domain,
-    //     SingletonDexTypeDomain(get_type("TestR$Derived2")));
+    EXPECT_EQ(single_domain,
+              SingletonDexTypeDomain(get_type("TestR$Derived2")));
     const auto& set_domain = rtype.get_set_domain();
     EXPECT_TRUE(set_domain.is_top());
   }

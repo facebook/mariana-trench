@@ -214,14 +214,52 @@ void GlobalTypeAnalyzer::analyze_node(
   }
 }
 
+namespace {
+
+ArgumentTypeEnvironment environment_from_entry_point_method(
+    const DexMethod* dex_method) {
+  if (dex_method == nullptr) {
+    // Unknown method (typically an edge to the exit node).
+    return ArgumentTypeEnvironment::top();
+  }
+
+  ArgumentTypeEnvironment environment;
+  int arg_idx = 0;
+  // NOTE: DexTypeDomains must use create_nullable instead of create_not_null.
+  // The latter is used when sure of the precise type (e.g. new-instance). We do
+  // not have that certainty when getting type information from the method
+  // signature. The SmallSetDexTypeDomain will also be top() this way.
+  // In Mariana Trench, the SmallSetDexTypeDomain is used to remove impossible
+  // overrides. If type information is obtained from the method signature, we do
+  // not have the precise types for SmallSetDexTypeDomain.
+  if (!is_static(dex_method)) {
+    const auto dex_type_domain =
+        DexTypeDomain::create_nullable(dex_method->get_class());
+    environment.set(arg_idx, dex_type_domain);
+    ++arg_idx;
+  }
+  const auto* arg_types = dex_method->get_proto()->get_args();
+  for (const auto* arg_type : *arg_types) {
+    environment.set(arg_idx, DexTypeDomain::create_nullable(arg_type));
+    ++arg_idx;
+  }
+  return environment;
+}
+
+} // namespace
+
 ArgumentTypePartition GlobalTypeAnalyzer::analyze_edge(
     const call_graph::EdgeId& edge,
     const ArgumentTypePartition& exit_state_at_source) const {
   ArgumentTypePartition entry_state_at_dest;
   auto insn = edge->invoke_insn();
   if (insn == nullptr) {
+    // Entry point method (or caller's instruction unavailable for some reason):
+    // For Mariana Trench, use argument types from method signature instead of
+    // top.
+    const auto* dex_method = edge->callee()->method();
     entry_state_at_dest.set(CURRENT_PARTITION_LABEL,
-                            ArgumentTypeEnvironment::top());
+                            environment_from_entry_point_method(dex_method));
   } else {
     entry_state_at_dest.set(CURRENT_PARTITION_LABEL,
                             exit_state_at_source.get(insn));
