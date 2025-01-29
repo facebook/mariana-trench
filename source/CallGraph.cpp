@@ -1140,8 +1140,7 @@ CallGraph::CallGraph(
   }
 
   if (options.dump_call_graph()) {
-    dump_call_graph(
-        options.call_graph_output_path(), /* with_overrides */ false);
+    dump_call_graph(options.call_graph_output_path());
   }
 
   log_call_graph_stats(heuristics);
@@ -1320,8 +1319,7 @@ bool CallGraph::has_callees(const Method* caller) {
   return false;
 }
 
-Json::Value CallGraph::to_json(const Method* method, bool with_overrides)
-    const {
+Json::Value CallGraph::to_json(const Method* method) const {
   auto method_value = Json::Value(Json::objectValue);
 
   auto resolved_callee = resolved_base_callees_.find(method);
@@ -1333,11 +1331,15 @@ Json::Value CallGraph::to_json(const Method* method, bool with_overrides)
         continue;
       } else if (call_target.is_virtual()) {
         virtual_callees.insert(call_target.resolved_base_callee());
-        if (with_overrides) {
-          for (const auto* override : call_target.overrides()) {
-            virtual_callees.insert(override);
-          }
+        const auto& overrides = call_target.overrides();
+        if (std::distance(overrides.begin(), overrides.end()) >
+            Heuristics::singleton().join_override_threshold()) {
+          continue;
         }
+        for (const auto* override : overrides) {
+          virtual_callees.insert(override);
+        }
+
       } else {
         static_callees.insert(call_target.resolved_base_callee());
       }
@@ -1382,16 +1384,16 @@ Json::Value CallGraph::to_json(const Method* method, bool with_overrides)
   return method_value;
 }
 
-Json::Value CallGraph::to_json(bool with_overrides) const {
+Json::Value CallGraph::to_json() const {
   auto value = Json::Value(Json::objectValue);
   for (const auto& [method, _callees] : resolved_base_callees_) {
-    value[method->show()] = to_json(method, with_overrides);
+    value[method->show()] = to_json(method);
   }
 
   // Add methods that only have artificial callees
   for (const auto& [method, _callees] : artificial_callees_) {
     if (resolved_base_callees_.find(method) == resolved_base_callees_.end()) {
-      value[method->show()] = to_json(method, with_overrides);
+      value[method->show()] = to_json(method);
     }
   }
 
@@ -1400,7 +1402,6 @@ Json::Value CallGraph::to_json(bool with_overrides) const {
 
 void CallGraph::dump_call_graph(
     const std::filesystem::path& output_directory,
-    bool with_overrides,
     const std::size_t batch_size) const {
   LOG(1, "Writing call graph to `{}`", output_directory.native());
 
@@ -1422,7 +1423,7 @@ void CallGraph::dump_call_graph(
   auto get_json_line = [&](std::size_t i) -> Json::Value {
     auto value = Json::Value(Json::objectValue);
     const auto* method = methods.at(i);
-    value[method->show()] = to_json(method, with_overrides);
+    value[method->show()] = to_json(method);
     return value;
   };
 
