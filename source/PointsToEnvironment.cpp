@@ -126,23 +126,31 @@ void PointsToEnvironment::write(
     const DexString* field,
     const PointsToSet& points_tos,
     UpdateKind kind) {
-  // Resolve aliases to find the memory locations to update
-  auto resolved_aliases = resolve_aliases(memory_location->root());
+  PointsToSet target_memory_locations;
+  Path full_path{};
 
-  auto [remaining_path, target_memory_locations] =
-      resolved_aliases.raw_read_max_path(memory_location->path());
+  if (auto* root_memory_location = memory_location->as<RootMemoryLocation>()) {
+    target_memory_locations = PointsToSet{root_memory_location};
+  } else {
+    // Resolve aliases to find the memory locations to update
+    auto resolved_aliases = resolve_aliases(memory_location->root());
+    auto [remaining_path, target_points_to_tree] =
+        resolved_aliases.raw_read_max_path(memory_location->path());
 
-  if (kind == UpdateKind::Strong && target_memory_locations.root().size() > 1) {
+    target_memory_locations = target_points_to_tree.root();
+    full_path = std::move(remaining_path);
+  }
+
+  full_path.append(PathElement::field(field));
+
+  if (kind == UpdateKind::Strong && target_memory_locations.size() > 1) {
     // In practice, only one of the memory location is affected, so we must
     // treat this as a weak update, even if a strong update was requested.
     kind = UpdateKind::Weak;
   }
 
-  Path full_path = remaining_path;
-  full_path.append(PathElement::field(field));
-
   for (const auto& [target_memory_location, _properties] :
-       target_memory_locations.root()) {
+       target_memory_locations) {
     environment_.update(
         target_memory_location,
         [&full_path, &points_tos, kind](const PointsToTree& tree) {
