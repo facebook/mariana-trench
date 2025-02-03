@@ -76,9 +76,9 @@ Shims ShimGeneration::run(
     } catch (const JsonValidationError& exception) {
       auto error = fmt::format(
           "Unable to parse shim generator at `{}`: {}", path, exception.what());
-      WARNING(3, error);
+      WARNING(1, error);
       EventLogger::log_event(
-          "shim_generator_error", error, /* verbosity_level */ 3);
+          "shim_generator_error", error, /* verbosity_level */ 1);
     }
   }
 
