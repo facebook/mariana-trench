@@ -42,5 +42,16 @@
     "sinks": [
       "Sink"
     ]
+  },
+  {
+    "name": "Flow",
+    "code": 5,
+    "description": "",
+    "sources": [
+      "Source"
+    ],
+    "sinks": [
+      "Sink"
+    ]
   }
 ]

@@ -492,6 +492,29 @@
       "Lcom/facebook/marianatrench/integrationtests/Tree;.getFoo:()Lcom/facebook/marianatrench/integrationtests/Tree;"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/AliasingObjects$MyClass;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/AliasingObjects;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/AliasingObjects;.falseNegative:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/AliasingObjects$MyClass;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V" : 
   {
     "static" : 

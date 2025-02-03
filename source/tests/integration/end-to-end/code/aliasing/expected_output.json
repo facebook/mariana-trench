@@ -6359,6 +6359,30 @@
   }
 }
 {
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingObjects$MyClass;.<init>:()V",
+  "position" : 
+  {
+    "line" : 10,
+    "path" : "AliasingObjects.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingObjects;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9,
+    "path" : "AliasingObjects.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AliasingObjects;.falseNegative:()V",
+  "position" : 
+  {
+    "line" : 18,
+    "path" : "AliasingObjects.java"
+  }
+}
+{
   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V",
   "position" : 
   {
@@ -6435,6 +6459,34 @@
   ]
 }
 {
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "Source",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
   "position" : 
   {

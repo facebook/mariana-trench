@@ -115,6 +115,10 @@
     "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.testNoCollapsePropagations:()V",
     "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.testSimple2:()V"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/AliasingObjects$MyClass;.<init>:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/AliasingObjects;.falseNegative:()V"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testAliasCycle:()V",
@@ -132,7 +136,12 @@
     "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.testNoCollapsePropagations:()V",
     "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.testSimple1:()V",
     "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.testSimple2:()V",
-    "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.testSimpleTaintTreeGeneration:()V"
+    "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.testSimpleTaintTreeGeneration:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AliasingObjects;.falseNegative:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/AliasingObjects;.falseNegative:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/Tree;.<init>:()V" : 
   [
@@ -271,6 +280,8 @@
     "Lcom/facebook/marianatrench/integrationtests/AliasingJava$Tree;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AliasingObjects$MyClass;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/AliasingObjects;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/Tree;.<init>:()V",
