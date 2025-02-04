@@ -183,6 +183,14 @@ void Interprocedural::run_analysis(Context& context, Registry& registry) {
     methods_to_analyze->insert(method);
   }
 
+  unsigned int threads = sparta::parallel::default_num_threads();
+  if (context.options->sequential()) {
+    WARNING(1, "Running sequentially!");
+    threads = 1u;
+  } else {
+    LOG(1, "Using {} threads", threads);
+  }
+
   std::size_t iteration = 0;
   while (methods_to_analyze->size() > 0) {
     Timer iteration_timer;
@@ -208,12 +216,6 @@ void Interprocedural::run_analysis(Context& context, Registry& registry) {
 
     auto new_methods_to_analyze =
         std::make_unique<ConcurrentSet<const Method*>>();
-
-    unsigned int threads = sparta::parallel::default_num_threads();
-    if (context.options->sequential()) {
-      WARNING(1, "Running sequentially!");
-      threads = 1u;
-    }
 
     std::atomic<std::size_t> method_iteration(0);
     auto queue = sparta::work_queue<const Method*>(
