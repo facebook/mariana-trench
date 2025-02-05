@@ -155,7 +155,8 @@ Model analyze(
     EventLogger::log_event(
         "slow_method",
         /* message */ method->show(),
-        /* value */ duration);
+        /* value */ duration,
+        /* verbosity_level */ 1);
   }
   auto slow_method_bound =
       global_context.options->maximum_method_analysis_time();
