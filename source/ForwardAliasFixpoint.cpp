@@ -214,6 +214,20 @@ void ForwardAliasFixpoint::analyze_node(
     const NodeId& block,
     ForwardAliasEnvironment* environment) const {
   LOG(4, "Analyzing block {}\n{}", block->id(), *environment);
+
+  auto duration = timer_.duration_in_seconds();
+  auto maximum_method_analysis_time =
+      context_.options.maximum_method_analysis_time().value_or(
+          std::numeric_limits<int>::max());
+  if (duration > maximum_method_analysis_time) {
+    throw TimeoutError(
+        fmt::format(
+            "Forward alias analysis of `{}` exceeded timeout of {}s.",
+            context_.method()->show(),
+            maximum_method_analysis_time),
+        duration);
+  }
+
   for (const auto& instruction : *block) {
     switch (instruction.type) {
       case MFLOW_OPCODE:

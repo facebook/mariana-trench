@@ -11,9 +11,11 @@
 namespace marianatrench {
 
 ForwardTaintFixpoint::ForwardTaintFixpoint(
+    const MethodContext& method_context,
     const cfg::ControlFlowGraph& cfg,
     InstructionAnalyzer<ForwardTaintEnvironment> instruction_analyzer)
     : MonotonicFixpointIterator(cfg, cfg.num_blocks()),
+      context_(method_context),
       instruction_analyzer_(std::move(instruction_analyzer)) {}
 
 ForwardTaintFixpoint::~ForwardTaintFixpoint() {}
@@ -22,6 +24,20 @@ void ForwardTaintFixpoint::analyze_node(
     const NodeId& block,
     ForwardTaintEnvironment* taint) const {
   LOG(4, "Analyzing block {}\n{}", block->id(), *taint);
+
+  auto duration = timer_.duration_in_seconds();
+  auto maximum_method_analysis_time =
+      context_.options.maximum_method_analysis_time().value_or(
+          std::numeric_limits<int>::max());
+  if (duration > maximum_method_analysis_time) {
+    throw TimeoutError(
+        fmt::format(
+            "Forward taint analysis of `{}` exceeded timeout of {}s.",
+            context_.method()->show(),
+            maximum_method_analysis_time),
+        duration);
+  }
+
   for (const auto& instruction : *block) {
     switch (instruction.type) {
       case MFLOW_OPCODE:

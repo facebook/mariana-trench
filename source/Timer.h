@@ -8,10 +8,25 @@
 #pragma once
 
 #include <chrono>
+#include <stdexcept>
 
 #include <mariana-trench/IncludeMacros.h>
 
 namespace marianatrench {
+
+class TimeoutError : public std::runtime_error {
+ public:
+  explicit TimeoutError(const std::string& message, double duration_in_seconds)
+      : std::runtime_error(message),
+        duration_in_seconds_(duration_in_seconds) {}
+
+  double duration_in_seconds() const {
+    return duration_in_seconds_;
+  }
+
+ private:
+  double duration_in_seconds_;
+};
 
 class Timer final {
  public:

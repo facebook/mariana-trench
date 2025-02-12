@@ -14,6 +14,7 @@
 
 #include <mariana-trench/BackwardTaintEnvironment.h>
 #include <mariana-trench/Log.h>
+#include <mariana-trench/Timer.h>
 
 namespace marianatrench {
 
@@ -23,6 +24,7 @@ class BackwardTaintFixpoint final
           BackwardTaintEnvironment> {
  public:
   BackwardTaintFixpoint(
+      const MethodContext& context,
       const cfg::ControlFlowGraph& cfg,
       InstructionAnalyzer<BackwardTaintEnvironment> instruction_analyzer);
 
@@ -35,8 +37,17 @@ class BackwardTaintFixpoint final
       const EdgeId& edge,
       const BackwardTaintEnvironment& taint) const override;
 
+  const Timer& timer() const {
+    return timer_;
+  }
+
  private:
+  const MethodContext& context_;
   InstructionAnalyzer<BackwardTaintEnvironment> instruction_analyzer_;
+
+  // Timer tracking approximately when the analysis was started.
+  // Default constructed.
+  Timer timer_;
 };
 
 } // namespace marianatrench

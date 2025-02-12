@@ -14,6 +14,7 @@
 
 #include <mariana-trench/ForwardAliasEnvironment.h>
 #include <mariana-trench/MethodContext.h>
+#include <mariana-trench/Timer.h>
 
 namespace marianatrench {
 
@@ -35,9 +36,17 @@ class ForwardAliasFixpoint final : public sparta::MonotonicFixpointIterator<
       const EdgeId& edge,
       const ForwardAliasEnvironment& environment) const override;
 
+  const Timer& timer() const {
+    return timer_;
+  }
+
  private:
   MethodContext& context_;
   InstructionAnalyzer<ForwardAliasEnvironment> instruction_analyzer_;
+
+  // Timer tracking approximately when the analysis was started.
+  // Default constructed.
+  Timer timer_;
 };
 
 } // namespace marianatrench

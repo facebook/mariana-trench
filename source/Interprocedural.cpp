@@ -81,57 +81,89 @@ Model analyze(
       "Code:\n{}",
       Method::show_control_flow_graph(code->cfg()));
 
+  bool analysis_timed_out = false;
+
   {
     // TODO(T144485000): This could potentially be done once as a pre-analysis
     // step and cached. The handling of inlining (`inline_as_getter`) might make
     // this impossible unfortunately.
     LOG_OR_DUMP(
         &method_context, 4, "Forward alias analysis of `{}`", method->show());
-    Timer forward_alias_timer;
     auto forward_alias_fixpoint = ForwardAliasFixpoint(
         method_context,
         code->cfg(),
         InstructionAnalyzerCombiner<ForwardAliasTransfer>(&method_context));
-    forward_alias_fixpoint.run(ForwardAliasEnvironment::initial());
+    try {
+      forward_alias_fixpoint.run(ForwardAliasEnvironment::initial());
+    } catch (const TimeoutError& error) {
+      analysis_timed_out = true;
+      WARNING(1, "TimeoutError: {}", error.what());
+      EventLogger::log_event(
+          "method_timed_out_forward_alias_analysis",
+          /* message */ method->show(),
+          /* value */ error.duration_in_seconds(),
+          /* verbosity_level */ 1);
+    }
+
     LOG_OR_DUMP(
         &method_context,
         4,
         "Forward alias analysis of `{}` took {:.2f}s",
         method->show(),
-        forward_alias_timer.duration_in_seconds());
+        forward_alias_fixpoint.timer().duration_in_seconds());
   }
 
-  {
+  if (!analysis_timed_out) {
     LOG_OR_DUMP(
         &method_context, 4, "Forward taint analysis of `{}`", method->show());
-    Timer forward_taint_timer;
     auto forward_taint_fixpoint = ForwardTaintFixpoint(
+        method_context,
         code->cfg(),
         InstructionAnalyzerCombiner<ForwardTaintTransfer>(&method_context));
-    forward_taint_fixpoint.run(ForwardTaintEnvironment::initial());
+    try {
+      forward_taint_fixpoint.run(ForwardTaintEnvironment::initial());
+    } catch (const TimeoutError& error) {
+      analysis_timed_out = true;
+      WARNING(1, "TimeoutError: {}", error.what());
+      EventLogger::log_event(
+          "method_timed_out_forward_taint_analysis",
+          /* message */ method->show(),
+          /* value */ error.duration_in_seconds(),
+          /* verbosity_level */ 1);
+    }
     LOG_OR_DUMP(
         &method_context,
         4,
         "Forward taint analysis of `{}` took {:.2f}s",
         method->show(),
-        forward_taint_timer.duration_in_seconds());
+        forward_taint_fixpoint.timer().duration_in_seconds());
   }
 
-  {
-    Timer backward_taint_timer;
+  if (!analysis_timed_out) {
     LOG_OR_DUMP(
         &method_context, 4, "Backward taint analysis of `{}`", method->show());
     auto backward_taint_fixpoint = BackwardTaintFixpoint(
+        method_context,
         code->cfg(),
         InstructionAnalyzerCombiner<BackwardTaintTransfer>(&method_context));
-    backward_taint_fixpoint.run(
-        BackwardTaintEnvironment::initial(method_context));
+    try {
+      backward_taint_fixpoint.run(
+          BackwardTaintEnvironment::initial(method_context));
+    } catch (const TimeoutError& error) {
+      analysis_timed_out = true;
+      WARNING(1, "TimeoutError: {}", error.what());
+      EventLogger::log_event(
+          "method_timed_out_backward_taint_analysis",
+          /* message */ method->show(),
+          /* value */ error.duration_in_seconds(),
+          /* verbosity_level */ 1);
+    }
     LOG_OR_DUMP(
         &method_context,
         4,
         "Backward taint analysis of `{}` took {:.2f}s",
         method->show(),
-        backward_taint_timer.duration_in_seconds());
+        backward_taint_fixpoint.timer().duration_in_seconds());
   }
 
   new_model.collapse_invalid_paths(global_context);
@@ -158,13 +190,13 @@ Model analyze(
         /* value */ duration,
         /* verbosity_level */ 1);
   }
-  auto slow_method_bound =
-      global_context.options->maximum_method_analysis_time();
-  if (slow_method_bound && *slow_method_bound <= duration) {
+
+  if (analysis_timed_out) {
     LOG(1,
-        "Analyzing `{}` took {:.2f}s, setting default taint-in-taint-out.",
+        "Analyzing `{}` exceeded maximum per-analyzer timeout duration of {}s, setting default taint-in-taint-out.",
         method->show(),
-        duration);
+        global_context.options->maximum_method_analysis_time().value_or(
+            std::numeric_limits<int>::max()));
     new_model.add_mode(Model::Mode::AddViaObscureFeature, global_context);
     new_model.add_mode(Model::Mode::SkipAnalysis, global_context);
     new_model.add_mode(Model::Mode::NoJoinVirtualOverrides, global_context);

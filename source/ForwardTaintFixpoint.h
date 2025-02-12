@@ -13,6 +13,8 @@
 #include <InstructionAnalyzer.h>
 
 #include <mariana-trench/ForwardTaintEnvironment.h>
+#include <mariana-trench/MethodContext.h>
+#include <mariana-trench/Timer.h>
 
 namespace marianatrench {
 
@@ -21,6 +23,7 @@ class ForwardTaintFixpoint final : public sparta::MonotonicFixpointIterator<
                                        ForwardTaintEnvironment> {
  public:
   ForwardTaintFixpoint(
+      const MethodContext& method_context,
       const cfg::ControlFlowGraph& cfg,
       InstructionAnalyzer<ForwardTaintEnvironment> instruction_analyzer);
 
@@ -33,8 +36,17 @@ class ForwardTaintFixpoint final : public sparta::MonotonicFixpointIterator<
       const EdgeId& edge,
       const ForwardTaintEnvironment& taint) const override;
 
+  const Timer& timer() const {
+    return timer_;
+  }
+
  private:
+  const MethodContext& context_;
   InstructionAnalyzer<ForwardTaintEnvironment> instruction_analyzer_;
+
+  // Timer tracking approximately when the analysis was started.
+  // Default constructed.
+  Timer timer_;
 };
 
 } // namespace marianatrench
