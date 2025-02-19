@@ -161,6 +161,46 @@
           }
         ]
       }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroidx/activity/result/ActivityResultCaller;",
+          "name": "registerForActivityResult"
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "ActivityResultCallerRegister",
+            "port": "Argument(1)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Lcom/facebook/secure/context/ScopedIntentLauncher;",
+          "name": "registerForActivityResult"
+        }
+      ],
+      "model": {
+        "sanitizers": [
+          {
+            "sanitize": "sinks",
+            "kinds": [
+              {
+                "kind": "ActivityResultCallerRegister"
+              }
+            ]
+          }
+        ]
+      }
     }
   ]
 }

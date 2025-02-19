@@ -4,24 +4,9 @@
       "find": "methods",
       "where": [
         {
-          "constraint": "name",
-          "pattern": "\\<init\\>"
-        },
-        {
-          "constraint": "any_of",
-          "inners": [
-            {
-              "constraint": "parent",
-              "inner": {
-                "constraint": "extends",
-                "include_self": true,
-                "inner": {
-                  "constraint": "name",
-                  "pattern": "Landroid/content/Intent;"
-                }
-              }
-            }
-          ]
+          "constraint": "signature_match",
+          "extends": "Landroid/content/Intent;",
+          "name": "<init>"
         },
         {
           "constraint": "not",
@@ -35,6 +20,24 @@
         "generations": [
           {
             "kind": "IntentCreation",
+            "port": "Argument(0)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroidx/activity/result/contract/ActivityResultContracts$StartActivityForResult;",
+          "name": "<init>"
+        }
+      ],
+      "model": {
+        "generations": [
+          {
+            "kind": "StartActivityForResultContract",
             "port": "Argument(0)"
           }
         ]
