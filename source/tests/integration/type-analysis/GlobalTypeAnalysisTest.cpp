@@ -512,4 +512,19 @@ TEST_F(GlobalTypeAnalysisTest, EntryPointArgumentTypes) {
   }
 }
 
+TEST_F(GlobalTypeAnalysisTest, UnassignedFields) {
+  auto scope = build_class_scope(stores);
+  set_root_method("Lcom/facebook/redextest/TestS;.main:()V");
+
+  auto options = test::make_default_options();
+  auto analysis = GlobalTypeAnalysis::make_default();
+  auto gta = analysis.analyze(scope, *options);
+  auto wps = gta->get_whole_program_state();
+
+  auto field = get_field("TestS$One;.m1:Lcom/facebook/redextest/TestS$Foo;");
+  auto field_type = wps.get_field_type(field);
+  EXPECT_TRUE(field_type.is_top());
+  EXPECT_TRUE(field_type.is_nullable());
+}
+
 } // namespace marianatrench

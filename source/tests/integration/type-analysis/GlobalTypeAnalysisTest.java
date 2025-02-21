@@ -493,3 +493,24 @@ class TestR {
    staticPassThrough(derived2);
  }
 }
+
+/*
+ * Unassigned ifields should have type top()
+ */
+class TestS {
+  static class Foo {
+    void doSomething() {}
+  }
+
+  static class One {
+    Foo m1;
+
+    void doSomething() {
+      m1.doSomething();
+    }
+  }
+
+  public static void main() {
+    (new One()).doSomething();
+  }
+}
