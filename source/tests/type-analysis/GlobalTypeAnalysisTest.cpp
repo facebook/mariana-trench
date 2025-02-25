@@ -406,6 +406,14 @@ TEST_F(GlobalTypeAnalysisTest, StaticFieldWithEncodedValueTest) {
                   new DexEncodedValueType(DexType::make_type("L0"))));
   creator.add_field(field_3);
 
+  auto field_4 =
+      DexField::make_field("LA;.f4:LA;")
+          ->make_concrete(
+              ACC_PUBLIC | ACC_STATIC | ACC_FINAL,
+              std::unique_ptr<DexEncodedValue>(
+                  new DexEncodedValueType(DexType::make_type("LA;"))));
+  creator.add_field(field_4);
+
   // No clinit
   auto meth_init = assembler::method_from_string(R"(
     (method (public constructor) "LA;.<init>:()V"
@@ -497,6 +505,9 @@ TEST_F(GlobalTypeAnalysisTest, StaticFieldWithEncodedValueTest) {
   EXPECT_EQ(wps.get_return_type(meth_buk),
             DexTypeDomain::create_not_null(type::java_lang_Class())
                 .join(DexTypeDomain::null()));
+
+  EXPECT_EQ(wps.get_field_type(field_4),
+            DexTypeDomain::create_nullable(DexType::get_type("LA;")));
 }
 
 } // namespace marianatrench

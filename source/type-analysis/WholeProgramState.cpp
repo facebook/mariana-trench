@@ -74,7 +74,9 @@ void set_encoded_values(const DexClass* cls, DexTypeEnvironment* env) {
                value->evtype() == DEVT_TYPE) {
       env->set(sfield, DexTypeDomain::create_not_null(type::java_lang_Class()));
     } else {
-      env->set(sfield, DexTypeDomain::top());
+      // Other encoded values might not be fully supported. Use the field's
+      // declared type.
+      env->set(sfield, DexTypeDomain::create_nullable(sfield->get_type()));
     }
   }
 }
@@ -98,7 +100,6 @@ void set_sfields_in_partition(const DexClass* cls,
           TYPE, 5, "%s has type %s after <clinit>", SHOW(field), SHOW(domain));
       always_assert(field->get_class() == cls->get_type());
     } else {
-      // Other encoded value might not be fully supported.
       TRACE(TYPE, 5, "%s has null type after <clinit>", SHOW(field));
       domain = DexTypeDomain::null();
     }
