@@ -99,7 +99,8 @@ void set_sfields_in_partition(const DexClass* cls,
       always_assert(field->get_class() == cls->get_type());
     } else {
       // Other encoded value might not be fully supported.
-      TRACE(TYPE, 5, "%s has unknown type after <clinit>", SHOW(field));
+      TRACE(TYPE, 5, "%s has null type after <clinit>", SHOW(field));
+      domain = DexTypeDomain::null();
     }
     field_partition->set(field, std::move(domain));
   }
@@ -129,7 +130,8 @@ void set_ifields_in_partition(
       TRACE(TYPE, 5, "%s has type %s after <init>", SHOW(field), SHOW(domain));
       always_assert(field->get_class() == cls->get_type());
     } else {
-      TRACE(TYPE, 5, "%s has unknown type after <init>", SHOW(field));
+      TRACE(TYPE, 5, "%s has null type after <init>", SHOW(field));
+      domain = DexTypeDomain::null();
     }
     field_partition->update(field, [&domain](auto* current_type) {
       current_type->join_with(domain);

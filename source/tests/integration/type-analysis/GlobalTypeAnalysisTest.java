@@ -495,7 +495,7 @@ class TestR {
 }
 
 /*
- * Unassigned ifields should have type top()
+ * Unassigned ifields should have type NONE, and nullness "is null".
  */
 class TestS {
   static class Foo {

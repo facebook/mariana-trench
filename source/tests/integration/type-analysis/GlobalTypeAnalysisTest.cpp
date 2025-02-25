@@ -98,7 +98,8 @@ TEST_F(GlobalTypeAnalysisTest, NullableFieldTypeTest) {
   // Field holding the reference to the nullalbe anonymous class
   auto field_monitor =
       get_field("TestC;.mMonitor:Lcom/facebook/redextest/Receiver;");
-  EXPECT_TRUE(wps.get_field_type(field_monitor).is_top());
+  EXPECT_EQ(*wps.get_field_type(field_monitor).get_dex_type(),
+            get_type("TestC$1"));
   EXPECT_TRUE(wps.get_field_type(field_monitor).is_nullable());
 
   // Field on the anonymous class referencing the outer class
@@ -117,10 +118,17 @@ TEST_F(GlobalTypeAnalysisTest, TrueVirtualFieldTypeTest) {
   auto gta = analysis.analyze(scope, *options);
   auto wps = gta->get_whole_program_state();
 
-  // The field written by true virtuals is conservatively joined to top.
+  // True virtual methods are entry-points. Redex conservatively sets fields
+  // written to by such methods as top, but Mariana Trench does not.
   auto field_val =
       get_field("TestD$State;.mVal:Lcom/facebook/redextest/TestD$Base;");
-  EXPECT_TRUE(wps.get_field_type(field_val).is_top());
+  auto field_type = wps.get_field_type(field_val);
+  EXPECT_FALSE(field_type.is_top());
+  EXPECT_TRUE(field_type.is_nullable());
+  const auto& single_domain = field_type.get_single_domain();
+  EXPECT_EQ(single_domain, SingletonDexTypeDomain(get_type("TestD$Sub")));
+  const auto& set_domain = field_type.get_set_domain();
+  EXPECT_EQ(set_domain.get_types(), get_type_set({get_type("TestD$Sub")}));
 }
 
 TEST_F(GlobalTypeAnalysisTest, SmallSetDexTypeDomainTest) {
@@ -200,20 +208,32 @@ TEST_F(GlobalTypeAnalysisTest, ClinitFieldAnalyzerTest) {
   auto field_mbase =
       get_field("TestH;.mBase:Lcom/facebook/redextest/TestH$Base;");
   ftype = wps.get_field_type(field_mbase);
-  EXPECT_TRUE(ftype.is_top());
+  EXPECT_FALSE(ftype.is_top());
   EXPECT_TRUE(ftype.is_nullable());
+  EXPECT_EQ(ftype.get_single_domain(),
+            SingletonDexTypeDomain(get_type("TestH$Base")));
+  EXPECT_EQ(ftype.get_set_domain(),
+            get_small_set_domain({"TestH$SubOne", "TestH$SubTwo"}));
 
   auto meth_foo =
       get_method("TestH;.foo", "", "Lcom/facebook/redextest/TestH$Base;");
   auto rtype = wps.get_return_type(meth_foo);
-  EXPECT_TRUE(rtype.is_top());
+  EXPECT_FALSE(rtype.is_top());
   EXPECT_TRUE(rtype.is_nullable());
+  EXPECT_EQ(rtype.get_single_domain(),
+            SingletonDexTypeDomain(get_type("TestH$Base")));
+  EXPECT_EQ(rtype.get_set_domain(),
+            get_small_set_domain({"TestH$SubOne", "TestH$SubTwo"}));
 
   auto meth_bar =
       get_method("TestH;.bar", "", "Lcom/facebook/redextest/TestH$Base;");
   rtype = wps.get_return_type(meth_bar);
-  EXPECT_TRUE(rtype.is_top());
+  EXPECT_FALSE(rtype.is_top());
   EXPECT_TRUE(rtype.is_nullable());
+  EXPECT_EQ(rtype.get_single_domain(),
+            SingletonDexTypeDomain(get_type("TestH$Base")));
+  EXPECT_EQ(rtype.get_set_domain(),
+            get_small_set_domain({"TestH$SubOne", "TestH$SubTwo"}));
 
   auto meth_baz =
       get_method("TestH;.baz", "", "Lcom/facebook/redextest/TestH$Base;");
@@ -257,8 +277,10 @@ TEST_F(GlobalTypeAnalysisTest, IFieldsNullnessTest) {
 
   auto two_m2 = get_field("TestI$Two;.m2:Lcom/facebook/redextest/TestI$Foo;");
   ftype = wps.get_field_type(two_m2);
-  EXPECT_TRUE(ftype.is_top());
+  EXPECT_FALSE(ftype.is_top());
   EXPECT_TRUE(ftype.is_nullable());
+  EXPECT_EQ(ftype.get_single_domain(),
+            SingletonDexTypeDomain(get_type("TestI$Foo")));
 }
 
 TEST_F(GlobalTypeAnalysisTest, PrimitiveArrayTest) {
@@ -308,8 +330,10 @@ TEST_F(GlobalTypeAnalysisTest, InstanceSensitiveCtorNullnessTest) {
 
   auto field_f = get_field("TestL$Foo;.f:Lcom/facebook/redextest/TestL$A;");
   auto ftype = wps.get_field_type(field_f);
-  EXPECT_TRUE(ftype.is_top());
+  EXPECT_FALSE(ftype.is_top());
   EXPECT_TRUE(ftype.is_nullable());
+  EXPECT_EQ(ftype.get_single_domain(),
+            SingletonDexTypeDomain(get_type("TestL$A")));
 }
 
 TEST_F(GlobalTypeAnalysisTest, ArrayNullnessEscapeTest) {
@@ -523,8 +547,13 @@ TEST_F(GlobalTypeAnalysisTest, UnassignedFields) {
 
   auto field = get_field("TestS$One;.m1:Lcom/facebook/redextest/TestS$Foo;");
   auto field_type = wps.get_field_type(field);
-  EXPECT_TRUE(field_type.is_top());
-  EXPECT_TRUE(field_type.is_nullable());
+  EXPECT_FALSE(field_type.is_top());
+  EXPECT_TRUE(field_type.is_null());
+
+  const auto& single_domain = field_type.get_single_domain();
+  EXPECT_TRUE(single_domain.is_none());
+  const auto& set_domain = field_type.get_set_domain();
+  EXPECT_EQ(set_domain.get_types(), get_type_set({}));
 }
 
 } // namespace marianatrench
