@@ -768,10 +768,7 @@ void infer_exploitability_sinks(
       context->heuristics);
 }
 
-void apply_call_effects(
-    MethodContext* context,
-    const IRInstruction* instruction,
-    const CalleeModel& callee) {
+void apply_call_effects(MethodContext* context, const CalleeModel& callee) {
   const auto& callee_call_effect_sinks = callee.model.call_effect_sinks();
   for (const auto& [port, sinks] : callee_call_effect_sinks.elements()) {
     switch (port.root().kind()) {
@@ -801,17 +798,37 @@ void apply_call_effects(
         // between the forward and backwards analysis. Instead,
         // we fully rely on the information passed from the forward analysis
         // through the PartiallyFulfilledExploitabilityRuleState for both cases
-        // below in `infer_exploitability_sinks`
+        // in `infer_exploitability_sinks`
         break;
 
       case Root::Kind::CallEffectIntent:
+        // This is for methods that call getIntent() and is used to indicate
+        // that the intent within the method is tainted. It is not propagated to
+        // callers as their intents are not necessarily tainted (e.g. if the
+        // caller is from a different class/activity).
         break;
+
       default:
         mt_unreachable();
     }
   }
+}
 
-  infer_exploitability_sinks(context, instruction);
+void apply_call_effects(
+    MethodContext* context,
+    const InstructionAliasResults& aliasing,
+    const IRInstruction* instruction,
+    const CalleeModel& callee_from_instruction) {
+  apply_call_effects(context, callee_from_instruction);
+
+  // Instruction may be attached to artificial callees. Propagate their call
+  // effects accordingly.
+  const auto& artificial_callees =
+      context->call_graph.artificial_callees(context->method(), instruction);
+  for (const auto& artificial_callee : artificial_callees) {
+    apply_call_effects(
+        context, get_callee(context, artificial_callee, aliasing.position()));
+  }
 }
 
 } // namespace
@@ -891,7 +908,8 @@ bool BackwardTaintTransfer::analyze_invoke(
         result_taint);
   }
 
-  apply_call_effects(context, instruction, callee);
+  apply_call_effects(context, aliasing, instruction, callee);
+  infer_exploitability_sinks(context, instruction);
 
   return false;
 }
