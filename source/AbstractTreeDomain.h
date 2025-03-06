@@ -1164,6 +1164,38 @@ class AbstractTreeDomain final
 
  public:
   /**
+   * Iterate on all non-empty elements in the tree in the post-order.
+   *
+   * When visiting the tree, elements do not include their ancestors.
+   */
+  template <typename Visitor> // void(const Path&, const Elements&)
+  void visit_postorder(Visitor&& visitor) const {
+    static_assert(
+        std::is_same_v<
+            decltype(visitor(
+                std::declval<const Path>(), std::declval<const Elements>())),
+            void>);
+
+    Path path;
+    visit_postorder_internal(path, std::forward<Visitor>(visitor));
+  }
+
+ private:
+  template <typename Visitor> // void(const Path&, const Elements&)
+  void visit_postorder_internal(Path& path, Visitor&& visitor) const {
+    for (const auto& [path_element, subtree] : children_) {
+      path.append(path_element);
+      subtree.visit_internal(path, visitor);
+      path.pop_back();
+    }
+
+    if (!elements_.is_bottom()) {
+      visitor(path, elements_);
+    }
+  }
+
+ public:
+  /**
    * Return the list of all pairs (path, elements) in the tree.
    *
    * Elements are returned by reference.

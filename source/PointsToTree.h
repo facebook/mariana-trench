@@ -98,6 +98,16 @@ class PointsToTree final : public sparta::AbstractDomain<PointsToTree> {
     return tree_.visit(std::forward<Visitor>(visitor));
   }
 
+  /**
+   * Iterate on all non-empty points-to set in the tree in the post-order.
+   *
+   * When visiting the tree, points-to set do not include their ancestors.
+   */
+  template <typename Visitor> // void(const Path&, const PointsToSet&)
+  void visit_postorder(Visitor&& visitor) const {
+    return tree_.visit_postorder(std::forward<Visitor>(visitor));
+  }
+
   std::vector<std::pair<Path, const PointsToSet&>> elements() const {
     return tree_.elements();
   }
