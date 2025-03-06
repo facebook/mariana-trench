@@ -98,11 +98,22 @@ class PointsToTree final : public sparta::AbstractDomain<PointsToTree> {
     return tree_.visit(std::forward<Visitor>(visitor));
   }
 
+  std::vector<std::pair<Path, const PointsToSet&>> elements() const {
+    return tree_.elements();
+  }
+
   /* Apply the given function on all PointsToSet. */
   template <typename Function> // PointsToSet(PointsToSet)
   void transform(Function&& f) {
     tree_.transform(std::forward<Function>(f));
   }
+
+  /**
+   * Return a copy of the points-to tree with the given aliasing properties
+   * applied to the root of the tree.
+   */
+  PointsToTree with_aliasing_properties(
+      const AliasingProperties& properties) const;
 
   friend std::ostream& operator<<(std::ostream& out, const PointsToTree& tree);
 

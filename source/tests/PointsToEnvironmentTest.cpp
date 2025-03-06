@@ -11,6 +11,7 @@
 
 #include <mariana-trench/PointsToEnvironment.h>
 #include <mariana-trench/Redex.h>
+#include <mariana-trench/WideningPointsToResolver.h>
 #include <mariana-trench/tests/Test.h>
 
 namespace marianatrench {
@@ -674,6 +675,368 @@ TEST_F(
   EXPECT_EQ(
       environment.resolve_aliases(im5.get()),
       (PointsToTree{{Path{}, PointsToSet{im5.get()}}, {Path{e}, im0_set}}));
+}
+
+TEST_F(PointsToEnvironmentTest, ResolveAliasesLoopsWithSideTree) {
+  // Setup memory locations
+  auto r0 = std::make_unique<ParameterMemoryLocation>(0);
+  auto m1 = std::make_unique<ParameterMemoryLocation>(1);
+  auto m2 = std::make_unique<ParameterMemoryLocation>(2);
+  auto m3 = std::make_unique<ParameterMemoryLocation>(3);
+  auto m4 = std::make_unique<ParameterMemoryLocation>(4);
+
+  // For side tree
+  auto s1 = std::make_unique<ParameterMemoryLocation>(11);
+  auto s2 = std::make_unique<ParameterMemoryLocation>(12);
+  auto s3 = std::make_unique<ParameterMemoryLocation>(13);
+  auto s4 = std::make_unique<ParameterMemoryLocation>(14);
+  auto s5 = std::make_unique<ParameterMemoryLocation>(15);
+
+  // Setup fields
+  const auto tree = PathElement::field("tree");
+  const auto left = PathElement::field("left");
+  const auto right = PathElement::field("right");
+  const auto side = PathElement::field("side");
+
+  PointsToSet points_to_set_m12{m1.get(), m2.get()};
+  PointsToSet points_to_set_m1234{m1.get(), m2.get(), m3.get(), m4.get()};
+
+  // Setup to test the current state of the environment
+  auto r0_tree = PointsToTree{
+      {Path{tree}, PointsToSet{m1.get(), m2.get(), m3.get()}},
+  };
+  auto m1_tree = PointsToTree{
+      {Path{right}, points_to_set_m12},
+      {Path{left}, points_to_set_m1234},
+      {Path{side}, PointsToSet{s1.get()}},
+  };
+
+  auto s1_tree = PointsToTree{
+      {Path{left}, PointsToSet{s2.get()}},
+      {Path{right}, PointsToSet{s3.get()}},
+  };
+
+  auto s3_tree = PointsToTree{
+      {Path{left}, PointsToSet{s2.get()}},
+  };
+
+  auto m2_tree = PointsToTree{
+      {Path{right}, points_to_set_m12},
+      {Path{left}, points_to_set_m1234},
+  };
+
+  auto m3_tree = PointsToTree{
+      {Path{right}, points_to_set_m12},
+      {Path{left}, points_to_set_m1234},
+  };
+
+  auto m4_tree = PointsToTree{
+      {Path{right}, points_to_set_m12},
+      {Path{left}, points_to_set_m1234},
+  };
+
+  auto environment = PointsToEnvironment{
+      {r0.get(), r0_tree},
+      {m1.get(), m1_tree},
+      {m2.get(), m2_tree},
+      {m3.get(), m3_tree},
+      {m4.get(), m4_tree},
+      {s1.get(), s1_tree},
+      {s3.get(), s3_tree},
+      // Adding a separate unconnected locations.
+      {s4.get(), (PointsToTree{{Path{left}, PointsToSet{s5.get()}}})},
+  };
+
+  // Tests
+  WideningPointsToResolver widening_resolver(environment);
+
+  // Widened component.
+  const auto& widened_components = widening_resolver.widened_components();
+  EXPECT_EQ(widened_components.size(), 1);
+
+  // Expected widened component is: {m1, m2, m3, m4}. Since these are all in the
+  // same depth and we store pointers, the order of visitation is not
+  // deterministic and anyone of them could be the head.
+  auto* head = widened_components.get_head(m1.get());
+  auto* widened_component = widened_components.get_component(head);
+  EXPECT_TRUE(widened_component != nullptr);
+  EXPECT_EQ(
+      *widened_component,
+      (WidenedPointsToComponents::Component{
+          m1.get(), m2.get(), m3.get(), m4.get()}));
+  EXPECT_EQ(widened_components.get_head(m1.get()), head);
+  EXPECT_EQ(widened_components.get_head(m2.get()), head);
+  EXPECT_EQ(widened_components.get_head(m3.get()), head);
+  EXPECT_EQ(widened_components.get_head(m4.get()), head);
+
+  EXPECT_EQ(
+      widening_resolver.resolved_aliases(s5.get()),
+      (PointsToTree{{Path{}, PointsToSet{s5.get()}}}));
+
+  EXPECT_EQ(
+      widening_resolver.resolved_aliases(s4.get()),
+      (PointsToTree{
+          {
+              Path{},
+              PointsToSet{s4.get()},
+          },
+          {
+              Path{left},
+              PointsToSet{s5.get()},
+          },
+      }));
+
+  EXPECT_EQ(
+      widening_resolver.resolved_aliases(s3.get()),
+      (PointsToTree{
+          {
+              Path{},
+              PointsToSet{s3.get()},
+          },
+          {
+              Path{left},
+              PointsToSet{s2.get()},
+          },
+      }));
+
+  EXPECT_EQ(
+      widening_resolver.resolved_aliases(s2.get()),
+      (PointsToTree{{
+          Path{},
+          PointsToSet{s2.get()},
+      }}));
+
+  EXPECT_EQ(
+      widening_resolver.resolved_aliases(s1.get()),
+      (PointsToTree{
+          {
+              Path{},
+              PointsToSet{s1.get()},
+          },
+          {
+              Path{left},
+              PointsToSet{s2.get()},
+          },
+          {
+              Path{right},
+              PointsToSet{s3.get()},
+          },
+          {
+              Path{right, left},
+              PointsToSet{s2.get()},
+          },
+      }));
+
+  // For widened component:
+  // - we only find the head in the environment
+  // - collapse depth is always set to 0
+  EXPECT_EQ(
+      widening_resolver.resolved_aliases(head),
+      (PointsToTree{
+          {Path{}, PointsToSet{head, AliasingProperties::always_collapse()}},
+          {
+              Path{side},
+              PointsToSet{s1.get()},
+          },
+          {
+              Path{side, left},
+              PointsToSet{s2.get()},
+          },
+          {
+              Path{side, right},
+              PointsToSet{s3.get()},
+          },
+          {
+              Path{side, right, left},
+              PointsToSet{s2.get()},
+          },
+      }));
+
+  EXPECT_EQ(
+      widening_resolver.resolved_aliases(r0.get()),
+      (PointsToTree{
+          {Path{}, PointsToSet{r0.get()}},
+          {Path{tree},
+           PointsToSet{head, AliasingProperties::always_collapse()}},
+          {
+              Path{tree, side},
+              PointsToSet{s1.get()},
+          },
+          {
+              Path{tree, side, left},
+              PointsToSet{s2.get()},
+          },
+          {
+              Path{tree, side, right},
+              PointsToSet{s3.get()},
+          },
+          {
+              Path{tree, side, right, left},
+              PointsToSet{s2.get()},
+          },
+      }));
+}
+
+TEST_F(PointsToEnvironmentTest, WeakTopologicalOrdering) {
+  // Setup memory locations
+  auto m1 = std::make_unique<ParameterMemoryLocation>(1);
+  auto m2 = std::make_unique<ParameterMemoryLocation>(2);
+  auto m3 = std::make_unique<ParameterMemoryLocation>(3);
+  auto m4 = std::make_unique<ParameterMemoryLocation>(4);
+  auto m5 = std::make_unique<ParameterMemoryLocation>(5);
+  auto m6 = std::make_unique<ParameterMemoryLocation>(6);
+  auto m7 = std::make_unique<ParameterMemoryLocation>(7);
+  auto m8 = std::make_unique<ParameterMemoryLocation>(8);
+  auto m9 = std::make_unique<ParameterMemoryLocation>(9);
+  auto m10 = std::make_unique<ParameterMemoryLocation>(10);
+  auto m11 = std::make_unique<ParameterMemoryLocation>(11);
+  auto m12 = std::make_unique<ParameterMemoryLocation>(12);
+  auto m13 = std::make_unique<ParameterMemoryLocation>(13);
+
+  // Setup fields
+  const auto left = PathElement::field("left");
+  const auto right = PathElement::field("right");
+  const auto side = PathElement::field("side");
+
+  // Setup to test the current state of the environment
+  auto environment = PointsToEnvironment{
+      {m1.get(),
+       PointsToTree{
+           {Path{left}, PointsToSet{m2.get()}},
+       }},
+      {m2.get(),
+       PointsToTree{
+           {Path{left}, PointsToSet{m3.get()}},
+           {Path{right}, PointsToSet{m8.get()}},
+       }},
+      {m3.get(),
+       PointsToTree{
+           {Path{left}, PointsToSet{m4.get()}},
+       }},
+      {m4.get(),
+       PointsToTree{
+           {Path{left}, PointsToSet{m5.get()}},
+           {Path{right}, PointsToSet{m7.get()}},
+           {Path{side}, PointsToSet{m11.get()}},
+       }},
+      {m5.get(),
+       PointsToTree{
+           {Path{left}, PointsToSet{m6.get()}},
+           {Path{side}, PointsToSet{m12.get()}},
+       }},
+      {m6.get(),
+       PointsToTree{
+           {Path{left}, PointsToSet{m7.get()}},
+           {Path{right}, PointsToSet{m5.get()}},
+       }},
+      {m7.get(),
+       PointsToTree{
+           {Path{left}, PointsToSet{m8.get()}},
+           {Path{right}, PointsToSet{m3.get()}},
+       }},
+      {m8.get(),
+       PointsToTree{
+           {Path{left}, PointsToSet{m9.get()}},
+           {Path{right}, PointsToSet{m10.get()}},
+       }},
+      {m11.get(),
+       PointsToTree{
+           {Path{left}, PointsToSet{m13.get()}},
+       }},
+      {m13.get(),
+       PointsToTree{
+           {Path{left}, PointsToSet{m11.get()}},
+       }},
+  };
+
+  // Tests
+  WideningPointsToResolver widening_resolver(environment);
+
+  // Expected widened components are: {m3, m4, m5, m6, m7} and {m11, m13}.
+  const auto& widened_components = widening_resolver.widened_components();
+  EXPECT_EQ(widened_components.size(), 2);
+
+  auto* head1 = widened_components.get_head(m3.get());
+  auto* head2 = widened_components.get_head(m11.get());
+  EXPECT_TRUE(head1 != nullptr);
+  EXPECT_TRUE(head2 != nullptr);
+
+  auto* widened_component_head1 = widened_components.get_component(head1);
+  EXPECT_TRUE(widened_component_head1 != nullptr);
+  EXPECT_EQ(
+      *widened_component_head1,
+      (WidenedPointsToComponents::Component{
+          m3.get(), m4.get(), m5.get(), m6.get(), m7.get()}));
+
+  // Setup Results
+  auto head2_with_m12_set = PointsToSet{
+      {head2, AliasingProperties::always_collapse()},
+      {m12.get(), AliasingProperties::empty()}};
+  auto expected_head1_tree = PointsToTree{
+      {Path{}, PointsToSet{head1, AliasingProperties::always_collapse()}},
+      {Path{left}, PointsToSet{m8.get()}},
+      {Path{side}, head2_with_m12_set},
+      {Path{left, left}, PointsToSet{m9.get()}},
+      {Path{left, right}, PointsToSet{m10.get()}},
+  };
+
+  EXPECT_EQ(widening_resolver.resolved_aliases(head1), expected_head1_tree);
+  EXPECT_EQ(widening_resolver.resolved_aliases(m3.get()), expected_head1_tree);
+  EXPECT_EQ(widening_resolver.resolved_aliases(m4.get()), expected_head1_tree);
+  EXPECT_EQ(widening_resolver.resolved_aliases(m5.get()), expected_head1_tree);
+  EXPECT_EQ(widening_resolver.resolved_aliases(m6.get()), expected_head1_tree);
+  EXPECT_EQ(widening_resolver.resolved_aliases(m7.get()), expected_head1_tree);
+
+  auto* widened_component_head2 = widened_components.get_component(head2);
+  EXPECT_TRUE(widened_component_head2 != nullptr);
+  EXPECT_EQ(
+      *widened_component_head2,
+      (WidenedPointsToComponents::Component{m11.get(), m13.get()}));
+
+  EXPECT_EQ(
+      widening_resolver.resolved_aliases(head2),
+      (PointsToTree{
+          {Path{}, PointsToSet{head2, AliasingProperties::always_collapse()}},
+      }));
+
+  EXPECT_EQ(
+      widening_resolver.resolved_aliases(m11.get()),
+      (PointsToTree{
+          {Path{}, PointsToSet{head2, AliasingProperties::always_collapse()}},
+      }));
+
+  EXPECT_EQ(
+      widening_resolver.resolved_aliases(m13.get()),
+      (PointsToTree{
+          {Path{}, PointsToSet{head2, AliasingProperties::always_collapse()}},
+      }));
+
+  EXPECT_EQ(
+      widening_resolver.resolved_aliases(m8.get()),
+      (PointsToTree{
+          {Path{}, PointsToSet{m8.get()}},
+          {Path{left}, PointsToSet{m9.get()}},
+          {Path{right}, PointsToSet{m10.get()}},
+      }));
+
+  auto expected_m2_tree = PointsToTree{
+      {Path{}, PointsToSet{m2.get()}},
+      {Path{left}, PointsToSet{head1, AliasingProperties::always_collapse()}},
+      {Path{left, left}, PointsToSet{m8.get()}},
+      {Path{left, left, left}, PointsToSet{m9.get()}},
+      {Path{left, left, right}, PointsToSet{m10.get()}},
+      {Path{left, side}, head2_with_m12_set},
+      {Path{right}, PointsToSet{m8.get()}},
+      {Path{right, left}, PointsToSet{m9.get()}},
+      {Path{right, right}, PointsToSet{m10.get()}},
+  };
+
+  EXPECT_EQ(widening_resolver.resolved_aliases(m2.get()), expected_m2_tree);
+
+  // m1 only has 1 edge to m2, which we already verified.
+  EXPECT_EQ(
+      widening_resolver.resolved_aliases(m1.get()).raw_read(Path{left}).root(),
+      (PointsToSet{m2.get()}));
 }
 
 } // namespace marianatrench

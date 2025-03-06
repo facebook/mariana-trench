@@ -30,6 +30,17 @@ void PointsToTree::write(const Path& path, PointsToTree tree, UpdateKind kind) {
   tree_.write(path, std::move(tree.tree_), kind);
 }
 
+PointsToTree PointsToTree::with_aliasing_properties(
+    const AliasingProperties& properties) const {
+  auto result = *this;
+  result.write(
+      Path{},
+      tree_.root().with_aliasing_properties(properties),
+      UpdateKind::Weak);
+
+  return result;
+}
+
 std::ostream& operator<<(std::ostream& out, const PointsToTree& tree) {
   return out << "PointsToTree(tree=" << tree.tree_ << ")";
 }

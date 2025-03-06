@@ -28,6 +28,14 @@ PointsToSet::PointsToSet(
   }
 }
 
+PointsToSet::PointsToSet(
+    std::initializer_list<std::pair<RootMemoryLocation*, AliasingProperties>>
+        points_tos) {
+  for (auto& points_to : points_tos) {
+    set_internal(points_to.first, points_to.second);
+  }
+}
+
 PointsToSet::PointsToSet(const MemoryLocationsDomain& memory_locations) {
   for (auto* memory_location : memory_locations) {
     auto* root_memory_location = memory_location->as<RootMemoryLocation>();
@@ -53,6 +61,27 @@ void PointsToSet::add_locally_inferred_features(
     properties.add_locally_inferred_features(features);
     return properties;
   });
+}
+
+void PointsToSet::update_aliasing_properties(
+    RootMemoryLocation* points_to,
+    const AliasingProperties& properties) {
+  map_.update(points_to, [&properties](const AliasingProperties& existing) {
+    auto result = existing;
+    result.join_with(properties);
+    return result;
+  });
+}
+
+PointsToSet PointsToSet::with_aliasing_properties(
+    const AliasingProperties& new_properties) const {
+  PointsToSet result{};
+
+  for (const auto& [points_to, _properties] : map_.bindings()) {
+    result.set_internal(points_to, new_properties);
+  }
+
+  return result;
 }
 
 std::ostream& operator<<(std::ostream& out, const PointsToSet& points_to_set) {

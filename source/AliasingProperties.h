@@ -9,6 +9,7 @@
 
 #include <sparta/AbstractDomain.h>
 
+#include <mariana-trench/CollapseDepth.h>
 #include <mariana-trench/FeatureMayAlwaysSet.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/LocalPositionSet.h>
@@ -35,21 +36,31 @@ class AliasingProperties final
    */
   AliasingProperties()
       : local_positions_(LocalPositionSet::bottom()),
-        locally_inferred_features_(FeatureMayAlwaysSet::bottom()) {}
+        locally_inferred_features_(FeatureMayAlwaysSet::bottom()),
+        collapse_depth_(CollapseDepth::bottom()) {}
 
  private:
   AliasingProperties(
       LocalPositionSet local_positions,
-      FeatureMayAlwaysSet features)
+      FeatureMayAlwaysSet features,
+      CollapseDepth collapse_depth)
       : local_positions_(std::move(local_positions)),
-        locally_inferred_features_(std::move(features)) {}
+        locally_inferred_features_(std::move(features)),
+        collapse_depth_(std::move(collapse_depth)) {}
 
  public:
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(AliasingProperties)
 
   static AliasingProperties empty() {
     return AliasingProperties(
-        /* local_positions */ {}, /* features */ {});
+        /* local_positions */ {},
+        /* features */ {},
+        /* collapse_depth */ CollapseDepth::no_collapse());
+  }
+
+  static AliasingProperties always_collapse() {
+    return AliasingProperties(
+        /* local_positions */ {}, /* features */ {}, CollapseDepth::collapse());
   }
 
   static AliasingProperties bottom() {
@@ -62,20 +73,23 @@ class AliasingProperties final
 
   bool is_bottom() const {
     return local_positions_.is_bottom() &&
-        locally_inferred_features_.is_bottom();
+        locally_inferred_features_.is_bottom() && collapse_depth_.is_bottom();
   }
 
   bool is_top() const {
-    return local_positions_.is_top() && locally_inferred_features_.is_top();
+    return local_positions_.is_top() && locally_inferred_features_.is_top() &&
+        collapse_depth_.is_top();
   }
 
   bool is_empty() const {
-    return local_positions_.empty() && locally_inferred_features_.empty();
+    return local_positions_.empty() && locally_inferred_features_.empty() &&
+        collapse_depth_ == CollapseDepth::no_collapse();
   }
 
   void set_to_empty() {
     local_positions_ = {};
     locally_inferred_features_ = {};
+    collapse_depth_ = CollapseDepth::no_collapse();
   }
 
   [[noreturn]] void set_to_bottom() {
@@ -112,6 +126,8 @@ class AliasingProperties final
 
   void add_locally_inferred_features(const FeatureMayAlwaysSet& features);
 
+  void set_always_collapse();
+
   friend std::ostream& operator<<(
       std::ostream& out,
       const AliasingProperties& properties);
@@ -119,6 +135,7 @@ class AliasingProperties final
  private:
   LocalPositionSet local_positions_;
   FeatureMayAlwaysSet locally_inferred_features_;
+  CollapseDepth collapse_depth_;
 };
 
 } // namespace marianatrench

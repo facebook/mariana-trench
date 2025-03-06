@@ -49,17 +49,25 @@ class PointsToSet final : public sparta::AbstractDomain<PointsToSet> {
   explicit PointsToSet(
       std::initializer_list<RootMemoryLocation*> memory_locations);
 
+  explicit PointsToSet(
+      std::initializer_list<std::pair<RootMemoryLocation*, AliasingProperties>>
+          points_tos);
+
   explicit PointsToSet(const MemoryLocationsDomain& memory_locations);
 
   INCLUDE_ABSTRACT_DOMAIN_METHODS(PointsToSet, Map, map_)
 
   void difference_with(const PointsToSet& other) {
+    if (other.is_bottom()) {
+      return;
+    }
     map_.difference_like_operation(
         other.map_,
         [](const AliasingProperties& left, const AliasingProperties& right) {
           if (left.leq(right)) {
             return AliasingProperties::empty();
           }
+
           return left;
         });
   }
@@ -80,10 +88,20 @@ class PointsToSet final : public sparta::AbstractDomain<PointsToSet> {
 
   void add_locally_inferred_features(const FeatureMayAlwaysSet& features);
 
+  void update_aliasing_properties(
+      RootMemoryLocation* points_to,
+      const AliasingProperties& properties);
+
+  /**
+   * Return a copy of the points-to set with the given aliasing properties.
+   */
+  PointsToSet with_aliasing_properties(
+      const AliasingProperties& properties) const;
+
  private:
   void set_internal(
       RootMemoryLocation* memory_location,
-      AliasingProperties&& properties) {
+      AliasingProperties properties) {
     mt_assert(!properties.is_top());
     map_.set(memory_location, std::move(properties));
   }

@@ -25,6 +25,17 @@ class PointsToEnvironment final
       PatriciaTreeMapAbstractPartition<RootMemoryLocation*, PointsToTree>;
 
  public:
+  using key_type = RootMemoryLocation*;
+  using mapped_type = PointsToTree;
+  using value_type = std::pair<const RootMemoryLocation*, PointsToTree>;
+  using iterator = typename Map::MapType::iterator;
+  using const_iterator = iterator;
+  using difference_type = std::ptrdiff_t;
+  using size_type = std::size_t;
+  using const_reference = const value_type&;
+  using const_pointer = const value_type*;
+
+ public:
   /* Create a bottom environment */
   PointsToEnvironment() : environment_(Map::bottom()) {}
 
@@ -39,6 +50,14 @@ class PointsToEnvironment final
   }
 
   INCLUDE_ABSTRACT_DOMAIN_METHODS(PointsToEnvironment, Map, environment_)
+
+  iterator begin() const {
+    return environment_.bindings().begin();
+  }
+
+  iterator end() const {
+    return environment_.bindings().end();
+  }
 
   const PointsToTree& get(RootMemoryLocation* root_memory_location) const {
     return environment_.get(root_memory_location);

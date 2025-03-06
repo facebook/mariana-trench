@@ -81,6 +81,9 @@ class CollapseDepth final : public sparta::AbstractDomain<CollapseDepth> {
   friend std::ostream& operator<<(
       std::ostream& out,
       const CollapseDepth& depth) {
+    if (depth.is(CollapseDepth::Enum::NoCollapse)) {
+      return out << "no-collapse";
+    }
     return out << depth.scalar_;
   }
 
