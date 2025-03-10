@@ -18,6 +18,8 @@
 
 namespace marianatrench {
 
+class WideningPointsToResolver;
+
 class PointsToEnvironment final
     : public sparta::AbstractDomain<PointsToEnvironment> {
  private:
@@ -77,6 +79,12 @@ class PointsToEnvironment final
   }
 
   /**
+   * Creates a widening resolver reflecting the current state of the points-to
+   * environment.
+   */
+  WideningPointsToResolver make_widening_resolver() const;
+
+  /**
    * Resolve all possible aliases for the points-to tree at the given
    * root_memory_location.
    *
@@ -119,6 +127,18 @@ class PointsToEnvironment final
    * Writes the points_tos set at the deeps node in the points-to environment.
    */
   void write(
+      MemoryLocation* memory_location,
+      const DexString* field,
+      const PointsToSet& points_tos,
+      UpdateKind kind);
+
+  /**
+   * Create an alias from memory location at path field to the points_tos set.
+   *
+   * Writes the points_tos set at the deeps node in the points-to environment.
+   */
+  void write(
+      const WideningPointsToResolver& widening_resolver,
       MemoryLocation* memory_location,
       const DexString* field,
       const PointsToSet& points_tos,

@@ -43,6 +43,7 @@ TEST_F(PointsToEnvironmentTest, ReadAndWritePointsToTreeSimple) {
   // eg. r0.x = im0();
   auto im0_set = PointsToSet{im0.get()};
   environment.write(
+      environment.make_widening_resolver(),
       /* memory_location */ r0.get(),
       /* field */ x.name(),
       /* points_tos */ im0_set,
@@ -54,6 +55,7 @@ TEST_F(PointsToEnvironmentTest, ReadAndWritePointsToTreeSimple) {
   // eg. join with r0.x = im1();
   auto im1_set = PointsToSet{im1.get()};
   environment.write(
+      environment.make_widening_resolver(),
       /* memory_location */ r0.get(),
       /* field */ x.name(),
       /* points_tos */ im1_set,
@@ -70,10 +72,14 @@ TEST_F(PointsToEnvironmentTest, ReadAndWritePointsToTreeSimple) {
   // im1.y = im2
   auto im2_set = PointsToSet{im2.get()};
   environment.write(
+      environment.make_widening_resolver(),
       /* memory_location */ r0_x,
       /* field */ y.name(),
       /* points_tos */ im2_set,
       UpdateKind::Strong);
+  // Retrieve the widening_resolver from the updated environment to test reads.
+  auto widening_resolver = environment.make_widening_resolver();
+
   auto r0_x_y = r0_x->make_field(y.name());
   EXPECT_EQ(environment.points_to(r0_x), im0_im1_set);
   EXPECT_EQ(environment.points_to(r0_x_y), im2_set);
@@ -82,7 +88,7 @@ TEST_F(PointsToEnvironmentTest, ReadAndWritePointsToTreeSimple) {
   EXPECT_EQ(
       environment.get(im1.get()).raw_read(Path{y}), PointsToTree{im2_set});
   EXPECT_EQ(
-      environment.resolve_aliases(r0.get()),
+      widening_resolver.resolved_aliases(r0.get()),
       (PointsToTree{
           {Path{}, PointsToSet{r0.get()}},
           {Path{x}, im0_im1_set},
@@ -110,14 +116,18 @@ TEST_F(PointsToEnvironmentTest, ReadAndWritePointsToTreeSimple) {
   // eg. r0.x = im0_im1();
   //     r0.x = im2();
   environment.write(
+      widening_resolver,
       /* memory_location */ r0.get(),
       /* field */ x.name(),
       /* points_tos */ im2_set,
       UpdateKind::Strong);
+  // Retrieve the widening_resolver from the updated environment to test reads.
+  widening_resolver = environment.make_widening_resolver();
+
   EXPECT_EQ(environment.points_to(r0_x), im2_set);
   EXPECT_TRUE(environment.points_to(r0_x_y).is_bottom());
   EXPECT_EQ(
-      environment.resolve_aliases(r0.get()),
+      widening_resolver.resolved_aliases(r0.get()),
       (PointsToTree{
           {Path{}, PointsToSet{r0.get()}},
           {Path{x}, im2_set},
@@ -178,6 +188,7 @@ TEST_F(PointsToEnvironmentTest, ChainingPointsToTree) {
   // eg. r0.x = r1;
   auto r1_set = PointsToSet{r1.get()};
   environment.write(
+      environment.make_widening_resolver(),
       /* memory_location */ r0.get(),
       /* field */ x.name(),
       /* points_tos */ r1_set,
@@ -187,6 +198,7 @@ TEST_F(PointsToEnvironmentTest, ChainingPointsToTree) {
   // Test update from the aliased memory location
   // eg. r1.a = im1();
   environment.write(
+      environment.make_widening_resolver(),
       /* memory_location */ r1.get(),
       /* field */ a.name(),
       /* points_tos */ im1_set,
@@ -202,6 +214,7 @@ TEST_F(PointsToEnvironmentTest, ChainingPointsToTree) {
   // Test update from the aliasing memory location
   // eg. r0.x.a.b = im2();
   environment.write(
+      environment.make_widening_resolver(),
       /* memory_location */ r0_x_a,
       /* field */ b.name(),
       /* points_tos */ im2_set,
@@ -233,6 +246,7 @@ TEST_F(PointsToEnvironmentTest, ChainingPointsToTree) {
   // Test setup new root memory location
   // eg. r2.c = im0()
   environment.write(
+      environment.make_widening_resolver(),
       /* memory_location */ r2.get(),
       /* field */ c.name(),
       /* points_tos */ im0_set,
@@ -243,6 +257,7 @@ TEST_F(PointsToEnvironmentTest, ChainingPointsToTree) {
   // eg. r2.d = im3();
   auto im3_set = PointsToSet{im3.get()};
   environment.write(
+      environment.make_widening_resolver(),
       /* memory_location */ r2.get(),
       /* field */ d.name(),
       /* points_tos */ im3_set,
@@ -280,27 +295,28 @@ TEST_F(PointsToEnvironmentTest, ChainingPointsToTree) {
   // Test the current taint environment
   //
   EXPECT_EQ(environment, expected);
+  auto widening_resolver = environment.make_widening_resolver();
   EXPECT_EQ(
-      environment.resolve_aliases(r0.get()),
+      widening_resolver.resolved_aliases(r0.get()),
       (PointsToTree{
           {Path{}, PointsToSet{r0.get()}},
           {Path{x}, PointsToSet{r1.get()}},
           {Path{x, a}, im1_set},
           {Path{x, a, b}, im2_set}}));
   EXPECT_EQ(
-      environment.resolve_aliases(r1.get()),
+      widening_resolver.resolved_aliases(r1.get()),
       (PointsToTree{
           {Path{}, PointsToSet{r1.get()}},
           {Path{a}, im1_set},
           {Path{a, b}, im2_set}}));
   EXPECT_EQ(
-      environment.resolve_aliases(r2.get()),
+      widening_resolver.resolved_aliases(r2.get()),
       (PointsToTree{
           {Path{}, PointsToSet{r2.get()}},
           {Path{c}, im0_set},
           {Path{d}, im3_set}}));
   EXPECT_EQ(
-      environment.resolve_aliases(im1.get()),
+      widening_resolver.resolved_aliases(im1.get()),
       (PointsToTree{{Path{}, PointsToSet{im1.get()}}, {Path{b}, im2_set}}));
 }
 
@@ -339,11 +355,36 @@ TEST_F(
 
   // Setup to test the current state of the environment
   auto environment = PointsToEnvironment::bottom();
-  environment.write(im1.get(), b.name(), im2_set, UpdateKind::Strong);
-  environment.write(r0.get(), x.name(), r1_set, UpdateKind::Strong);
-  environment.write(r1.get(), a.name(), im1_set, UpdateKind::Strong);
-  environment.write(r2.get(), c.name(), im0_set, UpdateKind::Strong);
-  environment.write(r2.get(), d.name(), im3_set, UpdateKind::Strong);
+  environment.write(
+      environment.make_widening_resolver(),
+      im1.get(),
+      b.name(),
+      im2_set,
+      UpdateKind::Strong);
+  environment.write(
+      environment.make_widening_resolver(),
+      r0.get(),
+      x.name(),
+      r1_set,
+      UpdateKind::Strong);
+  environment.write(
+      environment.make_widening_resolver(),
+      r1.get(),
+      a.name(),
+      im1_set,
+      UpdateKind::Strong);
+  environment.write(
+      environment.make_widening_resolver(),
+      r2.get(),
+      c.name(),
+      im0_set,
+      UpdateKind::Strong);
+  environment.write(
+      environment.make_widening_resolver(),
+      r2.get(),
+      d.name(),
+      im3_set,
+      UpdateKind::Strong);
 
   EXPECT_EQ(
       environment,
@@ -371,10 +412,14 @@ TEST_F(
   auto r1_b_c = r1->make_field(Path{b, c});
   auto r2_d_points_to = environment.points_to(r2_d);
   environment.write(
+      environment.make_widening_resolver(),
       /* memory_location */ r1_b_c,
       /* field */ d.name(),
       /* points_tos */ r2_d_points_to,
       UpdateKind::Strong);
+  // Retrieve the widening_resolver from the updated environment to test reads.
+  auto widening_resolver = environment.make_widening_resolver();
+
   auto r1_b_c_d = r1->make_field(Path{b, c, d});
   // Test read from r1.b.c.d and r0.x.a.b points-to the same memory locations.
   EXPECT_EQ(environment.points_to(r1_b_c_d), environment.points_to(r2_d));
@@ -382,7 +427,7 @@ TEST_F(
   EXPECT_EQ(environment.points_to(r1_b_c_d), im3_set);
   // Test resolved aliases for r1.
   EXPECT_EQ(
-      environment.resolve_aliases(r1.get()),
+      widening_resolver.resolved_aliases(r1.get()),
       (PointsToTree{
           {Path{}, PointsToSet{r1.get()}},
           {Path{a}, im1_set},
@@ -395,6 +440,7 @@ TEST_F(
   auto r3 = std::make_unique<ParameterMemoryLocation>(3);
   auto r3_set = PointsToSet{r3.get()};
   environment.write(
+      widening_resolver,
       /* memory_location */ im3.get(),
       /* field */ z.name(),
       /* points_tos */ r3_set,
@@ -447,6 +493,7 @@ TEST_F(
   auto r4 = std::make_unique<ParameterMemoryLocation>(4);
   auto r4_set = PointsToSet{r4.get()};
   environment.write(
+      environment.make_widening_resolver(),
       /* memory_location */ r1.get(),
       /* field */ b.name(),
       /* points_tos */ r4_set,
@@ -470,6 +517,7 @@ TEST_F(
   // Setup r4.c = im4();
   // Now, im4 is also reachable through r1.b.c when we resolve aliases.
   environment.write(
+      environment.make_widening_resolver(),
       /* memory_location */ r4.get(),
       /* field */ c.name(),
       /* points_tos */ im4_set,
@@ -489,6 +537,7 @@ TEST_F(
   // hence the write is equivalent to r4.c = im4();, which is already
   // the current state.
   environment.write(
+      environment.make_widening_resolver(),
       /* memory_location */ r1_b,
       /* field */ c.name(),
       /* points_tos */ im4_set,
@@ -503,6 +552,7 @@ TEST_F(
   auto im5 = std::make_unique<InstructionMemoryLocation>(i5.get());
   auto im5_set = PointsToSet{im5.get()};
   environment.write(
+      environment.make_widening_resolver(),
       /* memory_location */ r4_c,
       /* field */ d.name(),
       /* points_tos */ im5_set,
@@ -525,6 +575,7 @@ TEST_F(
   // implies writes to both im3.e and im5.e
   auto e = PathElement::field("e");
   environment.write(
+      environment.make_widening_resolver(),
       /* memory_location */ r1_b_c_d,
       /* field */ e.name(),
       /* points_tos */ im0_set,
@@ -610,8 +661,9 @@ TEST_F(
   //
   // Test resolved aliases
   //
+  widening_resolver = environment.make_widening_resolver();
   EXPECT_EQ(
-      environment.resolve_aliases(r0.get()),
+      widening_resolver.resolved_aliases(r0.get()),
       (PointsToTree{
           {Path{}, PointsToSet{r0.get()}},
           {Path{x}, PointsToSet{r1.get()}},
@@ -624,7 +676,7 @@ TEST_F(
           {Path{x, b, c, d, z}, r3_set}}));
 
   EXPECT_EQ(
-      environment.resolve_aliases(r1.get()),
+      widening_resolver.resolved_aliases(r1.get()),
       (PointsToTree{
           {Path{}, PointsToSet{r1.get()}},
           {Path{a}, im1_set},
@@ -636,7 +688,7 @@ TEST_F(
           {Path{b, c, d, z}, r3_set}}));
 
   EXPECT_EQ(
-      environment.resolve_aliases(r2.get()),
+      widening_resolver.resolved_aliases(r2.get()),
       (PointsToTree{
           {Path{}, PointsToSet{r2.get()}},
           {Path{c}, im0_set},
@@ -647,7 +699,7 @@ TEST_F(
           {Path{d, z}, r3_set}}));
 
   EXPECT_EQ(
-      environment.resolve_aliases(r4.get()),
+      widening_resolver.resolved_aliases(r4.get()),
       (PointsToTree{
           {Path{}, PointsToSet{r4.get()}},
           {Path{c}, im4_set},
@@ -655,25 +707,25 @@ TEST_F(
           {Path{c, d, e}, im0_set}}));
 
   EXPECT_EQ(
-      environment.resolve_aliases(im1.get()),
+      widening_resolver.resolved_aliases(im1.get()),
       (PointsToTree{{Path{}, PointsToSet{im1.get()}}, {Path{b}, im2_set}}));
 
   EXPECT_EQ(
-      environment.resolve_aliases(im3.get()),
+      widening_resolver.resolved_aliases(im3.get()),
       (PointsToTree{
           {Path{}, PointsToSet{im3.get()}},
           {Path{e}, im0_set},
           {Path{z}, r3_set}}));
 
   EXPECT_EQ(
-      environment.resolve_aliases(im4.get()),
+      widening_resolver.resolved_aliases(im4.get()),
       (PointsToTree{
           {Path{}, PointsToSet{im4.get()}},
           {Path{d}, im5_set},
           {Path{d, e}, im0_set}}));
 
   EXPECT_EQ(
-      environment.resolve_aliases(im5.get()),
+      widening_resolver.resolved_aliases(im5.get()),
       (PointsToTree{{Path{}, PointsToSet{im5.get()}}, {Path{e}, im0_set}}));
 }
 
@@ -748,7 +800,8 @@ TEST_F(PointsToEnvironmentTest, ResolveAliasesLoopsWithSideTree) {
   };
 
   // Tests
-  WideningPointsToResolver widening_resolver(environment);
+  // Retrieve the widening_resolver from the updated environment to test reads.
+  auto widening_resolver = environment.make_widening_resolver();
 
   // Widened component.
   const auto& widened_components = widening_resolver.widened_components();
@@ -950,7 +1003,8 @@ TEST_F(PointsToEnvironmentTest, WeakTopologicalOrdering) {
   };
 
   // Tests
-  WideningPointsToResolver widening_resolver(environment);
+  // Retrieve the widening_resolver from the updated environment to test reads.
+  auto widening_resolver = environment.make_widening_resolver();
 
   // Expected widened components are: {m3, m4, m5, m6, m7} and {m11, m13}.
   const auto& widened_components = widening_resolver.widened_components();
