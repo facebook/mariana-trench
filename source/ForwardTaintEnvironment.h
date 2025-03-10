@@ -16,6 +16,7 @@
 #include <mariana-trench/Taint.h>
 #include <mariana-trench/TaintEnvironment.h>
 #include <mariana-trench/TaintTree.h>
+#include <mariana-trench/WideningPointsToResolver.h>
 
 namespace marianatrench {
 
@@ -82,45 +83,45 @@ class ForwardTaintEnvironment final
       UpdateKind kind);
 
   TaintTree deep_read(
-      const ResolvedAliasesMap& resolved_aliases,
+      const WideningPointsToResolver& widening_resolver,
       MemoryLocation* memory_location) const;
 
   TaintTree deep_read(
-      const ResolvedAliasesMap& resolved_aliases,
+      const WideningPointsToResolver& widening_resolver,
       const MemoryLocationsDomain& memory_locations) const;
 
   TaintTree deep_read(
-      const ResolvedAliasesMap& resolved_aliases,
+      const WideningPointsToResolver& widening_resolver,
       const MemoryLocationsDomain& memory_locations,
       const Path& path) const;
 
   void deep_write(
-      const ResolvedAliasesMap& resolved_aliases,
+      const WideningPointsToResolver& widening_resolver,
       MemoryLocation* memory_location,
       TaintTree taint,
       UpdateKind kind);
 
   void deep_write(
-      const ResolvedAliasesMap& resolved_aliases,
+      const WideningPointsToResolver& widening_resolver,
       MemoryLocation* memory_location,
       const Path& path,
       TaintTree taint,
       UpdateKind kind);
 
   void deep_write(
-      const ResolvedAliasesMap& resolved_aliases,
+      const WideningPointsToResolver& widening_resolver,
       const MemoryLocationsDomain& memory_locations,
       TaintTree taint,
       UpdateKind kind);
 
   void deep_write(
-      const ResolvedAliasesMap& resolved_aliases,
+      const WideningPointsToResolver& widening_resolver,
       const MemoryLocationsDomain& memory_locations,
       Taint taint,
       UpdateKind kind);
 
   void deep_write(
-      const ResolvedAliasesMap& resolved_aliases,
+      const WideningPointsToResolver& widening_resolver,
       const MemoryLocationsDomain& memory_locations,
       const Path& path,
       TaintTree taint,

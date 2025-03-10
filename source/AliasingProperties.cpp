@@ -85,6 +85,18 @@ void AliasingProperties::set_always_collapse() {
   collapse_depth_ = CollapseDepth::collapse();
 }
 
+bool AliasingProperties::is_widened() const {
+  return collapse_depth_.should_collapse();
+}
+
+bool AliasingProperties::should_collapse() const {
+  return collapse_depth_.should_collapse();
+}
+
+const CollapseDepth& AliasingProperties::collapse_depth() const {
+  return collapse_depth_;
+}
+
 std::ostream& operator<<(
     std::ostream& out,
     const AliasingProperties& properties) {

@@ -10,6 +10,7 @@
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/ForwardAliasEnvironment.h>
 #include <mariana-trench/Log.h>
+#include <mariana-trench/WideningPointsToResolver.h>
 
 namespace marianatrench {
 
@@ -161,9 +162,9 @@ ForwardAliasEnvironment::memory_location_environment() const {
   return memory_locations_;
 }
 
-const PointsToEnvironment& ForwardAliasEnvironment::points_to_environment()
+WideningPointsToResolver ForwardAliasEnvironment::make_widening_resolver()
     const {
-  return aliases_;
+  return aliases_.make_widening_resolver();
 }
 
 DexPosition* ForwardAliasEnvironment::last_position() const {
@@ -221,6 +222,7 @@ PointsToSet ForwardAliasEnvironment::points_to(
 }
 
 void ForwardAliasEnvironment::write(
+    const WideningPointsToResolver& widening_resolver,
     MemoryLocation* memory_location,
     const DexString* field,
     const PointsToSet& points_tos,
@@ -232,7 +234,7 @@ void ForwardAliasEnvironment::write(
       field->str(),
       points_tos);
 
-  aliases_.write(memory_location, field, points_tos, kind);
+  aliases_.write(widening_resolver, memory_location, field, points_tos, kind);
 }
 
 std::ostream& operator<<(

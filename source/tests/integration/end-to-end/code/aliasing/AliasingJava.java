@@ -176,16 +176,15 @@ public class AliasingJava {
     // input.baz -> output -> .bar = Source3
     Origin.sink(input.baz.bar);
 
-    // Should have issues for Source1, Source2, and Source3.
-    // Currently a FN as we break the cycle and do not widen.
-    // Deep read taint tree at root memory location of output is:
-    // TaintTree(tree={{}
-    //   `.bar` -> {Source3}
-    //   `.foo` -> {{}
-    //     `.bar` -> {Source2}
-    //     `.foo` -> {Source1}
+    // Expect issues for Source1, Source2, and Source3 due to widening on aliasing cycles.
+    // The points-to tree is widened and has the collapse depth set to 0 at the head:
+    // Widened PointsToTree({
+    //  [(input + output):collapse-depth=0] -> {
+    //      .foo -> {source1, source3},
+    //      .bar -> {source2} }
     // })
-    // No issues for output.foo.baz.
+    // Deep read taint tree at root memory location of output is collapsed to:
+    // TaintTree({Source1, Source2, Source3})
     Origin.sink(output.foo.baz);
   }
 

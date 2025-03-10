@@ -17,11 +17,11 @@ namespace marianatrench {
 
 InstructionAliasResults::InstructionAliasResults(
     RegisterMemoryLocationsMap register_memory_locations_map,
-    ResolvedAliasesMap aliases,
+    WideningPointsToResolver widening_resolver,
     std::optional<MemoryLocationsDomain> result_memory_locations,
     DexPosition* MT_NULLABLE position)
     : register_memory_locations_map_(std::move(register_memory_locations_map)),
-      aliases_(std::move(aliases)),
+      widening_resolver_(std::move(widening_resolver)),
       result_memory_locations_(std::move(result_memory_locations)),
       position_(position) {}
 
@@ -30,8 +30,9 @@ InstructionAliasResults::register_memory_locations_map() const {
   return register_memory_locations_map_;
 }
 
-const ResolvedAliasesMap& InstructionAliasResults::resolved_aliases() const {
-  return aliases_;
+const WideningPointsToResolver& InstructionAliasResults::widening_resolver()
+    const {
+  return widening_resolver_;
 }
 
 MemoryLocationsDomain InstructionAliasResults::register_memory_locations(
@@ -91,14 +92,11 @@ std::ostream& operator<<(
     const InstructionAliasResults& results) {
   out << "InstructionAliasResults(\nregister_memory_locations_map={\n";
   for (const auto& [register_id, memory_locations] :
-       results.register_memory_locations_map()) {
+       results.register_memory_locations_map_) {
     out << fmt::format("{} -> {},\n", register_id, memory_locations);
   }
 
-  out << "},\nresolved_aliases={\n";
-  for (const auto& [memory_location, aliases] : results.resolved_aliases()) {
-    out << fmt::format("{} -> {},\n", show(memory_location), aliases);
-  }
+  out << "},\nwidening_resolver=" << results.widening_resolver_;
 
   out << "},\nresult_memory_locations="
       << show(results.result_memory_location_or_null());

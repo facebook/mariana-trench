@@ -80,7 +80,7 @@ bool ForwardTaintTransfer::analyze_check_cast(
       show(memory_location),
       taint);
   environment->deep_write(
-      aliasing.resolved_aliases(), memory_location, taint, UpdateKind::Strong);
+      aliasing.widening_resolver(), memory_location, taint, UpdateKind::Strong);
 
   return false;
 }
@@ -113,7 +113,7 @@ bool ForwardTaintTransfer::analyze_iget(
           memory_locations,
           field_sources);
       environment->deep_write(
-          aliasing.resolved_aliases(),
+          aliasing.widening_resolver(),
           memory_locations,
           field_sources,
           UpdateKind::Weak);
@@ -150,7 +150,7 @@ bool ForwardTaintTransfer::analyze_sget(
         show(memory_location),
         field_sources);
     environment->deep_write(
-        aliasing.resolved_aliases(),
+        aliasing.widening_resolver(),
         memory_location,
         TaintTree(field_sources),
         UpdateKind::Strong);
@@ -199,7 +199,7 @@ void apply_generations(
             memory_locations,
             generations);
         environment->deep_write(
-            aliasing.resolved_aliases(),
+            aliasing.widening_resolver(),
             memory_locations,
             generations,
             UpdateKind::Weak);
@@ -245,13 +245,13 @@ void apply_add_features_to_arguments(
     auto memory_locations = aliasing.register_memory_locations(register_id);
     for (auto* memory_location : memory_locations.elements()) {
       auto taint = previous_environment->deep_read(
-          aliasing.resolved_aliases(), memory_location);
+          aliasing.widening_resolver(), memory_location);
       taint.add_locally_inferred_features_and_local_position(
           features, position);
       // This is using a strong update, since a weak update would turn
       // the always-features we want to add into may-features.
       new_environment->deep_write(
-          aliasing.resolved_aliases(),
+          aliasing.widening_resolver(),
           memory_location,
           std::move(taint),
           UpdateKind::Strong);
@@ -300,7 +300,7 @@ void apply_propagations(
 
     auto input_register_id = instruction->src(input_parameter_position);
     auto input_taint_tree = previous_environment->deep_read(
-        aliasing.resolved_aliases(),
+        aliasing.widening_resolver(),
         aliasing.register_memory_locations(input_register_id),
         input_path.path().resolve(source_constant_arguments));
 
@@ -424,7 +424,7 @@ void apply_propagations(
                 output_path_resolved,
                 output_taint_tree);
             new_environment->deep_write(
-                aliasing.resolved_aliases(),
+                aliasing.widening_resolver(),
                 memory_locations,
                 output_path_resolved,
                 std::move(output_taint_tree),
@@ -448,11 +448,11 @@ void apply_inline_setter(
     ForwardTaintEnvironment* environment,
     TaintTree& result_taint) {
   auto taint = previous_environment->deep_read(
-      aliasing.resolved_aliases(), setter.value);
+      aliasing.widening_resolver(), setter.value);
   taint.add_local_position(setter.position);
   LOG_OR_DUMP(context, 4, "Tainting {} with {}", show(setter.target), taint);
   environment->deep_write(
-      aliasing.resolved_aliases(), setter.target, taint, UpdateKind::Strong);
+      aliasing.widening_resolver(), setter.target, taint, UpdateKind::Strong);
 
   result_taint = TaintTree::bottom();
 }
@@ -902,7 +902,7 @@ void check_call_flows(
     Taint sources =
         environment
             ->deep_read(
-                aliasing.resolved_aliases(),
+                aliasing.widening_resolver(),
                 aliasing.register_memory_locations(*register_id),
                 port.path().resolve(source_constant_arguments))
             .collapse(FeatureMayAlwaysSet{
@@ -1002,7 +1002,7 @@ void check_flows_to_array_allocation(
     Taint sources =
         environment
             ->deep_read(
-                aliasing.resolved_aliases(),
+                aliasing.widening_resolver(),
                 aliasing.register_memory_locations(register_id))
             .collapse(FeatureMayAlwaysSet{
                 context->feature_factory.get_issue_broadening_feature()});
@@ -1276,7 +1276,7 @@ bool ForwardTaintTransfer::analyze_invoke(
     LOG_OR_DUMP(
         context, 4, "Tainting {} with {}", show(memory_location), result_taint);
     environment->deep_write(
-        aliasing.resolved_aliases(),
+        aliasing.widening_resolver(),
         memory_location,
         result_taint,
         UpdateKind::Weak);
@@ -1318,7 +1318,7 @@ void check_flows_to_field_sink(
   }
 
   auto source_taint = environment->deep_read(
-      aliasing.resolved_aliases(),
+      aliasing.widening_resolver(),
       aliasing.register_memory_locations(instruction->src(0)));
 
   if (source_taint.is_bottom()) {
@@ -1378,7 +1378,7 @@ bool ForwardTaintTransfer::analyze_iput(
         show(field_memory_location),
         taint_copy);
     environment->deep_write(
-        aliasing.resolved_aliases(),
+        aliasing.widening_resolver(),
         field_memory_location,
         taint_copy,
         UpdateKind::Weak);
@@ -1476,7 +1476,7 @@ bool ForwardTaintTransfer::analyze_aput(
   const auto& aliasing = context->aliasing.get(instruction);
 
   auto taint = environment->deep_read(
-      aliasing.resolved_aliases(),
+      aliasing.widening_resolver(),
       aliasing.register_memory_locations(instruction->src(0)));
 
   auto features = FeatureMayAlwaysSet::make_always(
@@ -1501,7 +1501,7 @@ bool ForwardTaintTransfer::analyze_aput(
       memory_locations,
       taint);
   environment->deep_write(
-      aliasing.resolved_aliases(), memory_locations, taint, UpdateKind::Weak);
+      aliasing.widening_resolver(), memory_locations, taint, UpdateKind::Weak);
 
   return false;
 }
@@ -1539,11 +1539,11 @@ bool ForwardTaintTransfer::analyze_filled_new_array(
   // We join the taints from all the input locations and create a single memory
   // location for the array and its elements (ignoring the indices).
   auto taint = environment->deep_read(
-      aliasing.resolved_aliases(),
+      aliasing.widening_resolver(),
       aliasing.register_memory_locations(instruction->src(0)));
   for (size_t i = 1; i < instruction->srcs_size(); ++i) {
     taint.join_with(environment->deep_read(
-        aliasing.resolved_aliases(),
+        aliasing.widening_resolver(),
         aliasing.register_memory_locations(instruction->src(i))));
   }
 
@@ -1569,7 +1569,7 @@ static bool analyze_numerical_operator(
   TaintTree taint;
   for (auto register_id : instruction->srcs()) {
     taint.join_with(environment->deep_read(
-        aliasing.resolved_aliases(),
+        aliasing.widening_resolver(),
         aliasing.register_memory_locations(register_id)));
   }
 
@@ -1691,12 +1691,12 @@ bool ForwardTaintTransfer::analyze_return(
     infer_output_taint(
         context,
         Root(Root::Kind::Return),
-        environment->deep_read(aliasing.resolved_aliases(), memory_locations));
+        environment->deep_read(aliasing.widening_resolver(), memory_locations));
 
     for (const auto& [path, sinks] : return_sinks.elements()) {
       Taint sources =
           environment
-              ->deep_read(aliasing.resolved_aliases(), memory_locations, path)
+              ->deep_read(aliasing.widening_resolver(), memory_locations, path)
               .collapse(FeatureMayAlwaysSet{
                   context->feature_factory.get_issue_broadening_feature()});
       // Fulfilled partial sinks are not expected to be produced here. Return
@@ -1719,7 +1719,7 @@ bool ForwardTaintTransfer::analyze_return(
         context,
         Root(Root::Kind::Argument, 0),
         environment->deep_read(
-            aliasing.resolved_aliases(),
+            aliasing.widening_resolver(),
             context->memory_factory.make_parameter(0)));
   }
 

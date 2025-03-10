@@ -72,6 +72,8 @@ using RootMemoryLocationPointsToTreeMap =
  */
 class WideningPointsToResolver final {
  public:
+  WideningPointsToResolver() = default;
+
   explicit WideningPointsToResolver(const PointsToEnvironment& environment);
 
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(WideningPointsToResolver)

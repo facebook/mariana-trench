@@ -20,6 +20,7 @@
 #include <mariana-trench/PointsToEnvironment.h>
 #include <mariana-trench/PointsToTree.h>
 #include <mariana-trench/SetterAccessPathConstantDomain.h>
+#include <mariana-trench/WideningPointsToResolver.h>
 
 namespace marianatrench {
 
@@ -83,7 +84,7 @@ class ForwardAliasEnvironment final
 
   const MemoryLocationEnvironment& memory_location_environment() const;
 
-  const PointsToEnvironment& points_to_environment() const;
+  WideningPointsToResolver make_widening_resolver() const;
 
   DexPosition* MT_NULLABLE last_position() const;
   void set_last_position(DexPosition* position);
@@ -99,6 +100,7 @@ class ForwardAliasEnvironment final
   PointsToSet points_to(const MemoryLocationsDomain& memory_locations) const;
 
   void write(
+      const WideningPointsToResolver& widening_resolver,
       MemoryLocation* memory_location,
       const DexString* field,
       const PointsToSet& points_tos,

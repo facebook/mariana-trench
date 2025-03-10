@@ -6,6 +6,7 @@
  */
 
 #include <mariana-trench/AliasingProperties.h>
+#include <mariana-trench/FeatureFactory.h>
 #include <mariana-trench/TaintEnvironment.h>
 
 namespace marianatrench {
@@ -82,50 +83,62 @@ void TaintEnvironment::write(
 }
 
 TaintTree TaintEnvironment::deep_read(
-    const ResolvedAliasesMap& resolved_aliases,
+    const WideningPointsToResolver& widening_resolver,
     MemoryLocation* memory_location) const {
   TaintTree result{};
-  auto points_to_tree = resolved_aliases.get(memory_location->root());
-  points_to_tree.visit(
-      [this, &result](const Path& path, const PointsToSet& points_to_set) {
-        for (const auto& [points_to, properties] : points_to_set) {
-          auto taint = this->read(points_to);
-          taint.apply_aliasing_properties(properties);
-          result.write(path, std::move(taint), UpdateKind::Weak);
-        }
-      });
+  auto points_to_tree =
+      widening_resolver.resolved_aliases(memory_location->root());
+
+  // Collapse the points-to tree
+  points_to_tree.visit_postorder([this, &result](
+                                     const Path& path,
+                                     const PointsToSet& points_to_set) {
+    for (const auto& [points_to, properties] : points_to_set) {
+      auto taint = this->read(points_to);
+      taint.apply_aliasing_properties(properties);
+      result.write(path, std::move(taint), UpdateKind::Weak);
+
+      if (properties.collapse_depth().should_collapse()) {
+        result.collapse_deeper_than(
+            properties.collapse_depth().value(),
+            FeatureMayAlwaysSet{
+                FeatureFactory::singleton().get_alias_broadening_feature()});
+      }
+    }
+  });
 
   return result.read(memory_location->path());
 }
 
 TaintTree TaintEnvironment::deep_read(
-    const ResolvedAliasesMap& resolved_aliases,
+    const WideningPointsToResolver& widening_resolver,
     const MemoryLocationsDomain& memory_locations) const {
   TaintTree result{};
   for (auto* memory_location : memory_locations) {
-    result.join_with(deep_read(resolved_aliases, memory_location));
+    result.join_with(deep_read(widening_resolver, memory_location));
   }
   return result;
 }
 
 TaintTree TaintEnvironment::deep_read(
-    const ResolvedAliasesMap& resolved_aliases,
+    const WideningPointsToResolver& widening_resolver,
     const MemoryLocationsDomain& memory_locations,
     const Path& path) const {
   TaintTree result{};
   for (auto* memory_location : memory_locations) {
-    result.join_with(deep_read(resolved_aliases, memory_location).read(path));
+    result.join_with(deep_read(widening_resolver, memory_location).read(path));
   }
   return result;
 }
 
 void TaintEnvironment::deep_write(
-    const ResolvedAliasesMap& resolved_aliases,
+    const WideningPointsToResolver& widening_resolver,
     MemoryLocation* memory_location,
     const Path& path,
     TaintTree taint,
     UpdateKind kind) {
-  const auto& points_to_tree = resolved_aliases.get(memory_location->root());
+  const auto& points_to_tree =
+      widening_resolver.resolved_aliases(memory_location->root());
 
   auto full_path = memory_location->path();
   full_path.extend(path);
@@ -141,38 +154,41 @@ void TaintEnvironment::deep_write(
   // destructured variables in lambda below.
   auto raw_read_result = points_to_tree.raw_read_max_path(full_path);
   auto remaining_path = raw_read_result.first;
-  auto target_memory_locations = raw_read_result.second;
+  auto target_memory_locations = raw_read_result.second.root();
 
-  if (kind == UpdateKind::Strong && target_memory_locations.root().size() > 1) {
+  if (kind == UpdateKind::Strong && target_memory_locations.size() > 1) {
     // In practice, only one of the memory location is affected, so we must
     // treat this as a weak update, even if a strong update was requested.
     kind = UpdateKind::Weak;
   }
 
   for (const auto& [target_memory_location, properties] :
-       target_memory_locations.root()) {
+       target_memory_locations) {
+    auto target_update_kind = properties.is_widened() ? UpdateKind::Weak : kind;
     auto taint_to_write = taint;
     taint_to_write.apply_aliasing_properties(properties);
 
     LOG(5,
         "{} updating taint tree of {} at {} with: {}",
-        kind == UpdateKind::Strong ? "Strong" : "Weak",
+        target_update_kind == UpdateKind::Strong ? "Strong" : "Weak",
         show(target_memory_location),
         remaining_path,
         taint_to_write);
 
     environment_.update(
         target_memory_location,
-        [&remaining_path, &taint_to_write, kind](const TaintTree& tree) {
+        [&remaining_path, &taint_to_write, target_update_kind](
+            const TaintTree& tree) {
           auto copy = tree;
-          copy.write(remaining_path, std::move(taint_to_write), kind);
+          copy.write(
+              remaining_path, std::move(taint_to_write), target_update_kind);
           return copy;
         });
   }
 }
 
 void TaintEnvironment::deep_write(
-    const ResolvedAliasesMap& resolved_aliases,
+    const WideningPointsToResolver& widening_resolver,
     const MemoryLocationsDomain& memory_locations,
     const Path& path,
     TaintTree taint,
@@ -188,7 +204,7 @@ void TaintEnvironment::deep_write(
   }
 
   for (auto* memory_location : memory_locations.elements()) {
-    deep_write(resolved_aliases, memory_location, path, taint, kind);
+    deep_write(widening_resolver, memory_location, path, taint, kind);
   }
 }
 

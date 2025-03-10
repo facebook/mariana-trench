@@ -59,6 +59,11 @@ class FeatureFactory final {
    */
   const Feature* get_widen_broadening_feature() const;
   /**
+   * This feature is added to source or sink taint that is collapsed as a result
+   * of a read from a widened memory location.
+   */
+  const Feature* get_alias_broadening_feature() const;
+  /**
    * This feature is added to source or sink taint that is collapsed when
    * the analysis inferred taint on an undefined field.
    */

@@ -82,6 +82,10 @@ const Feature* FeatureFactory::get_widen_broadening_feature() const {
   return factory_.create("via-widen-broadening");
 }
 
+const Feature* FeatureFactory::get_alias_broadening_feature() const {
+  return factory_.create("via-alias-widen-broadening");
+}
+
 const Feature* FeatureFactory::get_invalid_path_broadening() const {
   return factory_.create("via-invalid-path-broadening");
 }

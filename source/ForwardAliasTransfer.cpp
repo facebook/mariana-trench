@@ -69,6 +69,8 @@ bool ForwardAliasTransfer::analyze_iget(
   // Read source memory locations that stores the fields.
   auto source_memory_locations =
       environment->memory_locations(instruction->src(0));
+  // Build the widening resolver from the entry state.
+  auto widening_resolver = environment->make_widening_resolver();
 
   const auto* field = instruction->get_field()->get_name();
   MemoryLocationsDomain field_memory_locations;
@@ -83,6 +85,7 @@ bool ForwardAliasTransfer::analyze_iget(
           context->memory_factory.make_location(instruction);
 
       environment->write(
+          widening_resolver,
           memory_location,
           field,
           PointsToSet{root_memory_location},
@@ -269,6 +272,8 @@ bool ForwardAliasTransfer::analyze_iput(
   // Update the points-to environment
   auto source_memory_locations =
       environment->memory_locations(instruction->src(0));
+  // Build the widening resolver from the entry state.
+  auto widening_resolver = environment->make_widening_resolver();
 
   const auto* field_name = instruction->get_field()->get_name();
   auto target_memory_locations =
@@ -298,6 +303,7 @@ bool ForwardAliasTransfer::analyze_iput(
         points_to);
 
     environment->write(
+        widening_resolver,
         memory_location,
         field_name,
         points_to,

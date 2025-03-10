@@ -128,6 +128,12 @@ class AliasingProperties final
 
   void set_always_collapse();
 
+  bool is_widened() const;
+
+  bool should_collapse() const;
+
+  const CollapseDepth& collapse_depth() const;
+
   friend std::ostream& operator<<(
       std::ostream& out,
       const AliasingProperties& properties);

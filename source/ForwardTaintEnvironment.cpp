@@ -99,9 +99,9 @@ void ForwardTaintEnvironment::write(
 }
 
 TaintTree ForwardTaintEnvironment::deep_read(
-    const ResolvedAliasesMap& resolved_aliases,
+    const WideningPointsToResolver& widening_resolver,
     MemoryLocation* memory_location) const {
-  auto taint_tree = environment_.deep_read(resolved_aliases, memory_location);
+  auto taint_tree = environment_.deep_read(widening_resolver, memory_location);
 
   LOG(5,
       "Deep read of memory location {} resolves to: {}",
@@ -112,9 +112,9 @@ TaintTree ForwardTaintEnvironment::deep_read(
 }
 
 TaintTree ForwardTaintEnvironment::deep_read(
-    const ResolvedAliasesMap& resolved_aliases,
+    const WideningPointsToResolver& widening_resolver,
     const MemoryLocationsDomain& memory_locations) const {
-  auto taint_tree = environment_.deep_read(resolved_aliases, memory_locations);
+  auto taint_tree = environment_.deep_read(widening_resolver, memory_locations);
 
   LOG(5,
       "Deep read of memory location {} resolves to: {}",
@@ -125,11 +125,11 @@ TaintTree ForwardTaintEnvironment::deep_read(
 }
 
 TaintTree ForwardTaintEnvironment::deep_read(
-    const ResolvedAliasesMap& resolved_aliases,
+    const WideningPointsToResolver& widening_resolver,
     const MemoryLocationsDomain& memory_locations,
     const Path& path) const {
   auto taint_tree =
-      environment_.deep_read(resolved_aliases, memory_locations, path);
+      environment_.deep_read(widening_resolver, memory_locations, path);
 
   LOG(5,
       "Deep read of memory location {} at path {} resolves to: {}",
@@ -141,26 +141,26 @@ TaintTree ForwardTaintEnvironment::deep_read(
 }
 
 void ForwardTaintEnvironment::deep_write(
-    const ResolvedAliasesMap& resolved_aliases,
+    const WideningPointsToResolver& widening_resolver,
     MemoryLocation* memory_location,
     TaintTree taint,
     UpdateKind kind) {
   environment_.deep_write(
-      resolved_aliases, memory_location, Path{}, std::move(taint), kind);
+      widening_resolver, memory_location, Path{}, std::move(taint), kind);
 }
 
 void ForwardTaintEnvironment::deep_write(
-    const ResolvedAliasesMap& resolved_aliases,
+    const WideningPointsToResolver& widening_resolver,
     MemoryLocation* memory_location,
     const Path& path,
     TaintTree taint,
     UpdateKind kind) {
   environment_.deep_write(
-      resolved_aliases, memory_location, path, std::move(taint), kind);
+      widening_resolver, memory_location, path, std::move(taint), kind);
 }
 
 void ForwardTaintEnvironment::deep_write(
-    const ResolvedAliasesMap& resolved_aliases,
+    const WideningPointsToResolver& widening_resolver,
     const MemoryLocationsDomain& memory_locations,
     TaintTree taint,
     UpdateKind kind) {
@@ -169,16 +169,16 @@ void ForwardTaintEnvironment::deep_write(
   }
 
   environment_.deep_write(
-      resolved_aliases, memory_locations, Path{}, std::move(taint), kind);
+      widening_resolver, memory_locations, Path{}, std::move(taint), kind);
 }
 
 void ForwardTaintEnvironment::deep_write(
-    const ResolvedAliasesMap& resolved_aliases,
+    const WideningPointsToResolver& widening_resolver,
     const MemoryLocationsDomain& memory_locations,
     Taint taint,
     UpdateKind kind) {
   environment_.deep_write(
-      resolved_aliases,
+      widening_resolver,
       memory_locations,
       Path{},
       TaintTree(std::move(taint)),
@@ -186,7 +186,7 @@ void ForwardTaintEnvironment::deep_write(
 }
 
 void ForwardTaintEnvironment::deep_write(
-    const ResolvedAliasesMap& resolved_aliases,
+    const WideningPointsToResolver& widening_resolver,
     const MemoryLocationsDomain& memory_locations,
     const Path& path,
     TaintTree taint,
@@ -196,7 +196,7 @@ void ForwardTaintEnvironment::deep_write(
   }
 
   environment_.deep_write(
-      resolved_aliases, memory_locations, path, std::move(taint), kind);
+      widening_resolver, memory_locations, path, std::move(taint), kind);
 }
 
 std::ostream& operator<<(
