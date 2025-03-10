@@ -87,7 +87,7 @@ class WideningPointsToResolver final {
       const WideningPointsToResolver& widening_resolver);
 
  private:
-  RootMemoryLocationPointsToTreeMap resolved_aliases_;
+  RootMemoryLocationPointsToTreeMap widened_resolved_aliases_;
   WidenedPointsToComponents widened_components_;
 };
 

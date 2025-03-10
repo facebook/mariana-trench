@@ -21,6 +21,272 @@ class DummyRootMemoryLocation : public RootMemoryLocation {
 };
 
 /**
+ * Builds the widened components for each WTOComponent.
+ * This preserves only the largest component by subsuming all the nested
+ * components into it.
+ */
+void build_widened_components_impl(
+    const sparta::WtoComponent<RootMemoryLocation*>& node,
+    RootMemoryLocation* head,
+    std::vector<RootMemoryLocation*>& ordering,
+    WidenedPointsToComponents& widened_components) {
+  auto* current_node = node.head_node();
+
+  // TODO: Implement reverse iterator in sparta's WeakTopological ordering so
+  // that we don't have to store this just for that.
+  ordering.emplace_back(current_node);
+
+  if (node.is_vertex() && head != nullptr) {
+    widened_components.add_component(head, current_node);
+  } else if (node.is_scc()) {
+    RootMemoryLocation* current_head;
+    if (head == nullptr) {
+      // Verify that we haven't processed this node already.
+      mt_assert(widened_components.get_head(node.head_node()) == nullptr);
+
+      // Found the head of a new component.
+      current_head = node.head_node();
+      widened_components.create_component(current_head);
+    } else {
+      // Found a nested component. Merge into the larger component.
+      current_head = head;
+      widened_components.add_component(current_head, node.head_node());
+    }
+
+    for (const auto& inner_node : node) {
+      build_widened_components_impl(
+          inner_node, current_head, ordering, widened_components);
+    }
+  }
+}
+
+/**
+ * Build the widened components from the WTO.
+ * This collects all the widened components from the WTO, subsuming the nested
+ * components into the largest component.
+ */
+std::vector<RootMemoryLocation*> build_widened_components(
+    const sparta::WeakTopologicalOrdering<RootMemoryLocation*>& wto,
+    WidenedPointsToComponents& widened_components) {
+  LOG(5, "Building widened components...");
+
+  std::vector<RootMemoryLocation*> ordering;
+  for (const auto& node : wto) {
+    if (node.head_node()->is<DummyRootMemoryLocation>()) {
+      // Skip the dummy node.
+      mt_assert(node.is_vertex());
+      continue;
+    }
+    build_widened_components_impl(
+        node, /* head */ nullptr, ordering, widened_components);
+  }
+
+  LOG(5, "Built Widened components: {}", widened_components);
+
+  return ordering;
+}
+
+/**
+ * Processes the given points_to_tree for the head memory location to create a
+ * widened points-to tree. This:
+ * - filters out the memory locations from the points-to set that are present
+ * in the component containing the head (if any).
+ * - replaces the memory locations in the points-to set with the corresponding
+ * head (if any).
+ * - updates the aliasing properties of the the points-set containing a
+ * widened memory location with collapse depth 0.
+ */
+PointsToTree build_widened_points_to_tree(
+    RootMemoryLocation* head,
+    const PointsToTree& points_to_tree,
+    const WidenedPointsToComponents& widened_components) {
+  PointsToTree result{};
+
+  const auto* current_component = widened_components.get_component(head);
+
+  points_to_tree.visit([&widened_components, &current_component, &result](
+                           const Path& path, const PointsToSet& points_to_set) {
+    PointsToSet new_points_to_set{};
+    for (const auto& [points_to, properties] : points_to_set) {
+      if (current_component && current_component->contains(points_to)) {
+        // points_to is a part of the current component and hence is
+        // merged/collapsed into (i.e. represented by) the head of the
+        // component. Note that the points-to environment does not store a
+        // points-to set (and hence aliasing properties) for the root memory
+        // location of the tree and hence the aliasing properties is ignored
+        // here as well.
+        continue;
+      }
+
+      if (auto* component_head = widened_components.get_head(points_to)) {
+        auto new_properties = properties;
+        new_properties.set_always_collapse();
+        new_points_to_set.update_aliasing_properties(
+            component_head, new_properties);
+      } else {
+        new_points_to_set.update_aliasing_properties(points_to, properties);
+      }
+    }
+
+    result.write(path, std::move(new_points_to_set), UpdateKind::Weak);
+  });
+
+  return result;
+}
+
+/**
+ * Builds the widened points-to environment for each WTOComponent.
+ */
+PointsToTree build_widened_points_to_environment_impl(
+    const PointsToEnvironment& environment,
+    const sparta::WtoComponent<RootMemoryLocation*>& node,
+    RootMemoryLocation* head,
+    const WidenedPointsToComponents& widened_components,
+    PointsToEnvironment& widened_environment) {
+  auto* current_head = head ? head : node.head_node();
+  PointsToTree widened_points_to_tree;
+
+  if (node.is_vertex()) {
+    widened_points_to_tree = build_widened_points_to_tree(
+        current_head, environment.get(node.head_node()), widened_components);
+  } else {
+    mt_assert(node.is_scc());
+    mt_assert(current_head == widened_components.get_head(current_head));
+
+    // This is a new component that has not been added to the widened
+    // points-to environment. We join the points-to-trees of all the
+    // members of this component to a single node represented by the head.
+    widened_points_to_tree = build_widened_points_to_tree(
+        current_head, environment.get(node.head_node()), widened_components);
+
+    for (const auto& inner_node : node) {
+      widened_points_to_tree.join_with(build_widened_points_to_environment_impl(
+          environment,
+          inner_node,
+          current_head,
+          widened_components,
+          widened_environment));
+    }
+  }
+
+  // If we are visiting the actual head of a component, update the
+  // widened-points-to-environment
+  if (current_head == node.head_node()) {
+    // Update the widened points-to environment.
+    widened_environment.update(
+        current_head, [&widened_points_to_tree](const PointsToTree& existing) {
+          auto copy = existing;
+          copy.join_with(widened_points_to_tree);
+          return copy;
+        });
+  }
+
+  return widened_points_to_tree;
+}
+
+/**
+ * Builds the widened points-to environment from the WTO.
+ */
+PointsToEnvironment build_widened_points_to_environment(
+    const sparta::WeakTopologicalOrdering<RootMemoryLocation*>& wto,
+    const PointsToEnvironment& environment,
+    const WidenedPointsToComponents& widened_components) {
+  LOG(5, "Building Widened Points-to Environment...");
+
+  PointsToEnvironment widened_environment{};
+
+  for (const auto& node : wto) {
+    if (node.head_node()->is<DummyRootMemoryLocation>()) {
+      // Skip the dummy node.
+      mt_assert(node.is_vertex());
+      continue;
+    }
+    build_widened_points_to_environment_impl(
+        environment,
+        node,
+        /* head */ nullptr,
+        widened_components,
+        widened_environment);
+  }
+
+  LOG(5, "Built Widened Points-to Environment: {}", widened_environment);
+
+  return widened_environment;
+}
+
+/**
+ * Traverses the widened points-to environment in weak topological ordering
+ * and updates the RootMemoryLocationToPointsToTree for each root with the
+ * fully resolved PointsToTree as value which includes the self-resolution at
+ * the root.
+ */
+void build_widened_resolved_aliases(
+    const std::vector<RootMemoryLocation*>& ordering,
+    const PointsToEnvironment& widened_environment,
+    const WidenedPointsToComponents& widened_components,
+    RootMemoryLocationPointsToTreeMap& widened_resolved_aliases) {
+  // We need to iterate in reverse topological order so that we can use the
+  // widened_resolved_aliases itself for memoization.
+  for (auto node = ordering.rbegin(); node != ordering.rend(); node++) {
+    bool is_component = true;
+    auto* head = widened_components.get_head(*node);
+    if (head == nullptr) {
+      // Not a part of any component.
+      head = *node;
+      is_component = false;
+    }
+
+    if (widened_resolved_aliases.find(head) != widened_resolved_aliases.end()) {
+      // Already resolved.
+      continue;
+    }
+
+    auto points_to_tree = widened_environment.get(head);
+    PointsToTree resolved_points_to_tree{};
+    points_to_tree.visit(
+        [&widened_resolved_aliases, &resolved_points_to_tree](
+            const Path& inner_path, const PointsToSet& points_to_set) {
+          // The root element of the PointsToTree of a root memory location is
+          // always empty.
+          mt_assert(!inner_path.empty() || points_to_set.is_bottom());
+
+          for (const auto& [points_to, properties] : points_to_set) {
+            // We are resolving the widened points-to environment in weak
+            // topological ordering hence we always expect to find the
+            // points-to memory location in the widened resolved environment.
+            auto resolved_points_to = widened_resolved_aliases.at(points_to);
+
+            // Update the root of the widened resolved point-to tree
+            // with the current aliasing properties.
+            resolved_points_to_tree.write(
+                inner_path,
+                resolved_points_to.with_aliasing_properties(properties),
+                UpdateKind::Weak);
+          }
+        });
+
+    // Add self resolution.
+    // When reading from a widened memory location (i.e. component), we
+    // always need to set the collapse depth to 0. This is updated in the
+    // AliasingProperties correctly in the widened_environment when another
+    // memory location aliases/points-to a widened memory location. However,
+    // we do not store the AliasingProperties for a memory location when it
+    // is the "root"/key of the PointsToEnvironment and since
+    // PointsToEnvironment::resolve_aliases() currently does not have access
+    // to this information, we update it after the fact here.
+    auto self_resolution = PointsToSet{
+        head,
+        is_component ? AliasingProperties::always_collapse()
+                     : AliasingProperties::empty()};
+
+    resolved_points_to_tree.write(
+        Path{}, std::move(self_resolution), UpdateKind::Weak);
+
+    widened_resolved_aliases.emplace(head, std::move(resolved_points_to_tree));
+  }
+}
+
+/**
  * This implements a widening operation on the PointsToEnvironment to remove any
  * cycles in the aliasing graph and applies the appropriate AliasingProperties
  * so that taint analysis can correctly read the taint trees from the widened
@@ -57,327 +323,60 @@ class DummyRootMemoryLocation : public RootMemoryLocation {
  *    - the AliasingProperties are updated to reflect this widened state.
  *
  */
-class WidenedPointsToBuilder final {
- public:
-  explicit WidenedPointsToBuilder(
-      const PointsToEnvironment& environment,
-      RootMemoryLocationPointsToTreeMap& widened_resolved_environment,
-      WidenedPointsToComponents& widened_components)
-      : environment_(environment),
-        widened_resolved_environment_(widened_resolved_environment),
-        widened_components_(widened_components) {}
+void build_widening_points_to_resolver(
+    const PointsToEnvironment& environment,
+    WidenedPointsToComponents& widened_components,
+    RootMemoryLocationPointsToTreeMap& widened_resolved_aliases) {
+  // Create a dummy root memory location so that we can traverse all the
+  // potentially disconnected components at once.
+  DummyRootMemoryLocation dummy_entry_node{};
 
-  void build() {
-    // Create a dummy root memory location so that we can traverse all the
-    // potentially disconnected components at once.
-    DummyRootMemoryLocation dummy_entry_node{};
+  auto successor_fn = [&environment, dummy_entry_node_ptr = &dummy_entry_node](
+                          RootMemoryLocation* vertex) {
+    auto successors = boost::container::flat_set<RootMemoryLocation*>{};
 
-    auto successor_fn = [&environment = environment_,
-                         dummy_entry_node_ptr =
-                             &dummy_entry_node](RootMemoryLocation* vertex) {
-      auto successors = boost::container::flat_set<RootMemoryLocation*>{};
-
-      if (vertex == dummy_entry_node_ptr) {
-        // Collect all the keys of the environment_ as successors for the dummy
-        // node.
-        for (const auto& [root_vertex, _points_to_tree] : environment) {
-          successors.insert(root_vertex);
-        }
-
-        return successors;
+    if (vertex == dummy_entry_node_ptr) {
+      // Collect all the keys of the environment_ as successors for the dummy
+      // node.
+      for (const auto& [root_vertex, _points_to_tree] : environment) {
+        successors.insert(root_vertex);
       }
-
-      environment.get(vertex).visit(
-          [&successors](
-              const Path& /* path */, const PointsToSet& points_to_set) {
-            for (const auto& [successor, _properties] : points_to_set) {
-              successors.insert(successor);
-            }
-          });
 
       return successors;
-    };
-
-    // 1. Create a WTO with root_vertex as the entry point into the graph.
-    sparta::WeakTopologicalOrdering<RootMemoryLocation*> wto(
-        &dummy_entry_node, successor_fn);
-
-    // 2. Collect all the widened components from the WTO, subsuming the
-    // nested components into the largest component.
-    auto ordering = build_widened_components(wto);
-
-    // 3. Build the widened points-to tree from the original environment_,
-    // applying the widening strategy.
-    auto widened_points_to_environment =
-        build_widened_points_to_environment(wto);
-
-    // 4. Build the mapping from each root memory location to the fully
-    // resolved PointsToTree.
-    build_widened_resolved_aliases(ordering, widened_points_to_environment);
-  }
-
- private:
-  /**
-   * Build the widened components from the WTO.
-   * This collects all the widened components from the WTO, subsuming the nested
-   * components into the largest component.
-   */
-  std::vector<RootMemoryLocation*> build_widened_components(
-      sparta::WeakTopologicalOrdering<RootMemoryLocation*>& wto) {
-    LOG(5, "Building widened components...");
-
-    std::vector<RootMemoryLocation*> ordering;
-    for (const auto& node : wto) {
-      if (node.head_node()->is<DummyRootMemoryLocation>()) {
-        // Skip the dummy node.
-        mt_assert(node.is_vertex());
-        continue;
-      }
-      build_widened_components_impl(node, /* head */ nullptr, ordering);
     }
 
-    LOG(5, "Built Widened components: {}", widened_components_);
+    environment.get(vertex).visit(
+        [&successors](
+            const Path& /* path */, const PointsToSet& points_to_set) {
+          for (const auto& [successor, _properties] : points_to_set) {
+            successors.insert(successor);
+          }
+        });
 
-    return ordering;
-  }
+    return successors;
+  };
 
-  /**
-   * Builds the widened components for each WTOComponent.
-   * This preserves only the largest component by subsuming all the nested
-   * components into it.
-   */
-  void build_widened_components_impl(
-      const sparta::WtoComponent<RootMemoryLocation*>& node,
-      RootMemoryLocation* head,
-      std::vector<RootMemoryLocation*>& ordering) {
-    auto* current_node = node.head_node();
+  // 1. Create a WTO with root_vertex as the entry point into the graph.
+  sparta::WeakTopologicalOrdering<RootMemoryLocation*> wto(
+      &dummy_entry_node, successor_fn);
 
-    // TODO: Implement reverse iterator in sparta's WeakTopological ordering so
-    // that we don't have to store this just for that.
-    ordering.emplace_back(current_node);
+  // 2. Collect all the widened components from the WTO, subsuming the
+  // nested components into the largest component.
+  auto ordering = build_widened_components(wto, widened_components);
 
-    if (node.is_vertex() && head != nullptr) {
-      widened_components_.add_component(head, current_node);
-    } else if (node.is_scc()) {
-      RootMemoryLocation* current_head;
-      if (head == nullptr) {
-        // Verify that we haven't processed this node already.
-        mt_assert(widened_components_.get_head(node.head_node()) == nullptr);
+  // 3. Build the widened points-to tree from the original environment_,
+  // applying the widening strategy.
+  auto widened_points_to_environment =
+      build_widened_points_to_environment(wto, environment, widened_components);
 
-        // Found the head of a new component.
-        current_head = node.head_node();
-        widened_components_.create_component(current_head);
-      } else {
-        // Found a nested component. Merge into the larger component.
-        current_head = head;
-        widened_components_.add_component(current_head, node.head_node());
-      }
-
-      for (const auto& inner_node : node) {
-        build_widened_components_impl(inner_node, current_head, ordering);
-      }
-    }
-  }
-
-  /**
-   * Builds the widened points-to environment from the WTO.
-   */
-  PointsToEnvironment build_widened_points_to_environment(
-      sparta::WeakTopologicalOrdering<RootMemoryLocation*>& wto) {
-    LOG(5, "Building Widened Points-to Environment...");
-
-    PointsToEnvironment widened_environment{};
-
-    for (const auto& node : wto) {
-      if (node.head_node()->is<DummyRootMemoryLocation>()) {
-        // Skip the dummy node.
-        mt_assert(node.is_vertex());
-        continue;
-      }
-      build_widened_points_to_environment_impl(
-          widened_environment, node, /* head */ nullptr);
-    }
-
-    LOG(5, "Built Widened Points-to Environment: {}", widened_environment);
-
-    return widened_environment;
-  }
-
-  /**
-   * Builds the widened points-to environment for each WTOComponent.
-   */
-  PointsToTree build_widened_points_to_environment_impl(
-      PointsToEnvironment& widened_environment,
-      const sparta::WtoComponent<RootMemoryLocation*>& node,
-      RootMemoryLocation* head) {
-    auto* current_head = head ? head : node.head_node();
-    PointsToTree widened_points_to_tree;
-
-    if (node.is_vertex()) {
-      widened_points_to_tree = build_widened_points_to_tree(
-          current_head, environment_.get(node.head_node()));
-    } else {
-      mt_assert(node.is_scc());
-      mt_assert(current_head == widened_components_.get_head(current_head));
-
-      // This is a new component that has not been added to the widened
-      // points-to environment. We join the points-to-trees of all the
-      // members of this component to a single node represented by the head.
-      widened_points_to_tree = build_widened_points_to_tree(
-          current_head, environment_.get(node.head_node()));
-
-      for (const auto& inner_node : node) {
-        widened_points_to_tree.join_with(
-            build_widened_points_to_environment_impl(
-                widened_environment, inner_node, current_head));
-      }
-    }
-
-    // If we are visiting the actual head of a component, update the
-    // widened-points-to-environment
-    if (current_head == node.head_node()) {
-      // Update the widened points-to environment.
-      widened_environment.update(
-          current_head, [widened_points_to_tree](const PointsToTree& existing) {
-            auto copy = existing;
-            copy.join_with(widened_points_to_tree);
-            return copy;
-          });
-    }
-
-    return widened_points_to_tree;
-  }
-
-  /**
-   * Processes the given points_to_tree for the head memory location to create a
-   * widened points-to tree. This:
-   * - filters out the memory locations from the points-to set that are present
-   * in the component containing the head (if any).
-   * - replaces the memory locations in the points-to set with the corresponding
-   * head (if any).
-   * - updates the aliasing properties of the the points-set containing a
-   * widened memory location with collapse depth 0.
-   */
-  PointsToTree build_widened_points_to_tree(
-      RootMemoryLocation* head,
-      const PointsToTree& points_to_tree) {
-    PointsToTree result{};
-
-    const auto* current_component = widened_components_.get_component(head);
-
-    points_to_tree.visit([this, &result, &current_component](
-                             const Path& path,
-                             const PointsToSet& points_to_set) {
-      PointsToSet new_points_to_set{};
-      for (const auto& [points_to, properties] : points_to_set) {
-        if (current_component && current_component->contains(points_to)) {
-          // points_to is a part of the current component and hence is
-          // merged/collapsed into (i.e. represented by) the head of the
-          // component. Note that the points-to environment does not store a
-          // points-to set (and hence aliasing properties) for the root memory
-          // location of the tree and hence the aliasing properties is ignored
-          // here as well.
-          continue;
-        }
-
-        if (auto* component_head =
-                this->widened_components_.get_head(points_to)) {
-          auto new_properties = properties;
-          new_properties.set_always_collapse();
-          new_points_to_set.update_aliasing_properties(
-              component_head, new_properties);
-        } else {
-          new_points_to_set.update_aliasing_properties(points_to, properties);
-        }
-      }
-
-      result.write(path, std::move(new_points_to_set), UpdateKind::Weak);
-    });
-
-    return result;
-  }
-
-  /**
-   * Traverses the widened points-to environment in weak topological ordering
-   * and updates the RootMemoryLocationToPointsToTree for each root with the
-   * fully resolved PointsToTree as value which includes the self-resolution at
-   * the root.
-   */
-  void build_widened_resolved_aliases(
-      const std::vector<RootMemoryLocation*>& ordering,
-      const PointsToEnvironment& widened_environment) {
-    // We need to iterate in reverse topological order so that we can use the
-    // widened_resolved_environment_ itself for memoization.
-    for (auto node = ordering.rbegin(); node != ordering.rend(); node++) {
-      bool is_component = true;
-      auto* head = widened_components_.get_head(*node);
-      if (head == nullptr) {
-        // Not a part of any component.
-        head = *node;
-        is_component = false;
-      }
-
-      if (widened_resolved_environment_.find(head) !=
-          widened_resolved_environment_.end()) {
-        // Already resolved.
-        continue;
-      }
-
-      auto points_to_tree = widened_environment.get(head);
-      PointsToTree resolved_points_to_tree{};
-      points_to_tree.visit(
-          [this, &resolved_points_to_tree](
-              const Path& inner_path, const PointsToSet& points_to_set) {
-            // The root element of the PointsToTree of a root memory location is
-            // always empty.
-            mt_assert(!inner_path.empty() || points_to_set.is_bottom());
-
-            for (const auto& [points_to, properties] : points_to_set) {
-              // We are resolving the widened points-to environment in weak
-              // topological ordering hence we always expect to find the
-              // points-to memory location in the widened resolved environment.
-              auto resolved_points_to =
-                  this->widened_resolved_environment_.at(points_to);
-
-              // Update the root of the widened resolved point-to tree
-              // with the current aliasing properties.
-              resolved_points_to_tree.write(
-                  inner_path,
-                  resolved_points_to.with_aliasing_properties(properties),
-                  UpdateKind::Weak);
-            }
-          });
-
-      // Add self resolution.
-      // When reading from a widened memory location (i.e. component), we
-      // always need to set the collapse depth to 0. This is updated in the
-      // AliasingProperties correctly in the widened_environment when another
-      // memory location aliases/points-to a widened memory location. However,
-      // we do not store the AliasingProperties for a memory location when it
-      // is the "root"/key of the PointsToEnvironment and since
-      // PointsToEnvironment::resolve_aliases() currently does not have access
-      // to this information, we update it after the fact here.
-      auto self_resolution = PointsToSet{
-          head,
-          is_component ? AliasingProperties::always_collapse()
-                       : AliasingProperties::empty()};
-
-      resolved_points_to_tree.write(
-          Path{}, std::move(self_resolution), UpdateKind::Weak);
-
-      widened_resolved_environment_.emplace(
-          head, std::move(resolved_points_to_tree));
-    }
-  }
-
- private:
-  // Original environment to widen
-  const PointsToEnvironment& environment_;
-
-  // Output params
-  RootMemoryLocationPointsToTreeMap& widened_resolved_environment_;
-  WidenedPointsToComponents& widened_components_;
-};
+  // 4. Build the mapping from each root memory location to the fully
+  // resolved PointsToTree.
+  build_widened_resolved_aliases(
+      ordering,
+      widened_points_to_environment,
+      widened_components,
+      widened_resolved_aliases);
+}
 
 } // namespace
 
@@ -433,9 +432,8 @@ WidenedPointsToComponents::get_component(
 
 WideningPointsToResolver::WideningPointsToResolver(
     const PointsToEnvironment& points_to_environment) {
-  WidenedPointsToBuilder builder(
-      points_to_environment, resolved_aliases_, widened_components_);
-  builder.build();
+  build_widening_points_to_resolver(
+      points_to_environment, widened_components_, widened_resolved_aliases_);
 
   LOG(5, "Built WideningPointsToResolver: {}", *this);
 }
@@ -447,8 +445,8 @@ PointsToTree WideningPointsToResolver::resolved_aliases(
     root_memory_location = head;
   }
 
-  auto result = resolved_aliases_.find(root_memory_location);
-  if (result == resolved_aliases_.end()) {
+  auto result = widened_resolved_aliases_.find(root_memory_location);
+  if (result == widened_resolved_aliases_.end()) {
     return PointsToTree{PointsToSet{root_memory_location}};
   }
 
@@ -477,7 +475,7 @@ std::ostream& operator<<(
     const WideningPointsToResolver& widening_resolver) {
   out << "WideningPointsToResolver(";
   for (const auto& [root_memory_location, points_to_tree] :
-       widening_resolver.resolved_aliases_) {
+       widening_resolver.widened_resolved_aliases_) {
     out << "\n  ";
 
     if (auto* head = widening_resolver.widened_components_.get_head(
