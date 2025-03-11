@@ -7,11 +7,13 @@
 
 package com.facebook.marianatrench;
 
+import com.facebook.infer.annotation.Nullsafe;
 import com.google.common.io.CharStreams;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class RunCommand {
   public static void run(Process process) {
     try {
