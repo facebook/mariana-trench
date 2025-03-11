@@ -12,6 +12,7 @@ import static org.objectweb.asm.Opcodes.BIPUSH;
 import static org.objectweb.asm.Opcodes.INVOKEVIRTUAL;
 import static org.objectweb.asm.Opcodes.POP;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.ArrayList;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
@@ -19,6 +20,7 @@ import org.objectweb.asm.Type;
 import org.objectweb.asm.signature.SignatureReader;
 import org.objectweb.asm.signature.SignatureVisitor;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class MethodHandleVisitor extends ClassVisitor {
   private boolean mSkipMethodForClass = false;
   private ArrayList<String> mSkippedClasses;
@@ -62,8 +64,10 @@ public class MethodHandleVisitor extends ClassVisitor {
   public MethodVisitor visitMethod(
       int access, String name, String desc, String signature, String[] exceptions) {
     if (mSkipMethodForClass) {
+      // NULLSAFE_FIXME[Return Not Nullable]
       return null;
     }
+    // NULLSAFE_FIXME[Not Vetted Third-Party]
     return new ProcessVisitMethodInsn(super.visitMethod(access, name, desc, signature, exceptions));
   }
 
@@ -83,6 +87,7 @@ public class MethodHandleVisitor extends ClassVisitor {
       @Override
       public SignatureVisitor visitParameterType() {
         mCount++;
+        // NULLSAFE_FIXME[Not Vetted Third-Party]
         return super.visitParameterType();
       }
 
@@ -136,6 +141,7 @@ public class MethodHandleVisitor extends ClassVisitor {
         //
         // At this point, the last thing on the stack is the method handle
         // which is an object/reference type.
+        // NULLSAFE_FIXME[Not Vetted Third-Party]
         int returnType = Type.getReturnType(descriptor).getSort();
         if (returnType != Type.OBJECT) {
           // Pop the handle reference for non-object return types. The
