@@ -9,8 +9,10 @@ package com.facebook.marianatrench;
 
 import static org.objectweb.asm.Opcodes.ASM9;
 
+import com.facebook.infer.annotation.Nullsafe;
 import org.objectweb.asm.ClassVisitor;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class NestVisitor extends ClassVisitor {
   public NestVisitor(ClassVisitor next) {
     super(ASM9, next);
