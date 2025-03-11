@@ -7,6 +7,7 @@
 
 package com.facebook.marianatrench;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -25,6 +26,7 @@ import java.util.stream.Stream;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class Desugar {
   public static void main(final String[] arguments) throws IOException, FileNotFoundException {
     System.out.printf("Desugaring file %s into file %s%n", arguments[0], arguments[1]);
@@ -42,6 +44,7 @@ public class Desugar {
       }
     }
 
+    // NULLSAFE_FIXME[Not Vetted Third-Party]
     Path temporaryDirectory = Files.createTempDirectory("");
 
     try (JarFile inputJar = new JarFile(arguments[0])) {
@@ -49,15 +52,20 @@ public class Desugar {
       while (entries.hasMoreElements()) {
         JarEntry entry = entries.nextElement();
 
+        // NULLSAFE_FIXME[Nullable Dereference]
         File file = new File(temporaryDirectory + File.separator + entry.getName());
 
         File parentDir = file.getParentFile();
+        // NULLSAFE_FIXME[Nullable Dereference]
         if (!parentDir.exists()) {
+          // NULLSAFE_FIXME[Nullable Dereference]
           parentDir.mkdirs();
         }
+        // NULLSAFE_FIXME[Nullable Dereference]
         if (entry.isDirectory()) {
           continue;
         }
+        // NULLSAFE_FIXME[Parameter Not Nullable]
         try (InputStream inputStream = inputJar.getInputStream(entry)) {
           while (inputStream.available() > 0 && file.getName().endsWith(".class")) {
             try (FileOutputStream outputStream = new FileOutputStream(file)) {
@@ -81,6 +89,7 @@ public class Desugar {
     String[] command = {"jar", "cf", arguments[1], "."};
     RunCommand.run(
         Runtime.getRuntime()
+            // NULLSAFE_FIXME[Parameter Not Nullable, Not Vetted Third-Party]
             .exec(command, null, new File(temporaryDirectory.toAbsolutePath().toString())));
 
     try (Stream<Path> walk = Files.walk(temporaryDirectory)) {
