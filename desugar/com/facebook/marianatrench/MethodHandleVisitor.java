@@ -14,6 +14,7 @@ import static org.objectweb.asm.Opcodes.POP;
 
 import com.facebook.infer.annotation.Nullsafe;
 import java.util.ArrayList;
+import javax.annotation.Nullable;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
@@ -60,11 +61,11 @@ public class MethodHandleVisitor extends ClassVisitor {
     super.visit(version, access, name, signature, superName, interfaces);
   }
 
+  @Nullable
   @Override
   public MethodVisitor visitMethod(
       int access, String name, String desc, String signature, String[] exceptions) {
     if (mSkipMethodForClass) {
-      // NULLSAFE_FIXME[Return Not Nullable]
       return null;
     }
     // NULLSAFE_FIXME[Not Vetted Third-Party]
