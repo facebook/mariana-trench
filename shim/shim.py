@@ -605,6 +605,11 @@ def _add_debug_arguments(parser: argparse.ArgumentParser) -> None:
         help="Dump the class hierarchies in `class_hierarchies.json`.",
     )
     debug_arguments.add_argument(
+        "--dump-class-intervals",
+        action="store_true",
+        help="Dump the class intervals in `class_intervals.json`.",
+    )
+    debug_arguments.add_argument(
         "--dump-overrides",
         action="store_true",
         help="Dump the override graph in `overrides.json`.",
@@ -782,6 +787,9 @@ def _get_command_options_json(
 
     if arguments.dump_class_hierarchies:
         options["dump-class-hierarchies"] = True
+
+    if arguments.dump_class_intervals:
+        options["dump-class-intervals"] = True
 
     if arguments.dump_overrides:
         options["dump-overrides"] = True
