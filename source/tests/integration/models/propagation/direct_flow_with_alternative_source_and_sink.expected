@@ -35,8 +35,8 @@
                 {
                   "callee_interval" :
                   [
-                    5,
-                    6
+                    4,
+                    5
                   ],
                   "kind" : "AlternativeSink",
                   "origins" :
@@ -69,8 +69,8 @@
                 {
                   "callee_interval" :
                   [
-                    5,
-                    6
+                    4,
+                    5
                   ],
                   "kind" : "AlternativeSource",
                   "origins" :

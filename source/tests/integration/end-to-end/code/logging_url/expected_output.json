@@ -1280,8 +1280,8 @@
             {
               "callee_interval" : 
               [
-                7,
-                8
+                6,
+                7
               ],
               "distance" : 1,
               "kind" : "Logging",
@@ -1323,8 +1323,8 @@
             {
               "callee_interval" : 
               [
-                7,
-                8
+                6,
+                7
               ],
               "distance" : 1,
               "kind" : "Logging",
@@ -1415,8 +1415,8 @@
             {
               "callee_interval" : 
               [
-                7,
-                8
+                6,
+                7
               ],
               "kind" : "ExternalUserInput",
               "origins" : 
@@ -1471,8 +1471,8 @@
             {
               "callee_interval" : 
               [
-                7,
-                8
+                6,
+                7
               ],
               "kind" : "Logging",
               "origins" : 
@@ -1510,8 +1510,8 @@
             {
               "callee_interval" : 
               [
-                7,
-                8
+                6,
+                7
               ],
               "kind" : "Logging",
               "origins" : 
@@ -2108,8 +2108,8 @@
             {
               "callee_interval" : 
               [
-                9,
-                10
+                8,
+                9
               ],
               "kind" : "Logging",
               "origins" : 
@@ -2144,8 +2144,8 @@
             {
               "callee_interval" : 
               [
-                9,
-                10
+                8,
+                9
               ],
               "kind" : "ExternalUserInput",
               "origins" : 

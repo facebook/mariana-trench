@@ -36,8 +36,8 @@
                 {
                   "callee_interval" :
                   [
-                    5,
-                    6
+                    4,
+                    5
                   ],
                   "distance" : 2,
                   "kind" : "TestSink",
@@ -71,8 +71,8 @@
                 {
                   "callee_interval" :
                   [
-                    5,
-                    6
+                    4,
+                    5
                   ],
                   "kind" : "TestSource",
                   "origins" :
@@ -126,8 +126,8 @@
                 {
                   "callee_interval" :
                   [
-                    5,
-                    6
+                    4,
+                    5
                   ],
                   "distance" : 1,
                   "kind" : "TestSink",
@@ -175,8 +175,8 @@
                 {
                   "callee_interval" :
                   [
-                    5,
-                    6
+                    4,
+                    5
                   ],
                   "kind" : "TestSink",
                   "origins" :

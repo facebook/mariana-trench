@@ -1071,8 +1071,8 @@
             {
               "callee_interval" : 
               [
-                5,
-                6
+                4,
+                5
               ],
               "kind" : "Logging",
               "origins" : 
@@ -1107,8 +1107,8 @@
             {
               "callee_interval" : 
               [
-                5,
-                6
+                4,
+                5
               ],
               "kind" : "UserGeoLocation",
               "origins" : 

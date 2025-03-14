@@ -32,13 +32,16 @@ void dfs_on_hierarchy(
   mt_assert(children != class_hierarchy.end());
 
   for (const auto* child : children->second) {
+    mt_assert(
+        dfs_order <
+        std::numeric_limits<int32_t>::max()); // Ensure no overflows.
     ++dfs_order;
-    mt_assert(dfs_order > 0); // Ensure no overflows.
     dfs_on_hierarchy(class_hierarchy, child, dfs_order, result);
   }
 
+  mt_assert(
+      dfs_order < std::numeric_limits<int32_t>::max()); // Ensure no overflows.
   ++dfs_order;
-  mt_assert(dfs_order > 0); // Ensure no overflows.
 
   // Each node should only be visited once since multiple inheritance is not
   // supported by Java/Kotlin.
@@ -53,22 +56,50 @@ ClassIntervals::ClassIntervals(
     const Options& options,
     const DexStoresVector& stores)
     : top_(Interval::top()) {
+  // Theoretically, all classes are rooted in java.lang.Object. In practice,
+  // internal classes inheriting from external classes will not be reachable
+  // from Object. Treat the class hierarchy as a forest of trees, with roots
+  // being either direct children of Object or internal classes deriving
+  // directly from external classes.
   ClassHierarchy class_hierarchy;
+  const auto* object_root = type::java_lang_Object();
+
+  // Use a deterministic ordering for the roots so that integration tests always
+  // return the same interval for the same class.
+  std::set<const DexType*, dextypes_comparator> roots;
+
   for (const auto& scope : DexStoreClassesIterator(stores)) {
     auto store_hierarchy = build_type_hierarchy(scope);
     for (const auto& [parent, children] : store_hierarchy) {
-      class_hierarchy[parent].insert(children.begin(), children.end());
+      if (parent == object_root) {
+        roots.insert(children.begin(), children.end());
+      } else {
+        const auto* parent_class = type_class(parent);
+        if (parent_class == nullptr) {
+          // DexType exists but not DexClass, this is an external class.
+          continue;
+        }
+
+        class_hierarchy[parent].insert(children.begin(), children.end());
+
+        const auto* super_class = type_class(parent_class->get_super_class());
+        if (super_class == nullptr) {
+          // DexClass does not exist for for the super class. This is a root
+          // (derives directly from an external class).
+          roots.insert(parent_class->get_type());
+        }
+      }
     }
   }
 
-  // Assuming the code is known, all classes will be rooted in java.lang.Object.
-  // Optimization: Divide the single hierarchy into multiple, with roots at
-  // direct children of Object, then compute in parallel. Need to make sure
-  // dfs_order does not intersect between different trees.
-  const auto* root = type::java_lang_Object();
-
   std::int32_t dfs_order = MIN_INTERVAL;
-  dfs_on_hierarchy(class_hierarchy, root, dfs_order, class_intervals_);
+  for (const auto* root : roots) {
+    dfs_on_hierarchy(class_hierarchy, root, dfs_order, class_intervals_);
+    mt_assert(
+        dfs_order <
+        std::numeric_limits<int32_t>::max()); // Ensure no overflows.
+    ++dfs_order;
+  }
 
   if (options.dump_class_intervals()) {
     auto class_intervals_path = options.class_intervals_output_path();

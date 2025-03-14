@@ -60,7 +60,8 @@ class ClassIntervals final {
   /**
    * Returns the most precisely known interval of the given type.
    * This is generally the computed type, but can be the open interval, such as
-   * when class interval computation is disabled, or for non-class types.
+   * when class interval computation is disabled, or for non-class types, or
+   * java.lang.Object.
    */
   const Interval& get_interval(const DexType* type) const;
 
