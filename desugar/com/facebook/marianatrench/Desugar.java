@@ -7,6 +7,7 @@
 
 package com.facebook.marianatrench;
 
+import com.facebook.common.preconditions.Preconditions;
 import com.facebook.infer.annotation.Nullsafe;
 import java.io.BufferedReader;
 import java.io.File;
@@ -52,8 +53,9 @@ public class Desugar {
       while (entries.hasMoreElements()) {
         JarEntry entry = entries.nextElement();
 
-        // NULLSAFE_FIXME[Nullable Dereference]
-        File file = new File(temporaryDirectory + File.separator + entry.getName());
+        File file =
+            new File(
+                temporaryDirectory + File.separator + Preconditions.checkNotNull(entry).getName());
 
         File parentDir = file.getParentFile();
         // NULLSAFE_FIXME[Nullable Dereference]
@@ -61,11 +63,9 @@ public class Desugar {
           // NULLSAFE_FIXME[Nullable Dereference]
           parentDir.mkdirs();
         }
-        // NULLSAFE_FIXME[Nullable Dereference]
         if (entry.isDirectory()) {
           continue;
         }
-        // NULLSAFE_FIXME[Parameter Not Nullable]
         try (InputStream inputStream = inputJar.getInputStream(entry)) {
           while (inputStream.available() > 0 && file.getName().endsWith(".class")) {
             try (FileOutputStream outputStream = new FileOutputStream(file)) {
