@@ -956,7 +956,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/MainActivity$Event;.<init>:(Lcom/facebook/marianatrench/integrationtests/MainActivity;)V",
   "position" : 
   {
-    "line" : 79,
+    "line" : 30,
     "path" : "MainActivity.java"
   },
   "propagation" : 
@@ -997,7 +997,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/MainActivity$Event;.<init>:(Lcom/facebook/marianatrench/integrationtests/MainActivity;Lcom/facebook/marianatrench/integrationtests/MainActivity$1;)V",
   "position" : 
   {
-    "line" : 79,
+    "line" : 30,
     "path" : "MainActivity.java"
   },
   "propagation" : 
@@ -1057,7 +1057,7 @@
             "position" : 
             {
               "end" : 42,
-              "line" : 64,
+              "line" : 15,
               "path" : "MainActivity.java",
               "start" : 37
             }
@@ -1092,7 +1092,7 @@
           [
             {
               "end" : 45,
-              "line" : 64,
+              "line" : 15,
               "start" : 21
             }
           ]
@@ -1103,7 +1103,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/MainActivity;.call:()V",
   "position" : 
   {
-    "line" : 62,
+    "line" : 13,
     "path" : "MainActivity.java"
   }
 }
@@ -1117,7 +1117,7 @@
   ],
   "position" : 
   {
-    "line" : 76,
+    "line" : 27,
     "path" : "MainActivity.java"
   },
   "propagation" : 
@@ -1167,7 +1167,7 @@
             "position" : 
             {
               "end" : 7,
-              "line" : 69,
+              "line" : 20,
               "path" : "MainActivity.java",
               "start" : 4
             },
@@ -1221,7 +1221,7 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
       {
-        "line" : 71,
+        "line" : 22,
         "path" : "MainActivity.java"
       },
       "rule" : 1,
@@ -1236,7 +1236,7 @@
             "position" : 
             {
               "end" : 19,
-              "line" : 71,
+              "line" : 22,
               "path" : "MainActivity.java",
               "start" : 16
             }
@@ -1272,7 +1272,7 @@
             "position" : 
             {
               "end" : 7,
-              "line" : 69,
+              "line" : 20,
               "path" : "MainActivity.java",
               "start" : 4
             },
@@ -1315,7 +1315,7 @@
           [
             {
               "end" : 21,
-              "line" : 70,
+              "line" : 21,
               "start" : 18
             }
           ]
@@ -1326,7 +1326,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/MainActivity;.onCreate:()V",
   "position" : 
   {
-    "line" : 68,
+    "line" : 19,
     "path" : "MainActivity.java"
   },
   "sinks" : 
@@ -1343,7 +1343,7 @@
             "position" : 
             {
               "end" : 19,
-              "line" : 71,
+              "line" : 22,
               "path" : "MainActivity.java",
               "start" : 16
             }
@@ -1379,7 +1379,7 @@
           [
             {
               "end" : 21,
-              "line" : 70,
+              "line" : 21,
               "start" : 18
             }
           ]
