@@ -1243,6 +1243,93 @@
   }
 }
 {
+  "generations" : 
+  [
+    {
+      "port" : "Argument(0).mTainted1",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Argument(0).mTainted1",
+            "position" : 
+            {
+              "line" : 0
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.onCreate:(Landroid/os/Bundle;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "always_features" : 
+              [
+                "via-cast:Ljava/lang/String;"
+              ],
+              "callee_interval" : 
+              [
+                6,
+                7
+              ],
+              "distance" : 2,
+              "kind" : "Source",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "port" : "Argument(0).mTainted2",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Argument(0).mTainted2",
+            "position" : 
+            {
+              "line" : 0
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/BaseFragment;.onCreate:(Landroid/os/Bundle;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "always_features" : 
+              [
+                "via-cast:Ljava/lang/String;"
+              ],
+              "callee_interval" : 
+              [
+                6,
+                7
+              ],
+              "distance" : 2,
+              "kind" : "Source",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ]
+    }
+  ],
   "issues" : 
   [
     {
@@ -1765,6 +1852,51 @@
   }
 }
 {
+  "generations" : 
+  [
+    {
+      "port" : "Argument(0).mTainted",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Argument(0).mTainted",
+            "position" : 
+            {
+              "line" : 0
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/SimpleFragment;.onCreate:(Landroid/os/Bundle;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "always_features" : 
+              [
+                "via-cast:Ljava/lang/String;"
+              ],
+              "callee_interval" : 
+              [
+                9,
+                10
+              ],
+              "distance" : 1,
+              "kind" : "Source",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ]
+    }
+  ],
   "issues" : 
   [
     {

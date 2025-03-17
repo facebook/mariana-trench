@@ -480,6 +480,9 @@ const DexMethod* MT_NULLABLE LifecycleMethod::create_dex_method(
     return nullptr;
   }
 
+  // Add return statement
+  main_block->ret_void();
+
   // The CFG needs to be built for the call graph to be constructed later.
   auto* new_method = method.create();
   mt_assert(new_method != nullptr && new_method->get_code() != nullptr);

@@ -1242,6 +1242,47 @@
   }
 }
 {
+  "generations" : 
+  [
+    {
+      "port" : "Argument(0).mSource",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Argument(0).mSource",
+            "position" : 
+            {
+              "line" : 0
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/BaseActivity;.onCreate:(Landroid/os/Bundle;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                7,
+                8
+              ],
+              "distance" : 2,
+              "kind" : "Source",
+              "origins" : 
+              [
+                {
+                  "method" : "Landroid/content/Intent;.<init>:()V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ]
+    }
+  ],
   "issues" : 
   [
     {
@@ -1485,6 +1526,47 @@
   }
 }
 {
+  "generations" : 
+  [
+    {
+      "port" : "Argument(0).mSource",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Argument(0).mSource",
+            "position" : 
+            {
+              "line" : 0
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/BaseActivity;.onCreate:(Landroid/os/Bundle;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                9,
+                10
+              ],
+              "distance" : 2,
+              "kind" : "Source",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ]
+    }
+  ],
   "method" : "Lcom/facebook/marianatrench/integrationtests/MainActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;)V",
   "position" : {}
 }
