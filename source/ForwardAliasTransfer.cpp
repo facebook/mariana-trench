@@ -296,10 +296,12 @@ bool ForwardAliasTransfer::analyze_iput(
     points_to.add_locally_inferred_features(
         get_field_features(context, field_memory_location));
 
-    LOG(5,
+    LOG_OR_DUMP(
+        context,
+        4,
         "{} updating PointsToTree at {} with {}",
         is_singleton ? "Strong" : "Weak",
-        show(memory_location),
+        show(field_memory_location),
         points_to);
 
     environment->write(
