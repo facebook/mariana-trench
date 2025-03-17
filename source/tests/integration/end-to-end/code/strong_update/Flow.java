@@ -45,7 +45,20 @@ public class Flow {
   }
 
   public void no_issue_inlining() {
+    this.field = Origin.source();
     field_setter(new Object());
     Origin.sink(field_getter());
+  }
+
+  // TODO(T218206443): False positive with field assignment to non-tainted value
+
+  public void field_set_empty() {
+    this.field = new Object();
+  }
+
+  public void no_issue_field_set_empty() {
+    this.field = Origin.source();
+    field_set_empty();
+    Origin.sink(this.field);
   }
 }

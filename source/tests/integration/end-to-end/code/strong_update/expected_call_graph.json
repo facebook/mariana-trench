@@ -225,6 +225,13 @@
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/Flow;.field_set_empty:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/Flow;.issue_propagation:()V" : 
   {
     "static" : 
@@ -235,6 +242,18 @@
     "virtual" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/Flow;.add_propagation:(Ljava/lang/Object;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Flow;.no_issue_field_set_empty:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+    ],
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Flow;.field_set_empty:()V"
     ]
   },
   "Lcom/facebook/marianatrench/integrationtests/Flow;.no_issue_generation:()V" : 
@@ -253,6 +272,7 @@
     "static" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
       "Ljava/lang/Object;.<init>:()V"
     ],
     "virtual" : 

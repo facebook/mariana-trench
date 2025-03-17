@@ -43,6 +43,10 @@
   [
     "Lcom/facebook/marianatrench/integrationtests/Flow;.no_issue_inlining:()V"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/Flow;.field_set_empty:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/Flow;.no_issue_field_set_empty:()V"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/Flow;.field_setter:(Ljava/lang/Object;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/Flow;.no_issue_inlining:()V"
@@ -50,13 +54,16 @@
   "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/Flow;.issue_propagation:()V",
+    "Lcom/facebook/marianatrench/integrationtests/Flow;.no_issue_field_set_empty:()V",
     "Lcom/facebook/marianatrench/integrationtests/Flow;.no_issue_generation:()V",
     "Lcom/facebook/marianatrench/integrationtests/Flow;.no_issue_inlining:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/Flow;.add_generation:()V",
-    "Lcom/facebook/marianatrench/integrationtests/Flow;.issue_propagation:()V"
+    "Lcom/facebook/marianatrench/integrationtests/Flow;.issue_propagation:()V",
+    "Lcom/facebook/marianatrench/integrationtests/Flow;.no_issue_field_set_empty:()V",
+    "Lcom/facebook/marianatrench/integrationtests/Flow;.no_issue_inlining:()V"
   ],
   "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V" : 
   [
@@ -101,6 +108,7 @@
     "Lcom/facebook/marianatrench/integrationtests/Flow;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Flow;.add_generation:()V",
     "Lcom/facebook/marianatrench/integrationtests/Flow;.add_propagation:(Ljava/lang/Object;)V",
+    "Lcom/facebook/marianatrench/integrationtests/Flow;.field_set_empty:()V",
     "Lcom/facebook/marianatrench/integrationtests/Flow;.no_issue_inlining:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
