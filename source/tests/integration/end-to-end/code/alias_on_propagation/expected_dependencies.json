@@ -84,17 +84,40 @@
   [
     "Lcom/facebook/marianatrench/integrationtests/KotlinAnonymousFunction$issue$lambda$1;.invoke:()Ljava/lang/Object;"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel$SecondLevel;.secondLevelSinkOnFirstLevelMember:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava;.wrapperWithArgSecondLevelSinkOnFirstLevelMember:(Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel$SecondLevel;)V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel$SecondLevel;.secondLevelSinkOnTopLevelMember:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava;.wrapperWithArgSecondLevelSinkOnTopLevelMember:(Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel$SecondLevel;)V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel;.<init>:(Lcom/facebook/marianatrench/integrationtests/NestedClassesJava;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava;.testIssueWrapperFirstLevelSinkOnTopLevelMember:()V",
+    "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava;.wrapperFirstLevelSinkOnTopLevelMember:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel;.firstLevelSinkOnTopLevelMember:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava;.testIssueWrapperFirstLevelSinkOnTopLevelMember:()V",
+    "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava;.wrapperFirstLevelSinkOnTopLevelMember:()V",
+    "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava;.wrapperWithArgFirstLevelSinkOnTopLevelMember:(Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel;)V"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation;.falseNegative:()V",
     "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation;.issueFalseNegative:()V",
     "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation;.taintAliasReadOriginalFalseNegative:()V",
     "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation;.taintOriginalReadAliasFalseNegative:()V",
-    "Lcom/facebook/marianatrench/integrationtests/KotlinAnonymousFunction;.issue:()V"
+    "Lcom/facebook/marianatrench/integrationtests/KotlinAnonymousFunction;.issue:()V",
+    "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel$SecondLevel;.secondLevelSinkOnFirstLevelMember:()V",
+    "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel$SecondLevel;.secondLevelSinkOnTopLevelMember:()V",
+    "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel;.firstLevelSinkOnTopLevelMember:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/KotlinAnonymousFunction$issue$lambda$1;.invoke:()V"
+    "Lcom/facebook/marianatrench/integrationtests/KotlinAnonymousFunction$issue$lambda$1;.invoke:()V",
+    "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava;.testIssueWrapperFirstLevelSinkOnTopLevelMember:()V"
   ],
   "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V" : 
   [
@@ -142,6 +165,9 @@
     "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;.<init>:(Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation$Test;)V",
     "Lcom/facebook/marianatrench/integrationtests/AliasOnPropagation;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/KotlinAnonymousFunction;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel$SecondLevel;.<init>:(Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel;)V",
+    "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel;.<init>:(Lcom/facebook/marianatrench/integrationtests/NestedClassesJava;)V",
+    "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
     "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V",

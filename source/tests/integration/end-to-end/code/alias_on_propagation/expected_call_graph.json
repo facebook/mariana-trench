@@ -341,6 +341,92 @@
       "Lcom/facebook/marianatrench/integrationtests/KotlinAnonymousFunction$issue$lambda$1;.invoke:()Ljava/lang/Object;"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel$SecondLevel;.<init>:(Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel;)V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel$SecondLevel;.secondLevelSinkOnFirstLevelMember:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel$SecondLevel;.secondLevelSinkOnTopLevelMember:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel;.<init>:(Lcom/facebook/marianatrench/integrationtests/NestedClassesJava;)V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel;.firstLevelSinkOnTopLevelMember:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava;.testIssueWrapperFirstLevelSinkOnTopLevelMember:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel;.<init>:(Lcom/facebook/marianatrench/integrationtests/NestedClassesJava;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+    ],
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel;.firstLevelSinkOnTopLevelMember:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava;.wrapperFirstLevelSinkOnTopLevelMember:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel;.<init>:(Lcom/facebook/marianatrench/integrationtests/NestedClassesJava;)V"
+    ],
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel;.firstLevelSinkOnTopLevelMember:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava;.wrapperWithArgFirstLevelSinkOnTopLevelMember:(Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel;)V" : 
+  {
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel;.firstLevelSinkOnTopLevelMember:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava;.wrapperWithArgSecondLevelSinkOnFirstLevelMember:(Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel$SecondLevel;)V" : 
+  {
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel$SecondLevel;.secondLevelSinkOnFirstLevelMember:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava;.wrapperWithArgSecondLevelSinkOnTopLevelMember:(Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel$SecondLevel;)V" : 
+  {
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel$SecondLevel;.secondLevelSinkOnTopLevelMember:()V"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V" : 
   {
     "static" : 

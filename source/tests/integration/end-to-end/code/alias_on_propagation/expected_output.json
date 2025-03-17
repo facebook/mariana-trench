@@ -1433,6 +1433,555 @@
   }
 }
 {
+  "method" : "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel$SecondLevel;.<init>:(Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel;)V",
+  "position" : 
+  {
+    "line" : 20,
+    "path" : "NestedClassesJava.java"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(1)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              {
+                ".this$1" : 3
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel$SecondLevel;.secondLevelSinkOnFirstLevelMember:()V",
+  "position" : 
+  {
+    "line" : 31,
+    "path" : "NestedClassesJava.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(0).this$1.mFirstLevel",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "line" : 32,
+              "path" : "NestedClassesJava.java"
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                42,
+                43
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel$SecondLevel;.secondLevelSinkOnTopLevelMember:()V",
+  "position" : 
+  {
+    "line" : 38,
+    "path" : "NestedClassesJava.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(0).this$1.this$0.mTopLevel",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "line" : 39,
+              "path" : "NestedClassesJava.java"
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                42,
+                43
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel;.<init>:(Lcom/facebook/marianatrench/integrationtests/NestedClassesJava;)V",
+  "position" : 
+  {
+    "line" : 12,
+    "path" : "NestedClassesJava.java"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(1)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              {
+                ".this$0" : 3
+              }
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-inner-class-this"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel;.firstLevelSinkOnTopLevelMember:()V",
+  "position" : 
+  {
+    "line" : 50,
+    "path" : "NestedClassesJava.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(0).this$0.mTopLevel",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "line" : 51,
+              "path" : "NestedClassesJava.java"
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                44,
+                45
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9,
+    "path" : "NestedClassesJava.java"
+  }
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Argument(0).mTopLevel",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "line" : 80,
+              "path" : "NestedClassesJava.java"
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                46,
+                47
+              ],
+              "kind" : "Source",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "line" : 80
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava;.testIssueWrapperFirstLevelSinkOnTopLevelMember:()V",
+  "position" : 
+  {
+    "line" : 76,
+    "path" : "NestedClassesJava.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(0).mTopLevel",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Argument(0).this$0.mTopLevel",
+            "position" : 
+            {
+              "line" : 83,
+              "path" : "NestedClassesJava.java"
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel;.firstLevelSinkOnTopLevelMember:()V"
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                44,
+                45
+              ],
+              "distance" : 1,
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : false
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-inner-class-this"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "line" : 77
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava;.wrapperFirstLevelSinkOnTopLevelMember:()V",
+  "position" : 
+  {
+    "line" : 69,
+    "path" : "NestedClassesJava.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(0).mTopLevel",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Argument(0).this$0.mTopLevel",
+            "position" : 
+            {
+              "line" : 73,
+              "path" : "NestedClassesJava.java"
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel;.firstLevelSinkOnTopLevelMember:()V"
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                44,
+                45
+              ],
+              "distance" : 1,
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : false
+            }
+          ],
+          "local_features" : 
+          {
+            "always_features" : 
+            [
+              "via-inner-class-this"
+            ]
+          },
+          "local_positions" : 
+          [
+            {
+              "line" : 70
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava;.wrapperWithArgFirstLevelSinkOnTopLevelMember:(Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel;)V",
+  "position" : 
+  {
+    "line" : 60,
+    "path" : "NestedClassesJava.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(1).this$0.mTopLevel",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Argument(0).this$0.mTopLevel",
+            "position" : 
+            {
+              "line" : 61,
+              "path" : "NestedClassesJava.java"
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel;.firstLevelSinkOnTopLevelMember:()V"
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                44,
+                45
+              ],
+              "distance" : 1,
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava;.wrapperWithArgSecondLevelSinkOnFirstLevelMember:(Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel$SecondLevel;)V",
+  "position" : 
+  {
+    "line" : 98,
+    "path" : "NestedClassesJava.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(1).this$1.mFirstLevel",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Argument(0).this$1.mFirstLevel",
+            "position" : 
+            {
+              "line" : 99,
+              "path" : "NestedClassesJava.java"
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel$SecondLevel;.secondLevelSinkOnFirstLevelMember:()V"
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                42,
+                43
+              ],
+              "distance" : 1,
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava;.wrapperWithArgSecondLevelSinkOnTopLevelMember:(Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel$SecondLevel;)V",
+  "position" : 
+  {
+    "line" : 103,
+    "path" : "NestedClassesJava.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(1).this$1.this$0.mTopLevel",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Argument(0).this$1.this$0.mTopLevel",
+            "position" : 
+            {
+              "line" : 104,
+              "path" : "NestedClassesJava.java"
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel$SecondLevel;.secondLevelSinkOnTopLevelMember:()V"
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                42,
+                43
+              ],
+              "distance" : 1,
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V",
   "position" : 
   {
