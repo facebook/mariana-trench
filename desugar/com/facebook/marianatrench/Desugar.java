@@ -58,10 +58,8 @@ public class Desugar {
                 temporaryDirectory + File.separator + Preconditions.checkNotNull(entry).getName());
 
         File parentDir = file.getParentFile();
-        // NULLSAFE_FIXME[Nullable Dereference]
-        if (!parentDir.exists()) {
-          // NULLSAFE_FIXME[Nullable Dereference]
-          parentDir.mkdirs();
+        if (!Preconditions.checkNotNull(parentDir).exists()) {
+          Preconditions.checkNotNull(parentDir).mkdirs();
         }
         if (entry.isDirectory()) {
           continue;
