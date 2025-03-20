@@ -644,6 +644,39 @@ class AbstractTreeDomain final
     }
   }
 
+  /* Collapse the sub-tree at given path to the given maximum height. */
+  template <typename Transform> // Elements(Elements)
+  void collapse_deeper_than(
+      const Path& path,
+      std::size_t height,
+      Transform&& transform) {
+    collapse_deeper_than_internal(
+        path.begin(), path.end(), height, std::forward<Transform>(transform));
+  }
+
+  template <typename Transform> // Elements(Elements)
+  void collapse_deeper_than_internal(
+      Path::ConstIterator begin,
+      Path::ConstIterator end,
+      std::size_t height,
+      Transform&& transform) {
+    if (begin == end) {
+      this->collapse_deeper_than(height, std::forward<Transform>(transform));
+      return;
+    }
+
+    auto path = *begin;
+    ++begin;
+
+    children_.update(
+        [begin, end, height, transform = std::forward<Transform>(transform)](
+            AbstractTreeDomain subtree) {
+          subtree.collapse_deeper_than_internal(begin, end, height, transform);
+          return subtree;
+        },
+        path);
+  }
+
   /* Remove the given elements from the tree. */
   void prune(Elements accumulator) {
     elements_.difference_with(accumulator);
@@ -816,11 +849,11 @@ class AbstractTreeDomain final
       // Write on any_index [*] == write on every index:
       // [*] has a different meaning for the write() api than the [*] node in
       // the tree.
-      //   - node [*] in the tree represents any remaining index apart from the
-      //   index already present in the tree.
-      //   - write([*]) implies write to an unknown/unresolved index which could
-      //   be some index we know about or any other index. In this sense, it
-      //   represents _every_ index.
+      //   - node [*] in the tree represents any remaining index apart from
+      //   the index already present in the tree.
+      //   - write([*]) implies write to an unknown/unresolved index which
+      //   could be some index we know about or any other index. In this
+      //   sense, it represents _every_ index.
       // Hence, we consider write() to [*] as weak write() to every index.
       kind = UpdateKind::Weak;
       Map new_children;
@@ -928,8 +961,8 @@ class AbstractTreeDomain final
   /**
    * Return the subtree at the given path.
    *
-   * `propagate` is a function that is called when propagating elements down to
-   * a child. This is mainly used to attach the correct access path to
+   * `propagate` is a function that is called when propagating elements down
+   * to a child. This is mainly used to attach the correct access path to
    * backward taint to infer propagations.
    */
   template <typename Propagate> // Elements(Elements, Path::Element)
@@ -1025,8 +1058,8 @@ class AbstractTreeDomain final
 
  public:
   /**
-   * Return the subtree at the given path and the remaining path elements if the
-   * full path did not exist in the tree.
+   * Return the subtree at the given path and the remaining path elements if
+   * the full path did not exist in the tree.
    *
    * Elements are NOT propagated down to children.
    */

@@ -1200,6 +1200,61 @@ TEST_F(AbstractTreeDomainTest, CollapseDeeperThanWithIndex) {
   EXPECT_EQ(tree, (IntSetTree{IntSet{1, 2, 3, 4, 5, 6, 7, 8, 9}}));
 }
 
+TEST_F(AbstractTreeDomainTest, CollapseDeeperThanAtPath) {
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+  const auto z = PathElement::field("z");
+
+  auto transform = [](const IntSet& set) { return set; };
+
+  auto tree = IntSetTree{
+      {Path{}, IntSet{1}},
+      {Path{x}, IntSet{2}},
+      {Path{x, x}, IntSet{3}},
+      {Path{x, y}, IntSet{4}},
+      {Path{x, z, x}, IntSet{5}},
+      {Path{y}, IntSet{10}},
+      {Path{y, z}, IntSet{11}},
+      {Path{y, z, x}, IntSet{12}},
+  };
+  tree.collapse_deeper_than(Path{x}, 1, transform);
+  EXPECT_EQ(
+      tree,
+      (IntSetTree{
+          {Path{}, IntSet{1}},
+          {Path{x}, IntSet{2}},
+          {Path{x, x}, IntSet{3}},
+          {Path{x, y}, IntSet{4}},
+          {Path{x, z}, IntSet{5}},
+          {Path{y}, IntSet{10}},
+          {Path{y, z}, IntSet{11}},
+          {Path{y, z, x}, IntSet{12}},
+      }));
+
+  tree.collapse_deeper_than(Path{x}, 0, transform);
+  EXPECT_EQ(
+      tree,
+      (IntSetTree{
+          {Path{}, IntSet{1}},
+          {Path{x}, IntSet{2, 3, 4, 5}},
+          {Path{y}, IntSet{10}},
+          {Path{y, z}, IntSet{11}},
+          {Path{y, z, x}, IntSet{12}},
+      }));
+
+  tree.collapse_deeper_than(Path{y}, 0, transform);
+  EXPECT_EQ(
+      tree,
+      (IntSetTree{
+          {Path{}, IntSet{1}},
+          {Path{x}, IntSet{2, 3, 4, 5}},
+          {Path{y}, IntSet{10, 11, 12}},
+      }));
+
+  tree.collapse_deeper_than(Path{}, 0, transform);
+  EXPECT_EQ(tree, (IntSetTree{IntSet{1, 2, 3, 4, 5, 10, 11, 12}}));
+}
+
 TEST_F(AbstractTreeDomainTest, Prune) {
   const auto x = PathElement::field("x");
   const auto y = PathElement::field("y");
