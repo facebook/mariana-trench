@@ -182,6 +182,17 @@ void TaintTree::collapse_deeper_than(
   });
 }
 
+void TaintTree::collapse_deeper_than(
+    const Path& path,
+    std::size_t height,
+    const FeatureMayAlwaysSet& broadening_features) {
+  tree_.collapse_deeper_than(path, height, [&broadening_features](Taint taint) {
+    taint.add_locally_inferred_features(broadening_features);
+    taint.update_maximum_collapse_depth(CollapseDepth::zero());
+    return taint;
+  });
+}
+
 void TaintTree::limit_leaves(
     std::size_t default_max_leaves,
     const FeatureMayAlwaysSet& broadening_features) {

@@ -86,27 +86,102 @@ TaintTree TaintEnvironment::deep_read(
     const WideningPointsToResolver& widening_resolver,
     MemoryLocation* memory_location) const {
   TaintTree result{};
+
+  // Retrieve the fully resolved PointsToTree for the RootMemoryLocation.
+  // It is necessary to build the full taint tree for a deep read even if we are
+  // reading taint at a certain path. This is because the TaintTree at a memory
+  // location higher in the points-to tree could have overlapping paths with the
+  // current points-to tree which needs to be joined for the full deep read.
   auto points_to_tree =
       widening_resolver.resolved_aliases(memory_location->root());
 
-  // Collapse the points-to tree
+  // To build the complete taint tree for the RootMemoryLocation, we visit the
+  // fully resolved points-to-tree in postorder. This is necessary for
+  // correctness and accuracy of the final taint tree.
+  //
+  // Specifically, this is necessary to correctly apply the collapse-depth when
+  // reading the taint from the pointee memory location. Note that nodes of the
+  // points-to-tree are "self-contained" i.e. we do not propagate information
+  // from the ancestors down to the children.
+  //
+  // Eg: Say we have a collapse-depth=always at the root node. For correctness,
+  // we need to build the complete taint tree for all the children and then
+  // collapse the entire taint tree. Doing an inorder traversal would lead
+  // incorrect results.
   points_to_tree.visit_postorder([this, &result](
                                      const Path& path,
                                      const PointsToSet& points_to_set) {
-    for (const auto& [points_to, properties] : points_to_set) {
-      auto taint = this->read(points_to);
-      taint.apply_aliasing_properties(properties);
-      result.write(path, std::move(taint), UpdateKind::Weak);
+    // When we read the taint from the pointee memory location, we need to
+    // apply the aliasing properties to the taint i.e. add the local
+    // positions, features, and collapse the taint read from that memory
+    // location before adding it to the final result taint.
+
+    if (path.empty()) {
+      // - Empty path implies that this is the root node of the PointsToTree
+      // i.e. the PointsToSet here contains the self-resolution and is only
+      // present in the fully resolved PointsToTree retrieved from the
+      // WideningPointsToResolver::resolved_aliases().
+      // - Hence, for self-resolution, the AliasingProperties is applicable
+      // to the whole result taint.
+
+      // For self-resolution, we expect a single points-to memory location
+      // in the points_to_set.
+      mt_assert(points_to_set.size() == 1);
+      const auto& [points_to, properties] = *points_to_set.begin();
+      // The pointee memory location in the points_to_set is either:
+      // 1. The input `memory_location` itself: In this case, the
+      // AliasingProperties is empty.
+      // 2. The head of the widened component of which the input
+      // memory_location is a part. In this case, the AliasingProperties
+      // is non-empty and we expect the collapse-depth to be set to
+      // always-collapse.
+      mt_assert(
+          properties.is_empty() ||
+          properties.collapse_depth().is(CollapseDepth::Enum::AlwaysCollapse));
+
+      result.join_with(this->read(points_to));
+      result.apply_aliasing_properties(properties);
 
       if (properties.collapse_depth().should_collapse()) {
         result.collapse_deeper_than(
-            properties.collapse_depth().value(),
+            /* height */ properties.collapse_depth().value(),
             FeatureMayAlwaysSet{
                 FeatureFactory::singleton().get_alias_broadening_feature()});
       }
+
+      return;
+    }
+
+    mt_assert(!path.empty());
+
+    // When path is non-empty: the aliasing properties applies to
+    // the taint read from the original memory location then written to
+    // result taint at path.
+    CollapseDepth min_collapse_depth;
+    for (const auto& [points_to, properties] : points_to_set) {
+      // Read the taint from the points_to memory location
+      auto taint = this->read(points_to);
+
+      // Apply the aliasing properties to the taint i.e. add the local
+      // positions, features, and collapse the taint read from the memory
+      // location to the expected depth.
+      taint.apply_aliasing_properties(properties);
+      min_collapse_depth.join_with(properties.collapse_depth());
+
+      result.write(path, std::move(taint), UpdateKind::Weak);
+    }
+
+    if (min_collapse_depth.should_collapse()) {
+      result.collapse_deeper_than(
+          path,
+          /* height */ min_collapse_depth.value(),
+          FeatureMayAlwaysSet{
+              FeatureFactory::singleton().get_alias_broadening_feature()});
     }
   });
 
+  // If the input memory_location had a path, we return the sub-tree of the
+  // fully resolved result taint tree.
   return result.read(memory_location->path());
 }
 

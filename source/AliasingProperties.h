@@ -46,7 +46,9 @@ class AliasingProperties final
       CollapseDepth collapse_depth)
       : local_positions_(std::move(local_positions)),
         locally_inferred_features_(std::move(features)),
-        collapse_depth_(std::move(collapse_depth)) {}
+        collapse_depth_(std::move(collapse_depth)) {
+    mt_assert(!local_positions_.is_bottom());
+  }
 
  public:
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(AliasingProperties)
@@ -61,6 +63,11 @@ class AliasingProperties final
   static AliasingProperties always_collapse() {
     return AliasingProperties(
         /* local_positions */ {}, /* features */ {}, CollapseDepth::collapse());
+  }
+
+  static AliasingProperties with_collapse_depth(CollapseDepth collapse_depth) {
+    return AliasingProperties(
+        /* local_positions */ {}, /* features */ {}, std::move(collapse_depth));
   }
 
   static AliasingProperties bottom() {

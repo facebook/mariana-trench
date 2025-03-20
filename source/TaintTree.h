@@ -160,6 +160,12 @@ class TaintTree final : public sparta::AbstractDomain<TaintTree> {
       std::size_t height,
       const FeatureMayAlwaysSet& broadening_features);
 
+  /* Collapse the subtree at path to the given maximum height. */
+  void collapse_deeper_than(
+      const Path& path,
+      std::size_t height,
+      const FeatureMayAlwaysSet& broadening_features);
+
   /* Collapse children that have more than `max_leaves` leaves. */
   void limit_leaves(
       std::size_t default_max_leaves,
@@ -172,8 +178,8 @@ class TaintTree final : public sparta::AbstractDomain<TaintTree> {
 
   void update_maximum_collapse_depth(CollapseDepth collapse_depth);
 
-  /* Update the propagation taint tree with the trace information collected from
-   * the propagation frame. */
+  /* Update the propagation taint tree with the trace information collected
+   * from the propagation frame. */
   void update_with_propagation_trace(
       const CallInfo& propagation_call_info,
       const Frame& propagation_frame);
