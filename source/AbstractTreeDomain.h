@@ -1185,7 +1185,7 @@ class AbstractTreeDomain final
   void visit_postorder_internal(Path& path, Visitor&& visitor) const {
     for (const auto& [path_element, subtree] : children_) {
       path.append(path_element);
-      subtree.visit_internal(path, visitor);
+      subtree.visit_postorder_internal(path, visitor);
       path.pop_back();
     }
 
