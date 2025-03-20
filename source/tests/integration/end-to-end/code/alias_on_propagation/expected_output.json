@@ -1623,8 +1623,10 @@
             "port" : "Argument(0)",
             "position" : 
             {
+              "end" : 49,
               "line" : 51,
-              "path" : "NestedClassesJava.java"
+              "path" : "NestedClassesJava.java",
+              "start" : 18
             }
           },
           "kinds" : 
@@ -1673,8 +1675,10 @@
             "port" : "Return",
             "position" : 
             {
+              "end" : 28,
               "line" : 80,
-              "path" : "NestedClassesJava.java"
+              "path" : "NestedClassesJava.java",
+              "start" : 23
             }
           },
           "kinds" : 
@@ -1699,7 +1703,104 @@
           "local_positions" : 
           [
             {
-              "line" : 80
+              "end" : 31,
+              "line" : 80,
+              "start" : 16
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel;.firstLevelSinkOnTopLevelMember:()V",
+      "position" : 
+      {
+        "line" : 83,
+        "path" : "NestedClassesJava.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Argument(0).this$0.mTopLevel",
+            "position" : 
+            {
+              "end" : 13,
+              "line" : 83,
+              "path" : "NestedClassesJava.java",
+              "start" : 4
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel;.firstLevelSinkOnTopLevelMember:()V"
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                44,
+                45
+              ],
+              "distance" : 1,
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : false
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 28,
+              "line" : 80,
+              "path" : "NestedClassesJava.java",
+              "start" : 23
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                46,
+                47
+              ],
+              "kind" : "Source",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 31,
+              "line" : 80,
+              "start" : 16
             }
           ]
         }
@@ -1725,8 +1826,10 @@
             "port" : "Argument(0).this$0.mTopLevel",
             "position" : 
             {
+              "end" : 13,
               "line" : 83,
-              "path" : "NestedClassesJava.java"
+              "path" : "NestedClassesJava.java",
+              "start" : 4
             },
             "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel;.firstLevelSinkOnTopLevelMember:()V"
           },
@@ -1760,7 +1863,9 @@
           "local_positions" : 
           [
             {
-              "line" : 77
+              "end" : 0,
+              "line" : 77,
+              "start" : 0
             }
           ]
         }
@@ -1885,7 +1990,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava;.wrapperWithArgSecondLevelSinkOnFirstLevelMember:(Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel$SecondLevel;)V",
   "position" : 
   {
-    "line" : 98,
+    "line" : 90,
     "path" : "NestedClassesJava.java"
   },
   "sinks" : 
@@ -1901,7 +2006,7 @@
             "port" : "Argument(0).this$1.mFirstLevel",
             "position" : 
             {
-              "line" : 99,
+              "line" : 91,
               "path" : "NestedClassesJava.java"
             },
             "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel$SecondLevel;.secondLevelSinkOnFirstLevelMember:()V"
@@ -1935,7 +2040,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava;.wrapperWithArgSecondLevelSinkOnTopLevelMember:(Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel$SecondLevel;)V",
   "position" : 
   {
-    "line" : 103,
+    "line" : 95,
     "path" : "NestedClassesJava.java"
   },
   "sinks" : 
@@ -1951,7 +2056,7 @@
             "port" : "Argument(0).this$1.this$0.mTopLevel",
             "position" : 
             {
-              "line" : 104,
+              "line" : 96,
               "path" : "NestedClassesJava.java"
             },
             "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/NestedClassesJava$FirstLevel$SecondLevel;.secondLevelSinkOnTopLevelMember:()V"

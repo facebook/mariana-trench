@@ -191,6 +191,205 @@ MemoryLocationsDomain invoke_result_memory_location(
   return MemoryLocationsDomain{memory_location};
 }
 
+/**
+ * Helper to check if the output path is eligible aliasing propagation
+ */
+const DexString* MT_NULLABLE
+maybe_get_aliasing_output_path_element(const Path& output_path) {
+  // Only considering `this$n` access path.
+  if (output_path.size() != 1) {
+    return nullptr;
+  }
+
+  auto path_element = *output_path.begin();
+  if (!path_element.is_field()) {
+    return nullptr;
+  }
+
+  // Currently, just check for this$
+  auto* field_name = path_element.name();
+  mt_assert(field_name != nullptr);
+  if (!boost::starts_with(field_name->str(), "this$")) {
+    return nullptr;
+  }
+
+  return field_name;
+}
+
+/**
+ * Helper to check if the input path and the corresponding source memory
+ * location is eligible for aliasing propagation
+ */
+RootMemoryLocation* MT_NULLABLE
+maybe_get_aliasing_propagation_source_memory_location(
+    const IRInstruction* instruction,
+    const ForwardAliasEnvironment* environment,
+    const AccessPath& input_path) {
+  // For now, only consider Argument input roots without paths.
+  if (!input_path.root().is_argument() || !input_path.path().empty()) {
+    return nullptr;
+  }
+
+  // Source memory locations
+  auto input_register_id =
+      instruction->src(input_path.root().parameter_position());
+  auto source_memory_locations =
+      environment->memory_locations(input_register_id);
+
+  // Check if the source memory location is a singleton and
+  // RootMemoryLocation, or else skip for now.
+  auto* source_memory_location_singleton = source_memory_locations.singleton();
+  if (source_memory_location_singleton == nullptr) {
+    return nullptr;
+  }
+
+  return (*source_memory_location_singleton)->as<RootMemoryLocation>();
+}
+
+/**
+ * Creates an alias to the memory locations in the `points_to_set` from
+ * `target_memory_locations` at path `field_name`.
+ */
+void create_alias(
+    MethodContext* context,
+    ForwardAliasEnvironment* environment,
+    const WideningPointsToResolver& widening_resolver,
+    PointsToSet points_to_set,
+    const MemoryLocationsDomain& target_memory_locations,
+    const DexString* field_name) {
+  if (points_to_set.is_bottom()) {
+    return;
+  }
+
+  bool is_singleton = target_memory_locations.singleton() != nullptr;
+
+  for (auto* memory_location : target_memory_locations.elements()) {
+    // TODO: T142954672 FieldMemoryLocation can widen consecutive duplicate
+    // paths. Identify when widening and always weak update for widened memory
+    // locations.
+    auto* field_memory_location = memory_location->make_field(field_name);
+    points_to_set.add_locally_inferred_features(
+        get_field_features(context, field_memory_location));
+
+    LOG_OR_DUMP(
+        context,
+        4,
+        "{} updating PointsToTree at {} with {}",
+        is_singleton ? "Strong" : "Weak",
+        show(field_memory_location),
+        points_to_set);
+
+    environment->write(
+        widening_resolver,
+        memory_location,
+        field_name,
+        points_to_set,
+        is_singleton ? UpdateKind::Strong : UpdateKind::Weak);
+  }
+}
+
+void apply_aliasing_propagations(
+    MethodContext* context,
+    ForwardAliasEnvironment* environment,
+    const WideningPointsToResolver& widening_resolver,
+    const IRInstruction* instruction) {
+  auto register_memory_locations_map = memory_location_map_from_environment(
+      environment->memory_location_environment(), instruction);
+  auto callee = get_callee(
+      context,
+      instruction,
+      environment->last_position(),
+      register_memory_locations_map);
+
+  if (callee.resolved_base_method == nullptr ||
+      callee.resolved_base_method->is_static()) {
+    // Cannot capture parent scope in .this$n
+    return;
+  }
+
+  LOG_OR_DUMP(
+      context,
+      4,
+      "Processing propagations for call to `{}`",
+      show(callee.method_reference));
+
+  // Process the aliasing propagations.
+  // Currently only processing propagations to specific access path `.this$n`.
+  for (const auto& binding : callee.model.propagations().elements()) {
+    const AccessPath& input_path = binding.first;
+    auto* aliasing_source_memory_location =
+        maybe_get_aliasing_propagation_source_memory_location(
+            instruction, environment, input_path);
+
+    if (aliasing_source_memory_location == nullptr) {
+      // Nothing to alias
+      continue;
+    }
+
+    LOG_OR_DUMP(
+        context,
+        4,
+        "Memory location {} at input path {} of propagation can be aliased",
+        show(aliasing_source_memory_location),
+        input_path);
+
+    const Taint& propagations = binding.second;
+    propagations.visit_frames([context,
+                               instruction,
+                               environment,
+                               &input_path,
+                               aliasing_source_memory_location,
+                               &widening_resolver](
+                                  const CallInfo& /* call_info */,
+                                  const Frame& propagation) {
+      // Only handle propgation to Argument(0).
+      auto output_root = propagation.propagation_kind()->root();
+      if (!(output_root.is_argument() &&
+            output_root.parameter_position() == 0)) {
+        return;
+      }
+
+      for (const auto& [output_path, collapse_depth] :
+           propagation.output_paths().elements()) {
+        const auto* output_path_element =
+            maybe_get_aliasing_output_path_element(output_path);
+        if (output_path_element == nullptr) {
+          // Nothing to alias.
+          continue;
+        }
+
+        LOG_OR_DUMP(
+            context,
+            4,
+            "Output root {} at path {} of propagation aliases input path: {}",
+            output_root,
+            show(output_path_element),
+            input_path);
+
+        // Create the source points-to set
+        PointsToSet points_to_set{
+            aliasing_source_memory_location,
+            AliasingProperties::with_collapse_depth(collapse_depth)};
+
+        // Retrieve the target memory locations where the alias is to be
+        // created.
+        auto output_register_id =
+            instruction->src(output_root.parameter_position());
+        auto target_memory_locations =
+            environment->memory_locations(output_register_id);
+
+        create_alias(
+            context,
+            environment,
+            widening_resolver,
+            std::move(points_to_set),
+            target_memory_locations,
+            output_path_element);
+      }
+    });
+  }
+}
+
 } // namespace
 
 bool ForwardAliasTransfer::analyze_invoke(
@@ -199,10 +398,19 @@ bool ForwardAliasTransfer::analyze_invoke(
     ForwardAliasEnvironment* environment) {
   log_instruction(context, instruction);
 
+  // Build the widening resolver from the entry state.
+  auto widening_resolver = environment->make_widening_resolver();
+
   auto memory_locations =
       invoke_result_memory_location(context, instruction, environment);
+
+  // Set result register
   LOG_OR_DUMP(context, 4, "Setting result register to {}", memory_locations);
   environment->assign(k_result_register, memory_locations);
+
+  apply_aliasing_propagations(
+      context, environment, widening_resolver, instruction);
+
   return false;
 }
 
@@ -276,7 +484,6 @@ bool ForwardAliasTransfer::analyze_iput(
   const auto* field_name = instruction->get_field()->get_name();
   auto target_memory_locations =
       environment->memory_locations(instruction->src(1));
-  bool is_singleton = target_memory_locations.singleton() != nullptr;
 
   auto points_to = environment->points_to(source_memory_locations);
   auto* position = context->positions.get(
@@ -286,29 +493,13 @@ bool ForwardAliasTransfer::analyze_iput(
       instruction);
   points_to.add_local_position(position);
 
-  for (auto* memory_location : target_memory_locations.elements()) {
-    // TODO: T142954672 FieldMemoryLocation can widen consecutive duplicate
-    // paths. Identify when widening and always weak update for widened memory
-    // locations.
-    auto* field_memory_location = memory_location->make_field(field_name);
-    points_to.add_locally_inferred_features(
-        get_field_features(context, field_memory_location));
-
-    LOG_OR_DUMP(
-        context,
-        4,
-        "{} updating PointsToTree at {} with {}",
-        is_singleton ? "Strong" : "Weak",
-        show(field_memory_location),
-        points_to);
-
-    environment->write(
-        widening_resolver,
-        memory_location,
-        field_name,
-        points_to,
-        is_singleton ? UpdateKind::Strong : UpdateKind::Weak);
-  }
+  create_alias(
+      context,
+      environment,
+      widening_resolver,
+      std::move(points_to),
+      target_memory_locations,
+      field_name);
 
   // Handle field_write to infer inline as setter.
   const auto& current_field_write = environment->field_write();

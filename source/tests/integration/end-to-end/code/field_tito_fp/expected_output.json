@@ -1046,7 +1046,7 @@
   "generations" : 
   [
     {
-      "port" : "Argument(0).mEvent.tainted",
+      "port" : "Argument(0)",
       "taint" : 
       [
         {
@@ -1085,6 +1085,7 @@
           {
             "always_features" : 
             [
+              "via-alias-widen-broadening",
               "via-cast:Ljava/lang/String;"
             ]
           },
@@ -1156,14 +1157,14 @@
   "generations" : 
   [
     {
-      "port" : "Argument(0).mEvent.tainted",
+      "port" : "Argument(0)",
       "taint" : 
       [
         {
           "call_info" : 
           {
             "call_kind" : "CallSite",
-            "port" : "Argument(0).mEvent.tainted",
+            "port" : "Argument(0)",
             "position" : 
             {
               "end" : 7,
@@ -1178,6 +1179,7 @@
             {
               "always_features" : 
               [
+                "via-alias-widen-broadening",
                 "via-cast:Ljava/lang/String;"
               ],
               "callee_interval" : 
@@ -1213,10 +1215,10 @@
     {
       "always_features" : 
       [
+        "via-alias-widen-broadening",
         "via-cast:Ljava/lang/String;",
         "via-obscure",
-        "via-obscure-taint-in-taint-out",
-        "via-propagation-broadening"
+        "via-obscure-taint-in-taint-out"
       ],
       "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "position" : 
@@ -1268,7 +1270,7 @@
           "call_info" : 
           {
             "call_kind" : "CallSite",
-            "port" : "Argument(0).mEvent.tainted",
+            "port" : "Argument(0)",
             "position" : 
             {
               "end" : 7,
@@ -1283,6 +1285,7 @@
             {
               "always_features" : 
               [
+                "via-alias-widen-broadening",
                 "via-cast:Ljava/lang/String;"
               ],
               "callee_interval" : 
@@ -1307,8 +1310,7 @@
             "always_features" : 
             [
               "via-obscure",
-              "via-obscure-taint-in-taint-out",
-              "via-propagation-broadening"
+              "via-obscure-taint-in-taint-out"
             ]
           },
           "local_positions" : 

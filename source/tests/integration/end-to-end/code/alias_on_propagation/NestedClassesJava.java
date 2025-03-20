@@ -82,16 +82,8 @@ public class NestedClassesJava {
 
     firstLevel.firstLevelSinkOnTopLevelMember();
     // Sink: Argument(0).this$1.mTopLevel
-    // FN: No issue found.
-    // Note: Correctly infer source and sink on the same port:
-    // Argument(0).mTopLevel
-    // So we are reading the taint incorrectly when we check for flows.
-    // Forward analyze_invoke() -> check_flows()
-    // - invoke v0, FirstLevel;.firstLevelSinkOnTopLevelMember()
-    //   where v0 -> MemoryLocation(new-instance FirstLevel;)
-    // - To correctly resolve the deep read when we check for flows for this invoke,
-    // we need to apply the aliasing propagation on the constructor:
-    //   Argument(1) -> Argument(0).this$n
+    // Expect issue.
+    // Expect inferred source and sink on the same port: Argument(0).mTopLevel
   }
 
   void wrapperWithArgSecondLevelSinkOnFirstLevelMember(FirstLevel.SecondLevel arg) {

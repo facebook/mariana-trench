@@ -1248,10 +1248,19 @@
             "always_features" : 
             [
               "via-cast:Ljava/lang/String;"
+            ],
+            "may_features" : 
+            [
+              "via-inner-class-this"
             ]
           },
           "local_positions" : 
           [
+            {
+              "end" : 0,
+              "line" : 39,
+              "start" : 0
+            },
             {
               "end" : 43,
               "line" : 36,
@@ -1268,11 +1277,14 @@
       "always_features" : 
       [
         "via-anonymous-class-to-obscure",
-        "via-cast:Ljava/lang/String;",
+        "via-cast:Ljava/lang/String;"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Flow$2;.run:()V",
+      "may_features" : 
+      [
         "via-inner-class-this",
         "via-obscure"
       ],
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/Flow$2;.run:()V",
       "position" : 
       {
         "line" : 39,
@@ -1357,7 +1369,10 @@
           {
             "always_features" : 
             [
-              "via-cast:Ljava/lang/String;",
+              "via-cast:Ljava/lang/String;"
+            ],
+            "may_features" : 
+            [
               "via-inner-class-this",
               "via-obscure"
             ]
@@ -1428,12 +1443,19 @@
             "always_features" : 
             [
               "via-cast:Ljava/lang/String;"
+            ],
+            "may_features" : 
+            [
+              "via-inner-class-this"
             ]
           },
           "local_positions" : 
           [
             {
               "line" : 23
+            },
+            {
+              "line" : 26
             }
           ]
         }
