@@ -16,6 +16,7 @@
 
 #include <sparta/AbstractDomain.h>
 #include <sparta/PatriciaTreeMap.h>
+#include <sparta/PerfectForwardCapture.h>
 
 #include <Show.h>
 
@@ -669,9 +670,13 @@ class AbstractTreeDomain final
     ++begin;
 
     children_.update(
-        [begin, end, height, transform = std::forward<Transform>(transform)](
+        [begin,
+         end,
+         height,
+         transform = sparta::fwd_capture(std::forward<Transform>(transform))](
             AbstractTreeDomain subtree) {
-          subtree.collapse_deeper_than_internal(begin, end, height, transform);
+          subtree.collapse_deeper_than_internal(
+              begin, end, height, transform.get());
           return subtree;
         },
         path);
