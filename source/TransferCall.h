@@ -11,6 +11,7 @@
 
 #include <mariana-trench/Access.h>
 #include <mariana-trench/CallGraph.h>
+#include <mariana-trench/ForwardAliasEnvironment.h>
 #include <mariana-trench/MemoryLocation.h>
 #include <mariana-trench/MemoryLocationEnvironment.h>
 #include <mariana-trench/Method.h>
@@ -34,28 +35,16 @@ struct CalleeModel {
   const Method* MT_NULLABLE resolved_base_method;
   const Position* position;
   TextualOrderIndex call_index;
+  // Resolved values of constant arguments passed to the callee.
+  const std::vector<std::optional<std::string>> source_constant_arguments;
   Model model;
 };
-
-std::vector<const DexType * MT_NULLABLE> get_source_register_types(
-    const MethodContext* context,
-    const IRInstruction* instruction);
-
-std::vector<std::optional<std::string>> get_source_constant_arguments(
-    const RegisterMemoryLocationsMap& register_memory_locations_map,
-    const IRInstruction* instruction);
-
-bool get_is_this_call(
-    const RegisterMemoryLocationsMap& register_memory_locations_map,
-    const IRInstruction* instruction);
 
 CalleeModel get_callee(
     const MethodContext* context,
     const IRInstruction* instruction,
-    const DexPosition* MT_NULLABLE position,
-    const std::vector<const DexType * MT_NULLABLE>& source_register_types,
-    const std::vector<std::optional<std::string>>& source_constant_arguments,
-    bool is_this_call);
+    const DexPosition* MT_NULLABLE dex_position,
+    const RegisterMemoryLocationsMap& register_memory_locations_map);
 
 CalleeModel get_callee(
     const MethodContext* context,

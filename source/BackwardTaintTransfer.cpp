@@ -621,7 +621,6 @@ void check_call_flows(
     BackwardTaintEnvironment* environment,
     const std::vector<Register>& instruction_sources,
     const CalleeModel& callee,
-    const std::vector<std::optional<std::string>>& source_constant_arguments,
     const FeatureMayAlwaysSet& extra_features,
     const FulfilledPartialKindState& fulfilled_partial_sinks) {
   check_call_flows(
@@ -643,7 +642,7 @@ void check_call_flows(
       },
       callee.method_reference,
       callee.model.sinks(),
-      source_constant_arguments,
+      callee.source_constant_arguments,
       extra_features,
       fulfilled_partial_sinks);
 }
@@ -652,9 +651,7 @@ void check_artificial_calls_flows(
     MethodContext* context,
     const InstructionAliasResults& aliasing,
     const IRInstruction* instruction,
-    BackwardTaintEnvironment* environment,
-    const std::vector<std::optional<std::string>>& source_constant_arguments =
-        {}) {
+    BackwardTaintEnvironment* environment) {
   const auto& artificial_callees =
       context->call_graph.artificial_callees(context->method(), instruction);
 
@@ -683,7 +680,7 @@ void check_artificial_calls_flows(
         get_register,
         callee.method_reference,
         callee.model.sinks(),
-        source_constant_arguments,
+        callee.source_constant_arguments,
         extra_features,
         fulfilled_partial_sinks);
 
@@ -694,7 +691,7 @@ void check_artificial_calls_flows(
         get_register,
         callee.method_reference,
         callee.model.call_effect_sinks(),
-        source_constant_arguments,
+        callee.source_constant_arguments,
         extra_features,
         fulfilled_partial_sinks);
   }
@@ -840,21 +837,15 @@ bool BackwardTaintTransfer::analyze_invoke(
   log_instruction(context, instruction);
   const auto& aliasing = context->aliasing.get(instruction);
 
-  auto source_constant_arguments = get_source_constant_arguments(
-      aliasing.register_memory_locations_map(), instruction);
-
-  check_artificial_calls_flows(
-      context, aliasing, instruction, environment, source_constant_arguments);
-
-  const BackwardTaintEnvironment previous_environment = *environment;
-
   auto callee = get_callee(
       context,
       instruction,
       aliasing.position(),
-      get_source_register_types(context, instruction),
-      source_constant_arguments,
-      get_is_this_call(aliasing.register_memory_locations_map(), instruction));
+      aliasing.register_memory_locations_map());
+
+  check_artificial_calls_flows(context, aliasing, instruction, environment);
+
+  const BackwardTaintEnvironment previous_environment = *environment;
 
   TaintTree result_taint = TaintTree::bottom();
   if (callee.resolved_base_method &&
@@ -885,7 +876,6 @@ bool BackwardTaintTransfer::analyze_invoke(
       environment,
       instruction->srcs_copy(),
       callee,
-      source_constant_arguments,
       /* extra_features */ {},
       context->fulfilled_partial_sinks.get_call(instruction));
 
@@ -904,7 +894,7 @@ bool BackwardTaintTransfer::analyze_invoke(
         environment,
         instruction,
         callee,
-        source_constant_arguments,
+        callee.source_constant_arguments,
         result_taint);
   }
 

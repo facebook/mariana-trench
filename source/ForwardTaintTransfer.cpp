@@ -266,7 +266,6 @@ void apply_propagations(
     ForwardTaintEnvironment* new_environment,
     const IRInstruction* instruction,
     const CalleeModel& callee,
-    const std::vector<std::optional<std::string>>& source_constant_arguments,
     TaintTree& result_taint) {
   LOG_OR_DUMP(
       context,
@@ -302,7 +301,7 @@ void apply_propagations(
     auto input_taint_tree = previous_environment->deep_read(
         aliasing.widening_resolver(),
         aliasing.register_memory_locations(input_register_id),
-        input_path.path().resolve(source_constant_arguments));
+        input_path.path().resolve(callee.source_constant_arguments));
 
     if (input_taint_tree.is_bottom() &&
         !callee.model.strong_write_on_propagation()) {
@@ -318,7 +317,6 @@ void apply_propagations(
                                &input_taint_tree,
                                &propagations,
                                &result_taint,
-                               &source_constant_arguments,
                                context,
                                instruction,
                                new_environment,
@@ -393,7 +391,7 @@ void apply_propagations(
         }
 
         auto output_path_resolved =
-            output_path.resolve(source_constant_arguments);
+            output_path.resolve(callee.source_constant_arguments);
 
         switch (output_root.kind()) {
           case Root::Kind::Return: {
@@ -884,7 +882,6 @@ void check_call_flows(
     const std::function<std::optional<Register>(Root)>& get_register,
     const CalleeModel& callee,
     const TaintAccessPathTree& sinks,
-    const std::vector<std::optional<std::string>>& source_constant_arguments,
     const FeatureMayAlwaysSet& extra_features,
     FulfilledPartialKindState* MT_NULLABLE fulfilled_partial_sinks) {
   LOG_OR_DUMP(
@@ -904,7 +901,7 @@ void check_call_flows(
             ->deep_read(
                 aliasing.widening_resolver(),
                 aliasing.register_memory_locations(*register_id),
-                port.path().resolve(source_constant_arguments))
+                port.path().resolve(callee.source_constant_arguments))
             .collapse(FeatureMayAlwaysSet{
                 context->feature_factory.get_issue_broadening_feature()});
     check_sources_sinks_flows(
@@ -929,7 +926,6 @@ void check_call_flows(
     const ForwardTaintEnvironment* environment,
     const std::vector<Register>& instruction_sources,
     const CalleeModel& callee,
-    const std::vector<std::optional<std::string>>& source_constant_arguments,
     const FeatureMayAlwaysSet& extra_features,
     FulfilledPartialKindState* MT_NULLABLE fulfilled_partial_sinks) {
   check_call_flows(
@@ -952,7 +948,6 @@ void check_call_flows(
       },
       callee,
       callee.model.sinks(),
-      source_constant_arguments,
       extra_features,
       fulfilled_partial_sinks);
 }
@@ -1024,9 +1019,7 @@ void check_artificial_calls_flows(
     MethodContext* context,
     const InstructionAliasResults& aliasing,
     const IRInstruction* instruction,
-    ForwardTaintEnvironment* environment,
-    const std::vector<std::optional<std::string>>& source_constant_arguments =
-        {}) {
+    ForwardTaintEnvironment* environment) {
   const auto& artificial_callees =
       context->call_graph.artificial_callees(context->method(), instruction);
 
@@ -1054,7 +1047,6 @@ void check_artificial_calls_flows(
         get_register,
         callee,
         callee.model.sinks(),
-        source_constant_arguments,
         extra_features,
         &fulfilled_partial_sinks);
 
@@ -1066,7 +1058,6 @@ void check_artificial_calls_flows(
         get_register,
         callee,
         callee.model.call_effect_sinks(),
-        source_constant_arguments,
         extra_features,
         &fulfilled_partial_sinks);
 
@@ -1187,15 +1178,11 @@ bool ForwardTaintTransfer::analyze_invoke(
   log_instruction(context, instruction);
   const auto& aliasing = context->aliasing.get(instruction);
 
-  auto source_constant_arguments = get_source_constant_arguments(
-      aliasing.register_memory_locations_map(), instruction);
   auto callee = get_callee(
       context,
       instruction,
       aliasing.position(),
-      get_source_register_types(context, instruction),
-      source_constant_arguments,
-      get_is_this_call(aliasing.register_memory_locations_map(), instruction));
+      aliasing.register_memory_locations_map());
 
   const ForwardTaintEnvironment previous_environment = *environment;
 
@@ -1207,7 +1194,6 @@ bool ForwardTaintTransfer::analyze_invoke(
       &previous_environment,
       instruction->srcs_copy(),
       callee,
-      source_constant_arguments,
       /* extra_features */ {},
       &fulfilled_partial_sinks);
   context->fulfilled_partial_sinks.store_call(
@@ -1245,7 +1231,6 @@ bool ForwardTaintTransfer::analyze_invoke(
         environment,
         instruction,
         callee,
-        source_constant_arguments,
         result_taint);
   }
 
@@ -1282,8 +1267,7 @@ bool ForwardTaintTransfer::analyze_invoke(
         UpdateKind::Weak);
   }
 
-  check_artificial_calls_flows(
-      context, aliasing, instruction, environment, source_constant_arguments);
+  check_artificial_calls_flows(context, aliasing, instruction, environment);
   check_artificial_call_effect_flows(context, aliasing, instruction);
 
   return false;

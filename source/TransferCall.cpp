@@ -21,6 +21,8 @@ void log_instruction(
   LOG_OR_DUMP(context, 4, "Instruction: \033[33m{}\033[0m", show(instruction));
 }
 
+namespace {
+
 std::vector<const DexType * MT_NULLABLE> get_source_register_types(
     const MethodContext* context,
     const IRInstruction* instruction) {
@@ -41,8 +43,6 @@ std::vector<const DexType * MT_NULLABLE> get_source_register_types(
   }
   return register_types;
 }
-
-namespace {
 
 std::optional<std::string> register_constant_argument(
     const RegisterMemoryLocationsMap& register_memory_locations_map,
@@ -102,8 +102,6 @@ CallClassIntervalContext get_type_context(
       interval, /* preserves_type_context */ is_this_call);
 }
 
-} // namespace
-
 std::vector<std::optional<std::string>> get_source_constant_arguments(
     const RegisterMemoryLocationsMap& register_memory_locations_map,
     const IRInstruction* instruction) {
@@ -143,13 +141,13 @@ bool get_is_this_call(
   return receiver_memory_location->is<ThisParameterMemoryLocation>();
 }
 
+} // namespace
+
 CalleeModel get_callee(
     const MethodContext* context,
     const IRInstruction* instruction,
     const DexPosition* MT_NULLABLE dex_position,
-    const std::vector<const DexType * MT_NULLABLE>& source_register_types,
-    const std::vector<std::optional<std::string>>& source_constant_arguments,
-    bool is_this_call) {
+    const RegisterMemoryLocationsMap& register_memory_locations_map) {
   mt_assert(opcode::is_an_invoke(instruction->opcode()));
 
   auto call_target = context->call_graph.callee(context->method(), instruction);
@@ -168,9 +166,15 @@ CalleeModel get_callee(
   }
 
   auto* position = context->positions.get(context->method(), dex_position);
+  auto source_register_types = get_source_register_types(context, instruction);
+  auto source_constant_arguments =
+      get_source_constant_arguments(register_memory_locations_map, instruction);
 
-  auto class_interval_context =
-      get_type_context(context, instruction, is_this_call);
+  auto class_interval_context = get_type_context(
+      context,
+      instruction,
+      get_is_this_call(register_memory_locations_map, instruction));
+
   auto model = context->model_at_callsite(
       call_target,
       position,
@@ -179,13 +183,12 @@ CalleeModel get_callee(
       class_interval_context);
   LOG_OR_DUMP(context, 4, "Callee model: {}", model);
 
-  // Avoid copies using `std::move`.
-  // https://fb.workplace.com/groups/2292641227666517/permalink/2478196942444277/
   return CalleeModel{
       instruction->get_method(),
       call_target.resolved_base_callee(),
       position,
       call_target.call_index(),
+      std::move(source_constant_arguments),
       std::move(model)};
 }
 
@@ -214,6 +217,7 @@ CalleeModel get_callee(
       resolved_base_callee,
       position,
       callee.call_target.call_index(),
+      /* source_constant_arguments */ {},
       std::move(model)};
 }
 
