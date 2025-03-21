@@ -19,12 +19,8 @@ namespace marianatrench {
 
 struct PointsToTreeConfiguration {
   static std::size_t max_tree_height_after_widening() {
-    // Using the Heuristics::propagation_output_path_tree_widening_height, i.e.
-    // the maximum height of the output path tree of propagations after
-    // widening as this will be the maximum level of aliasing we will be able to
-    // track through propagations.
-    return Heuristics::singleton()
-        .propagation_output_path_tree_widening_height();
+    // Maintain the height of the PointsToTree during intra-procedural analysis.
+    return std::numeric_limits<std::size_t>::max();
   }
 
   static PointsToSet transform_on_widening_collapse(
