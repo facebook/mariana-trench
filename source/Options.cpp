@@ -502,6 +502,14 @@ Options::class_hierarchies_input_path() const {
   return *sharded_models_directory_ / "class_hierarchies.json";
 }
 
+const std::optional<std::filesystem::path> Options::class_intervals_input_path()
+    const {
+  if (!sharded_models_directory_.has_value()) {
+    return std::nullopt;
+  }
+  return *sharded_models_directory_ / "class_intervals.json";
+}
+
 bool Options::sequential() const {
   return sequential_;
 }

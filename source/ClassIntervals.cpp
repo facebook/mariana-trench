@@ -11,6 +11,7 @@
 #include <json/value.h>
 
 #include <mariana-trench/Assert.h>
+#include <mariana-trench/CachedModelsContext.h>
 #include <mariana-trench/ClassIntervals.h>
 #include <mariana-trench/JsonReaderWriter.h>
 #include <mariana-trench/JsonValidation.h>
@@ -54,8 +55,22 @@ void dfs_on_hierarchy(
 
 ClassIntervals::ClassIntervals(
     const Options& options,
-    const DexStoresVector& stores)
+    const DexStoresVector& stores,
+    const CachedModelsContext& cached_models_context)
     : top_(Interval::top()) {
+  if (cached_models_context.class_intervals().size() > 0) {
+    // If the cached context has class intervals, use them as is and do not
+    // re-compute. This is for replaying an analysis for debugging.
+    mt_assert(options.analysis_mode() == AnalysisMode::Replay);
+    class_intervals_ = cached_models_context.class_intervals();
+
+    // Consider also re-computing class intervals for JAR caching. Requires
+    // handling cases where an internal class extends an external class that
+    // already has an interval in the cached output. Intervals in the cached
+    // models need to be re-mapped too.
+    return;
+  }
+
   // Theoretically, all classes are rooted in java.lang.Object. In practice,
   // internal classes inheriting from external classes will not be reachable
   // from Object. Treat the class hierarchy as a forest of trees, with roots

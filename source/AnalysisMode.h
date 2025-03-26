@@ -24,5 +24,6 @@ enum class AnalysisMode : unsigned int {
 };
 
 AnalysisMode analysis_mode_from_string(std::string_view value);
+std::string analysis_mode_to_string(AnalysisMode value);
 
 } // namespace marianatrench

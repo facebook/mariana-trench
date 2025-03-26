@@ -22,6 +22,8 @@
 
 namespace marianatrench {
 
+class CachedModelsContext;
+
 /**
  * Class intervals are used to describe a hierarchy as follows:
  * - An interval is a [lower bound, upper bound] pair.
@@ -53,7 +55,8 @@ class ClassIntervals final {
 
   explicit ClassIntervals(
       const Options& options,
-      const DexStoresVector& stores);
+      const DexStoresVector& stores,
+      const CachedModelsContext& cached_models_context);
 
   DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ClassIntervals)
 

@@ -102,6 +102,7 @@ class Options final {
   const std::optional<std::filesystem::path> overrides_input_path() const;
   const std::optional<std::filesystem::path> class_hierarchies_input_path()
       const;
+  const std::optional<std::filesystem::path> class_intervals_input_path() const;
 
   bool sequential() const;
   bool skip_source_indexing() const;

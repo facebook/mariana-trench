@@ -163,8 +163,8 @@ Registry MarianaTrench::analyze(Context& context) {
 
   Timer class_intervals_timer;
   LOG(1, "Computing class intervals...");
-  context.class_intervals =
-      std::make_unique<ClassIntervals>(*context.options, context.stores);
+  context.class_intervals = std::make_unique<ClassIntervals>(
+      *context.options, context.stores, cached_models_context);
   context.statistics->log_time("class_intervals", class_intervals_timer);
   LOG(1,
       "Computed class intervals in {:.2f}s. Memory used, RSS: {:.2f}GB",

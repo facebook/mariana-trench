@@ -379,8 +379,16 @@ Registry Registry::from_sharded_models_json(
   // parent directory (dot-dot) elements.
   auto directory_name = std::filesystem::canonical(path.string()).filename();
 
-  auto from_json_line =
-      [&context, &directory_name, &models](const Json::Value& value) -> void {
+  // Class intervals are not collapsed in replay mode. When models are replayed,
+  // the intervals in it are expected to correspond to what was loaded.
+  bool replay_mode = context.options->analysis_mode() == AnalysisMode::Replay;
+  LOG(1,
+      "Class intervals will{} be collapsed. Replay mode: {}",
+      replay_mode ? " not" : "",
+      replay_mode);
+
+  auto from_json_line = [&context, &directory_name, &models, &replay_mode](
+                            const Json::Value& value) -> void {
     JsonValidation::validate_object(value);
     if (value.isMember("method")) {
       try {
@@ -388,12 +396,14 @@ Registry Registry::from_sharded_models_json(
         mt_assert(method != nullptr);
         auto model = Model::from_json(value, context);
 
-        // Indicate that the source of these models is
-        // `Options::sharded_models_directory()`
-        model.make_sharded_model_generators(
-            /* identifier */ directory_name.string());
+        if (!replay_mode) {
+          // Indicate that the source of these models is
+          // `Options::sharded_models_directory()`
+          model.make_sharded_model_generators(
+              /* identifier */ directory_name.string());
+          model.collapse_class_intervals();
+        }
 
-        model.collapse_class_intervals();
         models.emplace(method, model);
       } catch (const JsonValidationError& e) {
         WARNING(1, "Unable to parse model `{}`: {}", value, e.what());

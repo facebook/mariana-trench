@@ -9,6 +9,7 @@
 
 #include <unordered_map>
 
+#include <mariana-trench/ClassIntervals.h>
 #include <mariana-trench/Context.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Registry.h>
@@ -40,6 +41,12 @@ class CachedModelsContext final {
     return class_hierarchy_;
   }
 
+  const std::unordered_map<const DexType*, ClassIntervals::Interval>&
+  class_intervals() const {
+    mt_assert(!is_cleared_);
+    return class_intervals_;
+  }
+
   const std::optional<Registry>& models() const {
     mt_assert(!is_cleared_);
     return models_;
@@ -56,6 +63,7 @@ class CachedModelsContext final {
       overrides_;
   std::unordered_map<const DexType*, std::unordered_set<const DexType*>>
       class_hierarchy_;
+  std::unordered_map<const DexType*, ClassIntervals::Interval> class_intervals_;
   std::optional<Registry> models_;
   bool is_cleared_;
 };
