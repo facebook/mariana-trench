@@ -136,7 +136,7 @@ std::unique_ptr<Rule> MultiSourceMultiSinkRule::from_json(
        JsonValidation::nonempty_array(value, "partial_sinks")) {
     for (const auto& label : labels) {
       partial_sink_kinds.insert(
-          PartialKind::from_json(sink_kind, label, context));
+          PartialKind::from_rule_json(sink_kind, label, context));
     }
   }
 

@@ -533,7 +533,14 @@ TEST_F(JsonTest, Sanitizer) {
                             .to_json()));
   EXPECT_EQ(
       test::parse_json(
-          R"({"sanitize": "sources", "kinds": [{"kind": "Kind1"}, {"kind": "Kind2"}, {"kind": "Partial:Kind3:a"}]})"),
+          R"({
+            "sanitize": "sources",
+            "kinds": [
+              {"kind": "Kind1"},
+              {"kind": "Kind2"},
+              {"kind": {"name": "Kind3", "partial_label": "a"}}
+            ]
+          })"),
       test::sorted_json(Sanitizer(
                             SanitizerKind::Sources,
                             /* kinds */
@@ -2215,7 +2222,12 @@ TEST_F(JsonTest, Model) {
         "method": "LData;.method:(LData;LData;)V",
         "sanitizers": [
           {"sanitize": "sources", "kinds": [{"kind": "Kind1"}]},
-          {"sanitize": "sinks", "kinds": [{"kind": "Kind1"}, {"kind": "Partial:Kind2:a"}]}
+          {
+            "sanitize": "sinks",
+            "kinds": [
+              {"kind": "Kind1"},
+              {"kind": {"name": "Kind2", "partial_label": "a"}}
+            ]}
         ]
       })#")));
   EXPECT_EQ(
@@ -2299,7 +2311,13 @@ TEST_F(JsonTest, Model) {
       test::sorted_json(test::parse_json(R"#({
       "method": "LData;.method:(LData;LData;)V",
       "sanitizers": [
-        {"sanitize": "sinks", "kinds": [{"kind": "Kind1"}, {"kind": "Partial:Kind2:a"}]},
+        {
+          "sanitize": "sinks",
+          "kinds": [
+            {"kind": "Kind1"},
+            {"kind": {"name": "Kind2", "partial_label": "a"}}
+          ]
+        },
         {"sanitize": "sinks", "port": "Argument(2)", "kinds": [{"kind": "Kind1"}, {"kind": "Kind3"}]},
         {"sanitize": "sources", "port": "Argument(1)"}
       ]

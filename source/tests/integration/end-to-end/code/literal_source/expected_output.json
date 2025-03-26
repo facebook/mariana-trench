@@ -1156,7 +1156,11 @@
           "kinds" : 
           [
             {
-              "kind" : "Partial:TestSink:regex",
+              "kind" : 
+              {
+                "name" : "TestSink",
+                "partial_label" : "regex"
+              },
               "origins" : 
               [
                 {
@@ -1181,7 +1185,11 @@
           "kinds" : 
           [
             {
-              "kind" : "Partial:TestSink:aci",
+              "kind" : 
+              {
+                "name" : "TestSink",
+                "partial_label" : "aci"
+              },
               "origins" : 
               [
                 {
@@ -2335,7 +2343,11 @@
           "kinds" : 
           [
             {
-              "kind" : "Partial:TestSink:regex",
+              "kind" : 
+              {
+                "name" : "TestSink",
+                "partial_label" : "regex"
+              },
               "origins" : 
               [
                 {
@@ -2360,7 +2372,11 @@
           "kinds" : 
           [
             {
-              "kind" : "Partial:TestSink:aci",
+              "kind" : 
+              {
+                "name" : "TestSink",
+                "partial_label" : "aci"
+              },
               "origins" : 
               [
                 {
@@ -2516,7 +2532,11 @@
           "kinds" : 
           [
             {
-              "kind" : "Partial:TestSink:aci",
+              "kind" : 
+              {
+                "name" : "TestSink",
+                "partial_label" : "aci"
+              },
               "origins" : 
               [
                 {
@@ -2526,7 +2546,11 @@
               ]
             },
             {
-              "kind" : "Partial:TestSink:regex",
+              "kind" : 
+              {
+                "name" : "TestSink",
+                "partial_label" : "regex"
+              },
               "origins" : 
               [
                 {
@@ -2551,7 +2575,11 @@
           "kinds" : 
           [
             {
-              "kind" : "Partial:TestSink:aci",
+              "kind" : 
+              {
+                "name" : "TestSink",
+                "partial_label" : "aci"
+              },
               "origins" : 
               [
                 {
@@ -2561,7 +2589,11 @@
               ]
             },
             {
-              "kind" : "Partial:TestSink:regex",
+              "kind" : 
+              {
+                "name" : "TestSink",
+                "partial_label" : "regex"
+              },
               "origins" : 
               [
                 {
@@ -2699,7 +2731,11 @@
           "kinds" : 
           [
             {
-              "kind" : "Partial:TestSink:regex",
+              "kind" : 
+              {
+                "name" : "TestSink",
+                "partial_label" : "regex"
+              },
               "origins" : 
               [
                 {
@@ -2724,7 +2760,11 @@
           "kinds" : 
           [
             {
-              "kind" : "Partial:TestSink:aci",
+              "kind" : 
+              {
+                "name" : "TestSink",
+                "partial_label" : "aci"
+              },
               "origins" : 
               [
                 {

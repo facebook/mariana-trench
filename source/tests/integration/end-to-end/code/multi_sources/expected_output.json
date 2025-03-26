@@ -1568,7 +1568,11 @@
               [
                 "sink-a"
               ],
-              "kind" : "Partial:TestSink:a",
+              "kind" : 
+              {
+                "name" : "TestSink",
+                "partial_label" : "a"
+              },
               "origins" : 
               [
                 {
@@ -1597,7 +1601,11 @@
               [
                 "sink-b"
               ],
-              "kind" : "Partial:TestSink:b",
+              "kind" : 
+              {
+                "name" : "TestSink",
+                "partial_label" : "b"
+              },
               "origins" : 
               [
                 {
@@ -2184,7 +2192,11 @@
               [
                 "sink-a"
               ],
-              "kind" : "Partial:TestSinkSingleArg:a",
+              "kind" : 
+              {
+                "name" : "TestSinkSingleArg",
+                "partial_label" : "a"
+              },
               "origins" : 
               [
                 {
@@ -2198,7 +2210,11 @@
               [
                 "sink-b"
               ],
-              "kind" : "Partial:TestSinkSingleArg:b",
+              "kind" : 
+              {
+                "name" : "TestSinkSingleArg",
+                "partial_label" : "b"
+              },
               "origins" : 
               [
                 {

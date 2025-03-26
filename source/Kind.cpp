@@ -41,15 +41,28 @@ const Kind* Kind::from_json(const Json::Value& value, Context& context) {
   const auto leaf_kind =
       JsonValidation::object_or_string(value, /* field */ "kind");
 
-  // An object means it's a TransformKind.
+  // Some kinds are represented as an object. Use unique keys in them to
+  // determine the Kind.
   if (leaf_kind.isObject()) {
-    return TransformKind::from_json(leaf_kind, context);
+    if (leaf_kind.isMember("base")) {
+      return TransformKind::from_json(leaf_kind, context);
+    } else if (leaf_kind.isMember("partial_label")) {
+      return PartialKind::from_json(leaf_kind, context);
+    } else {
+      throw JsonValidationError(
+          value,
+          "kind",
+          /* expected */ "TransformKind or PartialKind nested in an object.");
+    }
   }
 
   if (value.isMember("partial_label")) {
-    return context.kind_factory->get_partial(
-        leaf_kind.asString(),
-        JsonValidation::string(value, /* field */ "partial_label"));
+    // "partial_label" in the outer object is a legacy format that is no longer
+    // supported. It should be nested within the "kind" object.
+    throw JsonValidationError(
+        value,
+        "partial_label",
+        /* expected */ "'partial_label' nested in a 'kind' object.");
   }
 
   return Kind::from_trace_string(leaf_kind.asString(), context);
@@ -81,11 +94,9 @@ const Kind* Kind::from_trace_string(const std::string& kind, Context& context) {
         kind,
         /* expected */ "Non-TriggeredPartial Kind");
   } else if (boost::starts_with(kind, "Partial:")) {
-    // Note that parsing partial kinds from the JSON is supported, but not
-    // from the string representation.
-    throw KindNotSupportedError(
-        kind,
-        /* expected */ "Non-Partial Kind");
+    // Parsing of PartialKinds from the JSON is supported, but it no longer uses
+    // the old string representation.
+    throw KindNotSupportedError(kind, /* expected */ "Non-Partial Kind");
   } else if (kind.find_first_of(":@") != std::string::npos) {
     // Note that parsing transform kinds from the JSON is supported, but it
     // no longer uses the old string representation.

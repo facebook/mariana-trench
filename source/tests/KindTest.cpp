@@ -105,18 +105,11 @@ TEST_F(KindTest, SerializationDeserialization) {
         Kind::from_json(transform_kind->to_json(), context), transform_kind);
   }
 
-  // Deserializing Partial and Triggered Kinds are not currently supported.
-  // These are trickier to parse, and for now, are not needed unless
-  // multi-source/sink rules are used when analysis caching where
-  // deserialization of the cached result happens.
   const auto* partial_kind =
       context.kind_factory->get_partial("PartialKind", "label");
-  EXPECT_THROW(
-      Kind::from_json(partial_kind->to_json(), context), KindNotSupportedError);
-  EXPECT_THROW(
-      Kind::from_trace_string(partial_kind->to_trace_string(), context),
-      KindNotSupportedError);
+  EXPECT_EQ(Kind::from_json(partial_kind->to_json(), context), partial_kind);
 
+  // Deserializing Triggered Kinds is not currently supported.
   auto source_kinds_a =
       Rule::KindSet{context.kind_factory->get("NamedSourceKindA")};
   auto source_kinds_b =
