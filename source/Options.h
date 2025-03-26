@@ -15,6 +15,7 @@
 #include <boost/program_options.hpp>
 #include <json/json.h>
 
+#include <mariana-trench/AnalysisMode.h>
 #include <mariana-trench/ExportOriginsMode.h>
 #include <mariana-trench/Heuristics.h>
 #include <mariana-trench/IncludeMacros.h>
@@ -44,6 +45,7 @@ class Options final {
       const std::string& source_root_directory = ".",
       bool enable_cross_component_analysis = false,
       ExportOriginsMode export_origins_mode = ExportOriginsMode::Always,
+      AnalysisMode analysis_mode = AnalysisMode::Normal,
       bool propagate_across_arguments = false);
 
   explicit Options(const Json::Value& json);
@@ -130,6 +132,7 @@ class Options final {
 
   bool enable_cross_component_analysis() const;
   ExportOriginsMode export_origins_mode() const;
+  AnalysisMode analysis_mode() const;
   bool propagate_across_arguments() const;
 
   const std::optional<std::filesystem::path> heuristics_path() const;
@@ -194,6 +197,7 @@ class Options final {
 
   bool enable_cross_component_analysis_;
   ExportOriginsMode export_origins_mode_;
+  AnalysisMode analysis_mode_;
   bool propagate_across_arguments_;
 
   std::optional<std::filesystem::path> heuristics_path_;

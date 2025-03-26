@@ -640,9 +640,24 @@ def _add_debug_arguments(parser: argparse.ArgumentParser) -> None:
         help="Dumps file coverage info into `file_coverage.txt` and rule coverage info into `rule_coverage.json`.",
     )
     debug_arguments.add_argument(
+        "--dump-replay-output",
+        action="store_true",
+        help="Dumps the output for replaying an analysis (--analysis-mode=replay) into the output directory.",
+    )
+    debug_arguments.add_argument(
         "--always-export-origins",
         action="store_true",
         help="Export the origins for every trace frame into the output JSON instead of only on origins.",
+    )
+    debug_arguments.add_argument(
+        "--analysis-mode",
+        default="normal",
+        choices=["normal", "cached_models", "replay"],
+        help=(
+            "Analysis modes: cached_models - loads cached models from --sharded-models-directory; "
+            "replay - replays a previous analysis with input from --sharded-models-directory; "
+            "normal - the default type of analysis, no input models are loaded"
+        ),
     )
 
 
@@ -672,6 +687,7 @@ def _get_command_options_json(
     options["model-generator-configuration-paths"] = (
         arguments.model_generator_configuration_paths
     )
+    options["analysis-mode"] = arguments.analysis_mode
 
     if arguments.grepo_metadata_path:
         options["grepo-metadata-path"] = arguments.grepo_metadata_path
@@ -713,6 +729,13 @@ def _get_command_options_json(
 
     if arguments.sharded_models_directory:
         options["sharded-models-directory"] = arguments.sharded_models_directory
+        # TODO: Update caching jobs to provide the analysis_mode argument then
+        # remove this hack.
+        if arguments.analysis_mode == "normal":
+            LOG.info(
+                "Overriding --analysis-mode to cached_models since --sharded-models-directory is provided"
+            )
+            options["analysis-mode"] = "cached_models"
 
     if arguments.emit_all_via_cast_features:
         options["emit-all-via-cast-features"] = True
@@ -808,6 +831,12 @@ def _get_command_options_json(
 
     if arguments.dump_coverage_info:
         options["dump-coverage-info"] = True
+
+    if arguments.dump_replay_output:
+        options["dump-class-hierarchies"] = True
+        options["dump-class-intervals"] = True
+        options["dump-overrides"] = True
+        options["always-export-origins"] = True
 
     if arguments.always_export_origins:
         options["always-export-origins"] = True

@@ -177,6 +177,7 @@ TEST_P(IntegrationTest, CompareFlows) {
       /* source_root_directory */ directory.string(),
       /* enable_cross_component_analysis */ true,
       /* export_origins_mode */ ExportOriginsMode::Always,
+      /* analysis_mode */ AnalysisMode::Normal,
       propagate_across_arguments);
 
   // Load test Java classes

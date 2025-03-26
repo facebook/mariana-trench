@@ -99,6 +99,22 @@ std::optional<std::string> JsonValidation::optional_string(
   return string.asString();
 }
 
+std::string JsonValidation::string_or_default(
+    const Json::Value& value,
+    const std::string& field,
+    const std::string& default_value) {
+  validate_object(
+      value, fmt::format("non-null object with string field `{}`", field));
+  const auto& string = value[field];
+  if (string.isNull()) {
+    return default_value;
+  }
+  if (!string.isString()) {
+    throw JsonValidationError(value, field, /* expected */ "string");
+  }
+  return string.asString();
+}
+
 int JsonValidation::integer(const Json::Value& value) {
   if (value.isNull() || !value.isInt()) {
     throw JsonValidationError(

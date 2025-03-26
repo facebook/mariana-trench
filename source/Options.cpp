@@ -113,6 +113,7 @@ Options::Options(
     const std::string& source_root_directory,
     bool enable_cross_component_analysis,
     ExportOriginsMode export_origins_mode,
+    AnalysisMode analysis_mode,
     bool propagate_across_arguments)
     : models_paths_(models_paths),
       field_models_paths_(field_models_paths),
@@ -146,6 +147,7 @@ Options::Options(
       dump_coverage_info_(false),
       enable_cross_component_analysis_(enable_cross_component_analysis),
       export_origins_mode_(export_origins_mode),
+      analysis_mode_(analysis_mode),
       propagate_across_arguments_(propagate_across_arguments) {}
 
 Options::Options(const Json::Value& json) {
@@ -321,6 +323,9 @@ Options::Options(const Json::Value& json) {
       JsonValidation::optional_boolean(json, "always-export-origins", false)
       ? ExportOriginsMode::Always
       : ExportOriginsMode::OnlyOnOrigins;
+
+  analysis_mode_ = analysis_mode_from_string(
+      JsonValidation::string_or_default(json, "analysis-mode", "normal"));
 
   propagate_across_arguments_ = JsonValidation::optional_boolean(
       json, "propagate-across-arguments", false);
@@ -595,6 +600,10 @@ bool Options::enable_cross_component_analysis() const {
 
 ExportOriginsMode Options::export_origins_mode() const {
   return export_origins_mode_;
+}
+
+AnalysisMode Options::analysis_mode() const {
+  return analysis_mode_;
 }
 
 bool Options::propagate_across_arguments() const {
