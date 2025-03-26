@@ -50,8 +50,9 @@ class Overrides final {
 
   Json::Value to_json() const;
 
-  static std::unordered_map<const Method*, std::unordered_set<const Method*>>
-  from_json(const Json::Value& value, Methods& methods);
+  static CachedModelsContext::OverridesMap from_json(
+      const Json::Value& value,
+      Methods& methods);
 
  private:
   UniquePointerConcurrentMap<const Method*, std::unordered_set<const Method*>>

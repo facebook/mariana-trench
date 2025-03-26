@@ -147,8 +147,8 @@ Json::Value ClassHierarchies::to_json() const {
   return value;
 }
 
-std::unordered_map<const DexType*, std::unordered_set<const DexType*>>
-ClassHierarchies::from_json(const Json::Value& value) {
+CachedModelsContext::ClassHierarchiesMap ClassHierarchies::from_json(
+    const Json::Value& value) {
   auto extends_value = JsonValidation::object(value, "extends");
   std::unordered_map<const DexType*, std::unordered_set<const DexType*>> result;
 

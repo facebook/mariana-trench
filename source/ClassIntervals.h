@@ -52,6 +52,8 @@ class ClassIntervals final {
 
  public:
   using Interval = sparta::IntervalDomain<std::int32_t>;
+  using ClassIntervalsMap =
+      std::unordered_map<const DexType*, ClassIntervals::Interval>;
 
   explicit ClassIntervals(
       const Options& options,
@@ -72,13 +74,12 @@ class ClassIntervals final {
   static Interval interval_from_json(const Json::Value& value);
 
   Json::Value to_json() const;
-  static std::unordered_map<const DexType*, Interval> from_json(
-      const Json::Value& value);
+  static ClassIntervalsMap from_json(const Json::Value& value);
 
  private:
   const Interval top_;
 
-  std::unordered_map<const DexType*, Interval> class_intervals_;
+  ClassIntervalsMap class_intervals_;
 };
 
 } // namespace marianatrench

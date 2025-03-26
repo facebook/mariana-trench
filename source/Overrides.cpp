@@ -127,8 +127,9 @@ Json::Value Overrides::to_json() const {
   return value;
 }
 
-std::unordered_map<const Method*, std::unordered_set<const Method*>>
-Overrides::from_json(const Json::Value& value, Methods& methods) {
+CachedModelsContext::OverridesMap Overrides::from_json(
+    const Json::Value& value,
+    Methods& methods) {
   JsonValidation::validate_object(value);
   std::unordered_map<const Method*, std::unordered_set<const Method*>> result;
 

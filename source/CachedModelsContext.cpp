@@ -14,8 +14,9 @@ namespace marianatrench {
 
 namespace {
 
-std::unordered_map<const Method*, std::unordered_set<const Method*>>
-read_overrides(const Options& options, Methods& methods) {
+CachedModelsContext::OverridesMap read_overrides(
+    const Options& options,
+    Methods& methods) {
   auto overrides_file = options.overrides_input_path();
   if (!std::filesystem::exists(*overrides_file)) {
     throw std::runtime_error(
@@ -27,8 +28,8 @@ read_overrides(const Options& options, Methods& methods) {
   return Overrides::from_json(overrides_json, methods);
 }
 
-std::unordered_map<const DexType*, std::unordered_set<const DexType*>>
-read_class_hierarchies(const Options& options) {
+CachedModelsContext::ClassHierarchiesMap read_class_hierarchies(
+    const Options& options) {
   auto class_hierarchies_file = options.class_hierarchies_input_path();
   if (!std::filesystem::exists(*class_hierarchies_file)) {
     throw std::runtime_error(
@@ -44,8 +45,8 @@ read_class_hierarchies(const Options& options) {
   return ClassHierarchies::from_json(class_hierarchies_json);
 }
 
-std::unordered_map<const DexType*, ClassIntervals::Interval>
-read_class_intervals(const Options& options) {
+CachedModelsContext::ClassIntervalsMap read_class_intervals(
+    const Options& options) {
   auto class_intervals_file = options.class_intervals_input_path();
   if (!std::filesystem::exists(*class_intervals_file)) {
     throw std::runtime_error("Class intervals file must exist.");

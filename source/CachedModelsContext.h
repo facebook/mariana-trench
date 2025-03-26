@@ -25,24 +25,27 @@ namespace marianatrench {
  */
 class CachedModelsContext final {
  public:
+  using OverridesMap =
+      std::unordered_map<const Method*, std::unordered_set<const Method*>>;
+  using ClassHierarchiesMap =
+      std::unordered_map<const DexType*, std::unordered_set<const DexType*>>;
+  using ClassIntervalsMap = ClassIntervals::ClassIntervalsMap;
+
   CachedModelsContext(Context& context, const Options& options);
 
   DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(CachedModelsContext)
 
-  const std::unordered_map<const Method*, std::unordered_set<const Method*>>&
-  overrides() const {
+  const OverridesMap& overrides() const {
     mt_assert(!is_cleared_);
     return overrides_;
   }
 
-  const std::unordered_map<const DexType*, std::unordered_set<const DexType*>>&
-  class_hierarchy() const {
+  const ClassHierarchiesMap& class_hierarchy() const {
     mt_assert(!is_cleared_);
     return class_hierarchy_;
   }
 
-  const std::unordered_map<const DexType*, ClassIntervals::Interval>&
-  class_intervals() const {
+  const ClassIntervalsMap& class_intervals() const {
     mt_assert(!is_cleared_);
     return class_intervals_;
   }
@@ -59,11 +62,9 @@ class CachedModelsContext final {
   void clear();
 
  private:
-  std::unordered_map<const Method*, std::unordered_set<const Method*>>
-      overrides_;
-  std::unordered_map<const DexType*, std::unordered_set<const DexType*>>
-      class_hierarchy_;
-  std::unordered_map<const DexType*, ClassIntervals::Interval> class_intervals_;
+  OverridesMap overrides_;
+  ClassHierarchiesMap class_hierarchy_;
+  ClassIntervalsMap class_intervals_;
   std::optional<Registry> models_;
   bool is_cleared_;
 };
