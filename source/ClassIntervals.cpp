@@ -182,4 +182,14 @@ Json::Value ClassIntervals::to_json() const {
   return output;
 }
 
+std::unordered_map<const DexType*, ClassIntervals::Interval>
+ClassIntervals::from_json(const Json::Value& value) {
+  std::unordered_map<const DexType*, Interval> class_intervals;
+  for (const auto& klass : value.getMemberNames()) {
+    auto interval = interval_from_json(value[klass]);
+    class_intervals.emplace(DexType::get_type(klass), interval);
+  }
+  return class_intervals;
+}
+
 } // namespace marianatrench

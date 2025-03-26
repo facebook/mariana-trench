@@ -69,6 +69,8 @@ class ClassIntervals final {
   static Interval interval_from_json(const Json::Value& value);
 
   Json::Value to_json() const;
+  static std::unordered_map<const DexType*, Interval> from_json(
+      const Json::Value& value);
 
  private:
   const Interval top_;

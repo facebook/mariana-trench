@@ -78,6 +78,44 @@ TEST_F(ClassIntervalsTest, IntervalComputation) {
   EXPECT_EQ(ClassIntervals::Interval::top(), interval_object);
 }
 
+TEST_F(ClassIntervalsTest, IntervalSerializationDeserialization) {
+  Scope scope;
+
+  // Construct simple class hierarchy, rooted in BaseA and BaseB.
+
+  // BaseA [0,5] -> DerivedA1 [1,2]
+  //             -> DerivedA2 [3,4]
+  const auto* a = marianatrench::redex::create_class(scope, "LBaseA;");
+  marianatrench::redex::create_class(scope, "LDerivedA1;", a->get_type());
+  marianatrench::redex::create_class(scope, "LDerivedA2;", a->get_type());
+
+  // BaseB [6,11] -> DerivedB1 [7,10] -> DerivedB1_1 [8,9]
+  const auto* b = marianatrench::redex::create_class(scope, "LBaseB;");
+  const auto* b1 =
+      marianatrench::redex::create_class(scope, "LDerivedB1;", b->get_type());
+  marianatrench::redex::create_class(scope, "LDerivedB1_1;", b1->get_type());
+
+  // This constructs the class intervals from the scope.
+  auto context = test_context(scope);
+
+  auto intervals_json = context.class_intervals->to_json();
+  auto intervals_map = ClassIntervals::from_json(intervals_json);
+
+  // Every class should have an interval. Note that java.lang.Object which is
+  // not stored in the ClassIntervals, is also absent from Scope in this test
+  // environment.
+  EXPECT_EQ(intervals_map.size(), scope.size());
+
+  // Verifies that class intervals are the same as the original after
+  // deserialization.
+  for (const auto* klass : scope) {
+    const auto* klass_type = klass->get_type();
+    EXPECT_EQ(
+        context.class_intervals->get_interval(klass_type),
+        intervals_map.find(klass_type)->second);
+  }
+}
+
 TEST_F(ClassIntervalsTest, ClassIntervalSerializationDeserialization) {
   {
     auto interval = ClassIntervals::Interval::bottom();
