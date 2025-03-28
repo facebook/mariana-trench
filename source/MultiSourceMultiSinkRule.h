@@ -49,6 +49,8 @@ class MultiSourceMultiSinkRule final : public Rule {
 
   DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(MultiSourceMultiSinkRule)
 
+  bool operator==(const MultiSourceMultiSinkRule& other) const;
+
   const MultiSourceKindsByLabel& multi_source_kinds() const {
     return multi_source_kinds_;
   }

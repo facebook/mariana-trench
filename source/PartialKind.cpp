@@ -38,10 +38,17 @@ const PartialKind* PartialKind::from_json(
   return context.kind_factory->get_partial(name, label);
 }
 
+Json::Value PartialKind::to_rule_json() const {
+  // Multi-source rule representation contains only the name.
+  return Json::String(name_);
+}
+
 const PartialKind* PartialKind::from_rule_json(
     const Json::Value& value,
     const std::string& label,
     Context& context) {
+  // Multi-source rule representation contains only the name. Other fields
+  // required for constructing the kind are provided as arguments.
   auto name = JsonValidation::string(value);
   return context.kind_factory->get_partial(name, label);
 }

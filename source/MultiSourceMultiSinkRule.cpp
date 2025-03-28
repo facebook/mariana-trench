@@ -36,6 +36,13 @@ bool MultiSourceMultiSinkRule::uses(const Kind* kind) const {
   return partial_sink_kinds_.count(kind->as<PartialKind>()) != 0;
 }
 
+bool MultiSourceMultiSinkRule::operator==(
+    const MultiSourceMultiSinkRule& other) const {
+  return code() == other.code() &&
+      multi_source_kinds_ == other.multi_source_kinds_ &&
+      partial_sink_kinds_ == other.partial_sink_kinds_;
+}
+
 namespace {
 
 // For a multi-source rule to be considered covered, each set of kinds
@@ -150,14 +157,16 @@ Json::Value MultiSourceMultiSinkRule::to_json() const {
   for (const auto& [label, source_kinds] : multi_source_kinds_) {
     auto source_kinds_value = Json::Value(Json::arrayValue);
     for (const auto* source_kind : source_kinds) {
-      source_kinds_value.append(source_kind->to_json());
+      auto source_kind_json = source_kind->to_json();
+      source_kinds_value.append(
+          JsonValidation::string(source_kind_json, "kind"));
     }
     multi_sources_value[label] = source_kinds_value;
   }
 
   auto partial_sinks_value = Json::Value(Json::arrayValue);
   for (const auto* partial_sink_kind : partial_sink_kinds_) {
-    partial_sinks_value.append(partial_sink_kind->to_json());
+    partial_sinks_value.append(partial_sink_kind->to_rule_json());
   }
 
   value["multi_sources"] = multi_sources_value;

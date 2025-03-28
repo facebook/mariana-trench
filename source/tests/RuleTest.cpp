@@ -451,4 +451,33 @@ TEST_F(RuleTest, SourceSinkWithExploitabilityRuleTest) {
   // TODO: T176363060 Add tests for checking rule matches.
 }
 
+TEST_F(RuleTest, SerializationDeserialization) {
+  auto context = test::make_empty_context();
+  auto* source_a = context.kind_factory->get("A");
+  auto* source_b = context.kind_factory->get("B");
+
+  /* This creates the rule with the right combination of partial sinks.
+     The testing of rule creation in practice is covered in JsonTest.cpp and
+     asserted in the rule constructor. */
+  auto* partial_sink_lbl_a =
+      context.kind_factory->get_partial("kind", "labelA");
+  auto* partial_sink_lbl_b =
+      context.kind_factory->get_partial("kind", "labelB");
+
+  auto multi_source_rule = MultiSourceMultiSinkRule(
+      /* name */ "Rule1",
+      /* code */ 1,
+      /* description */ "Test rule 1",
+      /* multi_source_kinds */
+      MultiSourceMultiSinkRule::MultiSourceKindsByLabel{
+          {"labelA", {source_a, source_b}}, {"labelB", {source_a}}},
+      /* partial_sink_kinds */
+      MultiSourceMultiSinkRule::PartialKindSet{
+          partial_sink_lbl_a, partial_sink_lbl_b});
+  auto rule_ptr = Rule::from_json(multi_source_rule.to_json(), context);
+  EXPECT_EQ(
+      *dynamic_cast<const MultiSourceMultiSinkRule*>(rule_ptr.get()),
+      multi_source_rule);
+}
+
 } // namespace marianatrench

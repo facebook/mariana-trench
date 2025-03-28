@@ -43,6 +43,7 @@ class PartialKind final : public Kind {
       const Json::Value& value,
       Context& context);
 
+  Json::Value to_rule_json() const;
   static const PartialKind* from_rule_json(
       const Json::Value& value,
       const std::string& partial_label,
