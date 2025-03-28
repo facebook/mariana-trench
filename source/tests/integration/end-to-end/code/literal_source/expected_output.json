@@ -1328,7 +1328,12 @@
                 34,
                 35
               ],
-              "kind" : "Partial:TestSink:aci",
+              "kind" : 
+              {
+                "name" : "TestSink",
+                "partial_label" : "aci",
+                "triggered_rule" : 1
+              },
               "origins" : 
               [
                 {
@@ -1336,8 +1341,7 @@
                   "port" : "Argument(1)"
                 }
               ],
-              "preserves_type_context" : true,
-              "triggered_rule" : 1
+              "preserves_type_context" : true
             }
           ]
         }
@@ -1430,7 +1434,12 @@
                 34,
                 35
               ],
-              "kind" : "Partial:TestSink:aci",
+              "kind" : 
+              {
+                "name" : "TestSink",
+                "partial_label" : "aci",
+                "triggered_rule" : 1
+              },
               "origins" : 
               [
                 {
@@ -1438,8 +1447,7 @@
                   "port" : "Argument(1)"
                 }
               ],
-              "preserves_type_context" : true,
-              "triggered_rule" : 1
+              "preserves_type_context" : true
             }
           ]
         }
@@ -1547,7 +1555,12 @@
                 34,
                 35
               ],
-              "kind" : "Partial:TestSink:regex",
+              "kind" : 
+              {
+                "name" : "TestSink",
+                "partial_label" : "regex",
+                "triggered_rule" : 1
+              },
               "origins" : 
               [
                 {
@@ -1555,8 +1568,7 @@
                   "port" : "Argument(1)"
                 }
               ],
-              "preserves_type_context" : true,
-              "triggered_rule" : 1
+              "preserves_type_context" : true
             }
           ]
         }
@@ -1637,7 +1649,12 @@
                 34,
                 35
               ],
-              "kind" : "Partial:TestSink:aci",
+              "kind" : 
+              {
+                "name" : "TestSink",
+                "partial_label" : "aci",
+                "triggered_rule" : 1
+              },
               "origins" : 
               [
                 {
@@ -1645,8 +1662,7 @@
                   "port" : "Argument(1)"
                 }
               ],
-              "preserves_type_context" : true,
-              "triggered_rule" : 1
+              "preserves_type_context" : true
             }
           ]
         }
@@ -1731,7 +1747,12 @@
                 34,
                 35
               ],
-              "kind" : "Partial:TestSink:regex",
+              "kind" : 
+              {
+                "name" : "TestSink",
+                "partial_label" : "regex",
+                "triggered_rule" : 1
+              },
               "origins" : 
               [
                 {
@@ -1739,8 +1760,7 @@
                   "port" : "Argument(1)"
                 }
               ],
-              "preserves_type_context" : true,
-              "triggered_rule" : 1
+              "preserves_type_context" : true
             }
           ]
         }
@@ -1821,7 +1841,12 @@
                 34,
                 35
               ],
-              "kind" : "Partial:TestSink:aci",
+              "kind" : 
+              {
+                "name" : "TestSink",
+                "partial_label" : "aci",
+                "triggered_rule" : 1
+              },
               "origins" : 
               [
                 {
@@ -1829,8 +1854,7 @@
                   "port" : "Argument(1)"
                 }
               ],
-              "preserves_type_context" : true,
-              "triggered_rule" : 1
+              "preserves_type_context" : true
             }
           ]
         }
@@ -1923,7 +1947,12 @@
                 34,
                 35
               ],
-              "kind" : "Partial:TestSink:aci",
+              "kind" : 
+              {
+                "name" : "TestSink",
+                "partial_label" : "aci",
+                "triggered_rule" : 1
+              },
               "origins" : 
               [
                 {
@@ -1931,8 +1960,7 @@
                   "port" : "Argument(1)"
                 }
               ],
-              "preserves_type_context" : true,
-              "triggered_rule" : 1
+              "preserves_type_context" : true
             }
           ]
         }

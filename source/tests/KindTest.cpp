@@ -105,11 +105,15 @@ TEST_F(KindTest, SerializationDeserialization) {
         Kind::from_json(transform_kind->to_json(), context), transform_kind);
   }
 
+  // Deserialize PartialKind.
   const auto* partial_kind =
       context.kind_factory->get_partial("PartialKind", "label");
   EXPECT_EQ(Kind::from_json(partial_kind->to_json(), context), partial_kind);
+  EXPECT_THROW(
+      Kind::from_trace_string(partial_kind->to_trace_string(), context),
+      KindNotSupportedError);
 
-  // Deserializing Triggered Kinds is not currently supported.
+  // Deserialize TriggeredPartialKind.
   auto source_kinds_a =
       Rule::KindSet{context.kind_factory->get("NamedSourceKindA")};
   auto source_kinds_b =
@@ -117,18 +121,11 @@ TEST_F(KindTest, SerializationDeserialization) {
   auto partial_kinds = MultiSourceMultiSinkRule::PartialKindSet{
       context.kind_factory->get_partial("Partial", "a"),
       context.kind_factory->get_partial("Partial", "b")};
-  auto multi_source_rule = MultiSourceMultiSinkRule(
-      "MultiSourceRule",
-      /* code */ 1,
-      /* description */ "test rule",
-      MultiSourceMultiSinkRule::MultiSourceKindsByLabel{
-          {"a", source_kinds_a}, {"b", source_kinds_b}},
-      partial_kinds);
-  const auto* triggered_partial_kind = context.kind_factory->get_triggered(
-      partial_kind, multi_source_rule.code());
-  EXPECT_THROW(
+  const auto* triggered_partial_kind =
+      context.kind_factory->get_triggered(partial_kind, 1);
+  EXPECT_EQ(
       Kind::from_json(triggered_partial_kind->to_json(), context),
-      KindNotSupportedError);
+      triggered_partial_kind);
   EXPECT_THROW(
       Kind::from_trace_string(
           triggered_partial_kind->to_trace_string(), context),

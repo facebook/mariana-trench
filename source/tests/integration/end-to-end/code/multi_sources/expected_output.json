@@ -1096,7 +1096,12 @@
                 34,
                 35
               ],
-              "kind" : "Partial:TestSink:b",
+              "kind" : 
+              {
+                "name" : "TestSink",
+                "partial_label" : "b",
+                "triggered_rule" : 1
+              },
               "origins" : 
               [
                 {
@@ -1104,8 +1109,7 @@
                   "port" : "Argument(1)"
                 }
               ],
-              "preserves_type_context" : true,
-              "triggered_rule" : 1
+              "preserves_type_context" : true
             }
           ],
           "local_user_features" : 
@@ -1225,7 +1229,12 @@
                 35
               ],
               "distance" : 1,
-              "kind" : "Partial:TestSink:a",
+              "kind" : 
+              {
+                "name" : "TestSink",
+                "partial_label" : "a",
+                "triggered_rule" : 1
+              },
               "origins" : 
               [
                 {
@@ -1233,8 +1242,7 @@
                   "port" : "Argument(0)"
                 }
               ],
-              "preserves_type_context" : true,
-              "triggered_rule" : 1
+              "preserves_type_context" : true
             }
           ]
         }
@@ -1345,7 +1353,12 @@
                 35
               ],
               "distance" : 1,
-              "kind" : "Partial:TestSink:a",
+              "kind" : 
+              {
+                "name" : "TestSink",
+                "partial_label" : "a",
+                "triggered_rule" : 1
+              },
               "origins" : 
               [
                 {
@@ -1353,8 +1366,7 @@
                   "port" : "Argument(0)"
                 }
               ],
-              "preserves_type_context" : true,
-              "triggered_rule" : 1
+              "preserves_type_context" : true
             }
           ]
         }
@@ -1465,7 +1477,12 @@
                 35
               ],
               "distance" : 1,
-              "kind" : "Partial:TestSink:b",
+              "kind" : 
+              {
+                "name" : "TestSink",
+                "partial_label" : "b",
+                "triggered_rule" : 1
+              },
               "origins" : 
               [
                 {
@@ -1473,8 +1490,7 @@
                   "port" : "Argument(1)"
                 }
               ],
-              "preserves_type_context" : true,
-              "triggered_rule" : 1
+              "preserves_type_context" : true
             }
           ]
         }
@@ -1823,7 +1839,12 @@
                 34,
                 35
               ],
-              "kind" : "Partial:TestSink:a",
+              "kind" : 
+              {
+                "name" : "TestSink",
+                "partial_label" : "a",
+                "triggered_rule" : 1
+              },
               "origins" : 
               [
                 {
@@ -1831,8 +1852,7 @@
                   "port" : "Argument(0)"
                 }
               ],
-              "preserves_type_context" : true,
-              "triggered_rule" : 1
+              "preserves_type_context" : true
             },
             {
               "always_features" : 
@@ -1846,7 +1866,12 @@
                 34,
                 35
               ],
-              "kind" : "Partial:TestSink:a",
+              "kind" : 
+              {
+                "name" : "TestSink",
+                "partial_label" : "a",
+                "triggered_rule" : 3
+              },
               "origins" : 
               [
                 {
@@ -1854,8 +1879,7 @@
                   "port" : "Argument(0)"
                 }
               ],
-              "preserves_type_context" : true,
-              "triggered_rule" : 3
+              "preserves_type_context" : true
             }
           ],
           "local_features" : 
@@ -1919,7 +1943,12 @@
                 34,
                 35
               ],
-              "kind" : "Partial:TestSink:a",
+              "kind" : 
+              {
+                "name" : "TestSink",
+                "partial_label" : "a",
+                "triggered_rule" : 1
+              },
               "origins" : 
               [
                 {
@@ -1927,8 +1956,7 @@
                   "port" : "Argument(0)"
                 }
               ],
-              "preserves_type_context" : true,
-              "triggered_rule" : 1
+              "preserves_type_context" : true
             }
           ],
           "local_features" : 
@@ -1991,7 +2019,12 @@
                 34,
                 35
               ],
-              "kind" : "Partial:TestSink:b",
+              "kind" : 
+              {
+                "name" : "TestSink",
+                "partial_label" : "b",
+                "triggered_rule" : 1
+              },
               "origins" : 
               [
                 {
@@ -1999,8 +2032,7 @@
                   "port" : "Argument(1)"
                 }
               ],
-              "preserves_type_context" : true,
-              "triggered_rule" : 1
+              "preserves_type_context" : true
             }
           ],
           "local_features" : 
@@ -2090,7 +2122,12 @@
                 36,
                 37
               ],
-              "kind" : "Partial:TestSinkSingleArg:b",
+              "kind" : 
+              {
+                "name" : "TestSinkSingleArg",
+                "partial_label" : "b",
+                "triggered_rule" : 2
+              },
               "origins" : 
               [
                 {
@@ -2098,8 +2135,7 @@
                   "port" : "Argument(0)"
                 }
               ],
-              "preserves_type_context" : true,
-              "triggered_rule" : 2
+              "preserves_type_context" : true
             }
           ],
           "local_user_features" : 
@@ -2307,7 +2343,12 @@
                 36,
                 37
               ],
-              "kind" : "Partial:TestSinkSingleArg:a",
+              "kind" : 
+              {
+                "name" : "TestSinkSingleArg",
+                "partial_label" : "a",
+                "triggered_rule" : 2
+              },
               "origins" : 
               [
                 {
@@ -2315,8 +2356,7 @@
                   "port" : "Argument(0)"
                 }
               ],
-              "preserves_type_context" : true,
-              "triggered_rule" : 2
+              "preserves_type_context" : true
             }
           ],
           "local_features" : 
@@ -2384,7 +2424,12 @@
                 36,
                 37
               ],
-              "kind" : "Partial:TestSinkSingleArg:b",
+              "kind" : 
+              {
+                "name" : "TestSinkSingleArg",
+                "partial_label" : "b",
+                "triggered_rule" : 2
+              },
               "origins" : 
               [
                 {
@@ -2392,8 +2437,7 @@
                   "port" : "Argument(0)"
                 }
               ],
-              "preserves_type_context" : true,
-              "triggered_rule" : 2
+              "preserves_type_context" : true
             }
           ],
           "local_features" : 

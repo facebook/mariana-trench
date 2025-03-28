@@ -41,6 +41,9 @@ class TriggeredPartialKind final : public Kind {
   void show(std::ostream&) const override;
 
   Json::Value to_json() const override;
+  static const TriggeredPartialKind* from_json(
+      const Json::Value& value,
+      Context& context);
 
   std::string to_trace_string() const override;
 
