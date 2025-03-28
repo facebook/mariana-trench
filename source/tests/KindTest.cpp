@@ -124,8 +124,8 @@ TEST_F(KindTest, SerializationDeserialization) {
       MultiSourceMultiSinkRule::MultiSourceKindsByLabel{
           {"a", source_kinds_a}, {"b", source_kinds_b}},
       partial_kinds);
-  const auto* triggered_partial_kind =
-      context.kind_factory->get_triggered(partial_kind, &multi_source_rule);
+  const auto* triggered_partial_kind = context.kind_factory->get_triggered(
+      partial_kind, multi_source_rule.code());
   EXPECT_THROW(
       Kind::from_json(triggered_partial_kind->to_json(), context),
       KindNotSupportedError);

@@ -43,7 +43,7 @@ class KindFactory final {
 
   const TriggeredPartialKind* get_triggered(
       const PartialKind* partial_kind,
-      const MultiSourceMultiSinkRule* rule) const;
+      int rule_code) const;
 
   const LocalReturnKind* local_return() const;
 
@@ -71,9 +71,9 @@ class KindFactory final {
       TupleHash<std::string, std::string>>
       partial_;
   UniquePointerFactory<
-      std::tuple<const PartialKind*, const MultiSourceMultiSinkRule*>,
+      std::tuple<const PartialKind*, int>,
       TriggeredPartialKind,
-      TupleHash<const PartialKind*, const MultiSourceMultiSinkRule*>>
+      TupleHash<const PartialKind*, int>>
       triggered_partial_;
   UniquePointerFactory<
       std::tuple<

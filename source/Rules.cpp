@@ -118,8 +118,8 @@ void Rules::add(Context& context, std::unique_ptr<Rule> rule) {
       for (const auto* source_kind : source_kinds) {
         for (const auto* sink_kind :
              multi_source_rule->partial_sink_kinds(source_label)) {
-          const auto* triggered =
-              context.kind_factory->get_triggered(sink_kind, multi_source_rule);
+          const auto* triggered = context.kind_factory->get_triggered(
+              sink_kind, multi_source_rule->code());
           source_to_partial_sink_to_rules_[source_kind][sink_kind].push_back(
               multi_source_rule);
           source_to_sink_to_rules_[source_kind][triggered].push_back(

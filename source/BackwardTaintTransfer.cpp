@@ -532,13 +532,13 @@ FeatureMayAlwaysSet get_fulfilled_sink_features(
   // Called only after transform_kind_with_features creates a triggered kind,
   // so this must be a TriggeredPartialKind.
   mt_assert(new_kind != nullptr);
-  const auto* rule = new_kind->rule();
   const auto* counterpart = fulfilled_partial_sinks.get_fulfilled_counterpart(
-      /* unfulfilled_kind */ new_kind->partial_kind(), rule);
+      /* unfulfilled_kind */ new_kind->partial_kind(), new_kind->rule_code());
 
   // A triggered kind was created, so its counterpart must exist.
   mt_assert(counterpart != nullptr);
-  return fulfilled_partial_sinks.get_features(counterpart, rule);
+  return fulfilled_partial_sinks.get_features(
+      counterpart, new_kind->rule_code());
 }
 
 void check_call_flows(

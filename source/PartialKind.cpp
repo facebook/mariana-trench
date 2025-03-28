@@ -29,10 +29,6 @@ Json::Value PartialKind::to_json() const {
 const PartialKind* PartialKind::from_json(
     const Json::Value& value,
     Context& context) {
-  // Notable asymmetry with to_json():
-  // to_json() nests the value in a "kind" field to be consistent with the
-  // overridden Kind::to_json().
-  // from_json(value, ...) assumes `value` has been extracted from "kind" field.
   auto name = JsonValidation::string(value, /* field */ "name");
   auto label = JsonValidation::string(value, /* field */ "partial_label");
   return context.kind_factory->get_partial(name, label);

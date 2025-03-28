@@ -20,14 +20,14 @@ std::optional<Taint> FulfilledPartialKindState::fulfill_kind(
     const FeatureMayAlwaysSet& features,
     const Taint& sink,
     const KindFactory& kind_factory) {
-  const auto* counterpart = get_fulfilled_counterpart(kind, rule);
+  const auto* counterpart = get_fulfilled_counterpart(kind, rule->code());
   if (counterpart != nullptr) {
     // If both partial sinks for the callsite have been fulfilled, the rule
     // is satisfied. Make this a triggered sink and create the sink flow taint
     // for the issue. Include the features from both flows (using .add, NOT
     // .join).
-    const auto* triggered_kind = kind_factory.get_triggered(kind, rule);
-    auto sink_features = get_features(counterpart, rule);
+    const auto* triggered_kind = kind_factory.get_triggered(kind, rule->code());
+    auto sink_features = get_features(counterpart, rule->code());
     sink_features.add(features);
 
     auto issue_sink = sink;
@@ -52,10 +52,10 @@ std::optional<Taint> FulfilledPartialKindState::fulfill_kind(
 const PartialKind* MT_NULLABLE
 FulfilledPartialKindState::get_fulfilled_counterpart(
     const PartialKind* unfulfilled_kind,
-    const MultiSourceMultiSinkRule* rule) const {
+    int rule_code) const {
   for (const auto& [kind, rules_map] : map_) {
     if (unfulfilled_kind->is_counterpart(kind) &&
-        rules_map.find(rule) != rules_map.end()) {
+        rules_map.find(rule_code) != rules_map.end()) {
       return kind;
     }
   }
@@ -65,8 +65,8 @@ FulfilledPartialKindState::get_fulfilled_counterpart(
 
 FeatureMayAlwaysSet FulfilledPartialKindState::get_features(
     const PartialKind* kind,
-    const MultiSourceMultiSinkRule* rule) const {
-  return map_.at(kind).at(rule);
+    int rule_code) const {
+  return map_.at(kind).at(rule_code);
 }
 
 std::vector<const Kind*> FulfilledPartialKindState::make_triggered_counterparts(
@@ -75,8 +75,9 @@ std::vector<const Kind*> FulfilledPartialKindState::make_triggered_counterparts(
   std::vector<const Kind*> result;
   for (const auto& [kind, rules_map] : map_) {
     if (unfulfilled_kind->is_counterpart(kind)) {
-      for (const auto& [rule, _features] : rules_map) {
-        result.emplace_back(kind_factory.get_triggered(unfulfilled_kind, rule));
+      for (const auto& [rule_code, _features] : rules_map) {
+        result.emplace_back(
+            kind_factory.get_triggered(unfulfilled_kind, rule_code));
       }
     }
   }
@@ -92,10 +93,10 @@ void FulfilledPartialKindState::add_fulfilled_kind(
     const FeatureMayAlwaysSet& features) {
   auto rules_map = map_.find(kind);
   if (rules_map == map_.end()) {
-    map_.emplace(kind, RuleMap{{rule, features}});
+    map_.emplace(kind, RuleMap{{rule->code(), features}});
     return;
   }
-  rules_map->second.emplace(rule, features);
+  rules_map->second.emplace(rule->code(), features);
 }
 
 void FulfilledPartialKindState::erase(
@@ -106,7 +107,7 @@ void FulfilledPartialKindState::erase(
     return;
   }
 
-  rules_map->second.erase(rule);
+  rules_map->second.erase(rule->code());
   if (rules_map->second.empty()) {
     map_.erase(kind);
   }

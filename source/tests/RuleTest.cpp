@@ -90,9 +90,9 @@ TEST_F(RuleTest, Rules) {
       MultiSourceMultiSinkRule::PartialKindSet{
           partial_sink_lbl_a, partial_sink_lbl_b});
   auto* triggered_sink_lbl_a = context.kind_factory->get_triggered(
-      partial_sink_lbl_a, multi_source_rule.get());
+      partial_sink_lbl_a, multi_source_rule->code());
   auto* triggered_sink_lbl_b = context.kind_factory->get_triggered(
-      partial_sink_lbl_b, multi_source_rule.get());
+      partial_sink_lbl_b, multi_source_rule->code());
   rule_list.push_back(std::move(multi_source_rule));
 
   auto rules = Rules(context, std::move(rule_list));
@@ -141,7 +141,7 @@ TEST_F(RuleTest, Rules) {
       MultiSourceMultiSinkRule::PartialKindSet{
           partial_sink_lbl_a, partial_sink_lbl_b});
   auto* triggered_sink_invalid = context.kind_factory->get_triggered(
-      partial_sink_lbl_a, multi_source_rule_unused.get());
+      partial_sink_lbl_a, multi_source_rule_unused->code());
   EXPECT_TRUE(rules.rules(source_a, triggered_sink_invalid).empty());
 
   EXPECT_THAT(
@@ -394,9 +394,9 @@ TEST_F(RuleTest, Uses) {
   EXPECT_TRUE(rule2->uses(partial_sink_lbl_b));
 
   auto* triggered_sink_lbl_a =
-      context.kind_factory->get_triggered(partial_sink_lbl_a, rule2.get());
+      context.kind_factory->get_triggered(partial_sink_lbl_a, rule2->code());
   auto* triggered_sink_lbl_b =
-      context.kind_factory->get_triggered(partial_sink_lbl_b, rule2.get());
+      context.kind_factory->get_triggered(partial_sink_lbl_b, rule2->code());
   EXPECT_FALSE(rule2->uses(triggered_sink_lbl_a));
   EXPECT_FALSE(rule2->uses(triggered_sink_lbl_b));
   EXPECT_FALSE(rule2->uses(sink_y));

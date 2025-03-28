@@ -79,17 +79,17 @@ TEST_F(FulfilledPartialKindStateTest, Basic) {
           *context.kind_factory));
   EXPECT_EQ(
       FeatureMayAlwaysSet{feature_1},
-      state.get_features(fulfilled, rule_1.get()));
+      state.get_features(fulfilled, rule_1->code()));
   EXPECT_EQ(
-      fulfilled, state.get_fulfilled_counterpart(unfulfilled, rule_1.get()));
+      fulfilled, state.get_fulfilled_counterpart(unfulfilled, rule_1->code()));
   EXPECT_EQ(
-      nullptr, state.get_fulfilled_counterpart(unfulfilled, rule_2.get()));
+      nullptr, state.get_fulfilled_counterpart(unfulfilled, rule_2->code()));
 
   // Get triggered counterparts for the unfulfilled kind in rule_1.
   EXPECT_THAT(
       state.make_triggered_counterparts(unfulfilled, *context.kind_factory),
       testing::UnorderedElementsAre(
-          context.kind_factory->get_triggered(unfulfilled, rule_1.get())));
+          context.kind_factory->get_triggered(unfulfilled, rule_1->code())));
 
   // Fulfill `fulfilled` under rule_2 as well.
   EXPECT_EQ(
@@ -100,16 +100,17 @@ TEST_F(FulfilledPartialKindStateTest, Basic) {
           /* features */ FeatureMayAlwaysSet{},
           /* sink */ Taint{sink_frame},
           *context.kind_factory));
-  EXPECT_EQ(FeatureMayAlwaysSet{}, state.get_features(fulfilled, rule_2.get()));
   EXPECT_EQ(
-      fulfilled, state.get_fulfilled_counterpart(unfulfilled, rule_2.get()));
+      FeatureMayAlwaysSet{}, state.get_features(fulfilled, rule_2->code()));
+  EXPECT_EQ(
+      fulfilled, state.get_fulfilled_counterpart(unfulfilled, rule_2->code()));
 
   // Triggered counterparts now includes rule_2
   EXPECT_THAT(
       state.make_triggered_counterparts(unfulfilled, *context.kind_factory),
       testing::UnorderedElementsAre(
-          context.kind_factory->get_triggered(unfulfilled, rule_1.get()),
-          context.kind_factory->get_triggered(unfulfilled, rule_2.get())));
+          context.kind_factory->get_triggered(unfulfilled, rule_1->code()),
+          context.kind_factory->get_triggered(unfulfilled, rule_2->code())));
 
   // Fulfill the other part of rule_1.
   auto unfulfilled_sink_frame = test::make_taint_config(
@@ -127,7 +128,7 @@ TEST_F(FulfilledPartialKindStateTest, Basic) {
           .value(),
       Taint{test::make_taint_config(
           /* kind */ context.kind_factory->get_triggered(
-              unfulfilled, rule_1.get()),
+              unfulfilled, rule_1->code()),
           test::FrameProperties{
               .inferred_features =
                   FeatureMayAlwaysSet{feature_1, feature_2}})});
@@ -136,7 +137,7 @@ TEST_F(FulfilledPartialKindStateTest, Basic) {
   EXPECT_THAT(
       state.make_triggered_counterparts(unfulfilled, *context.kind_factory),
       testing::UnorderedElementsAre(
-          context.kind_factory->get_triggered(unfulfilled, rule_2.get())));
+          context.kind_factory->get_triggered(unfulfilled, rule_2->code())));
 }
 
 } // namespace marianatrench

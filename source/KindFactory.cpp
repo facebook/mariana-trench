@@ -32,9 +32,9 @@ const PartialKind* KindFactory::get_partial(
 
 const TriggeredPartialKind* KindFactory::get_triggered(
     const PartialKind* partial,
-    const MultiSourceMultiSinkRule* rule) const {
+    int rule_code) const {
   return triggered_partial_.create(
-      std::make_tuple(partial, rule), partial, rule);
+      std::make_tuple(partial, rule_code), partial, rule_code);
 }
 
 const LocalReturnKind* KindFactory::local_return() const {

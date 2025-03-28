@@ -33,10 +33,8 @@ namespace marianatrench {
  */
 class TriggeredPartialKind final : public Kind {
  public:
-  explicit TriggeredPartialKind(
-      const PartialKind* partial_kind,
-      const MultiSourceMultiSinkRule* rule)
-      : partial_kind_(partial_kind), rule_(rule) {}
+  explicit TriggeredPartialKind(const PartialKind* partial_kind, int rule_code)
+      : partial_kind_(partial_kind), rule_code_(rule_code) {}
 
   DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(TriggeredPartialKind)
 
@@ -50,13 +48,13 @@ class TriggeredPartialKind final : public Kind {
     return partial_kind_;
   }
 
-  const MultiSourceMultiSinkRule* rule() const {
-    return rule_;
+  int rule_code() const {
+    return rule_code_;
   }
 
  private:
   const PartialKind* partial_kind_;
-  const MultiSourceMultiSinkRule* rule_;
+  int rule_code_;
 };
 
 } // namespace marianatrench

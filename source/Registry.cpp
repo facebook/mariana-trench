@@ -410,7 +410,7 @@ Registry Registry::from_sharded_models_json(
       }
     } else {
       // TODO(T176362886): Support parsing field and literal models from JSON.
-      ERROR(1, "Unrecognized model type in JSON: `{}`", value.asString());
+      ERROR(1, "Unrecognized model type in JSON: `{}`", value.toStyledString());
     }
   };
 

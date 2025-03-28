@@ -43,10 +43,21 @@ const Kind* Kind::from_json(const Json::Value& value, Context& context) {
 
   // Some kinds are represented as an object. Use unique keys in them to
   // determine the Kind.
+  //
+  // There is a notable asymmetry between to_json() and from_json() for Kinds
+  // whose serialized form is an Object:
+  // to_json() nests the value in a "kind" field to be consistent with the
+  // overridden Kind::to_json().
+  // from_json(value, ...) assumes `value` has been extracted from "kind" field.
   if (leaf_kind.isObject()) {
     if (leaf_kind.isMember("base")) {
       return TransformKind::from_json(leaf_kind, context);
+    } else if (leaf_kind.isMember("triggered_rule")) {
+      return TriggeredPartialKind::from_json(leaf_kind, context);
     } else if (leaf_kind.isMember("partial_label")) {
+      // Check for "partial_label" must occur after check for "triggered_rule"
+      // to differentiate between TriggeredPartialKind and PartialKind. The
+      // "partial_label" key exists in both.
       return PartialKind::from_json(leaf_kind, context);
     } else {
       throw JsonValidationError(
@@ -85,6 +96,9 @@ const Kind* Kind::from_config_json(
 }
 
 const Kind* Kind::from_trace_string(const std::string& kind, Context& context) {
+  // Parsing of TriggeredPartialKind, PartialKind and TransformKind are
+  // supported from the JSON, as objects rather than strings. They no longer use
+  // the old string representation, so parsing them here is disabled.
   if (kind == "LocalReturn") {
     return context.kind_factory->local_return();
   } else if (boost::starts_with(kind, "LocalArgument(")) {
@@ -94,12 +108,8 @@ const Kind* Kind::from_trace_string(const std::string& kind, Context& context) {
         kind,
         /* expected */ "Non-TriggeredPartial Kind");
   } else if (boost::starts_with(kind, "Partial:")) {
-    // Parsing of PartialKinds from the JSON is supported, but it no longer uses
-    // the old string representation.
     throw KindNotSupportedError(kind, /* expected */ "Non-Partial Kind");
   } else if (kind.find_first_of(":@") != std::string::npos) {
-    // Note that parsing transform kinds from the JSON is supported, but it
-    // no longer uses the old string representation.
     throw KindNotSupportedError(
         kind,
         /* expected */ "Non-Transform Kind");

@@ -26,7 +26,7 @@ namespace marianatrench {
 class FulfilledPartialKindState final {
  private:
   using Value = FeatureMayAlwaysSet;
-  using RuleMap = std::unordered_map<const MultiSourceMultiSinkRule*, Value>;
+  using RuleMap = std::unordered_map</* rule code */ int, Value>;
 
  public:
   FulfilledPartialKindState() = default;
@@ -62,14 +62,13 @@ class FulfilledPartialKindState final {
    */
   const PartialKind* MT_NULLABLE get_fulfilled_counterpart(
       const PartialKind* unfulfilled_kind,
-      const MultiSourceMultiSinkRule* rule) const;
+      int rule_code) const;
 
   /**
    * Returns features of the flow where `kind` was fulfilled under `rule`.
    */
-  FeatureMayAlwaysSet get_features(
-      const PartialKind* kind,
-      const MultiSourceMultiSinkRule* rule) const;
+  FeatureMayAlwaysSet get_features(const PartialKind* kind, int rule_code)
+      const;
 
   /**
    * Given an `unfulfilled_kind`, create its `TriggeredPartialKind`s from any
