@@ -21,7 +21,7 @@ Below is a list of the required dependencies. Most of them can be installed with
 * Boost >= 1.75.0
 * GoogleTest >= 1.10.0
 * JsonCpp >= 1.9.4
-* fmt >= 7.1.2, <= 8.1.1
+* fmt >= 7.1.2, <= 9.1.0
 * RE2
 * Java (Optional)
 * Android SDK (Optional)
@@ -83,7 +83,7 @@ The 9.0 release of `fmt` has breaking changes that Mariana Trench is not yet com
 
 ```shell
 $ cd "$MARIANA_TRENCH_DIRECTORY/dependencies"
-$ git clone -b 8.1.1 https://github.com/fmtlib/fmt.git
+$ git clone -b 9.1.0 https://github.com/fmtlib/fmt.git
 $ mkdir fmt/build
 $ cd fmt/build
 $ cmake -DCMAKE_INSTALL_PREFIX="$MARIANA_TRENCH_DIRECTORY/install" ..
