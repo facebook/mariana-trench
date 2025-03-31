@@ -69,7 +69,7 @@ TEST_P(JsonModelGeneratorIntegrationTest, CompareModels) {
       /* emit_all_via_cast_features */ false);
 
   // Read from the expected generated models
-  std::string expected_output = "";
+  std::string expected_output;
   try {
     filesystem::load_string_file(
         directory / "expected_output.json", expected_output);
