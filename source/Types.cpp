@@ -174,7 +174,7 @@ std::string show_globally_inferred_types(
 std::string show_smallset_dex_types_selection(
     const SmallSetDexTypeDomain& small_set_dex_domain,
     const std::unordered_set<const DexType*>& included_types) {
-  std::string small_set_types = "";
+  std::string small_set_types;
 
   if (small_set_dex_domain.kind() != sparta::AbstractValueKind::Value) {
     return small_set_types;

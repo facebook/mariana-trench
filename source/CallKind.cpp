@@ -46,7 +46,7 @@ CallKind CallKind::from_trace_string(std::string_view trace_string) {
 }
 
 std::string CallKind::to_trace_string() const {
-  std::string call_kind = "";
+  std::string call_kind;
 
   if (is_propagation_with_trace()) {
     call_kind = "PropagationWithTrace:";

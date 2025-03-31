@@ -24,7 +24,7 @@ static const Feature* get_labelled_feature(
     const char* const format_str,
     const std::optional<std::string_view>& value,
     const DexString* const MT_NULLABLE tag) {
-  std::string tag_string = "";
+  std::string tag_string;
   if (tag != nullptr) {
     tag_string = fmt::format("{}-", tag->c_str());
   }
