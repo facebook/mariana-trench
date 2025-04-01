@@ -19,7 +19,7 @@ namespace marianatrench {
 template <typename Key, typename Value>
 class UniquePointerConcurrentMap final {
  private:
-  using Map = ConcurrentMap<Key, const Value*>;
+  using Map = ConcurrentMap<Key, Value*>;
 
  public:
   // C++ container concept member types
@@ -57,8 +57,14 @@ class UniquePointerConcurrentMap final {
     return map_.at(key);
   }
 
-  const Value* get(const Key& key, const Value* default_value) const {
+  const Value* get(const Key& key, Value* default_value) const {
     return map_.get(key, default_value);
+  }
+
+  // Returns a non-const Value* which may be modified. This is not thread-safe.
+  Value* get_unsafe(const Key& key) const {
+    auto* result = map_.get_unsafe(key);
+    return result == nullptr ? nullptr : *result;
   }
 
   bool emplace(const Key& key, std::unique_ptr<Value> value) {

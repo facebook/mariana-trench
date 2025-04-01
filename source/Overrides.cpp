@@ -24,50 +24,24 @@ namespace marianatrench {
 
 Overrides::Overrides(
     const Options& options,
+    AnalysisMode analysis_mode,
     Methods& method_factory,
     const DexStoresVector& stores,
     const CachedModelsContext& cached_models_context) {
-  // Compute overrides.
-  std::vector<std::unique_ptr<const method_override_graph::Graph>>
-      method_override_graphs;
-  for (const auto& scope : DexStoreClassesIterator(stores)) {
-    method_override_graphs.push_back(method_override_graph::build_graph(scope));
-  }
-
-  // Record overrides.
-  const auto& cached_overrides = cached_models_context.overrides();
-  for (const auto& scope : DexStoreClassesIterator(stores)) {
-    walk::parallel::methods(
-        scope,
-        [&method_factory, &method_override_graphs, &cached_overrides, this](
-            const DexMethod* dex_method) {
-          std::unordered_set<const Method*> method_overrides;
-          const auto* method = method_factory.get(dex_method);
-          for (const auto& graph : method_override_graphs) {
-            auto overrides_in_scope =
-                method_override_graph::get_overriding_methods(
-                    *graph, dex_method, /* include_interfaces */ true);
-            for (const auto* override : overrides_in_scope) {
-              method_overrides.insert(method_factory.get(override));
-            }
-
-            // Include any overrides in the input json
-            auto from_input = cached_overrides.find(method);
-            if (from_input != cached_overrides.end()) {
-              method_overrides.insert(
-                  from_input->second.begin(), from_input->second.end());
-            }
-          }
-          set(method, std::move(method_overrides));
-        });
-  }
-
-  // Merge overrides for remaining methods.
-  for (const auto& [method, overrides] : cached_overrides) {
-    const auto* overridden = overrides_.get(method, nullptr);
-    if (overridden == nullptr) {
-      set(method, overrides);
-    }
+  switch (analysis_mode) {
+    case AnalysisMode::Normal:
+      init_from_stores(stores, method_factory);
+      break;
+    case AnalysisMode::CachedModels:
+      init_from_stores(stores, method_factory);
+      add_cached_overrides(cached_models_context.overrides());
+      break;
+    case AnalysisMode::Replay:
+      // Do not recompute overrides in replay mode.
+      add_cached_overrides(cached_models_context.overrides());
+      break;
+    default:
+      mt_unreachable();
   }
 
   if (options.dump_overrides()) {
@@ -154,6 +128,50 @@ CachedModelsContext::OverridesMap Overrides::from_json(
   }
 
   return result;
+}
+
+void Overrides::add_cached_overrides(
+    const CachedModelsContext::OverridesMap& cached_overrides) {
+  for (const auto& [method, overrides] : cached_overrides) {
+    // Merge with existing overrides. Modifying the underlying value is safe
+    // since this is not happening concurrently.
+    auto* existing_overrides = overrides_.get_unsafe(method);
+    if (existing_overrides == nullptr) {
+      set(method, overrides);
+    } else {
+      existing_overrides->insert(overrides.begin(), overrides.end());
+    }
+  }
+}
+
+void Overrides::init_from_stores(
+    const DexStoresVector& stores,
+    Methods& method_factory) {
+  std::vector<std::unique_ptr<const method_override_graph::Graph>>
+      method_override_graphs;
+  for (const auto& scope : DexStoreClassesIterator(stores)) {
+    method_override_graphs.push_back(method_override_graph::build_graph(scope));
+  }
+
+  for (const auto& scope : DexStoreClassesIterator(stores)) {
+    walk::parallel::methods(
+        scope,
+        [&method_factory, &method_override_graphs, this](
+            const DexMethod* dex_method) {
+          std::unordered_set<const Method*> overrides;
+          const auto* method = method_factory.get(dex_method);
+
+          for (const auto& graph : method_override_graphs) {
+            auto overrides_in_scope =
+                method_override_graph::get_overriding_methods(
+                    *graph, dex_method, /* include_interfaces */ true);
+            for (const auto* override : overrides_in_scope) {
+              overrides.insert(method_factory.get(override));
+            }
+          }
+          set(method, std::move(overrides));
+        });
+  }
 }
 
 } // namespace marianatrench

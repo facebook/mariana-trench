@@ -104,6 +104,7 @@ TEST_P(JsonModelGeneratorIntegrationTest, CompareModels) {
       *context.options, context.stores, cached_models_context);
   context.overrides = std::make_unique<Overrides>(
       *context.options,
+      context.options->analysis_mode(),
       *context.methods,
       context.stores,
       cached_models_context);

@@ -25,6 +25,7 @@ class Overrides final {
  public:
   explicit Overrides(
       const Options& options,
+      AnalysisMode analysis_mode,
       Methods& methods,
       const DexStoresVector& stores,
       const CachedModelsContext& cached_models_context);
@@ -53,6 +54,11 @@ class Overrides final {
   static CachedModelsContext::OverridesMap from_json(
       const Json::Value& value,
       Methods& methods);
+
+ private:
+  // To be called from the constructor based on AnalysisMode.
+  void add_cached_overrides(const CachedModelsContext::OverridesMap& context);
+  void init_from_stores(const DexStoresVector& stores, Methods& method_factory);
 
  private:
   UniquePointerConcurrentMap<const Method*, std::unordered_set<const Method*>>

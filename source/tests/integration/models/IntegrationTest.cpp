@@ -506,6 +506,7 @@ TEST_P(IntegrationTest, ReturnsExpectedModel) {
       std::make_unique<FieldCache>(*context.class_hierarchies, context.stores);
   context.overrides = std::make_unique<Overrides>(
       *context.options,
+      context.options->analysis_mode(),
       *context.methods,
       context.stores,
       cached_models_context);
