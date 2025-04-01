@@ -250,7 +250,7 @@ void Registry::set(const Model& model) {
 
 LiteralModel Registry::match_literal(const std::string_view literal) const {
   LiteralModel result_model;
-  for (const auto& [pattern, model] : literal_models_) {
+  for (const auto& [pattern, model] : UnorderedIterable(literal_models_)) {
     if (model.matches(literal)) {
       result_model.join_with(model);
     }
@@ -268,7 +268,7 @@ std::size_t Registry::field_models_size() const {
 
 std::size_t Registry::issues_size() const {
   std::size_t result = 0;
-  for (const auto& entry : models_) {
+  for (const auto& entry : UnorderedIterable(models_)) {
     result += entry.second.issues().size();
   }
   return result;
@@ -308,13 +308,14 @@ void Registry::join_with(const LiteralModel& literal_model) {
 }
 
 void Registry::join_with(const Registry& other) {
-  for (const auto& other_model : other.models_) {
+  for (const auto& other_model : UnorderedIterable(other.models_)) {
     join_with(other_model.second);
   }
-  for (const auto& other_field_model : other.field_models_) {
+  for (const auto& other_field_model : UnorderedIterable(other.field_models_)) {
     join_with(other_field_model.second);
   }
-  for (const auto& other_literal_model : other.literal_models_) {
+  for (const auto& other_literal_model :
+       UnorderedIterable(other.literal_models_)) {
     join_with(other_literal_model.second);
   }
 }
@@ -339,11 +340,11 @@ void Registry::dump_metadata(const std::filesystem::path& path) const {
   statistics["methods_analyzed"] =
       Json::Value(static_cast<Json::UInt64>(models_.size()));
   statistics["methods_without_code"] = Json::Value(static_cast<Json::UInt64>(
-      std::count_if(models_.begin(), models_.end(), [](const auto& model) {
+      unordered_count_if(models_, [](const auto& model) {
         return model.first->get_code() == nullptr;
       })));
   statistics["methods_skipped"] = Json::Value(static_cast<Json::UInt64>(
-      std::count_if(models_.begin(), models_.end(), [](const auto& model) {
+      unordered_count_if(models_, [](const auto& model) {
         return model.second.skip_analysis();
       })));
   value["stats"] = statistics;
@@ -363,15 +364,15 @@ std::string Registry::dump_models() const {
   std::stringstream string;
   string << "// @";
   string << "generated\n";
-  for (const auto& model : models_) {
+  for (const auto& model : UnorderedIterable(models_)) {
     writer->write(model.second.to_json(context_), &string);
     string << "\n";
   }
-  for (const auto& field_model : field_models_) {
+  for (const auto& field_model : UnorderedIterable(field_models_)) {
     writer->write(field_model.second.to_json(context_), &string);
     string << "\n";
   }
-  for (const auto& literal_model : literal_models_) {
+  for (const auto& literal_model : UnorderedIterable(literal_models_)) {
     writer->write(literal_model.second.to_json(context_), &string);
     string << "\n";
   }
@@ -381,15 +382,15 @@ std::string Registry::dump_models() const {
 Json::Value Registry::models_to_json() const {
   auto models_value = Json::Value(Json::objectValue);
   models_value["models"] = Json::Value(Json::arrayValue);
-  for (auto model : models_) {
+  for (auto model : UnorderedIterable(models_)) {
     models_value["models"].append(model.second.to_json(context_));
   }
   models_value["field_models"] = Json::Value(Json::arrayValue);
-  for (auto field_model : field_models_) {
+  for (auto field_model : UnorderedIterable(field_models_)) {
     models_value["field_models"].append(field_model.second.to_json(context_));
   }
   models_value["literal_models"] = Json::Value(Json::arrayValue);
-  for (const auto& literal_model : literal_models_) {
+  for (const auto& literal_model : UnorderedIterable(literal_models_)) {
     models_value["literal_models"].append(
         literal_model.second.to_json(context_));
   }
@@ -400,17 +401,17 @@ void Registry::to_sharded_models_json(
     const std::filesystem::path& path,
     const std::size_t batch_size) const {
   std::vector<Model> models;
-  for (const auto& model : models_) {
+  for (const auto& model : UnorderedIterable(models_)) {
     models.push_back(model.second);
   }
 
   std::vector<FieldModel> field_models;
-  for (const auto& field_model : field_models_) {
+  for (const auto& field_model : UnorderedIterable(field_models_)) {
     field_models.push_back(field_model.second);
   }
 
   std::vector<LiteralModel> literal_models;
-  for (const auto& literal_model : literal_models_) {
+  for (const auto& literal_model : UnorderedIterable(literal_models_)) {
     literal_models.push_back(literal_model.second);
   }
 
@@ -436,7 +437,7 @@ void Registry::to_sharded_models_json(
 void Registry::dump_file_coverage_info(
     const std::filesystem::path& output_path) const {
   std::unordered_set<std::string> covered_paths;
-  for (const auto& [method, model] : models_) {
+  for (const auto& [method, model] : UnorderedIterable(models_)) {
     if (method->get_code() == nullptr || model.skip_analysis()) {
       continue;
     }
@@ -468,7 +469,7 @@ void Registry::dump_rule_coverage_info(
   std::unordered_set<const Kind*> used_sinks;
   std::unordered_set<const Transform*> used_transforms;
 
-  for (const auto& [_method, model] : models_) {
+  for (const auto& [_method, model] : UnorderedIterable(models_)) {
     auto source_kinds = model.source_kinds();
     used_sources.insert(source_kinds.begin(), source_kinds.end());
 
@@ -479,7 +480,7 @@ void Registry::dump_rule_coverage_info(
     used_transforms.insert(transforms.begin(), transforms.end());
   }
 
-  for (const auto& [_field, model] : field_models_) {
+  for (const auto& [_field, model] : UnorderedIterable(field_models_)) {
     auto source_kinds = model.sources().kinds();
     used_sources.insert(source_kinds.begin(), source_kinds.end());
 
@@ -487,7 +488,7 @@ void Registry::dump_rule_coverage_info(
     used_sinks.insert(sink_kinds.begin(), sink_kinds.end());
   }
 
-  for (const auto& [_literal, model] : literal_models_) {
+  for (const auto& [_literal, model] : UnorderedIterable(literal_models_)) {
     auto source_kinds = model.sources().kinds();
     used_sources.insert(source_kinds.begin(), source_kinds.end());
   }
@@ -501,7 +502,7 @@ void Registry::verify_expected_output(
     const std::filesystem::path& test_output_path) const {
   auto results = Json::Value(Json::arrayValue);
 
-  for (const auto& [method, model] : models_) {
+  for (const auto& [method, model] : UnorderedIterable(models_)) {
     auto model_validators = ModelValidators::from_method(method);
     if (!model_validators) {
       continue;

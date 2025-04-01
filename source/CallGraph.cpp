@@ -1130,7 +1130,7 @@ CallGraph::CallGraph(
           }
         },
         sparta::parallel::default_num_threads());
-    for (const auto* method : worklist) {
+    for (const auto* method : UnorderedIterable(worklist)) {
       queue.add_item(method);
       processed.insert(method);
     }
@@ -1386,12 +1386,14 @@ Json::Value CallGraph::to_json(const Method* method) const {
 
 Json::Value CallGraph::to_json() const {
   auto value = Json::Value(Json::objectValue);
-  for (const auto& [method, _callees] : resolved_base_callees_) {
+  for (const auto& [method, _callees] :
+       UnorderedIterable(resolved_base_callees_)) {
     value[method->show()] = to_json(method);
   }
 
   // Add methods that only have artificial callees
-  for (const auto& [method, _callees] : artificial_callees_) {
+  for (const auto& [method, _callees] :
+       UnorderedIterable(artificial_callees_)) {
     if (resolved_base_callees_.find(method) == resolved_base_callees_.end()) {
       value[method->show()] = to_json(method);
     }
@@ -1408,12 +1410,14 @@ void CallGraph::dump_call_graph(
   // Collect all methods in the callgraph
   std::vector<const Method*> methods;
   methods.reserve(resolved_base_callees_.size());
-  for (const auto& [method, _callees] : resolved_base_callees_) {
+  for (const auto& [method, _callees] :
+       UnorderedIterable(resolved_base_callees_)) {
     methods.push_back(method);
   }
 
   // Add methods that only have artificial callees
-  for (const auto& [method, _callees] : artificial_callees_) {
+  for (const auto& [method, _callees] :
+       UnorderedIterable(artificial_callees_)) {
     if (resolved_base_callees_.find(method) == resolved_base_callees_.end()) {
       methods.push_back(method);
     }
@@ -1482,7 +1486,8 @@ CallGraphStats::StatTypes compute_virtual_callsite_stats(
         resolved_base_callees,
     std::size_t join_override_threshold) {
   std::vector<std::size_t> num_resolved_targets_per_virtual_callsite;
-  for (const auto& [method, instruction_target] : resolved_base_callees) {
+  for (const auto& [method, instruction_target] :
+       UnorderedIterable(resolved_base_callees)) {
     for (const auto& [_instruction, call_target] : instruction_target) {
       if (!call_target.resolved() || !call_target.is_virtual()) {
         continue;
@@ -1508,7 +1513,8 @@ CallGraphStats::StatTypes compute_artificial_callee_stats(
         artificial_callees,
     std::size_t join_override_threshold) {
   std::vector<std::size_t> num_artificial_callees_per_callsite;
-  for (const auto& [_method, instruction_target] : artificial_callees) {
+  for (const auto& [_method, instruction_target] :
+       UnorderedIterable(artificial_callees)) {
     for (const auto& [_instruction, callees] : instruction_target) {
       std::size_t num_resolved_targets = 0;
       for (const auto& artificial_callee : callees) {

@@ -240,7 +240,7 @@ void Interprocedural::run_analysis(Context& context, Registry& registry) {
     if (iteration > context.heuristics->max_number_iterations()) {
       ERROR(1, "Too many iterations");
       std::string message = "Unstable methods are:";
-      for (const auto* method : *methods_to_analyze) {
+      for (const auto* method : UnorderedIterable(*methods_to_analyze)) {
         message.append(fmt::format("\n`{}`", method->show()));
       }
       LOG(1, message);

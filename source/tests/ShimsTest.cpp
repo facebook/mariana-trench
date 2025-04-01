@@ -61,7 +61,7 @@ SerializedMultimap serialize_classes_to_intent_receivers(
         classes_to_intent_receivers) {
   SerializedMultimap serialized;
   for (const auto& [dex_type, receiving_methods] :
-       classes_to_intent_receivers) {
+       UnorderedIterable(classes_to_intent_receivers)) {
     std::vector<std::string> serialized_methods;
     for (const auto& receiving_method : receiving_methods) {
       serialized_methods.push_back(receiving_method.method->show());
@@ -77,7 +77,8 @@ SerializedMultimap serialize_methods_to_routed_intents(
     const IntentRoutingAnalyzer::MethodToRoutedIntentClassesMap&
         method_to_routed_intents) {
   SerializedMultimap serialized;
-  for (const auto& [method, dex_types] : method_to_routed_intents) {
+  for (const auto& [method, dex_types] :
+       UnorderedIterable(method_to_routed_intents)) {
     std::vector<std::string> serialized_types;
     for (const auto& dex_type : dex_types) {
       serialized_types.emplace_back(dex_type->str());

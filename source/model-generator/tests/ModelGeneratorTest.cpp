@@ -34,8 +34,8 @@ template <class StringType>
 std::unordered_map<StringType, std::vector<const Method*>> sort_mapping(
     const ConcurrentMap<StringType, marianatrench::MethodHashedSet>& mapping) {
   auto unordered_mapping =
-      std::unordered_map<StringType, marianatrench::MethodHashedSet>(
-          mapping.begin(), mapping.end());
+      std::unordered_map<StringType, marianatrench::MethodHashedSet>();
+  insert_unordered_iterable(unordered_mapping, mapping);
   std::unordered_map<StringType, std::vector<const Method*>> result;
 
   for (const auto& [key, methods] : unordered_mapping) {

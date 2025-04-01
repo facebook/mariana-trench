@@ -102,7 +102,7 @@ Dependencies::Dependencies(
   }
   queue.run_all();
 
-  for (const auto* method : warn_many_overrides) {
+  for (const auto* method : UnorderedIterable(warn_many_overrides)) {
     WARNING(
         1,
         "Method `{}` has {} overrides, consider marking it with `no-join-virtual-overrides` if the analysis is slow.",
@@ -143,7 +143,7 @@ Json::Value Dependencies::to_json(const Method* method) const {
 
 Json::Value Dependencies::to_json() const {
   auto value = Json::Value(Json::objectValue);
-  for (const auto& [method, _dependencies] : dependencies_) {
+  for (const auto& [method, _dependencies] : UnorderedIterable(dependencies_)) {
     value[method->show()] = to_json(method);
   }
   return value;
@@ -156,7 +156,7 @@ void Dependencies::dump_dependencies(
 
   std::vector<const Method*> methods;
   methods.reserve(dependencies_.size());
-  for (const auto& [method, _dependencies] : dependencies_) {
+  for (const auto& [method, _dependencies] : UnorderedIterable(dependencies_)) {
     methods.push_back(method);
   }
 

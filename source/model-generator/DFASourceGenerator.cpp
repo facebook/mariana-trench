@@ -60,7 +60,8 @@ std::vector<Model> DFASourceGenerator::emit_method_models(
   for (auto& scope : DexStoreClassesIterator(context_.stores)) {
     walk::parallel::classes(
         scope, [&dfa_classes, &nested_dfa_classes](DexClass* clazz) {
-          for (const DexClass* exported_class : dfa_classes) {
+          for (const DexClass* exported_class :
+               UnorderedIterable(dfa_classes)) {
             auto dex_klass_prefix = exported_class->get_name()->str_copy();
             dex_klass_prefix.erase(dex_klass_prefix.length() - 1);
 
@@ -71,10 +72,10 @@ std::vector<Model> DFASourceGenerator::emit_method_models(
         });
   }
 
-  dfa_classes.insert(nested_dfa_classes.begin(), nested_dfa_classes.end());
+  insert_unordered_iterable(dfa_classes, nested_dfa_classes);
 
   std::vector<Model> models;
-  for (const auto* dex_klass : dfa_classes) {
+  for (const auto* dex_klass : UnorderedIterable(dfa_classes)) {
     // Mark all public and protected methods in the class as exported.
     for (const auto* dex_callee : dex_klass->get_all_methods()) {
       if (dex_callee == nullptr) {

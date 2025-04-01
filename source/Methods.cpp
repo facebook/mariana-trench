@@ -56,11 +56,13 @@ const Method* MT_NULLABLE Methods::get(const std::string& name) const {
 }
 
 Methods::Iterator Methods::begin() const {
-  return boost::make_transform_iterator(set_.cbegin(), GetPointer());
+  return boost::make_transform_iterator(
+      UnorderedIterable(set_).cbegin(), GetPointer());
 }
 
 Methods::Iterator Methods::end() const {
-  return boost::make_transform_iterator(set_.cend(), GetPointer());
+  return boost::make_transform_iterator(
+      UnorderedIterable(set_).cend(), GetPointer());
 }
 
 std::size_t Methods::size() const {

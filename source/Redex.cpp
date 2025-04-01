@@ -195,7 +195,7 @@ void redex::remove_unreachable(
 
   if (removed_symbols_path) {
     auto value = Json::Value(Json::arrayValue);
-    for (const auto& symbol : removed_symbols) {
+    for (const auto& symbol : UnorderedIterable(removed_symbols)) {
       value.append(symbol);
     }
     JsonWriter::write_json_file(*removed_symbols_path, value);

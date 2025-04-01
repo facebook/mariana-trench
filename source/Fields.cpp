@@ -35,11 +35,13 @@ const Field* Fields::get(const DexField* field) const {
 }
 
 Fields::Iterator Fields::begin() const {
-  return boost::make_transform_iterator(set_.cbegin(), GetPointer());
+  return boost::make_transform_iterator(
+      UnorderedIterable(set_).cbegin(), GetPointer());
 }
 
 Fields::Iterator Fields::end() const {
-  return boost::make_transform_iterator(set_.cend(), GetPointer());
+  return boost::make_transform_iterator(
+      UnorderedIterable(set_).cend(), GetPointer());
 }
 
 std::size_t Fields::size() const {

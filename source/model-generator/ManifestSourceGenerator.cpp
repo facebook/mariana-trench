@@ -88,7 +88,8 @@ std::vector<Model> ManifestSourceGenerator::emit_method_models(
   for (auto& scope : DexStoreClassesIterator(context_.stores)) {
     walk::parallel::classes(
         scope, [&exported_classes, &nested_exported_classes](DexClass* clazz) {
-          for (const DexClass* exported_class : exported_classes) {
+          for (const DexClass* exported_class :
+               UnorderedIterable(exported_classes)) {
             auto dex_klass_prefix = exported_class->get_name()->str_copy();
             dex_klass_prefix.erase(dex_klass_prefix.length() - 1);
 
@@ -99,11 +100,10 @@ std::vector<Model> ManifestSourceGenerator::emit_method_models(
         });
   }
 
-  exported_classes.insert(
-      nested_exported_classes.begin(), nested_exported_classes.end());
+  insert_unordered_iterable(exported_classes, nested_exported_classes);
 
   std::vector<Model> models;
-  for (const auto* dex_klass : exported_classes) {
+  for (const auto* dex_klass : UnorderedIterable(exported_classes)) {
     // Mark all public and protected methods in the class as exported.
     for (const auto* dex_callee : dex_klass->get_all_methods()) {
       if (dex_callee == nullptr) {

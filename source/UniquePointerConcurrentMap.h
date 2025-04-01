@@ -48,7 +48,7 @@ class UniquePointerConcurrentMap final {
   ~UniquePointerConcurrentMap() {
     // ConcurrentMap can only return by value, hence we need to store a raw
     // pointer and use delete here.
-    for (const auto& entry : map_) {
+    for (const auto& entry : UnorderedIterable(map_)) {
       delete entry.second;
     }
   }
@@ -82,11 +82,11 @@ class UniquePointerConcurrentMap final {
    */
 
   iterator begin() const {
-    return map_.cbegin();
+    return UnorderedIterable(map_).cbegin();
   }
 
   iterator end() const {
-    return map_.cend();
+    return UnorderedIterable(map_).cend();
   }
 
  private:

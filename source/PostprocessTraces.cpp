@@ -233,7 +233,7 @@ void PostprocessTraces::remove_collapsed_traces(
           registry.set(model);
         },
         sparta::parallel::default_num_threads());
-    for (const auto* method : *methods) {
+    for (const auto* method : UnorderedIterable(*methods)) {
       queue.add_item(method);
     }
     queue.run_all();

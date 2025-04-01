@@ -361,7 +361,7 @@ void get_frames_files_to_methods(
             new_frames_to_check->emplace(&local_taint);
           });
         });
-    for (const auto* taint : *frames_to_check) {
+    for (const auto* taint : UnorderedIterable(*frames_to_check)) {
       queue.add_item(taint);
     }
     queue.run_all();
@@ -602,7 +602,7 @@ void Highlights::augment_positions(Registry& registry, const Context& context) {
         }
       });
 
-  for (const auto& [filepath, _] : issue_files_to_methods) {
+  for (const auto& [filepath, _] : UnorderedIterable(issue_files_to_methods)) {
     file_queue.add_item(filepath);
   }
   file_queue.run_all();
