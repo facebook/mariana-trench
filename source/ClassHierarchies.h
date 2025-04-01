@@ -13,7 +13,6 @@
 
 #include <DexStore.h>
 
-#include <mariana-trench/CachedModelsContext.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Options.h>
 #include <mariana-trench/UniquePointerConcurrentMap.h>
@@ -22,11 +21,14 @@ namespace marianatrench {
 
 class ClassHierarchies final {
  public:
+  using MapType =
+      std::unordered_map<const DexType*, std::unordered_set<const DexType*>>;
+
+ public:
   explicit ClassHierarchies(
       const Options& options,
       AnalysisMode analysis_mode,
-      const DexStoresVector& stores,
-      const CachedModelsContext& cached_models_context);
+      const DexStoresVector& stores);
 
   DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ClassHierarchies)
 
@@ -35,13 +37,11 @@ class ClassHierarchies final {
 
   Json::Value to_json() const;
 
-  static CachedModelsContext::ClassHierarchiesMap from_json(
-      const Json::Value& value);
+  static MapType from_json(const Json::Value& value);
 
  private:
   // To be called from the constructor based on AnalysisMode.
-  void add_cached_hierarchies(
-      const CachedModelsContext::ClassHierarchiesMap& cached_hierarchies);
+  void add_cached_hierarchies(const Options& options);
   void init_from_stores(const DexStoresVector& stores);
 
  private:

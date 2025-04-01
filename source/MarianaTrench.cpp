@@ -131,10 +131,7 @@ Registry MarianaTrench::analyze(Context& context) {
   Timer class_hierarchies_timer;
   LOG(1, "Building class hierarchies...");
   context.class_hierarchies = std::make_unique<ClassHierarchies>(
-      *context.options,
-      context.options->analysis_mode(),
-      context.stores,
-      cached_models_context);
+      *context.options, context.options->analysis_mode(), context.stores);
   context.statistics->log_time("class_hierarchies", class_hierarchies_timer);
   LOG(1,
       "Built class hierarchies in {:.2f}s. Memory used, RSS: {:.2f}GB",
@@ -157,8 +154,7 @@ Registry MarianaTrench::analyze(Context& context) {
       *context.options,
       context.options->analysis_mode(),
       *context.methods,
-      context.stores,
-      cached_models_context);
+      context.stores);
   context.statistics->log_time("overrides", overrides_timer);
   LOG(1,
       "Built override graph in {:.2f}s. Memory used, RSS: {:.2f}GB",
@@ -168,10 +164,7 @@ Registry MarianaTrench::analyze(Context& context) {
   Timer class_intervals_timer;
   LOG(1, "Computing class intervals...");
   context.class_intervals = std::make_unique<ClassIntervals>(
-      *context.options,
-      context.options->analysis_mode(),
-      context.stores,
-      cached_models_context);
+      *context.options, context.options->analysis_mode(), context.stores);
   context.statistics->log_time("class_intervals", class_intervals_timer);
   LOG(1,
       "Computed class intervals in {:.2f}s. Memory used, RSS: {:.2f}GB",

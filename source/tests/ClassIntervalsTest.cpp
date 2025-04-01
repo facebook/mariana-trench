@@ -39,17 +39,13 @@ Context test_context(const Scope& scope) {
       /* model_generator_search_paths */ std::vector<std::string>{},
       /* emit_all_via_cast_features */ false,
       /* remove_unreachable_code */ false);
-  CachedModelsContext cached_models_context(context, *context.options);
 
   DexStore store("test_store");
   store.add_classes(scope);
   context.stores = {store};
   context.options = test::make_default_options();
   context.class_intervals = std::make_unique<ClassIntervals>(
-      *context.options,
-      context.options->analysis_mode(),
-      context.stores,
-      cached_models_context);
+      *context.options, context.options->analysis_mode(), context.stores);
   return context;
 }
 

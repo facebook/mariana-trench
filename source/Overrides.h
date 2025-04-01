@@ -13,7 +13,6 @@
 
 #include <DexStore.h>
 
-#include <mariana-trench/CachedModelsContext.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Method.h>
 #include <mariana-trench/Options.h>
@@ -23,12 +22,15 @@ namespace marianatrench {
 
 class Overrides final {
  public:
+  using MapType =
+      std::unordered_map<const Method*, std::unordered_set<const Method*>>;
+
+ public:
   explicit Overrides(
       const Options& options,
       AnalysisMode analysis_mode,
       Methods& methods,
-      const DexStoresVector& stores,
-      const CachedModelsContext& cached_models_context);
+      const DexStoresVector& stores);
 
   DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(Overrides)
 
@@ -51,13 +53,11 @@ class Overrides final {
 
   Json::Value to_json() const;
 
-  static CachedModelsContext::OverridesMap from_json(
-      const Json::Value& value,
-      Methods& methods);
+  static MapType from_json(const Json::Value& value, Methods& methods);
 
  private:
   // To be called from the constructor based on AnalysisMode.
-  void add_cached_overrides(const CachedModelsContext::OverridesMap& context);
+  void add_cached_overrides(const Options& options, Methods& methods);
   void init_from_stores(const DexStoresVector& stores, Methods& method_factory);
 
  private:

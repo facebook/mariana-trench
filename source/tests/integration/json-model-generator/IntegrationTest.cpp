@@ -90,7 +90,6 @@ TEST_P(JsonModelGeneratorIntegrationTest, CompareModels) {
       DexLocation::make_location("dex", dex_path.c_str())));
   context.stores.push_back(root_store);
   const auto& options = *context.options;
-  CachedModelsContext cached_models_context(context, options);
   context.artificial_methods = std::make_unique<ArtificialMethods>(
       *context.kind_factory, context.stores);
   context.methods = std::make_unique<Methods>(context.stores);
@@ -101,16 +100,12 @@ TEST_P(JsonModelGeneratorIntegrationTest, CompareModels) {
       std::make_unique<ControlFlowGraphs>(context.stores);
   context.types = std::make_unique<Types>(*context.options, context.stores);
   context.class_hierarchies = std::make_unique<ClassHierarchies>(
-      *context.options,
-      context.options->analysis_mode(),
-      context.stores,
-      cached_models_context);
+      *context.options, context.options->analysis_mode(), context.stores);
   context.overrides = std::make_unique<Overrides>(
       *context.options,
       context.options->analysis_mode(),
       *context.methods,
-      context.stores,
-      cached_models_context);
+      context.stores);
   context.call_graph = std::make_unique<CallGraph>(
       *context.options,
       *context.types,

@@ -26,19 +26,18 @@ Overrides::Overrides(
     const Options& options,
     AnalysisMode analysis_mode,
     Methods& method_factory,
-    const DexStoresVector& stores,
-    const CachedModelsContext& cached_models_context) {
+    const DexStoresVector& stores) {
   switch (analysis_mode) {
     case AnalysisMode::Normal:
       init_from_stores(stores, method_factory);
       break;
     case AnalysisMode::CachedModels:
       init_from_stores(stores, method_factory);
-      add_cached_overrides(cached_models_context.overrides());
+      add_cached_overrides(options, method_factory);
       break;
     case AnalysisMode::Replay:
       // Do not recompute overrides in replay mode.
-      add_cached_overrides(cached_models_context.overrides());
+      add_cached_overrides(options, method_factory);
       break;
     default:
       mt_unreachable();
@@ -101,7 +100,7 @@ Json::Value Overrides::to_json() const {
   return value;
 }
 
-CachedModelsContext::OverridesMap Overrides::from_json(
+Overrides::MapType Overrides::from_json(
     const Json::Value& value,
     Methods& methods) {
   JsonValidation::validate_object(value);
@@ -130,8 +129,27 @@ CachedModelsContext::OverridesMap Overrides::from_json(
   return result;
 }
 
-void Overrides::add_cached_overrides(
-    const CachedModelsContext::OverridesMap& cached_overrides) {
+namespace {
+
+Overrides::MapType read_overrides(
+    const std::filesystem::path& overrides_file,
+    Methods& methods) {
+  if (!std::filesystem::exists(overrides_file)) {
+    throw std::runtime_error(
+        "Overrides file must exist when sharded input models are provided.");
+  }
+
+  LOG(1, "Reading overrides from `{}`", overrides_file.native());
+  auto overrides_json = JsonReader::parse_json_file(overrides_file);
+  return Overrides::from_json(overrides_json, methods);
+}
+
+} // namespace
+
+void Overrides::add_cached_overrides(const Options& options, Methods& methods) {
+  auto overrides_input_path = options.overrides_input_path();
+  mt_assert(overrides_input_path.has_value());
+  auto cached_overrides = read_overrides(*overrides_input_path, methods);
   for (const auto& [method, overrides] : cached_overrides) {
     // Merge with existing overrides. Modifying the underlying value is safe
     // since this is not happening concurrently.

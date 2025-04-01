@@ -61,19 +61,18 @@ class Graph {
 ClassHierarchies::ClassHierarchies(
     const Options& options,
     AnalysisMode analysis_mode,
-    const DexStoresVector& stores,
-    const CachedModelsContext& cached_models_context) {
+    const DexStoresVector& stores) {
   switch (analysis_mode) {
     case AnalysisMode::Normal:
       init_from_stores(stores);
       break;
     case AnalysisMode::CachedModels:
       init_from_stores(stores);
-      add_cached_hierarchies(cached_models_context.class_hierarchy());
+      add_cached_hierarchies(options);
       break;
     case AnalysisMode::Replay:
       // Do not recompute class hierarchies in replay mode.
-      add_cached_hierarchies(cached_models_context.class_hierarchy());
+      add_cached_hierarchies(options);
       break;
     default:
       mt_unreachable();
@@ -114,7 +113,7 @@ Json::Value ClassHierarchies::to_json() const {
   return value;
 }
 
-CachedModelsContext::ClassHierarchiesMap ClassHierarchies::from_json(
+ClassHierarchies::MapType ClassHierarchies::from_json(
     const Json::Value& value) {
   auto extends_value = JsonValidation::object(value, "extends");
   std::unordered_map<const DexType*, std::unordered_set<const DexType*>> result;
@@ -141,8 +140,31 @@ CachedModelsContext::ClassHierarchiesMap ClassHierarchies::from_json(
   return result;
 }
 
-void ClassHierarchies::add_cached_hierarchies(
-    const CachedModelsContext::ClassHierarchiesMap& cached_hierarchies) {
+namespace {
+
+ClassHierarchies::MapType read_class_hierarchies(
+    const std::filesystem::path& class_hierarchies_file) {
+  if (!std::filesystem::exists(class_hierarchies_file)) {
+    throw std::runtime_error(
+        "Class hierarchies file must exist when sharded input models are provided.");
+  }
+
+  LOG(1,
+      "Reading class hierarchies from `{}`",
+      class_hierarchies_file.native());
+
+  auto class_hierarchies_json =
+      JsonReader::parse_json_file(class_hierarchies_file);
+  return ClassHierarchies::from_json(class_hierarchies_json);
+}
+
+} // namespace
+
+void ClassHierarchies::add_cached_hierarchies(const Options& options) {
+  auto class_hierarchies_input_path = options.class_hierarchies_input_path();
+  mt_assert(class_hierarchies_input_path.has_value());
+  auto cached_hierarchies =
+      read_class_hierarchies(*class_hierarchies_input_path);
   for (const auto& [method, hierarchies] : cached_hierarchies) {
     // Merge with existing overrides. Modifying the underlying value is safe
     // since this is not happening concurrently.

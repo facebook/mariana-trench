@@ -58,8 +58,7 @@ class ClassIntervals final {
   explicit ClassIntervals(
       const Options& options,
       AnalysisMode analysis_mode,
-      const DexStoresVector& stores,
-      const CachedModelsContext& cached_models_context);
+      const DexStoresVector& stores);
 
   DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ClassIntervals)
 

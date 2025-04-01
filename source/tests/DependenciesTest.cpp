@@ -44,7 +44,6 @@ Context test_dependencies(const Scope& scope) {
       /* model_generator_search_paths */ std::vector<std::string>{},
       /* remove_unreachable_code */ false,
       /* emit_all_via_cast_features */ false);
-  CachedModelsContext cached_models_context(context, *context.options);
   DexStore store("test_store");
   store.add_classes(scope);
   context.stores = {store};
@@ -56,16 +55,12 @@ Context test_dependencies(const Scope& scope) {
       std::make_unique<ControlFlowGraphs>(context.stores);
   context.types = std::make_unique<Types>(*context.options, context.stores);
   context.class_hierarchies = std::make_unique<ClassHierarchies>(
-      *context.options,
-      context.options->analysis_mode(),
-      context.stores,
-      cached_models_context);
+      *context.options, context.options->analysis_mode(), context.stores);
   context.overrides = std::make_unique<Overrides>(
       *context.options,
       context.options->analysis_mode(),
       *context.methods,
-      context.stores,
-      cached_models_context);
+      context.stores);
   context.fields = std::make_unique<Fields>();
   context.call_graph = std::make_unique<CallGraph>(
       *context.options,

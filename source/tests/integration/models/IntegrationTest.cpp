@@ -484,7 +484,6 @@ TEST_P(IntegrationTest, ReturnsExpectedModel) {
       /* emit_all_via_cast_features */ false,
       /* remove_unreachable_code */ false);
   const auto& options = *context.options;
-  CachedModelsContext cached_models_context(context, options);
 
   DexStore store("test_store");
   store.add_classes(scope);
@@ -501,18 +500,14 @@ TEST_P(IntegrationTest, ReturnsExpectedModel) {
       std::make_unique<ControlFlowGraphs>(context.stores);
   context.types = std::make_unique<Types>(options, context.stores);
   context.class_hierarchies = std::make_unique<ClassHierarchies>(
-      *context.options,
-      context.options->analysis_mode(),
-      context.stores,
-      cached_models_context);
+      *context.options, context.options->analysis_mode(), context.stores);
   context.field_cache =
       std::make_unique<FieldCache>(*context.class_hierarchies, context.stores);
   context.overrides = std::make_unique<Overrides>(
       *context.options,
       context.options->analysis_mode(),
       *context.methods,
-      context.stores,
-      cached_models_context);
+      context.stores);
   context.call_graph = std::make_unique<CallGraph>(
       *context.options,
       *context.types,
@@ -529,10 +524,7 @@ TEST_P(IntegrationTest, ReturnsExpectedModel) {
   context.used_kinds = std::make_unique<UsedKinds>(
       UsedKinds::from_rules(*context.rules, *context.transforms_factory));
   context.class_intervals = std::make_unique<ClassIntervals>(
-      *context.options,
-      context.options->analysis_mode(),
-      context.stores,
-      cached_models_context);
+      *context.options, context.options->analysis_mode(), context.stores);
 
   Registry registry(context, /* create_default_models */ true);
   registry.join_with(Registry(

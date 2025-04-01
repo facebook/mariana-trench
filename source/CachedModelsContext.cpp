@@ -14,51 +14,6 @@ namespace marianatrench {
 
 namespace {
 
-CachedModelsContext::OverridesMap read_overrides(
-    const Options& options,
-    Methods& methods) {
-  auto overrides_file = options.overrides_input_path();
-  if (!std::filesystem::exists(*overrides_file)) {
-    throw std::runtime_error(
-        "Overrides file must exist when sharded input models are provided.");
-  }
-
-  LOG(1, "Reading overrides from `{}`", overrides_file->native());
-  auto overrides_json = JsonReader::parse_json_file(*overrides_file);
-  return Overrides::from_json(overrides_json, methods);
-}
-
-CachedModelsContext::ClassHierarchiesMap read_class_hierarchies(
-    const Options& options) {
-  auto class_hierarchies_file = options.class_hierarchies_input_path();
-  if (!std::filesystem::exists(*class_hierarchies_file)) {
-    throw std::runtime_error(
-        "Class hierarchies file must exist when sharded input models are provided.");
-  }
-
-  LOG(1,
-      "Reading class hierarchies from `{}`",
-      class_hierarchies_file->native());
-
-  auto class_hierarchies_json =
-      JsonReader::parse_json_file(*class_hierarchies_file);
-  return ClassHierarchies::from_json(class_hierarchies_json);
-}
-
-CachedModelsContext::ClassIntervalsMap read_class_intervals(
-    const Options& options) {
-  auto class_intervals_file = options.class_intervals_input_path();
-  if (!std::filesystem::exists(*class_intervals_file)) {
-    throw std::runtime_error("Class intervals file must exist.");
-  }
-
-  LOG(1, "Reading class intervals from `{}`", class_intervals_file->native());
-
-  auto class_intervals_json =
-      JsonReader::parse_json_file(*class_intervals_file);
-  return ClassIntervals::from_json(class_intervals_json);
-}
-
 Registry read_sharded_models(
     Context& context,
     const std::filesystem::path& path) {
@@ -136,25 +91,9 @@ CachedModelsContext::CachedModelsContext(
   }
 
   models_.emplace(read_sharded_models(context, *sharded_models_directory));
-  overrides_ = read_overrides(options, *context.methods);
-  class_hierarchy_ = read_class_hierarchies(options);
-
-  if (analysis_mode == AnalysisMode::Replay) {
-    class_intervals_ = read_class_intervals(options);
-  } else {
-    // Outside of replay mode (i.e. cached models), do NOT read class intervals.
-    // Interweaving intervals of external methods with the APK's methods is not
-    // supported yet.
-    LOG(1,
-        "Not reading class intervals for analysis mode {}",
-        analysis_mode_to_string(analysis_mode));
-  }
 }
 
 void CachedModelsContext::clear() {
-  overrides_.clear();
-  class_hierarchy_.clear();
-  class_intervals_.clear();
   models_.reset();
   is_cleared_ = true;
 }

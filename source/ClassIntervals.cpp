@@ -11,7 +11,6 @@
 #include <json/value.h>
 
 #include <mariana-trench/Assert.h>
-#include <mariana-trench/CachedModelsContext.h>
 #include <mariana-trench/ClassIntervals.h>
 #include <mariana-trench/JsonReaderWriter.h>
 #include <mariana-trench/JsonValidation.h>
@@ -51,13 +50,24 @@ void dfs_on_hierarchy(
   result.emplace(current_node, interval);
 }
 
+ClassIntervals::ClassIntervalsMap read_class_intervals(
+    const std::filesystem::path& class_intervals_file) {
+  if (!std::filesystem::exists(class_intervals_file)) {
+    throw std::runtime_error("Class intervals file must exist.");
+  }
+
+  LOG(1, "Reading class intervals from `{}`", class_intervals_file.native());
+
+  auto class_intervals_json = JsonReader::parse_json_file(class_intervals_file);
+  return ClassIntervals::from_json(class_intervals_json);
+}
+
 } // namespace
 
 ClassIntervals::ClassIntervals(
     const Options& options,
     AnalysisMode analysis_mode,
-    const DexStoresVector& stores,
-    const CachedModelsContext& cached_models_context)
+    const DexStoresVector& stores)
     : top_(Interval::top()) {
   switch (analysis_mode) {
     case AnalysisMode::Normal:
@@ -70,10 +80,13 @@ ClassIntervals::ClassIntervals(
       // already has an interval in the cached output. Intervals in the cached
       // models need to be re-mapped too.
       break;
-    case AnalysisMode::Replay:
+    case AnalysisMode::Replay: {
       // Do not recompute intervals in replay mode.
-      class_intervals_ = cached_models_context.class_intervals();
+      auto class_intervals_input_path = options.class_intervals_input_path();
+      mt_assert(class_intervals_input_path.has_value());
+      class_intervals_ = read_class_intervals(*class_intervals_input_path);
       break;
+    }
     default:
       mt_unreachable();
   }
