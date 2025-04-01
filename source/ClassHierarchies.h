@@ -24,6 +24,7 @@ class ClassHierarchies final {
  public:
   explicit ClassHierarchies(
       const Options& options,
+      AnalysisMode analysis_mode,
       const DexStoresVector& stores,
       const CachedModelsContext& cached_models_context);
 
@@ -36,6 +37,12 @@ class ClassHierarchies final {
 
   static CachedModelsContext::ClassHierarchiesMap from_json(
       const Json::Value& value);
+
+ private:
+  // To be called from the constructor based on AnalysisMode.
+  void add_cached_hierarchies(
+      const CachedModelsContext::ClassHierarchiesMap& cached_hierarchies);
+  void init_from_stores(const DexStoresVector& stores);
 
  private:
   UniquePointerConcurrentMap<const DexType*, std::unordered_set<const DexType*>>

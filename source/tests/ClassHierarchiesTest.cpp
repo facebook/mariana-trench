@@ -47,7 +47,10 @@ Context test_class_hierarchies(const Scope& scope) {
       std::make_unique<ControlFlowGraphs>(context.stores);
   context.types = std::make_unique<Types>(*context.options, context.stores);
   context.class_hierarchies = std::make_unique<ClassHierarchies>(
-      *context.options, context.stores, cached_models_context);
+      *context.options,
+      context.options->analysis_mode(),
+      context.stores,
+      cached_models_context);
   return context;
 }
 

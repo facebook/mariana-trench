@@ -131,7 +131,10 @@ Registry MarianaTrench::analyze(Context& context) {
   Timer class_hierarchies_timer;
   LOG(1, "Building class hierarchies...");
   context.class_hierarchies = std::make_unique<ClassHierarchies>(
-      *context.options, context.stores, cached_models_context);
+      *context.options,
+      context.options->analysis_mode(),
+      context.stores,
+      cached_models_context);
   context.statistics->log_time("class_hierarchies", class_hierarchies_timer);
   LOG(1,
       "Built class hierarchies in {:.2f}s. Memory used, RSS: {:.2f}GB",

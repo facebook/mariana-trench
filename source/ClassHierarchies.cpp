@@ -60,56 +60,23 @@ class Graph {
 
 ClassHierarchies::ClassHierarchies(
     const Options& options,
+    AnalysisMode analysis_mode,
     const DexStoresVector& stores,
     const CachedModelsContext& cached_models_context) {
-  Graph graph;
-
-  // Compute the class hierarchy graph.
-  for (const auto& scope : DexStoreClassesIterator(stores)) {
-    walk::parallel::classes(scope, [&graph](const DexClass* klass) {
-      const DexType* super = klass->get_super_class();
-      if (super != type::java_lang_Object()) {
-        graph.add_edge(/* child */ klass->get_type(), /* parent */ super);
-      }
-      for (DexType* interface : *klass->get_interfaces()) {
-        graph.add_edge(/* child */ klass->get_type(), /* parent */ interface);
-      }
-    });
-  }
-
-  // Record the results.
-  const auto& cached_hierarchy = cached_models_context.class_hierarchy();
-  for (const auto& scope : DexStoreClassesIterator(stores)) {
-    walk::parallel::classes(
-        scope, [&graph, &cached_hierarchy, this](const DexClass* klass) {
-          const auto* class_type = klass->get_type();
-          auto extends = graph.extends(class_type);
-
-          // Include class hierarchies from json input.
-          auto existing_hierarchy = cached_hierarchy.find(class_type);
-          if (existing_hierarchy != cached_hierarchy.end()) {
-            extends.insert(
-                existing_hierarchy->second.begin(),
-                existing_hierarchy->second.end());
-          }
-
-          if (!extends.empty()) {
-            extends_.emplace(
-                klass->get_type(),
-                std::make_unique<std::unordered_set<const DexType*>>(
-                    std::move(extends)));
-          }
-        });
-  }
-
-  // Include hierarchy information for remaining classes.
-  for (const auto& [class_type, hierarchy] : cached_hierarchy) {
-    const auto* found = extends_.get(class_type, nullptr);
-    if (found == nullptr) {
-      extends_.emplace(
-          class_type,
-          std::make_unique<std::unordered_set<const DexType*>>(hierarchy));
-    }
+  switch (analysis_mode) {
+    case AnalysisMode::Normal:
+      init_from_stores(stores);
+      break;
+    case AnalysisMode::CachedModels:
+      init_from_stores(stores);
+      add_cached_hierarchies(cached_models_context.class_hierarchy());
+      break;
+    case AnalysisMode::Replay:
+      // Do not recompute class hierarchies in replay mode.
+      add_cached_hierarchies(cached_models_context.class_hierarchy());
+      break;
+    default:
+      mt_unreachable();
   }
 
   if (options.dump_class_hierarchies()) {
@@ -172,6 +139,54 @@ CachedModelsContext::ClassHierarchiesMap ClassHierarchies::from_json(
   }
 
   return result;
+}
+
+void ClassHierarchies::add_cached_hierarchies(
+    const CachedModelsContext::ClassHierarchiesMap& cached_hierarchies) {
+  for (const auto& [method, hierarchies] : cached_hierarchies) {
+    // Merge with existing overrides. Modifying the underlying value is safe
+    // since this is not happening concurrently.
+    auto* existing = extends_.get_unsafe(method);
+    if (existing == nullptr) {
+      extends_.emplace(
+          method,
+          std::make_unique<std::unordered_set<const DexType*>>(hierarchies));
+    } else {
+      existing->insert(hierarchies.begin(), hierarchies.end());
+    }
+  }
+}
+
+void ClassHierarchies::init_from_stores(const DexStoresVector& stores) {
+  Graph graph;
+
+  // Compute the class hierarchy graph.
+  for (const auto& scope : DexStoreClassesIterator(stores)) {
+    walk::parallel::classes(scope, [&graph](const DexClass* klass) {
+      const DexType* super = klass->get_super_class();
+      if (super != type::java_lang_Object()) {
+        graph.add_edge(/* child */ klass->get_type(), /* parent */ super);
+      }
+      for (DexType* interface : *klass->get_interfaces()) {
+        graph.add_edge(/* child */ klass->get_type(), /* parent */ interface);
+      }
+    });
+  }
+
+  // Record the results.
+  for (const auto& scope : DexStoreClassesIterator(stores)) {
+    walk::parallel::classes(scope, [&graph, this](const DexClass* klass) {
+      const auto* class_type = klass->get_type();
+      auto extends = graph.extends(class_type);
+
+      if (!extends.empty()) {
+        extends_.emplace(
+            klass->get_type(),
+            std::make_unique<std::unordered_set<const DexType*>>(
+                std::move(extends)));
+      }
+    });
+  }
 }
 
 } // namespace marianatrench
