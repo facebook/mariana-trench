@@ -130,6 +130,13 @@
   Class& operator=(Class&&) = delete;      \
   ~Class() = default;
 
+#define MOVE_ONLY(Class)                   \
+  Class(const Class&) = delete;            \
+  Class(Class&&) = default;                \
+  Class& operator=(const Class&) = delete; \
+  Class& operator=(Class&&) = default;     \
+  ~Class() = default;
+
 #define MOVE_CONSTRUCTOR_ONLY_VIRTUAL_DESTRUCTOR(Class) \
   Class(const Class&) = delete;                         \
   Class(Class&&) = default;                             \

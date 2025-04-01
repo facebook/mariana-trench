@@ -23,7 +23,7 @@ TEST_F(FulfilledPartialKindStateTest, Basic) {
   auto context = test::make_context(store);
 
   // Make method context.
-  auto registry = Registry(context);
+  auto registry = Registry(context, /* create_default_models */ true);
   auto* dex_method = marianatrench::redex::create_void_method(
       scope,
       /* class_name */ "MyClass;",

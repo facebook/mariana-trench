@@ -17,13 +17,18 @@
 #include <DexAnnotation.h>
 #include <sparta/WorkQueue.h>
 
+#include <mariana-trench/ArtificialMethods.h>
+#include <mariana-trench/CachedModelsContext.h>
 #include <mariana-trench/Constants.h>
 #include <mariana-trench/Filesystem.h>
 #include <mariana-trench/JsonReaderWriter.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
+#include <mariana-trench/MethodMappings.h>
 #include <mariana-trench/Methods.h>
+#include <mariana-trench/ModelGeneration.h>
 #include <mariana-trench/ModelValidator.h>
+#include <mariana-trench/OperatingSystem.h>
 #include <mariana-trench/Options.h>
 #include <mariana-trench/Positions.h>
 #include <mariana-trench/Registry.h>
@@ -34,26 +39,97 @@
 
 namespace marianatrench {
 
-Registry::Registry(Context& context) : context_(context) {
-  auto queue = sparta::work_queue<const Method*>(
-      [this, &context](const Method* method) { set(Model(method, context)); },
-      sparta::parallel::default_num_threads());
-  for (const auto* method : *context.methods) {
-    queue.add_item(method);
+namespace {
+
+Registry run_model_generators(
+    Context& context,
+    const MethodMappings& method_mappings,
+    const CachedModelsContext& cached_models_context) {
+  Timer generation_timer;
+  LOG(1, "Generating models...");
+  auto model_generator_result = ModelGeneration::run(
+      context, cached_models_context.models(), method_mappings);
+  context.statistics->log_time("models_generation", generation_timer);
+  LOG(1,
+      "Generated {} models and {} field models in {:.2f}s. Memory used, RSS: {:.2f}GB",
+      model_generator_result.method_models.size(),
+      model_generator_result.field_models.size(),
+      generation_timer.duration_in_seconds(),
+      resident_set_size_in_gb());
+
+  // Add models for artificial methods.
+  auto models = context.artificial_methods->models(context);
+  model_generator_result.method_models.insert(
+      model_generator_result.method_models.end(), models.begin(), models.end());
+
+  return Registry(
+      context,
+      model_generator_result.method_models,
+      model_generator_result.field_models,
+      /* literal_models */ {});
+}
+
+// Load models json input
+Registry from_models_file(Context& context, const Options& options) {
+  std::vector<Model> models;
+  for (const auto& models_path : options.models_paths()) {
+    auto models_json = JsonReader::parse_json_file(models_path);
+    for (const auto& value : JsonValidation::null_or_array(models_json)) {
+      const auto* method = Method::from_json(value["method"], context);
+      mt_assert(method != nullptr);
+      models.emplace_back(Model::from_config_json(method, value, context));
+    }
   }
-  queue.run_all();
+
+  std::vector<FieldModel> field_models;
+  for (const auto& field_models_path : options.field_models_paths()) {
+    auto field_model_json = JsonReader::parse_json_file(field_models_path);
+    for (const auto& value : JsonValidation::null_or_array(field_model_json)) {
+      const auto* field = Field::from_json(value["field"], context);
+      mt_assert(field != nullptr);
+      field_models.emplace_back(
+          FieldModel::from_config_json(field, value, context));
+    }
+  }
+
+  std::vector<LiteralModel> literal_models;
+  for (const auto& literal_models_path : options.literal_models_paths()) {
+    auto literal_model_json = JsonReader::parse_json_file(literal_models_path);
+    for (const auto& value :
+         JsonValidation::null_or_array(literal_model_json)) {
+      literal_models.emplace_back(
+          LiteralModel::from_config_json(value, context));
+    }
+  }
+
+  return Registry(context, models, field_models, literal_models);
+}
+
+} // namespace
+
+Registry::Registry(Context& context, bool create_default_models)
+    : context_(context) {
+  if (!create_default_models) {
+    // Empty registry with only context_ initialized
+    return;
+  }
+  add_default_models();
 }
 
 Registry::Registry(
     Context& context,
     const std::vector<Model>& models,
-    const std::vector<FieldModel>& field_models)
+    const std::vector<FieldModel>& field_models,
+    const std::vector<LiteralModel>& literal_models)
     : context_(context) {
   for (const auto& model : models) {
     join_with(model);
   }
   for (const auto& field_model : field_models) {
     join_with(field_model);
+  }
+  for (const auto& literal_model : literal_models) {
+    join_with(literal_model);
   }
 }
 
@@ -92,48 +168,39 @@ Registry::Registry(
 Registry Registry::load(
     Context& context,
     const Options& options,
-    const std::vector<Model>& generated_models,
-    const std::vector<FieldModel>& generated_field_models,
-    const std::optional<Registry>& cached_registry) {
-  // Create a registry with the generated models
-  Registry registry(context, generated_models, generated_field_models);
-
-  // TODO(T157984454): We should unify the loading of models from files and
-  // loading model generators, so we can use unique "model generator" names.
-
-  // Load models json input
-  for (const auto& models_path : options.models_paths()) {
-    registry.join_with(Registry(
-        context,
-        /* models_value */ JsonReader::parse_json_file(models_path),
-        /* field_models_value */ Json::Value(Json::arrayValue),
-        /* literal_models_value */ Json::Value(Json::arrayValue)));
+    AnalysisMode analysis_mode,
+    MethodMappings method_mappings,
+    const CachedModelsContext& cached_models_context) {
+  switch (analysis_mode) {
+    case AnalysisMode::Normal: {
+      auto registry =
+          run_model_generators(context, method_mappings, cached_models_context);
+      registry.join_with(from_models_file(context, options));
+      registry.add_default_models();
+      return registry;
+    }
+    case AnalysisMode::CachedModels: {
+      auto registry =
+          run_model_generators(context, method_mappings, cached_models_context);
+      registry.join_with(from_models_file(context, options));
+      mt_assert_log(
+          cached_models_context.models().has_value(),
+          "Expected cached models to be present in CachedModels mode.");
+      registry.join_with(*cached_models_context.models());
+      registry.add_default_models();
+      return registry;
+    }
+    case AnalysisMode::Replay: {
+      auto registry = Registry(context, /* create_default_models */ false);
+      mt_assert_log(
+          cached_models_context.models().has_value(),
+          "Expected cached models to be present in Replay mode.");
+      registry.join_with(*cached_models_context.models());
+      return registry;
+    }
+    default:
+      mt_unreachable();
   }
-  for (const auto& field_models_path : options.field_models_paths()) {
-    registry.join_with(Registry(
-        context,
-        /* models_value */ Json::Value(Json::arrayValue),
-        /* field_models_value */
-        JsonReader::parse_json_file(field_models_path),
-        /* literal_models_value */ Json::Value(Json::arrayValue)));
-  }
-  for (const auto& literal_models_path : options.literal_models_paths()) {
-    registry.join_with(Registry(
-        context,
-        /* models_value */ Json::Value(Json::arrayValue),
-        /* field_models_value */ Json::Value(Json::arrayValue),
-        /* literal_models_value */
-        JsonReader::parse_json_file(literal_models_path)));
-  }
-
-  if (cached_registry.has_value()) {
-    registry.join_with(*cached_registry);
-  }
-
-  // Add a default model for methods that don't have one
-  registry.add_default_models();
-
-  return registry;
 }
 
 void Registry::add_default_models() {

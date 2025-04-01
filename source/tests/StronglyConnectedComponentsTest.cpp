@@ -72,7 +72,7 @@ Context test_components(const Scope& scope) {
       *context.overrides,
       method_mappings);
   context.rules = std::make_unique<Rules>(context);
-  auto registry = Registry(context);
+  auto registry = Registry(context, /* create_default_models */ true);
   context.dependencies = std::make_unique<Dependencies>(
       *context.options,
       *context.heuristics,

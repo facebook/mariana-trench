@@ -172,30 +172,28 @@ Registry MarianaTrench::analyze(Context& context) {
       class_intervals_timer.duration_in_seconds(),
       resident_set_size_in_gb());
 
-  std::vector<Model> generated_models;
-  std::vector<FieldModel> generated_field_models;
+  MethodMappings method_mappings;
 
-  // Scope for LifecycleMethods, MethodMappings, Shims and IntentRoutingAnalyzer
-  // as they are only used for callgraph construction, shim and model generation
-  // steps.
+  // Scope for LifecycleMethods, Shims and IntentRoutingAnalyzer as they are
+  // only used for callgraph construction, shim and model generation steps.
   {
     Timer lifecycle_methods_timer;
     LOG(1, "Creating life-cycle wrapper methods...");
     auto lifecycle_methods = LifecycleMethods::run(
         *context.options, *context.class_hierarchies, *context.methods);
     context.statistics->log_time("lifecycle_methods", lifecycle_methods_timer);
-
     LOG(1,
         "Created lifecycle methods in {:.2f}s. Memory used, RSS: {:.2f}GB",
         lifecycle_methods_timer.duration_in_seconds(),
         resident_set_size_in_gb());
 
+    // MethodMappings must be constructed after the life-cycle wrapper so that
+    // life-cycle methods are added to it.
     Timer method_mapping_timer;
     LOG(1,
         "Building method mappings for shim/model generation over {} methods",
         context.methods->size());
-    MethodMappings method_mappings{*context.methods};
-
+    method_mappings = MethodMappings{*context.methods}; // note: uses move ctor.
     LOG(1,
         "Generated method mappings in {:.2f}s. Memory used, RSS: {:.2f}GB",
         method_mapping_timer.duration_in_seconds(),
@@ -240,41 +238,19 @@ Registry MarianaTrench::analyze(Context& context) {
         "Built call graph in {:.2f}s. Memory used, RSS: {:.2f}GB",
         call_graph_timer.duration_in_seconds(),
         resident_set_size_in_gb());
-
-    Timer generation_timer;
-    LOG(1, "Generating models...");
-    auto model_generator_result = ModelGeneration::run(
-        context, cached_models_context.models(), method_mappings);
-    generated_models = model_generator_result.method_models;
-    generated_field_models = model_generator_result.field_models;
-    context.statistics->log_time("models_generation", generation_timer);
-    LOG(1,
-        "Generated {} models and {} field models in {:.2f}s. Memory used, RSS: {:.2f}GB",
-        generated_models.size(),
-        generated_field_models.size(),
-        generation_timer.duration_in_seconds(),
-        resident_set_size_in_gb());
-  } // end MethodMappings, Shims and IntentRoutingAnalyzer
-
-  LOG(1,
-      "Reset MethodToShims and Method Mappings. Memory used, RSS: {:.2f}GB",
-      resident_set_size_in_gb());
-
-  // Add models for artificial methods.
-  {
-    auto models = context.artificial_methods->models(context);
-    generated_models.insert(
-        generated_models.end(), models.begin(), models.end());
-  }
+  } // end Shims and IntentRoutingAnalyzer
 
   Timer registry_timer;
   LOG(1, "Initializing models...");
+  // Model generation takes place within Registry::load() unless the analysis
+  // mode does not require it.
   auto registry = Registry::load(
       context,
       *context.options,
-      generated_models,
-      generated_field_models,
-      cached_models_context.models());
+      context.options->analysis_mode(),
+      std::move(method_mappings),
+      cached_models_context);
+  // end MethodMappings: no longer tracked/usable beyond this.
   context.statistics->log_time("registry_init", registry_timer);
   LOG(1,
       "Initialized {} models and {} field models in {:.2f}s. Memory used, RSS: {:.2f}GB",

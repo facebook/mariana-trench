@@ -22,16 +22,19 @@
 
 namespace marianatrench {
 
+class MethodMappings;
+
 class Registry final {
  public:
   /* Create a registry with default models for all methods. */
-  explicit Registry(Context& context);
+  explicit Registry(Context& context, bool create_default_models);
 
   /* Create a registry with the given models for methods and fields. */
   explicit Registry(
       Context& context,
       const std::vector<Model>& models,
-      const std::vector<FieldModel>& field_models);
+      const std::vector<FieldModel>& field_models,
+      const std::vector<LiteralModel>& literal_models);
 
   /* Create a registry with the given json models. */
   explicit Registry(
@@ -58,9 +61,9 @@ class Registry final {
   static Registry load(
       Context& context,
       const Options& options,
-      const std::vector<Model>& generated_models,
-      const std::vector<FieldModel>& generated_field_models,
-      const std::optional<Registry>& cached_registry);
+      AnalysisMode analysis_mode,
+      MethodMappings method_mappings,
+      const CachedModelsContext& cached_models_context);
 
   void add_default_models();
 

@@ -33,16 +33,15 @@ TEST_F(RegistryTest, remove_kinds) {
   DexStore store("stores");
   store.add_classes(scope);
   auto context = test::make_context(store);
-  CachedModelsContext cached_models_context(context, *context.options);
 
-  auto registry = Registry::load(
+  auto registry = Registry(
       context,
-      *context.options,
-      /* generated_models */
+      /* method_models */
       context.artificial_methods->models(
           context), // used to make sure we get ArrayAllocation
-      /* generated_field_models */ {},
-      cached_models_context.models());
+      /* field_models */ {},
+      /* literal_models */ {});
+
   context.rules =
       std::make_unique<Rules>(Rules::load(context, *context.options));
   context.used_kinds = std::make_unique<UsedKinds>(
@@ -107,7 +106,7 @@ TEST_F(RegistryTest, JoinWith) {
   const auto* source_kind = context.kind_factory->get("TestSource");
   const auto* source_kind_two = context.kind_factory->get("TestSourceTwo");
 
-  auto registry = Registry(context);
+  auto registry = Registry(context, /* create_default_models */ true);
   registry.join_with(Registry(
       context,
       /* models_value */ test::parse_json(R"([
@@ -165,7 +164,8 @@ TEST_F(RegistryTest, JoinWith) {
                   .inferred_features = FeatureMayAlwaysSet::bottom(),
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
                   .user_features = FeatureSet::bottom()})},
-          /* sinks */ {})}));
+          /* sinks */ {})},
+      /* literal_models */ {}));
   EXPECT_EQ(registry.get(field).sources().num_frames(), 1);
 
   registry.join_with(Registry(
@@ -183,7 +183,8 @@ TEST_F(RegistryTest, JoinWith) {
                   .inferred_features = FeatureMayAlwaysSet::bottom(),
                   .locally_inferred_features = FeatureMayAlwaysSet::bottom(),
                   .user_features = FeatureSet::bottom()})},
-          /* sinks */ {})}));
+          /* sinks */ {})},
+      /* literal_models*/ {}));
   EXPECT_EQ(registry.get(field).sources().num_frames(), 2);
 }
 
@@ -250,7 +251,8 @@ TEST_F(RegistryTest, ConstructorUseJoin) {
   auto registry = Registry(
       context,
       /* models */ {model_with_source, model_with_other_source},
-      /* field_models */ {field_with_source, field_with_other_source});
+      /* field_models */ {field_with_source, field_with_other_source},
+      /* literal_models */ std::vector<LiteralModel>{});
   EXPECT_THAT(
       registry.get(method).generations().elements(),
       testing::UnorderedElementsAre(

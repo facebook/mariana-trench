@@ -247,7 +247,8 @@ ModelGeneratorResult ModelGeneration::run(
           *generated_models_directory);
 
       // Merge models
-      auto registry = Registry(context, models, field_models);
+      auto registry =
+          Registry(context, models, field_models, /* literal_models */ {});
       JsonWriter::write_json_file(
           *generated_models_directory + "/" +
               model_generator->name()->identifier() + ".json",

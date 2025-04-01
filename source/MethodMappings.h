@@ -18,9 +18,11 @@ using MethodHashedSet = sparta::HashedSetAbstractDomain<const Method*>;
 
 class MethodMappings {
  public:
+  explicit MethodMappings() = default;
+
   explicit MethodMappings(const Methods& methods);
 
-  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(MethodMappings)
+  MOVE_ONLY(MethodMappings)
 
  public:
   const ConcurrentMap<std::string_view, MethodHashedSet>& name_to_methods()
