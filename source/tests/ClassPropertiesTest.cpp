@@ -64,14 +64,14 @@ class MockAndroidResources : public AndroidResources {
     return info;
   }
 
-  std::unordered_set<uint32_t> get_xml_reference_attributes(
+  UnorderedSet<uint32_t> get_xml_reference_attributes(
       const std::string&) override {
     return {};
   }
 
   void collect_layout_classes_and_attributes_for_file(
       const std::string&,
-      const std::unordered_set<std::string>&,
+      const UnorderedSet<std::string>&,
       resources::StringOrReferenceSet*,
       std::unordered_multimap<std::string, resources::StringOrReference>*)
       override {}
@@ -86,11 +86,11 @@ class MockAndroidResources : public AndroidResources {
     return nullptr;
   }
 
-  std::unordered_set<std::string> find_all_xml_files() override {
+  UnorderedSet<std::string> find_all_xml_files() override {
     return {};
   }
 
-  std::unordered_set<std::string> get_service_loader_classes() override {
+  UnorderedSet<std::string> get_service_loader_classes() override {
     return {};
   }
 
@@ -104,7 +104,7 @@ class MockAndroidResources : public AndroidResources {
 
   void collect_xml_attribute_string_values_for_file(
       const std::string& /* file_path */,
-      std::unordered_set<std::string>* /* out */) override {}
+      UnorderedSet<std::string>* /* out */) override {}
 
  protected:
   std::vector<std::string> find_res_directories() override {
@@ -123,8 +123,8 @@ class MockAndroidResources : public AndroidResources {
   }
 
   void obfuscate_xml_files(
-      const std::unordered_set<std::string>& /* unused */,
-      const std::unordered_set<std::string>& /* unused */) override {}
+      const UnorderedSet<std::string>& /* unused */,
+      const UnorderedSet<std::string>& /* unused */) override {}
 };
 
 Context make_context(const Scope& scope) {
