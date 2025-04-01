@@ -57,6 +57,7 @@ class ClassIntervals final {
 
   explicit ClassIntervals(
       const Options& options,
+      AnalysisMode analysis_mode,
       const DexStoresVector& stores,
       const CachedModelsContext& cached_models_context);
 
@@ -75,6 +76,10 @@ class ClassIntervals final {
 
   Json::Value to_json() const;
   static ClassIntervalsMap from_json(const Json::Value& value);
+
+ private:
+  // To be called from the constructor based on AnalysisMode.
+  void init_from_stores(const DexStoresVector& stores);
 
  private:
   const Interval top_;

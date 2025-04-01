@@ -529,7 +529,10 @@ TEST_P(IntegrationTest, ReturnsExpectedModel) {
   context.used_kinds = std::make_unique<UsedKinds>(
       UsedKinds::from_rules(*context.rules, *context.transforms_factory));
   context.class_intervals = std::make_unique<ClassIntervals>(
-      *context.options, context.stores, cached_models_context);
+      *context.options,
+      context.options->analysis_mode(),
+      context.stores,
+      cached_models_context);
 
   Registry registry(context, /* create_default_models */ true);
   registry.join_with(Registry(

@@ -55,65 +55,27 @@ void dfs_on_hierarchy(
 
 ClassIntervals::ClassIntervals(
     const Options& options,
+    AnalysisMode analysis_mode,
     const DexStoresVector& stores,
     const CachedModelsContext& cached_models_context)
     : top_(Interval::top()) {
-  if (cached_models_context.class_intervals().size() > 0) {
-    // If the cached context has class intervals, use them as is and do not
-    // re-compute. This is for replaying an analysis for debugging.
-    mt_assert(options.analysis_mode() == AnalysisMode::Replay);
-    class_intervals_ = cached_models_context.class_intervals();
-
-    // Consider also re-computing class intervals for JAR caching. Requires
-    // handling cases where an internal class extends an external class that
-    // already has an interval in the cached output. Intervals in the cached
-    // models need to be re-mapped too.
-    return;
-  }
-
-  // Theoretically, all classes are rooted in java.lang.Object. In practice,
-  // internal classes inheriting from external classes will not be reachable
-  // from Object. Treat the class hierarchy as a forest of trees, with roots
-  // being either direct children of Object or internal classes deriving
-  // directly from external classes.
-  ClassHierarchy class_hierarchy;
-  const auto* object_root = type::java_lang_Object();
-
-  // Use a deterministic ordering for the roots so that integration tests always
-  // return the same interval for the same class.
-  std::set<const DexType*, dextypes_comparator> roots;
-
-  for (const auto& scope : DexStoreClassesIterator(stores)) {
-    auto store_hierarchy = build_type_hierarchy(scope);
-    for (const auto& [parent, children] : store_hierarchy) {
-      if (parent == object_root) {
-        roots.insert(children.begin(), children.end());
-      } else {
-        const auto* parent_class = type_class(parent);
-        if (parent_class == nullptr) {
-          // DexType exists but not DexClass, this is an external class.
-          continue;
-        }
-
-        class_hierarchy[parent].insert(children.begin(), children.end());
-
-        const auto* super_class = type_class(parent_class->get_super_class());
-        if (super_class == nullptr) {
-          // DexClass does not exist for for the super class. This is a root
-          // (derives directly from an external class).
-          roots.insert(parent_class->get_type());
-        }
-      }
-    }
-  }
-
-  std::int32_t dfs_order = MIN_INTERVAL;
-  for (const auto* root : roots) {
-    dfs_on_hierarchy(class_hierarchy, root, dfs_order, class_intervals_);
-    mt_assert(
-        dfs_order <
-        std::numeric_limits<int32_t>::max()); // Ensure no overflows.
-    ++dfs_order;
+  switch (analysis_mode) {
+    case AnalysisMode::Normal:
+      init_from_stores(stores);
+      break;
+    case AnalysisMode::CachedModels:
+      init_from_stores(stores);
+      // Cached intervals are ignored. Consider re-computing them. Requires
+      // handling cases where an internal class extends an external class that
+      // already has an interval in the cached output. Intervals in the cached
+      // models need to be re-mapped too.
+      break;
+    case AnalysisMode::Replay:
+      // Do not recompute intervals in replay mode.
+      class_intervals_ = cached_models_context.class_intervals();
+      break;
+    default:
+      mt_unreachable();
   }
 
   if (options.dump_class_intervals()) {
@@ -205,6 +167,53 @@ ClassIntervals::ClassIntervalsMap ClassIntervals::from_json(
     class_intervals.emplace(DexType::get_type(klass), interval);
   }
   return class_intervals;
+}
+
+void ClassIntervals::init_from_stores(const DexStoresVector& stores) {
+  // Theoretically, all classes are rooted in java.lang.Object. In practice,
+  // internal classes inheriting from external classes will not be reachable
+  // from Object. Treat the class hierarchy as a forest of trees, with roots
+  // being either direct children of Object or internal classes deriving
+  // directly from external classes.
+  ClassHierarchy class_hierarchy;
+  const auto* object_root = type::java_lang_Object();
+
+  // Use a deterministic ordering for the roots so that integration tests always
+  // return the same interval for the same class.
+  std::set<const DexType*, dextypes_comparator> roots;
+
+  for (const auto& scope : DexStoreClassesIterator(stores)) {
+    auto store_hierarchy = build_type_hierarchy(scope);
+    for (const auto& [parent, children] : store_hierarchy) {
+      if (parent == object_root) {
+        roots.insert(children.begin(), children.end());
+      } else {
+        const auto* parent_class = type_class(parent);
+        if (parent_class == nullptr) {
+          // DexType exists but not DexClass, this is an external class.
+          continue;
+        }
+
+        class_hierarchy[parent].insert(children.begin(), children.end());
+
+        const auto* super_class = type_class(parent_class->get_super_class());
+        if (super_class == nullptr) {
+          // DexClass does not exist for for the super class. This is a root
+          // (derives directly from an external class).
+          roots.insert(parent_class->get_type());
+        }
+      }
+    }
+  }
+
+  std::int32_t dfs_order = MIN_INTERVAL;
+  for (const auto* root : roots) {
+    dfs_on_hierarchy(class_hierarchy, root, dfs_order, class_intervals_);
+    mt_assert(
+        dfs_order <
+        std::numeric_limits<int32_t>::max()); // Ensure no overflows.
+    ++dfs_order;
+  }
 }
 
 } // namespace marianatrench

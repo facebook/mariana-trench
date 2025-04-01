@@ -46,7 +46,10 @@ Context test_context(const Scope& scope) {
   context.stores = {store};
   context.options = test::make_default_options();
   context.class_intervals = std::make_unique<ClassIntervals>(
-      *context.options, context.stores, cached_models_context);
+      *context.options,
+      context.options->analysis_mode(),
+      context.stores,
+      cached_models_context);
   return context;
 }
 
