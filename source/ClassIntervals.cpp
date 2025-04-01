@@ -197,7 +197,7 @@ void ClassIntervals::init_from_stores(const DexStoresVector& stores) {
 
   for (const auto& scope : DexStoreClassesIterator(stores)) {
     auto store_hierarchy = build_type_hierarchy(scope);
-    for (const auto& [parent, children] : store_hierarchy) {
+    for (const auto& [parent, children] : UnorderedIterable(store_hierarchy)) {
       if (parent == object_root) {
         roots.insert(children.begin(), children.end());
       } else {

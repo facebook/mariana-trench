@@ -41,7 +41,7 @@ class MockAndroidResources : public AndroidResources {
   }
 
   void fully_qualify_layout(
-      const std::unordered_map<std::string, std::string>&,
+      const UnorderedMap<std::string, std::string>&,
       const std::string&,
       size_t*) override {}
 
