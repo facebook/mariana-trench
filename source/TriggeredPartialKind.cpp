@@ -31,7 +31,7 @@ Json::Value TriggeredPartialKind::to_json() const {
   return value;
 }
 
-const TriggeredPartialKind* TriggeredPartialKind::from_json(
+const TriggeredPartialKind* TriggeredPartialKind::from_inner_json(
     const Json::Value& value,
     Context& context) {
   auto name = JsonValidation::string(value, /* field */ "name");

@@ -26,7 +26,7 @@ Json::Value PartialKind::to_json() const {
   return value;
 }
 
-const PartialKind* PartialKind::from_json(
+const PartialKind* PartialKind::from_inner_json(
     const Json::Value& value,
     Context& context) {
   auto name = JsonValidation::string(value, /* field */ "name");

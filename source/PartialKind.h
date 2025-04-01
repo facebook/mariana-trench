@@ -39,7 +39,7 @@ class PartialKind final : public Kind {
   void show(std::ostream&) const override;
 
   Json::Value to_json() const override;
-  static const PartialKind* from_json(
+  static const PartialKind* from_inner_json(
       const Json::Value& value,
       Context& context);
 

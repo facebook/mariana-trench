@@ -44,21 +44,21 @@ const Kind* Kind::from_json(const Json::Value& value, Context& context) {
   // Some kinds are represented as an object. Use unique keys in them to
   // determine the Kind.
   //
-  // There is a notable asymmetry between to_json() and from_json() for Kinds
-  // whose serialized form is an Object:
+  // There is an asymmetry between to_json() and from_inner_json(), hence the
+  // naming asymmetry, for Kinds whose serialized form is an Object:
   // to_json() nests the value in a "kind" field to be consistent with the
   // overridden Kind::to_json().
-  // from_json(value, ...) assumes `value` has been extracted from "kind" field.
+  // from_inner_json(value, ...) assumes `value` has been extracted from "kind".
   if (leaf_kind.isObject()) {
     if (leaf_kind.isMember("base")) {
-      return TransformKind::from_json(leaf_kind, context);
+      return TransformKind::from_inner_json(leaf_kind, context);
     } else if (leaf_kind.isMember("triggered_rule")) {
-      return TriggeredPartialKind::from_json(leaf_kind, context);
+      return TriggeredPartialKind::from_inner_json(leaf_kind, context);
     } else if (leaf_kind.isMember("partial_label")) {
       // Check for "partial_label" must occur after check for "triggered_rule"
       // to differentiate between TriggeredPartialKind and PartialKind. The
       // "partial_label" key exists in both.
-      return PartialKind::from_json(leaf_kind, context);
+      return PartialKind::from_inner_json(leaf_kind, context);
     } else {
       throw JsonValidationError(
           value,

@@ -43,7 +43,7 @@ class TransformKind final : public Kind {
 
   Json::Value to_json() const override;
 
-  static const TransformKind* from_json(
+  static const TransformKind* from_inner_json(
       const Json::Value& value,
       Context& context);
 

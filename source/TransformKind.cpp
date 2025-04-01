@@ -42,7 +42,7 @@ Json::Value TransformKind::to_json() const {
   return value;
 }
 
-const TransformKind* TransformKind::from_json(
+const TransformKind* TransformKind::from_inner_json(
     const Json::Value& value,
     Context& context) {
   // Parse local transforms
