@@ -98,9 +98,6 @@ class Registry final {
       const std::filesystem::path& path,
       const std::size_t shard_limit =
           JsonValidation::k_default_shard_limit) const;
-  static Registry from_sharded_models_json(
-      Context& context,
-      const std::filesystem::path& input_directory);
 
   void dump_file_coverage_info(const std::filesystem::path& path) const;
   void dump_rule_coverage_info(const std::filesystem::path& path) const;
