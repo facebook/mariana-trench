@@ -430,9 +430,8 @@ std::unique_ptr<TypeEnvironments> Types::infer_types_for_method(
           instruction, &current_state);
 
       LOG(log_method ? 0 : 5,
-          "GTA: Analyzed instruction `{}`. RegEnv: {}",
-          show(instruction),
-          show(current_state.get_reg_environment()));
+          "GTA: Analyzed instruction `{}`.",
+          show(instruction));
 
       if (!is_interesting_opcode(instruction->opcode())) {
         continue;

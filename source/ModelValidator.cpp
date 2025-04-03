@@ -101,8 +101,8 @@ std::unique_ptr<ModelValidator> make_validator(
     case ModelValidationType::EXPECT_NO_ISSUE:
       return std::make_unique<ExpectNoIssue>(
           ExpectNoIssue::from_annotation(annotation_elements));
-      break;
   }
+  mt_unreachable();
 }
 
 std::vector<std::unique_ptr<ModelValidator>> validators_from_annotation(

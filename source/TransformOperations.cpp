@@ -39,13 +39,13 @@ TaintTree apply_propagation(
 
   mt_assert(
       propagation_call_info.call_kind().is_propagation_with_trace() ||
-      propagation_call_info.call_kind().is_propagation() &&
-          std::any_of(
-              all_transforms->begin(),
-              all_transforms->end(),
-              [](const Transform* transform) {
-                return transform->is<SanitizerSetTransform>();
-              }));
+      (propagation_call_info.call_kind().is_propagation() &&
+       std::any_of(
+           all_transforms->begin(),
+           all_transforms->end(),
+           [](const Transform* transform) {
+             return transform->is<SanitizerSetTransform>();
+           })));
 
   if (direction == TransformDirection::Forward) {
     all_transforms = context->transforms_factory.reverse(all_transforms);
