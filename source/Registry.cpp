@@ -18,7 +18,6 @@
 #include <sparta/WorkQueue.h>
 
 #include <mariana-trench/ArtificialMethods.h>
-#include <mariana-trench/CachedModelsContext.h>
 #include <mariana-trench/Constants.h>
 #include <mariana-trench/Filesystem.h>
 #include <mariana-trench/JsonReaderWriter.h>
@@ -44,11 +43,11 @@ namespace {
 Registry run_model_generators(
     Context& context,
     const MethodMappings& method_mappings,
-    const CachedModelsContext& cached_models_context) {
+    const std::optional<Registry>& cached_registry) {
   Timer generation_timer;
   LOG(1, "Generating models...");
-  auto model_generator_result = ModelGeneration::run(
-      context, cached_models_context.models(), method_mappings);
+  auto model_generator_result =
+      ModelGeneration::run(context, cached_registry, method_mappings);
   context.statistics->log_time("models_generation", generation_timer);
   LOG(1,
       "Generated {} models and {} field models in {:.2f}s. Memory used, RSS: {:.2f}GB",
@@ -103,6 +102,63 @@ Registry from_models_file(Context& context, const Options& options) {
   }
 
   return Registry(context, models, field_models, literal_models);
+}
+
+Registry from_sharded_models(
+    Context& context,
+    const std::filesystem::path& path) {
+  LOG(1, "Reading models from sharded JSON files...");
+
+  ConcurrentMap<const Method*, Model> models;
+  ConcurrentMap<const Field*, FieldModel> field_models;
+  ConcurrentMap<std::string, LiteralModel> literal_models;
+
+  // A path with no redundant directory separators, current directory (dot) or
+  // parent directory (dot-dot) elements.
+  auto directory_name = std::filesystem::canonical(path).filename();
+
+  // Class intervals are not collapsed in replay mode. When models are replayed,
+  // the intervals in it are expected to correspond to what was loaded.
+  bool replay_mode = context.options->analysis_mode() == AnalysisMode::Replay;
+  LOG(1,
+      "Class intervals will{} be collapsed. Replay mode: {}",
+      replay_mode ? " not" : "",
+      replay_mode);
+
+  auto from_json_line = [&context, &directory_name, &models, &replay_mode](
+                            const Json::Value& value) -> void {
+    JsonValidation::validate_object(value);
+    if (value.isMember("method")) {
+      try {
+        const auto* method = Method::from_json(value["method"], context);
+        mt_assert(method != nullptr);
+        auto model = Model::from_json(value, context);
+
+        if (!replay_mode) {
+          // Indicate that the source of these models is
+          // `Options::sharded_models_directory()`
+          model.make_sharded_model_generators(
+              /* identifier */ directory_name.string());
+          model.collapse_class_intervals();
+        }
+
+        models.emplace(method, model);
+      } catch (const JsonValidationError& e) {
+        WARNING(1, "Unable to parse model `{}`: {}", value, e.what());
+      }
+    } else {
+      // TODO(T176362886): Support parsing field and literal models from JSON.
+      ERROR(1, "Unrecognized model type in JSON: `{}`", value.toStyledString());
+    }
+  };
+
+  JsonReader::read_sharded_json_files(path, "model@", from_json_line);
+
+  return Registry(
+      context,
+      std::move(models),
+      std::move(field_models),
+      std::move(literal_models));
 }
 
 } // namespace
@@ -169,34 +225,39 @@ Registry Registry::load(
     Context& context,
     const Options& options,
     AnalysisMode analysis_mode,
-    MethodMappings method_mappings,
-    const CachedModelsContext& cached_models_context) {
+    MethodMappings method_mappings) {
   switch (analysis_mode) {
     case AnalysisMode::Normal: {
-      auto registry =
-          run_model_generators(context, method_mappings, cached_models_context);
+      auto registry = run_model_generators(
+          context, method_mappings, /* cached_registry */ std::nullopt);
       registry.join_with(from_models_file(context, options));
       registry.add_default_models();
       return registry;
     }
     case AnalysisMode::CachedModels: {
+      auto sharded_models_directory = options.sharded_models_directory();
+      if (!sharded_models_directory.has_value()) {
+        throw std::runtime_error(fmt::format(
+            "Analysis mode `{}` requires sharded models to be provided.",
+            analysis_mode_to_string(analysis_mode)));
+      }
+      auto cached_registry = std::make_optional<Registry>(
+          from_sharded_models(context, *sharded_models_directory));
       auto registry =
-          run_model_generators(context, method_mappings, cached_models_context);
+          run_model_generators(context, method_mappings, cached_registry);
       registry.join_with(from_models_file(context, options));
-      mt_assert_log(
-          cached_models_context.models().has_value(),
-          "Expected cached models to be present in CachedModels mode.");
-      registry.join_with(*cached_models_context.models());
+      registry.join_with(*cached_registry);
       registry.add_default_models();
       return registry;
     }
     case AnalysisMode::Replay: {
-      auto registry = Registry(context, /* create_default_models */ false);
-      mt_assert_log(
-          cached_models_context.models().has_value(),
-          "Expected cached models to be present in Replay mode.");
-      registry.join_with(*cached_models_context.models());
-      return registry;
+      auto sharded_models_directory = options.sharded_models_directory();
+      if (!sharded_models_directory.has_value()) {
+        throw std::runtime_error(fmt::format(
+            "Analysis mode `{}` requires sharded models to be provided.",
+            analysis_mode_to_string(analysis_mode)));
+      }
+      return from_sharded_models(context, *sharded_models_directory);
     }
     default:
       mt_unreachable();

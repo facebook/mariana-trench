@@ -62,8 +62,7 @@ class Registry final {
       Context& context,
       const Options& options,
       AnalysisMode analysis_mode,
-      MethodMappings method_mappings,
-      const CachedModelsContext& cached_models_context);
+      MethodMappings method_mappings);
 
   void add_default_models();
 

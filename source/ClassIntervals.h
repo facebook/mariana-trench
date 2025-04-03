@@ -22,8 +22,6 @@
 
 namespace marianatrench {
 
-class CachedModelsContext;
-
 /**
  * Class intervals are used to describe a hierarchy as follows:
  * - An interval is a [lower bound, upper bound] pair.

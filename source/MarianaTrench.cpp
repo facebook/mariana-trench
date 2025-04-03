@@ -15,7 +15,6 @@
 #include <RedexContext.h>
 
 #include <mariana-trench/ArtificialMethods.h>
-#include <mariana-trench/CachedModelsContext.h>
 #include <mariana-trench/ClassHierarchies.h>
 #include <mariana-trench/ClassIntervals.h>
 #include <mariana-trench/ClassProperties.h>
@@ -116,16 +115,6 @@ Registry MarianaTrench::analyze(Context& context) {
   LOG(1,
       "Inferred types in {:.2f}s. Memory used, RSS: {:.2f}GB",
       types_timer.duration_in_seconds(),
-      resident_set_size_in_gb());
-
-  Timer cached_models_context_timer;
-  LOG(1, "Loading cached models...");
-  CachedModelsContext cached_models_context(context, *context.options);
-  context.statistics->log_time(
-      "cached_models_context_init", cached_models_context_timer);
-  LOG(1,
-      "Loaded models from input directory in {:.2f}s. Memory used, RSS: {:.2f}GB",
-      cached_models_context_timer.duration_in_seconds(),
       resident_set_size_in_gb());
 
   Timer class_hierarchies_timer;
@@ -247,8 +236,7 @@ Registry MarianaTrench::analyze(Context& context) {
       context,
       *context.options,
       context.options->analysis_mode(),
-      std::move(method_mappings),
-      cached_models_context);
+      std::move(method_mappings));
   // end MethodMappings: no longer tracked/usable beyond this.
   context.statistics->log_time("registry_init", registry_timer);
   LOG(1,
@@ -257,9 +245,6 @@ Registry MarianaTrench::analyze(Context& context) {
       registry.field_models_size(),
       registry_timer.duration_in_seconds(),
       resident_set_size_in_gb());
-
-  // Cache is no longer used. Free up memory
-  cached_models_context.clear();
 
   Timer rules_timer;
   LOG(1, "Initializing rules...");
