@@ -40,7 +40,7 @@ namespace {
 
 std::unordered_map<const ModelGeneratorName*, std::unique_ptr<ModelGenerator>>
 make_model_generators(
-    const std::optional<Registry>& preloaded_models,
+    const Registry* MT_NULLABLE preloaded_models,
     Context& context) {
   std::unordered_map<const ModelGeneratorName*, std::unique_ptr<ModelGenerator>>
       generators = ModelGeneration::make_builtin_model_generators(
@@ -113,7 +113,7 @@ ModelGeneratorError::ModelGeneratorError(const std::string& message)
 #ifndef MARIANA_TRENCH_FACEBOOK_BUILD
 std::unordered_map<const ModelGeneratorName*, std::unique_ptr<ModelGenerator>>
 ModelGeneration::make_builtin_model_generators(
-    const std::optional<Registry>& preloaded_models,
+    const Registry* MT_NULLABLE preloaded_models,
     Context& context) {
   std::vector<std::unique_ptr<ModelGenerator>> builtin_generators;
   builtin_generators.push_back(
@@ -144,7 +144,7 @@ ModelGeneration::make_builtin_model_generators(
 
 ModelGeneratorResult ModelGeneration::run(
     Context& context,
-    const std::optional<Registry>& preloaded_models,
+    const Registry* MT_NULLABLE preloaded_models,
     const MethodMappings& method_mappings) {
   const auto& options = *context.options;
 

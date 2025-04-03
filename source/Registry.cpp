@@ -43,7 +43,7 @@ namespace {
 Registry run_model_generators(
     Context& context,
     const MethodMappings& method_mappings,
-    const std::optional<Registry>& cached_registry) {
+    const Registry* MT_NULLABLE cached_registry) {
   Timer generation_timer;
   LOG(1, "Generating models...");
   auto model_generator_result =
@@ -229,7 +229,7 @@ Registry Registry::load(
   switch (analysis_mode) {
     case AnalysisMode::Normal: {
       auto registry = run_model_generators(
-          context, method_mappings, /* cached_registry */ std::nullopt);
+          context, method_mappings, /* cached_registry */ nullptr);
       registry.join_with(from_models_file(context, options));
       registry.add_default_models();
       return registry;
@@ -241,12 +241,12 @@ Registry Registry::load(
             "Analysis mode `{}` requires sharded models to be provided.",
             analysis_mode_to_string(analysis_mode)));
       }
-      auto cached_registry = std::make_optional<Registry>(
-          from_sharded_models(context, *sharded_models_directory));
+      auto cached_registry =
+          from_sharded_models(context, *sharded_models_directory);
       auto registry =
-          run_model_generators(context, method_mappings, cached_registry);
+          run_model_generators(context, method_mappings, &cached_registry);
       registry.join_with(from_models_file(context, options));
-      registry.join_with(*cached_registry);
+      registry.join_with(cached_registry);
       registry.add_default_models();
       return registry;
     }

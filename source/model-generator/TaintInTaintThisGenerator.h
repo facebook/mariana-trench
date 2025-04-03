@@ -15,7 +15,7 @@ namespace marianatrench {
 class TaintInTaintThisGenerator : public MethodVisitorModelGenerator {
  public:
   explicit TaintInTaintThisGenerator(
-      const std::optional<Registry>& preloaded_models,
+      const Registry* MT_NULLABLE preloaded_models,
       Context& context)
       : MethodVisitorModelGenerator("taint_in_taint_this", context),
         preloaded_models_(preloaded_models) {}
@@ -23,7 +23,9 @@ class TaintInTaintThisGenerator : public MethodVisitorModelGenerator {
   std::vector<Model> visit_method(const Method* method) const override;
 
  private:
-  const std::optional<Registry>& preloaded_models_;
+  // Underlying object should be alive for the duration of
+  // ModelGeneration::run()
+  const Registry* MT_NULLABLE preloaded_models_;
 };
 
 } // namespace marianatrench

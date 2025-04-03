@@ -27,13 +27,13 @@ class ModelGeneration {
  public:
   static ModelGeneratorResult run(
       Context& context,
-      const std::optional<Registry>& preloaded_models,
+      const Registry* MT_NULLABLE preloaded_models,
       const MethodMappings& method_mappings);
 
   static std::
       unordered_map<const ModelGeneratorName*, std::unique_ptr<ModelGenerator>>
       make_builtin_model_generators(
-          const std::optional<Registry>& preloaded_models,
+          const Registry* MT_NULLABLE preloaded_models,
           Context& context);
 };
 
