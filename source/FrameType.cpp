@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <mariana-trench/Assert.h>
 #include <mariana-trench/FrameType.h>
 #include <mariana-trench/JsonValidation.h>
 
@@ -33,6 +34,7 @@ std::string FrameType::to_trace_string() const {
     case FrameType::Kind::Sink:
       return "sink";
   }
+  mt_unreachable();
 }
 
 std::ostream& operator<<(std::ostream& out, const FrameType& frame_type) {
