@@ -163,12 +163,7 @@ Registry from_sharded_models(
 
 } // namespace
 
-Registry::Registry(Context& context, bool create_default_models)
-    : context_(context) {
-  if (!create_default_models) {
-    // Empty registry with only context_ initialized
-    return;
-  }
+Registry::Registry(Context& context) : context_(context) {
   add_default_models();
 }
 

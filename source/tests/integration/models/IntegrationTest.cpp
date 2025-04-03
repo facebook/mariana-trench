@@ -526,7 +526,7 @@ TEST_P(IntegrationTest, ReturnsExpectedModel) {
   context.class_intervals = std::make_unique<ClassIntervals>(
       *context.options, context.options->analysis_mode(), context.stores);
 
-  Registry registry(context, /* create_default_models */ true);
+  Registry registry(context);
   registry.join_with(Registry(
       context,
       /* models_value */ models,

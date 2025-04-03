@@ -27,7 +27,7 @@ class MethodMappings;
 class Registry final {
  public:
   /* Create a registry with default models for all methods. */
-  explicit Registry(Context& context, bool create_default_models);
+  explicit Registry(Context& context);
 
   /* Create a registry with the given models for methods and fields. */
   explicit Registry(

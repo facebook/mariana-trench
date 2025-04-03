@@ -115,7 +115,7 @@ Context make_context(const DexStore& store) {
       *context.fields,
       *context.overrides,
       method_mappings);
-  auto registry = Registry(context, /* create_default_models */ true);
+  auto registry = Registry(context);
   context.dependencies = std::make_unique<Dependencies>(
       *context.options,
       *context.heuristics,

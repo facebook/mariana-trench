@@ -75,7 +75,7 @@ Context test_dependencies(const Scope& scope) {
       *context.overrides,
       method_mappings);
   context.rules = std::make_unique<Rules>(context);
-  auto registry = Registry(context, /* create_default_models */ true);
+  auto registry = Registry(context);
   context.dependencies = std::make_unique<Dependencies>(
       *context.options,
       *context.heuristics,
@@ -647,7 +647,7 @@ TEST_F(DependenciesTest, NoJoinVirtualOverrides) {
   auto* override_two = context.methods->get(dex_override_two);
   auto* caller = context.methods->get(dex_caller);
 
-  auto registry = Registry(context, /* create_default_models */ true);
+  auto registry = Registry(context);
   registry.set(
       Model(callee, context, /* modes */ Model::Mode::NoJoinVirtualOverrides));
 

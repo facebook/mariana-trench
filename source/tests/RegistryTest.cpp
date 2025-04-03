@@ -106,7 +106,7 @@ TEST_F(RegistryTest, JoinWith) {
   const auto* source_kind = context.kind_factory->get("TestSource");
   const auto* source_kind_two = context.kind_factory->get("TestSourceTwo");
 
-  auto registry = Registry(context, /* create_default_models */ true);
+  auto registry = Registry(context);
   registry.join_with(Registry(
       context,
       /* models_value */ test::parse_json(R"([
