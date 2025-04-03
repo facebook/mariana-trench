@@ -3,7 +3,7 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
-cmake_minimum_required(VERSION 3.19.3 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.19.3...4.0 FATAL_ERROR)
 project(MarianaTrench VERSION 0.1 LANGUAGES CXX)
 
 if (CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
@@ -77,7 +77,8 @@ endif ()
 find_package(Threads REQUIRED)
 find_package(ZLIB REQUIRED)
 find_package(Boost 1.75.0 REQUIRED
-             COMPONENTS system filesystem regex program_options iostreams thread)
+             COMPONENTS system filesystem regex program_options iostreams thread
+             CONFIG)
 # CMake's provided `FindGTest.cmake` does not define GMock.
 # We use `CONFIG` to find the `GTestConfig.cmake` provided by gtest, which properly defines GMock.
 find_package(GTest 1.10.0 REQUIRED CONFIG)
