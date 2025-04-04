@@ -125,8 +125,28 @@ resolve_field_access(const Method* caller, const IRInstruction* instruction) {
 }
 
 bool is_anonymous_class(const DexType* type) {
-  static const re2::RE2 regex("^.*\\$\\d+;$");
-  return re2::RE2::FullMatch(show(type), regex);
+  static constexpr std::array<std::string_view, 2> patterns = {
+      // https://r8.googlesource.com/r8/+/refs/tags/8.9.31/src/main/java/com/android/tools/r8/synthesis/SyntheticNaming.java#419
+      "$$ExternalSyntheticLambda",
+      // Desugared lambda classes from older versions of D8.
+      "$$Lambda$",
+  };
+
+  auto type_name = type->str();
+  auto pos = type_name.rfind('$');
+  if (pos == std::string::npos) {
+    return false;
+  }
+
+  pos++;
+  return (pos < type_name.size() && type_name[pos] >= '0' &&
+          type_name[pos] <= '9') ||
+      std::any_of(
+             patterns.begin(),
+             patterns.end(),
+             [&type_name](const std::string_view& pattern) {
+               return type_name.find(pattern) != std::string::npos;
+             });
 }
 
 using TextualOrderIndex = marianatrench::TextualOrderIndex;
