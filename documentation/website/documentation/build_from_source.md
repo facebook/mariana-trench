@@ -86,7 +86,7 @@ $ cd "$MARIANA_TRENCH_DIRECTORY/dependencies"
 $ git clone -b 9.1.0 https://github.com/fmtlib/fmt.git
 $ mkdir fmt/build
 $ cd fmt/build
-$ cmake -DCMAKE_INSTALL_PREFIX="$MARIANA_TRENCH_DIRECTORY/install" ..
+$ cmake -DCMAKE_CXX_STANDARD=17 -DFMT_TEST=OFF -DCMAKE_INSTALL_PREFIX="$MARIANA_TRENCH_DIRECTORY/install" ..
 $ make -j4
 $ make install
 ```
