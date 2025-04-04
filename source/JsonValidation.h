@@ -33,6 +33,10 @@ class JsonValidation final {
   static void validate_object(
       const Json::Value& value,
       const std::string& expected);
+  static void validate_object(
+      const Json::Value& value,
+      const std::string& field,
+      const std::string& expected);
 
   static const Json::Value& object(
       const Json::Value& value,

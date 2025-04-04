@@ -49,6 +49,16 @@ void JsonValidation::validate_object(
   }
 }
 
+void JsonValidation::validate_object(
+    const Json::Value& value,
+    const std::string& field,
+    const std::string& expected) {
+  if (value.isNull() || !value.isObject() || !value.isMember(field)) {
+    throw JsonValidationError(
+        value, /* field */ std::nullopt, /* expected */ expected);
+  }
+}
+
 void JsonValidation::validate_object(const Json::Value& value) {
   validate_object(value, /* expected */ "non-null object");
 }
@@ -56,7 +66,8 @@ void JsonValidation::validate_object(const Json::Value& value) {
 const Json::Value& JsonValidation::object(
     const Json::Value& value,
     const std::string& field) {
-  validate_object(value, fmt::format("non-null object with field `{}`", field));
+  validate_object(
+      value, field, fmt::format("non-null object with field `{}`", field));
   const auto& attribute = value[field];
   if (attribute.isNull() || !attribute.isObject()) {
     throw JsonValidationError(value, field, /* expected */ "non-null object");
@@ -127,7 +138,9 @@ int JsonValidation::integer(
     const Json::Value& value,
     const std::string& field) {
   validate_object(
-      value, fmt::format("non-null object with integer field `{}`", field));
+      value,
+      field,
+      fmt::format("non-null object with integer field `{}`", field));
   const auto& integer = value[field];
   if (integer.isNull() || !integer.isInt()) {
     throw JsonValidationError(value, field, /* expected */ "integer");
@@ -185,7 +198,9 @@ bool JsonValidation::boolean(
     const Json::Value& value,
     const std::string& field) {
   validate_object(
-      value, fmt::format("non-null object with boolean field `{}`", field));
+      value,
+      field,
+      fmt::format("non-null object with boolean field `{}`", field));
   const auto& boolean = value[field];
   if (boolean.isNull() || !boolean.isBool()) {
     throw JsonValidationError(value, field, /* expected */ "boolean");
@@ -223,10 +238,15 @@ const Json::Value& JsonValidation::null_or_array(
   validate_object(
       value,
       fmt::format("non-null object with null or array field `{}`", field));
+  if (!value.isMember(field)) {
+    return Json::Value::nullSingleton();
+  }
+
   const auto& null_or_array = value[field];
   if (!null_or_array.isNull() && !null_or_array.isArray()) {
     throw JsonValidationError(value, field, /* expected */ "null or array");
   }
+
   return null_or_array;
 }
 
@@ -243,6 +263,7 @@ const Json::Value& JsonValidation::nonempty_array(
     const std::string& field) {
   validate_object(
       value,
+      field,
       fmt::format("non-null object with non-empty array field `{}`", field));
   const auto& nonempty_array = value[field];
   if (nonempty_array.isNull() || !nonempty_array.isArray() ||
@@ -270,6 +291,7 @@ const Json::Value& JsonValidation::object_or_string(
     const std::string& field) {
   validate_object(
       value,
+      field,
       fmt::format("non-null object with object or string field `{}`", field));
   const auto& attribute = value[field];
   if (attribute.isNull() || (!attribute.isObject() && !attribute.isString())) {
