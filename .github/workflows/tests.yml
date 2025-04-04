@@ -29,7 +29,7 @@ jobs:
           git checkout 9.1.0
           mkdir build
           cd build
-          cmake -DCMAKE_INSTALL_PREFIX="../install" ..
+          cmake -DCMAKE_CXX_STANDARD=17 -DFMT_TEST=OFF -DCMAKE_INSTALL_PREFIX="../install" ..
           make -j$(sysctl -n hw.ncpu)
           make install
           cd ../..
@@ -63,7 +63,7 @@ jobs:
           git checkout 9.1.0
           mkdir build
           cd build
-          cmake -DCMAKE_INSTALL_PREFIX="../install" ..
+          cmake -DCMAKE_CXX_STANDARD=17 -DFMT_TEST=OFF -DCMAKE_INSTALL_PREFIX="../install" ..
           make -j$(nproc)
           make install
           cd ../..
