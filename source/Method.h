@@ -90,6 +90,12 @@ class Method final {
    * parameter. */
   ParameterPosition first_parameter_index() const;
 
+  /**
+   * Returns a Method* representing the method described in the json object.
+   *
+   * Note: If the json does not match any method in the store, both DexMethod
+   * and Method are created.
+   */
   static const Method* from_json(const Json::Value& value, Context& context);
   Json::Value to_json() const;
 
