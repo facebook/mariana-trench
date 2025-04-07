@@ -490,61 +490,6 @@ void Registry::to_sharded_models_json(
       path, batch_size, total_elements, "model@", to_json_line);
 }
 
-std::unordered_set<std::string> Registry::compute_files() const {
-  std::unordered_set<std::string> covered_paths;
-  for (const auto& [method, model] : UnorderedIterable(models_)) {
-    if (method->get_code() == nullptr || model.skip_analysis()) {
-      continue;
-    }
-
-    const auto* path = context_.positions->get_path(method->dex_method());
-    if (path) {
-      covered_paths.insert(*path);
-    }
-  }
-  return covered_paths;
-}
-
-std::unordered_set<const Kind*> Registry::compute_used_sources() const {
-  std::unordered_set<const Kind*> used_sources;
-  for (const auto& [_method, model] : UnorderedIterable(models_)) {
-    auto source_kinds = model.source_kinds();
-    used_sources.insert(source_kinds.begin(), source_kinds.end());
-  }
-  for (const auto& [_field, model] : UnorderedIterable(field_models_)) {
-    auto source_kinds = model.sources().kinds();
-    used_sources.insert(source_kinds.begin(), source_kinds.end());
-  }
-  for (const auto& [_literal, model] : UnorderedIterable(literal_models_)) {
-    auto source_kinds = model.sources().kinds();
-    used_sources.insert(source_kinds.begin(), source_kinds.end());
-  }
-  return used_sources;
-}
-
-std::unordered_set<const Kind*> Registry::compute_used_sinks() const {
-  std::unordered_set<const Kind*> used_sinks;
-  for (const auto& [_method, model] : UnorderedIterable(models_)) {
-    auto sink_kinds = model.sink_kinds();
-    used_sinks.insert(sink_kinds.begin(), sink_kinds.end());
-  }
-
-  for (const auto& [_field, model] : UnorderedIterable(field_models_)) {
-    auto sink_kinds = model.sinks().kinds();
-    used_sinks.insert(sink_kinds.begin(), sink_kinds.end());
-  }
-  return used_sinks;
-}
-
-std::unordered_set<const Transform*> Registry::compute_used_transforms() const {
-  std::unordered_set<const Transform*> used_transforms;
-  for (const auto& [_method, model] : UnorderedIterable(models_)) {
-    auto transforms = model.local_transform_kinds();
-    used_transforms.insert(transforms.begin(), transforms.end());
-  }
-  return used_transforms;
-}
-
 void Registry::verify_expected_output(
     const std::filesystem::path& test_output_path) const {
   auto results = Json::Value(Json::arrayValue);

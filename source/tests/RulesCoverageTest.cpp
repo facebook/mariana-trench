@@ -165,14 +165,6 @@ TEST_F(RulesCoverageTest, TestCoverageInfo) {
         /* field_models */ {},
         /* literal_models */ {});
     EXPECT_EQ(
-        registry.compute_used_sources(),
-        std::unordered_set<const Kind*>{source1});
-    EXPECT_EQ(
-        registry.compute_used_sinks(), std::unordered_set<const Kind*>{sink1});
-    EXPECT_EQ(
-        registry.compute_used_transforms(),
-        std::unordered_set<const Transform*>{});
-    EXPECT_EQ(
         RulesCoverage::compute(registry, rules),
         (RulesCoverage{/* covered_rules */
                        {{1,
@@ -195,14 +187,6 @@ TEST_F(RulesCoverageTest, TestCoverageInfo) {
              context, method, transform_list1)},
         /* field_models */ {},
         /* literal_models */ {});
-    EXPECT_EQ(
-        registry.compute_used_sources(),
-        std::unordered_set<const Kind*>{source1});
-    EXPECT_EQ(
-        registry.compute_used_sinks(), std::unordered_set<const Kind*>{sink1});
-    EXPECT_EQ(
-        registry.compute_used_transforms(),
-        std::unordered_set<const Transform*>{transform1});
     EXPECT_EQ(
         RulesCoverage::compute(registry, rules),
         (RulesCoverage{/* covered_rules */
@@ -234,15 +218,6 @@ TEST_F(RulesCoverageTest, TestCoverageInfo) {
         /* field_models */ {},
         /* literal_models */ {});
     EXPECT_EQ(
-        source1_sinkA_registry.compute_used_sources(),
-        std::unordered_set<const Kind*>{source1});
-    EXPECT_EQ(
-        source1_sinkA_registry.compute_used_sinks(),
-        std::unordered_set<const Kind*>{partial_sink_a});
-    EXPECT_EQ(
-        source1_sinkA_registry.compute_used_transforms(),
-        std::unordered_set<const Transform*>{});
-    EXPECT_EQ(
         RulesCoverage::compute(source1_sinkA_registry, rules),
         (RulesCoverage{
             /* covered_rules */ {},
@@ -257,16 +232,6 @@ TEST_F(RulesCoverageTest, TestCoverageInfo) {
          make_model_with_sink_argument0(context, method, partial_sink_b)},
         /* field_models */ {},
         /* literal_models */ {});
-    EXPECT_EQ(
-        multi_source_registry.compute_used_sources(),
-        (std::unordered_set<const Kind*>{source1, source2}));
-    EXPECT_EQ(
-        multi_source_registry.compute_used_sinks(),
-        (std::unordered_set<const Kind*>{partial_sink_a, partial_sink_b}));
-    EXPECT_EQ(
-        multi_source_registry.compute_used_transforms(),
-        std::unordered_set<const Transform*>{});
-
     EXPECT_EQ(
         RulesCoverage::compute(multi_source_registry, rules),
         (RulesCoverage{/* covered_rules */

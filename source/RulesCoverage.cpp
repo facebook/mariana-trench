@@ -90,12 +90,60 @@ Json::Value RulesCoverage::to_json() const {
   return result;
 }
 
+namespace {
+
+std::unordered_set<const Kind*> compute_used_sources(const Registry& registry) {
+  std::unordered_set<const Kind*> used_sources;
+  for (const auto& [_method, model] : UnorderedIterable(registry.models())) {
+    auto source_kinds = model.source_kinds();
+    used_sources.insert(source_kinds.begin(), source_kinds.end());
+  }
+  for (const auto& [_field, model] :
+       UnorderedIterable(registry.field_models())) {
+    auto source_kinds = model.sources().kinds();
+    used_sources.insert(source_kinds.begin(), source_kinds.end());
+  }
+  for (const auto& [_literal, model] :
+       UnorderedIterable(registry.literal_models())) {
+    auto source_kinds = model.sources().kinds();
+    used_sources.insert(source_kinds.begin(), source_kinds.end());
+  }
+  return used_sources;
+}
+
+std::unordered_set<const Kind*> compute_used_sinks(const Registry& registry) {
+  std::unordered_set<const Kind*> used_sinks;
+  for (const auto& [_method, model] : UnorderedIterable(registry.models())) {
+    auto sink_kinds = model.sink_kinds();
+    used_sinks.insert(sink_kinds.begin(), sink_kinds.end());
+  }
+
+  for (const auto& [_field, model] :
+       UnorderedIterable(registry.field_models())) {
+    auto sink_kinds = model.sinks().kinds();
+    used_sinks.insert(sink_kinds.begin(), sink_kinds.end());
+  }
+  return used_sinks;
+}
+
+std::unordered_set<const Transform*> compute_used_transforms(
+    const Registry& registry) {
+  std::unordered_set<const Transform*> used_transforms;
+  for (const auto& [_method, model] : UnorderedIterable(registry.models())) {
+    auto transforms = model.local_transform_kinds();
+    used_transforms.insert(transforms.begin(), transforms.end());
+  }
+  return used_transforms;
+}
+
+} // namespace
+
 RulesCoverage RulesCoverage::compute(
     const Registry& registry,
     const Rules& rules) {
-  auto used_sources = registry.compute_used_sources();
-  auto used_sinks = registry.compute_used_sinks();
-  auto used_transforms = registry.compute_used_transforms();
+  auto used_sources = compute_used_sources(registry);
+  auto used_sinks = compute_used_sinks(registry);
+  auto used_transforms = compute_used_transforms(registry);
 
   std::unordered_map<int, CoveredRule> covered_rules;
   std::unordered_set<int> non_covered_rule_codes;

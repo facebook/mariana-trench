@@ -18,11 +18,32 @@
 
 namespace marianatrench {
 
+namespace {
+
+std::unordered_set<std::string> compute_files(
+    const Registry& registry,
+    const Positions& positions) {
+  std::unordered_set<std::string> covered_paths;
+  for (const auto& [method, model] : UnorderedIterable(registry.models())) {
+    if (method->get_code() == nullptr || model.skip_analysis()) {
+      continue;
+    }
+
+    const auto* path = positions.get_path(method->dex_method());
+    if (path) {
+      covered_paths.insert(*path);
+    }
+  }
+  return covered_paths;
+}
+
+} // namespace
+
 FilesCoverage FilesCoverage::compute(
     const Registry& registry,
     const Positions& positions,
     const DexStoresVector& stores) {
-  auto registry_covered_files = registry.compute_files();
+  auto registry_covered_files = compute_files(registry, positions);
 
   // Check APK for implementationless files and consider them covered.
   InsertOnlyConcurrentSet<const std::string*> file_has_implementation;

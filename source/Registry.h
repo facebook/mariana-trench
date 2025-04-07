@@ -101,11 +101,17 @@ class Registry final {
       const std::size_t shard_limit =
           JsonValidation::k_default_shard_limit) const;
 
-  // For file/rule coverage computation.
-  std::unordered_set<std::string> compute_files() const;
-  std::unordered_set<const Kind*> compute_used_sources() const;
-  std::unordered_set<const Kind*> compute_used_sinks() const;
-  std::unordered_set<const Transform*> compute_used_transforms() const;
+  const ConcurrentMap<const Method*, Model>& models() const {
+    return models_;
+  }
+
+  const ConcurrentMap<const Field*, FieldModel>& field_models() const {
+    return field_models_;
+  }
+
+  const ConcurrentMap<std::string, LiteralModel>& literal_models() const {
+    return literal_models_;
+  }
 
   void verify_expected_output(
       const std::filesystem::path& test_output_path) const;
