@@ -9,7 +9,7 @@ jobs:
       - uses: Homebrew/actions/setup-homebrew@master
 
       - name: Install dependencies
-        run: brew install cmake zlib boost googletest jsoncpp re2
+        run: brew install --formula cmake zlib boost googletest jsoncpp re2
 
       - name: Install Redex
         run: |
@@ -52,7 +52,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          brew install cmake zlib boost googletest jsoncpp re2 git
+          brew install --formula cmake zlib boost googletest jsoncpp re2 git
           sudo apt update
           sudo apt install default-jre default-jdk
 
