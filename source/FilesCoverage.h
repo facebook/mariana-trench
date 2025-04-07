@@ -26,7 +26,10 @@ class FilesCoverage final {
  public:
   DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(FilesCoverage)
 
-  static FilesCoverage compute(const Registry& registry);
+  static FilesCoverage compute(
+      const Registry& registry,
+      const Positions& positions,
+      const DexStoresVector& stores);
 
   void dump(const std::filesystem::path& output_path) const;
 

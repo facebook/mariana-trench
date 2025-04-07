@@ -432,7 +432,8 @@ void MarianaTrench::run(const program_options::variables_map& variables) {
     Timer file_coverage_timer;
     auto file_coverage_output_path = options.file_coverage_output_path();
     LOG(1, "Writing file coverage info to `{}`.", file_coverage_output_path);
-    FilesCoverage::compute(registry).dump(file_coverage_output_path);
+    FilesCoverage::compute(registry, *context.positions, context.stores)
+        .dump(file_coverage_output_path);
     context.statistics->log_time(
         "dump_file_coverage_info", file_coverage_timer);
     LOG(1,

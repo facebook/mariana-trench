@@ -534,4 +534,12 @@ Positions::get_path(const DexMethod* method) const {
   return method_to_path_.get(method, /* default */ nullptr);
 }
 
+std::unordered_set<const std::string*> Positions::all_paths() const {
+  std::unordered_set<const std::string*> all_paths;
+  for (const auto& [_method, path] : UnorderedIterable(method_to_path_)) {
+    all_paths.insert(path);
+  }
+  return all_paths;
+}
+
 } // namespace marianatrench

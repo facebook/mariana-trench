@@ -78,6 +78,8 @@ class Positions final {
 
   const std::string* MT_NULLABLE get_path(const DexMethod* method) const;
 
+  std::unordered_set<const std::string*> all_paths() const;
+
   static std::string execute_and_catch_output(
       const std::string& command,
       int& return_code);
