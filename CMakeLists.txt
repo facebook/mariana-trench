@@ -100,8 +100,8 @@ else()
   message(WARNING "Compiler ${CMAKE_CXX_COMPILER_ID} is not currently supported.")
 endif()
 
-# If specified, enable automatic std::ostream insertion operator (operator<<) discovery for fmt >8
-if (FMT_DEPRECATED_OSTREAM)
+option(FMT_DEPRECATED_OSTREAM "Enable automatic std::ostream insertion operator (operator<<) discovery" OFF)
+if (FMT_DEPRECATED_OSTREAM OR ("${fmt_VERSION}" VERSION_GREATER "8"))
   add_compile_options("-DFMT_DEPRECATED_OSTREAM=ON")
 endif()
 
