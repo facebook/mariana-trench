@@ -490,8 +490,7 @@ void Registry::to_sharded_models_json(
       path, batch_size, total_elements, "model@", to_json_line);
 }
 
-void Registry::dump_file_coverage_info(
-    const std::filesystem::path& output_path) const {
+std::unordered_set<std::string> Registry::compute_files() const {
   std::unordered_set<std::string> covered_paths;
   for (const auto& [method, model] : UnorderedIterable(models_)) {
     if (method->get_code() == nullptr || model.skip_analysis()) {
@@ -504,19 +503,7 @@ void Registry::dump_file_coverage_info(
     }
   }
 
-  std::ofstream output_file;
-  output_file.open(output_path, std::ios_base::out);
-  if (!output_file.is_open()) {
-    ERROR(
-        1, "Unable to write file coverage info to `{}`.", output_path.native());
-    return;
-  }
-
-  for (const auto& path : covered_paths) {
-    output_file << path << std::endl;
-  }
-
-  output_file.close();
+  return covered_paths;
 }
 
 void Registry::dump_rule_coverage_info(

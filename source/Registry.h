@@ -101,7 +101,8 @@ class Registry final {
       const std::size_t shard_limit =
           JsonValidation::k_default_shard_limit) const;
 
-  void dump_file_coverage_info(const std::filesystem::path& path) const;
+  std::unordered_set<std::string> compute_files() const;
+
   void dump_rule_coverage_info(const std::filesystem::path& path) const;
 
   void verify_expected_output(
