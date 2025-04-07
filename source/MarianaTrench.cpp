@@ -42,6 +42,7 @@
 #include <mariana-trench/PostprocessTraces.h>
 #include <mariana-trench/Redex.h>
 #include <mariana-trench/Rules.h>
+#include <mariana-trench/RulesCoverage.h>
 #include <mariana-trench/Scheduler.h>
 #include <mariana-trench/Statistics.h>
 #include <mariana-trench/Timer.h>
@@ -441,7 +442,8 @@ void MarianaTrench::run(const program_options::variables_map& variables) {
     Timer rule_coverage_timer;
     auto rule_coverage_output_path = options.rule_coverage_output_path();
     LOG(1, "Writing rule coverage info to `{}`.", rule_coverage_output_path);
-    registry.dump_rule_coverage_info(rule_coverage_output_path);
+    RulesCoverage::compute(registry, *context.rules)
+        .dump(rule_coverage_output_path);
     context.statistics->log_time(
         "dump_rule_coverage_info", rule_coverage_timer);
     LOG(1,

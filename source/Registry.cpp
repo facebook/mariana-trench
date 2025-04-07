@@ -502,43 +502,47 @@ std::unordered_set<std::string> Registry::compute_files() const {
       covered_paths.insert(*path);
     }
   }
-
   return covered_paths;
 }
 
-void Registry::dump_rule_coverage_info(
-    const std::filesystem::path& output_path) const {
+std::unordered_set<const Kind*> Registry::compute_used_sources() const {
   std::unordered_set<const Kind*> used_sources;
-  std::unordered_set<const Kind*> used_sinks;
-  std::unordered_set<const Transform*> used_transforms;
-
   for (const auto& [_method, model] : UnorderedIterable(models_)) {
     auto source_kinds = model.source_kinds();
     used_sources.insert(source_kinds.begin(), source_kinds.end());
-
-    auto sink_kinds = model.sink_kinds();
-    used_sinks.insert(sink_kinds.begin(), sink_kinds.end());
-
-    auto transforms = model.local_transform_kinds();
-    used_transforms.insert(transforms.begin(), transforms.end());
   }
-
   for (const auto& [_field, model] : UnorderedIterable(field_models_)) {
     auto source_kinds = model.sources().kinds();
     used_sources.insert(source_kinds.begin(), source_kinds.end());
-
-    auto sink_kinds = model.sinks().kinds();
-    used_sinks.insert(sink_kinds.begin(), sink_kinds.end());
   }
-
   for (const auto& [_literal, model] : UnorderedIterable(literal_models_)) {
     auto source_kinds = model.sources().kinds();
     used_sources.insert(source_kinds.begin(), source_kinds.end());
   }
+  return used_sources;
+}
 
-  auto rule_coverage = RulesCoverage::create(
-      *(context_.rules), used_sources, used_sinks, used_transforms);
-  JsonWriter::write_json_file(output_path, rule_coverage.to_json());
+std::unordered_set<const Kind*> Registry::compute_used_sinks() const {
+  std::unordered_set<const Kind*> used_sinks;
+  for (const auto& [_method, model] : UnorderedIterable(models_)) {
+    auto sink_kinds = model.sink_kinds();
+    used_sinks.insert(sink_kinds.begin(), sink_kinds.end());
+  }
+
+  for (const auto& [_field, model] : UnorderedIterable(field_models_)) {
+    auto sink_kinds = model.sinks().kinds();
+    used_sinks.insert(sink_kinds.begin(), sink_kinds.end());
+  }
+  return used_sinks;
+}
+
+std::unordered_set<const Transform*> Registry::compute_used_transforms() const {
+  std::unordered_set<const Transform*> used_transforms;
+  for (const auto& [_method, model] : UnorderedIterable(models_)) {
+    auto transforms = model.local_transform_kinds();
+    used_transforms.insert(transforms.begin(), transforms.end());
+  }
+  return used_transforms;
 }
 
 void Registry::verify_expected_output(

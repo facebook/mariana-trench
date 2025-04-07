@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <mariana-trench/Registry.h>
 #include <mariana-trench/Rule.h>
 #include <mariana-trench/Rules.h>
 
@@ -21,15 +22,21 @@ struct CoveredRule {
   bool operator==(const CoveredRule& other) const;
 
   Json::Value to_json() const;
+
+  friend std::ostream& operator<<(std::ostream&, const CoveredRule&);
 };
 
-struct RulesCoverage {
-  std::unordered_map<int, CoveredRule> covered_rules;
-  std::unordered_set<int> non_covered_rule_codes;
+class RulesCoverage {
+ public:
+  RulesCoverage(
+      std::unordered_map<int, CoveredRule> covered_rules,
+      std::unordered_set<int> non_covered_rule_codes)
+      : covered_rules_(std::move(covered_rules)),
+        non_covered_rule_codes_(std::move(non_covered_rule_codes)) {}
+
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(RulesCoverage)
 
   bool operator==(const RulesCoverage& other) const;
-
-  Json::Value to_json() const;
 
   /**
    * Computes rule(/category) coverage based on the set of known
@@ -38,11 +45,16 @@ struct RulesCoverage {
    * source/sink/transform kinds, additional information is included to indicate
    * which ones in the rule were used.
    */
-  static RulesCoverage create(
-      const Rules& rules,
-      const Rule::KindSet& used_sources,
-      const Rule::KindSet& used_sinks,
-      const Rule::TransformSet& used_transforms);
+  static RulesCoverage compute(const Registry& registry, const Rules& rules);
+
+  Json::Value to_json() const;
+  void dump(const std::filesystem::path& output_path) const;
+
+  friend std::ostream& operator<<(std::ostream&, const RulesCoverage&);
+
+ private:
+  std::unordered_map<int, CoveredRule> covered_rules_;
+  std::unordered_set<int> non_covered_rule_codes_;
 };
 
 } // namespace marianatrench

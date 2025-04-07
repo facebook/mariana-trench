@@ -15,11 +15,72 @@
 
 namespace marianatrench {
 
+namespace {
+
+Model make_model_with_source_argument1(
+    Context& context,
+    const Method* method,
+    const Kind* source) {
+  return Model(
+      method,
+      context,
+      /* modes */ {},
+      /* frozen */ {},
+      /* config overrides */ {},
+      /* generations */
+      {{AccessPath(Root(Root::Kind::Argument, 1)),
+        test::make_leaf_taint_config(source)}},
+      /* parameter_sources */ {},
+      /* sinks */ {});
+}
+
+Model make_model_with_sink_argument0(
+    Context& context,
+    const Method* method,
+    const Kind* sink) {
+  return Model(
+      method,
+      context,
+      /* modes */ {},
+      /* frozen */ {},
+      /* config overrides */ {},
+      /* generations */ {},
+      /* parameter_sources */ {},
+      /* sinks */
+      {{AccessPath(Root(Root::Kind::Argument, 0)),
+        test::make_leaf_taint_config(sink)}});
+}
+
+Model make_model_with_transform_argument1to0(
+    Context& context,
+    const Method* method,
+    const TransformList* transforms) {
+  const auto* transform_kind1 = context.kind_factory->transform_kind(
+      /* base_kind */ context.kind_factory->local_argument(0),
+      /* local_transforms */ transforms,
+      /* global_transforms */ nullptr);
+  return Model(
+      method,
+      context,
+      /* modes */ {},
+      /* frozen */ {},
+      /* config overrides */ {},
+      /* generations */ {},
+      /* parameter_sources */ {},
+      /* sinks */ {},
+      /* propagations */
+      {test::make_propagation_config(
+          transform_kind1,
+          /* input_path */ AccessPath(Root(Root::Kind::Argument, 1)),
+          /* output_path */ AccessPath(Root(Root::Kind::Argument, 0)))});
+}
+
+} // namespace
+
 class RulesCoverageTest : public test::Test {};
 
 TEST_F(RulesCoverageTest, TestCoverageInfo) {
-  DexStore store("stores");
-  auto context = test::make_context(store);
+  auto context = test::make_empty_context();
 
   const auto* source1 = context.kind_factory->get("Source1");
   const auto* source2 = context.kind_factory->get("Source2");
@@ -33,6 +94,22 @@ TEST_F(RulesCoverageTest, TestCoverageInfo) {
       context.kind_factory->get_partial("PartialSink1", "labelA");
   auto* partial_sink_b =
       context.kind_factory->get_partial("ParitialSink1", "labelB");
+
+  DexStore store("stores");
+  Scope scope;
+  store.add_classes(scope);
+
+  // NOTE: When adding models for this method to the registry, the caller port
+  // needs to be valid, i.e. Argument(0-1) only, and no Return. The make_model_*
+  // helpers are named to indicate the hard-coded caller ports within them.
+  const auto* method =
+      context.methods->create(marianatrench::redex::create_void_method(
+          scope,
+          /* class_name */ "LClass;",
+          /* method_name */ "returns_void",
+          /* parameter_types */ "I",
+          /* return_type*/ "V",
+          /* super */ nullptr));
 
   auto rules = Rules(context);
   rules.add(
@@ -67,89 +144,140 @@ TEST_F(RulesCoverageTest, TestCoverageInfo) {
               partial_sink_a, partial_sink_b}));
 
   // Trivial case: No coverage.
-  EXPECT_EQ(
-      RulesCoverage::create(
-          rules,
-          /* used_sources */ {},
-          /* used_sinks */ {},
-          /* used_transforms */ {}),
-      (RulesCoverage{
-          .covered_rules = {},
-          .non_covered_rule_codes = {1, 2, 3},
-      }));
+  {
+    auto empty_registry = Registry(context);
+    EXPECT_EQ(
+        RulesCoverage::compute(empty_registry, rules),
+        (RulesCoverage{
+            /* covered_rules */ {},
+            /* non_covered_rule_codes */ {1, 2, 3},
+        }));
+  }
 
   // Simple source-sink rule (no transforms).
-  EXPECT_EQ(
-      RulesCoverage::create(
-          rules,
-          /* used_sources */ {source1},
-          /* used_sinks */ {sink1},
-          /* used_transforms */ {}),
-      (RulesCoverage{
-          .covered_rules =
-              {{1,
-                CoveredRule{
-                    .code = 1,
-                    .used_sources = {source1},
-                    .used_sinks = {sink1},
-                    .used_transforms = {}}}},
-          .non_covered_rule_codes = {2, 3},
-      }));
+  {
+    auto registry = Registry(
+        context,
+        /* models */
+        std::vector<Model>{
+            make_model_with_source_argument1(context, method, source1),
+            make_model_with_sink_argument0(context, method, sink1)},
+        /* field_models */ {},
+        /* literal_models */ {});
+    EXPECT_EQ(
+        registry.compute_used_sources(),
+        std::unordered_set<const Kind*>{source1});
+    EXPECT_EQ(
+        registry.compute_used_sinks(), std::unordered_set<const Kind*>{sink1});
+    EXPECT_EQ(
+        registry.compute_used_transforms(),
+        std::unordered_set<const Transform*>{});
+    EXPECT_EQ(
+        RulesCoverage::compute(registry, rules),
+        (RulesCoverage{/* covered_rules */
+                       {{1,
+                         CoveredRule{
+                             .code = 1,
+                             .used_sources = {source1},
+                             .used_sinks = {sink1},
+                             .used_transforms = {}}}},
+                       /* non_covered_rule_codes */ {2, 3}}));
+  }
 
   // Source-sink rule with transforms.
-  EXPECT_EQ(
-      RulesCoverage::create(
-          rules,
-          /* used_sources */ {source1},
-          /* used_sinks */ {sink1},
-          /* used_transforms */ {transform1}),
-      (RulesCoverage{
-          .covered_rules =
-              {{1,
-                CoveredRule{
-                    .code = 1,
-                    .used_sources = {source1},
-                    .used_sinks = {sink1},
-                    .used_transforms = {}}},
-               {2,
-                CoveredRule{
-                    .code = 2,
-                    .used_sources = {source1},
-                    .used_sinks = {sink1},
-                    .used_transforms = {transform1}}}},
-          .non_covered_rule_codes = {3},
-      }));
+  {
+    auto registry = Registry(
+        context,
+        /* models */
+        {make_model_with_source_argument1(context, method, source1),
+         make_model_with_sink_argument0(context, method, sink1),
+         make_model_with_transform_argument1to0(
+             context, method, transform_list1)},
+        /* field_models */ {},
+        /* literal_models */ {});
+    EXPECT_EQ(
+        registry.compute_used_sources(),
+        std::unordered_set<const Kind*>{source1});
+    EXPECT_EQ(
+        registry.compute_used_sinks(), std::unordered_set<const Kind*>{sink1});
+    EXPECT_EQ(
+        registry.compute_used_transforms(),
+        std::unordered_set<const Transform*>{transform1});
+    EXPECT_EQ(
+        RulesCoverage::compute(registry, rules),
+        (RulesCoverage{/* covered_rules */
+                       {{1,
+                         CoveredRule{
+                             .code = 1,
+                             .used_sources = {source1},
+                             .used_sinks = {sink1},
+                             .used_transforms = {}}},
+                        {2,
+                         CoveredRule{
+                             .code = 2,
+                             .used_sources = {source1},
+                             .used_sinks = {sink1},
+                             .used_transforms = {transform1}}}},
+                       /* non_covered_rule_codes */ {3}}));
+  }
 
   // Multi-source rule with partial source/sink coverage.
   // For these rules, *both* branches/labels must have sources/sinks in the
   // input.
-  EXPECT_EQ(
-      RulesCoverage::create(
-          rules,
-          /* used_sources */ {source1},
-          /* used_sinks */ {partial_sink_a},
-          /* used_transforms */ {}),
-      (RulesCoverage{
-          .covered_rules = {},
-          .non_covered_rule_codes = {1, 2, 3},
-      }));
+  {
+    auto source1_sinkA_registry = Registry(
+        context,
+        /* models */
+        std::vector<Model>{
+            make_model_with_source_argument1(context, method, source1),
+            make_model_with_sink_argument0(context, method, partial_sink_a)},
+        /* field_models */ {},
+        /* literal_models */ {});
+    EXPECT_EQ(
+        source1_sinkA_registry.compute_used_sources(),
+        std::unordered_set<const Kind*>{source1});
+    EXPECT_EQ(
+        source1_sinkA_registry.compute_used_sinks(),
+        std::unordered_set<const Kind*>{partial_sink_a});
+    EXPECT_EQ(
+        source1_sinkA_registry.compute_used_transforms(),
+        std::unordered_set<const Transform*>{});
+    EXPECT_EQ(
+        RulesCoverage::compute(source1_sinkA_registry, rules),
+        (RulesCoverage{
+            /* covered_rules */ {},
+            /* non_covered_rule_codes */ {1, 2, 3}}));
 
-  EXPECT_EQ(
-      RulesCoverage::create(
-          rules,
-          /* used_sources */ {source1, source2},
-          /* used_sinks */ {partial_sink_a, partial_sink_b},
-          /* used_transforms */ {}),
-      (RulesCoverage{
-          .covered_rules =
-              {{3,
-                CoveredRule{
-                    .code = 3,
-                    .used_sources = {source1, source2},
-                    .used_sinks = {partial_sink_a, partial_sink_b},
-                    .used_transforms = {}}}},
-          .non_covered_rule_codes = {1, 2},
-      }));
+    auto multi_source_registry = Registry(
+        context,
+        /* models */
+        {make_model_with_source_argument1(context, method, source1),
+         make_model_with_source_argument1(context, method, source2),
+         make_model_with_sink_argument0(context, method, partial_sink_a),
+         make_model_with_sink_argument0(context, method, partial_sink_b)},
+        /* field_models */ {},
+        /* literal_models */ {});
+    EXPECT_EQ(
+        multi_source_registry.compute_used_sources(),
+        (std::unordered_set<const Kind*>{source1, source2}));
+    EXPECT_EQ(
+        multi_source_registry.compute_used_sinks(),
+        (std::unordered_set<const Kind*>{partial_sink_a, partial_sink_b}));
+    EXPECT_EQ(
+        multi_source_registry.compute_used_transforms(),
+        std::unordered_set<const Transform*>{});
+
+    EXPECT_EQ(
+        RulesCoverage::compute(multi_source_registry, rules),
+        (RulesCoverage{/* covered_rules */
+                       {{3,
+                         CoveredRule{
+                             .code = 3,
+                             .used_sources = {source1, source2},
+                             .used_sinks = {partial_sink_a, partial_sink_b},
+                             .used_transforms = {}}}},
+                       /* non_covered_rule_codes */ {1, 2}}));
+  }
 }
 
 } // namespace marianatrench
