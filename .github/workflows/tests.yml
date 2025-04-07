@@ -38,7 +38,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -DREDEX_ROOT="$PWD/../redex/install" -Dfmt_ROOT="$PWD/../fmt/install" -DFMT_DEPRECATED_OSTREAM=ON -DEXCLUDE_INTEGRATION_TESTS="check_cast_types" -DCMAKE_INSTALL_PREFIX="../install" ..
+          cmake -DREDEX_ROOT="$PWD/../redex/install" -Dfmt_ROOT="$PWD/../fmt/install" -DEXCLUDE_INTEGRATION_TESTS="check_cast_types" -DCMAKE_INSTALL_PREFIX="../install" ..
           make -j$(sysctl -n hw.ncpu)
           make install
           make check -j$(sysctl -n hw.ncpu)
@@ -82,7 +82,7 @@ jobs:
           cd ../..
           mkdir build
           cd build
-          cmake -DREDEX_ROOT="$PWD/../redex/install" -Dfmt_ROOT="$PWD/../fmt/install" -DFMT_DEPRECATED_OSTREAM=ON -DEXCLUDE_INTEGRATION_TESTS="check_cast_types" -DCMAKE_INSTALL_PREFIX="../install" ..
+          cmake -DREDEX_ROOT="$PWD/../redex/install" -Dfmt_ROOT="$PWD/../fmt/install" -DEXCLUDE_INTEGRATION_TESTS="check_cast_types" -DCMAKE_INSTALL_PREFIX="../install" ..
           make -j$(nproc)
           make install
           make check -j$(nproc)
