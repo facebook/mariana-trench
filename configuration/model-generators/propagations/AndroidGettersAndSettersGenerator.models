@@ -617,25 +617,9 @@
       "where": [
         {
           "constraint": "signature_match",
-          "parents": [
+          "extends": [
             "Ljava/util/Map;",
-            "Ljava/util/AbstractMap;",
-            "Ljava/util/EnumMap;",
-            "Ljava/util/HashMap;",
-            "Ljava/util/IdentityHashMap;",
-            "Ljava/util/TreeMap;",
-            "Ljava/util/WeakHashMap;",
-            "Ljava/util/concurrent/ConcurrentHashMap;",
-            "Ljava/util/concurrent/ConcurrentSkipListMap;",
-            "Landroid/util/ArrayMap;",
-            "Landroid/util/LruCache;",
-            "Landroidx/collection/SimpleArrayMap;",
-            "Landroidx/arch/core/internal/SafeIterableMap;",
-            "Landroidx/collection/LruCache;",
-            "Lkotlin/collections/AbstractMutableMap;",
-            "Lkotlin/collections/MutableMapWithDefaultImpl;",
-            "Lkotlin/collections/AbstractMap;",
-            "Lkotlin/collections/MapWithDefaultImpl;"
+            "Lkotlin/collections/Map;"
           ],
           "name": "put"
         },
@@ -668,15 +652,14 @@
       "find": "methods",
       "where": [
         {
-          "constraint": "name",
-          "pattern": "put"
-        },
-        {
-          "constraint": "parent",
-          "inner": {
-            "constraint": "name",
-            "pattern": "Lcom/google/common/collect/[A-Za-z]+Map(\\$Builder)?;"
-          }
+          "constraint": "signature_match",
+          "parents": [
+            "Landroid/util/LruCache;",
+            "Landroidx/collection/SimpleArrayMap;",
+            "Landroidx/arch/core/internal/SafeIterableMap;",
+            "Landroidx/collection/LruCache;"
+          ],
+          "name": "put"
         },
         {
           "constraint": "number_parameters",
@@ -737,25 +720,9 @@
       "where": [
         {
           "constraint": "signature_match",
-          "parents": [
+          "extends": [
             "Ljava/util/Map;",
-            "Ljava/util/AbstractMap;",
-            "Ljava/util/EnumMap;",
-            "Ljava/util/HashMap;",
-            "Ljava/util/IdentityHashMap;",
-            "Ljava/util/TreeMap;",
-            "Ljava/util/WeakHashMap;",
-            "Ljava/util/concurrent/ConcurrentHashMap;",
-            "Ljava/util/concurrent/ConcurrentSkipListMap;",
-            "Landroid/util/ArrayMap;",
-            "Landroid/util/LruCache;",
-            "Landroidx/collection/SimpleArrayMap;",
-            "Landroidx/arch/core/internal/SafeIterableMap;",
-            "Landroidx/collection/LruCache;",
-            "Lkotlin/collections/AbstractMutableMap;",
-            "Lkotlin/collections/MutableMapWithDefaultImpl;",
-            "Lkotlin/collections/AbstractMap;",
-            "Lkotlin/collections/MapWithDefaultImpl;"
+            "Lkotlin/collections/Map;"
           ],
           "name": "get"
         }
@@ -780,22 +747,14 @@
       "find": "methods",
       "where": [
         {
-          "constraint": "name",
-          "pattern": "get"
-        },
-        {
-          "constraint": "parent",
-          "inner": {
-            "constraint": "name",
-            "pattern": "Lcom/google/common/collect/[A-Za-z]+Map;"
-          }
-        },
-        {
-          "constraint": "number_parameters",
-          "inner": {
-            "constraint": ">",
-            "value": 1
-          }
+          "constraint": "signature_match",
+          "parents": [
+            "Landroid/util/LruCache;",
+            "Landroidx/collection/SimpleArrayMap;",
+            "Landroidx/arch/core/internal/SafeIterableMap;",
+            "Landroidx/collection/LruCache;"
+          ],
+          "name": "get"
         }
       ],
       "model": {
