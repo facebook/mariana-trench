@@ -1118,7 +1118,7 @@ void check_call_effect_flows(
   }
 }
 
-void check_artificial_call_effect_flows(
+void check_artificial_calls_effect_flows(
     MethodContext* context,
     const InstructionAliasResults& aliasing,
     const IRInstruction* instruction) {
@@ -1268,7 +1268,7 @@ bool ForwardTaintTransfer::analyze_invoke(
   }
 
   check_artificial_calls_flows(context, aliasing, instruction, environment);
-  check_artificial_call_effect_flows(context, aliasing, instruction);
+  check_artificial_calls_effect_flows(context, aliasing, instruction);
 
   return false;
 }
@@ -1369,7 +1369,7 @@ bool ForwardTaintTransfer::analyze_iput(
   }
 
   check_artificial_calls_flows(context, aliasing, instruction, environment);
-  check_artificial_call_effect_flows(context, aliasing, instruction);
+  check_artificial_calls_effect_flows(context, aliasing, instruction);
 
   return false;
 }
