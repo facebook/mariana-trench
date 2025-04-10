@@ -211,6 +211,39 @@ void apply_generations(
   }
 }
 
+void apply_artificial_calls_generations(
+    MethodContext* context,
+    const InstructionAliasResults& aliasing,
+    const IRInstruction* instruction,
+    ForwardTaintEnvironment* environment) {
+  const auto& artificial_callees =
+      context->call_graph.artificial_callees(context->method(), instruction);
+
+  for (const auto& artificial_callee : artificial_callees) {
+    auto callee = get_callee(context, artificial_callee, aliasing.position());
+    auto get_register =
+        [&artificial_callee](
+            Root parameter_position) -> std::optional<Register> {
+      auto found = artificial_callee.root_registers.find(parameter_position);
+      if (found == artificial_callee.root_registers.end()) {
+        return std::nullopt;
+      }
+
+      return found->second;
+    };
+
+    // Result taint from an artificial call is never used.
+    TaintTree result_taint_to_ignore;
+    apply_generations(
+        context,
+        aliasing,
+        environment,
+        callee,
+        get_register,
+        result_taint_to_ignore);
+  }
+}
+
 void apply_add_features_to_arguments(
     MethodContext* context,
     const InstructionAliasResults& aliasing,
@@ -547,8 +580,8 @@ void check_fulfilled_exploitability_rules(
       exploitability_source_kind, source_as_transform_sink_kind);
 
   if (fulfilled_rules.empty()) {
-    // If an exploitability rule cannot be fulfilled,
-    // pass it to backwards analysis to propagate the source-as-transform sinks.
+    // If an exploitability rule cannot be fulfilled, pass it to backwards
+    // analysis to propagate the source-as-transform sinks.
     context->partially_fulfilled_exploitability_state
         .add_source_as_transform_sinks(
             instruction, source_as_transform_sink_taint);
@@ -646,8 +679,8 @@ void check_partially_fulfilled_exploitability_rules(
           .collapse();
 
   if (exploitability_sources.is_bottom()) {
-    // If an exploitability rule cannot be fulfilled,
-    // pass it to backwards analysis to propagate the source-as-transform sinks.
+    // If an exploitability rule cannot be fulfilled, pass it to backwards
+    // analysis to propagate the source-as-transform sinks.
     context->partially_fulfilled_exploitability_state
         .add_source_as_transform_sinks(
             instruction, transformed_sink_with_extra_trace);
@@ -1089,15 +1122,6 @@ void check_artificial_calls_flows(
 
     context->fulfilled_partial_sinks.store_artificial_call(
         &artificial_callee, std::move(fulfilled_partial_sinks));
-
-    // Consider also applying other parts of the model as in analyze_invoke
-    // (e.g. add_features_to_arguments, propagations, etc.). In theory, an
-    // artificial call/shim should be handled like a real call. Main difference
-    // is that its returned value is never used (i.e. `result_taint` can be
-    // ignored).
-    TaintTree result_taint;
-    apply_generations(
-        context, aliasing, environment, callee, get_register, result_taint);
   }
 }
 
@@ -1305,6 +1329,14 @@ bool ForwardTaintTransfer::analyze_invoke(
       environment);
   check_artificial_calls_effect_flows(
       context, aliasing, instruction, sink_callee_for_artificial_calls);
+
+  // Consider also applying other parts of the model (e.g.
+  // add_features_to_arguments, propagations, etc.) for artificial calls. In
+  // theory, an artificial call/shim should be handled like a real call. Main
+  // difference is that its returned value is never used (i.e. `result_taint`
+  // can be ignored).
+  apply_artificial_calls_generations(
+      context, aliasing, instruction, environment);
 
   return false;
 }
