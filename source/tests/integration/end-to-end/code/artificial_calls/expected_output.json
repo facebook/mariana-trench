@@ -1204,7 +1204,7 @@
         "via-anonymous-class-to-obscure",
         "via-obscure"
       ],
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/RunnableFlows$2;.run:()V",
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Executor;.execute:(Lcom/facebook/marianatrench/integrationtests/Runnable;)V",
       "position" : 
       {
         "line" : 35,

@@ -1373,7 +1373,7 @@
       [
         "via-shim:Lcom/facebook/marianatrench/integrationtests/JavaCheckCast;.shimmed:(Lcom/facebook/marianatrench/integrationtests/JavaCheckCast$Base;Ljava/lang/Object;)V"
       ],
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/JavaCheckCast$DerivedWithSink;.run:(Ljava/lang/Object;)V",
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/JavaCheckCast;.shimmed:(Lcom/facebook/marianatrench/integrationtests/JavaCheckCast$Base;Ljava/lang/Object;)V",
       "position" : 
       {
         "line" : 62,
@@ -1479,7 +1479,7 @@
       [
         "via-shim:Lcom/facebook/marianatrench/integrationtests/JavaCheckCast;.shimmed:(Lcom/facebook/marianatrench/integrationtests/JavaCheckCast$Base;Ljava/lang/Object;)V"
       ],
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/JavaCheckCast$DerivedWithSink;.run:(Ljava/lang/Object;)V",
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/JavaCheckCast;.shimmed:(Lcom/facebook/marianatrench/integrationtests/JavaCheckCast$Base;Ljava/lang/Object;)V",
       "position" : 
       {
         "line" : 40,
@@ -1585,7 +1585,7 @@
       [
         "via-shim:Lcom/facebook/marianatrench/integrationtests/JavaCheckCast;.shimmed:(Lcom/facebook/marianatrench/integrationtests/JavaCheckCast$Base;Ljava/lang/Object;)V"
       ],
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/JavaCheckCast$Base;.run:(Ljava/lang/Object;)V",
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/JavaCheckCast;.shimmed:(Lcom/facebook/marianatrench/integrationtests/JavaCheckCast$Base;Ljava/lang/Object;)V",
       "position" : 
       {
         "line" : 57,
@@ -1813,7 +1813,7 @@
       [
         "via-shim:Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.shimmed:(Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;Ljava/lang/Object;)V"
       ],
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$DerivedWithSink;.run:(Ljava/lang/Object;)V",
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.shimmed:(Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;Ljava/lang/Object;)V",
       "position" : 
       {
         "line" : 63,
@@ -1919,7 +1919,7 @@
       [
         "via-shim:Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.shimmed:(Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;Ljava/lang/Object;)V"
       ],
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$DerivedWithSink;.run:(Ljava/lang/Object;)V",
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.shimmed:(Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;Ljava/lang/Object;)V",
       "position" : 
       {
         "line" : 38,
@@ -2025,7 +2025,7 @@
       [
         "via-shim:Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.shimmed:(Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;Ljava/lang/Object;)V"
       ],
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;.run:(Ljava/lang/Object;)V",
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast;.shimmed:(Lcom/facebook/marianatrench/integrationtests/KotlinCheckCast$Base;Ljava/lang/Object;)V",
       "position" : 
       {
         "line" : 58,

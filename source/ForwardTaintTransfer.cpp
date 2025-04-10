@@ -881,6 +881,7 @@ void check_call_flows(
     const ForwardTaintEnvironment* environment,
     const std::function<std::optional<Register>(Root)>& get_register,
     const CalleeModel& callee,
+    std::string_view sink_callee,
     const TaintAccessPathTree& sinks,
     const FeatureMayAlwaysSet& extra_features,
     FulfilledPartialKindState* MT_NULLABLE fulfilled_partial_sinks) {
@@ -911,9 +912,7 @@ void check_call_flows(
         sinks,
         callee.position,
         /* sink_index */ callee.call_index,
-        /* callee */ callee.resolved_base_method
-            ? callee.resolved_base_method->show()
-            : std::string(k_unresolved_callee),
+        /* sink_callee */ sink_callee,
         extra_features,
         fulfilled_partial_sinks);
   }
@@ -947,6 +946,9 @@ void check_call_flows(
         return instruction_sources.at(parameter_position.parameter_position());
       },
       callee,
+      /* sink_callee */ callee.resolved_base_method
+          ? callee.resolved_base_method->show()
+          : k_unresolved_callee,
       callee.model.sinks(),
       extra_features,
       fulfilled_partial_sinks);
@@ -1019,6 +1021,7 @@ void check_artificial_calls_flows(
     MethodContext* context,
     const InstructionAliasResults& aliasing,
     const IRInstruction* instruction,
+    std::string_view sink_callee,
     ForwardTaintEnvironment* environment) {
   const auto& artificial_callees =
       context->call_graph.artificial_callees(context->method(), instruction);
@@ -1046,6 +1049,7 @@ void check_artificial_calls_flows(
         environment,
         get_register,
         callee,
+        sink_callee,
         callee.model.sinks(),
         extra_features,
         &fulfilled_partial_sinks);
@@ -1057,6 +1061,7 @@ void check_artificial_calls_flows(
         environment,
         get_register,
         callee,
+        sink_callee,
         callee.model.call_effect_sinks(),
         extra_features,
         &fulfilled_partial_sinks);
@@ -1108,8 +1113,8 @@ void check_call_effect_flows(
           sources.attach_position(caller_position),
           sinks,
           callee.position,
-          callee.call_index,
-          /* sink_index */ callee.resolved_base_method
+          /* sink_index */ callee.call_index,
+          /* sink_callee */ callee.resolved_base_method
               ? callee.resolved_base_method->show()
               : std::string(k_unresolved_callee),
           /* extra features */ {},
@@ -1158,8 +1163,8 @@ void check_artificial_calls_effect_flows(
             sources.attach_position(caller_position),
             sinks,
             callee.position,
-            callee.call_index,
-            /* sink_index */ callee.resolved_base_method
+            /* sink_index */ callee.call_index,
+            /* sink_callee */ callee.resolved_base_method
                 ? callee.resolved_base_method->show()
                 : std::string(k_unresolved_callee),
             /* extra features */ {},
@@ -1267,7 +1272,14 @@ bool ForwardTaintTransfer::analyze_invoke(
         UpdateKind::Weak);
   }
 
-  check_artificial_calls_flows(context, aliasing, instruction, environment);
+  check_artificial_calls_flows(
+      context,
+      aliasing,
+      instruction,
+      /* sink_callee */ callee.resolved_base_method
+          ? callee.resolved_base_method->show()
+          : k_unresolved_callee,
+      environment);
   check_artificial_calls_effect_flows(context, aliasing, instruction);
 
   return false;
@@ -1323,7 +1335,7 @@ void check_flows_to_field_sink(
         field_sinks,
         position,
         /* sink_index */ field_target->field_sink_index,
-        /* callee */ show(field_target->field),
+        /* sink callee */ show(field_target->field),
         /* extra_features */ FeatureMayAlwaysSet(),
         /* fulfilled_partial_sinks */ nullptr);
   }
@@ -1368,7 +1380,12 @@ bool ForwardTaintTransfer::analyze_iput(
         UpdateKind::Weak);
   }
 
-  check_artificial_calls_flows(context, aliasing, instruction, environment);
+  check_artificial_calls_flows(
+      context,
+      aliasing,
+      instruction,
+      /* sink_callee */ field_name->str(),
+      environment);
   check_artificial_calls_effect_flows(context, aliasing, instruction);
 
   return false;
@@ -1692,7 +1709,7 @@ bool ForwardTaintTransfer::analyze_return(
           sinks,
           position,
           /* sink_index */ return_index,
-          /* callee */ std::string(k_return_callee),
+          /* sink_callee */ k_return_callee,
           /* extra_features */ {},
           /* fulfilled_partial_sinks */ nullptr);
     }
