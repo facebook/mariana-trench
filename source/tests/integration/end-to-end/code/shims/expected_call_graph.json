@@ -422,7 +422,7 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.testMultipleCallsites:(Z)V" : 
   {
-    "artificial" : 
+    "shim" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/A;.api:(Ljava/lang/Object;)V",
       "Lcom/facebook/marianatrench/integrationtests/B;.api:(Ljava/lang/Object;)V"
@@ -443,7 +443,7 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.testSimple:()V" : 
   {
-    "artificial" : 
+    "shim" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/A;.api:(Ljava/lang/Object;)V"
     ],
@@ -454,7 +454,7 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.testSimpleIssue:()V" : 
   {
-    "artificial" : 
+    "shim" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/B;.api:(Ljava/lang/Object;)V"
     ],
@@ -494,7 +494,7 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/Shims;.getMessenger:(Lcom/facebook/marianatrench/integrationtests/Handler;)Lcom/facebook/marianatrench/integrationtests/Messenger;" : 
   {
-    "artificial" : 
+    "shim" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/Handler;.handleMessage:(Ljava/lang/Object;)V"
     ],
@@ -505,7 +505,7 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/Shims;.testDefinedAndInferredArgument:()V" : 
   {
-    "artificial" : 
+    "shim" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/ShimTarget;.multipleArguments:(ILjava/lang/String;Ljava/lang/Object;)V"
     ],
@@ -534,7 +534,7 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/Shims;.testDropArgumentDefined:()V" : 
   {
-    "artificial" : 
+    "shim" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/ShimTarget;.multipleArguments:(ILjava/lang/String;Ljava/lang/Object;)V"
     ],
@@ -551,7 +551,7 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/Shims;.testDropArgumentInferred:()V" : 
   {
-    "artificial" : 
+    "shim" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/ShimTarget;.multipleArguments:(ILjava/lang/String;Ljava/lang/Object;)V"
     ],
@@ -568,7 +568,7 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/Shims;.testFragmentBaseClass:(Landroid/app/Activity;)V" : 
   {
-    "artificial" : 
+    "shim" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/FragmentOneActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V",
       "Lcom/facebook/marianatrench/integrationtests/FragmentThreeActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V",
@@ -586,7 +586,7 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/Shims;.testFragmentInstance:()V" : 
   {
-    "artificial" : 
+    "shim" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/FragmentOneActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V"
     ],
@@ -603,7 +603,7 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/Shims;.testFragmentReflection:()V" : 
   {
-    "artificial" : 
+    "shim" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/FragmentOneActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V"
     ],
@@ -619,7 +619,7 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/Shims;.testMessageHandlerOneIssue:()Lcom/facebook/marianatrench/integrationtests/Messenger;" : 
   {
-    "artificial" : 
+    "shim" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/HandlerOne;.handleMessage:(Ljava/lang/Object;)V"
     ],
@@ -632,7 +632,7 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/Shims;.testMessageHandlerOneNoIssue:()Lcom/facebook/marianatrench/integrationtests/Messenger;" : 
   {
-    "artificial" : 
+    "shim" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/HandlerOne;.handleMessage:(Ljava/lang/Object;)V"
     ],
@@ -667,7 +667,7 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/Shims;.testMultipleFragmentChildClasses:(Z)V" : 
   {
-    "artificial" : 
+    "shim" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/FragmentOneActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V",
       "Lcom/facebook/marianatrench/integrationtests/FragmentTwoActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V"
@@ -686,7 +686,7 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/Shims;.testParameterMappingIssue:()Lcom/facebook/marianatrench/integrationtests/ParameterMapping;" : 
   {
-    "artificial" : 
+    "shim" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/HandlerOne;.handleMessage:(Ljava/lang/Object;)V"
     ],
@@ -701,7 +701,7 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/Shims;.testParameterMappingNoIssue:()Lcom/facebook/marianatrench/integrationtests/ParameterMapping;" : 
   {
-    "artificial" : 
+    "shim" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/HandlerOne;.handleMessage:(Ljava/lang/Object;)V"
     ],
@@ -716,7 +716,7 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/Shims;.testSetArguments:()V" : 
   {
-    "artificial" : 
+    "shim" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/FragmentOneActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V"
     ],
@@ -736,7 +736,7 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/Shims;.testStaticShimTarget:()V" : 
   {
-    "artificial" : 
+    "shim" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/ShimTarget;.staticMethod:(Ljava/lang/Object;)V"
     ],
@@ -759,7 +759,7 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/ShimsWithArgumentGenerations;.issue1:()V" : 
   {
-    "artificial" : 
+    "shim" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/ShimsWithArgumentGenerations;.sourceOnArgument0:(Ljava/lang/Object;)V"
     ],
@@ -771,7 +771,7 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/ShimsWithArgumentGenerations;.issue2:()V" : 
   {
-    "artificial" : 
+    "shim" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/ShimsWithArgumentGenerations;.sourceOnArgument1:(ILjava/lang/Object;)V"
     ],
@@ -790,7 +790,7 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/ShimsWithThisGenerations;.noIssueViaShim:()V" : 
   {
-    "artificial" : 
+    "shim" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/ShimsWithThisGenerations;.sourceAndSinkOnThis:()V"
     ],
@@ -852,7 +852,7 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides;.testShimOnAnonymousClass:()V" : 
   {
-    "artificial" : 
+    "shim" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides$1;.onReceive:(Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;Ljava/lang/Object;)V"
     ],
@@ -869,7 +869,7 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides;.testShimWithAnonymousClassArgument:()V" : 
   {
-    "artificial" : 
+    "shim" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/BroadcastReceiver;.onReceive:(Lcom/facebook/marianatrench/integrationtests/ActionReceiverLike;Ljava/lang/Object;)V"
     ],

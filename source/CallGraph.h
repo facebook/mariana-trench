@@ -204,6 +204,12 @@ namespace marianatrench {
  * argument(s).
  */
 struct ArtificialCallee {
+  enum class Kind {
+    AnonymousClass,
+    Shim,
+  };
+
+  Kind kind;
   CallTarget call_target;
   std::unordered_map<Root, Register> root_registers;
   FeatureSet features;

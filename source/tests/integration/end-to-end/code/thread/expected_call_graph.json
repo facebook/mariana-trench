@@ -358,7 +358,7 @@
   },
   "Ljava/lang/Thread;.<init>:(Ljava/lang/Runnable;)V[0: Lcom/facebook/marianatrench/integrationtests/RunnableActivity$1;]" : 
   {
-    "artificial" : 
+    "anonymous_class" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/RunnableActivity$1;.run:()V"
     ],

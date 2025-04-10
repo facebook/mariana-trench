@@ -247,7 +247,7 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.flow:()V" : 
   {
-    "artificial" : 
+    "anonymous_class" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/RunnableFlows$2;.run:()V"
     ],
@@ -264,7 +264,7 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.noFlow:()V" : 
   {
-    "artificial" : 
+    "anonymous_class" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/RunnableFlows$1;.run:()V"
     ],

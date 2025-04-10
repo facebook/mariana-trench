@@ -234,7 +234,9 @@ ArtificialCallees anonymous_class_artificial_callees(
     auto call_index =
         update_index(sink_textual_order_index, method->signature());
     callees.push_back(ArtificialCallee{
-        /* call_target */ CallTarget::direct_call(
+        /* kind */ ArtificialCallee::Kind::AnonymousClass,
+        /* call_target */
+        CallTarget::direct_call(
             instruction, method, call_index, anonymous_class_type),
         /* root_registers */
         {{Root(Root::Kind::Argument, 0), register_id}},
@@ -376,8 +378,9 @@ void process_shim_target(
   if (method->is_static()) {
     mt_assert(shim_target.is_static());
     artificial_callees.push_back(ArtificialCallee{
-        /* call_target */ CallTarget::static_call(
-            instruction, method, call_index),
+        /* kind */ ArtificialCallee::Kind::Shim,
+        /* call_target */
+        CallTarget::static_call(instruction, method, call_index),
         /* root_registers */ root_registers,
         /* features */ features,
     });
@@ -385,7 +388,9 @@ void process_shim_target(
   }
 
   artificial_callees.push_back(ArtificialCallee{
-      /* call_target */ CallTarget::virtual_call(
+      /* kind */ ArtificialCallee::Kind::Shim,
+      /* call_target */
+      CallTarget::virtual_call(
           instruction,
           method,
           call_index,
@@ -452,7 +457,9 @@ void process_shim_reflection(
       update_index(sink_textual_order_index, reflection_method->signature());
 
   artificial_callees.push_back(ArtificialCallee{
-      /* call_target */ CallTarget::virtual_call(
+      /* kind */ ArtificialCallee::Kind::Shim,
+      /* call_target */
+      CallTarget::virtual_call(
           instruction,
           reflection_method,
           call_index,
@@ -571,7 +578,9 @@ void process_shim_lifecycle(
         update_index(sink_textual_order_index, lifecycle_method->signature());
 
     artificial_callees.push_back(ArtificialCallee{
-        /* call_target */ CallTarget::direct_call(
+        /* kind */ ArtificialCallee::Kind::Shim,
+        /* call_target */
+        CallTarget::direct_call(
             instruction, lifecycle_method, call_index, receiver_type),
         /* root_registers */ root_registers,
         /* features */ FeatureSet{feature_factory.get_via_shim_feature(callee)},
@@ -998,13 +1007,28 @@ std::ostream& operator<<(std::ostream& out, const CallTarget& call_target) {
 }
 
 bool ArtificialCallee::operator==(const ArtificialCallee& other) const {
-  return call_target == other.call_target &&
+  return kind == other.kind && call_target == other.call_target &&
       root_registers == other.root_registers && features == other.features;
 }
 
+namespace {
+
+std::string artificial_callee_kind_to_string(ArtificialCallee::Kind kind) {
+  switch (kind) {
+    case ArtificialCallee::Kind::AnonymousClass:
+      return "anonymous_class";
+    case ArtificialCallee::Kind::Shim:
+      return "shim";
+  }
+  mt_unreachable();
+}
+
+} // namespace
+
 std::ostream& operator<<(std::ostream& out, const ArtificialCallee& callee) {
-  out << "ArtificialCallee(call_target=" << callee.call_target
-      << ", root_registers={";
+  out << "ArtificialCallee(kind="
+      << artificial_callee_kind_to_string(callee.kind)
+      << ", call_target=" << callee.call_target << ", root_registers={";
   for (const auto& [root, register_id] : callee.root_registers) {
     out << " " << root << ": v" << register_id << ",";
   }
@@ -1384,19 +1408,39 @@ Json::Value CallGraph::to_json(const Method* method) const {
 
   auto instruction_artificial_callees = artificial_callees_.find(method);
   if (instruction_artificial_callees != artificial_callees_.end()) {
-    std::unordered_set<const Method*> callees;
+    std::unordered_set<const Method*> anonymous_classes;
+    std::unordered_set<const Method*> shims;
     for (const auto& [instruction, artificial_callees] :
          instruction_artificial_callees->second) {
       for (const auto& artificial_callee : artificial_callees) {
-        callees.insert(artificial_callee.call_target.resolved_base_callee());
+        auto* resolved = artificial_callee.call_target.resolved_base_callee();
+        mt_assert(resolved != nullptr);
+        if (artificial_callee.kind == ArtificialCallee::Kind::Shim) {
+          shims.insert(resolved);
+        } else if (
+            artificial_callee.kind == ArtificialCallee::Kind::AnonymousClass) {
+          anonymous_classes.insert(resolved);
+        } else {
+          mt_unreachable();
+        }
       }
     }
 
-    auto callees_value = Json::Value(Json::arrayValue);
-    for (const auto* callee : callees) {
-      callees_value.append(Json::Value(show(callee)));
+    if (!anonymous_classes.empty()) {
+      auto callees_value = Json::Value(Json::arrayValue);
+      for (const auto* callee : anonymous_classes) {
+        callees_value.append(Json::Value(show(callee)));
+      }
+      method_value["anonymous_class"] = callees_value;
     }
-    method_value["artificial"] = callees_value;
+
+    if (!shims.empty()) {
+      auto shims_value = Json::Value(Json::arrayValue);
+      for (const auto* callee : shims) {
+        shims_value.append(Json::Value(show(callee)));
+      }
+      method_value["shim"] = shims_value;
+    }
   }
 
   JsonValidation::validate_object(method_value);

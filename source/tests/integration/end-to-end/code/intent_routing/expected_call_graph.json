@@ -244,7 +244,7 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.doesNotRouteIntent_noTaintSources:(Landroid/content/Context;)V" : 
   {
-    "artificial" : 
+    "shim" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsAndReturnsRoutedIntent:()Landroid/content/Intent;",
       "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsAndReturnsRoutedIntent_sessionToReturn:()Ljava/lang/String;",
@@ -275,7 +275,7 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.falsePositive_wrongShim:(Landroid/content/Context;)V" : 
   {
-    "artificial" : 
+    "shim" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsAndReturnsRoutedIntent:()Landroid/content/Intent;",
       "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsAndReturnsRoutedIntent_sessionToReturn:()Ljava/lang/String;",
@@ -307,7 +307,7 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.objectTaintUnknown:(Ljava/lang/String;Landroid/content/Context;)V" : 
   {
-    "artificial" : 
+    "shim" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsAndReturnsRoutedIntent:()Landroid/content/Intent;",
       "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsAndReturnsRoutedIntent_sessionToReturn:()Ljava/lang/String;",
@@ -327,7 +327,7 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/IntentRouter;.routesIntent:(Landroid/content/Context;)V" : 
   {
-    "artificial" : 
+    "shim" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsAndReturnsRoutedIntent:()Landroid/content/Intent;",
       "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsAndReturnsRoutedIntent_sessionToReturn:()Ljava/lang/String;",
@@ -355,7 +355,7 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/IntentRouterAndTarget;.routesAndGetsIntent:(Landroid/content/Context;)V" : 
   {
-    "artificial" : 
+    "shim" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsAndReturnsRoutedIntent:()Landroid/content/Intent;",
       "Lcom/facebook/marianatrench/integrationtests/IntentTarget;.readsAndReturnsRoutedIntent_sessionToReturn:()Ljava/lang/String;",
