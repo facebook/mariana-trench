@@ -1147,7 +1147,8 @@ void check_call_effect_flows(
 void check_artificial_calls_effect_flows(
     MethodContext* context,
     const InstructionAliasResults& aliasing,
-    const IRInstruction* instruction) {
+    const IRInstruction* instruction,
+    std::string_view original_sink_callee) {
   const auto& artificial_callees =
       context->call_graph.artificial_callees(context->method(), instruction);
 
@@ -1185,9 +1186,9 @@ void check_artificial_calls_effect_flows(
             sinks,
             callee.position,
             /* sink_index */ callee.call_index,
-            /* sink_callee */ callee.resolved_base_method
-                ? callee.resolved_base_method->show()
-                : std::string(k_unresolved_callee),
+            /* sink_callee */
+            get_sink_callee_for_artificial_call(
+                artificial_callee, original_sink_callee),
             /* extra features */ {},
             /* fulfilled partial sinks */ nullptr);
       }
@@ -1293,15 +1294,17 @@ bool ForwardTaintTransfer::analyze_invoke(
         UpdateKind::Weak);
   }
 
+  auto sink_callee_for_artificial_calls = callee.resolved_base_method
+      ? callee.resolved_base_method->show()
+      : k_unresolved_callee;
   check_artificial_calls_flows(
       context,
       aliasing,
       instruction,
-      /* sink_callee */ callee.resolved_base_method
-          ? callee.resolved_base_method->show()
-          : k_unresolved_callee,
+      sink_callee_for_artificial_calls,
       environment);
-  check_artificial_calls_effect_flows(context, aliasing, instruction);
+  check_artificial_calls_effect_flows(
+      context, aliasing, instruction, sink_callee_for_artificial_calls);
 
   return false;
 }
@@ -1401,13 +1404,15 @@ bool ForwardTaintTransfer::analyze_iput(
         UpdateKind::Weak);
   }
 
+  auto sink_callee_for_artificial_calls = field_name->str();
   check_artificial_calls_flows(
       context,
       aliasing,
       instruction,
-      /* sink_callee */ field_name->str(),
+      sink_callee_for_artificial_calls,
       environment);
-  check_artificial_calls_effect_flows(context, aliasing, instruction);
+  check_artificial_calls_effect_flows(
+      context, aliasing, instruction, sink_callee_for_artificial_calls);
 
   return false;
 }
