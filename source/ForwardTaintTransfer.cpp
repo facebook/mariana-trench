@@ -1017,11 +1017,30 @@ void check_flows_to_array_allocation(
   }
 }
 
+std::string_view get_sink_callee_for_artificial_call(
+    const ArtificialCallee& artificial_callee,
+    std::string_view original_sink_callee) {
+  auto* callee = artificial_callee.call_target.resolved_base_callee();
+  if (callee == nullptr) {
+    return original_sink_callee;
+  }
+
+  switch (artificial_callee.kind) {
+    case ArtificialCallee::Kind::AnonymousClass:
+      return callee->show();
+
+    case ArtificialCallee::Kind::Shim:
+      return original_sink_callee;
+  }
+
+  mt_unreachable();
+}
+
 void check_artificial_calls_flows(
     MethodContext* context,
     const InstructionAliasResults& aliasing,
     const IRInstruction* instruction,
-    std::string_view sink_callee,
+    std::string_view original_sink_callee,
     ForwardTaintEnvironment* environment) {
   const auto& artificial_callees =
       context->call_graph.artificial_callees(context->method(), instruction);
@@ -1049,7 +1068,8 @@ void check_artificial_calls_flows(
         environment,
         get_register,
         callee,
-        sink_callee,
+        get_sink_callee_for_artificial_call(
+            artificial_callee, original_sink_callee),
         callee.model.sinks(),
         extra_features,
         &fulfilled_partial_sinks);
@@ -1061,7 +1081,8 @@ void check_artificial_calls_flows(
         environment,
         get_register,
         callee,
-        sink_callee,
+        get_sink_callee_for_artificial_call(
+            artificial_callee, original_sink_callee),
         callee.model.call_effect_sinks(),
         extra_features,
         &fulfilled_partial_sinks);

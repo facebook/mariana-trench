@@ -1279,7 +1279,7 @@
         "via-anonymous-class-to-obscure",
         "via-cast:Ljava/lang/String;"
       ],
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/Executor;.execute:(Lcom/facebook/marianatrench/integrationtests/Runnable;)V",
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Flow$2;.run:()V",
       "may_features" : 
       [
         "via-inner-class-this",
