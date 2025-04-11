@@ -37,7 +37,7 @@ static Taint create_taint(
     const std::string& pattern,
     const std::vector<TaintConfig>& sources) {
   Taint all_sources;
-  for (const auto& source : sources) {
+  for (const auto& source : UnorderedIterable(sources)) {
     mt_assert(source.is_leaf());
     mt_assert(source.call_kind().is_declaration());
     check_taint_config_consistency(pattern, source);

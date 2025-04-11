@@ -173,7 +173,7 @@ class Parser {
     auto sorted_sources = std::vector<TestSource>();
     while (sources.size() != sorted_sources.size()) {
       auto unsorted_sources = std::vector<TestSource>();
-      for (const auto& source : sources) {
+      for (const auto& source : UnorderedIterable(sources)) {
         if (!source.super ||
             std::find_if(
                 sorted_sources.begin(),
