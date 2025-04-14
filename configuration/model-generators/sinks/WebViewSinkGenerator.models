@@ -19,28 +19,6 @@
       }
     },
     {
-      "_comment": "Precautionary model. Do not want any matches for these.",
-      "find": "methods",
-      "where": [
-        {
-          "constraint": "signature_match",
-          "parents": [
-            "Lcom/android/webview/chromium/WebViewChromium;",
-            "Lorg/chromium/android_webview/AwContents;"
-          ],
-          "name": "evaluateJavascript"
-        }
-      ],
-      "model": {
-        "sinks": [
-          {
-            "kind": "ExecuteJavascript",
-            "port": "Argument(1)"
-          }
-        ]
-      }
-    },
-    {
       "find": "methods",
       "where": [
         {
