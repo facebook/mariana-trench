@@ -32,7 +32,7 @@ class GlobalTypeAnalyzer;
 
 } // namespace global
 
-using EligibleIfields = std::unordered_set<DexField*>;
+using EligibleIfields = UnorderedSet<DexField*>;
 
 using DexTypeFieldPartition =
     sparta::HashedAbstractPartition<const DexField*, DexTypeDomain>;
