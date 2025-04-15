@@ -57,6 +57,29 @@
           }
         ]
       }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroid/app/Activity;",
+          "names": [
+            "getCaller",
+            "getCallingActivity",
+            "getCallingPackage",
+            "getLaunchedFromPackage",
+            "getCurrentCaller"
+          ]
+        }
+      ],
+      "model": {
+        "sources": [
+          {
+            "kind": "AndroidCallerIdentity"
+          }
+        ]
+      }
     }
   ]
 }
