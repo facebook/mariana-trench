@@ -183,7 +183,7 @@ void Overrides::init_from_stores(
             auto overrides_in_scope =
                 method_override_graph::get_overriding_methods(
                     *graph, dex_method, /* include_interfaces */ true);
-            for (const auto* override : overrides_in_scope) {
+            for (const auto* override : UnorderedIterable(overrides_in_scope)) {
               overrides.insert(method_factory.get(override));
             }
           }

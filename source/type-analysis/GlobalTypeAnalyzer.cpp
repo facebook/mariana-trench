@@ -118,7 +118,7 @@ void scan_any_init_reachables(
     bool overrides_external = false;
     const auto& overridens =
         mog::get_overridden_methods(method_override_graph, vmethod);
-    for (auto overriden : overridens) {
+    for (auto overriden : UnorderedIterable(overridens)) {
       if (overriden->is_external()) {
         overrides_external = true;
       }
@@ -501,7 +501,7 @@ void GlobalTypeAnalysis::find_any_init_reachables(
       bool overrides_external = false;
       const auto& overridens =
           mog::get_overridden_methods(method_override_graph, vmethod);
-      for (auto overriden : overridens) {
+      for (auto overriden : UnorderedIterable(overridens)) {
         if (overriden->is_external()) {
           overrides_external = true;
         }
