@@ -28,14 +28,17 @@ JSONCPP_URL: str = (
 GTEST_VERSION: str = "1.13.0"
 GTEST_URL: str = f"https://github.com/google/googletest/archive/v{GTEST_VERSION}.tar.gz"
 
-FMT_VERSION: str = "7.1.3"
+FMT_VERSION: str = "9.1.0"
 FMT_URL: str = f"https://github.com/fmtlib/fmt/archive/{FMT_VERSION}.tar.gz"
 
-RE2_VERSION: str = "2021-04-01"
+ABSEIL_VERSION: str = "20250127.1"
+ABSEIL_URL: str = f"https://github.com/abseil/abseil-cpp/releases/download/{ABSEIL_VERSION}/abseil-cpp-{ABSEIL_VERSION}.tar.gz"
+
+RE2_VERSION: str = "2024-07-02"
 RE2_URL: str = f"https://github.com/google/re2/archive/{RE2_VERSION}.tar.gz"
 
-BOOST_VERSION: str = "1.76.0"
-BOOST_URL: str = f"https://boostorg.jfrog.io/artifactory/main/release/{BOOST_VERSION}/source/boost_{BOOST_VERSION.replace('.', '_')}.tar.bz2"
+BOOST_VERSION: str = "1.87.0"
+BOOST_URL: str = f"https://archives.boost.io/release/{BOOST_VERSION}/source/boost_{BOOST_VERSION.replace('.', '_')}.tar.gz"
 
 REDEX_URL: str = "https://github.com/facebook/redex.git"
 
@@ -208,7 +211,7 @@ def _build_boost(
     boost_install_directory = work_directory / f"install/boost-{BOOST_VERSION}"
     _download_and_extract(
         BOOST_URL,
-        f"boost-{BOOST_VERSION}.tar.bz2",
+        f"boost-{BOOST_VERSION}.tar.gz",
         work_directory,
         boost_build_directory,
     )
@@ -280,6 +283,8 @@ def _build_fmt(arguments: argparse.Namespace, work_directory: Path) -> Path:
     _run(
         [
             "cmake",
+            "-DCMAKE_CXX_STANDARD=17",
+            "-DFMT_TEST=OFF",
             "-DBUILD_SHARED_LIBS=FALSE",
             f"-DCMAKE_INSTALL_PREFIX={fmt_install_directory}",
             ".",
@@ -291,7 +296,37 @@ def _build_fmt(arguments: argparse.Namespace, work_directory: Path) -> Path:
     return fmt_install_directory
 
 
-def _build_re2(arguments: argparse.Namespace, work_directory: Path) -> Path:
+def _build_abseil(arguments: argparse.Namespace, work_directory: Path) -> Path:
+    LOG.info(f"Building abseil {ABSEIL_VERSION}")
+    abseil_build_directory = work_directory / f"build/abseil-{ABSEIL_VERSION}"
+    abseil_install_directory = work_directory / f"install/abseil-{ABSEIL_VERSION}"
+    _download_and_extract(
+        ABSEIL_URL,
+        f"abseil-{ABSEIL_VERSION}.tar.gz",
+        work_directory,
+        abseil_build_directory,
+    )
+    abseil_build_directory /= f"abseil-cpp-{ABSEIL_VERSION}"
+    _run(
+        [
+            "cmake",
+            "-DABSL_BUILD_TESTING=OFF",
+            "-DABSL_USE_GOOGLETEST_HEAD=ON",
+            "-DCMAKE_CXX_STANDARD=17",
+            "-DBUILD_SHARED_LIBS=FALSE",
+            f"-DCMAKE_INSTALL_PREFIX={abseil_install_directory}",
+            ".",
+        ],
+        cwd=abseil_build_directory,
+    )
+    _run(["make", f"-j{arguments.jobs}"], cwd=abseil_build_directory)
+    _run(["make", "install"], cwd=abseil_build_directory)
+    return abseil_install_directory
+
+
+def _build_re2(
+    arguments: argparse.Namespace, work_directory: Path, abseil: Path
+) -> Path:
     LOG.info(f"Building re2 {RE2_VERSION}")
     re2_build_directory = work_directory / f"build/re2-{RE2_VERSION}"
     re2_install_directory = work_directory / f"install/re2-{RE2_VERSION}"
@@ -307,6 +342,7 @@ def _build_re2(arguments: argparse.Namespace, work_directory: Path) -> Path:
             "cmake",
             "-DBUILD_SHARED_LIBS=FALSE",
             "-DRE2_BUILD_TESTING=OFF",
+            f"-Dabsl_DIR={abseil}/lib/cmake/absl",
             f"-DCMAKE_INSTALL_PREFIX={re2_install_directory}",
             ".",
         ],
@@ -357,6 +393,7 @@ def _build_mariana_trench(
     jsoncpp: Path,
     gtest: Path,
     fmt: Path,
+    abseil: Path,
     re2: Path,
     boost: Path,
     redex: Path,
@@ -374,6 +411,7 @@ def _build_mariana_trench(
             f"-DJSONCPP_DIR={jsoncpp}",
             f"-DGTest_DIR={gtest}/lib/cmake/GTest",
             f"-Dfmt_DIR={fmt}/lib/cmake/fmt",
+            f"-Dabsl_DIR={abseil}/lib/cmake/absl",
             f"-Dre2_DIR={re2}/lib/cmake/re2",
             f"-DBOOST_ROOT={boost}",
             f"-DREDEX_ROOT={redex}",
@@ -407,7 +445,8 @@ def main() -> None:
         jsoncpp = _build_jsoncpp(arguments, work_directory)
         gtest = _build_gtest(arguments, work_directory)
         fmt = _build_fmt(arguments, work_directory)
-        re2 = _build_re2(arguments, work_directory)
+        abseil = _build_abseil(arguments, work_directory)
+        re2 = _build_re2(arguments, work_directory, abseil)
         boost = _build_boost(arguments, work_directory)
         redex = _build_redex(arguments, work_directory, zlib, jsoncpp, boost)
         mariana_trench = _build_mariana_trench(
@@ -417,6 +456,7 @@ def main() -> None:
             jsoncpp,
             gtest,
             fmt,
+            abseil,
             re2,
             boost,
             redex,

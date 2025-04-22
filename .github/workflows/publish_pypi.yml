@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-macos:
-    runs-on: macos-11
+    runs-on: macos-13
 
     steps:
       - uses: actions/checkout@v2
@@ -32,14 +32,14 @@ jobs:
       - name: Log the output directory
         run: ls -lisah dist
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: macos-wheels
           path: dist/
           if-no-files-found: error
 
   build-ubuntu:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
 
     steps:
       - uses: actions/checkout@v2
@@ -64,7 +64,7 @@ jobs:
       - name: Log the output directory
         run: ls -lisah dist
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: ubuntu-wheels
           path: dist/
@@ -80,12 +80,12 @@ jobs:
       - name: Make a 'dist' folder
         run: mkdir dist
 
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v4
         with:
           name: macos-wheels
           path: ./dist
 
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v4
         with:
           name: ubuntu-wheels
           path: ./dist
