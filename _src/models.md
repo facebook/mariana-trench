@@ -73,11 +73,7 @@ For the parameters and return types use the following table to pick the correct 
 - F - float
 - D - double (64 bits)
 
-Classes take the form `Lpackage/name/ClassName;` - where the leading `L` indicates that it is a class type, `package/name/` is the package that the class is in. A nested class will take the form `Lpackage/name/ClassName$NestedClassName` (the `$` will need to be double escaped `\\$` in json regex).
-
-> **NOTE:** Instance (i.e, non-static) method parameters are indexed starting from 1! The 0th parameter is the `this` parameter in dalvik byte-code. For static method parameter, indices start from 0.
-
-> **NOTE:** In a constructor (\<init\> method), parameters are also indexed starting from 1. The 0th parameter refers to the instance being constructed, similar to the `this` reference.
+Classes take the form `Lpackage/name/ClassName;` - where the leading `L` indicates that it is a class type, `package/name/` is the package that the class is in. A nested class will take the form `Lpackage/name/ClassName$NestedClassName;` (the `$` will need to be double escaped `\\$` in json regex).
 
 ### Access path format
 
@@ -88,7 +84,7 @@ An access path is composed of a root and a path.
 The root is either:
 
 - `Return`, representing the returned value;
-- `Argument(x)` (where `x` is an integer), representing the parameter number `x`;
+- `Argument(x)` (where `x` is an integer), representing the parameter number `x`. **Note** that `Argument(0)` represents the implicit `this` parameter for instance methods;
 
 The path is a (possibly empty) list of path elements. A path element can be any of the following kinds:
 
@@ -104,7 +100,11 @@ Examples:
 - `Argument(1)[*]` corresponds to _any index_ of the dictionary like second parameter;
 - `Argument(1)[<Argument(2)>]` corresponds to an _index_ of the dictionary like second parameter whose value is resolved from the third parameter;
 - `Return` corresponds to the returned value;
-- `Return.x` correpsonds to the field `x` of the returned value;
+- `Return.x` corresponds to the field `x` of the returned value;
+
+> **NOTE 1:** Instance (i.e, non-static) method parameters are indexed starting from 1! The 0th parameter is the `this` parameter in Dalvik byte-code. For static method parameters, indices start from 0.
+
+> **NOTE 2:** In a constructor (`<init>` method), parameters are also indexed starting from 1. The 0th parameter refers to the instance being constructed, similar to the `this` reference.
 
 ### Kinds
 
@@ -112,9 +112,11 @@ A source has a **kind** that describes its content (e.g, user input, file system
 
 ### Sources
 
-Sources describe sources produced or received by a given method. A source can either flow out via the return value or flow via a given parameter. A source has a **kind** that describes its content (e.g, user input, file system, etc).
+Sources describe taint *produced* or *received* by a given method. A source has a **kind** that describes its content (e.g, user input, file system, etc).
+- A method *produces* a source kind if invoking the method implies the source kind *flows out* from it. The source kind can flow out via the return value or through a parameter (pass by reference semantics).
+- A method *receives* a source kind if a source kind is always assumed to *flow in* via an argument regardless of the method's callsite.
 
-Here is an example where the source flows by return value:
+Here is an example where the source *flows out* through the return value:
 
 ```java
 public static String getPath() {
@@ -145,7 +147,7 @@ The JSON model generator for this method could be:
 }
 ```
 
-Here is an example where the source flows in via an argument:
+Here is an example where the source *flows in* via an argument:
 
 ```java
 class MyActivity extends Activity {
@@ -178,7 +180,84 @@ The JSON model generator for this method could be:
 }
 ```
 
-Note that the implicit `this` parameter is considered the argument 0.
+Here is an example where source *flows out* via an argument:
+```java
+public static void updateIntent(Intent intent) {}
+
+void createAndUseIntent() {
+  MyIntent myIntent = new MyIntent();
+  // myIntent is not a source. This is safe.
+  sink(myIntent);
+
+  updateIntent(myIntent);
+  // myIntent is now a source. This is now a flow.
+  sink(myIntent);
+}
+```
+
+The JSON model generator for this method could be:
+
+```json
+{
+  "find": "methods",
+  "where": [
+    {
+     "constraint": "signature_match",
+      "parent": "Lcom/example/Class;",
+      "name": "updateIntent"
+    }
+  ],
+  "model": {
+    "generations": [
+      {
+        "kind": "UserControlled",
+        "port": "Argument(0)"
+      }
+    ]
+  }
+}
+```
+
+Note on the use of "generations" vs "sources": "generations" indicates that the source kind is *produced* and *flows out* via the specified port. When the port is "Return", "generations" and "sources" are equivalent.
+
+"generations" are also useful to mark the `this` reference of an instance as sources. Instances are created using constructors, which are special `<init>` methods with return type void. But, as mentioned in Note 2 above, constructors create a special 0th parameter to refer to the instance being constructed (i.e. `this`). Here is an example where a constructor marks the instance as a source:
+```java
+class SourceIntent extends Intent {
+  SourceIntent() {}
+}
+
+void createAndUseIntent() {
+  SourceIntent sourceIntent = new SourceIntent();
+  // sourceIntent is a source.
+  sink(myIntent);
+}
+```
+
+The JSON model generator for the constructor method could be:
+
+```json
+{
+  "find": "methods",
+  "where": [
+    {
+     "constraint": "signature_match",
+      "parent": "Lcom/example/SourceIntent;",
+      "name": "<init>"
+    }
+  ],
+  "model": {
+    "generations": [
+      {
+        "kind": "UserControlled",
+        "port": "Argument(0)"
+      }
+    ]
+  }
+}
+```
+
+
+
 
 ### Sinks
 
@@ -261,6 +340,24 @@ The return value of the method can be controlled by both parameters, hence it ha
   }
 }
 ```
+
+#### Propagation with Transforms
+
+Propagations can additionally specify a list of "transforms". This is an ordered list of *transform kinds* which specifies the transformations that are applied to the input of the propagation. Transform kinds can be used to specify methods that flows must pass through to be valid flows. Transform kinds, like source and sink kinds, must be included as a part of the [rule](./rules.md#transforms) to add the transform constraint.
+
+
+```json
+"propagation": [
+  {
+    "input": "Argument(0)",
+    "output": "Return",
+    "transforms": [
+      "IntentData"
+    ]
+  }
+]
+```
+
 
 ### Features
 
@@ -448,7 +545,7 @@ activitySubclassInstance.startActivityForResult(intent, requestCode);
 
 ```
 
-we could use the following JSON to specifiy a via-type feature that would materialize as `via-type:ActivitySubclass`:
+we could use the following JSON to specify a via-type feature that would materialize as `via-type:ActivitySubclass`:
 
 ```json
 {
@@ -476,7 +573,7 @@ we could use the following JSON to specifiy a via-type feature that would materi
 
 #### Via-value Features
 
-_Via-value_ feature captures the value of the specified callable's port seen at its callsites during taint flow analysis. They are specified similar to `Via-type` features -- in model generators within the "sources" or "sinks" field of a model with the "via_value_of" field. It is mapped to a nonempty list of ports of the method for which we want to create via-value features.
+_Via-value_ feature captures the value of the specified callable's port seen at its callsites during taint flow analysis. They are specified similar to `Via-type` features -- in model generators within the "sources", "sinks"  or "add_features_to_arguments" field of a model with the "via_value_of" field. It is mapped to a nonempty list of ports of the method for which we want to create via-value features.
 
 For example, if we were interested in the specific `mode` with which the method below was called:
 
@@ -492,7 +589,7 @@ log(Constants.MODE, "error message");
 
 ```
 
-we could use the following JSON to specifiy a via-value feature that would materialize as `via-value:M1`:
+we could use the following JSON to specify a via-value feature that would materialize as `via-value:M1`:
 
 ```json
 {
@@ -519,6 +616,145 @@ we could use the following JSON to specifiy a via-value feature that would mater
 ```
 
 Note that this only works for numeric and string literals. In cases where the argument is not a constant, the feature will appear as `via-value:unknown`.
+
+Note: `via_type_of` and `via_value_of` allow specifying a tag, which will be provided in the instantiated breadcrumb. For instance `via-foo-value:bar`, for a tag "foo". This can be used to differentiate from other via-value or via-type breadcrumbs.
+```json
+"via_type_of": [
+  {
+    "port": "Argument(1)",
+    "tag": "differentiator"
+  }
+]
+```
+This would create the feature `via-differentiator-type:Lcom/example/Class`.
+
+For backward compatibility, we allow these to be mixed with normal ports in a list
+```json
+"via_value_of": [
+  "Argument(0)",
+  {
+    "port": "Argument(1)",
+    "tag": "error-mode"
+  },
+  "Argument(2)"
+]
+```
+
+#### Annotation Features
+
+In model generators we can also use annotation features, which translate to regular user features based on annotation parameter values. This feature is also compatible with `for_all_parameters`.
+
+Config example:
+```json
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;",
+          "name": "getSourceWithMethodAnnotation"
+        }
+      ],
+      "model": {
+        "generations": [
+          {
+            "kind": "Source",
+            "port": "Return",
+            "via_annotation": [
+              {
+                "type": "Lcom/facebook/marianatrench/integrationtests/Path;",
+                "target": "Return"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Lcom/facebook/marianatrench/integrationtests/AnnotationFeature;",
+          "name": "getSourceWithParameterAnnotation"
+        }
+      ],
+      "model": {
+        "generations": [
+          {
+            "kind": "Source",
+            "port": "Return",
+            "via_annotation": [
+              {
+                "type": "Lcom/facebook/marianatrench/integrationtests/QueryParam;",
+                "target": "Argument(1)"
+              },
+              {
+                "type": "Lcom/facebook/marianatrench/integrationtests/OtherQueryParam;",
+                "target": "Argument(2)",
+                "tag": "ParameterNameLabel",
+                "annotation_parameter": "description"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
+```
+
+Java class with annotations:
+```java
+public class AnnotationFeature {
+
+  @Path("/issue_1")
+  Object getSourceWithMethodAnnotation() {
+    return new Object();
+  }
+
+  Object getSourceWithParameterAnnotation(@QueryParam("query_param_name") String value, @OtherQueryParam(value = "other_query_param_name", description = "other_query_param_name_description") String description) {
+    return "unrelated";
+  }
+
+  void testSourceWithMethodAnnotation() {
+    Object source = getSourceWithMethodAnnotation();
+    Origin.sink(source);
+  }
+
+  void testSourceWithParameterAnnotation() {
+    Object source = getSourceWithParameterAnnotation("argument_value");
+    Origin.sink(source);
+  }
+}
+```
+
+Resulting issues:
+
+```json
+{
+  "issues" :
+  [
+    {
+      "always_features" :
+      [
+        "via-annotation:/issue_1"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+...
+{
+  "issues" :
+  [
+    {
+      "always_features" :
+      [
+        "via-ParameterNameLabel-annotation:description_instead_of_value"
+      ],
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+...
+```
 
 ### Taint Broadening
 
@@ -656,7 +892,7 @@ These can be specified in model generators as follows -
 }
 ```
 
-Note, if there are any user-specificed sources, sinks or propagations on the model, sanitizers will not affect them, but it will prevent them from being propagated outward to callsites.
+Note, if there are any user-specified sources, sinks or propagations on the model, sanitizers will not affect them, but it will prevent them from being propagated outward to callsites.
 
 #### Kind-specific Sanitizers
 
@@ -859,7 +1095,9 @@ void testRegexSourceGoogleApiKey() {
 
 Mariana Trench allows for dynamic model specifications. This allows a user to specify models of methods before running the analysis. This is used to specify sources, sinks, propagation and modes.
 
-Model generators are specified in a generator configuration file, specified by the `--generator-configuration-path` parameter. By default, we use [`default_generator_config.json`](https://github.com/facebook/mariana-trench/blob/main/configuration/default_generator_config.json).
+The model generator files must have the extension `.models`. The locations to search for these files must be provided using the `--model-generator-search-paths` argument.
+
+Model generators to use during analysis are listed in a *model generator configuration file* and specified using the `--model-generator-configuration-paths` argument. By default, we use [`default_generator_config.json`](https://github.com/facebook/mariana-trench/blob/main/configuration/default_generator_config.json). Any other `.models` files found in the search paths but not listed in the configuration file are ignored.
 
 ### Example
 
@@ -1007,7 +1245,7 @@ Each "rule" defines a "filter" (which uses "constraints" to specify methods for 
 - `model`: A model, describing sources/sinks/propagations/etc.
 
   - **For method models**
-    - `sources`\*: A list of sources, i.e a source flowing out of the method via return value or flowing in via an argument. A source has the following key/values:
+    - `sources`\*: A list of sources, i.e a source *flowing out* of the method via return value or *flowing in* via an argument. To specify sources *flowing out* via an argument, specify it as `generations`. A source/generation has the following key/values:
       - `kind`: The source name;
       - `port`\*\*: The source access path (e.g, `"Return"` or `"Argument(1)"`);
       - `features`\*: A list of features/breadcrumbs names;
@@ -1030,7 +1268,7 @@ Each "rule" defines a "filter" (which uses "constraints" to specify methods for 
     - `attach_to_propagations`\*: A list of attach-to-propagations that describe that inferred propagations of sources flowing in or out of a given parameter or return value must have the given features. An attach-to-propagation has the following key/values:
       - `port`: The access path root (e.g, `"Return"` or `"Argument(1)"`);
       - `features`: A list of features/breadcrumb names;
-    - `add_features_to_parameters`\*: A list of add-features-to-parameters that describe that flows that might flow on the given parameter must have the given features. An add-features-to-parameter has the following key/values:
+    - `add_features_to_arguments`\*: A list of add-features-to-arguments that describe that flows that might flow on the given argument must have the given features. An add-features-to-argument has the following key/values:
       - `port`: The access path root (e.g, `"Argument(1)"`);
       - `features`: A list of features/breadcrumb names;
     - `modes`\*: A list of mode names that describe specific behaviors of a method;
@@ -1046,7 +1284,7 @@ Each "rule" defines a "filter" (which uses "constraints" to specify methods for 
       - `features`\*: A list of features/breadcrumbs names;
     - `sinks`\*: A list of sinks the field should hold. A sink has the following key/values:
       - `kind`: The sink name;
-      - `features`\*: A list of features/breadcrumds names;
+      - `features`\*: A list of features/breadcrumbs names;
 
 In the above bullets,
 
