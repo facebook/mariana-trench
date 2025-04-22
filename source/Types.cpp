@@ -102,12 +102,11 @@ TypeEnvironments make_environments(reflection::ReflectionAnalysis& analysis) {
  * inference. This extracts what the analysis requires and discards the rest.
  */
 TypeEnvironments make_environments(
-    const std::unordered_map<
-        const IRInstruction*,
-        type_inference::TypeEnvironment>& environments) {
+    const UnorderedMap<const IRInstruction*, type_inference::TypeEnvironment>&
+        environments) {
   TypeEnvironments result;
 
-  for (const auto& [instruction, types] : environments) {
+  for (const auto& [instruction, types] : UnorderedIterable(environments)) {
     if (!is_interesting_opcode(instruction->opcode())) {
       continue;
     }
