@@ -73,7 +73,7 @@ int maybeIssue(IFace iface) {
 
 Mariana Trench computes propagations for each method (this may be known as “tito” (taint-in-taint-out) in other tools). Propagations tell the analysis that if an argument is tainted by a source, whether its return value, or the method’s “this” object become tainted by the argument. However, without explictly specifying `--propagate-across-arguments`, Mariana Trench does not propagate taint from one argument to another. In code:
 ```
-void setIntentValue(Intent intent, Uri uri) {
+void setIntentVaue(Intent intent, Uri uri) {
   // MT sees that intent.putExtra has a propagation from uri (Argument(2)) to
   // intent (Argument(0) or this).
   intent.putExtra("label", uri);

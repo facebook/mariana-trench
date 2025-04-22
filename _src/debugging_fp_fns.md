@@ -17,26 +17,22 @@ First, you need to run the analysis on your computer. This will create `model@XX
 
 ## Investigate the output models
 
-Now, your objective is to understand in which method we lost the flow (false negative) or introduced the invalid flow (false positive). You will need to look into the output models for that. These models include both the declared models and inferred models. Declared models are models explicitly written out or created by a model generator. Inferred models are models created by Mariana Trench's analysis of other models and the code. I recommend using the `explore_models.py` bento script.
+Now, your objective is to understand in which method we lost the flow (false negative) or introduced the invalid flow (false positive). You will need to look into the output models for that. I recommend to use the `explore_models.py` bento script.
 
 Run the following command in the directory containing the output model files (i.e, `model@XXX.json`):
 <OssOnly>
-
-```shell
+```
 python3 -i mariana_trench_repository/scripts/explore_models.py
 ```
-
 </OssOnly>
 <FbInternalOnly>
-
-```shell
+```
 bento console -i --file ~/fbsource/fbandroid/native/mariana-trench/scripts/explore_models.py
 ```
-
 </FbInternalOnly>
 
 This provides you with a few helper functions:
-```shell
+```
   index('.')                    Index all available models in the given directory.
   method_containing('Foo;.bar') Find all methods containing the given string.
   method_matching('Foo.*')      Find all methods matching the given regular expression.
@@ -44,7 +40,7 @@ This provides you with a few helper functions:
   print_model('Foo;.bar')       Pretty print the model for the given method.
 ```
 Use `index` to index all models first:
-```shell
+```
 In [1]: index()
 ```
 Now you can search for methods with `method_containing` and print their models with `print_model`.
@@ -53,7 +49,7 @@ You probably want to look at the first or last frame of the trace, to see if the
 ### Example
 
 Let's suppose I am investigating a false negative, I want to find in which method we are losing the flow. I could start looking at the last frame, i.e the sink:
-```shell
+```
 In [2]: method_containing('Landroid/content/Context;.sendOrderedBroadcast')
 Out[2]:
 ['Landroid/content/Context;.sendOrderedBroadcast:(Landroid/content/Intent;Ljava/lang/String;)V',
@@ -87,7 +83,7 @@ In [3]: print_model('Landroid/content/Context;.sendOrderedBroadcast:(Landroid/co
 }
 ```
 As expected, the method has a sink on Argument(1), so we are good for now. Next, I want to check the previous frame, which calls `Context.sendOrderedBroadcast`:
-```shell
+```
 In [2]: method_containing('ShortcutManagerCompat;.requestPinShortcut:')
 Out[2]: ['Landroidx/core/content/pm/ShortcutManagerCompat;.requestPinShortcut:(Landroid/content/Context;Landroidx/core/content/pm/ShortcutInfoCompat;Landroid/content/IntentSender;)Z']
 
@@ -133,43 +129,23 @@ I can see the frame from `ShortcutManagerCompat.requestPinShortcut` on `Argument
 
 For frames from the source to the root callable, I should look at `generations`, and for frames from the root callable to the sink, I should look at `sinks`. On the root callable, I should look at `issues`.
 
-As you can see above, methods can have very long signatures. Fortunately, the bento script is also a python REPL, so you can assign them to variables
-
-```shell
-In [4]:requestPinShortcut = 'Landroidx/core/content/pm/ShortcutManagerCompat;.requestPinShortcut:(Landroid/content/Context;Landroidx/core/content/pm/ShortcutInfoCompat;Landroid/content/IntentSender;)Z'
-In [5]:pm = print_model
-In [6]:pm(requestPinShortcut)
-{
-  "method": "Landroidx/core/content/pm/ShortcutManagerCompat;.requestPinShortcut:(Landroid/content/Context;Landroidx/core/content/pm/ShortcutInfoCompat;Landroid/content/IntentSender;)Z",
-  "position": {
-    "line": 112,
-    "path": "androidx/core/content/pm/ShortcutManagerCompat.java"
-  },
-  ...
-}
-```
-
 ## Investigating the transfer function
 
 Once you know in which method you are losing the flow or introducing an invalid flow, you will need to run the analysis with logging enabled for that method, using:
 
 <OssOnly>
-
-```shell
+```
 mariana-trench \
   --apk-path='your-apk' \
   --log-method='method-name'
 ```
-
 </OssOnly>
 <FbInternalOnly>
-
-```shell
+```
 buck run //fbandroid/native/mariana-trench/shim:shim -- \
   --apk-path='your-apk' \
   --log-method='method-name'
 ```
-
 </FbInternalOnly>
 
 This will log everything the transfer function does in that method, which might be a lot of logs. You can pipe this into a file or into `less`. Using logs, you should be able to see in which instruction you are losing the taint. Remember, the analysis computes a fixpoint, so the method will be analyzed multiple times. You should look at the last time it was analyzed (i.e, end of the logs).
