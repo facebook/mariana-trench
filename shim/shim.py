@@ -671,6 +671,16 @@ def _set_environment_variables(arguments: argparse.Namespace) -> None:
     os.environ["TRACE"] = ",".join(trace_settings)
 
 
+def _str_to_bool(value: str) -> Optional[bool]:
+    value = value.lower()
+    if value == "true":
+        return True
+    elif value == "false":
+        return False
+    else:
+        return None
+
+
 def _get_command_options_json(
     arguments: argparse.Namespace, apk_directory: str, dex_directory: str
 ) -> Dict[str, Any]:
@@ -788,8 +798,11 @@ def _get_command_options_json(
             ):
                 # Append the values to the existing list
                 options[key].extend(value)
+            elif (bool_value := _str_to_bool(value)) is not None:
+                # Override the existing value (if any)
+                options[key] = bool_value
             else:
-                # Override the value
+                # Override the existing value (if any)
                 options[key] = value
 
     if arguments.job_id:
