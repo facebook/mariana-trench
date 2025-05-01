@@ -241,7 +241,18 @@ Options::Options(const Json::Value& json) {
         /* check_exist */ false);
   }
 
-  if (json.isMember("grepo-metadata-path")) {
+  if (json.isMember("buck-target-metadata-path") &&
+      json.isMember("grepo-metadata-path")) {
+    throw JsonValidationError(
+        json,
+        std::nullopt,
+        "Expected only one of 'buck-target-metadata-path' or 'grepo-metadata-path");
+  }
+
+  if (json.isMember("buck-target-metadata-path")) {
+    buck_target_metadata_path_ = check_path_exists(
+        JsonValidation::string(json, "buck-target-metadata-path"));
+  } else if (json.isMember("grepo-metadata-path")) {
     grepo_metadata_path_ =
         check_path_exists(JsonValidation::string(json, "grepo-metadata-path"));
   }
@@ -409,7 +420,11 @@ const std::vector<std::string>& Options::source_exclude_directories() const {
   return source_exclude_directories_;
 }
 
-const std::string& Options::grepo_metadata_path() const {
+const std::optional<std::string>& Options::buck_target_metadata_path() const {
+  return buck_target_metadata_path_;
+}
+
+const std::optional<std::string>& Options::grepo_metadata_path() const {
   return grepo_metadata_path_;
 }
 

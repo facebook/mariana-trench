@@ -9,6 +9,7 @@
 
 #include <filesystem>
 #include <string>
+#include <vector>
 
 namespace marianatrench {
 namespace filesystem {
@@ -20,6 +21,8 @@ void save_string_file(
 
 /* Load contents of file at path to str */
 void load_string_file(const std::filesystem::path& path, std::string& str);
+
+std::vector<std::string> read_lines(const std::filesystem::path& path);
 
 } // namespace filesystem
 } // namespace marianatrench

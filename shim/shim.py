@@ -380,12 +380,6 @@ def _add_configuration_arguments(parser: argparse.ArgumentParser) -> None:
         help="A `;`-separated list of directories that should be excluded from indexed source files.",
     )
     configuration_arguments.add_argument(
-        "--grepo-metadata-path",
-        type=str,
-        default=None,
-        help="A json file containing grepo metadata for source file indexing.",
-    )
-    configuration_arguments.add_argument(
         "--proguard-configuration-paths",
         type=_separated_paths_exist,
         default=None,
@@ -508,17 +502,37 @@ def _add_configuration_arguments(parser: argparse.ArgumentParser) -> None:
     )
 
 
+def _add_source_indexing_arguments(parser: argparse.ArgumentParser) -> None:
+    source_indexing_arguments = parser.add_argument_group("Source indexing arguments")
+    source_indexing_arguments.add_argument(
+        "--skip-source-indexing",
+        action="store_true",
+        help="Skip indexing source files.",
+    )
+
+    repository_metadata = source_indexing_arguments.add_mutually_exclusive_group(
+        required=False
+    )
+    repository_metadata.add_argument(
+        "--buck-target-metadata-path",
+        type=str,
+        default=None,
+        help="A file containing metadata for source file indexing.",
+    )
+    repository_metadata.add_argument(
+        "--grepo-metadata-path",
+        type=str,
+        default=None,
+        help="A json file containing grepo metadata for source file indexing.",
+    )
+
+
 def _add_analysis_arguments(parser: argparse.ArgumentParser) -> None:
     analysis_arguments = parser.add_argument_group("Analysis arguments")
     analysis_arguments.add_argument(
         "--sequential",
         action="store_true",
         help="Run the analysis sequentially, one a single thread.",
-    )
-    analysis_arguments.add_argument(
-        "--skip-source-indexing",
-        action="store_true",
-        help="Skip indexing source files.",
     )
     analysis_arguments.add_argument(
         "--skip-analysis",
@@ -875,6 +889,7 @@ def main() -> None:
         _add_binary_arguments(parser)
         _add_configuration_arguments(parser)
         _add_analysis_arguments(parser)
+        _add_source_indexing_arguments(parser)
         _add_metadata_arguments(parser)
         _add_debug_arguments(parser)
         parser.add_argument(

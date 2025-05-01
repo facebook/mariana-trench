@@ -8,6 +8,7 @@
 #include <fstream>
 
 #include <mariana-trench/Filesystem.h>
+#include <mariana-trench/Log.h>
 
 namespace marianatrench {
 namespace filesystem {
@@ -28,6 +29,25 @@ void load_string_file(const std::filesystem::path& path, std::string& str) {
   std::size_t size = static_cast<std::size_t>(std::filesystem::file_size(path));
   str.resize(size, '\0');
   file.read(&str[0], size);
+}
+
+std::vector<std::string> read_lines(const std::filesystem::path& path) {
+  std::ifstream file;
+  file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+  try {
+    file.open(path, std::ios_base::binary);
+  } catch (const std::ifstream::failure&) {
+    ERROR(1, "Could not open file: `{}`.", path);
+    throw;
+  }
+
+  std::vector<std::string> lines;
+  std::string line;
+  while (std::getline(file, line)) {
+    lines.push_back(path);
+  }
+
+  return lines;
 }
 
 } // namespace filesystem
