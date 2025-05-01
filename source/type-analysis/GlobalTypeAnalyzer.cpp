@@ -100,8 +100,8 @@ void scan_any_init_reachables(
           TYPE, 5, "[any init reachables] missing node in cg %s", SHOW(method));
       continue;
     }
-    auto callees = resolve_callees_in_graph(cg, insn);
-    for (const DexMethod* callee : callees) {
+    const auto& callees = resolve_callees_in_graph(cg, insn);
+    for (const DexMethod* callee : UnorderedIterable(callees)) {
       scan_any_init_reachables(
           cg, method_override_graph, callee, false, reachables);
     }
@@ -479,8 +479,8 @@ void GlobalTypeAnalysis::find_any_init_reachables(
               SHOW(method));
         continue;
       }
-      auto callees = resolve_callees_in_graph(*cg, insn);
-      for (const DexMethod* callee : callees) {
+      const auto& callees = resolve_callees_in_graph(*cg, insn);
+      for (const DexMethod* callee : UnorderedIterable(callees)) {
         bool trace_callbacks_in_callee_cls =
             is_leaking_this_in_ctor(method, callee);
         scan_any_init_reachables(*cg,
