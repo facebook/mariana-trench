@@ -83,10 +83,7 @@
             "sources": [
               {
                 "kind": "TestOtherGeneration",
-                "port": "Return",
-                "via_type_of": [
-                  "Return"
-                ]
+                "port": "Return"
               },
               {
                 "kind": "TestOtherParameterSource",

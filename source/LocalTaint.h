@@ -27,8 +27,8 @@
 namespace marianatrench {
 
 /**
- * Represents a set of frames with the same call info (calle, call kind, callee
- * port, position).
+ * Represents a set of frames with the same call info (callee, call kind,
+ * callee port, position).
  */
 class LocalTaint final : public sparta::AbstractDomain<LocalTaint> {
  private:

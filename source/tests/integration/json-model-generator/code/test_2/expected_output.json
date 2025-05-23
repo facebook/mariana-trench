@@ -151,12 +151,6 @@
                   "method" : "Lcom/facebook/marianatrench/integrationtests/JsonModelGeneratorIntegrationTest2;.function:(II)I",
                   "port" : "Return"
                 }
-              ],
-              "via_type_of" : 
-              [
-                {
-                  "port" : "Return"
-                }
               ]
             }
           ]

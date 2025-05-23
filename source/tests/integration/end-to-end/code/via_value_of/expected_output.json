@@ -1147,12 +1147,6 @@
                   "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaInvalidModel:()Ljava/lang/Object;",
                   "port" : "Return"
                 }
-              ],
-              "via_value_of" : 
-              [
-                {
-                  "port" : "Argument(1)"
-                }
               ]
             }
           ]
@@ -1356,12 +1350,6 @@
                 {
                   "method" : "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.sinkViaInvalidModel:(Ljava/lang/Object;)V",
                   "port" : "Argument(1)"
-                }
-              ],
-              "via_value_of" : 
-              [
-                {
-                  "port" : "Argument(2)"
                 }
               ]
             }

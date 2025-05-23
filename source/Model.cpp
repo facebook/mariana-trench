@@ -863,6 +863,8 @@ void Model::add_generation(
   if (!check_taint_config_consistency(source, "source")) {
     return;
   }
+
+  source.filter_invalid_via_features_for(method_);
   add_generation(port, Taint{std::move(source)}, heuristics);
 }
 
@@ -893,6 +895,7 @@ void Model::add_parameter_source(
     return;
   }
 
+  source.filter_invalid_via_features_for(method_);
   add_parameter_source(port, Taint{std::move(source)}, heuristics);
 }
 
@@ -904,6 +907,7 @@ void Model::add_sink(
     return;
   }
 
+  sink.filter_invalid_via_features_for(method_);
   add_sink(port, Taint{std::move(sink)}, heuristics);
 }
 
@@ -936,6 +940,7 @@ void Model::add_call_effect_source(
     return;
   }
 
+  source.filter_invalid_via_features_for(method_);
   add_call_effect_source(port, Taint{std::move(source)}, heuristics);
 }
 
@@ -947,6 +952,7 @@ void Model::add_call_effect_sink(
     return;
   }
 
+  sink.filter_invalid_via_features_for(method_);
   add_call_effect_sink(port, Taint{std::move(sink)}, heuristics);
 }
 

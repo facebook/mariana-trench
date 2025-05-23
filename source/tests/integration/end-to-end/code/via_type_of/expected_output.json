@@ -1122,12 +1122,6 @@
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
                   "port" : "Return"
                 }
-              ],
-              "via_type_of" : 
-              [
-                {
-                  "port" : "Argument(2)"
-                }
               ]
             }
           ]
