@@ -50,7 +50,6 @@ TaintConfig TaintConfigTemplate::instantiate(
 
   TaintConfig taint_config{taint_config_};
   taint_config.add_user_feature_set(new_user_features);
-  taint_config.filter_invalid_via_features_for(method);
   return taint_config;
 }
 

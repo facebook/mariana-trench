@@ -465,7 +465,6 @@ class Model final {
   bool check_taint_config_consistency(
       const TaintConfig& frame,
       std::string_view kind) const;
-  bool check_taint_consistency(const Taint& frame) const;
   bool check_inline_as_getter_consistency(
       const AccessPathConstantDomain& inline_as) const;
   bool check_inline_as_setter_consistency(

@@ -266,47 +266,4 @@ void TaintConfig::add_user_feature_set(const FeatureSet& feature_set) {
   user_features_.join_with(feature_set);
 }
 
-void TaintConfig::filter_invalid_via_features_for(const Method* method) {
-  if (method == nullptr) {
-    return;
-  }
-
-  auto number_of_parameters = method->number_of_parameters();
-
-  if (!via_type_of_ports_.is_bottom()) {
-    via_type_of_ports_.filter([number_of_parameters,
-                               method](const TaggedRoot& tagged_root) {
-      mt_assert(tagged_root.root().is_argument());
-      if (tagged_root.root().parameter_position() < number_of_parameters) {
-        return true;
-      }
-
-      WARNING(
-          1,
-          "Invalid port {} provided for via_type_of ports of method {} will be excluded.",
-          tagged_root,
-          method->show());
-
-      return false;
-    });
-  }
-  if (!via_value_of_ports_.is_bottom()) {
-    via_value_of_ports_.filter([number_of_parameters,
-                                method](const TaggedRoot& tagged_root) {
-      mt_assert(tagged_root.root().is_argument());
-      if (tagged_root.root().parameter_position() < number_of_parameters) {
-        return true;
-      }
-
-      WARNING(
-          1,
-          "Invalid port {} provided for via_value_of ports of method {} will be excluded.",
-          tagged_root,
-          method->show());
-
-      return false;
-    });
-  }
-}
-
 } // namespace marianatrench

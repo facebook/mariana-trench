@@ -247,6 +247,12 @@ class Frame final : public sparta::AbstractDomain<Frame> {
       const std::vector<std::optional<std::string>>& source_constant_arguments)
       const;
 
+  /**
+   * Removes the via-type-of and via-value-of features for ports invalid for
+   * given method.
+   */
+  void filter_invalid_via_features(const Method* method);
+
   Frame with_origins(OriginSet origins) const;
 
   /**

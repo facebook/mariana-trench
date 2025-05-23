@@ -277,6 +277,12 @@ class Taint final : public sparta::AbstractDomain<Taint> {
                                  const Kind*)>& is_valid);
 
   /**
+   * Removes the via-type-of and via-value-of features for ports invalid for
+   * given method.
+   */
+  void filter_invalid_via_features(const Method* method);
+
+  /**
    * Returns true if any frame contains the given kind.
    */
   bool contains_kind(const Kind*) const;

@@ -864,7 +864,6 @@ void Model::add_generation(
     return;
   }
 
-  source.filter_invalid_via_features_for(method_);
   add_generation(port, Taint{std::move(source)}, heuristics);
 }
 
@@ -895,7 +894,6 @@ void Model::add_parameter_source(
     return;
   }
 
-  source.filter_invalid_via_features_for(method_);
   add_parameter_source(port, Taint{std::move(source)}, heuristics);
 }
 
@@ -907,7 +905,6 @@ void Model::add_sink(
     return;
   }
 
-  sink.filter_invalid_via_features_for(method_);
   add_sink(port, Taint{std::move(sink)}, heuristics);
 }
 
@@ -940,7 +937,6 @@ void Model::add_call_effect_source(
     return;
   }
 
-  source.filter_invalid_via_features_for(method_);
   add_call_effect_source(port, Taint{std::move(source)}, heuristics);
 }
 
@@ -952,7 +948,6 @@ void Model::add_call_effect_sink(
     return;
   }
 
-  sink.filter_invalid_via_features_for(method_);
   add_call_effect_sink(port, Taint{std::move(sink)}, heuristics);
 }
 
@@ -2440,26 +2435,6 @@ bool Model::check_taint_config_consistency(
   return true;
 }
 
-bool Model::check_taint_consistency(const Taint& taint) const {
-  taint.visit_frames([this](const CallInfo&, const Frame& frame) {
-    if (!frame.via_type_of_ports().is_bottom()) {
-      for (const auto& tagged_root : frame.via_type_of_ports().elements()) {
-        // Logs invalid ports specifed for via_type_of but does not prevent the
-        // model from being created.
-        check_root_consistency(tagged_root.root());
-      }
-    }
-    if (!frame.via_value_of_ports().is_bottom()) {
-      for (const auto& tagged_root : frame.via_value_of_ports().elements()) {
-        // Logs invalid ports specifed for via_value_of but does not prevent the
-        // model from being created.
-        check_root_consistency(tagged_root.root());
-      }
-    }
-  });
-  return true;
-}
-
 bool Model::check_inline_as_getter_consistency(
     const AccessPathConstantDomain& inline_as) const {
   auto access_path = inline_as.get_constant();
@@ -2532,10 +2507,11 @@ void Model::add_generation(
         method_, AccessPathFactory::singleton().get(port));
   }
 
-  if (!check_port_consistency(port) || !check_taint_consistency(source)) {
+  if (!check_port_consistency(port)) {
     return;
   }
 
+  source.filter_invalid_via_features(method_);
   if (port.path().size() > heuristics.generation_max_port_size()) {
     WARNING(
         1,
@@ -2559,11 +2535,11 @@ void Model::add_parameter_source(
   }
 
   if (!check_port_consistency(port) ||
-      !check_parameter_source_port_consistency(port) ||
-      !check_taint_consistency(source)) {
+      !check_parameter_source_port_consistency(port)) {
     return;
   }
 
+  source.filter_invalid_via_features(method_);
   if (port.path().size() > heuristics.parameter_source_max_port_size()) {
     WARNING(
         1,
@@ -2586,10 +2562,11 @@ void Model::add_sink(
         method_, AccessPathFactory::singleton().get(port));
   }
 
-  if (!check_port_consistency(port) || !check_taint_consistency(sink)) {
+  if (!check_port_consistency(port)) {
     return;
   }
 
+  sink.filter_invalid_via_features(method_);
   if (port.path().size() > heuristics.call_effect_sink_max_port_size()) {
     WARNING(
         1,
@@ -2616,10 +2593,7 @@ void Model::add_call_effect_source(
         method_, AccessPathFactory::singleton().get(port));
   }
 
-  if (!check_taint_consistency(source)) {
-    return;
-  }
-
+  source.filter_invalid_via_features(method_);
   if (port.path().size() > heuristics.call_effect_source_max_port_size()) {
     WARNING(
         1,
@@ -2646,10 +2620,7 @@ void Model::add_call_effect_sink(
         method_, AccessPathFactory::singleton().get(port));
   }
 
-  if (!check_taint_consistency(sink)) {
-    return;
-  }
-
+  sink.filter_invalid_via_features(method_);
   if (port.path().size() > heuristics.call_effect_sink_max_port_size()) {
     WARNING(
         1,

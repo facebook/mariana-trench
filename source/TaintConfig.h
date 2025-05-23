@@ -201,12 +201,6 @@ class TaintConfig final {
    */
   void add_user_feature_set(const FeatureSet& feature_set);
 
-  /**
-   * Removes the via-value-of and via-type-of features for ports invalid for
-   * given method.
-   */
-  void filter_invalid_via_features_for(const Method* MT_NULLABLE method);
-
   static TaintConfig from_json(const Json::Value& value, Context& context);
 
  private:

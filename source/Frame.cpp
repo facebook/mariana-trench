@@ -284,6 +284,50 @@ std::vector<const Feature*> Frame::materialize_via_value_of_ports(
   return features_added;
 }
 
+void Frame::filter_invalid_via_features(const Method* method) {
+  if (method == nullptr) {
+    return;
+  }
+
+  auto number_of_parameters = method->number_of_parameters();
+
+  if (!via_type_of_ports_.is_bottom()) {
+    via_type_of_ports_.filter([number_of_parameters,
+                               method](const TaggedRoot& tagged_root) {
+      mt_assert(tagged_root.root().is_argument());
+      if (tagged_root.root().parameter_position() < number_of_parameters) {
+        return true;
+      }
+
+      WARNING(
+          1,
+          "Invalid port {} provided for via_type_of ports of method {} will be excluded.",
+          tagged_root,
+          method->show());
+
+      return false;
+    });
+  }
+
+  if (!via_value_of_ports_.is_bottom()) {
+    via_value_of_ports_.filter([number_of_parameters,
+                                method](const TaggedRoot& tagged_root) {
+      mt_assert(tagged_root.root().is_argument());
+      if (tagged_root.root().parameter_position() < number_of_parameters) {
+        return true;
+      }
+
+      WARNING(
+          1,
+          "Invalid port {} provided for via_value_of ports of method {} will be excluded.",
+          tagged_root,
+          method->show());
+
+      return false;
+    });
+  }
+}
+
 void Frame::append_to_propagation_output_paths(Path::Element path_element) {
   PathTreeDomain new_output_paths;
   for (const auto& [path, collapse_depth] : output_paths_.elements()) {

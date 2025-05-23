@@ -353,6 +353,17 @@ void Taint::filter_invalid_frames(const std::function<bool(
   });
 }
 
+void Taint::filter_invalid_via_features(const Method* method) {
+  if (method == nullptr) {
+    return;
+  }
+
+  transform_frames([method](Frame frame) {
+    frame.filter_invalid_via_features(method);
+    return frame;
+  });
+}
+
 bool Taint::contains_kind(const Kind* kind) const {
   return std::any_of(
       map_.bindings().begin(),
