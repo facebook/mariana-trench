@@ -614,6 +614,9 @@ def _add_debug_arguments(parser: argparse.ArgumentParser) -> None:
         "--lldb", action="store_true", help="Run the analyzer inside lldb."
     )
     debug_arguments.add_argument(
+        "--fdb", action="store_true", help="Run the analyzer inside fdb."
+    )
+    debug_arguments.add_argument(
         "--log-method",
         action="append",
         metavar="PATTERN",
@@ -999,7 +1002,9 @@ def main() -> None:
                 binary, arguments, apk_directory, dex_directory
             )
         else:
-            with tempfile.NamedTemporaryFile(suffix=".json", mode="w") as options_file:
+            with tempfile.NamedTemporaryFile(
+                suffix=".json", mode="w", delete=False
+            ) as options_file:
                 _set_environment_variables(arguments)
                 options_json = _get_command_options_json(
                     arguments, apk_directory, dex_directory
@@ -1011,6 +1016,8 @@ def main() -> None:
                     command = ["gdb", "--args"] + command
                 elif arguments.lldb:
                     command = ["lldb", "--"] + command
+                elif arguments.fdb:
+                    command = ["fdb", "--launch-mode=vscode", "debug", "--"] + command
                 LOG.info(f"Running Mariana Trench: {' '.join(command)}")
                 output = subprocess.run(command)
         if output.returncode != 0:
