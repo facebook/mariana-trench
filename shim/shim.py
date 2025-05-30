@@ -145,8 +145,14 @@ def _extract_jex_file_if_exists(path: Path, target: str, build_directory: Path) 
         return run_unzip_command(["unzip", "-d", str(jex_extract_directory), str(path)])
 
 
-def _build_target(target: str, *, mode: Optional[str] = None) -> Path:
-    LOG.info(f"Building `{target}`%s...", f" with `{mode}`" if mode else "")
+def _build_target(
+    target: str, *, mode: Optional[str] = None, modifier: Optional[str] = None
+) -> Path:
+    LOG.info(
+        f"Building `{target}`%s%s...",
+        f" with mode `{mode}`" if mode else "",
+        f" with modifier `{modifier}`" if modifier else "",
+    )
 
     # If a target starts with fbcode, then it needs to be built from fbcode instead of from fbsource
     if ":" not in target:
@@ -161,13 +167,17 @@ def _build_target(target: str, *, mode: Optional[str] = None) -> Path:
     command = ["buck2", "build", "--show-json-output"]
     if mode:
         command.append(str(mode))
+    if modifier:
+        command.extend(["--modifier", modifier])
     command.append(target)
+
     current_working_directory = Path(os.getcwd())
     working_directory = (
         current_working_directory / "fbcode"
         if is_fbcode_target
         else current_working_directory
     )
+    LOG.info(f"Running Command: `{' '.join(command)}`")
     output = subprocess.run(command, capture_output=True, cwd=working_directory)
     if output.returncode != 0:
         raise ClientError(
@@ -191,8 +201,10 @@ def _build_target(target: str, *, mode: Optional[str] = None) -> Path:
     return current_working_directory / next(iter(list(response.values())))
 
 
-def _build_executable_target(target: str, *, mode: Optional[str] = None) -> Path:
-    return _check_executable(_build_target(target, mode=mode))
+def _build_executable_target(
+    target: str, *, mode: Optional[str] = None, modifier: Optional[str]
+) -> Path:
+    return _check_executable(_build_target(target, mode=mode, modifier=modifier))
 
 
 def _get_analysis_binary(arguments: argparse.Namespace) -> Path:
@@ -207,7 +219,7 @@ def _get_analysis_binary(arguments: argparse.Namespace) -> Path:
         # Build the mariana-trench binary from buck (facebook-only).
         return _build_executable_target(
             buck_target,
-            mode=arguments.build,
+            modifier=arguments.build,
         )
 
     # pyre-fixme[16]: Module `shim` has no attribute `configuration`.
@@ -342,9 +354,9 @@ def _add_binary_arguments(parser: argparse.ArgumentParser) -> None:
             "--build",
             type=str,
             # pyre-fixme[16]: Module `shim` has no attribute `configuration`.
-            default=none_throws(configuration.BINARY_BUCK_BUILD_MODE),
-            metavar="BUILD_MODE",
-            help="The Mariana Trench binary buck build mode.",
+            default=none_throws(configuration.BINARY_BUCK_BUILD_MODIFIER),
+            metavar="MODIFIER",
+            help="The Mariana Trench binary buck build mode modifier.",
         )
 
 
