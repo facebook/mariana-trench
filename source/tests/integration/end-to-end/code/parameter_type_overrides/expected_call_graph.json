@@ -238,6 +238,13 @@
       "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/RunnableFlows$3;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.<init>:()V" : 
   {
     "static" : 
@@ -282,6 +289,7 @@
     [
       "Lcom/facebook/marianatrench/integrationtests/RunnableFlows$1;.run:(Ljava/lang/Object;)V",
       "Lcom/facebook/marianatrench/integrationtests/RunnableFlows$2;.run:(Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/RunnableFlows$3;.run:(Ljava/lang/Object;)V",
       "Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;.run:(Ljava/lang/Object;)V"
     ]
   },
@@ -307,6 +315,15 @@
     "virtual" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/RunnableFlows$2;.run:(Ljava/lang/Object;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.testUserDefinedModelsOnParameterTypeOverrides:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/RunnableFlows$3;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.sink:(Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;)V",
+      "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.source:(Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;)Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;[0: Lcom/facebook/marianatrench/integrationtests/RunnableFlows$3;]"
     ]
   },
   "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V" : 

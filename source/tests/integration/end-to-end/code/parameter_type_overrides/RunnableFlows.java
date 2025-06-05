@@ -49,4 +49,21 @@ public class RunnableFlows {
     // Issue - Only reported on method without parameter type overrides.
     Origin.sink(Origin.source());
   }
+
+  static void sink(RunnableWithArgument runnable) {}
+
+  static RunnableWithArgument source(RunnableWithArgument runnable) {
+    return runnable;
+  }
+
+  static void testUserDefinedModelsOnParameterTypeOverrides() {
+    // Expect issue: FN as parameter type overrides do not inherit
+    // user defined models from the orignal method.
+    sink(
+        source(
+            new RunnableWithArgument() {
+              @Override
+              public void run(Object data) {}
+            }));
+  }
 }

@@ -14,7 +14,8 @@
     "Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/RunnableFlows$1;",
-      "Lcom/facebook/marianatrench/integrationtests/RunnableFlows$2;"
+      "Lcom/facebook/marianatrench/integrationtests/RunnableFlows$2;",
+      "Lcom/facebook/marianatrench/integrationtests/RunnableFlows$3;"
     ],
     "Ljava/lang/Runnable;" : 
     [

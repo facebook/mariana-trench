@@ -16,5 +16,23 @@
         "port": "Argument(0)"
       }
     ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.source:(Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;)Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;",
+    "generations": [
+      {
+        "kind": "Source",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.sink:(Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;)V",
+    "sinks": [
+      {
+        "kind": "Sink",
+        "port": "Argument(0)"
+      }
+    ]
   }
 ]

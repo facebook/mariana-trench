@@ -65,6 +65,14 @@
     "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.runRunnable:(Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;Ljava/lang/Object;)V",
     "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.runRunnable:(Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;Ljava/lang/Object;)V[0: Lcom/facebook/marianatrench/integrationtests/RunnableFlows$2;]"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/RunnableFlows$3;.<init>:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.testUserDefinedModelsOnParameterTypeOverrides:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/RunnableFlows$3;.run:(Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.runRunnable:(Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;Ljava/lang/Object;)V"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.runRunnable:(Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;Ljava/lang/Object;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.genericInvocation:(Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;)V"
@@ -76,6 +84,14 @@
   "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.runRunnable:(Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;Ljava/lang/Object;)V[0: Lcom/facebook/marianatrench/integrationtests/RunnableFlows$2;]" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.flow:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.sink:(Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.testUserDefinedModelsOnParameterTypeOverrides:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.source:(Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;)Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;[0: Lcom/facebook/marianatrench/integrationtests/RunnableFlows$3;]" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.testUserDefinedModelsOnParameterTypeOverrides:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;.run:(Ljava/lang/Object;)V" : 
   [
@@ -125,6 +141,7 @@
     "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/RunnableFlows$1;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/RunnableFlows$2;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/RunnableFlows$3;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.<init>:()V",
     "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V",
     "Lcom/facebook/secure/context/SecureContextHelperV2;.<init>:()V",

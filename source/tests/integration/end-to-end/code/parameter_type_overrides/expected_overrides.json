@@ -7,7 +7,8 @@
   "Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;.run:(Ljava/lang/Object;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/RunnableFlows$1;.run:(Ljava/lang/Object;)V",
-    "Lcom/facebook/marianatrench/integrationtests/RunnableFlows$2;.run:(Ljava/lang/Object;)V"
+    "Lcom/facebook/marianatrench/integrationtests/RunnableFlows$2;.run:(Ljava/lang/Object;)V",
+    "Lcom/facebook/marianatrench/integrationtests/RunnableFlows$3;.run:(Ljava/lang/Object;)V"
   ],
   "Ljava/lang/Object;.toString:()Ljava/lang/String;" : 
   [

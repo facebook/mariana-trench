@@ -1138,6 +1138,22 @@
   ]
 }
 {
+  "method" : "Lcom/facebook/marianatrench/integrationtests/RunnableFlows$3;.<init>:()V",
+  "position" : 
+  {
+    "line" : 63,
+    "path" : "RunnableFlows.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/RunnableFlows$3;.run:(Ljava/lang/Object;)V",
+  "position" : 
+  {
+    "line" : 65,
+    "path" : "RunnableFlows.java"
+  }
+}
+{
   "method" : "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.<init>:()V",
   "position" : 
   {
@@ -1219,8 +1235,8 @@
             {
               "callee_interval" : 
               [
-                38,
-                39
+                40,
+                41
               ],
               "kind" : "Source",
               "origins" : 
@@ -1308,8 +1324,8 @@
             {
               "callee_interval" : 
               [
-                38,
-                39
+                40,
+                41
               ],
               "kind" : "Source",
               "origins" : 
@@ -1373,8 +1389,8 @@
             {
               "callee_interval" : 
               [
-                38,
-                39
+                40,
+                41
               ],
               "kind" : "Sink",
               "origins" : 
@@ -1409,8 +1425,8 @@
             {
               "callee_interval" : 
               [
-                38,
-                39
+                40,
+                41
               ],
               "kind" : "Source",
               "origins" : 
@@ -1557,6 +1573,158 @@
       ]
     }
   ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.sink:(Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;)V",
+  "position" : 
+  {
+    "line" : 52,
+    "path" : "RunnableFlows.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(0)",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.sink:(Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;)V",
+                  "port" : "Argument(0)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "Source",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.source:(Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;)Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;",
+                  "port" : "Return"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "inline_as_getter" : "Argument(0)",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.source:(Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;)Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;",
+  "position" : 
+  {
+    "line" : 55,
+    "path" : "RunnableFlows.java"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "inline_as_getter" : "Argument(0)",
+  "method" : 
+  {
+    "name" : "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.source:(Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;)Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;",
+    "parameter_type_overrides" : 
+    [
+      {
+        "parameter" : 0,
+        "type" : "Lcom/facebook/marianatrench/integrationtests/RunnableFlows$3;"
+      }
+    ]
+  },
+  "position" : 
+  {
+    "line" : 55,
+    "path" : "RunnableFlows.java"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/RunnableFlows;.testUserDefinedModelsOnParameterTypeOverrides:()V",
+  "position" : 
+  {
+    "line" : 61,
+    "path" : "RunnableFlows.java"
+  }
 }
 {
   "method" : "Lcom/facebook/marianatrench/integrationtests/RunnableWithArgument;.run:(Ljava/lang/Object;)V",
