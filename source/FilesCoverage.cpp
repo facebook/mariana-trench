@@ -5,6 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <fstream>
+
 #include <Walkers.h>
 
 #include <mariana-trench/EventLogger.h>
