@@ -24,6 +24,10 @@
             {
               "constraint": "name",
               "pattern": "setPackage"
+            },
+            {
+              "constraint": "name",
+              "pattern": "createChooser"
             }
           ]
         }
