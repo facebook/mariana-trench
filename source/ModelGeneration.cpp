@@ -20,6 +20,7 @@
 #include <mariana-trench/ModelGeneration.h>
 #include <mariana-trench/Options.h>
 #include <mariana-trench/Timer.h>
+#include <mariana-trench/model-generator/BroadcastReceiverGenerator.h>
 #include <mariana-trench/model-generator/BuilderPatternGenerator.h>
 #include <mariana-trench/model-generator/ContentProviderGenerator.h>
 #include <mariana-trench/model-generator/DFASourceGenerator.h>
@@ -116,6 +117,8 @@ ModelGeneration::make_builtin_model_generators(
     const Registry* MT_NULLABLE preloaded_models,
     Context& context) {
   std::vector<std::unique_ptr<ModelGenerator>> builtin_generators;
+  builtin_generators.push_back(
+      std::make_unique<BroadcastReceiverGenerator>(context));
   builtin_generators.push_back(
       std::make_unique<ContentProviderGenerator>(context));
   builtin_generators.push_back(
