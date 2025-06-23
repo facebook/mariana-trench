@@ -24,6 +24,66 @@
       "find": "methods",
       "where": [
         {
+          "constraint": "signature_match",
+          "extends": "Landroid/app/AppComponentFactory;",
+          "name": "instantiateActivity"
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-join-virtual-overrides"
+        ],
+        "effect_sources": [
+          {
+            "type": "call-effect-intent",
+            "kind": "ExportedComponent"
+          }
+        ],
+        "sources": [
+          {
+            "kind": "ActivityUserInput",
+            "port": "Argument(3)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "extends": "Landroid/app/Activity;",
+          "name": "onNewIntent"
+        },
+        {
+          "constraint": "parameter",
+          "idx": 1,
+          "inner": {
+            "constraint": "name",
+            "pattern": "Landroid/content/Intent;"
+          }
+        },
+        {
+          "constraint": "is_static",
+          "value": false
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-join-virtual-overrides"
+        ],
+        "sources": [
+          {
+            "kind": "ActivityUserInput",
+            "port": "Argument(1)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
           "constraint": "any_of",
           "inners": [
             {
