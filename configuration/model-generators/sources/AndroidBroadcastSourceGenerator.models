@@ -4,18 +4,9 @@
       "find": "methods",
       "where": [
         {
-          "constraint": "signature_pattern",
-          "pattern": ".*\\.onReceive:\\(Landroid/content/Context;Landroid/content/Intent;\\)V"
-        },
-        {
-          "constraint": "parent",
-          "inner": {
-            "constraint": "extends",
-            "inner": {
-              "constraint": "name",
-              "pattern": "Landroid/content/BroadcastReceiver;"
-            }
-          }
+          "constraint": "signature_match",
+          "extends": "Landroid/content/BroadcastReceiver;",
+          "name": "onReceive"
         }
       ],
       "model": {
@@ -26,6 +17,33 @@
           {
             "kind": "ReceiverUserInput",
             "port": "Argument(2)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "extends": "Landroid/app/AppComponentFactory;",
+          "name": "instantiateReceiver"
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-join-virtual-overrides"
+        ],
+        "effect_sources": [
+          {
+            "type": "call-effect-intent",
+            "kind": "ExportedComponent"
+          }
+        ],
+        "sources": [
+          {
+            "kind": "ReceiverUserInput",
+            "port": "Argument(3)"
           }
         ]
       }
