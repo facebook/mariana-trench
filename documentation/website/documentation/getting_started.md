@@ -51,9 +51,14 @@ We are now ready to run the analysis
 
 ```shell
 (mariana-trench)$ mariana-trench \
-  --system-jar-configuration-path=$ANDROID_SDK/platforms/android-30/android.jar \
-  --apk-path=app/build/outputs/apk/debug/app-debug.apk \
-  --source-root-directory=app/src/main/java
+  --system-jar-configuration-path=configuration/default_system_jar_paths.json \
+  --model-generator-configuration-paths=configuration/default_generator_config.json \
+  --lifecycles-paths=configuration/lifecycles.json \
+  --rules-paths=configuration/rules.json \
+  --apk-path=documentation/sample-app/app/build/outputs/apk/debug/app-debug.apk \
+  --source-root-directory=documentation/sample-app/app/src/main/java \
+  --model-generator-search-paths=configuration/model-generators/
+
 # ...
 INFO Analyzed 68886 models in 4.04s. Found 4 issues!
 # ...

@@ -55,7 +55,7 @@ We are now ready to run the analysis
 
 ```shell
 (mariana-trench)$ mariana-trench \
-  --system-jar-configuration-path=$ANDROID_SDK/platforms/android-32/android.jar \
+  --system-jar-configuration-path=configuration/default_system_jar_paths.json \
   --model-generator-configuration-paths=configuration/default_generator_config.json \
   --lifecycles-paths=configuration/lifecycles.json \
   --rules-paths=configuration/rules.json \
