@@ -715,7 +715,6 @@ def _get_command_options_json(
     arguments: argparse.Namespace, apk_directory: str, dex_directory: str
 ) -> Dict[str, Any]:
     options = {}
-    options["system-jar-paths"] = arguments.system_jar_configuration_path
     options["apk-directory"] = apk_directory
     options["dex-directory"] = dex_directory
     options["rules-paths"] = arguments.rules_paths
@@ -728,6 +727,9 @@ def _get_command_options_json(
         arguments.model_generator_configuration_paths
     )
     options["analysis-mode"] = arguments.analysis_mode
+
+    if arguments.system_jar_configuration_path:
+        options["system-jar-paths"] = arguments.system_jar_configuration_path
 
     if arguments.grepo_metadata_path:
         options["grepo-metadata-path"] = arguments.grepo_metadata_path
@@ -918,10 +920,14 @@ def main() -> None:
 
         # TODO T147423951
         if arguments.system_jar_configuration_path is None:
-            arguments.system_jar_configuration_path = _system_jar_configuration_path(
+            default_system_jar_configuration_path = _system_jar_configuration_path(
                 # pyre-fixme[16]: Module `shim` has no attribute `configuration`.
                 os.fspath(configuration.get_path("default_system_jar_paths.json"))
             )
+            LOG.warning(
+                f"--system-jar-configuration-path was not specified. Consider specifying {default_system_jar_configuration_path}"
+            )
+
         if arguments.rules_paths is None:
             # pyre-fixme[16]: Module `shim` has no attribute `configuration`.
             arguments.rules_paths = str(os.fspath(configuration.get_path("rules.json")))

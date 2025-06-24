@@ -153,15 +153,17 @@ Options::Options(
 Options::Options(const Json::Value& json) {
   LOG(2, "Arguments: {}", JsonWriter::to_styled_string(json));
 
-  system_jar_paths_ = parse_paths_list(
-      JsonValidation::string(json, "system-jar-paths"),
-      std::nullopt,
-      /* check exist */ false);
-
   apk_directory_ =
       check_directory_exists(JsonValidation::string(json, "apk-directory"));
   dex_directory_ =
       check_directory_exists(JsonValidation::string(json, "dex-directory"));
+
+  if (json.isMember("system-jar-paths")) {
+    system_jar_paths_ = parse_paths_list(
+        JsonValidation::string(json, "system-jar-paths"),
+        /* extension */ ".json",
+        /* check_exists */ false);
+  }
 
   if (json.isMember("models-paths")) {
     models_paths_ = parse_paths_list(
