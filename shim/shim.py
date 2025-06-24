@@ -8,7 +8,6 @@ import argparse
 import json
 import logging
 import os
-import shlex
 import shutil
 import subprocess
 import sys
@@ -35,18 +34,18 @@ import pyredex
 LOG: logging.Logger = logging.getLogger(__name__)
 
 
-def _path_exists(path: str) -> str:
-    path = os.path.expanduser(path)
-    if not os.path.exists(path):
+def _path_exists(path_str: str) -> str:
+    path = Path(path_str).expanduser()
+    if not path.exists():
         raise argparse.ArgumentTypeError(f"Path `{path}` does not exist.")
-    return os.path.realpath(path)
+    return str(path.resolve())
 
 
-def _directory_exists(path: str) -> str:
-    path = os.path.expanduser(path)
-    if not os.path.isdir(path):
+def _directory_exists(path_str: str) -> str:
+    path = Path(path_str).expanduser()
+    if not path.is_dir():
         raise argparse.ArgumentTypeError(f"Path `{path}` is not a directory.")
-    path = os.path.realpath(path)
+    path = str(path.resolve())
     if path and path[-1] != "/":
         path = path + "/"
     return path
@@ -77,6 +76,8 @@ def _system_jar_configuration_path(input: str) -> str:
                 raise argparse.ArgumentTypeError(
                     f"`{path}` must contain a list of strings"
                 )
+    elif Path(input).expanduser().is_dir():
+        raise argparse.ArgumentTypeError(f"Path `{input}` is a directory.")
 
     # Validation deferred to backend if we pass `;` separated list of paths
     # because they are allowed to not exist.
