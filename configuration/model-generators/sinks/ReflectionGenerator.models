@@ -23,6 +23,92 @@
       "where": [
         {
           "constraint": "signature_match",
+          "extends": "Ljava/lang/ClassLoader;",
+          "names": [
+            "loadClass",
+            "defineClass",
+            "findClass",
+            "findLoadedClass",
+            "findSystemClass"
+          ]
+        }
+      ],
+      "model": {
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [
+              {
+                "constraint": "name",
+                "pattern": "Ljava/lang/String;"
+              }
+            ],
+            "sinks": [
+              {
+                "kind": "Reflection",
+                "port": "Argument(x)"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Ldalvik/system/DexFile;",
+          "names": [
+            "loadClassBinaryName",
+            "loadClass",
+            "<init>"
+          ]
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "Reflection",
+            "port": "Argument(1)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "extends": "Ldalvik/system/BaseDexClassLoader;",
+          "name": "<init>"
+        }
+      ],
+      "model": {
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [
+              {
+                "constraint": "name",
+                "pattern": "Ljava/lang/String;"
+              }
+            ],
+            "sinks": [
+              {
+                "kind": "Reflection",
+                "port": "Argument(x)"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
           "parents": [
             "Landroid/app/Fragment;",
             "Landroidx/fragment/app/Fragment;"
