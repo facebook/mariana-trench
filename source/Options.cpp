@@ -146,7 +146,15 @@ Options::Options(
       enable_cross_component_analysis_(enable_cross_component_analysis),
       export_origins_mode_(export_origins_mode),
       analysis_mode_(analysis_mode),
-      propagate_across_arguments_(propagate_across_arguments) {}
+      propagate_across_arguments_(propagate_across_arguments),
+      list_all_rules_(false),
+      list_all_model_generators_(false),
+      list_all_model_generators_in_rules_(false),
+      list_all_kinds_(false),
+      list_all_kinds_in_rules_(false),
+      list_all_filters_(false),
+      list_all_features_(false),
+      list_all_lifecycles_(false) {}
 
 Options::Options(const Json::Value& json) {
   LOG(2, "Arguments: {}", JsonWriter::to_styled_string(json));
@@ -316,6 +324,24 @@ Options::Options(const Json::Value& json) {
   dump_methods_ = JsonValidation::optional_boolean(json, "dump-methods", false);
   dump_coverage_info_ =
       JsonValidation::optional_boolean(json, "dump-coverage-info", false);
+
+  // Parse listing command flags
+  list_all_rules_ = 
+      JsonValidation::optional_boolean(json, "list-all-rules", false);
+  list_all_model_generators_ = 
+      JsonValidation::optional_boolean(json, "list-all-model-generators", false);
+  list_all_model_generators_in_rules_ = 
+      JsonValidation::optional_boolean(json, "list-all-model-generators-in-rules", false);
+  list_all_kinds_ = 
+      JsonValidation::optional_boolean(json, "list-all-kinds", false);
+  list_all_kinds_in_rules_ = 
+      JsonValidation::optional_boolean(json, "list-all-kinds-in-rules", false);
+  list_all_filters_ = 
+      JsonValidation::optional_boolean(json, "list-all-filters", false);
+  list_all_features_ = 
+      JsonValidation::optional_boolean(json, "list-all-features", false);
+  list_all_lifecycles_ = 
+      JsonValidation::optional_boolean(json, "list-all-lifecycles", false);
 
   job_id_ = JsonValidation::optional_string(json, "job-id");
   metarun_id_ = JsonValidation::optional_string(json, "metarun-id");
@@ -624,6 +650,38 @@ bool Options::propagate_across_arguments() const {
 
 const std::optional<std::filesystem::path> Options::heuristics_path() const {
   return heuristics_path_;
+}
+
+bool Options::list_all_rules() const {
+  return list_all_rules_;
+}
+
+bool Options::list_all_model_generators() const {
+  return list_all_model_generators_;
+}
+
+bool Options::list_all_model_generators_in_rules() const {
+  return list_all_model_generators_in_rules_;
+}
+
+bool Options::list_all_kinds() const {
+  return list_all_kinds_;
+}
+
+bool Options::list_all_kinds_in_rules() const {
+  return list_all_kinds_in_rules_;
+}
+
+bool Options::list_all_filters() const {
+  return list_all_filters_;
+}
+
+bool Options::list_all_features() const {
+  return list_all_features_;
+}
+
+bool Options::list_all_lifecycles() const {
+  return list_all_lifecycles_;
 }
 
 } // namespace marianatrench

@@ -787,6 +787,30 @@ def _add_debug_arguments(parser: argparse.ArgumentParser) -> None:
     )
 
 
+def _add_listing_arguments(parser: argparse.ArgumentParser) -> None:
+    listing_arguments = parser.add_argument_group("Listing arguments")
+    listing_arguments.add_argument(
+        "--list-all-rules",
+        action="store_true",
+        help="List all rules taken from the rules configuration files",
+    )
+    listing_arguments.add_argument(
+        "--list-all-model-generators",
+        action="store_true",
+        help="List all model generators from configuration",
+    )
+    listing_arguments.add_argument(
+        "--list-all-kinds-in-rules",
+        action="store_true",
+        help="List all kinds defined in rules",
+    )
+    listing_arguments.add_argument(
+        "--list-all-lifecycles",
+        action="store_true",
+        help="List all custom and built-in lifecycles with descriptions",
+    )
+
+
 def _set_environment_variables(arguments: argparse.Namespace) -> None:
     trace_settings = [
         f"MARIANA_TRENCH:{arguments.verbosity}",
@@ -944,6 +968,15 @@ def _get_command_options_json(
         options["dump-overrides"] = True
         options["always-export-origins"] = True
 
+    # Add listing command flags if present
+    if getattr(arguments, 'list_all_rules', False):
+        options["list-all-rules"] = True
+    if getattr(arguments, 'list_all_model_generators', False):
+        options["list-all-model-generators"] = True
+    if getattr(arguments, 'list_all_kinds_in_rules', False):
+        options["list-all-kinds-in-rules"] = True
+    if getattr(arguments, 'list_all_lifecycles', False):
+        options["list-all-lifecycles"] = True
     return options
 
 
@@ -968,6 +1001,7 @@ def main() -> None:
         _add_source_indexing_arguments(parser)
         _add_metadata_arguments(parser)
         _add_debug_arguments(parser)
+        _add_listing_arguments(parser)
         parser.add_argument(
             "--analyze-third-party",
             action="store",

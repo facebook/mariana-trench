@@ -48,6 +48,8 @@
 #include <mariana-trench/UsedKinds.h>
 #include <mariana-trench/shim-generator/ShimGeneration.h>
 #include <mariana-trench/shim-generator/Shims.h>
+#include <mariana-trench/ListingCommands.h>
+#include <mariana-trench/TransformsFactory.h>
 
 namespace marianatrench {
 
@@ -262,6 +264,32 @@ Registry MarianaTrench::analyze(Context& context) {
       context.rules->size(),
       rules_timer.duration_in_seconds(),
       resident_set_size_in_gb());
+
+  // Handle listing commands after rules are loaded
+  if (context.options->list_all_rules()) {
+    ListingCommands::list_all_rules(context);
+  }
+  if (context.options->list_all_model_generators()) {
+    ListingCommands::list_all_model_generators(context);
+  }
+  if (context.options->list_all_model_generators_in_rules()) {
+    ListingCommands::list_all_model_generators_in_rules(context);
+  }
+  if (context.options->list_all_kinds()) {
+    ListingCommands::list_all_kinds(context);
+  }
+  if (context.options->list_all_kinds_in_rules()) {
+    ListingCommands::list_all_kinds_in_rules(context);
+  }
+  if (context.options->list_all_filters()) {
+    ListingCommands::list_all_filters(context);
+  }
+  if (context.options->list_all_features()) {
+    ListingCommands::list_all_features(context);
+  }
+  if (context.options->list_all_lifecycles()) {
+    ListingCommands::list_all_lifecycles(context);
+  }
 
   Timer transforms_timer;
   LOG(1, "Initializing used transform kinds...");
