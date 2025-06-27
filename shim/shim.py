@@ -704,11 +704,6 @@ def _add_listing_arguments(parser: argparse.ArgumentParser) -> None:
         help="List all model generators from configuration",
     )
     listing_arguments.add_argument(
-        "--list-all-model-generators-in-rules",
-        action="store_true", 
-        help="List all model generators derived from rules",
-    )
-    listing_arguments.add_argument(
         "--list-all-kinds",
         action="store_true",
         help="List all kinds derived from model generators",
@@ -718,16 +713,7 @@ def _add_listing_arguments(parser: argparse.ArgumentParser) -> None:
         action="store_true",
         help="List all kinds defined in rules",
     )
-    listing_arguments.add_argument(
-        "--list-all-filters",
-        action="store_true",
-        help="List all custom and built-in filters with descriptions",
-    )
-    listing_arguments.add_argument(
-        "--list-all-features",
-        action="store_true",
-        help="List all custom and built-in features with descriptions",
-    )
+
     listing_arguments.add_argument(
         "--list-all-lifecycles",
         action="store_true",
@@ -935,16 +921,11 @@ def _get_command_options_json(
         options["list-all-rules"] = True
     if getattr(arguments, 'list_all_model_generators', False):
         options["list-all-model-generators"] = True
-    if getattr(arguments, 'list_all_model_generators_in_rules', False):
-        options["list-all-model-generators-in-rules"] = True
     if getattr(arguments, 'list_all_kinds', False):
         options["list-all-kinds"] = True
     if getattr(arguments, 'list_all_kinds_in_rules', False):
         options["list-all-kinds-in-rules"] = True
-    if getattr(arguments, 'list_all_filters', False):
-        options["list-all-filters"] = True
-    if getattr(arguments, 'list_all_features', False):
-        options["list-all-features"] = True
+
     if getattr(arguments, 'list_all_lifecycles', False):
         options["list-all-lifecycles"] = True
 

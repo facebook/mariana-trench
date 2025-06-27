@@ -13,19 +13,20 @@ namespace marianatrench {
 
 class ListingCommands {
  public:
-  // Individual listing methods (called from MarianaTrench.cpp)
+  // Entry point for all listing commands
+  static void run(Context& context);
+
+ private:
+  // Individual listing command implementations
   static void list_all_rules(Context& context);
   static void list_all_model_generators(Context& context);
-  static void list_all_model_generators_in_rules(Context& context);
   static void list_all_kinds(Context& context);
   static void list_all_kinds_in_rules(Context& context);
-  static void list_all_filters(Context& context);
-  static void list_all_features(Context& context);
+
   static void list_all_lifecycles(Context& context);
   
- private:
-  // Helper methods
-  static std::vector<std::string> parse_paths_list(const std::string& input);
+  // Helper function to get model generator paths
+  static std::vector<std::string> get_model_generator_paths(Context& context);
 };
 
 } // namespace marianatrench 
