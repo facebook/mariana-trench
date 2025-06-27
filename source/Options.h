@@ -140,11 +140,9 @@ class Options final {
   // Listing command flags
   bool list_all_rules() const;
   bool list_all_model_generators() const;
-  bool list_all_model_generators_in_rules() const;
   bool list_all_kinds() const;
   bool list_all_kinds_in_rules() const;
-  bool list_all_filters() const;
-  bool list_all_features() const;
+
   bool list_all_lifecycles() const;
 
  private:
@@ -215,11 +213,9 @@ class Options final {
   // Listing command flags
   bool list_all_rules_;
   bool list_all_model_generators_;
-  bool list_all_model_generators_in_rules_;
   bool list_all_kinds_;
   bool list_all_kinds_in_rules_;
-  bool list_all_filters_;
-  bool list_all_features_;
+
   bool list_all_lifecycles_;
 };
 

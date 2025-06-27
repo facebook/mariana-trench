@@ -149,11 +149,9 @@ Options::Options(
       propagate_across_arguments_(propagate_across_arguments),
       list_all_rules_(false),
       list_all_model_generators_(false),
-      list_all_model_generators_in_rules_(false),
       list_all_kinds_(false),
       list_all_kinds_in_rules_(false),
-      list_all_filters_(false),
-      list_all_features_(false),
+
       list_all_lifecycles_(false) {}
 
 Options::Options(const Json::Value& json) {
@@ -330,16 +328,11 @@ Options::Options(const Json::Value& json) {
       JsonValidation::optional_boolean(json, "list-all-rules", false);
   list_all_model_generators_ = 
       JsonValidation::optional_boolean(json, "list-all-model-generators", false);
-  list_all_model_generators_in_rules_ = 
-      JsonValidation::optional_boolean(json, "list-all-model-generators-in-rules", false);
   list_all_kinds_ = 
       JsonValidation::optional_boolean(json, "list-all-kinds", false);
   list_all_kinds_in_rules_ = 
       JsonValidation::optional_boolean(json, "list-all-kinds-in-rules", false);
-  list_all_filters_ = 
-      JsonValidation::optional_boolean(json, "list-all-filters", false);
-  list_all_features_ = 
-      JsonValidation::optional_boolean(json, "list-all-features", false);
+
   list_all_lifecycles_ = 
       JsonValidation::optional_boolean(json, "list-all-lifecycles", false);
 
@@ -660,9 +653,7 @@ bool Options::list_all_model_generators() const {
   return list_all_model_generators_;
 }
 
-bool Options::list_all_model_generators_in_rules() const {
-  return list_all_model_generators_in_rules_;
-}
+
 
 bool Options::list_all_kinds() const {
   return list_all_kinds_;
@@ -672,13 +663,7 @@ bool Options::list_all_kinds_in_rules() const {
   return list_all_kinds_in_rules_;
 }
 
-bool Options::list_all_filters() const {
-  return list_all_filters_;
-}
 
-bool Options::list_all_features() const {
-  return list_all_features_;
-}
 
 bool Options::list_all_lifecycles() const {
   return list_all_lifecycles_;

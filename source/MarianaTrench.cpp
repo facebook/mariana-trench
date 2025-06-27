@@ -265,31 +265,8 @@ Registry MarianaTrench::analyze(Context& context) {
       rules_timer.duration_in_seconds(),
       resident_set_size_in_gb());
 
-  // Handle listing commands after rules are loaded
-  if (context.options->list_all_rules()) {
-    ListingCommands::list_all_rules(context);
-  }
-  if (context.options->list_all_model_generators()) {
-    ListingCommands::list_all_model_generators(context);
-  }
-  if (context.options->list_all_model_generators_in_rules()) {
-    ListingCommands::list_all_model_generators_in_rules(context);
-  }
-  if (context.options->list_all_kinds()) {
-    ListingCommands::list_all_kinds(context);
-  }
-  if (context.options->list_all_kinds_in_rules()) {
-    ListingCommands::list_all_kinds_in_rules(context);
-  }
-  if (context.options->list_all_filters()) {
-    ListingCommands::list_all_filters(context);
-  }
-  if (context.options->list_all_features()) {
-    ListingCommands::list_all_features(context);
-  }
-  if (context.options->list_all_lifecycles()) {
-    ListingCommands::list_all_lifecycles(context);
-  }
+  // Execute any requested listing commands
+  ListingCommands::run(context);
 
   Timer transforms_timer;
   LOG(1, "Initializing used transform kinds...");
