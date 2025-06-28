@@ -24,9 +24,6 @@ class ListingCommands {
   static void list_all_kinds_in_rules(Context& context);
 
   static void list_all_lifecycles(Context& context);
-  
-  // Helper function to get model generator paths
-  static std::vector<std::string> get_model_generator_paths(Context& context);
 };
 
 } // namespace marianatrench 

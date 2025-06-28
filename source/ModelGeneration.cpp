@@ -272,4 +272,32 @@ ModelGeneratorResult ModelGeneration::run(
           /* field_models */ generated_field_models};
 }
 
+std::unordered_map<const ModelGeneratorName*, std::filesystem::path>
+ModelGeneration::get_json_model_generator_paths(Context& context) {
+  std::unordered_map<const ModelGeneratorName*, std::filesystem::path> paths;
+  
+  // Find JSON model generators in search paths
+  for (const auto& path : context.options->model_generator_search_paths()) {
+    for (auto& entry : std::filesystem::recursive_directory_iterator(path)) {
+      if (entry.path().extension() == ".json") {
+        // Skip deprecated .json files
+        continue;
+      }
+
+      if (entry.path().extension() != ".models") {
+        continue;
+      }
+
+      auto path_copy = entry.path();
+      auto identifier = path_copy.replace_extension("").filename().string();
+      const auto* name =
+          context.model_generator_name_factory->create(identifier);
+
+      paths.emplace(name, entry.path());
+    }
+  }
+
+  return paths;
+}
+
 } // namespace marianatrench
