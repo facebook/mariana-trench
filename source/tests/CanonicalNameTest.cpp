@@ -23,6 +23,11 @@ TEST_F(CanonicalNameTest, Instantiate) {
       marianatrench::redex::create_void_method(scope, "LClass;", "one"));
   const auto* method2 = context.methods->create(redex::create_void_method(
       scope, "Lcom/facebook/graphql/calls/SomeMutationData;", "setSomeField"));
+  const auto* method3 =
+      context.methods->create(marianatrench::redex::create_void_method(
+          scope,
+          "Lcom/instagram/common/bloks/actions/BloksFooAsyncControllerAction;",
+          "contentId"));
   const auto* feature1 = context.feature_factory->get("feature1");
   const auto* feature2 = context.feature_factory->get("feature2");
 
@@ -38,6 +43,13 @@ TEST_F(CanonicalNameTest, Instantiate) {
           .value(),
       CanonicalName(
           CanonicalName::InstantiatedValue{"some_mutation:some_field"}));
+
+  EXPECT_EQ(
+      CanonicalName(CanonicalName::TemplateValue{"%bloks_canonical_name%"})
+          .instantiate(method3, /* via_type_ofs */ {})
+          .value(),
+      CanonicalName(CanonicalName::InstantiatedValue{
+          "BloksFooAsyncController:content_id"}));
 
   EXPECT_EQ(
       CanonicalName(CanonicalName::TemplateValue{

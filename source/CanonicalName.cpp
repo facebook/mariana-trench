@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/replace.hpp>
 #include <json/value.h>
 #include <re2/re2.h>
@@ -52,6 +53,24 @@ std::optional<CanonicalName> CanonicalName::instantiate(
     auto callee_name = method->signature();
     boost::algorithm::replace_all(
         canonical_name, k_leaf_name_marker, callee_name);
+  }
+
+  if (canonical_name.find(k_bloks_marker) != std::string::npos) {
+    auto class_signature = method->get_class()->get_name()->str();
+    auto pos = class_signature.find_last_of("/");
+    if (pos != std::string::npos && class_signature.size() > (pos + 2)) {
+      std::string class_name = str_copy(
+          class_signature.substr(pos + 1, class_signature.size() - pos - 2));
+      if (boost::ends_with(class_name, "Action") ||
+          boost::ends_with(class_name, "Screen")) {
+        class_name = class_name.substr(0, class_name.size() - 6);
+
+        std::string method_name = str_copy(method->get_name());
+        convert_to_lower_underscore(method_name);
+        boost::algorithm::replace_all(
+            canonical_name, k_bloks_marker, class_name + ":" + method_name);
+      }
+    }
   }
 
   // Converts Lcom/SomeMutationData;.setPhoneField:.* to
