@@ -87,6 +87,7 @@ class Registry final {
 
   std::size_t models_size() const;
   std::size_t field_models_size() const;
+  std::size_t literal_models_size() const;
   std::size_t issues_size() const;
 
   void join_with(const Model& model);

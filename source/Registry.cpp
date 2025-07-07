@@ -70,6 +70,9 @@ Registry run_model_generators(
 
 // Load models json input
 Registry from_models_file(Context& context, const Options& options) {
+  Timer models_file_timer;
+  LOG(1, "Reading models file...");
+
   std::vector<Model> models;
   for (const auto& models_path : options.models_paths()) {
     auto models_json = JsonReader::parse_json_file(models_path);
@@ -101,17 +104,25 @@ Registry from_models_file(Context& context, const Options& options) {
     }
   }
 
+  context.statistics->log_time("load_models_file", models_file_timer);
+  LOG(1,
+      "Loaded {} models, {} field models, and {} literal models from models files in {:.2f}s. Memory used, RSS: {:.2f}GB",
+      models.size(),
+      field_models.size(),
+      literal_models.size(),
+      models_file_timer.duration_in_seconds(),
+      resident_set_size_in_gb());
+
   return Registry(context, models, field_models, literal_models);
 }
 
 Registry from_sharded_models(
     Context& context,
     const std::filesystem::path& path) {
+  Timer sharded_models_timer;
   LOG(1, "Reading models from sharded JSON files...");
 
   ConcurrentMap<const Method*, Model> models;
-  ConcurrentMap<const Field*, FieldModel> field_models;
-  ConcurrentMap<std::string, LiteralModel> literal_models;
 
   // A path with no redundant directory separators, current directory (dot) or
   // parent directory (dot-dot) elements.
@@ -154,11 +165,18 @@ Registry from_sharded_models(
 
   JsonReader::read_sharded_json_files(path, "model@", from_json_line);
 
+  context.statistics->log_time("load_sharded_models", sharded_models_timer);
+  LOG(1,
+      "Loaded {} models from sharded json files in {:.2f}s. Memory used, RSS: {:.2f}GB",
+      models.size(),
+      sharded_models_timer.duration_in_seconds(),
+      resident_set_size_in_gb());
+
   return Registry(
       context,
       std::move(models),
-      std::move(field_models),
-      std::move(literal_models));
+      /* field_models */ {},
+      /* literal_models */ {});
 }
 
 } // namespace
@@ -320,6 +338,10 @@ std::size_t Registry::models_size() const {
 
 std::size_t Registry::field_models_size() const {
   return field_models_.size();
+}
+
+std::size_t Registry::literal_models_size() const {
+  return literal_models_.size();
 }
 
 std::size_t Registry::issues_size() const {

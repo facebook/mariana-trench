@@ -242,9 +242,10 @@ Registry MarianaTrench::analyze(Context& context) {
   // end MethodMappings: no longer tracked/usable beyond this.
   context.statistics->log_time("registry_init", registry_timer);
   LOG(1,
-      "Initialized {} models and {} field models in {:.2f}s. Memory used, RSS: {:.2f}GB",
+      "Initialized {} models, {} field models, and {} literal models in {:.2f}s. Memory used, RSS: {:.2f}GB",
       registry.models_size(),
       registry.field_models_size(),
+      registry.literal_models_size(),
       registry_timer.duration_in_seconds(),
       resident_set_size_in_gb());
 
