@@ -53,6 +53,13 @@ void JsonValidation::validate_object(const Json::Value& value) {
   validate_object(value, /* expected */ "non-null object");
 }
 
+void JsonValidation::validate_array(const Json::Value& value) {
+  if (value.isNull() || !value.isArray()) {
+    throw JsonValidationError(
+        value, /* field */ std::nullopt, /* expected */ "non-null array");
+  }
+}
+
 const Json::Value& JsonValidation::object(
     const Json::Value& value,
     const std::string& field) {

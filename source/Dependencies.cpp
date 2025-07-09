@@ -136,7 +136,7 @@ Json::Value Dependencies::to_json(const Method* method) const {
     dependencies_value.append(Json::Value(dependency->show()));
   }
 
-  JsonValidation::nonempty_array(dependencies_value);
+  JsonValidation::validate_array(dependencies_value);
 
   return dependencies_value;
 }
