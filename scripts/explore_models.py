@@ -26,8 +26,9 @@ class FilePosition(NamedTuple):
     length: int
 
 
-__index: Dict[str, FilePosition] = {}
+__model_index: Dict[str, FilePosition] = {}
 __field_index: Dict[str, FilePosition] = {}
+__callgraph_index: Dict[str, FilePosition] = {}
 
 
 def _method_string(method: Union[str, Dict[str, Any]]) -> str:
@@ -54,7 +55,9 @@ def _iter_with_offset(lines: Iterable[bytes]) -> Iterable[Tuple[bytes, int]]:
         offset += len(line)
 
 
-def _index_file(path: str) -> Tuple[Dict[str, FilePosition], Dict[str, FilePosition]]:
+def _index_models_file(
+    path: str,
+) -> Tuple[Dict[str, FilePosition], Dict[str, FilePosition]]:
     print(f"Indexing `{path}`")
     index = {}
     field_index = {}
@@ -75,10 +78,33 @@ def _index_file(path: str) -> Tuple[Dict[str, FilePosition], Dict[str, FilePosit
     return (index, field_index)
 
 
-def index(results_directory: str = ".") -> None:
+def _index_callgraph_file(path: str) -> Dict[str, FilePosition]:
+    print(f"Indexing `{path}`")
+    callgraphs = {}
+
+    with open(path, "rb") as file:
+        for line, offset in _iter_with_offset(file):
+            if line.startswith(b"//"):
+                continue
+
+            position = FilePosition(path=path, offset=offset, length=len(line))
+            callgraph = json.loads(line)
+
+            caller = list(callgraph.keys())
+            if len(caller) != 1:
+                raise AssertionError(
+                    f"Expected a single key in the callgraph json. Found {len(caller)}"
+                )
+
+            callgraphs[caller[0]] = position
+
+    return callgraphs
+
+
+def index_models(results_directory: str = ".") -> None:
     """Index all available method and field models in the given directory."""
-    global __index, __field_index
-    __index = {}
+    global __model_index, __field_index
+    __model_index = {}
     __field_index = {}
 
     paths = []
@@ -89,15 +115,38 @@ def index(results_directory: str = ".") -> None:
         paths.append(os.path.join(results_directory, path))
 
     with multiprocessing.Pool() as pool:
-        for index, field_index in pool.imap_unordered(_index_file, paths):
-            __index.update(index)
+        for index, field_index in pool.imap_unordered(_index_models_file, paths):
+            __model_index.update(index)
             __field_index.update(field_index)
 
-    print(f"Indexed {len(__index)} models")
+
+def index_callgraphs(results_directory: str = ".") -> None:
+    """Index all available callgraphs in the given directory."""
+    global __callgraph_index
+    __callgraph_index = {}
+
+    callgraph_paths = []
+    for path in os.listdir(results_directory):
+        if not path.startswith("call-graph@"):
+            continue
+
+        callgraph_paths.append(os.path.join(results_directory, path))
+
+    with multiprocessing.Pool() as pool:
+        for call_graph in pool.imap_unordered(_index_callgraph_file, callgraph_paths):
+            __callgraph_index.update(call_graph)
+
+    print(f"{len(__callgraph_index)} callgraphs")
+
+
+def index(results_directory: str = ".") -> None:
+    """Index all available models, fields, and callgraphs in the given directory."""
+    index_models(results_directory)
+    index_callgraphs(results_directory)
 
 
 def _assert_loaded() -> None:
-    if len(__index) == 0:
+    if len(__model_index) == 0 and len(__callgraph_index) == 0:
         raise AssertionError("call index() first")
 
 
@@ -108,7 +157,10 @@ def _index_keys_containing(index: Dict[str, Any], string: str) -> List[str]:
 
 def method_containing(string: str) -> List[str]:
     """Find all methods containing the given string."""
-    return _index_keys_containing(__index, string)
+    if len(__model_index) > 0:
+        return _index_keys_containing(__model_index, string)
+    else:
+        return _index_keys_containing(__callgraph_index, string)
 
 
 def field_containing(string: str) -> List[str]:
@@ -124,7 +176,7 @@ def _index_keys_matching(index: Dict[str, Any], pattern: str) -> List[str]:
 
 def method_matching(pattern: str) -> List[str]:
     """Find all methods matching the given regular expression."""
-    return _index_keys_matching(__index, pattern)
+    return _index_keys_matching(__model_index, pattern)
 
 
 def field_matching(pattern: str) -> List[str]:
@@ -132,7 +184,7 @@ def field_matching(pattern: str) -> List[str]:
     return _index_keys_matching(__field_index, pattern)
 
 
-def _get_model_bytes(key: str, index: Dict[str, Any]) -> bytes:
+def _get_bytes(key: str, index: Dict[str, Any]) -> bytes:
     _assert_loaded()
 
     if key not in index:
@@ -146,31 +198,36 @@ def _get_model_bytes(key: str, index: Dict[str, Any]) -> bytes:
 
 def get_model(method: str) -> Model:
     """Get the model for the given method."""
-    return json.loads(_get_model_bytes(method, __index))
+    return json.loads(_get_bytes(method, __model_index))
 
 
 def get_field_model(field: str) -> Model:
     """Get the model for the given field."""
-    return json.loads(_get_model_bytes(field, __field_index))
+    return json.loads(_get_bytes(field, __field_index))
 
 
-def _print_model_helper(model: bytes) -> None:
+def _print_helper(input: bytes) -> None:
     try:
-        subprocess.run(["jq", "-C"], input=model, check=True)
+        subprocess.run(["jq", "-C"], input=input, check=True)
     except FileNotFoundError:
         # User doesn't have jq installed
-        json.dump(json.loads(model), sys.stdout, indent=2)
+        json.dump(json.loads(input), sys.stdout, indent=2)
         sys.stdout.write("\n")
 
 
 def print_model(method: str) -> None:
     """Pretty print the model for the given method."""
-    _print_model_helper(_get_model_bytes(method, __index))
+    _print_helper(_get_bytes(method, __model_index))
 
 
 def print_field_model(field: str) -> None:
     """Pretty print the model for the given field."""
-    _print_model_helper(_get_model_bytes(field, __field_index))
+    _print_helper(_get_bytes(field, __field_index))
+
+
+def print_callees(method: str) -> None:
+    """Pretty print the callees for the given method."""
+    _print_helper(_get_bytes(method, __callgraph_index))
 
 
 def dump_model(method: str, filename: str, indent: int = 2) -> None:
@@ -190,6 +247,8 @@ def print_help() -> None:
     print("Available commands:")
     commands = [
         (index, "index('.')"),
+        (index_models, "index_models('.')"),
+        (index_callgraphs, "index_callgraphs('.')"),
         (method_containing, "method_containing('Foo;.bar')"),
         (field_containing, "field_containing('Foo;.bar')"),
         (method_matching, "method_matching('Foo.*')"),
@@ -198,6 +257,7 @@ def print_help() -> None:
         (get_field_model, "get_field_model('Foo;.bar')"),
         (print_model, "print_model('Foo;.bar')"),
         (print_field_model, "print_field_model('Foo;.bar')"),
+        (print_callees, "print_callees('Foo;.bar')"),
         (dump_model, "dump_model('Foo;.bar', 'bar.json', [indent=2])"),
         (dump_field_model, "dump_field_model('Foo;.bar', 'bar.json', [indent=2])"),
     ]
