@@ -29,6 +29,7 @@ class FilePosition(NamedTuple):
 __model_index: Dict[str, FilePosition] = {}
 __field_index: Dict[str, FilePosition] = {}
 __callgraph_index: Dict[str, FilePosition] = {}
+__dependencies_index: Dict[str, FilePosition] = {}
 
 
 def _method_string(method: Union[str, Dict[str, Any]]) -> str:
@@ -90,13 +91,13 @@ def _index_callgraph_file(path: str) -> Dict[str, FilePosition]:
             position = FilePosition(path=path, offset=offset, length=len(line))
             callgraph = json.loads(line)
 
-            caller = list(callgraph.keys())
-            if len(caller) != 1:
+            method = list(callgraph.keys())
+            if len(method) != 1:
                 raise AssertionError(
-                    f"Expected a single key in the callgraph json. Found {len(caller)}"
+                    f"Expected a single key in the callgraph or dependencies json. Found {len(method)}"
                 )
 
-            callgraphs[caller[0]] = position
+            callgraphs[method[0]] = position
 
     return callgraphs
 
@@ -122,21 +123,31 @@ def index_models(results_directory: str = ".") -> None:
 
 def index_callgraphs(results_directory: str = ".") -> None:
     """Index all available callgraphs in the given directory."""
-    global __callgraph_index
+    global __callgraph_index, __dependencies_index
     __callgraph_index = {}
+    __dependencies_index = {}
 
     callgraph_paths = []
+    dependencies_paths = []
     for path in os.listdir(results_directory):
-        if not path.startswith("call-graph@"):
+        if path.startswith("call-graph@"):
+            callgraph_paths.append(os.path.join(results_directory, path))
+        elif path.startswith("dependencies@"):
+            dependencies_paths.append(os.path.join(results_directory, path))
+        else:
             continue
-
-        callgraph_paths.append(os.path.join(results_directory, path))
 
     with multiprocessing.Pool() as pool:
         for call_graph in pool.imap_unordered(_index_callgraph_file, callgraph_paths):
             __callgraph_index.update(call_graph)
 
+        for dependency in pool.imap_unordered(
+            _index_callgraph_file, dependencies_paths
+        ):
+            __dependencies_index.update(dependency)
+
     print(f"{len(__callgraph_index)} callgraphs")
+    print(f"{len(__dependencies_index)} dependencies")
 
 
 def index(results_directory: str = ".") -> None:
@@ -230,6 +241,11 @@ def print_callees(method: str) -> None:
     _print_helper(_get_bytes(method, __callgraph_index))
 
 
+def print_callers(method: str) -> None:
+    """Pretty print the callers for the given method."""
+    _print_helper(_get_bytes(method, __dependencies_index))
+
+
 def dump_model(method: str, filename: str, indent: int = 2) -> None:
     """Dump model for the given method to given filename."""
     with open(filename, "w") as f:
@@ -258,6 +274,7 @@ def print_help() -> None:
         (print_model, "print_model('Foo;.bar')"),
         (print_field_model, "print_field_model('Foo;.bar')"),
         (print_callees, "print_callees('Foo;.bar')"),
+        (print_callers, "print_callers('Foo;.bar')"),
         (dump_model, "dump_model('Foo;.bar', 'bar.json', [indent=2])"),
         (dump_field_model, "dump_field_model('Foo;.bar', 'bar.json', [indent=2])"),
     ]
