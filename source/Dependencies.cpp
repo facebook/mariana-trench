@@ -35,37 +35,32 @@ Dependencies::Dependencies(
 
   auto queue = sparta::work_queue<const Method*>(
       [&](const Method* caller) {
-        auto add_caller_as_dependency =
-            [&](const Method* /* method */,
-                std::unordered_set<const Method*>& dependencies,
-                bool /* is_new */) {
-              auto* code = caller->get_code();
-              if (!code) {
-                return;
-              }
-
-              auto model = registry.get(caller);
-              if (model.skip_analysis()) {
-                return;
-              }
-
-              dependencies.insert(caller);
-            };
-
         auto add_dependency = [&](const CallTarget& call_target) {
           if (!call_target.resolved()) {
             return;
           }
+          auto* code = caller->get_code();
+          if (!code) {
+            return;
+          }
+
+          auto model = registry.get(caller);
+          if (model.skip_analysis()) {
+            return;
+          }
 
           dependencies_.update(
-              call_target.resolved_base_callee(), add_caller_as_dependency);
+              call_target.resolved_base_callee(),
+              [&](const Method* /* method */,
+                  std::unordered_set<const Method*>& dependencies,
+                  bool /* is_new */) { dependencies.insert(caller); });
 
           if (!call_target.is_virtual()) {
             // We don't add a dependency for overrides of direct invocations.
             return;
           }
 
-          auto model = registry.get(call_target.resolved_base_callee());
+          model = registry.get(call_target.resolved_base_callee());
 
           if (model.no_join_virtual_overrides()) {
             return;
@@ -78,7 +73,11 @@ Dependencies::Dependencies(
           }
 
           for (const auto* override : call_target.overrides()) {
-            dependencies_.update(override, add_caller_as_dependency);
+            dependencies_.update(
+                override,
+                [&](const Method* /* method */,
+                    std::unordered_set<const Method*>& dependencies,
+                    bool /* is_new */) { dependencies.insert(caller); });
           }
         };
 
