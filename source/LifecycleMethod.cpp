@@ -48,6 +48,12 @@ LifeCycleMethodGraph::get_node(const std::string& node_name) const {
 }
 
 LifeCycleMethodGraph LifeCycleMethodGraph::from_json(const Json::Value& value) {
+  // Make sure the entry node is always present
+  if (!value.isMember("entry")) {
+    throw JsonValidationError(
+        value, std::nullopt, "an entry point defined for the lifecycle graph");
+  }
+
   LifeCycleMethodGraph graph;
 
   for (const auto& node_name : value.getMemberNames()) {
@@ -65,8 +71,15 @@ LifeCycleMethodGraph LifeCycleMethodGraph::from_json(const Json::Value& value) {
       successors.push_back(JsonValidation::string(successor));
     }
 
+    // Make sure non-exit nodes always have some successors
+    if (node_name != "exit" && successors.empty()) {
+      throw JsonValidationError(
+          node, "successors", "non-empty successor list for a non-exit node");
+    }
+
     graph.add_node(node_name, std::move(method_calls), std::move(successors));
   }
+
   return graph;
 }
 
@@ -217,11 +230,6 @@ LifecycleMethod LifecycleMethod::from_json(const Json::Value& value) {
 void LifeCycleMethodGraph::validate(
     const DexClass* base_class,
     const ClassHierarchies& class_hierarchies) const {
-  if (get_node("entry") == nullptr) {
-    throw LifecycleMethodValidationError(
-        "Entry point entry is not a valid node in the lifecycle graph.");
-  }
-
   for (const auto& [node_name, node] : get_nodes()) {
     for (const auto& method_call : node.method_calls()) {
       method_call.validate(base_class, class_hierarchies);

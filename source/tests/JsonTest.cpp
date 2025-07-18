@@ -1590,6 +1590,7 @@ TEST_F(JsonTest, Propagation) {
 }
 
 TEST_F(JsonTest, LifeCycleMethodGraphFromJson) {
+  // Normal case
   std::string json_string = R"(
     {
       "entry": {
@@ -1599,28 +1600,28 @@ TEST_F(JsonTest, LifeCycleMethodGraphFromJson) {
           "successors": ["onStart"]
       },
       "onStart": {
-        "instructions": [
+          "instructions": [
             { "method_name": "onStart", "return_type": "V" }
           ],
-          "successors": ["onResume", "onStop"]
+          "successors": ["onResume", "exit"]
       },
       "onResume": {
-        "instructions": [
+          "instructions": [
             { "method_name": "onResume", "return_type": "V" }
           ],
           "successors": ["onPause"]
       },
       "onPause": {
-        "instructions": [
+          "instructions": [
             { "method_name": "onPause", "return_type": "V" }
           ],
-          "successors": ["onResume", "onStop"]
+          "successors": ["onResume", "exit"]
       },
-      "onStop": {
-        "instructions": [
+      "exit": {
+          "instructions": [
             { "method_name": "onStop", "return_type": "V" }
           ],
-          "successors": []
+          "successors": [],
       }
     }
   )";
@@ -1641,7 +1642,7 @@ TEST_F(JsonTest, LifeCycleMethodGraphFromJson) {
   EXPECT_EQ(onStart_node->method_calls()[0].get_method_name(), "onStart");
   EXPECT_EQ(
       onStart_node->successors(),
-      (std::vector<std::string>{"onResume", "onStop"}));
+      (std::vector<std::string>{"onResume", "exit"}));
 
   const LifecycleGraphNode* onResume_node = graph.get_node("onResume");
   EXPECT_NE(onResume_node, nullptr);
@@ -1655,13 +1656,82 @@ TEST_F(JsonTest, LifeCycleMethodGraphFromJson) {
   EXPECT_EQ(onPause_node->method_calls()[0].get_method_name(), "onPause");
   EXPECT_EQ(
       onPause_node->successors(),
-      (std::vector<std::string>{"onResume", "onStop"}));
+      (std::vector<std::string>{"onResume", "exit"}));
 
-  const LifecycleGraphNode* onStop_node = graph.get_node("onStop");
+  const LifecycleGraphNode* onStop_node = graph.get_node("exit");
   EXPECT_NE(onStop_node, nullptr);
   EXPECT_EQ(onStop_node->method_calls().size(), 1);
   EXPECT_EQ(onStop_node->method_calls()[0].get_method_name(), "onStop");
   EXPECT_TRUE(onStop_node->successors().empty());
+
+  // Case without an entry point
+  json_string = R"(
+    {
+      "onCreate": {
+          "instructions": [
+            { "method_name": "onCreate", "return_type": "V" }
+          ],
+          "successors": ["onStart"]
+      },
+      "onStart": {
+          "instructions": [
+            { "method_name": "onStart", "return_type": "V" }
+          ],
+          "successors": ["exit"]
+      },
+      "exit": {
+          "instructions": [
+            { "method_name": "onResume", "return_type": "V" }
+          ],
+          "successors": [],
+      },
+    }
+  )";
+  json_value = test::parse_json(json_string);
+  EXPECT_THROW(
+      LifeCycleMethodGraph::from_json(json_value), JsonValidationError);
+
+  // Valid case without terminators
+  json_string = R"(
+    {
+      "entry": {
+          "instructions": [
+            { "method_name": "onCreate", "return_type": "V" }
+          ],
+          "successors": ["onStart"]
+      },
+      "onStart": {
+          "instructions": [
+            { "method_name": "onStart", "return_type": "V" }
+          ],
+          "successors": ["entry"]
+      },
+    }
+  )";
+  json_value = test::parse_json(json_string);
+  EXPECT_NO_THROW(LifeCycleMethodGraph::from_json(json_value));
+
+  // Invalid case without terminators, a node not marked as a terminator must
+  // have an non-empty successors list
+  json_string = R"(
+    {
+      "entry": {
+          "instructions": [
+            { "method_name": "onCreate", "return_type": "V" }
+          ],
+          "successors": ["onStart"]
+      },
+      "onStart": {
+          "instructions": [
+            { "method_name": "onStart", "return_type": "V" }
+          ],
+          "successors": []
+      },
+    }
+  )";
+  json_value = test::parse_json(json_string);
+  EXPECT_THROW(
+      LifeCycleMethodGraph::from_json(json_value), JsonValidationError);
 }
 
 TEST_F(JsonTest, Model) {
@@ -3143,9 +3213,9 @@ TEST_F(JsonTest, LifecycleMethod) {
       "onStart",
       std::vector<LifecycleMethodCall>{
           {LifecycleMethodCall("onStart", "V", {}, std::nullopt)}},
-      std::vector<std::string>{{"onResume"}});
+      std::vector<std::string>{{"exit"}});
   graph.add_node(
-      "onResume",
+      "exit",
       std::vector<LifecycleMethodCall>{
           {LifecycleMethodCall("onResume", "V", {}, std::nullopt)}},
       std::vector<std::string>{});
@@ -3164,13 +3234,13 @@ TEST_F(JsonTest, LifecycleMethod) {
             "instructions": [
                 { "method_name": "onStart", "return_type": "V" }
               ],
-              "successors": ["onResume"]
+              "successors": ["exit"]
           },
-          "onResume": {
+          "exit": {
             "instructions": [
                 { "method_name": "onResume", "return_type": "V" }
               ],
-              "successors": []
+              "successors": [],
           }
         }
       })")),
