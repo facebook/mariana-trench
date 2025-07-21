@@ -23,7 +23,7 @@ namespace {
 
 void map_argument_type_to_index(
     const LifecycleMethodCall& callee,
-    std::unordered_map<DexType*, int>& type_index_map) {
+    LifecycleMethod::TypeIndexMap& type_index_map) {
   const auto* type_list = callee.get_argument_types();
   if (type_list == nullptr) {
     ERROR(1, "Callee `{}` has invalid argument types.", callee.to_string());
@@ -32,6 +32,215 @@ void map_argument_type_to_index(
   for (auto* type : *type_list) {
     type_index_map.emplace(type, type_index_map.size() + 1);
   }
+}
+
+/**
+ * Lifecycle method creation for linear state transitions
+ */
+const DexMethod* MT_NULLABLE create_dex_method_from_callees(
+    DexClass* dex_klass,
+    const LifecycleMethod::TypeIndexMap& type_index_map,
+    MethodCreator method_creator,
+    const std::vector<LifecycleMethodCall>& callees) {
+  auto this_location = method_creator.get_local(0);
+  auto* main_block = method_creator.get_main_block();
+  mt_assert(main_block != nullptr);
+
+  int callee_count = 0;
+
+  for (const auto& callee : callees) {
+    auto* dex_method = callee.get_dex_method(dex_klass);
+    if (!dex_method) {
+      // Dex method does not apply for current APK.
+      // See `LifecycleMethod::validate()`.
+      continue;
+    }
+
+    ++callee_count;
+
+    std::vector<Location> invoke_with_registers{this_location};
+    auto* type_list = callee.get_argument_types();
+    // This should have been verified at the start of `create_methods`
+    mt_assert(type_list != nullptr);
+    for (auto* type : *type_list) {
+      auto argument_register =
+          method_creator.get_local(type_index_map.at(type));
+      invoke_with_registers.push_back(argument_register);
+    }
+    main_block->invoke(
+        IROpcode::OPCODE_INVOKE_VIRTUAL, dex_method, invoke_with_registers);
+  }
+
+  if (callee_count < 2) {
+    // The point of life-cycle methods is to find flows where tainted member
+    // variables flow from one callee into another. If only one (or no) method
+    // is overridden, there is no need to create the artificial method. If
+    // this happens, it is likely the life-cycle configuration is incorrect.
+    WARNING(
+        1,
+        "Skipped creating life-cycle method for class `{}`. Reason: Insufficient callees.",
+        show(dex_klass));
+    return nullptr;
+  }
+
+  // Add return statement
+  main_block->ret_void();
+
+  // The CFG needs to be built for the call graph to be constructed later.
+  auto* new_method = method_creator.create();
+  mt_assert(new_method != nullptr && new_method->get_code() != nullptr);
+  IRCode* code = new_method->get_code();
+  code->build_cfg();
+  code->cfg().calculate_exit_block();
+
+  // Add method to the class
+  dex_klass->add_method(new_method);
+
+  return new_method;
+}
+
+/**
+ * Lifecycle method creation for graph like state transitions
+ *
+ * We will perform the code generation in two passes:
+ * First pass: creates one basic block for each graph node and add the
+ * invocations
+ * Second pass: performs the graph traversal and connect
+ * the basic blocks with each other
+ */
+const DexMethod* MT_NULLABLE create_dex_method_from_graph(
+    DexClass* dex_klass,
+    const LifecycleMethod::TypeIndexMap& type_index_map,
+    MethodCreator method_creator,
+    const LifeCycleMethodGraph& graph) {
+  // First create the method, and then we can work on its CFG
+  auto* new_method = method_creator.create();
+  mt_assert(new_method != nullptr && new_method->get_code() != nullptr);
+  new_method->rstate.set_no_optimizations();
+  new_method->rstate.set_generated();
+  IRCode* code = new_method->get_code();
+  code->build_cfg();
+  auto& cfg = code->cfg();
+
+  int callee_count = 0;
+
+  // First pass
+  // Create a basic block for each graph node.
+  // The entry node is treated specially -- we want to directly reuse the
+  // existing entry block for it.
+  std::unordered_map<std::string, cfg::Block*> node_to_block;
+  for (const auto& [name, node] : graph.get_nodes()) {
+    auto* block = cfg.create_block();
+
+    // Construct method calls in this basic block
+    for (const auto& callee : node.method_calls()) {
+      auto* dex_method = callee.get_dex_method(dex_klass);
+      if (!dex_method) {
+        // Dex method does not apply for current APK.
+        // See `LifecycleMethod::validate()`.
+        continue;
+      }
+
+      ++callee_count;
+
+      auto* type_list = callee.get_argument_types();
+      // This should have been verified at the start of `create_methods`
+      mt_assert(type_list != nullptr);
+      auto* invoke_insn =
+          (new IRInstruction(IROpcode::OPCODE_INVOKE_VIRTUAL))
+              ->set_srcs_size(type_list->size() + 1)
+              ->set_method(dex_method)
+              ->set_src(/* this parameter index */ 0, /* register */ 0);
+      size_t idx = 1;
+      for (auto* type : *type_list) {
+        // MethodCreator by default allocates param registers starting from 0.
+        // It does remap param registers to the end of the register frame when
+        // MethodCreator::creator is called. Technically we should handle
+        // that, but we are lucky here, the method we just created is empty,
+        // which means there are no other registers, and consequently the
+        // param registers get mapped back to themselves. This means the param
+        // register equals to the index of the corresponding parameter in the
+        // function proto, i.e., type_index_map
+        invoke_insn->set_src(idx++, type_index_map.at(type));
+      }
+
+      block->push_back(invoke_insn);
+    }
+
+    node_to_block.emplace(name, block);
+  }
+
+  if (callee_count < 2) {
+    // The point of life-cycle methods is to find flows where tainted member
+    // variables flow from one callee into another. If only one (or no) method
+    // is overridden, there is no need to create the artificial method. If
+    // this happens, it is likely the life-cycle configuration is incorrect.
+    WARNING(
+        1,
+        "Skipped creating life-cycle method for class `{}`. Reason: Insufficient callees.",
+        show(dex_klass));
+
+    // Clean up most of the resources used by DexMethod. Note, this does *NOT*
+    // directly free the `DexMethod`, the method will be fully freed at some
+    // later point
+    DexMethodRef::delete_method(new_method);
+
+    return nullptr;
+  }
+
+  // Second pass: perform the graph traversal and connect the basic blocks
+
+  // Connect the entry block with the block of the entry node of this graph
+  // using an unconditional jump. The entry code cannot directly use the entry
+  // block because the entry block already contains instructions that loads
+  // the registers. If we were to use it, any execution following a graph edge
+  // to the entry block would unconditionally rerun these instructions, which
+  // is not ideal.
+  cfg.add_edge(
+      cfg.entry_block(), node_to_block["entry"], cfg::EdgeType::EDGE_GOTO);
+
+  // create an exit block
+  auto* exit_block = cfg.create_block();
+  exit_block->push_back(new IRInstruction(OPCODE_RETURN_VOID));
+
+  for (auto& [name, node] : graph.get_nodes()) {
+    auto* curr_block = node_to_block[name];
+
+    const auto& successors = node.successors();
+    std::vector<std::pair<int32_t, cfg::Block*>> edges;
+
+    // Construct case -> block maps for all successors
+    for (size_t i = 0, size = successors.size(); i < size; i++) {
+      const auto& successor = successors[i];
+      edges.emplace_back(i, node_to_block[successor]);
+    }
+
+    cfg::Block* default_block;
+
+    if (name == "exit") {
+      // In case the current node may exit the lifecycle (currently set to
+      // the onStop and onDestroy nodes), we map the default case to the exit
+      // block
+      default_block = exit_block;
+    } else {
+      // Otherwise, we map the default case to the block of the last successor
+      mt_assert(!edges.empty());
+      std::tie(std::ignore, default_block) = edges.back();
+      edges.pop_back();
+    }
+
+    // Create the switch in the current basic block to connect all successors
+    auto* switch_insn =
+        (new IRInstruction(OPCODE_SWITCH))->set_src(0, cfg.allocate_temp());
+    cfg.create_branch(curr_block, switch_insn, default_block, edges);
+  }
+
+  cfg.calculate_exit_block();
+
+  // Add method to the class
+  dex_klass->add_method(new_method);
+
+  return new_method;
 }
 
 } // namespace
@@ -495,215 +704,6 @@ const DexTypeList* LifecycleMethod::get_argument_types(
   }
 
   return DexTypeList::make_type_list(std::move(argument_types));
-}
-
-/**
- * Lifecycle method creation for linear state transitions
- */
-const DexMethod* MT_NULLABLE LifecycleMethod::create_dex_method_from_callees(
-    DexClass* dex_klass,
-    const TypeIndexMap& type_index_map,
-    MethodCreator method_creator,
-    const std::vector<LifecycleMethodCall>& callees) {
-  auto this_location = method_creator.get_local(0);
-  auto* main_block = method_creator.get_main_block();
-  mt_assert(main_block != nullptr);
-
-  int callee_count = 0;
-
-  for (const auto& callee : callees) {
-    auto* dex_method = callee.get_dex_method(dex_klass);
-    if (!dex_method) {
-      // Dex method does not apply for current APK.
-      // See `LifecycleMethod::validate()`.
-      continue;
-    }
-
-    ++callee_count;
-
-    std::vector<Location> invoke_with_registers{this_location};
-    auto* type_list = callee.get_argument_types();
-    // This should have been verified at the start of `create_methods`
-    mt_assert(type_list != nullptr);
-    for (auto* type : *type_list) {
-      auto argument_register =
-          method_creator.get_local(type_index_map.at(type));
-      invoke_with_registers.push_back(argument_register);
-    }
-    main_block->invoke(
-        IROpcode::OPCODE_INVOKE_VIRTUAL, dex_method, invoke_with_registers);
-  }
-
-  if (callee_count < 2) {
-    // The point of life-cycle methods is to find flows where tainted member
-    // variables flow from one callee into another. If only one (or no) method
-    // is overridden, there is no need to create the artificial method. If
-    // this happens, it is likely the life-cycle configuration is incorrect.
-    WARNING(
-        1,
-        "Skipped creating life-cycle method for class `{}`. Reason: Insufficient callees.",
-        show(dex_klass));
-    return nullptr;
-  }
-
-  // Add return statement
-  main_block->ret_void();
-
-  // The CFG needs to be built for the call graph to be constructed later.
-  auto* new_method = method_creator.create();
-  mt_assert(new_method != nullptr && new_method->get_code() != nullptr);
-  IRCode* code = new_method->get_code();
-  code->build_cfg();
-  code->cfg().calculate_exit_block();
-
-  // Add method to the class
-  dex_klass->add_method(new_method);
-
-  return new_method;
-}
-
-/**
- * Lifecycle method creation for graph like state transitions
- *
- * We will perform the code generation in two passes:
- * First pass: creates one basic block for each graph node and add the
- * invocations
- * Second pass: performs the graph traversal and connect
- * the basic blocks with each other
- */
-const DexMethod* MT_NULLABLE LifecycleMethod::create_dex_method_from_graph(
-    DexClass* dex_klass,
-    const TypeIndexMap& type_index_map,
-    MethodCreator method_creator,
-    const LifeCycleMethodGraph& graph) {
-  // First create the method, and then we can work on its CFG
-  auto* new_method = method_creator.create();
-  mt_assert(new_method != nullptr && new_method->get_code() != nullptr);
-  new_method->rstate.set_no_optimizations();
-  new_method->rstate.set_generated();
-  IRCode* code = new_method->get_code();
-  code->build_cfg();
-  auto& cfg = code->cfg();
-
-  int callee_count = 0;
-
-  // First pass
-  // Create a basic block for each graph node.
-  // The entry node is treated specially -- we want to directly reuse the
-  // existing entry block for it.
-  std::unordered_map<std::string, cfg::Block*> node_to_block;
-  for (const auto& [name, node] : graph.get_nodes()) {
-    auto* block = cfg.create_block();
-
-    // Construct method calls in this basic block
-    for (const auto& callee : node.method_calls()) {
-      auto* dex_method = callee.get_dex_method(dex_klass);
-      if (!dex_method) {
-        // Dex method does not apply for current APK.
-        // See `LifecycleMethod::validate()`.
-        continue;
-      }
-
-      ++callee_count;
-
-      auto* type_list = callee.get_argument_types();
-      // This should have been verified at the start of `create_methods`
-      mt_assert(type_list != nullptr);
-      auto* invoke_insn =
-          (new IRInstruction(IROpcode::OPCODE_INVOKE_VIRTUAL))
-              ->set_srcs_size(type_list->size() + 1)
-              ->set_method(dex_method)
-              ->set_src(/* this parameter index */ 0, /* register */ 0);
-      size_t idx = 1;
-      for (auto* type : *type_list) {
-        // MethodCreator by default allocates param registers starting from 0.
-        // It does remap param registers to the end of the register frame when
-        // MethodCreator::creator is called. Technically we should handle
-        // that, but we are lucky here, the method we just created is empty,
-        // which means there are no other registers, and consequently the
-        // param registers get mapped back to themselves. This means the param
-        // register equals to the index of the corresponding parameter in the
-        // function proto, i.e., type_index_map
-        invoke_insn->set_src(idx++, type_index_map.at(type));
-      }
-
-      block->push_back(invoke_insn);
-    }
-
-    node_to_block.emplace(name, block);
-  }
-
-  if (callee_count < 2) {
-    // The point of life-cycle methods is to find flows where tainted member
-    // variables flow from one callee into another. If only one (or no) method
-    // is overridden, there is no need to create the artificial method. If
-    // this happens, it is likely the life-cycle configuration is incorrect.
-    WARNING(
-        1,
-        "Skipped creating life-cycle method for class `{}`. Reason: Insufficient callees.",
-        show(dex_klass));
-
-    // Clean up most of the resources used by DexMethod. Note, this does *NOT*
-    // directly free the `DexMethod`, the method will be fully freed at some
-    // later point
-    DexMethodRef::delete_method(new_method);
-
-    return nullptr;
-  }
-
-  // Second pass: perform the graph traversal and connect the basic blocks
-
-  // Connect the entry block with the block of the entry node of this graph
-  // using an unconditional jump. The entry code cannot directly use the entry
-  // block because the entry block already contains instructions that loads
-  // the registers. If we were to use it, any execution following a graph edge
-  // to the entry block would unconditionally rerun these instructions, which
-  // is not ideal.
-  cfg.add_edge(
-      cfg.entry_block(), node_to_block["entry"], cfg::EdgeType::EDGE_GOTO);
-
-  // create an exit block
-  auto* exit_block = cfg.create_block();
-  exit_block->push_back(new IRInstruction(OPCODE_RETURN_VOID));
-
-  for (auto& [name, node] : graph.get_nodes()) {
-    auto* curr_block = node_to_block[name];
-
-    const auto& successors = node.successors();
-    std::vector<std::pair<int32_t, cfg::Block*>> edges;
-
-    // Construct case -> block maps for all successors
-    for (size_t i = 0, size = successors.size(); i < size; i++) {
-      const auto& successor = successors[i];
-      edges.emplace_back(i, node_to_block[successor]);
-    }
-
-    cfg::Block* default_block;
-
-    if (name == "exit") {
-      // In case the current node may exit the lifecycle (currently set to
-      // the onStop and onDestroy nodes), we map the default case to the exit
-      // block
-      default_block = exit_block;
-    } else {
-      // Otherwise, we map the default case to the block of the last successor
-      mt_assert(!edges.empty());
-      std::tie(std::ignore, default_block) = edges.back();
-      edges.pop_back();
-    }
-
-    // Create the switch in the current basic block to connect all successors
-    auto* switch_insn =
-        (new IRInstruction(OPCODE_SWITCH))->set_src(0, cfg.allocate_temp());
-    cfg.create_branch(curr_block, switch_insn, default_block, edges);
-  }
-
-  cfg.calculate_exit_block();
-
-  // Add method to the class
-  dex_klass->add_method(new_method);
-
-  return new_method;
 }
 
 } // namespace marianatrench
