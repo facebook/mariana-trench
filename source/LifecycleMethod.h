@@ -14,6 +14,8 @@
 
 #include <ConcurrentContainers.h>
 
+#include <Creators.h>
+
 #include <mariana-trench/Context.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Method.h>
@@ -227,6 +229,18 @@ class LifecycleMethod {
   create_dex_method(DexType* klass, const TypeIndexMap& type_index_map);
 
   const DexTypeList* get_argument_types(const TypeIndexMap&);
+
+  static const DexMethod* MT_NULLABLE create_dex_method_from_callees(
+      DexClass* dex_klass,
+      const TypeIndexMap& type_index_map,
+      MethodCreator method,
+      const std::vector<LifecycleMethodCall>& callees);
+
+  static const DexMethod* MT_NULLABLE create_dex_method_from_graph(
+      DexClass* dex_klass,
+      const TypeIndexMap& type_index_map,
+      MethodCreator method,
+      const LifeCycleMethodGraph& graph);
 
   std::string base_class_name_;
   std::string method_name_;

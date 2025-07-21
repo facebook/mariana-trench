@@ -2,24 +2,45 @@
   {
     "base_class_name": "Landroid/app/Activity;",
     "method_name": "activity_lifecycle_wrapper",
-    "callees": [
-      {
-        "method_name": "<init>",
-        "return_type": "V",
-        "argument_types": []
-      },
-      {
-        "method_name": "onCreate",
-        "return_type": "V",
-        "argument_types": [
-          "Landroid/os/Bundle;"
+    "control_flow_graph": {
+      "entry": {
+        "instructions": [
+          {
+            "method_name": "<init>",
+            "return_type": "V",
+            "argument_types": []
+          }
+        ],
+        "successors": [
+          "onCreate"
         ]
       },
-      {
-        "method_name": "onStart",
-        "return_type": "V",
-        "argument_types": []
+      "onCreate": {
+        "instructions": [
+          {
+            "method_name": "onCreate",
+            "return_type": "V",
+            "argument_types": [
+              "Landroid/os/Bundle;"
+            ]
+          }
+        ],
+        "successors": [
+          "exit"
+        ]
+      },
+      "exit": {
+        "instructions": [
+          {
+            "method_name": "onStart",
+            "return_type": "V",
+            "argument_types": []
+          }
+        ],
+        "successors": [
+          "onCreate"
+        ]
       }
-    ]
+    }
   }
 ]
