@@ -684,11 +684,9 @@ const DexMethod* MT_NULLABLE LifecycleMethod::create_dex_method(
   }
 
   LOG(5,
-      "Created life-cycle method `{}` for class: `{}`",
+      "Created life-cycle method `{}` for class: `{}`\nGenerated method body:\n{}",
       show(new_method),
-      show(klass));
-  LOG(5,
-      "Generated method body:\n{}",
+      show(klass),
       Method::show_control_flow_graph(new_method->get_code()->cfg()));
 
   return new_method;
