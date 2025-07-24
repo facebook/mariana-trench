@@ -107,14 +107,14 @@ Context make_context(const DexStore& store) {
       *context.options,
       *context.types,
       *context.class_hierarchies,
-      LifecycleMethods{},
-      shims,
       *context.feature_factory,
       *context.heuristics,
       *context.methods,
       *context.fields,
       *context.overrides,
-      method_mappings);
+      method_mappings,
+      LifecycleMethods{},
+      std::move(shims));
   auto registry = Registry(context);
   context.dependencies = std::make_unique<Dependencies>(
       *context.options,

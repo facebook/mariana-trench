@@ -272,14 +272,14 @@ class CallGraph final {
       const Options& options,
       const Types& types,
       const ClassHierarchies& class_hierarchies,
-      const LifecycleMethods& lifecycle_methods,
-      const Shims& shims,
       const FeatureFactory& feature_factory,
       const Heuristics& heuristics,
       Methods& methods,
       Fields& fields,
       Overrides& overrides,
-      MethodMappings& method_mappings);
+      MethodMappings& method_mappings,
+      LifecycleMethods lifecycle_methods,
+      Shims shims);
 
   DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(CallGraph)
 

@@ -110,14 +110,14 @@ TEST_P(JsonModelGeneratorIntegrationTest, CompareModels) {
       *context.options,
       *context.types,
       *context.class_hierarchies,
-      LifecycleMethods{},
-      Shims{/* global_shims_size */ 0},
       *context.feature_factory,
       *context.heuristics,
       *context.methods,
       *context.fields,
       *context.overrides,
-      method_mappings);
+      method_mappings,
+      LifecycleMethods{},
+      Shims{/* global_shims_size */ 0});
 
   // Run a model generator and compare output
   auto [models, field_models] =

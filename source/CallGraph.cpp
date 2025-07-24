@@ -1048,14 +1048,14 @@ CallGraph::CallGraph(
     const Options& options,
     const Types& types,
     const ClassHierarchies& class_hierarchies,
-    const LifecycleMethods& lifecycle_methods,
-    const Shims& shims,
     const FeatureFactory& feature_factory,
     const Heuristics& heuristics,
     Methods& method_factory,
     Fields& field_factory,
     Overrides& override_factory,
-    MethodMappings& method_mappings)
+    MethodMappings& method_mappings,
+    LifecycleMethods lifecycle_methods,
+    Shims shims)
     : types_(types),
       class_hierarchies_(class_hierarchies),
       overrides_(override_factory) {

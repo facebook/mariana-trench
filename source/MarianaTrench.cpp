@@ -34,7 +34,6 @@
 #include <mariana-trench/MarianaTrench.h>
 #include <mariana-trench/MethodMappings.h>
 #include <mariana-trench/Methods.h>
-#include <mariana-trench/ModelGeneration.h>
 #include <mariana-trench/OperatingSystem.h>
 #include <mariana-trench/Options.h>
 #include <mariana-trench/Overrides.h>
@@ -162,73 +161,67 @@ Registry MarianaTrench::analyze(Context& context) {
       class_intervals_timer.duration_in_seconds(),
       resident_set_size_in_gb());
 
-  MethodMappings method_mappings;
+  Timer lifecycle_methods_timer;
+  LOG(1, "Creating life-cycle wrapper methods...");
+  auto lifecycle_methods = LifecycleMethods::run(
+      *context.options, *context.class_hierarchies, *context.methods);
+  context.statistics->log_time("lifecycle_methods", lifecycle_methods_timer);
+  LOG(1,
+      "Created lifecycle methods in {:.2f}s. Memory used, RSS: {:.2f}GB",
+      lifecycle_methods_timer.duration_in_seconds(),
+      resident_set_size_in_gb());
 
-  // Scope for LifecycleMethods, Shims and IntentRoutingAnalyzer as they are
-  // only used for callgraph construction, shim and model generation steps.
-  {
-    Timer lifecycle_methods_timer;
-    LOG(1, "Creating life-cycle wrapper methods...");
-    auto lifecycle_methods = LifecycleMethods::run(
-        *context.options, *context.class_hierarchies, *context.methods);
-    context.statistics->log_time("lifecycle_methods", lifecycle_methods_timer);
+  // MethodMappings must be constructed after the life-cycle wrapper so that
+  // life-cycle methods are added to it.
+  Timer method_mapping_timer;
+  LOG(1,
+      "Building method mappings for shim/model generation over {} methods",
+      context.methods->size());
+  MethodMappings method_mappings{*context.methods};
+  LOG(1,
+      "Generated method mappings in {:.2f}s. Memory used, RSS: {:.2f}GB",
+      method_mapping_timer.duration_in_seconds(),
+      resident_set_size_in_gb());
+
+  Timer shims_timer;
+  LOG(1, "Creating user defined shims...");
+  Shims shims = ShimGeneration::run(context, method_mappings);
+  LOG(1,
+      "Created Shims in {:.2f}s. Memory used, RSS: {:.2f}GB",
+      shims_timer.duration_in_seconds(),
+      resident_set_size_in_gb());
+
+  if (context.options->enable_cross_component_analysis()) {
+    Timer intent_routing_analyzer_timer;
+    LOG(1, "Running intent routing analyzer...");
+    auto intent_routing_analyzer = IntentRoutingAnalyzer::run(
+        *context.methods, *context.types, *context.options);
     LOG(1,
-        "Created lifecycle methods in {:.2f}s. Memory used, RSS: {:.2f}GB",
-        lifecycle_methods_timer.duration_in_seconds(),
+        "Created intent routing analyzer in {:.2f}s. Memory used, RSS: {:.2f}MB",
+        intent_routing_analyzer_timer.duration_in_seconds(),
         resident_set_size_in_gb());
+    shims.add_intent_routing_analyzer(std::move(intent_routing_analyzer));
+  }
 
-    // MethodMappings must be constructed after the life-cycle wrapper so that
-    // life-cycle methods are added to it.
-    Timer method_mapping_timer;
-    LOG(1,
-        "Building method mappings for shim/model generation over {} methods",
-        context.methods->size());
-    method_mappings = MethodMappings{*context.methods}; // note: uses move ctor.
-    LOG(1,
-        "Generated method mappings in {:.2f}s. Memory used, RSS: {:.2f}GB",
-        method_mapping_timer.duration_in_seconds(),
-        resident_set_size_in_gb());
-
-    Timer shims_timer;
-    LOG(1, "Creating user defined shims...");
-    Shims shims = ShimGeneration::run(context, method_mappings);
-    LOG(1,
-        "Created Shims in {:.2f}s. Memory used, RSS: {:.2f}GB",
-        shims_timer.duration_in_seconds(),
-        resident_set_size_in_gb());
-
-    if (context.options->enable_cross_component_analysis()) {
-      Timer intent_routing_analyzer_timer;
-      LOG(1, "Running intent routing analyzer...");
-      auto intent_routing_analyzer = IntentRoutingAnalyzer::run(
-          *context.methods, *context.types, *context.options);
-      LOG(1,
-          "Created intent routing analyzer in {:.2f}s. Memory used, RSS: {:.2f}MB",
-          intent_routing_analyzer_timer.duration_in_seconds(),
-          resident_set_size_in_gb());
-      shims.add_intent_routing_analyzer(std::move(intent_routing_analyzer));
-    }
-
-    Timer call_graph_timer;
-    LOG(1, "Building call graph...");
-    context.call_graph = std::make_unique<CallGraph>(
-        *context.options,
-        *context.types,
-        *context.class_hierarchies,
-        lifecycle_methods,
-        shims,
-        *context.feature_factory,
-        *context.heuristics,
-        *context.methods,
-        *context.fields,
-        *context.overrides,
-        method_mappings);
-    context.statistics->log_time("call_graph", call_graph_timer);
-    LOG(1,
-        "Built call graph in {:.2f}s. Memory used, RSS: {:.2f}GB",
-        call_graph_timer.duration_in_seconds(),
-        resident_set_size_in_gb());
-  } // end Shims and IntentRoutingAnalyzer
+  Timer call_graph_timer;
+  LOG(1, "Building call graph...");
+  context.call_graph = std::make_unique<CallGraph>(
+      *context.options,
+      *context.types,
+      *context.class_hierarchies,
+      *context.feature_factory,
+      *context.heuristics,
+      *context.methods,
+      *context.fields,
+      *context.overrides,
+      method_mappings,
+      std::move(lifecycle_methods),
+      std::move(shims));
+  context.statistics->log_time("call_graph", call_graph_timer);
+  LOG(1,
+      "Built call graph in {:.2f}s. Memory used, RSS: {:.2f}GB",
+      call_graph_timer.duration_in_seconds(),
+      resident_set_size_in_gb());
 
   Timer registry_timer;
   LOG(1, "Initializing models...");
@@ -239,7 +232,6 @@ Registry MarianaTrench::analyze(Context& context) {
       *context.options,
       context.options->analysis_mode(),
       std::move(method_mappings));
-  // end MethodMappings: no longer tracked/usable beyond this.
   context.statistics->log_time("registry_init", registry_timer);
   LOG(1,
       "Initialized {} models, {} field models, and {} literal models in {:.2f}s. Memory used, RSS: {:.2f}GB",

@@ -61,14 +61,14 @@ Context test_components(const Scope& scope) {
       *context.options,
       *context.types,
       *context.class_hierarchies,
-      LifecycleMethods{},
-      Shims{/* global_shims_size */ 0},
       *context.feature_factory,
       *context.heuristics,
       *context.methods,
       *context.fields,
       *context.overrides,
-      method_mappings);
+      method_mappings,
+      LifecycleMethods{},
+      Shims{/* global_shims_size */ 0});
   context.rules = std::make_unique<Rules>(context);
   auto registry = Registry(context);
   context.dependencies = std::make_unique<Dependencies>(

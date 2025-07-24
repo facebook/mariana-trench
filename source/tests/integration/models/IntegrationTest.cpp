@@ -512,14 +512,14 @@ TEST_P(IntegrationTest, ReturnsExpectedModel) {
       *context.options,
       *context.types,
       *context.class_hierarchies,
-      LifecycleMethods{},
-      Shims{/* global_shims_size */ 0},
       *context.feature_factory,
       *context.heuristics,
       *context.methods,
       *context.fields,
       *context.overrides,
-      method_mappings);
+      method_mappings,
+      LifecycleMethods{},
+      Shims{/* global_shims_size */ 0});
   context.rules = std::make_unique<Rules>(context, rules);
   context.used_kinds = std::make_unique<UsedKinds>(
       UsedKinds::from_rules(*context.rules, *context.transforms_factory));
