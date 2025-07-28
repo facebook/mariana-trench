@@ -83,7 +83,9 @@
             "kind": "Sink",
             "port": "Argument(0)[<Argument(1)>]",
             "via_value_of": [
-              "Argument(1)"
+              {
+                "port": "Argument(1)"
+              }
             ]
           }
         ]
