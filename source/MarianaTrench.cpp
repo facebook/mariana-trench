@@ -49,6 +49,8 @@
 #include <mariana-trench/UsedKinds.h>
 #include <mariana-trench/shim-generator/ShimGeneration.h>
 #include <mariana-trench/shim-generator/Shims.h>
+#include <mariana-trench/ListingCommands.h>
+#include <mariana-trench/TransformsFactory.h>
 
 namespace marianatrench {
 
@@ -251,6 +253,9 @@ Registry MarianaTrench::analyze(Context& context) {
       context.rules->size(),
       rules_timer.duration_in_seconds(),
       resident_set_size_in_gb());
+
+  // Execute any requested listing commands
+  ListingCommands::run(context);
 
   Timer transforms_timer;
   LOG(1, "Initializing used transform kinds...");
