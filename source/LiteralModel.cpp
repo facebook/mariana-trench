@@ -96,8 +96,9 @@ LiteralModel LiteralModel::from_config_json(
   for (auto source :
        JsonValidation::null_or_array(value, /* field */ "sources")) {
     TaintConfig taintConfig{TaintConfig::from_json(source, context)};
-    if (!taintConfig.is_leaf())
+    if (!taintConfig.is_leaf()) {
       throw JsonValidationError{source, /* field */ "sources", "empty callee"};
+    }
 
     sources.push_back(std::move(taintConfig));
   }
