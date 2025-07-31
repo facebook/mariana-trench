@@ -401,17 +401,29 @@ def _add_configuration_arguments(parser: argparse.ArgumentParser) -> None:
     )
     configuration_arguments.add_argument(
         "--disable-global-type-analysis",
-        action="store_true",
+        action="store",
+        type=_str_to_bool,
+        nargs="?",
+        const=True,
+        default=False,
         help="Disables global type analysis. If a proguard configuration path is passed in, it will be ignored.",
     )
     configuration_arguments.add_argument(
         "--verify-expected-output",
-        action="store_true",
+        action="store",
+        type=_str_to_bool,
+        nargs="?",
+        const=True,
+        default=False,
         help="Verifies special @Expected* annotations against the analysis output.",
     )
     configuration_arguments.add_argument(
         "--remove-unreachable-code",
-        action="store_true",
+        action="store",
+        type=_str_to_bool,
+        nargs="?",
+        const=True,
+        default=False,
         help="Prune unreachable code based on entry points specified in proguard configuration.",
     )
     configuration_arguments.add_argument(
@@ -478,7 +490,11 @@ def _add_configuration_arguments(parser: argparse.ArgumentParser) -> None:
     )
     configuration_arguments.add_argument(
         "--emit-all-via-cast-features",
-        action="store_true",
+        action="store",
+        type=_str_to_bool,
+        nargs="?",
+        const=True,
+        default=False,
         help=(
             "Compute and emit all via-cast features. There can be many such "
             "features which slows down the analysis so it is disabled by "
@@ -498,7 +514,11 @@ def _add_configuration_arguments(parser: argparse.ArgumentParser) -> None:
     )
     configuration_arguments.add_argument(
         "--propagate-across-arguments",
-        action="store_true",
+        action="store",
+        type=_str_to_bool,
+        nargs="?",
+        const=True,
+        default=False,
         help=(
             "Enable taint propagation across object type arguments. By "
             "default, taint propagation is only tracked for return values and "
@@ -521,7 +541,11 @@ def _add_source_indexing_arguments(parser: argparse.ArgumentParser) -> None:
     source_indexing_arguments = parser.add_argument_group("Source indexing arguments")
     source_indexing_arguments.add_argument(
         "--skip-source-indexing",
-        action="store_true",
+        action="store",
+        type=_str_to_bool,
+        nargs="?",
+        const=True,
+        default=False,
         help="Skip indexing source files.",
     )
 
@@ -546,17 +570,28 @@ def _add_analysis_arguments(parser: argparse.ArgumentParser) -> None:
     analysis_arguments = parser.add_argument_group("Analysis arguments")
     analysis_arguments.add_argument(
         "--sequential",
-        action="store_true",
+        action="store",
+        nargs="?",
+        default=False,
+        choices=["true", "false"],
         help="Run the analysis sequentially, one a single thread.",
     )
     analysis_arguments.add_argument(
         "--skip-analysis",
-        action="store_true",
+        action="store",
+        type=_str_to_bool,
+        nargs="?",
+        const=True,
+        default=False,
         help="Skip taint analysis.",
     )
     analysis_arguments.add_argument(
         "--disable-parameter-type-overrides",
-        action="store_true",
+        action="store",
+        type=_str_to_bool,
+        nargs="?",
+        const=True,
+        default=False,
         help="Disable analyzing methods with specific parameter type information.",
     )
     analysis_arguments.add_argument(
@@ -566,7 +601,11 @@ def _add_analysis_arguments(parser: argparse.ArgumentParser) -> None:
     )
     analysis_arguments.add_argument(
         "--enable-cross-component-analysis",
-        action="store_true",
+        action="store",
+        type=_str_to_bool,
+        nargs="?",
+        const=True,
+        default=False,
         help="Compute taint flows across Android components.",
     )
     analysis_arguments.add_argument(
@@ -612,13 +651,31 @@ def _add_debug_arguments(parser: argparse.ArgumentParser) -> None:
         help="The logging verbosity for global type analysis (GTA). Disabled by default (value=0)",
     )
     debug_arguments.add_argument(
-        "--gdb", action="store_true", help="Run the analyzer inside gdb."
+        "--gdb",
+        action="store",
+        type=_str_to_bool,
+        nargs="?",
+        const=True,
+        default=False,
+        help="Run the analyzer inside gdb.",
     )
     debug_arguments.add_argument(
-        "--lldb", action="store_true", help="Run the analyzer inside lldb."
+        "--lldb",
+        action="store",
+        type=_str_to_bool,
+        nargs="?",
+        const=True,
+        default=False,
+        help="Run the analyzer inside lldb.",
     )
     debug_arguments.add_argument(
-        "--fdb", action="store_true", help="Run the analyzer inside fdb."
+        "--fdb",
+        action="store",
+        type=_str_to_bool,
+        nargs="?",
+        const=True,
+        default=False,
+        help="Run the analyzer inside fdb.",
     )
     debug_arguments.add_argument(
         "--log-method",
@@ -636,52 +693,92 @@ def _add_debug_arguments(parser: argparse.ArgumentParser) -> None:
     )
     debug_arguments.add_argument(
         "--dump-class-hierarchies",
-        action="store_true",
+        action="store",
+        type=_str_to_bool,
+        nargs="?",
+        const=True,
+        default=False,
         help="Dump the class hierarchies in `class_hierarchies.json`.",
     )
     debug_arguments.add_argument(
         "--dump-class-intervals",
-        action="store_true",
+        action="store",
+        type=_str_to_bool,
+        nargs="?",
+        const=True,
+        default=False,
         help="Dump the class intervals in `class_intervals.json`.",
     )
     debug_arguments.add_argument(
         "--dump-overrides",
-        action="store_true",
+        action="store",
+        type=_str_to_bool,
+        nargs="?",
+        const=True,
+        default=False,
         help="Dump the override graph in `overrides.json`.",
     )
     debug_arguments.add_argument(
         "--dump-call-graph",
-        action="store_true",
+        action="store",
+        type=_str_to_bool,
+        nargs="?",
+        const=True,
+        default=False,
         help="Dump the call graph in `call_graph.json`.",
     )
     debug_arguments.add_argument(
         "--dump-gta-call-graph",
-        action="store_true",
+        action="store",
+        type=_str_to_bool,
+        nargs="?",
+        const=True,
+        default=False,
         help="Dump the GTA (global type analysis) call graph in `gta_call_graph.json`.",
     )
     debug_arguments.add_argument(
         "--dump-dependencies",
-        action="store_true",
+        action="store",
+        type=_str_to_bool,
+        nargs="?",
+        const=True,
+        default=False,
         help="Dump the dependency graph in `dependencies.json`.",
     )
     debug_arguments.add_argument(
         "--dump-methods",
-        action="store_true",
+        action="store",
+        type=_str_to_bool,
+        nargs="?",
+        const=True,
+        default=False,
         help="Dump a list of the method signatures in `methods.json`.",
     )
     debug_arguments.add_argument(
         "--dump-coverage-info",
-        action="store_true",
+        action="store",
+        type=_str_to_bool,
+        nargs="?",
+        const=True,
+        default=False,
         help="Dumps file coverage info into `file_coverage.txt` and rule coverage info into `rule_coverage.json`.",
     )
     debug_arguments.add_argument(
         "--dump-replay-output",
-        action="store_true",
+        action="store",
+        type=_str_to_bool,
+        nargs="?",
+        const=True,
+        default=False,
         help="Dumps the output for replaying an analysis (--analysis-mode=replay) into the output directory.",
     )
     debug_arguments.add_argument(
         "--always-export-origins",
-        action="store_true",
+        action="store",
+        type=_str_to_bool,
+        nargs="?",
+        const=True,
+        default=False,
         help="Export the origins for every trace frame into the output JSON instead of only on origins.",
     )
     debug_arguments.add_argument(
@@ -707,6 +804,12 @@ def _set_environment_variables(arguments: argparse.Namespace) -> None:
 
 
 def _str_to_bool(value: str) -> Optional[bool]:
+    """
+    Use this as type in argparse along with: nargs='?', const=True, default=False
+    instead of action="store_action" to allow the user to either pass `--flag`
+    or `--flag=true|false`. This makes it compatible for the argument to be specified
+    as --extra-analysis-arguments.
+    """
     value = value.lower()
     if value == "true":
         return True
@@ -786,11 +889,8 @@ def _get_command_options_json(
             )
             options["analysis-mode"] = "cached_models"
 
-    if arguments.emit_all_via_cast_features:
-        options["emit-all-via-cast-features"] = True
-
-    if arguments.propagate_across_arguments:
-        options["propagate-across-arguments"] = True
+    options["emit-all-via-cast-features"] = arguments.emit_all_via_cast_features
+    options["propagate-across-arguments"] = arguments.propagate_across_arguments
 
     if arguments.allow_via_cast_feature:
         options["allow-via-cast-feature"] = []
@@ -800,32 +900,22 @@ def _get_command_options_json(
     if arguments.heuristics:
         options["heuristics"] = arguments.heuristics
 
-    if arguments.sequential:
-        options["sequential"] = True
-
-    if arguments.skip_source_indexing:
-        options["skip-source-indexing"] = True
-
-    if arguments.skip_analysis:
-        options["skip-analysis"] = True
-
-    if arguments.disable_parameter_type_overrides:
-        options["disable-parameter-type-overrides"] = True
-
-    if arguments.disable_global_type_analysis:
-        options["disable-global-type-analysis"] = True
-
-    if arguments.verify_expected_output:
-        options["verify-expected-output"] = True
-
-    if arguments.remove_unreachable_code:
-        options["remove-unreachable-code"] = True
+    options["sequential"] = arguments.sequential
+    options["skip-source-indexing"] = arguments.skip_source_indexing
+    options["skip-analysis"] = arguments.skip_analysis
+    options["disable-parameter-type-overrides"] = (
+        arguments.disable_parameter_type_overrides
+    )
+    options["disable-global-type-analysis"] = arguments.disable_global_type_analysis
+    options["verify-expected-output"] = arguments.verify_expected_output
+    options["remove-unreachable-code"] = arguments.enable_cross_component_analysis
 
     if arguments.maximum_method_analysis_time is not None:
         options["maximum-method-analysis-time"] = arguments.maximum_method_analysis_time
 
-    if arguments.enable_cross_component_analysis:
-        options["enable-cross-component-analysis"] = True
+    options["enable-cross-component-analysis"] = (
+        arguments.enable_cross_component_analysis
+    )
 
     if arguments.job_id:
         options["job-id"] = arguments.job_id
@@ -843,37 +933,21 @@ def _get_command_options_json(
         for method in arguments.log_method_types:
             options["log-method-types"].append(method.strip())
 
-    if arguments.dump_class_hierarchies:
-        options["dump-class-hierarchies"] = True
+    options["dump-class-hierarchies"] = arguments.dump_class_hierarchies
+    options["dump-class-intervals"] = arguments.dump_class_intervals
+    options["dump-overrides"] = arguments.dump_overrides
+    options["dump-call-graph"] = arguments.dump_call_graph
+    options["dump-gta-call-graph"] = arguments.dump_gta_call_graph
+    options["dump-dependencies"] = arguments.dump_dependencies
+    options["dump-methods"] = arguments.dump_methods
+    options["dump-coverage-info"] = arguments.dump_coverage_info
 
-    if arguments.dump_class_intervals:
-        options["dump-class-intervals"] = True
-
-    if arguments.dump_overrides:
-        options["dump-overrides"] = True
-
-    if arguments.dump_call_graph:
-        options["dump-call-graph"] = True
-
-    if arguments.dump_gta_call_graph:
-        options["dump-gta-call-graph"] = True
-
-    if arguments.dump_dependencies:
-        options["dump-dependencies"] = True
-
-    if arguments.dump_methods:
-        options["dump-methods"] = True
-
-    if arguments.dump_coverage_info:
-        options["dump-coverage-info"] = True
+    options["always-export-origins"] = arguments.always_export_origins
 
     if arguments.dump_replay_output:
         options["dump-class-hierarchies"] = True
         options["dump-class-intervals"] = True
         options["dump-overrides"] = True
-        options["always-export-origins"] = True
-
-    if arguments.always_export_origins:
         options["always-export-origins"] = True
 
     return options
@@ -902,7 +976,11 @@ def main() -> None:
         _add_debug_arguments(parser)
         parser.add_argument(
             "--analyze-third-party",
-            action="store_true",
+            action="store",
+            type=_str_to_bool,
+            nargs="?",
+            const=True,
+            default=False,
             help="Analyzing third party apps",
         )
 
@@ -913,18 +991,7 @@ def main() -> None:
             for key, value in extra_arguments.items():
                 key = ("--" if len(key) > 1 else "-") + key
 
-                if (
-                    isinstance(value, str)
-                    and (bool_value := _str_to_bool(value)) is not None
-                ):
-                    if bool_value is False:
-                        LOG.warning(
-                            f"Extra argument {key} is a boolean flag set to False. Skip parsing..."
-                        )
-                        continue
-                    # key is a flag and we do not need to specify the boolean
-                    value = []
-                elif not isinstance(value, list):
+                if not isinstance(value, list):
                     value = [str(value)]
 
                 to_parse = list(itertools.chain([key], value))
