@@ -5,6 +5,7 @@
 # LICENSE file in the root directory of this source tree.
 
 import argparse
+import itertools
 import json
 import logging
 import os
@@ -487,7 +488,8 @@ def _add_configuration_arguments(parser: argparse.ArgumentParser) -> None:
     configuration_arguments.add_argument(
         "--allow-via-cast-feature",
         type=str,
-        action="append",
+        action="extend",
+        nargs="+",
         help=(
             "Compute only these via-cast features. Specified as the full "
             "type name, e.g. Ljava/lang/Object;. Multiple inputs allowed. "
@@ -620,13 +622,15 @@ def _add_debug_arguments(parser: argparse.ArgumentParser) -> None:
     )
     debug_arguments.add_argument(
         "--log-method",
-        action="append",
+        action="extend",
+        nargs="+",
         metavar="PATTERN",
         help="Enable logging for the given methods.",
     )
     debug_arguments.add_argument(
         "--log-method-types",
-        action="append",
+        action="extend",
+        nargs="+",
         metavar="PATTERN",
         help="Enable logging of type inference (from local and global type analysis) for the given methods.",
     )
@@ -713,7 +717,9 @@ def _str_to_bool(value: str) -> Optional[bool]:
 
 
 def _get_command_options_json(
-    arguments: argparse.Namespace, apk_directory: str, dex_directory: str
+    arguments: argparse.Namespace,
+    apk_directory: str,
+    dex_directory: str,
 ) -> Dict[str, Any]:
     options = {}
     options["apk-directory"] = apk_directory
@@ -821,26 +827,6 @@ def _get_command_options_json(
     if arguments.enable_cross_component_analysis:
         options["enable-cross-component-analysis"] = True
 
-    if arguments.extra_analysis_arguments:
-        extra_arguments = json.loads(arguments.extra_analysis_arguments)
-        for key, value in extra_arguments.items():
-            if (
-                key in options
-                and isinstance(options[key], list)
-                and isinstance(value, list)
-            ):
-                # Append the values to the existing list
-                options[key].extend(value)
-            elif (
-                isinstance(value, str)
-                and (bool_value := _str_to_bool(value)) is not None
-            ):
-                # Override the existing value (if any)
-                options[key] = bool_value
-            else:
-                # Override the existing value (if any)
-                options[key] = value
-
     if arguments.job_id:
         options["job-id"] = arguments.job_id
 
@@ -921,8 +907,33 @@ def main() -> None:
         )
 
         arguments: argparse.Namespace = parser.parse_args()
+        if arguments.extra_analysis_arguments:
+            # Parse and merge arguments specified from --extra-analysis-arguments
+            extra_arguments = json.loads(arguments.extra_analysis_arguments)
+            for key, value in extra_arguments.items():
+                key = ("--" if len(key) > 1 else "-") + key
 
-        # TODO T147423951
+                if (
+                    isinstance(value, str)
+                    and (bool_value := _str_to_bool(value)) is not None
+                ):
+                    if bool_value is False:
+                        LOG.warning(
+                            f"Extra argument {key} is a boolean flag set to False. Skip parsing..."
+                        )
+                        continue
+                    # key is a flag and we do not need to specify the boolean
+                    value = []
+                elif not isinstance(value, list):
+                    value = [str(value)]
+
+                to_parse = list(itertools.chain([key], value))
+                LOG.info(f"Parsing extra arguments: {to_parse}")
+                _, unknown_args = parser.parse_known_args(to_parse, arguments)
+
+                if len(to_parse) == len(unknown_args):
+                    LOG.warning(" Extra argument is unknown. Skipping...")
+
         if arguments.system_jar_configuration_path is None:
             default_system_jar_configuration_path = _system_jar_configuration_path(
                 # pyre-fixme[16]: Module `shim` has no attribute `configuration`.
@@ -958,6 +969,7 @@ def main() -> None:
                 # pyre-fixme[16]: Module `shim` has no attribute `configuration`.
                 os.fspath(configuration.get_path("shims.json"))
             )
+
         if (
             # pyre-fixme[16]: Module `shim` has no attribute `configuration`.
             configuration.FACEBOOK_SHIM
