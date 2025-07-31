@@ -572,7 +572,8 @@ def _add_analysis_arguments(parser: argparse.ArgumentParser) -> None:
         type=str,
         help=(
             "Additional arguments to be passed to the analysis that the "
-            "shim does not currently wrap. For convenience of testing "
+            "shim does not currently wrap. Expects the arguments as escaped json. "
+            "For convenience of testing "
             "only."
         ),
     )
@@ -830,7 +831,10 @@ def _get_command_options_json(
             ):
                 # Append the values to the existing list
                 options[key].extend(value)
-            elif (bool_value := _str_to_bool(value)) is not None:
+            elif (
+                isinstance(value, str)
+                and (bool_value := _str_to_bool(value)) is not None
+            ):
                 # Override the existing value (if any)
                 options[key] = bool_value
             else:
