@@ -908,7 +908,7 @@ def _get_command_options_json(
     )
     options["disable-global-type-analysis"] = arguments.disable_global_type_analysis
     options["verify-expected-output"] = arguments.verify_expected_output
-    options["remove-unreachable-code"] = arguments.enable_cross_component_analysis
+    options["remove-unreachable-code"] = arguments.remove_unreachable_code
 
     if arguments.maximum_method_analysis_time is not None:
         options["maximum-method-analysis-time"] = arguments.maximum_method_analysis_time
