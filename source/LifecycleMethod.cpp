@@ -21,16 +21,24 @@ namespace marianatrench {
 
 namespace {
 
-void map_argument_type_to_index(
-    const LifecycleMethodCall& callee,
-    LifecycleMethod::TypeIndexMap& type_index_map) {
-  const auto* type_list = callee.get_argument_types();
-  if (type_list == nullptr) {
-    ERROR(1, "Callee `{}` has invalid argument types.", callee.to_string());
-    return;
-  }
-  for (auto* type : *type_list) {
-    type_index_map.emplace(type, type_index_map.size() + 1);
+inline int get_index_of_type(
+    DexType* type,
+    const LifecycleMethod::TypeOrderedSet& ordered_types) {
+  auto it = ordered_types.find(type);
+  mt_assert(it != ordered_types.end());
+  return (int)std::distance(ordered_types.begin(), it);
+}
+
+void collect_argument_types_from_callees(
+    const std::vector<LifecycleMethodCall>& callees,
+    LifecycleMethod::TypeOrderedSet& ordered_types) {
+  for (const auto& callee : callees) {
+    const auto* type_list = callee.get_argument_types();
+
+    // Already checked in `LifecycleMethod::validate`
+    mt_assert(type_list != nullptr);
+
+    ordered_types.insert(type_list->begin(), type_list->end());
   }
 }
 
@@ -39,7 +47,7 @@ void map_argument_type_to_index(
  */
 const DexMethod* MT_NULLABLE create_dex_method_from_callees(
     DexClass* dex_klass,
-    const LifecycleMethod::TypeIndexMap& type_index_map,
+    const LifecycleMethod::TypeOrderedSet& ordered_types,
     MethodCreator method_creator,
     const std::vector<LifecycleMethodCall>& callees) {
   auto this_location = method_creator.get_local(0);
@@ -63,8 +71,9 @@ const DexMethod* MT_NULLABLE create_dex_method_from_callees(
     // This should have been verified at the start of `create_methods`
     mt_assert(type_list != nullptr);
     for (auto* type : *type_list) {
+      // Find the index of the type in the sorted flat_set (1-based indexing)
       auto argument_register =
-          method_creator.get_local(type_index_map.at(type));
+          method_creator.get_local(get_index_of_type(type, ordered_types) + 1);
       invoke_with_registers.push_back(argument_register);
     }
     main_block->invoke(
@@ -110,7 +119,7 @@ const DexMethod* MT_NULLABLE create_dex_method_from_callees(
  */
 const DexMethod* MT_NULLABLE create_dex_method_from_graph(
     DexClass* dex_klass,
-    const LifecycleMethod::TypeIndexMap& type_index_map,
+    const LifecycleMethod::TypeOrderedSet& ordered_types,
     MethodCreator method_creator,
     const LifeCycleMethodGraph& graph) {
   // First create the method, and then we can work on its CFG
@@ -160,8 +169,9 @@ const DexMethod* MT_NULLABLE create_dex_method_from_graph(
         // which means there are no other registers, and consequently the
         // param registers get mapped back to themselves. This means the param
         // register equals to the index of the corresponding parameter in the
-        // function proto, i.e., type_index_map
-        invoke_insn->set_src(idx++, type_index_map.at(type));
+        // function proto, i.e., the position in the sorted flat_set + 1 (since
+        // we do not store `this` to the flat_set)
+        invoke_insn->set_src(idx++, get_index_of_type(type, ordered_types) + 1);
       }
 
       block->push_back(invoke_insn);
@@ -384,6 +394,12 @@ void LifecycleMethodCall::validate(
         to_string(),
         derived_class->str()));
   }
+
+  // Validate that argument types can be resolved
+  if (get_argument_types() == nullptr) {
+    throw LifecycleMethodValidationError(
+        fmt::format("Callee `{}` has invalid argument types.", to_string()));
+  }
 }
 
 DexMethodRef* MT_NULLABLE
@@ -545,23 +561,17 @@ void LifecycleMethod::create_methods(
 
   // All DexMethods created by `LifecycleMethod` have the same signature:
   //   void <method_name_>(<arguments>)
-  // The arguments are determined by the callees' arguments. This creates the
-  // map of argument type -> location/position (first argument is at index 1).
-  // The position corresponds to the register location containing the argument
-  // in the DexMethod's code. The register location will be used to create the
-  // invoke operation for methods that take a given DexType* as its argument.
-  TypeIndexMap type_index_map;
+  // The arguments are determined by the callees' arguments. The flat_set
+  // automatically deduplicates and keeps types sorted to ensure consistent
+  // ordering between linear and graph based lifecycles.
+  TypeOrderedSet ordered_types;
   if (const auto* callees =
           std::get_if<std::vector<LifecycleMethodCall>>(&body_)) {
-    for (const auto& callee : *callees) {
-      map_argument_type_to_index(callee, type_index_map);
-    }
+    collect_argument_types_from_callees(*callees, ordered_types);
   } else {
     const auto& graph = std::get<LifeCycleMethodGraph>(body_);
     for (const auto& [_, node] : graph.get_nodes()) {
-      for (const auto& callee : node.method_calls()) {
-        map_argument_type_to_index(callee, type_index_map);
-      }
+      collect_argument_types_from_callees(node.method_calls(), ordered_types);
     }
   }
 
@@ -594,7 +604,7 @@ void LifecycleMethod::create_methods(
       final_children.size());
 
   auto queue = sparta::work_queue<DexType*>([&](DexType* child) {
-    if (const auto* dex_method = create_dex_method(child, type_index_map)) {
+    if (const auto* dex_method = create_dex_method(child, ordered_types)) {
       ++methods_created_count;
       const auto* method = methods.create(dex_method);
       class_to_lifecycle_method_.emplace(child, method);
@@ -655,12 +665,15 @@ bool LifecycleMethod::operator==(const LifecycleMethod& other) const {
 
 const DexMethod* MT_NULLABLE LifecycleMethod::create_dex_method(
     DexType* klass,
-    const TypeIndexMap& type_index_map) {
+    const TypeOrderedSet& ordered_types) {
   auto method_creator = MethodCreator(
       /* class */ klass,
       /* name */ DexString::make_string(method_name_),
       /* proto */
-      DexProto::make_proto(type::_void(), get_argument_types(type_index_map)),
+      DexProto::make_proto(
+          type::_void(),
+          DexTypeList::make_type_list(
+              {ordered_types.begin(), ordered_types.end()})),
       /* access */ DexAccessFlags::ACC_PUBLIC);
 
   auto* dex_klass = type_class(klass);
@@ -671,11 +684,11 @@ const DexMethod* MT_NULLABLE LifecycleMethod::create_dex_method(
   if (const auto* callees =
           std::get_if<std::vector<LifecycleMethodCall>>(&body_)) {
     new_method = create_dex_method_from_callees(
-        dex_klass, type_index_map, std::move(method_creator), *callees);
+        dex_klass, ordered_types, std::move(method_creator), *callees);
   } else {
     const auto& graph = std::get<LifeCycleMethodGraph>(body_);
     new_method = create_dex_method_from_graph(
-        dex_klass, type_index_map, std::move(method_creator), graph);
+        dex_klass, ordered_types, std::move(method_creator), graph);
   }
 
   // Directly return if method creation was skipped
@@ -690,18 +703,6 @@ const DexMethod* MT_NULLABLE LifecycleMethod::create_dex_method(
       Method::show_control_flow_graph(new_method->get_code()->cfg()));
 
   return new_method;
-}
-
-const DexTypeList* LifecycleMethod::get_argument_types(
-    const TypeIndexMap& type_index_map) {
-  // While the register locations for the arguments start at 1, the actual
-  // argument index for the method's prototype start at index 0.
-  DexTypeList::ContainerType argument_types(type_index_map.size(), nullptr);
-  for (const auto& [type, pos] : type_index_map) {
-    argument_types.at(pos - 1) = type;
-  }
-
-  return DexTypeList::make_type_list(std::move(argument_types));
 }
 
 } // namespace marianatrench

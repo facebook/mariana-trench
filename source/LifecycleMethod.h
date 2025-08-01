@@ -9,11 +9,11 @@
 
 #include <variant>
 
+#include <boost/container/flat_set.hpp>
 #include <fmt/format.h>
 #include <json/json.h>
 
 #include <ConcurrentContainers.h>
-
 #include <Creators.h>
 
 #include <mariana-trench/Context.h>
@@ -177,7 +177,8 @@ class LifeCycleMethodGraph {
  */
 class LifecycleMethod {
  public:
-  using TypeIndexMap = std::unordered_map<DexType*, int>;
+  using TypeOrderedSet =
+      boost::container::flat_set<DexType*, dextypes_comparator>;
 
   explicit LifecycleMethod(
       std::string base_class_name,
@@ -225,9 +226,7 @@ class LifecycleMethod {
 
  private:
   const DexMethod* MT_NULLABLE
-  create_dex_method(DexType* klass, const TypeIndexMap& type_index_map);
-
-  const DexTypeList* get_argument_types(const TypeIndexMap&);
+  create_dex_method(DexType* klass, const TypeOrderedSet& ordered_types);
 
   std::string base_class_name_;
   std::string method_name_;
