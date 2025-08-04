@@ -221,7 +221,7 @@ def _get_analysis_binary(arguments: argparse.Namespace) -> Path:
         # Build the mariana-trench binary from buck (facebook-only).
         return _build_executable_target(
             buck_target,
-            modifier=arguments.build,
+            modifier=arguments.build_modifier,
         )
 
     # pyre-fixme[16]: Module `shim` has no attribute `configuration`.
@@ -353,7 +353,7 @@ def _add_binary_arguments(parser: argparse.ArgumentParser) -> None:
     # pyre-fixme[16]: Module `shim` has no attribute `configuration`.
     if configuration.FACEBOOK_SHIM:
         binary_arguments.add_argument(
-            "--build",
+            "--build-modifier",
             type=str,
             # pyre-fixme[16]: Module `shim` has no attribute `configuration`.
             default=none_throws(configuration.BINARY_BUCK_BUILD_MODIFIER),
