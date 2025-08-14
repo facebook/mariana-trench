@@ -488,3 +488,58 @@ TEST_F(TypesTest, InvokeWithHopReflectionArgument) {
       register_types_caller.at(2),
       DexType::make_type(DexString::make_string("Ljava/lang/Class;")));
 }
+
+TEST_F(TypesTest, InvokeReturnTypeTracking) {
+  Scope scope;
+
+  auto dex_caller = marianatrench::redex::create_method(
+      scope,
+      "LCaller;",
+      R"(
+          (method (public) "LCaller;.caller:()V"
+            (
+              (load-param-object v0)
+
+              (new-instance "LCallee;")
+              (move-result-object v1)
+
+              (invoke-virtual (v1) "LCallee;.getObject:()Ljava/lang/String;")
+              (move-result-pseudo-object v2)
+
+              (invoke-direct (v1) "LCallee;.doSomething:()V")
+
+              (return-void)
+            )
+          )
+      )");
+
+  auto context = test_types(scope);
+  auto* method = context.methods->get(dex_caller);
+
+  // Check that the return type is tracked in the type environment
+  auto* code = method->get_code();
+  mt_assert(code->cfg_built());
+  mt_assert(code->cfg().blocks().size() == 1);
+
+  std::vector<const DexType*> result_types;
+
+  const auto* block = code->cfg().blocks().front();
+  for (const auto& entry : *block) {
+    const IRInstruction* instruction = entry.insn;
+    if (opcode::is_an_invoke(instruction->opcode())) {
+      const auto& environment = context.types->environment(method, instruction);
+
+      // Query RESULT_REGISTER from the environment
+      auto result_type_iter = environment.find(RESULT_REGISTER);
+      if (result_type_iter != environment.end()) {
+        result_types.push_back(result_type_iter->second.singleton_type());
+      }
+    }
+  }
+
+  // First invoke returns a string, second invoke returns void
+  EXPECT_EQ(
+      result_types,
+      (std::vector<const DexType*>{
+          DexType::make_type(DexString::make_string("Ljava/lang/String;"))}));
+}

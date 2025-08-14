@@ -118,6 +118,30 @@ TypeEnvironments make_environments(
         environment.emplace(register_id, TypeValue(*type));
       }
     }
+
+    // Extract returned types of invoke instructions
+    if (opcode::is_an_invoke(instruction->opcode())) {
+      const auto* method = instruction->get_method();
+      mt_assert_log(
+          method != nullptr, "invoke instruction has no method reference");
+
+      const auto* return_type = method->get_proto()->get_rtype();
+      if (return_type != type::_void()) {
+        // For invoke instructions with return values, the result is stored
+        // in a special result register that gets moved by move-result
+        // instructions
+        auto inferred_result_type = types.get_dex_type(RESULT_REGISTER);
+        if (inferred_result_type && *inferred_result_type != nullptr) {
+          environment.emplace(
+              RESULT_REGISTER, TypeValue(*inferred_result_type));
+        } else {
+          // Fallback to the method's declared return type if type inference
+          // didn't provide a more specific type
+          environment.emplace(RESULT_REGISTER, TypeValue(return_type));
+        }
+      }
+    }
+
     result.emplace(instruction, std::move(environment));
   }
 
