@@ -3596,4 +3596,116 @@ TEST_F(JsonTest, ExtraTraceTest) {
       boost::exception_detail::error_info_injector<RedexException>);
 }
 
+TEST_F(JsonTest, ShimTargetTemplateTest) {
+  using namespace shim;
+
+  // static
+  TargetTemplate target_template =
+      TargetTemplate::from_json(test::parse_json(R"#({
+      "static": "Lcom/example/TestClass;",
+      "method_name": "methodA:(Ljava/lang/Object;)V"
+    })#"));
+
+  EXPECT_EQ(target_template.target(), "methodA:(Ljava/lang/Object;)V");
+  EXPECT_EQ(target_template.receiver_info().kind(), ReceiverInfo::Kind::STATIC);
+  EXPECT_EQ(
+      std::get<std::string>(target_template.receiver_info().receiver()),
+      "Lcom/example/TestClass;");
+  EXPECT_TRUE(target_template.parameter_map().empty());
+
+  // type_of
+  target_template = TargetTemplate::from_json(test::parse_json(R"#({
+      "type_of": "Argument(1)",
+      "method_name": "methodB:(Ljava/lang/Object;)V"
+    })#"));
+
+  EXPECT_EQ(target_template.target(), "methodB:(Ljava/lang/Object;)V");
+  EXPECT_EQ(
+      target_template.receiver_info().kind(), ReceiverInfo::Kind::INSTANCE);
+  EXPECT_EQ(
+      std::get<Root>(target_template.receiver_info().receiver()),
+      (Root{Root::Kind::Argument, 1}));
+  EXPECT_TRUE(target_template.parameter_map().empty());
+
+  // type_of with lifecycle
+  target_template = TargetTemplate::from_json(test::parse_json(R"#({
+      "type_of": "Argument(1)",
+      "lifecycle_name": "activity_lifecycle_wrapper"
+    })#"));
+
+  EXPECT_EQ(target_template.target(), "activity_lifecycle_wrapper");
+  EXPECT_EQ(
+      target_template.receiver_info().kind(), ReceiverInfo::Kind::INSTANCE);
+  EXPECT_EQ(
+      std::get<Root>(target_template.receiver_info().receiver()),
+      (Root{Root::Kind::Argument, 1}));
+  EXPECT_TRUE(target_template.parameter_map().empty());
+
+  // type_of with return as receiver
+  target_template = TargetTemplate::from_json(test::parse_json(R"#({
+      "type_of": "Return",
+      "method_name": "methodC:(Ljava/lang/Object;)LTarget;"
+    })#"));
+
+  EXPECT_EQ(target_template.target(), "methodC:(Ljava/lang/Object;)LTarget;");
+  EXPECT_EQ(
+      target_template.receiver_info().kind(), ReceiverInfo::Kind::INSTANCE);
+  // TODO: T233167172 Shims on return
+  EXPECT_EQ(
+      std::get<Root>(target_template.receiver_info().receiver()), (Root{}));
+  EXPECT_TRUE(target_template.parameter_map().empty());
+
+  // reflected_type_of
+  target_template = TargetTemplate::from_json(test::parse_json(R"#({
+      "reflected_type_of": "Argument(2)",
+      "method_name": "methodD:(Ljava/lang/Object;)V"
+    })#"));
+
+  EXPECT_EQ(target_template.target(), "methodD:(Ljava/lang/Object;)V");
+  EXPECT_EQ(
+      target_template.receiver_info().kind(), ReceiverInfo::Kind::REFLECTION);
+  EXPECT_EQ(
+      std::get<Root>(target_template.receiver_info().receiver()),
+      (Root{Root::Kind::Argument, 2}));
+  EXPECT_TRUE(target_template.parameter_map().empty());
+
+  // parameters_map
+  target_template = TargetTemplate::from_json(test::parse_json(R"#({
+      "type_of": "Argument(2)",
+      "method_name": "methodE:(Ljava/lang/Object;Ljava/lang/Object;)V",
+      "parameters_map": {
+        "Argument(2)" : "Argument(3)"
+      }
+    })#"));
+
+  EXPECT_EQ(
+      target_template.target(),
+      "methodE:(Ljava/lang/Object;Ljava/lang/Object;)V");
+  EXPECT_EQ(
+      target_template.receiver_info().kind(), ReceiverInfo::Kind::INSTANCE);
+  EXPECT_EQ(
+      std::get<Root>(target_template.receiver_info().receiver()),
+      (Root{Root::Kind::Argument, 2}));
+  EXPECT_EQ(
+      target_template.parameter_map(),
+      (ShimParameterMapping{std::pair{Root{Root::Kind::Argument, 2}, 3}}));
+
+  // Test with infer_parameters_from_types
+  target_template = TargetTemplate::from_json(test::parse_json(R"#({
+      "type_of": "Argument(1)",
+      "method_name": "methodF:(Ljava/lang/Object;Ljava/lang/String;)V",
+      "infer_parameters_from_types": true
+    })#"));
+
+  EXPECT_EQ(
+      target_template.target(),
+      "methodF:(Ljava/lang/Object;Ljava/lang/String;)V");
+  EXPECT_EQ(
+      target_template.receiver_info().kind(), ReceiverInfo::Kind::INSTANCE);
+  EXPECT_EQ(
+      std::get<Root>(target_template.receiver_info().receiver()),
+      (Root{Root::Kind::Argument, 1}));
+  EXPECT_TRUE(target_template.parameter_map().infer_from_types());
+}
+
 } // namespace marianatrench

@@ -79,6 +79,10 @@ ShimMethod::parameter_type(ShimParameterPosition argument) const {
   return method_->parameter_type(argument);
 }
 
+DexType* MT_NULLABLE ShimMethod::return_type() const {
+  return method_->return_type();
+}
+
 std::optional<ShimParameterPosition> ShimMethod::type_position(
     const DexType* dex_type) const {
   auto found = types_to_position_.find(dex_type);

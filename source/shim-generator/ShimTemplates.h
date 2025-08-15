@@ -25,7 +25,7 @@ class ReceiverInfo final {
   };
 
  private:
-  explicit ReceiverInfo(Kind type, ShimParameterPosition position);
+  explicit ReceiverInfo(Kind type, Root position);
   explicit ReceiverInfo(Kind type, std::string position);
 
  public:
@@ -39,7 +39,7 @@ class ReceiverInfo final {
     return kind_;
   }
 
-  const std::variant<ShimParameterPosition, std::string>& receiver() const {
+  const std::variant<Root, std::string>& receiver() const {
     return receiver_;
   }
 
@@ -47,7 +47,7 @@ class ReceiverInfo final {
 
  private:
   Kind kind_;
-  std::variant<ShimParameterPosition, std::string> receiver_;
+  std::variant<Root, std::string> receiver_;
 };
 
 class TargetTemplate final {
