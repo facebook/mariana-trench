@@ -41,7 +41,7 @@ Inside your virtual environment installing Mariana Trench is as easy as running
 (mariana-trench)$ pip install mariana-trench
 ```
 
-Note: pip install is not currently supported for Apple silicon Macs, you can build from source using the instructions in the [Developer's Guide](https://mariana-tren.ch/docs/contribution#building-from-source).
+Note: pip install is not currently supported for Apple silicon Macs, you can build from source using the instructions in the [Developer's Guide](https://mariana-tren.ch/docs/build-from-source/).
 
 ## Running Mariana Trench
 We'll use a small app that is part of our documentation. You can get it by running
