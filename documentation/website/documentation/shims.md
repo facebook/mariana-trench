@@ -132,6 +132,12 @@ Each shim definition object consists of the following keys:
   }
   ```
 
+  The `infer_parameters_from_types` option can be used to control the behavior of inferring mapping based on parameter types. It behaves as follows:
+  - if `parameters_map` is not provided, the mapping is inferred by default.
+  - if `parameters_map` is provided
+    - if `infer_parameters_from_types` is set to `true`: Any remaining unspecified mappings will be inferred.
+    - if `infer_parameters_from_types` is not specified or set to `false`: the unspecified mapping of the remaining parameters are not inferred.
+
 ### Example
 ```java showLineNumbers
 class TargetA {
