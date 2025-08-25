@@ -170,10 +170,12 @@
   ],
   "Lcom/facebook/marianatrench/integrationtests/Handler;.handleMessage:(Ljava/lang/Object;)V" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/Shims;.getMessenger:(Lcom/facebook/marianatrench/integrationtests/Handler;)Lcom/facebook/marianatrench/integrationtests/Messenger;"
+    "Lcom/facebook/marianatrench/integrationtests/Shims;.getMessenger:(Lcom/facebook/marianatrench/integrationtests/Handler;)Lcom/facebook/marianatrench/integrationtests/Messenger;",
+    "Lcom/facebook/marianatrench/integrationtests/Shims;.testReturnReceiver:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/HandlerOne;.<init>:()V" : 
   [
+    "Lcom/facebook/marianatrench/integrationtests/Messenger;.getHandlerOne:(Ljava/lang/Object;Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/Handler;",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testMessageHandlerOneIssue:()Lcom/facebook/marianatrench/integrationtests/Messenger;",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testMessageHandlerOneNoIssue:()Lcom/facebook/marianatrench/integrationtests/Messenger;",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testMessageHandlerOneWithHop:()Lcom/facebook/marianatrench/integrationtests/Messenger;",
@@ -186,7 +188,8 @@
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testMessageHandlerOneIssue:()Lcom/facebook/marianatrench/integrationtests/Messenger;",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testMessageHandlerOneNoIssue:()Lcom/facebook/marianatrench/integrationtests/Messenger;",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testParameterMappingIssue:()Lcom/facebook/marianatrench/integrationtests/ParameterMapping;",
-    "Lcom/facebook/marianatrench/integrationtests/Shims;.testParameterMappingNoIssue:()Lcom/facebook/marianatrench/integrationtests/ParameterMapping;"
+    "Lcom/facebook/marianatrench/integrationtests/Shims;.testParameterMappingNoIssue:()Lcom/facebook/marianatrench/integrationtests/ParameterMapping;",
+    "Lcom/facebook/marianatrench/integrationtests/Shims;.testReturnReceiver:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/HandlerTwo;.<init>:()V" : 
   [
@@ -194,11 +197,13 @@
   ],
   "Lcom/facebook/marianatrench/integrationtests/HandlerTwo;.handleMessage:(Ljava/lang/Object;)V" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/Shims;.getMessenger:(Lcom/facebook/marianatrench/integrationtests/Handler;)Lcom/facebook/marianatrench/integrationtests/Messenger;"
+    "Lcom/facebook/marianatrench/integrationtests/Shims;.getMessenger:(Lcom/facebook/marianatrench/integrationtests/Handler;)Lcom/facebook/marianatrench/integrationtests/Messenger;",
+    "Lcom/facebook/marianatrench/integrationtests/Shims;.testReturnReceiver:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/Messenger;.<init>:()V" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/Shims;.testMessengerNoShim:()Lcom/facebook/marianatrench/integrationtests/Messenger;"
+    "Lcom/facebook/marianatrench/integrationtests/Shims;.testMessengerNoShim:()Lcom/facebook/marianatrench/integrationtests/Messenger;",
+    "Lcom/facebook/marianatrench/integrationtests/Shims;.testReturnReceiver:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/Messenger;.<init>:(Lcom/facebook/marianatrench/integrationtests/Handler;)V" : 
   [
@@ -208,6 +213,10 @@
   "Lcom/facebook/marianatrench/integrationtests/Messenger;.<init>:(Lcom/facebook/marianatrench/integrationtests/Handler;Ljava/lang/Object;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testMessageHandlerOneIssue:()Lcom/facebook/marianatrench/integrationtests/Messenger;"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/Messenger;.getHandlerOne:(Ljava/lang/Object;Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/Handler;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/Shims;.testReturnReceiver:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V" : 
   [
@@ -241,6 +250,7 @@
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testMultipleFragmentChildClasses:(Z)V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testParameterMappingIssue:()Lcom/facebook/marianatrench/integrationtests/ParameterMapping;",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testParameterMappingNoIssue:()Lcom/facebook/marianatrench/integrationtests/ParameterMapping;",
+    "Lcom/facebook/marianatrench/integrationtests/Shims;.testReturnReceiver:()V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testSetArguments:()V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testStaticShimTarget:()V",
     "Lcom/facebook/marianatrench/integrationtests/ShimsWithThisGenerations;.sourceAndSinkOnThis:()V",
@@ -412,6 +422,7 @@
     "Lcom/facebook/marianatrench/integrationtests/Shims;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testParameterMappingIssue:()Lcom/facebook/marianatrench/integrationtests/ParameterMapping;",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testParameterMappingNoIssue:()Lcom/facebook/marianatrench/integrationtests/ParameterMapping;",
+    "Lcom/facebook/marianatrench/integrationtests/Shims;.testReturnReceiver:()V",
     "Lcom/facebook/marianatrench/integrationtests/ShimsWithArgumentGenerations;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/ShimsWithThisGenerations;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides$2;.<init>:()V",

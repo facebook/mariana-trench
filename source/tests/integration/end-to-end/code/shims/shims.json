@@ -276,5 +276,25 @@
         }
       ]
     }
+  },
+  {
+    "find": "methods",
+    "where": [
+      {
+        "constraint": "signature_pattern",
+        "pattern": "Lcom/facebook/marianatrench/integrationtests/Messenger;\\.getHandlerOne:.*"
+      }
+    ],
+    "shim": {
+      "callees": [
+        {
+          "type_of": "Return",
+          "method_name": "handleMessage:(Ljava/lang/Object;)V",
+          "parameters_map": {
+            "Argument(1)": "Argument(2)"
+          }
+        }
+      ]
+    }
   }
 ]

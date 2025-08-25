@@ -41,6 +41,10 @@ class Messenger {
   Messenger(Handler handle, Object o) {
     // Expect artificial call: handler.handleMessage(o)
   }
+
+  Handler getHandlerOne(Object o1, Object o2) {
+    return new HandlerOne();
+  }
 }
 
 class FragmentOneActivity extends FragmentActivity {
@@ -223,5 +227,14 @@ public class Shims {
   static void testDefinedAndInferredArgument() {
     ParameterMapping c = new ParameterMapping();
     c.definedAndInferred(new ShimTarget(), Origin.source(), (String) Origin.source());
+  }
+
+  static void testReturnReceiver() {
+    // Excepct no issue
+    new Messenger().getHandlerOne(new Object(), new Object());
+    // Excepct issue
+    new Messenger().getHandlerOne(new Object(), Origin.source());
+    // Expect no issue
+    new Messenger().getHandlerOne(Origin.source(), new Object());
   }
 }

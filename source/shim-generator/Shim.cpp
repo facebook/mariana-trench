@@ -278,9 +278,14 @@ std::optional<Register> ShimTarget::receiver_register(
     return std::nullopt;
   }
 
-  auto receiver_parameter_position = receiver_position->parameter_position();
-  mt_assert(receiver_parameter_position < instruction->srcs_size());
-  return instruction->src(receiver_parameter_position);
+  // Return value is stored in the special RESULT_REGISTER
+  if (receiver_position->is_return()) {
+    return RESULT_REGISTER;
+  } else {
+    auto receiver_parameter_position = receiver_position->parameter_position();
+    mt_assert(receiver_parameter_position < instruction->srcs_size());
+    return instruction->src(receiver_parameter_position);
+  }
 }
 
 std::unordered_map<Root, Register> ShimTarget::root_registers(
@@ -288,11 +293,18 @@ std::unordered_map<Root, Register> ShimTarget::root_registers(
   std::unordered_map<Root, Register> root_registers;
 
   for (const auto& [root, shimmed_method_position] : parameter_mapping_) {
-    auto shimmed_method_parameter_position =
-        shimmed_method_position.parameter_position();
-    mt_assert(shimmed_method_parameter_position < instruction->srcs_size());
-    root_registers.emplace(
-        root, instruction->src(shimmed_method_parameter_position));
+    if (shimmed_method_position.is_return()) {
+      mt_assert_log(
+          root.is_argument() && root.parameter_position() == 0,
+          "Return port can only be receiver");
+      root_registers.emplace(root, RESULT_REGISTER);
+    } else {
+      auto shimmed_method_parameter_position =
+          shimmed_method_position.parameter_position();
+      mt_assert(shimmed_method_parameter_position < instruction->srcs_size());
+      root_registers.emplace(
+          root, instruction->src(shimmed_method_parameter_position));
+    }
   }
 
   return root_registers;
