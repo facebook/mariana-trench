@@ -1,0 +1,179 @@
+// @generated
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/PublicBindableLifecycleServiceWithSwitchOff;.onBind:(Landroid/content/Intent;)Landroid/os/IBinder;",
+  "model_generators" :
+  [
+    "TestModelGenerator:0"
+  ],
+  "modes" :
+  [
+    "add-via-obscure-feature",
+    "no-join-virtual-overrides",
+    "skip-analysis"
+  ],
+  "parameter_sources" :
+  [
+    {
+      "port" : "Argument(1)",
+      "taint" :
+      [
+        {
+          "call_info" :
+          {
+            "call_kind" : "Declaration"
+          },
+          "kinds" :
+          [
+            {
+              "kind" : "ServiceUserInput",
+              "origins" :
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/PublicBindableLifecycleServiceWithSwitchOff;.onBind:(Landroid/content/Intent;)Landroid/os/IBinder;",
+                  "port" : "Argument(1)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "position" :
+  {
+    "path" : "com/facebook/marianatrench/integrationtests/PublicBindableLifecycleServiceWithSwitchOff.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/PublicBindableLifecycleServiceWithSwitchOff;.onStartCommand:(Landroid/content/Intent;II)I",
+  "model_generators" :
+  [
+    "TestModelGenerator:1"
+  ],
+  "modes" :
+  [
+    "add-via-obscure-feature",
+    "no-join-virtual-overrides",
+    "skip-analysis"
+  ],
+  "parameter_sources" :
+  [
+    {
+      "port" : "Argument(1)",
+      "taint" :
+      [
+        {
+          "call_info" :
+          {
+            "call_kind" : "Declaration"
+          },
+          "kinds" :
+          [
+            {
+              "kind" : "ServiceUserInput",
+              "origins" :
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/PublicBindableLifecycleServiceWithSwitchOff;.onStartCommand:(Landroid/content/Intent;II)I",
+                  "port" : "Argument(1)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "position" :
+  {
+    "path" : "com/facebook/marianatrench/integrationtests/PublicBindableLifecycleServiceWithSwitchOff.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/PublicBindableServiceTest;.onBind:(Landroid/content/Intent;)Landroid/os/IBinder;",
+  "model_generators" :
+  [
+    "TestModelGenerator:0"
+  ],
+  "modes" :
+  [
+    "no-join-virtual-overrides"
+  ],
+  "parameter_sources" :
+  [
+    {
+      "port" : "Argument(1)",
+      "taint" :
+      [
+        {
+          "call_info" :
+          {
+            "call_kind" : "Declaration"
+          },
+          "kinds" :
+          [
+            {
+              "kind" : "ServiceUserInput",
+              "origins" :
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/PublicBindableServiceTest;.onBind:(Landroid/content/Intent;)Landroid/os/IBinder;",
+                  "port" : "Argument(1)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "position" :
+  {
+    "line" : 26,
+    "path" : "com/facebook/marianatrench/integrationtests/PublicBindableServiceTest.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/PublicBindableServiceTest;.onStartCommand:(Landroid/content/Intent;II)I",
+  "model_generators" :
+  [
+    "TestModelGenerator:1"
+  ],
+  "modes" :
+  [
+    "no-join-virtual-overrides"
+  ],
+  "parameter_sources" :
+  [
+    {
+      "port" : "Argument(1)",
+      "taint" :
+      [
+        {
+          "call_info" :
+          {
+            "call_kind" : "Declaration"
+          },
+          "kinds" :
+          [
+            {
+              "kind" : "ServiceUserInput",
+              "origins" :
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/PublicBindableServiceTest;.onStartCommand:(Landroid/content/Intent;II)I",
+                  "port" : "Argument(1)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "position" :
+  {
+    "line" : 32,
+    "path" : "com/facebook/marianatrench/integrationtests/PublicBindableServiceTest.java"
+  }
+}

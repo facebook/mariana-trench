@@ -1,0 +1,46 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "extends": "Lcom/facebook/marianatrench/integrationtests/PublicBindableLifecycleServiceWithSwitchOff;",
+          "name": "onBind"
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-join-virtual-overrides"
+        ],
+        "sources": [
+          {
+            "kind": "ServiceUserInput",
+            "port": "Argument(1)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "extends": "Lcom/facebook/marianatrench/integrationtests/PublicBindableLifecycleServiceWithSwitchOff;",
+          "name": "onStartCommand"
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-join-virtual-overrides"
+        ],
+        "sources": [
+          {
+            "kind": "ServiceUserInput",
+            "port": "Argument(1)"
+          }
+        ]
+      }
+    }
+  ]
+}
