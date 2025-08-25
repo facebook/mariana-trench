@@ -1,0 +1,195 @@
+// @generated
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/IntentHandler;.getIntent:(Ljava/lang/String;Landroid/net/Uri;Ljava/lang/String;)Landroid/content/Intent;",
+  "model_generators" : 
+  [
+    "TestModelGenerator:0"
+  ],
+  "modes" : 
+  [
+    "add-via-obscure-feature",
+    "no-join-virtual-overrides",
+    "skip-analysis"
+  ],
+  "parameter_sources" : 
+  [
+    {
+      "port" : "Argument(2)",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
+          "kinds" : 
+          [
+            {
+              "always_features" : 
+              [
+                "via-public-dfa-scheme"
+              ],
+              "kind" : "ActivityUserInput",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/IntentHandler;.getIntent:(Ljava/lang/String;Landroid/net/Uri;Ljava/lang/String;)Landroid/content/Intent;",
+                  "port" : "Argument(2)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "position" : 
+  {
+    "path" : "com/facebook/marianatrench/integrationtests/IntentHandler.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/IntentHandler;.handleIntent:(Ljava/lang/String;Landroid/net/Uri;Ljava/lang/String;Landroid/content/Intent;Ljava/lang/String;)V",
+  "model_generators" : 
+  [
+    "TestModelGenerator:1"
+  ],
+  "modes" : 
+  [
+    "add-via-obscure-feature",
+    "no-join-virtual-overrides",
+    "skip-analysis"
+  ],
+  "parameter_sources" : 
+  [
+    {
+      "port" : "Argument(4)",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
+          "kinds" : 
+          [
+            {
+              "always_features" : 
+              [
+                "via-public-dfa-scheme"
+              ],
+              "kind" : "ActivityUserInput",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/IntentHandler;.handleIntent:(Ljava/lang/String;Landroid/net/Uri;Ljava/lang/String;Landroid/content/Intent;Ljava/lang/String;)V",
+                  "port" : "Argument(4)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "position" : 
+  {
+    "path" : "com/facebook/marianatrench/integrationtests/IntentHandler.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/IntentHandlerTest;.getIntent:(Ljava/lang/String;Landroid/net/Uri;Ljava/lang/String;)Landroid/content/Intent;",
+  "model_generators" : 
+  [
+    "TestModelGenerator:0"
+  ],
+  "modes" : 
+  [
+    "no-join-virtual-overrides"
+  ],
+  "parameter_sources" : 
+  [
+    {
+      "port" : "Argument(2)",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
+          "kinds" : 
+          [
+            {
+              "always_features" : 
+              [
+                "via-public-dfa-scheme"
+              ],
+              "kind" : "ActivityUserInput",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/IntentHandlerTest;.getIntent:(Ljava/lang/String;Landroid/net/Uri;Ljava/lang/String;)Landroid/content/Intent;",
+                  "port" : "Argument(2)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "position" : 
+  {
+    "line" : 23,
+    "path" : "com/facebook/marianatrench/integrationtests/IntentHandlerTest.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/IntentHandlerTest;.handleIntent:(Ljava/lang/String;Landroid/net/Uri;Ljava/lang/String;Landroid/content/Intent;Ljava/lang/String;)V",
+  "model_generators" : 
+  [
+    "TestModelGenerator:1"
+  ],
+  "modes" : 
+  [
+    "no-join-virtual-overrides"
+  ],
+  "parameter_sources" : 
+  [
+    {
+      "port" : "Argument(4)",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
+          "kinds" : 
+          [
+            {
+              "always_features" : 
+              [
+                "via-public-dfa-scheme"
+              ],
+              "kind" : "ActivityUserInput",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/IntentHandlerTest;.handleIntent:(Ljava/lang/String;Landroid/net/Uri;Ljava/lang/String;Landroid/content/Intent;Ljava/lang/String;)V",
+                  "port" : "Argument(4)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "position" : 
+  {
+    "line" : 29,
+    "path" : "com/facebook/marianatrench/integrationtests/IntentHandlerTest.java"
+  }
+}

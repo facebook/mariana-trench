@@ -1,0 +1,56 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "extends": "Lcom/facebook/marianatrench/integrationtests/IntentHandler;",
+          "names": [
+            "getIntent"
+          ]
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-join-virtual-overrides"
+        ],
+        "sources": [
+          {
+            "kind": "ActivityUserInput",
+            "port": "Argument(2)",
+            "features": [
+              "via-public-dfa-scheme"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "extends": "Lcom/facebook/marianatrench/integrationtests/IntentHandler;",
+          "names": [
+            "handleIntent"
+          ]
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-join-virtual-overrides"
+        ],
+        "sources": [
+          {
+            "kind": "ActivityUserInput",
+            "port": "Argument(4)",
+            "features": [
+              "via-public-dfa-scheme"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
