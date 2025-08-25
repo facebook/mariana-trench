@@ -53,11 +53,11 @@ bool verify_has_parameter_type(
 } // namespace
 
 ShimMethod::ShimMethod(const Method* method) : method_(method) {
-  ShimParameterPosition index = 0;
+  ParameterPosition index = 0;
 
   if (!method_->is_static()) {
     // Include `this` as argument 0
-    types_to_position_.emplace(method->get_class(), index++);
+    types_to_position_.emplace(method->get_class(), Root::argument(index++));
   }
 
   const auto* dex_arguments = method_->get_proto()->get_args();
@@ -66,7 +66,7 @@ ShimMethod::ShimMethod(const Method* method) : method_(method) {
   }
 
   for (auto* dex_argument : *dex_arguments) {
-    types_to_position_.emplace(dex_argument, index++);
+    types_to_position_.emplace(dex_argument, Root::argument(index++));
   }
 }
 
@@ -74,16 +74,15 @@ const Method* ShimMethod::method() const {
   return method_;
 }
 
-DexType* MT_NULLABLE
-ShimMethod::parameter_type(ShimParameterPosition argument) const {
-  return method_->parameter_type(argument);
+DexType* MT_NULLABLE ShimMethod::parameter_type(ShimRoot argument) const {
+  return method_->parameter_type(argument.parameter_position());
 }
 
 DexType* MT_NULLABLE ShimMethod::return_type() const {
   return method_->return_type();
 }
 
-std::optional<ShimParameterPosition> ShimMethod::type_position(
+std::optional<ShimRoot> ShimMethod::type_position(
     const DexType* dex_type) const {
   auto found = types_to_position_.find(dex_type);
   if (found == types_to_position_.end()) {
@@ -116,12 +115,12 @@ bool ShimParameterMapping::empty() const {
   return map_.empty();
 }
 
-bool ShimParameterMapping::contains(const Root& position) const {
+bool ShimParameterMapping::contains(Root position) const {
   return map_.count(position) > 0;
 }
 
-std::optional<ShimParameterPosition> ShimParameterMapping::at(
-    const Root& parameter_position) const {
+std::optional<ShimRoot> ShimParameterMapping::at(
+    Root parameter_position) const {
   auto found = map_.find(parameter_position);
   if (found == map_.end()) {
     return std::nullopt;
@@ -131,8 +130,8 @@ std::optional<ShimParameterPosition> ShimParameterMapping::at(
 }
 
 void ShimParameterMapping::insert(
-    const Root& parameter_position,
-    ShimParameterPosition shim_parameter_position) {
+    Root parameter_position,
+    ShimRoot shim_parameter_position) {
   map_.insert({parameter_position, shim_parameter_position});
 }
 
@@ -144,8 +143,7 @@ bool ShimParameterMapping::infer_from_types() const {
   return infer_from_types_;
 }
 
-void ShimParameterMapping::add_receiver(
-    ShimParameterPosition shim_parameter_position) {
+void ShimParameterMapping::add_receiver(ShimRoot shim_parameter_position) {
   // Include `this` as argument 0
   insert(Root::argument(0), shim_parameter_position);
 }
@@ -188,8 +186,7 @@ ShimParameterMapping ShimParameterMapping::from_json(
     auto parameter_argument = JsonValidation::string(item.key());
     auto shim_argument = JsonValidation::string(*item);
     parameter_mapping.insert(
-        Root::from_json(parameter_argument),
-        Root::from_json(shim_argument).parameter_position());
+        Root::from_json(parameter_argument), Root::from_json(shim_argument));
   }
 
   return parameter_mapping;
@@ -281,9 +278,9 @@ std::optional<Register> ShimTarget::receiver_register(
     return std::nullopt;
   }
 
-  mt_assert(*receiver_position < instruction->srcs_size());
-
-  return instruction->src(*receiver_position);
+  auto receiver_parameter_position = receiver_position->parameter_position();
+  mt_assert(receiver_parameter_position < instruction->srcs_size());
+  return instruction->src(receiver_parameter_position);
 }
 
 std::unordered_map<Root, Register> ShimTarget::root_registers(
@@ -291,8 +288,11 @@ std::unordered_map<Root, Register> ShimTarget::root_registers(
   std::unordered_map<Root, Register> root_registers;
 
   for (const auto& [root, shimmed_method_position] : parameter_mapping_) {
-    mt_assert(shimmed_method_position < instruction->srcs_size());
-    root_registers.emplace(root, instruction->src(shimmed_method_position));
+    auto shimmed_method_parameter_position =
+        shimmed_method_position.parameter_position();
+    mt_assert(shimmed_method_parameter_position < instruction->srcs_size());
+    root_registers.emplace(
+        root, instruction->src(shimmed_method_parameter_position));
   }
 
   return root_registers;
@@ -332,10 +332,11 @@ bool ShimReflectionTarget::operator<(const ShimReflectionTarget& other) const {
 
 Register ShimReflectionTarget::receiver_register(
     const IRInstruction* instruction) const {
-  auto receiver_position = parameter_mapping_.at(Root::argument(0));
-  mt_assert(*receiver_position < instruction->srcs_size());
+  auto receiver_parameter_position =
+      parameter_mapping_.at(Root::argument(0))->parameter_position();
+  mt_assert(receiver_parameter_position < instruction->srcs_size());
 
-  return instruction->src(*receiver_position);
+  return instruction->src(receiver_parameter_position);
 }
 
 std::unordered_map<Root, Register> ShimReflectionTarget::root_registers(
@@ -349,10 +350,11 @@ std::unordered_map<Root, Register> ShimReflectionTarget::root_registers(
        position < resolved_reflection->number_of_parameters();
        ++position) {
     if (auto shim_position = parameter_mapping_.at(Root::argument(position))) {
-      mt_assert(*shim_position < instruction->srcs_size());
+      auto shim_parameter_position = shim_position->parameter_position();
+      mt_assert(shim_parameter_position < instruction->srcs_size());
       root_registers.emplace(
           Root(Root::Kind::Argument, position),
-          instruction->src(*shim_position));
+          instruction->src(shim_parameter_position));
     }
   }
 
@@ -361,7 +363,7 @@ std::unordered_map<Root, Register> ShimReflectionTarget::root_registers(
 
 ShimLifecycleTarget::ShimLifecycleTarget(
     std::string method_name,
-    ShimParameterPosition receiver_position,
+    ShimRoot receiver_position,
     bool is_reflection,
     bool infer_from_types)
     : method_name_(std::move(method_name)),
@@ -392,9 +394,10 @@ bool ShimLifecycleTarget::operator<(const ShimLifecycleTarget& other) const {
 
 Register ShimLifecycleTarget::receiver_register(
     const IRInstruction* instruction) const {
-  mt_assert(receiver_position_ < instruction->srcs_size());
+  auto receiver_parameter_position = receiver_position_.parameter_position();
 
-  return instruction->src(receiver_position_);
+  mt_assert(receiver_parameter_position < instruction->srcs_size());
+  return instruction->src(receiver_parameter_position);
 }
 
 std::unordered_map<Root, Register> ShimLifecycleTarget::root_registers(
@@ -423,10 +426,11 @@ std::unordered_map<Root, Register> ShimLifecycleTarget::root_registers(
        position < lifecycle_method->number_of_parameters();
        ++position) {
     if (auto shim_position = parameter_mapping.at(Root::argument(position))) {
-      mt_assert(*shim_position < instruction->srcs_size());
+      auto shim_parameter_position = shim_position->parameter_position();
+      mt_assert(shim_parameter_position < instruction->srcs_size());
       root_registers.emplace(
           Root(Root::Kind::Argument, position),
-          instruction->src(*shim_position));
+          instruction->src(shim_parameter_position));
     }
   }
 
@@ -502,7 +506,7 @@ std::ostream& operator<<(std::ostream& out, const ShimParameterMapping& map) {
   out << "parameters_map={";
   for (const auto& [parameter, shim_parameter] : map.map_) {
     out << " " << parameter << ":";
-    out << " Argument(" << shim_parameter << "),";
+    out << " " << shim_parameter << ",";
   }
   return out << " }";
 }

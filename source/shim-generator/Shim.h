@@ -25,7 +25,7 @@
 namespace marianatrench {
 
 /* Indicates the position of a parameter in the `shimmed-method`. */
-using ShimParameterPosition = ParameterPosition;
+using ShimRoot = Root;
 
 /**
  * Wrapper around the `shimmed-method` (i.e. the method matching the method
@@ -38,11 +38,11 @@ class ShimMethod final {
 
   const Method* method() const;
 
-  DexType* MT_NULLABLE parameter_type(ShimParameterPosition argument) const;
+  DexType* MT_NULLABLE parameter_type(ShimRoot argument) const;
 
   DexType* MT_NULLABLE return_type() const;
 
-  std::optional<ShimParameterPosition> type_position(const DexType* type) const;
+  std::optional<ShimRoot> type_position(const DexType* type) const;
 
   friend std::ostream& operator<<(
       std::ostream& out,
@@ -51,18 +51,17 @@ class ShimMethod final {
  private:
   const Method* method_;
   // Maps parameter type to position in method_
-  boost::container::flat_map<const DexType*, ShimParameterPosition>
-      types_to_position_;
+  boost::container::flat_map<const DexType*, ShimRoot> types_to_position_;
 };
 
 /**
  * Tracks the mapping of parameter positions from
  * `shim-target` (`ParameterPosition`) to
- * parameter positions in the `shimmed-method` (`ShimParameterPosition`)
+ * parameter positions / return ports in the `shimmed-method` (`ShimRoot`)
  */
 class ShimParameterMapping final {
  public:
-  using MapType = boost::container::flat_map<Root, ShimParameterPosition>;
+  using MapType = boost::container::flat_map<Root, ShimRoot>;
 
  public:
   explicit ShimParameterMapping(
@@ -80,13 +79,11 @@ class ShimParameterMapping final {
 
   bool empty() const;
 
-  bool contains(const Root& position) const;
+  bool contains(Root position) const;
 
-  std::optional<ShimParameterPosition> at(const Root& parameter_position) const;
+  std::optional<ShimRoot> at(Root parameter_position) const;
 
-  void insert(
-      const Root& parameter_position,
-      ShimParameterPosition shim_parameter_position);
+  void insert(Root parameter_position, ShimRoot shim_parameter_position);
 
   MapType::const_iterator begin() const {
     return map_.begin();
@@ -100,7 +97,7 @@ class ShimParameterMapping final {
 
   bool infer_from_types() const;
 
-  void add_receiver(ShimParameterPosition shim_parameter_position);
+  void add_receiver(ShimRoot shim_parameter_position);
 
   ShimParameterMapping instantiate_parameters(
       std::string_view shim_target_method,
@@ -217,7 +214,7 @@ class ShimLifecycleTarget final {
  public:
   explicit ShimLifecycleTarget(
       std::string method_name,
-      ShimParameterPosition receiver_position,
+      ShimRoot receiver_position,
       bool is_reflection,
       bool infer_parameter_mapping);
 
@@ -254,7 +251,7 @@ class ShimLifecycleTarget final {
 
  private:
   std::string method_name_;
-  ShimParameterPosition receiver_position_;
+  ShimRoot receiver_position_;
   bool is_reflection_;
   bool infer_from_types_;
 };
@@ -270,9 +267,10 @@ struct std::hash<marianatrench::ShimParameterMapping> {
       const marianatrench::ShimParameterMapping& shim_parameter_mapping) const {
     std::size_t seed = 0;
     boost::hash_combine(seed, shim_parameter_mapping.infer_from_types_);
-    for (const auto& [root, position] : shim_parameter_mapping.map_) {
+    for (const auto& [root, shim_root] : shim_parameter_mapping.map_) {
       boost::hash_combine(seed, std::hash<marianatrench::Root>()(root));
-      boost::hash_combine(seed, position);
+      boost::hash_combine(
+          seed, std::hash<marianatrench::ShimRoot>()(shim_root));
     }
     return seed;
   }
@@ -314,7 +312,10 @@ struct std::hash<marianatrench::ShimLifecycleTarget> {
       const marianatrench::ShimLifecycleTarget& shim_lifecycle_target) const {
     std::size_t seed = 0;
     boost::hash_combine(seed, shim_lifecycle_target.method_name_);
-    boost::hash_combine(seed, shim_lifecycle_target.receiver_position_);
+    boost::hash_combine(
+        seed,
+        std::hash<marianatrench::ShimRoot>()(
+            shim_lifecycle_target.receiver_position_));
     boost::hash_combine(seed, shim_lifecycle_target.is_reflection_);
     boost::hash_combine(seed, shim_lifecycle_target.infer_from_types_);
     return seed;

@@ -65,7 +65,7 @@ std::optional<ShimTarget> try_make_shim_target(
 
   if (!is_static) {
     instantiated_parameter_map.add_receiver(
-        std::get<Root>(receiver_info.receiver()).parameter_position());
+        std::get<ShimRoot>(receiver_info.receiver()));
   }
 
   return ShimTarget(
@@ -110,9 +110,8 @@ std::optional<ShimReflectionTarget> try_make_shim_reflection_target(
           method_spec->proto,
           /* shim_target_is_static */ false,
           shim_method);
-
   instantiated_parameter_map.add_receiver(
-      std::get<Root>(receiver_info.receiver()).parameter_position());
+      std::get<ShimRoot>(receiver_info.receiver()));
 
   return ShimReflectionTarget(
       std::move(*method_spec), std::move(instantiated_parameter_map));
@@ -138,14 +137,14 @@ std::optional<ShimLifecycleTarget> try_make_shim_lifecycle_target(
 
   return ShimLifecycleTarget(
       std::string(target_template.target()),
-      std::get<Root>(receiver_info.receiver()).parameter_position(),
+      std::get<ShimRoot>(receiver_info.receiver()),
       receiver_info.kind() == ReceiverInfo::Kind::REFLECTION,
       target_template.parameter_map().infer_from_types());
 }
 
 } // namespace
 
-ReceiverInfo::ReceiverInfo(Kind kind, Root position)
+ReceiverInfo::ReceiverInfo(Kind kind, ShimRoot position)
     : kind_(kind), receiver_(std::move(position)) {}
 
 ReceiverInfo::ReceiverInfo(Kind kind, std::string type)
@@ -155,14 +154,15 @@ ReceiverInfo ReceiverInfo::from_json(const Json::Value& callee) {
   if (callee.isMember("static")) {
     return ReceiverInfo{Kind::STATIC, JsonValidation::string(callee, "static")};
   } else if (callee.isMember("type_of")) {
-    auto root = Root::from_json(JsonValidation::string(callee, "type_of"));
+    auto root = ShimRoot::from_json(JsonValidation::string(callee, "type_of"));
     mt_assert(root.is_argument() || root.is_return());
 
     return ReceiverInfo{Kind::INSTANCE, root};
   } else if (callee.isMember("reflected_type_of")) {
     return ReceiverInfo{
         Kind::REFLECTION,
-        Root::from_json(JsonValidation::string(callee, "reflected_type_of"))};
+        ShimRoot::from_json(
+            JsonValidation::string(callee, "reflected_type_of"))};
   }
 
   throw JsonValidationError(
@@ -179,15 +179,13 @@ ReceiverInfo::receiver_dex_type(const ShimMethod& shim_method) const {
       return DexType::get_type(std::get<std::string>(receiver_));
 
     case Kind::INSTANCE: {
-      const auto receiver = std::get<Root>(receiver_);
-      return receiver.is_return()
-          ? shim_method.return_type()
-          : shim_method.parameter_type(receiver.parameter_position());
+      const auto receiver = std::get<ShimRoot>(receiver_);
+      return receiver.is_return() ? shim_method.return_type()
+                                  : shim_method.parameter_type(receiver);
     }
 
     case Kind::REFLECTION: {
-      auto dex_type = shim_method.parameter_type(
-          std::get<Root>(receiver_).parameter_position());
+      auto dex_type = shim_method.parameter_type(std::get<ShimRoot>(receiver_));
       if (dex_type && dex_type != type::java_lang_Class()) {
         LOG(1,
             "Reflection shim expected receiver type: {} but got {}",
@@ -276,7 +274,7 @@ std::ostream& operator<<(std::ostream& out, const ReceiverInfo& info) {
   if (info.kind_ == ReceiverInfo::Kind::STATIC) {
     out << std::get<std::string>(info.receiver_);
   } else {
-    out << std::get<Root>(info.receiver_);
+    out << std::get<ShimRoot>(info.receiver_);
   }
 
   if (info.kind_ == ReceiverInfo::Kind::REFLECTION) {

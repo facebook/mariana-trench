@@ -193,7 +193,7 @@ struct IntentRoutingData {
   std::vector<const DexType*> routed_intents;
 };
 
-std::pair<std::optional<Component>, std::optional<ShimParameterPosition>>
+std::pair<std::optional<Component>, std::optional<ShimRoot>>
 get_position_from_callee(const Method* original_callee) {
   const auto& activity_routing_methods =
       constants::get_activity_routing_methods();
@@ -203,12 +203,13 @@ get_position_from_callee(const Method* original_callee) {
   auto activity_match =
       activity_routing_methods.find(original_callee->signature());
   if (activity_match != activity_routing_methods.end()) {
-    return std::pair(Component::Activity, activity_match->second);
+    return std::pair(
+        Component::Activity, Root::argument(activity_match->second));
   }
   auto service_match =
       service_routing_methods.find(original_callee->signature());
   if (service_match != service_routing_methods.end()) {
-    return std::pair(Component::Service, service_match->second);
+    return std::pair(Component::Service, Root::argument(service_match->second));
   }
 
   auto receiver_methods =
@@ -220,7 +221,8 @@ get_position_from_callee(const Method* original_callee) {
     if (args->size() > 0 &&
         args->at(0) == DexType::make_type("Landroid/content/Intent;")) {
       return std::pair(
-          Component::BroadcastReceiver, ::is_static(original_callee) ? 0 : 1);
+          Component::BroadcastReceiver,
+          Root::argument(::is_static(original_callee) ? 0 : 1));
     }
   }
 

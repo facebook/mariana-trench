@@ -3688,7 +3688,8 @@ TEST_F(JsonTest, ShimTargetTemplateTest) {
       (Root{Root::Kind::Argument, 2}));
   EXPECT_EQ(
       target_template.parameter_map(),
-      (ShimParameterMapping{std::pair{Root{Root::Kind::Argument, 2}, 3}}));
+      (ShimParameterMapping{std::pair{
+          Root{Root::Kind::Argument, 2}, Root{Root::Kind::Argument, 3}}}));
 
   // Test with infer_parameters_from_types
   target_template = TargetTemplate::from_json(test::parse_json(R"#({
