@@ -77,7 +77,7 @@ endif ()
 find_package(Threads REQUIRED)
 find_package(ZLIB REQUIRED)
 find_package(Boost 1.75.0 REQUIRED
-             COMPONENTS system filesystem regex program_options iostreams thread
+             COMPONENTS filesystem regex program_options iostreams thread
              CONFIG)
 # CMake's provided `FindGTest.cmake` does not define GMock.
 # We use `CONFIG` to find the `GTestConfig.cmake` provided by gtest, which properly defines GMock.
@@ -118,7 +118,6 @@ add_library(mariana-trench-library STATIC ${library_sources})
 target_link_libraries(mariana-trench-library PUBLIC
                       Threads::Threads
                       ZLIB::ZLIB
-                      Boost::system
                       Boost::regex
                       Boost::program_options
                       Boost::iostreams
