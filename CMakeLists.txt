@@ -82,7 +82,7 @@ find_package(Boost 1.75.0 REQUIRED
 # CMake's provided `FindGTest.cmake` does not define GMock.
 # We use `CONFIG` to find the `GTestConfig.cmake` provided by gtest, which properly defines GMock.
 find_package(GTest 1.10.0 REQUIRED CONFIG)
-find_package(JsonCpp 1.9.4 REQUIRED)
+find_package(JsonCpp 1.9.6 REQUIRED)
 find_package(fmt 7.1.2...<10.0.0 REQUIRED)
 find_package(re2 REQUIRED)
 find_package(Redex REQUIRED)
@@ -116,6 +116,7 @@ file(GLOB library_sources
 list(FILTER library_sources EXCLUDE REGEX ".*/source/Main.cpp")
 add_library(mariana-trench-library STATIC ${library_sources})
 target_link_libraries(mariana-trench-library PUBLIC
+                      Redex::LibTool
                       Threads::Threads
                       ZLIB::ZLIB
                       Boost::regex
@@ -126,7 +127,6 @@ target_link_libraries(mariana-trench-library PUBLIC
                       JsonCpp::JsonCpp
                       fmt::fmt
                       re2::re2
-                      Redex::LibTool
                       Boost::filesystem)
 target_include_directories(mariana-trench-library PUBLIC "${CMAKE_CURRENT_BINARY_DIR}/header-tree")
 
