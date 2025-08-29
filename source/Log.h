@@ -27,7 +27,7 @@ class Logger {
       int level,
       std::string_view format,
       const Args&... args) {
-    log(section, level, fmt::format(format, args...));
+    log(section, level, fmt::format(fmt::runtime(format), args...));
   }
 
   /* Evaluates to whether the default output descriptor is interactive. */

@@ -29,7 +29,8 @@ static const Feature* get_labelled_feature(
     tag_string = fmt::format("{}-", tag->c_str());
   }
   const auto& via_value = value.value_or("unknown");
-  return factory.create(fmt::format(format_str, tag_string, via_value));
+  return factory.create(
+      fmt::format(fmt::runtime(format_str), tag_string, via_value));
 }
 
 const Feature* FeatureFactory::get_via_type_of_feature(
