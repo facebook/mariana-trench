@@ -14,7 +14,7 @@ Mariana Trench is currently supported on **macOS** (tested on *Big Sur 11.4*) an
 
 Below is a list of the required dependencies. Most of them can be installed with **[Homebrew](https://brew.sh/)**.
 
-* A C++ compiler that supports C++17 (GCC >= 7 or Clang >= 5)
+* A C++ compiler that supports C++20
 * Python >= 3.6
 * CMake >= 3.19.3
 * zlib
