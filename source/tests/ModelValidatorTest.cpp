@@ -49,6 +49,7 @@ TEST_F(ModelValidatorTest, ModelValidators) {
     std::vector<std::unique_ptr<ModelValidator>> validators;
     validators.push_back(std::make_unique<ExpectIssue>(
         /* is_false_positive */ false,
+        /* task */ std::nullopt,
         IssueProperties(
             /* code */ 1,
             /* source_kinds */ std::set<std::string>{},
@@ -57,10 +58,23 @@ TEST_F(ModelValidatorTest, ModelValidators) {
             /* sink_origins */ std::set<std::string>{})));
     validators.push_back(std::make_unique<ExpectIssue>(
         /* is_false_positive */ true,
+        /* task */ std::nullopt,
         IssueProperties(
             /* code */ 1,
             /* source_kinds */ std::set<std::string>{"TestSource"},
             /* sink_kinds */ std::set<std::string>{},
+            /* source_origins */ std::set<std::string>{},
+            /* sink_origins */ std::set<std::string>{})));
+
+    // Presence of task does not affect validation but should be included in the
+    // result.
+    validators.push_back(std::make_unique<ExpectIssue>(
+        /* is_false_positive */ true,
+        /* task */ "T123456",
+        IssueProperties(
+            /* code */ 1,
+            /* source_kinds */ std::set<std::string>{},
+            /* sink_kinds */ std::set<std::string>{"TestSink"},
             /* source_origins */ std::set<std::string>{},
             /* sink_origins */ std::set<std::string>{})));
 
@@ -78,6 +92,12 @@ TEST_F(ModelValidatorTest, ModelValidators) {
                   "valid": true,
                   "annotation": "ExpectIssue(code=1, sourceKinds={TestSource}, isFalsePositive=true)",
                   "isFalsePositive": true
+                },
+                {
+                  "valid": true,
+                  "annotation": "ExpectIssue(code=1, sinkKinds={TestSink}, isFalsePositive=true, task=T123456)",
+                  "isFalsePositive": true, 
+                  "task": "T123456"
                 }
               ]
             })#");
@@ -89,6 +109,7 @@ TEST_F(ModelValidatorTest, ModelValidators) {
     std::vector<std::unique_ptr<ModelValidator>> validators;
     validators.push_back(std::make_unique<ExpectIssue>(
         /* is_false_positive */ false,
+        /* task */ std::nullopt,
         IssueProperties(
             /* code */ 1,
             /* source_kinds */ std::set<std::string>{},
@@ -97,6 +118,7 @@ TEST_F(ModelValidatorTest, ModelValidators) {
             /* sink_origins */ std::set<std::string>{})));
     validators.push_back(std::make_unique<ExpectIssue>(
         /* is_false_positive */ true,
+        /* task */ std::nullopt,
         IssueProperties(
             /* code */ 2,
             /* source_kinds */ std::set<std::string>{},
@@ -129,6 +151,7 @@ TEST_F(ModelValidatorTest, ModelValidators) {
     std::vector<std::unique_ptr<ModelValidator>> validators;
     validators.push_back(std::make_unique<ExpectNoIssue>(
         /* is_false_negative */ true,
+        /* task */ std::nullopt,
         IssueProperties(
             /* code */ 1,
             /* source_kinds */ std::set<std::string>{},
@@ -157,6 +180,7 @@ TEST_F(ModelValidatorTest, ModelValidators) {
     std::vector<std::unique_ptr<ModelValidator>> validators;
     validators.push_back(std::make_unique<ExpectIssue>(
         /* is_false_positive */ false,
+        /* task */ std::nullopt,
         IssueProperties(
             /* code */ 1,
             /* source_kinds */ std::set<std::string>{},
@@ -165,8 +189,21 @@ TEST_F(ModelValidatorTest, ModelValidators) {
             /* sink_origins */ std::set<std::string>{})));
     validators.push_back(std::make_unique<ExpectNoIssue>(
         /* is_false_negative */ true,
+        /* task */ std::nullopt,
         IssueProperties(
             /* code */ 2,
+            /* source_kinds */ std::set<std::string>{},
+            /* sink_kinds */ std::set<std::string>{},
+            /* source_origins */ std::set<std::string>{},
+            /* sink_origins */ std::set<std::string>{})));
+
+    // Presence of task does not affect validation but should be included in the
+    // result.
+    validators.push_back(std::make_unique<ExpectNoIssue>(
+        /* is_false_negative */ true,
+        /* task */ "T234567",
+        IssueProperties(
+            /* code */ 3,
             /* source_kinds */ std::set<std::string>{},
             /* sink_kinds */ std::set<std::string>{},
             /* source_origins */ std::set<std::string>{},
@@ -186,6 +223,12 @@ TEST_F(ModelValidatorTest, ModelValidators) {
                   "valid": true,
                   "annotation": "ExpectNoIssue(code=2, isFalseNegative=true)",
                   "isFalseNegative": true
+                }, 
+                {
+                  "valid": true,
+                  "annotation": "ExpectNoIssue(code=3, isFalseNegative=true, task=T234567)",
+                  "isFalseNegative": true,
+                  "task": "T234567"
                 }
               ]
             })#");
@@ -239,9 +282,29 @@ TEST_F(ModelValidatorTest, ExpectIssueExpectNoIssue) {
         /* source_origins */ {},
         /* sink_origins */ {});
     ExpectIssue expect_issue(
-        /* is_false_positive */ false, issue_properties);
+        /* is_false_positive */ false,
+        /* task */ std::nullopt,
+        issue_properties);
     EXPECT_TRUE(expect_issue.validate(model).is_valid());
-    EXPECT_FALSE(ExpectNoIssue(/* is_false_negative */ true, issue_properties)
+    EXPECT_FALSE(ExpectNoIssue(
+                     /* is_false_negative */ true,
+                     /* task */ std::nullopt,
+                     issue_properties)
+                     .validate(model)
+                     .is_valid());
+
+    // Presence of task does not affect validation but should be included in the
+    // result.
+    EXPECT_TRUE(ExpectIssue(
+                    /* is_false_positive */ false,
+                    /* task */ "T123456",
+                    issue_properties)
+                    .validate(model)
+                    .is_valid());
+    EXPECT_FALSE(ExpectNoIssue(
+                     /* is_false_negative */ true,
+                     /* task */ "T1234567",
+                     issue_properties)
                      .validate(model)
                      .is_valid());
   }
@@ -254,9 +317,15 @@ TEST_F(ModelValidatorTest, ExpectIssueExpectNoIssue) {
         /* source_origins */ {},
         /* sink_origins */ {});
     // Matches code, sources and sinks.
-    ExpectIssue expect_issue(/* is_false_positive */ false, issue_properties);
+    ExpectIssue expect_issue(
+        /* is_false_positive */ false,
+        /* task */ std::nullopt,
+        issue_properties);
     EXPECT_TRUE(expect_issue.validate(model).is_valid());
-    EXPECT_FALSE(ExpectNoIssue(/* is_false_negative */ false, issue_properties)
+    EXPECT_FALSE(ExpectNoIssue(
+                     /* is_false_negative */ false,
+                     /* task */ std::nullopt,
+                     issue_properties)
                      .validate(model)
                      .is_valid());
   }
@@ -269,9 +338,15 @@ TEST_F(ModelValidatorTest, ExpectIssueExpectNoIssue) {
         {"TestSink"},
         /* source_origins */ {},
         /* sink_origins */ {});
-    ExpectIssue expect_issue(/* is_false_positive */ false, issue_properties);
+    ExpectIssue expect_issue(
+        /* is_false_positive */ false,
+        /* task */ std::nullopt,
+        issue_properties);
     EXPECT_FALSE(expect_issue.validate(model).is_valid());
-    EXPECT_TRUE(ExpectNoIssue(/* is_false_negative */ false, issue_properties)
+    EXPECT_TRUE(ExpectNoIssue(
+                    /* is_false_negative */ false,
+                    /* task */ std::nullopt,
+                    issue_properties)
                     .validate(model)
                     .is_valid());
   }
@@ -284,9 +359,15 @@ TEST_F(ModelValidatorTest, ExpectIssueExpectNoIssue) {
         {"OtherSink"},
         /* source_origins */ {},
         /* sink_origins */ {});
-    ExpectIssue expect_issue(/* is_false_positive */ false, issue_properties);
+    ExpectIssue expect_issue(
+        /* is_false_positive */ false,
+        /* task */ std::nullopt,
+        issue_properties);
     EXPECT_FALSE(expect_issue.validate(model).is_valid());
-    EXPECT_TRUE(ExpectNoIssue(/* is_false_negative */ false, issue_properties)
+    EXPECT_TRUE(ExpectNoIssue(
+                    /* is_false_negative */ false,
+                    /* task */ std::nullopt,
+                    issue_properties)
                     .validate(model)
                     .is_valid());
   }
@@ -299,9 +380,15 @@ TEST_F(ModelValidatorTest, ExpectIssueExpectNoIssue) {
         {"TestSink"},
         /* source_origins */ {},
         /* sink_origins */ {});
-    ExpectIssue expect_issue(/* is_false_positive */ false, issue_properties);
+    ExpectIssue expect_issue(
+        /* is_false_positive */ false,
+        /* task */ std::nullopt,
+        issue_properties);
     EXPECT_FALSE(expect_issue.validate(model).is_valid());
-    EXPECT_TRUE(ExpectNoIssue(/* is_false_negative */ false, issue_properties)
+    EXPECT_TRUE(ExpectNoIssue(
+                    /* is_false_negative */ false,
+                    /* task */ std::nullopt,
+                    issue_properties)
                     .validate(model)
                     .is_valid());
   }
@@ -314,9 +401,15 @@ TEST_F(ModelValidatorTest, ExpectIssueExpectNoIssue) {
         {"TestSink"},
         /* source_origins */ {},
         /* sink_origins */ {});
-    ExpectIssue expect_issue(/* is_false_positive */ false, issue_properties);
+    ExpectIssue expect_issue(
+        /* is_false_positive */ false,
+        /* task */ std::nullopt,
+        issue_properties);
     EXPECT_FALSE(expect_issue.validate(model).is_valid());
-    EXPECT_TRUE(ExpectNoIssue(/* is_false_negative */ false, issue_properties)
+    EXPECT_TRUE(ExpectNoIssue(
+                    /* is_false_negative */ false,
+                    /* task */ std::nullopt,
+                    issue_properties)
                     .validate(model)
                     .is_valid());
   }
@@ -345,9 +438,15 @@ TEST_F(ModelValidatorTest, ExpectIssueExpectNoIssue) {
         {"TestSink"},
         /* source_origins */ {},
         /* sink_origins */ {});
-    ExpectIssue expect_issue(/* is_false_positive */ false, issue_properties);
+    ExpectIssue expect_issue(
+        /* is_false_positive */ false,
+        /* task */ std::nullopt,
+        issue_properties);
     EXPECT_TRUE(expect_issue.validate(model).is_valid());
-    EXPECT_FALSE(ExpectNoIssue(/* is_false_negative */ false, issue_properties)
+    EXPECT_FALSE(ExpectNoIssue(
+                     /* is_false_negative */ false,
+                     /* task */ std::nullopt,
+                     issue_properties)
                      .validate(model)
                      .is_valid());
   }
@@ -360,9 +459,15 @@ TEST_F(ModelValidatorTest, ExpectIssueExpectNoIssue) {
         {"TestSink", "OtherSink"},
         /* source_origins */ {},
         /* sink_origins */ {});
-    ExpectIssue expect_issue(/* is_false_positive */ false, issue_properties);
+    ExpectIssue expect_issue(
+        /* is_false_positive */ false,
+        /* task */ std::nullopt,
+        issue_properties);
     EXPECT_TRUE(expect_issue.validate(model).is_valid());
-    EXPECT_FALSE(ExpectNoIssue(/* is_false_negative */ false, issue_properties)
+    EXPECT_FALSE(ExpectNoIssue(
+                     /* is_false_negative */ false,
+                     /* task */ std::nullopt,
+                     issue_properties)
                      .validate(model)
                      .is_valid());
   }
@@ -375,9 +480,15 @@ TEST_F(ModelValidatorTest, ExpectIssueExpectNoIssue) {
         {"TestSink"},
         /* source_origins */ {},
         /* sink_origins */ {});
-    ExpectIssue expect_issue(/* is_false_positive */ false, issue_properties);
+    ExpectIssue expect_issue(
+        /* is_false_positive */ false,
+        /* task */ std::nullopt,
+        issue_properties);
     EXPECT_FALSE(expect_issue.validate(model).is_valid());
-    EXPECT_TRUE(ExpectNoIssue(/* is_false_negative */ false, issue_properties)
+    EXPECT_TRUE(ExpectNoIssue(
+                    /* is_false_negative */ false,
+                    /* task */ std::nullopt,
+                    issue_properties)
                     .validate(model)
                     .is_valid());
   }
@@ -407,9 +518,15 @@ TEST_F(ModelValidatorTest, ExpectIssueExpectNoIssue) {
         {"TestSink"},
         /* source_origins */ {},
         /* sink_origins */ {});
-    ExpectIssue expect_issue(/* is_false_positive */ false, issue_properties);
+    ExpectIssue expect_issue(
+        /* is_false_positive */ false,
+        /* task */ std::nullopt,
+        issue_properties);
     EXPECT_TRUE(expect_issue.validate(model).is_valid());
-    EXPECT_FALSE(ExpectNoIssue(/* is_false_negative */ false, issue_properties)
+    EXPECT_FALSE(ExpectNoIssue(
+                     /* is_false_negative */ false,
+                     /* task */ std::nullopt,
+                     issue_properties)
                      .validate(model)
                      .is_valid());
   }
@@ -422,9 +539,15 @@ TEST_F(ModelValidatorTest, ExpectIssueExpectNoIssue) {
         {"TestSink", "OtherSink"},
         /* source_origins */ {},
         /* sink_origins */ {});
-    ExpectIssue expect_issue(/* is_false_positive */ false, issue_properties);
+    ExpectIssue expect_issue(
+        /* is_false_positive */ false,
+        /* task */ std::nullopt,
+        issue_properties);
     EXPECT_FALSE(expect_issue.validate(model).is_valid());
-    EXPECT_TRUE(ExpectNoIssue(/* is_false_negative */ false, issue_properties)
+    EXPECT_TRUE(ExpectNoIssue(
+                    /* is_false_negative */ false,
+                    /* task */ std::nullopt,
+                    issue_properties)
                     .validate(model)
                     .is_valid());
   }
@@ -450,9 +573,15 @@ TEST_F(ModelValidatorTest, ExpectIssueExpectNoIssue) {
         /* sink_kinds */ {},
         /* source_origins */ {"TestSourceOrigin"},
         /* sink_origins */ {});
-    ExpectIssue expect_issue(/* is_false_positive */ false, issue_properties);
+    ExpectIssue expect_issue(
+        /* is_false_positive */ false,
+        /* task */ std::nullopt,
+        issue_properties);
     EXPECT_TRUE(expect_issue.validate(model).is_valid());
-    EXPECT_FALSE(ExpectNoIssue(/* is_false_negative */ false, issue_properties)
+    EXPECT_FALSE(ExpectNoIssue(
+                     /* is_false_negative */ false,
+                     /* task */ std::nullopt,
+                     issue_properties)
                      .validate(model)
                      .is_valid());
   }
@@ -465,9 +594,15 @@ TEST_F(ModelValidatorTest, ExpectIssueExpectNoIssue) {
         /* sink_kinds */ {},
         /* source_origins */ {"TestSourceOrigin"},
         /* sink_origins */ {method->show()});
-    ExpectIssue expect_issue(/* is_false_positive */ false, issue_properties);
+    ExpectIssue expect_issue(
+        /* is_false_positive */ false,
+        /* task */ std::nullopt,
+        issue_properties);
     EXPECT_TRUE(expect_issue.validate(model).is_valid());
-    EXPECT_FALSE(ExpectNoIssue(/* is_false_negative */ false, issue_properties)
+    EXPECT_FALSE(ExpectNoIssue(
+                     /* is_false_negative */ false,
+                     /* task */ std::nullopt,
+                     issue_properties)
                      .validate(model)
                      .is_valid());
   }
@@ -480,9 +615,15 @@ TEST_F(ModelValidatorTest, ExpectIssueExpectNoIssue) {
         /* sink_kinds */ {},
         /* source_origins */ {"TestSourceOrigin"},
         /* sink_origins */ {"InvalidSinkorigin"});
-    ExpectIssue expect_issue(/* is_false_positive */ false, issue_properties);
+    ExpectIssue expect_issue(
+        /* is_false_positive */ false,
+        /* task */ std::nullopt,
+        issue_properties);
     EXPECT_FALSE(expect_issue.validate(model).is_valid());
-    EXPECT_TRUE(ExpectNoIssue(/* is_false_negative */ false, issue_properties)
+    EXPECT_TRUE(ExpectNoIssue(
+                    /* is_false_negative */ false,
+                    /* task */ std::nullopt,
+                    issue_properties)
                     .validate(model)
                     .is_valid());
   }

@@ -28,10 +28,12 @@ class ModelValidatorResult {
   explicit ModelValidatorResult(
       bool valid,
       std::string annotation,
+      std::optional<std::string> task,
       bool is_false_negative,
       bool is_false_positive)
       : valid_(valid),
         annotation_(std::move(annotation)),
+        task_(std::move(task)),
         is_false_negative_(is_false_negative),
         is_false_positive_(is_false_positive) {}
 
@@ -59,6 +61,8 @@ class ModelValidatorResult {
   // confidence. False negatives contribute to the numerator, while false
   // positives should be excluded from the denominator since they do not
   // contribute meaningfully to the set of "issues we should be finding".
+  // The task associated (if any) is used to deduplicate the tests related to
+  // the same patterns.
   //
   // NOTE: In theory, these are not the same as is_false_classification_ in
   // ModelValidator. ModelValidators represent how we expect the analysis to
@@ -67,6 +71,7 @@ class ModelValidatorResult {
   // otherwise there is a test failure that needs to be fixed. Therefore, these
   // flags simply reflect is_false_classification_ for now.
 
+  std::optional<std::string> task_;
   bool is_false_negative_;
   bool is_false_positive_;
 };
@@ -123,8 +128,11 @@ class ModelValidators final {
  */
 class ModelValidator {
  public:
-  explicit ModelValidator(bool is_false_classification)
-      : is_false_classification_(is_false_classification) {}
+  explicit ModelValidator(
+      bool is_false_classification,
+      std::optional<std::string> task)
+      : is_false_classification_(is_false_classification),
+        task_(std::move(task)) {}
 
   MOVE_CONSTRUCTOR_ONLY_VIRTUAL_DESTRUCTOR(ModelValidator)
 
@@ -138,6 +146,7 @@ class ModelValidator {
   // looking for presence (e.g. ExpectIssue), flag represents is_false_positive,
   // and vice versa.
   bool is_false_classification_;
+  std::optional<std::string> task_;
 };
 
 /**
@@ -183,8 +192,11 @@ class IssueProperties final {
 
 class ExpectIssue final : public ModelValidator {
  public:
-  explicit ExpectIssue(bool is_false_positive, IssueProperties issue_properties)
-      : ModelValidator(is_false_positive),
+  explicit ExpectIssue(
+      bool is_false_positive,
+      std::optional<std::string> task,
+      IssueProperties issue_properties)
+      : ModelValidator(is_false_positive, std::move(task)),
         issue_properties_(std::move(issue_properties)) {}
 
   MOVE_CONSTRUCTOR_ONLY(ExpectIssue)
@@ -204,8 +216,9 @@ class ExpectNoIssue final : public ModelValidator {
  public:
   explicit ExpectNoIssue(
       bool is_false_negative,
+      std::optional<std::string> task,
       IssueProperties issue_properties)
-      : ModelValidator(is_false_negative),
+      : ModelValidator(is_false_negative, std::move(task)),
         issue_properties_(std::move(issue_properties)) {}
 
   MOVE_CONSTRUCTOR_ONLY(ExpectNoIssue)

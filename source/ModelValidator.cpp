@@ -25,6 +25,9 @@ Json::Value ModelValidatorResult::to_json() const {
   if (is_false_positive_) {
     result["isFalsePositive"] = is_false_positive_;
   }
+  if (task_.has_value()) {
+    result["task"] = *task_;
+  }
   return result;
 }
 
@@ -214,6 +217,9 @@ struct AnnotationFields final {
 
   // Whether the annotation was denoted a false [positive|negative]
   bool is_false_classification;
+
+  // The task associated with the issue (if any)
+  std::optional<std::string> task;
 };
 
 AnnotationFields parse_annotation(
@@ -223,6 +229,7 @@ AnnotationFields parse_annotation(
   std::set<std::string> sink_kinds;
   std::set<std::string> source_origins;
   std::set<std::string> sink_origins;
+  std::optional<std::string> task = std::nullopt;
   bool is_false_classification = false;
 
   for (const auto& annotation_element : annotation_elements) {
@@ -238,6 +245,15 @@ AnnotationFields parse_annotation(
       gather_strings(annotation_element, source_origins);
     } else if (annotation_key->str() == "sinkOrigins") {
       gather_strings(annotation_element, sink_origins);
+    } else if (annotation_key->str() == "task") {
+      mt_assert(annotation_element.encoded_value->evtype() == DEVT_STRING);
+      const auto* dex_encoded_string =
+          dynamic_cast<const DexEncodedValueString*>(
+              annotation_element.encoded_value.get());
+      auto* task_dex_string = dex_encoded_string->string();
+      if (task_dex_string != nullptr && !task_dex_string->str().empty()) {
+        task = task_dex_string->str_copy();
+      }
     } else if (
         annotation_key->str() == "isFalsePositive" ||
         annotation_key->str() == "isFalseNegative") {
@@ -260,7 +276,8 @@ AnnotationFields parse_annotation(
           std::move(sink_kinds),
           std::move(source_origins),
           std::move(sink_origins)),
-      .is_false_classification = is_false_classification};
+      .is_false_classification = is_false_classification,
+      .task = std::move(task)};
 }
 
 bool includes_issue_kinds(
@@ -344,6 +361,7 @@ ExpectIssue ExpectIssue::from_annotation(
   auto annotation = parse_annotation(annotation_elements);
   return ExpectIssue(
       /* is_false_positive */ annotation.is_false_classification,
+      std::move(annotation.task),
       std::move(annotation.issue_properties));
 }
 
@@ -352,15 +370,21 @@ ModelValidatorResult ExpectIssue::validate(const Model& model) const {
   return ModelValidatorResult(
       valid,
       /* annotation */ show(),
+      /* task */ task_,
       /* is_false_negative */ false,
       /* is_false_positive */ is_false_classification_);
 }
 
 std::string ExpectIssue::show() const {
-  return fmt::format(
-      "ExpectIssue({}, isFalsePositive={})",
-      issue_properties_.show(),
-      is_false_classification_);
+  std::stringstream out;
+  out << "ExpectIssue(" << issue_properties_.show()
+      << ", isFalsePositive=" << (is_false_classification_ ? "true" : "false");
+  if (task_.has_value()) {
+    out << ", task=" << *task_;
+  }
+  out << ")";
+
+  return out.str();
 }
 
 ExpectNoIssue ExpectNoIssue::from_annotation(
@@ -368,6 +392,7 @@ ExpectNoIssue ExpectNoIssue::from_annotation(
   auto annotation = parse_annotation(annotation_elements);
   return ExpectNoIssue(
       /* is_false_negative */ annotation.is_false_classification,
+      std::move(annotation.task),
       std::move(annotation.issue_properties));
 }
 
@@ -376,15 +401,21 @@ ModelValidatorResult ExpectNoIssue::validate(const Model& model) const {
   return ModelValidatorResult(
       valid,
       /* annotation */ show(),
+      /* task */ task_,
       /* is_false_negative */ is_false_classification_,
       /* is_false_positive */ false);
 }
 
 std::string ExpectNoIssue::show() const {
-  return fmt::format(
-      "ExpectNoIssue({}, isFalseNegative={})",
-      issue_properties_.show(),
-      is_false_classification_);
+  std::stringstream out;
+  out << "ExpectNoIssue(" << issue_properties_.show()
+      << ", isFalseNegative=" << (is_false_classification_ ? "true" : "false");
+  if (task_.has_value()) {
+    out << ", task=" << *task_;
+  }
+  out << ")";
+
+  return out.str();
 }
 
 } // namespace marianatrench
