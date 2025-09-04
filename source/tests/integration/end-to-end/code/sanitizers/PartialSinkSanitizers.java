@@ -49,12 +49,10 @@ public class PartialSinkSanitizers {
   }
 
   public void testMultiSourceNoIssue1() {
-    // Currently a False Positive
     sanitizedPartialSinkForSourceA(PartialSinkSanitizers.sourceA());
   }
 
   public void testMultiSourceNoIssue2() {
-    // Currently a False Positive
     sanitizedPartialSinkForSourceB(PartialSinkSanitizers.sourceB());
   }
 }

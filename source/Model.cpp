@@ -1064,7 +1064,13 @@ Taint Model::apply_source_sink_sanitizers(
 
   if (!sanitized_kinds.empty()) {
     taint.filter_frames([&sanitized_kinds](const Frame& frame) {
-      return sanitized_kinds.find(frame.kind()) == sanitized_kinds.end();
+      const auto* frame_kind = frame.kind();
+      if (const auto* triggered_partial_kind =
+              frame_kind->as<TriggeredPartialKind>()) {
+        frame_kind = triggered_partial_kind->partial_kind();
+      }
+
+      return sanitized_kinds.find(frame_kind) == sanitized_kinds.end();
     });
   }
 

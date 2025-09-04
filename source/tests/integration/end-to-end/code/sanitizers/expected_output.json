@@ -2508,53 +2508,6 @@
       "port" : "Argument(1)",
       "sanitize" : "sinks"
     }
-  ],
-  "sinks" : 
-  [
-    {
-      "port" : "Argument(1)",
-      "taint" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Origin",
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 42,
-              "line" : 35,
-              "path" : "PartialSinkSanitizers.java",
-              "start" : 37
-            }
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                38,
-                39
-              ],
-              "kind" : 
-              {
-                "name" : "PartialSink",
-                "partial_label" : "arg0",
-                "triggered_rule" : 6
-              },
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.multiSinks:(Ljava/lang/Object;Ljava/lang/Object;)V",
-                  "port" : "Argument(0)"
-                }
-              ],
-              "preserves_type_context" : true
-            }
-          ]
-        }
-      ]
-    }
   ]
 }
 {
@@ -2579,53 +2532,6 @@
       ],
       "port" : "Argument(1)",
       "sanitize" : "sinks"
-    }
-  ],
-  "sinks" : 
-  [
-    {
-      "port" : "Argument(1)",
-      "taint" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Origin",
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "end" : 75,
-              "line" : 40,
-              "path" : "PartialSinkSanitizers.java",
-              "start" : 70
-            }
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                38,
-                39
-              ],
-              "kind" : 
-              {
-                "name" : "PartialSink",
-                "partial_label" : "arg1",
-                "triggered_rule" : 6
-              },
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.multiSinks:(Ljava/lang/Object;Ljava/lang/Object;)V",
-                  "port" : "Argument(1)"
-                }
-              ],
-              "preserves_type_context" : true
-            }
-          ]
-        }
-      ]
     }
   ]
 }
@@ -2902,202 +2808,18 @@
   }
 }
 {
-  "issues" : 
-  [
-    {
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.sanitizedPartialSinkForSourceA:(Ljava/lang/Object;)V",
-      "position" : 
-      {
-        "line" : 53,
-        "path" : "PartialSinkSanitizers.java"
-      },
-      "rule" : 6,
-      "sink_index" : "0",
-      "sinks" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "end" : 65,
-              "line" : 53,
-              "path" : "PartialSinkSanitizers.java",
-              "start" : 35
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.sanitizedPartialSinkForSourceA:(Ljava/lang/Object;)V"
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                38,
-                39
-              ],
-              "distance" : 1,
-              "kind" : 
-              {
-                "name" : "PartialSink",
-                "partial_label" : "arg0",
-                "triggered_rule" : 6
-              },
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.multiSinks:(Ljava/lang/Object;Ljava/lang/Object;)V",
-                  "port" : "Argument(0)"
-                }
-              ],
-              "preserves_type_context" : true
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Origin",
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 63,
-              "line" : 53,
-              "path" : "PartialSinkSanitizers.java",
-              "start" : 57
-            }
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                38,
-                39
-              ],
-              "kind" : "SourceA",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.sourceA:()Ljava/lang/Object;",
-                  "port" : "Return"
-                }
-              ],
-              "preserves_type_context" : true
-            }
-          ]
-        }
-      ]
-    }
-  ],
   "method" : "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.testMultiSourceNoIssue1:()V",
   "position" : 
   {
-    "line" : 52,
+    "line" : 51,
     "path" : "PartialSinkSanitizers.java"
   }
 }
 {
-  "issues" : 
-  [
-    {
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.sanitizedPartialSinkForSourceB:(Ljava/lang/Object;)V",
-      "position" : 
-      {
-        "line" : 58,
-        "path" : "PartialSinkSanitizers.java"
-      },
-      "rule" : 6,
-      "sink_index" : "0",
-      "sinks" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "end" : 65,
-              "line" : 58,
-              "path" : "PartialSinkSanitizers.java",
-              "start" : 35
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.sanitizedPartialSinkForSourceB:(Ljava/lang/Object;)V"
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                38,
-                39
-              ],
-              "distance" : 1,
-              "kind" : 
-              {
-                "name" : "PartialSink",
-                "partial_label" : "arg1",
-                "triggered_rule" : 6
-              },
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.multiSinks:(Ljava/lang/Object;Ljava/lang/Object;)V",
-                  "port" : "Argument(1)"
-                }
-              ],
-              "preserves_type_context" : true
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Origin",
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 63,
-              "line" : 58,
-              "path" : "PartialSinkSanitizers.java",
-              "start" : 57
-            }
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                38,
-                39
-              ],
-              "kind" : "SourceB",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.sourceB:()Ljava/lang/Object;",
-                  "port" : "Return"
-                }
-              ],
-              "preserves_type_context" : true
-            }
-          ]
-        }
-      ]
-    }
-  ],
   "method" : "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.testMultiSourceNoIssue2:()V",
   "position" : 
   {
-    "line" : 57,
+    "line" : 55,
     "path" : "PartialSinkSanitizers.java"
   }
 }
