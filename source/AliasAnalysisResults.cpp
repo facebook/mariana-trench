@@ -37,6 +37,9 @@ const WideningPointsToResolver& InstructionAliasResults::widening_resolver()
 
 MemoryLocationsDomain InstructionAliasResults::register_memory_locations(
     Register register_id) const {
+  if (register_id == RESULT_REGISTER) {
+    return result_memory_locations();
+  }
   return register_memory_locations_map_.at(register_id);
 }
 
