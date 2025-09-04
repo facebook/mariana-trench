@@ -117,6 +117,43 @@
     "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedFlows:()V",
     "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedSourcePort:()Ljava/lang/Object;"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.multiSinks:(Ljava/lang/Object;Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.sanitizedPartialSinkForSourceA:(Ljava/lang/Object;)V",
+    "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.sanitizedPartialSinkForSourceB:(Ljava/lang/Object;)V",
+    "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.triggeredPartialSinkForSourceA:(Ljava/lang/Object;)V",
+    "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.triggeredPartialSinkForSourceB:(Ljava/lang/Object;)V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.sanitizedPartialSinkForSourceA:(Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.testMultiSourceNoIssue1:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.sanitizedPartialSinkForSourceB:(Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.testMultiSourceNoIssue2:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.sourceA:()Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.sanitizedPartialSinkForSourceB:(Ljava/lang/Object;)V",
+    "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.testMultiSourceIssue1:()V",
+    "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.testMultiSourceNoIssue1:()V",
+    "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.triggeredPartialSinkForSourceB:(Ljava/lang/Object;)V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.sourceB:()Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.sanitizedPartialSinkForSourceA:(Ljava/lang/Object;)V",
+    "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.testMultiSourceIssue2:()V",
+    "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.testMultiSourceNoIssue2:()V",
+    "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.triggeredPartialSinkForSourceA:(Ljava/lang/Object;)V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.triggeredPartialSinkForSourceA:(Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.testMultiSourceIssue1:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.triggeredPartialSinkForSourceB:(Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.testMultiSourceIssue2:()V"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedPropagationPort:(Ljava/lang/Object;Ljava/lang/Object;)[Ljava/lang/Object;" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.sanitizedFlows:()V"
@@ -174,6 +211,9 @@
     "Lcom/facebook/marianatrench/integrationtests/KindSpecificSanitizers;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+    "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.sourceA:()Ljava/lang/Object;",
+    "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.sourceB:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/PortSanitizers;.<init>:()V",
     "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V",
     "Lcom/facebook/secure/context/SecureContextHelperV2;.<init>:()V",

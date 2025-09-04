@@ -53,5 +53,21 @@
     "sinks": [
       "SinkSSRF"
     ]
+  },
+  {
+    "name": "FlowMultiSource",
+    "code": 6,
+    "description": "Test multi source rule",
+    "multi_sources": {
+      "arg0": [
+        "SourceA"
+      ],
+      "arg1": [
+        "SourceB"
+      ]
+    },
+    "partial_sinks": [
+      "PartialSink"
+    ]
   }
 ]

@@ -162,5 +162,68 @@
         ]
       }
     ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.sourceA:()Ljava/lang/Object;",
+    "generations": [
+      {
+        "kind": "SourceA",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.sourceB:()Ljava/lang/Object;",
+    "generations": [
+      {
+        "kind": "SourceB",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.multiSinks:(Ljava/lang/Object;Ljava/lang/Object;)V",
+    "sinks": [
+      {
+        "kind": "PartialSink",
+        "partial_label": "arg0",
+        "port": "Argument(0)"
+      },
+      {
+        "kind": "PartialSink",
+        "partial_label": "arg1",
+        "port": "Argument(1)"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.sanitizedPartialSinkForSourceA:(Ljava/lang/Object;)V",
+    "sanitizers": [
+      {
+        "sanitize": "sinks",
+        "kinds": [
+          {
+            "kind": "PartialSink",
+            "partial_label": "arg0"
+          }
+        ],
+        "port": "Argument(1)"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/PartialSinkSanitizers;.sanitizedPartialSinkForSourceB:(Ljava/lang/Object;)V",
+    "sanitizers": [
+      {
+        "sanitize": "sinks",
+        "kinds": [
+          {
+            "kind": "PartialSink",
+            "partial_label": "arg1"
+          }
+        ],
+        "port": "Argument(1)"
+      }
+    ]
   }
 ]
