@@ -82,8 +82,8 @@ TransformList TransformList::from_trace_string(
   List result{};
 
   auto transform_string = transforms;
-  typedef boost::algorithm::split_iterator<std::string::iterator>
-      string_split_iterator;
+  using string_split_iterator =
+      boost::algorithm::split_iterator<std::string::iterator>;
   for (string_split_iterator iterator = boost::algorithm::make_split_iterator(
            transform_string, first_finder(":", boost::is_equal()));
        iterator != string_split_iterator();
