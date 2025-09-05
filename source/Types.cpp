@@ -463,7 +463,15 @@ std::unique_ptr<TypeEnvironments> Types::infer_types_for_method(
           show_locally_inferred_types(environment_at_instruction),
           show_globally_inferred_types(instruction, global_type_environment));
 
-      for (auto ir_register : instruction->srcs()) {
+      std::vector<reg_t> ir_registers(
+          instruction->srcs().begin(), instruction->srcs().end());
+
+      // Include the RESULT_REGISTER for invoke instructions.
+      if (instruction->has_move_result_any()) {
+        ir_registers.push_back(RESULT_REGISTER);
+      }
+
+      for (auto ir_register : ir_registers) {
         const auto& globally_inferred_type_domain =
             global_type_environment.get(ir_register);
 
