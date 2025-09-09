@@ -48,6 +48,7 @@ TEST_F(ModelValidatorTest, ModelValidators) {
     // All validators pass
     std::vector<std::unique_ptr<ModelValidator>> validators;
     validators.push_back(std::make_unique<ExpectIssue>(
+        ModelValidatorTestType::GLOBAL,
         /* is_false_positive */ false,
         /* task */ std::nullopt,
         IssueProperties(
@@ -57,6 +58,7 @@ TEST_F(ModelValidatorTest, ModelValidators) {
             /* source_origins */ std::set<std::string>{},
             /* sink_origins */ std::set<std::string>{})));
     validators.push_back(std::make_unique<ExpectIssue>(
+        ModelValidatorTestType::CATEGORY_SPECIFIC,
         /* is_false_positive */ true,
         /* task */ std::nullopt,
         IssueProperties(
@@ -69,6 +71,7 @@ TEST_F(ModelValidatorTest, ModelValidators) {
     // Presence of task does not affect validation but should be included in the
     // result.
     validators.push_back(std::make_unique<ExpectIssue>(
+        ModelValidatorTestType::GLOBAL,
         /* is_false_positive */ true,
         /* task */ "T123456",
         IssueProperties(
@@ -85,17 +88,23 @@ TEST_F(ModelValidatorTest, ModelValidators) {
               "method": "LClass;.one:()V",
               "validators": [
                 {
+                  "type": "GLOBAL",
+                  "code": 1,
                   "valid": true,
-                  "annotation": "ExpectIssue(code=1, isFalsePositive=false)"
+                  "annotation": "ExpectIssue(type=GLOBAL, code=1, isFalsePositive=false)"
                 },
                 {
+                  "type": "CATEGORY_SPECIFIC",
+                  "code": 1,
                   "valid": true,
-                  "annotation": "ExpectIssue(code=1, sourceKinds={TestSource}, isFalsePositive=true)",
+                  "annotation": "ExpectIssue(type=CATEGORY_SPECIFIC, code=1, sourceKinds={TestSource}, isFalsePositive=true)",
                   "isFalsePositive": true
                 },
                 {
+                  "type": "GLOBAL",
+                  "code": 1,
                   "valid": true,
-                  "annotation": "ExpectIssue(code=1, sinkKinds={TestSink}, isFalsePositive=true, task=T123456)",
+                  "annotation": "ExpectIssue(type=GLOBAL, code=1, sinkKinds={TestSink}, isFalsePositive=true, task=T123456)",
                   "isFalsePositive": true, 
                   "task": "T123456"
                 }
@@ -108,6 +117,7 @@ TEST_F(ModelValidatorTest, ModelValidators) {
     // One validator fails
     std::vector<std::unique_ptr<ModelValidator>> validators;
     validators.push_back(std::make_unique<ExpectIssue>(
+        ModelValidatorTestType::GLOBAL,
         /* is_false_positive */ false,
         /* task */ std::nullopt,
         IssueProperties(
@@ -117,6 +127,7 @@ TEST_F(ModelValidatorTest, ModelValidators) {
             /* source_origins */ std::set<std::string>{},
             /* sink_origins */ std::set<std::string>{})));
     validators.push_back(std::make_unique<ExpectIssue>(
+        ModelValidatorTestType::CATEGORY_SPECIFIC,
         /* is_false_positive */ true,
         /* task */ std::nullopt,
         IssueProperties(
@@ -133,12 +144,16 @@ TEST_F(ModelValidatorTest, ModelValidators) {
               "method": "LClass;.one:()V",
               "validators": [
                 {
+                  "type": "GLOBAL",
+                  "code": 1,
                   "valid": true,
-                  "annotation": "ExpectIssue(code=1, isFalsePositive=false)",
+                  "annotation": "ExpectIssue(type=GLOBAL, code=1, isFalsePositive=false)",
                 },
                 {
+                  "type": "CATEGORY_SPECIFIC",
+                  "code": 2,
                   "valid": false,
-                  "annotation": "ExpectIssue(code=2, isFalsePositive=true)",
+                  "annotation": "ExpectIssue(type=CATEGORY_SPECIFIC, code=2, isFalsePositive=true)",
                   "isFalsePositive": true
                 }
               ]
@@ -150,6 +165,7 @@ TEST_F(ModelValidatorTest, ModelValidators) {
     // All validators fail (and single validator)
     std::vector<std::unique_ptr<ModelValidator>> validators;
     validators.push_back(std::make_unique<ExpectNoIssue>(
+        ModelValidatorTestType::GLOBAL,
         /* is_false_negative */ true,
         /* task */ std::nullopt,
         IssueProperties(
@@ -166,8 +182,10 @@ TEST_F(ModelValidatorTest, ModelValidators) {
               "method": "LClass;.one:()V",
               "validators": [
                 {
+                  "type": "GLOBAL",
+                  "code": 1,
                   "valid": false,
-                  "annotation": "ExpectNoIssue(code=1, isFalseNegative=true)",
+                  "annotation": "ExpectNoIssue(type=GLOBAL, code=1, isFalseNegative=true)",
                   "isFalseNegative": true
                 }
               ]
@@ -179,6 +197,7 @@ TEST_F(ModelValidatorTest, ModelValidators) {
     // All validators pass, with a different validator types
     std::vector<std::unique_ptr<ModelValidator>> validators;
     validators.push_back(std::make_unique<ExpectIssue>(
+        ModelValidatorTestType::GLOBAL,
         /* is_false_positive */ false,
         /* task */ std::nullopt,
         IssueProperties(
@@ -188,6 +207,7 @@ TEST_F(ModelValidatorTest, ModelValidators) {
             /* source_origins */ std::set<std::string>{},
             /* sink_origins */ std::set<std::string>{})));
     validators.push_back(std::make_unique<ExpectNoIssue>(
+        ModelValidatorTestType::GLOBAL,
         /* is_false_negative */ true,
         /* task */ std::nullopt,
         IssueProperties(
@@ -200,6 +220,7 @@ TEST_F(ModelValidatorTest, ModelValidators) {
     // Presence of task does not affect validation but should be included in the
     // result.
     validators.push_back(std::make_unique<ExpectNoIssue>(
+        ModelValidatorTestType::CATEGORY_SPECIFIC,
         /* is_false_negative */ true,
         /* task */ "T234567",
         IssueProperties(
@@ -216,17 +237,23 @@ TEST_F(ModelValidatorTest, ModelValidators) {
               "method": "LClass;.one:()V",
               "validators": [
                 {
+                  "type": "GLOBAL",
+                  "code": 1,
                   "valid": true,
-                  "annotation": "ExpectIssue(code=1, isFalsePositive=false)"
+                  "annotation": "ExpectIssue(type=GLOBAL, code=1, isFalsePositive=false)"
                 },
                 {
+                  "type": "GLOBAL",
+                  "code": 2,
                   "valid": true,
-                  "annotation": "ExpectNoIssue(code=2, isFalseNegative=true)",
+                  "annotation": "ExpectNoIssue(type=GLOBAL, code=2, isFalseNegative=true)",
                   "isFalseNegative": true
                 }, 
                 {
+                  "type": "CATEGORY_SPECIFIC",
+                  "code": 3,
                   "valid": true,
-                  "annotation": "ExpectNoIssue(code=3, isFalseNegative=true, task=T234567)",
+                  "annotation": "ExpectNoIssue(type=CATEGORY_SPECIFIC, code=3, isFalseNegative=true, task=T234567)",
                   "isFalseNegative": true,
                   "task": "T234567"
                 }
@@ -282,12 +309,14 @@ TEST_F(ModelValidatorTest, ExpectIssueExpectNoIssue) {
         /* source_origins */ {},
         /* sink_origins */ {});
     EXPECT_TRUE(ExpectIssue(
+                    ModelValidatorTestType::GLOBAL,
                     /* is_false_positive */ false,
                     /* task */ std::nullopt,
                     issue_properties)
                     .validate(model)
                     .is_valid());
     EXPECT_FALSE(ExpectNoIssue(
+                     ModelValidatorTestType::GLOBAL,
                      /* is_false_negative */ true,
                      /* task */ std::nullopt,
                      issue_properties)
@@ -297,12 +326,14 @@ TEST_F(ModelValidatorTest, ExpectIssueExpectNoIssue) {
     // Presence of task does not affect validation but should be included in the
     // result.
     EXPECT_TRUE(ExpectIssue(
+                    ModelValidatorTestType::GLOBAL,
                     /* is_false_positive */ false,
                     /* task */ "T123456",
                     issue_properties)
                     .validate(model)
                     .is_valid());
     EXPECT_FALSE(ExpectNoIssue(
+                     ModelValidatorTestType::GLOBAL,
                      /* is_false_negative */ true,
                      /* task */ "T1234567",
                      issue_properties)
@@ -319,12 +350,14 @@ TEST_F(ModelValidatorTest, ExpectIssueExpectNoIssue) {
         /* sink_origins */ {});
     // Matches code, sources and sinks.
     EXPECT_TRUE(ExpectIssue(
+                    ModelValidatorTestType::GLOBAL,
                     /* is_false_positive */ false,
                     /* task */ std::nullopt,
                     issue_properties)
                     .validate(model)
                     .is_valid());
     EXPECT_FALSE(ExpectNoIssue(
+                     ModelValidatorTestType::GLOBAL,
                      /* is_false_negative */ false,
                      /* task */ std::nullopt,
                      issue_properties)
@@ -341,12 +374,14 @@ TEST_F(ModelValidatorTest, ExpectIssueExpectNoIssue) {
         /* source_origins */ {},
         /* sink_origins */ {});
     EXPECT_FALSE(ExpectIssue(
+                     ModelValidatorTestType::GLOBAL,
                      /* is_false_positive */ false,
                      /* task */ std::nullopt,
                      issue_properties)
                      .validate(model)
                      .is_valid());
     EXPECT_TRUE(ExpectNoIssue(
+                    ModelValidatorTestType::GLOBAL,
                     /* is_false_negative */ false,
                     /* task */ std::nullopt,
                     issue_properties)
@@ -363,12 +398,14 @@ TEST_F(ModelValidatorTest, ExpectIssueExpectNoIssue) {
         /* source_origins */ {},
         /* sink_origins */ {});
     EXPECT_FALSE(ExpectIssue(
+                     ModelValidatorTestType::GLOBAL,
                      /* is_false_positive */ false,
                      /* task */ std::nullopt,
                      issue_properties)
                      .validate(model)
                      .is_valid());
     EXPECT_TRUE(ExpectNoIssue(
+                    ModelValidatorTestType::GLOBAL,
                     /* is_false_negative */ false,
                     /* task */ std::nullopt,
                     issue_properties)
@@ -385,12 +422,14 @@ TEST_F(ModelValidatorTest, ExpectIssueExpectNoIssue) {
         /* source_origins */ {},
         /* sink_origins */ {});
     EXPECT_FALSE(ExpectIssue(
+                     ModelValidatorTestType::GLOBAL,
                      /* is_false_positive */ false,
                      /* task */ std::nullopt,
                      issue_properties)
                      .validate(model)
                      .is_valid());
     EXPECT_TRUE(ExpectNoIssue(
+                    ModelValidatorTestType::GLOBAL,
                     /* is_false_negative */ false,
                     /* task */ std::nullopt,
                     issue_properties)
@@ -407,12 +446,14 @@ TEST_F(ModelValidatorTest, ExpectIssueExpectNoIssue) {
         /* source_origins */ {},
         /* sink_origins */ {});
     EXPECT_FALSE(ExpectIssue(
+                     ModelValidatorTestType::GLOBAL,
                      /* is_false_positive */ false,
                      /* task */ std::nullopt,
                      issue_properties)
                      .validate(model)
                      .is_valid());
     EXPECT_TRUE(ExpectNoIssue(
+                    ModelValidatorTestType::GLOBAL,
                     /* is_false_negative */ false,
                     /* task */ std::nullopt,
                     issue_properties)
@@ -445,12 +486,14 @@ TEST_F(ModelValidatorTest, ExpectIssueExpectNoIssue) {
         /* source_origins */ {},
         /* sink_origins */ {});
     EXPECT_TRUE(ExpectIssue(
+                    ModelValidatorTestType::GLOBAL,
                     /* is_false_positive */ false,
                     /* task */ std::nullopt,
                     issue_properties)
                     .validate(model)
                     .is_valid());
     EXPECT_FALSE(ExpectNoIssue(
+                     ModelValidatorTestType::GLOBAL,
                      /* is_false_negative */ false,
                      /* task */ std::nullopt,
                      issue_properties)
@@ -467,12 +510,14 @@ TEST_F(ModelValidatorTest, ExpectIssueExpectNoIssue) {
         /* source_origins */ {},
         /* sink_origins */ {});
     EXPECT_TRUE(ExpectIssue(
+                    ModelValidatorTestType::GLOBAL,
                     /* is_false_positive */ false,
                     /* task */ std::nullopt,
                     issue_properties)
                     .validate(model)
                     .is_valid());
     EXPECT_FALSE(ExpectNoIssue(
+                     ModelValidatorTestType::GLOBAL,
                      /* is_false_negative */ false,
                      /* task */ std::nullopt,
                      issue_properties)
@@ -489,12 +534,14 @@ TEST_F(ModelValidatorTest, ExpectIssueExpectNoIssue) {
         /* source_origins */ {},
         /* sink_origins */ {});
     EXPECT_FALSE(ExpectIssue(
+                     ModelValidatorTestType::GLOBAL,
                      /* is_false_positive */ false,
                      /* task */ std::nullopt,
                      issue_properties)
                      .validate(model)
                      .is_valid());
     EXPECT_TRUE(ExpectNoIssue(
+                    ModelValidatorTestType::GLOBAL,
                     /* is_false_negative */ false,
                     /* task */ std::nullopt,
                     issue_properties)
@@ -528,12 +575,14 @@ TEST_F(ModelValidatorTest, ExpectIssueExpectNoIssue) {
         /* source_origins */ {},
         /* sink_origins */ {});
     EXPECT_TRUE(ExpectIssue(
+                    ModelValidatorTestType::GLOBAL,
                     /* is_false_positive */ false,
                     /* task */ std::nullopt,
                     issue_properties)
                     .validate(model)
                     .is_valid());
     EXPECT_FALSE(ExpectNoIssue(
+                     ModelValidatorTestType::GLOBAL,
                      /* is_false_negative */ false,
                      /* task */ std::nullopt,
                      issue_properties)
@@ -550,12 +599,14 @@ TEST_F(ModelValidatorTest, ExpectIssueExpectNoIssue) {
         /* source_origins */ {},
         /* sink_origins */ {});
     EXPECT_FALSE(ExpectIssue(
+                     ModelValidatorTestType::GLOBAL,
                      /* is_false_positive */ false,
                      /* task */ std::nullopt,
                      issue_properties)
                      .validate(model)
                      .is_valid());
     EXPECT_TRUE(ExpectNoIssue(
+                    ModelValidatorTestType::GLOBAL,
                     /* is_false_negative */ false,
                     /* task */ std::nullopt,
                     issue_properties)
@@ -585,12 +636,14 @@ TEST_F(ModelValidatorTest, ExpectIssueExpectNoIssue) {
         /* source_origins */ {"TestSourceOrigin"},
         /* sink_origins */ {});
     EXPECT_TRUE(ExpectIssue(
+                    ModelValidatorTestType::GLOBAL,
                     /* is_false_positive */ false,
                     /* task */ std::nullopt,
                     issue_properties)
                     .validate(model)
                     .is_valid());
     EXPECT_FALSE(ExpectNoIssue(
+                     ModelValidatorTestType::GLOBAL,
                      /* is_false_negative */ false,
                      /* task */ std::nullopt,
                      issue_properties)
@@ -607,12 +660,14 @@ TEST_F(ModelValidatorTest, ExpectIssueExpectNoIssue) {
         /* source_origins */ {"TestSourceOrigin"},
         /* sink_origins */ {method->show()});
     EXPECT_TRUE(ExpectIssue(
+                    ModelValidatorTestType::GLOBAL,
                     /* is_false_positive */ false,
                     /* task */ std::nullopt,
                     issue_properties)
                     .validate(model)
                     .is_valid());
     EXPECT_FALSE(ExpectNoIssue(
+                     ModelValidatorTestType::GLOBAL,
                      /* is_false_negative */ false,
                      /* task */ std::nullopt,
                      issue_properties)
@@ -629,12 +684,14 @@ TEST_F(ModelValidatorTest, ExpectIssueExpectNoIssue) {
         /* source_origins */ {"TestSourceOrigin"},
         /* sink_origins */ {"InvalidSinkorigin"});
     EXPECT_FALSE(ExpectIssue(
+                     ModelValidatorTestType::GLOBAL,
                      /* is_false_positive */ false,
                      /* task */ std::nullopt,
                      issue_properties)
                      .validate(model)
                      .is_valid());
     EXPECT_TRUE(ExpectNoIssue(
+                    ModelValidatorTestType::GLOBAL,
                     /* is_false_negative */ false,
                     /* task */ std::nullopt,
                     issue_properties)

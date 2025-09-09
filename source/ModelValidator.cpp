@@ -15,8 +15,37 @@
 
 namespace marianatrench {
 
+namespace {
+
+std::string model_validator_test_type_to_string(ModelValidatorTestType type) {
+  switch (type) {
+    case ModelValidatorTestType::GLOBAL:
+      return "GLOBAL";
+    case ModelValidatorTestType::CATEGORY_SPECIFIC:
+      return "CATEGORY_SPECIFIC";
+  }
+
+  mt_unreachable();
+}
+
+ModelValidatorTestType string_to_model_validator_test_type(
+    std::string_view type_str) {
+  if (type_str == "GLOBAL") {
+    return ModelValidatorTestType::GLOBAL;
+  } else if (type_str == "CATEGORY_SPECIFIC") {
+    return ModelValidatorTestType::CATEGORY_SPECIFIC;
+  }
+
+  mt_unreachable();
+}
+
+} // namespace
+
 Json::Value ModelValidatorResult::to_json() const {
   auto result = Json::Value(Json::objectValue);
+
+  result["type"] = model_validator_test_type_to_string(type_);
+  result["code"] = code_;
   result["valid"] = valid_;
   result["annotation"] = annotation_;
   if (is_false_negative_) {
@@ -220,6 +249,9 @@ struct AnnotationFields final {
 
   // The task associated with the issue (if any)
   std::optional<std::string> task;
+
+  // The test type (GLOBAL or CATEGORY_SPECIFIC)
+  ModelValidatorTestType type;
 };
 
 AnnotationFields parse_annotation(
@@ -230,11 +262,27 @@ AnnotationFields parse_annotation(
   std::set<std::string> source_origins;
   std::set<std::string> sink_origins;
   std::optional<std::string> task = std::nullopt;
+  // Default to GLOBAL per annotation definition. Although default values are
+  // specified in the validation annotations, they are not stored in the
+  // bytecode metadata unless they are explicitly specified.
+  auto type = ModelValidatorTestType::GLOBAL;
   bool is_false_classification = false;
 
   for (const auto& annotation_element : annotation_elements) {
     const auto* annotation_key = annotation_element.string;
-    if (annotation_key->str() == "code") {
+    if (annotation_key->str() == "type") {
+      // Parse the TestType enum value as string
+      mt_assert(annotation_element.encoded_value->evtype() == DEVT_ENUM);
+
+      const auto* dex_encoded_field = dynamic_cast<const DexEncodedValueField*>(
+          annotation_element.encoded_value.get());
+      mt_assert(dex_encoded_field != nullptr);
+
+      const auto* enum_field = dex_encoded_field->field();
+      mt_assert(enum_field != nullptr && !enum_field->str().empty());
+
+      type = string_to_model_validator_test_type(enum_field->get_name()->str());
+    } else if (annotation_key->str() == "code") {
       mt_assert(annotation_element.encoded_value->is_evtype_primitive());
       code = annotation_element.encoded_value->value();
     } else if (annotation_key->str() == "sourceKinds") {
@@ -264,7 +312,7 @@ AnnotationFields parse_annotation(
       // case, the error is expected to resolve on the next release
       ERROR(
           1,
-          "Unexpected annotation key: {} in @ExpectIssue",
+          "Unexpected annotation key: {} in @ExpectIssue/@ExpectNoIssue",
           ::show(annotation_key));
     }
   }
@@ -277,7 +325,8 @@ AnnotationFields parse_annotation(
           std::move(source_origins),
           std::move(sink_origins)),
       .is_false_classification = is_false_classification,
-      .task = std::move(task)};
+      .task = std::move(task),
+      .type = type};
 }
 
 bool includes_issue_kinds(
@@ -360,6 +409,7 @@ ExpectIssue ExpectIssue::from_annotation(
     const EncodedAnnotations& annotation_elements) {
   auto annotation = parse_annotation(annotation_elements);
   return ExpectIssue(
+      annotation.type,
       /* is_false_positive */ annotation.is_false_classification,
       std::move(annotation.task),
       std::move(annotation.issue_properties));
@@ -368,7 +418,9 @@ ExpectIssue ExpectIssue::from_annotation(
 ModelValidatorResult ExpectIssue::validate(const Model& model) const {
   bool valid = issue_properties_.validate_presence(model);
   return ModelValidatorResult(
-      valid,
+      /* code */ issue_properties_.code(),
+      /* type */ type_,
+      /* valid */ valid,
       /* annotation */ show(),
       /* task */ task_,
       /* is_false_negative */ false,
@@ -377,7 +429,8 @@ ModelValidatorResult ExpectIssue::validate(const Model& model) const {
 
 std::string ExpectIssue::show() const {
   std::stringstream out;
-  out << "ExpectIssue(" << issue_properties_.show()
+  out << "ExpectIssue(type=" << model_validator_test_type_to_string(type_)
+      << ", " << issue_properties_.show()
       << ", isFalsePositive=" << (is_false_classification_ ? "true" : "false");
   if (task_.has_value()) {
     out << ", task=" << *task_;
@@ -391,6 +444,7 @@ ExpectNoIssue ExpectNoIssue::from_annotation(
     const EncodedAnnotations& annotation_elements) {
   auto annotation = parse_annotation(annotation_elements);
   return ExpectNoIssue(
+      annotation.type,
       /* is_false_negative */ annotation.is_false_classification,
       std::move(annotation.task),
       std::move(annotation.issue_properties));
@@ -399,7 +453,9 @@ ExpectNoIssue ExpectNoIssue::from_annotation(
 ModelValidatorResult ExpectNoIssue::validate(const Model& model) const {
   bool valid = !issue_properties_.validate_presence(model);
   return ModelValidatorResult(
-      valid,
+      /* code */ issue_properties_.code(),
+      /* type */ type_,
+      /* valid */ valid,
       /* annotation */ show(),
       /* task */ task_,
       /* is_false_negative */ is_false_classification_,
@@ -408,7 +464,8 @@ ModelValidatorResult ExpectNoIssue::validate(const Model& model) const {
 
 std::string ExpectNoIssue::show() const {
   std::stringstream out;
-  out << "ExpectNoIssue(" << issue_properties_.show()
+  out << "ExpectNoIssue(type=" << model_validator_test_type_to_string(type_)
+      << ", " << issue_properties_.show()
       << ", isFalseNegative=" << (is_false_classification_ ? "true" : "false");
   if (task_.has_value()) {
     out << ", task=" << *task_;

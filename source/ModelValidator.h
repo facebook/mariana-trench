@@ -23,15 +23,21 @@ namespace marianatrench {
 
 class ModelValidator;
 
+enum class ModelValidatorTestType { GLOBAL, CATEGORY_SPECIFIC };
+
 class ModelValidatorResult {
  public:
   explicit ModelValidatorResult(
+      int code,
+      ModelValidatorTestType type,
       bool valid,
       std::string annotation,
       std::optional<std::string> task,
       bool is_false_negative,
       bool is_false_positive)
-      : valid_(valid),
+      : code_(code),
+        type_(type),
+        valid_(valid),
         annotation_(std::move(annotation)),
         task_(std::move(task)),
         is_false_negative_(is_false_negative),
@@ -51,9 +57,19 @@ class ModelValidatorResult {
     return is_false_positive_;
   }
 
+  ModelValidatorTestType type() const {
+    return type_;
+  }
+
+  int code() const {
+    return code_;
+  }
+
   Json::Value to_json() const;
 
  private:
+  int code_;
+  ModelValidatorTestType type_;
   bool valid_;
   std::string annotation_;
 
@@ -122,34 +138,6 @@ class ModelValidators final {
 };
 
 /**
- * Used for validating @Expect* annotations in the APK (if any) against the
- * models emitted at the end of the analysis. Each @Expect* annotation type
- * should inherit from this class.
- */
-class ModelValidator {
- public:
-  explicit ModelValidator(
-      bool is_false_classification,
-      std::optional<std::string> task)
-      : is_false_classification_(is_false_classification),
-        task_(std::move(task)) {}
-
-  MOVE_CONSTRUCTOR_ONLY_VIRTUAL_DESTRUCTOR(ModelValidator)
-
-  virtual ModelValidatorResult validate(const Model& model) const = 0;
-
-  virtual std::string show() const = 0;
-
- protected:
-  // i.e. is_false_[positive|negative]. Classification type depends on whether
-  // the validator is looking for the presence or absence of a model. If
-  // looking for presence (e.g. ExpectIssue), flag represents is_false_positive,
-  // and vice versa.
-  bool is_false_classification_;
-  std::optional<std::string> task_;
-};
-
-/**
  * Represents the properties of an issue that need to be validated by a
  * ModelValidator. Whether validation is based on the absence/presence of these
  * properties depends on the ModelValidator's type.
@@ -178,6 +166,10 @@ class IssueProperties final {
    */
   bool validate_presence(const Model& model) const;
 
+  int code() const {
+    return code_;
+  }
+
   std::string show() const;
 
  private:
@@ -190,14 +182,53 @@ class IssueProperties final {
   std::set<std::string> sink_origins_;
 };
 
+/**
+ * Used for validating @Expect* annotations in the APK (if any) against the
+ * models emitted at the end of the analysis. Each @Expect* annotation type
+ * should inherit from this class.
+ */
+class ModelValidator {
+ public:
+  explicit ModelValidator(
+      ModelValidatorTestType type,
+      bool is_false_classification,
+      std::optional<std::string> task,
+      IssueProperties issue_properties)
+      : type_(type),
+        is_false_classification_(is_false_classification),
+        task_(std::move(task)),
+        issue_properties_(std::move(issue_properties)) {}
+
+  MOVE_CONSTRUCTOR_ONLY_VIRTUAL_DESTRUCTOR(ModelValidator)
+
+  virtual ModelValidatorResult validate(const Model& model) const = 0;
+
+  virtual std::string show() const = 0;
+
+ protected:
+  ModelValidatorTestType type_;
+  // i.e. is_false_[positive|negative]. Classification type depends on whether
+  // the validator is looking for the presence or absence of a model. If
+  // looking for presence (e.g. ExpectIssue), flag represents is_false_positive,
+  // and vice versa.
+  bool is_false_classification_;
+  std::optional<std::string> task_;
+
+  IssueProperties issue_properties_;
+};
+
 class ExpectIssue final : public ModelValidator {
  public:
   explicit ExpectIssue(
+      ModelValidatorTestType type,
       bool is_false_positive,
       std::optional<std::string> task,
       IssueProperties issue_properties)
-      : ModelValidator(is_false_positive, std::move(task)),
-        issue_properties_(std::move(issue_properties)) {}
+      : ModelValidator(
+            type,
+            is_false_positive,
+            std::move(task),
+            std::move(issue_properties)) {}
 
   MOVE_CONSTRUCTOR_ONLY(ExpectIssue)
 
@@ -207,19 +238,20 @@ class ExpectIssue final : public ModelValidator {
   ModelValidatorResult validate(const Model& model) const override;
 
   std::string show() const override;
-
- private:
-  IssueProperties issue_properties_;
 };
 
 class ExpectNoIssue final : public ModelValidator {
  public:
   explicit ExpectNoIssue(
+      ModelValidatorTestType type,
       bool is_false_negative,
       std::optional<std::string> task,
       IssueProperties issue_properties)
-      : ModelValidator(is_false_negative, std::move(task)),
-        issue_properties_(std::move(issue_properties)) {}
+      : ModelValidator(
+            type,
+            is_false_negative,
+            std::move(task),
+            std::move(issue_properties)) {}
 
   MOVE_CONSTRUCTOR_ONLY(ExpectNoIssue)
 
@@ -229,9 +261,6 @@ class ExpectNoIssue final : public ModelValidator {
   ModelValidatorResult validate(const Model& model) const override;
 
   std::string show() const override;
-
- private:
-  IssueProperties issue_properties_;
 };
 
 } // namespace marianatrench
