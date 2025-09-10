@@ -119,7 +119,16 @@ TypeEnvironments make_environments(
       }
     }
 
-    // Extract returned types of invoke instructions
+    // We populate the entry of RESULT_REGISTER in the type environment with the
+    // declared return type from the method prototype. It is important to note
+    // that this does not read from the entry type state of the invoke
+    // instruction -- RESULT_REGISTER at this point holds values that are not
+    // relevant to the invoke. On the other hand, though we are "ahead of time"
+    // by setting the type of RESULT_REGISTER to the return type in the entry
+    // state, the original value held by RESULT_REGISTER is not observable in
+    // any sense -- the register will always be populated by the return value of
+    // the method call without being used by any other instructions, so we do
+    // not introduce inconsistencies in our type environment.
     if (opcode::is_an_invoke(instruction->opcode())) {
       const auto* method = instruction->get_method();
       mt_assert_log(
@@ -467,7 +476,11 @@ std::unique_ptr<TypeEnvironments> Types::infer_types_for_method(
           instruction->srcs().begin(), instruction->srcs().end());
 
       // Include the RESULT_REGISTER for invoke instructions.
-      if (instruction->has_move_result_any()) {
+      // For invoke instructions with a non-void method, the RESULT_REGISTER
+      // contains the declared return type from the method signature we
+      // populated during `make_environments` and is then refined with global
+      // type analysis results.
+      if (opcode::is_an_invoke(instruction->opcode())) {
         ir_registers.push_back(RESULT_REGISTER);
       }
 
