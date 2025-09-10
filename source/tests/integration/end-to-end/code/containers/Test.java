@@ -13,7 +13,7 @@ import java.util.TreeMap;
 
 public class Test extends Activity {
   protected void onCreate() {
-    Map<String, Object> params = new TreeMap<String, Object>();
+    Map<String, Object> params = new TreeMap<>();
     params.put("test", Origin.source());
     Origin.sink(params);
   }
