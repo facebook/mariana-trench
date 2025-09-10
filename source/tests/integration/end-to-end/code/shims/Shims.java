@@ -89,6 +89,11 @@ class FragmentTest {
   public void add(Activity activity, Object o) {
     // Expect artificial call: activity.activity_lifecycle_wrapper()
   }
+
+  public Activity add(Object o) {
+    // Expect artificial call: activity.activity_lifecycle_wrapper() on return instance
+    return new FragmentOneActivity();
+  }
 }
 
 class ShimTarget {
@@ -158,6 +163,11 @@ public class Shims {
   static void testFragmentInstance() {
     FragmentTest ft = new FragmentTest();
     ft.add(new FragmentOneActivity(), Origin.source());
+  }
+
+  static void testFragmentReturnInstance() {
+    FragmentTest ft = new FragmentTest();
+    ft.add(Origin.source());
   }
 
   static void testFragmentReflection() {

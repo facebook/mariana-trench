@@ -81,6 +81,23 @@
     "where": [
       {
         "constraint": "signature_pattern",
+        "pattern": "Lcom/facebook/marianatrench/integrationtests/FragmentTest;\\.add:\\(Ljava/lang/Object;.*"
+      }
+    ],
+    "shim": {
+      "callees": [
+        {
+          "type_of": "Return",
+          "lifecycle_name": "activity_lifecycle_wrapper"
+        }
+      ]
+    }
+  },
+  {
+    "find": "methods",
+    "where": [
+      {
+        "constraint": "signature_pattern",
         "pattern": "Lcom/facebook/marianatrench/integrationtests/ParameterMapping;\\.<init>:.*"
       },
       {
