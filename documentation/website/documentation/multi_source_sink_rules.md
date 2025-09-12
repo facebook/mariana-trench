@@ -46,7 +46,16 @@ Such a rule can be defined as follows:
 }
 ```
 
-There are **two** sinks. There should always be as many sinks as there are sources, and the sinks must share the **same kind**. This looks almost like a regular sink definition, with an additional **partial_label** field. The `partial_label` field is used when defining the multi-source/sink rule below.
+Here, there is **one sink** method catching **two sources** flowing into it, turning it into a **partial_sink**.
+
+To define each source that flows into the `partial_sink`:
+
+- `kind` must be the same
+- `partial_label` must be unique - this will map to the source in the rule definition
+- `port` must be unique - see [port documentation](../models/#access-path-format)
+- There must be as many `partial_labels` are there are `multi_sources`
+
+>**NOTE:** Multi-source/sink rules currently support exactly 2 sources/sinks only.
 
 3. Define rules as follows:
 
@@ -70,5 +79,3 @@ There are **two** sinks. There should always be as many sinks as there are sourc
 ```
 
 Pay attention to how the labels and partial sink kinds match what is defined in the sinks above.
-
->**NOTE:** Multi-source/sink rules currently support exactly 2 sources/sinks only.
