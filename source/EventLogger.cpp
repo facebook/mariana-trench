@@ -6,6 +6,7 @@
  */
 
 #include <mariana-trench/EventLogger.h>
+#include <mariana-trench/Log.h>
 
 namespace marianatrench {
 

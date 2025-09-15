@@ -9,11 +9,7 @@ jobs:
       - uses: Homebrew/actions/setup-homebrew@master
 
       - name: Install dependencies
-        run: |
-          # Workaround the conflict between the pinned version and the core version of CMake on MacOS.
-          brew uninstall cmake
-          brew untap local/pinned
-          brew install --formula cmake zlib boost googletest jsoncpp re2
+        run: brew install --formula cmake zlib boost googletest jsoncpp re2
 
       - name: Install Redex
         run: |
