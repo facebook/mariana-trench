@@ -24,7 +24,6 @@
 #include <mariana-trench/LifecycleMethods.h>
 #include <mariana-trench/MarianaTrench.h>
 #include <mariana-trench/ModelGeneration.h>
-#include <mariana-trench/SanitizersOptions.h>
 #include <mariana-trench/shim-generator/ShimGeneration.h>
 
 int main(int argc, char* argv[]) {

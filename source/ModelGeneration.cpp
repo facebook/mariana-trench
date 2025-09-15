@@ -20,20 +20,11 @@
 #include <mariana-trench/ModelGeneration.h>
 #include <mariana-trench/Options.h>
 #include <mariana-trench/Timer.h>
-#include <mariana-trench/model-generator/BroadcastReceiverGenerator.h>
-#include <mariana-trench/model-generator/BuilderPatternGenerator.h>
-#include <mariana-trench/model-generator/ContentProviderGenerator.h>
-#include <mariana-trench/model-generator/DFASourceGenerator.h>
-#include <mariana-trench/model-generator/JoinOverrideGenerator.h>
 #include <mariana-trench/model-generator/JsonModelGenerator.h>
-#include <mariana-trench/model-generator/ManifestSourceGenerator.h>
 #include <mariana-trench/model-generator/ModelGenerator.h>
 #include <mariana-trench/model-generator/ModelGeneratorConfiguration.h>
 #include <mariana-trench/model-generator/ModelGeneratorName.h>
 #include <mariana-trench/model-generator/ModelGeneratorNameFactory.h>
-#include <mariana-trench/model-generator/ServiceSourceGenerator.h>
-#include <mariana-trench/model-generator/TaintInTaintOutGenerator.h>
-#include <mariana-trench/model-generator/TaintInTaintThisGenerator.h>
 
 namespace marianatrench {
 

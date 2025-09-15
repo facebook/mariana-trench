@@ -10,7 +10,6 @@
 #include <mariana-trench/CallGraph.h>
 #include <mariana-trench/ClassProperties.h>
 #include <mariana-trench/FeatureFactory.h>
-#include <mariana-trench/Fields.h>
 #include <mariana-trench/ForwardTaintTransfer.h>
 #include <mariana-trench/FulfilledPartialKindState.h>
 #include <mariana-trench/Log.h>
@@ -23,7 +22,6 @@
 #include <mariana-trench/SourceSinkWithExploitabilityRule.h>
 #include <mariana-trench/TransferCall.h>
 #include <mariana-trench/TransformOperations.h>
-#include <mariana-trench/TriggeredPartialKind.h>
 
 namespace marianatrench {
 

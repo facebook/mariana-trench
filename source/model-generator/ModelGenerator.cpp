@@ -18,10 +18,8 @@
 #include <mariana-trench/AccessPathFactory.h>
 #include <mariana-trench/FeatureFactory.h>
 #include <mariana-trench/Fields.h>
-#include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Methods.h>
-#include <mariana-trench/OriginFactory.h>
 #include <mariana-trench/OriginSet.h>
 #include <mariana-trench/Redex.h>
 #include <mariana-trench/TaggedRootSet.h>

@@ -13,7 +13,6 @@
 #include <Walkers.h>
 #include <re2/re2.h>
 
-#include <mariana-trench/Assert.h>
 #include <mariana-trench/ClassProperties.h>
 #include <mariana-trench/Constants.h>
 #include <mariana-trench/EventLogger.h>

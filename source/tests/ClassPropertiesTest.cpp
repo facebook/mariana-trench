@@ -11,7 +11,6 @@
 
 #include <Creators.h>
 #include <DexStore.h>
-#include <IRAssembler.h>
 #include <RedexContext.h>
 #include <RedexResources.h>
 

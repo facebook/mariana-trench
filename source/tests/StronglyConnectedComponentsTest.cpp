@@ -11,7 +11,6 @@
 #include <mariana-trench/Method.h>
 #include <mariana-trench/Redex.h>
 #include <mariana-trench/StronglyConnectedComponents.h>
-#include <mariana-trench/shim-generator/ShimGenerator.h>
 #include <mariana-trench/tests/Test.h>
 
 using namespace marianatrench;

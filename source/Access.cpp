@@ -17,7 +17,6 @@
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Method.h>
-#include <mariana-trench/Redex.h>
 
 namespace marianatrench {
 

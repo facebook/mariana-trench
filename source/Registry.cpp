@@ -19,7 +19,6 @@
 
 #include <mariana-trench/ArtificialMethods.h>
 #include <mariana-trench/Constants.h>
-#include <mariana-trench/Filesystem.h>
 #include <mariana-trench/JsonReaderWriter.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
@@ -32,9 +31,7 @@
 #include <mariana-trench/Positions.h>
 #include <mariana-trench/Registry.h>
 #include <mariana-trench/Rules.h>
-#include <mariana-trench/RulesCoverage.h>
 #include <mariana-trench/Statistics.h>
-#include <mariana-trench/model-generator/ModelGeneratorNameFactory.h>
 
 namespace marianatrench {
 

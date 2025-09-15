@@ -31,7 +31,6 @@
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Methods.h>
 #include <mariana-trench/OperatingSystem.h>
-#include <mariana-trench/Overrides.h>
 #include <mariana-trench/Scheduler.h>
 #include <mariana-trench/Statistics.h>
 #include <mariana-trench/Timer.h>

@@ -16,7 +16,6 @@
 
 #include <mariana-trench/Dependencies.h>
 #include <mariana-trench/Redex.h>
-#include <mariana-trench/shim-generator/ShimGenerator.h>
 #include <mariana-trench/tests/Test.h>
 
 using namespace marianatrench;

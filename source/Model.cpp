@@ -16,7 +16,6 @@
 #include <mariana-trench/ClassHierarchies.h>
 #include <mariana-trench/ClassProperties.h>
 #include <mariana-trench/Compiler.h>
-#include <mariana-trench/Constants.h>
 #include <mariana-trench/EventLogger.h>
 #include <mariana-trench/FeatureFactory.h>
 #include <mariana-trench/FeatureSet.h>
@@ -25,7 +24,6 @@
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Model.h>
-#include <mariana-trench/Overrides.h>
 #include <mariana-trench/Positions.h>
 #include <mariana-trench/model-generator/ModelGeneratorNameFactory.h>
 #include <mariana-trench/model-generator/TaintConfigTemplate.h>

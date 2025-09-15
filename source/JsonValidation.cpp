@@ -14,7 +14,6 @@
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/JsonReaderWriter.h>
 #include <mariana-trench/JsonValidation.h>
-#include <mariana-trench/Redex.h>
 
 namespace marianatrench {
 

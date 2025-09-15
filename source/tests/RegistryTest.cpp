@@ -9,14 +9,11 @@
 
 #include <json/value.h>
 #include <mariana-trench/ClassProperties.h>
-#include <mariana-trench/Constants.h>
 #include <mariana-trench/Context.h>
-#include <mariana-trench/Dependencies.h>
 #include <mariana-trench/Fields.h>
 #include <mariana-trench/Model.h>
 #include <mariana-trench/Redex.h>
 #include <mariana-trench/Registry.h>
-#include <mariana-trench/Types.h>
 #include <mariana-trench/UsedKinds.h>
 #include <mariana-trench/tests/Test.h>
 

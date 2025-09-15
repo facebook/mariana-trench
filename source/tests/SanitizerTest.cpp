@@ -9,7 +9,6 @@
 
 #include <mariana-trench/Sanitizer.h>
 #include <mariana-trench/tests/Test.h>
-#include <optional>
 
 namespace marianatrench {
 

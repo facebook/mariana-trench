@@ -6,7 +6,6 @@
  */
 
 #include <memory>
-#include <stdexcept>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem/operations.hpp>

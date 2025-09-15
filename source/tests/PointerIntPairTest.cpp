@@ -10,7 +10,6 @@
 #include <gtest/gtest.h>
 #include <mariana-trench/PointerIntPair.h>
 #include <mariana-trench/tests/Test.h>
-#include <stdexcept>
 
 namespace marianatrench {
 
