@@ -17,6 +17,7 @@
 #include <mariana-trench/ClassProperties.h>
 #include <mariana-trench/Fields.h>
 #include <mariana-trench/JsonReaderWriter.h>
+#include <mariana-trench/SanitizersOptions.h>
 #include <mariana-trench/shim-generator/ShimGeneration.h>
 #include <mariana-trench/tests/Test.h>
 
