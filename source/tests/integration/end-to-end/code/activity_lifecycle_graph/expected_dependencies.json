@@ -45,6 +45,15 @@
   [
     "Landroidx/fragment/app/FragmentActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;)V"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/BaseActivityWithDefaultSink;.<init>:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/MainActivityWithBaseImpl;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/MainActivityWithOverriddenImpl;.<init>:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/BaseActivityWithDefaultSink;.onStart:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/MainActivityWithBaseImpl;.base_activity_default_sink_lifecycle_wrapper:()V"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/MainActivity2;.<init>:()V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/MainActivity2;.activity_lifecycle_wrapper:(Landroid/os/Bundle;)V"
@@ -69,15 +78,38 @@
   [
     "Lcom/facebook/marianatrench/integrationtests/MainActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;)V"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/MainActivityWithBaseImpl;.<init>:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/MainActivityWithBaseImpl;.base_activity_default_sink_lifecycle_wrapper:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/MainActivityWithBaseImpl;.onStop:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/MainActivityWithBaseImpl;.base_activity_default_sink_lifecycle_wrapper:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/MainActivityWithOverriddenImpl;.<init>:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/MainActivityWithOverriddenImpl;.base_activity_default_sink_lifecycle_wrapper:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/MainActivityWithOverriddenImpl;.onStart:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/MainActivityWithOverriddenImpl;.base_activity_default_sink_lifecycle_wrapper:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/MainActivityWithOverriddenImpl;.onStop:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/MainActivityWithOverriddenImpl;.base_activity_default_sink_lifecycle_wrapper:()V"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V" : 
   [
+    "Lcom/facebook/marianatrench/integrationtests/BaseActivityWithDefaultSink;.onStart:()V",
     "Lcom/facebook/marianatrench/integrationtests/MainActivity2;.onStart:()V",
     "Lcom/facebook/marianatrench/integrationtests/MainActivity;.onCreate:(Landroid/os/Bundle;)V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/MainActivity2;.onCreate:(Landroid/os/Bundle;)V",
-    "Lcom/facebook/marianatrench/integrationtests/MainActivity;.onStart:()V"
+    "Lcom/facebook/marianatrench/integrationtests/MainActivity;.onStart:()V",
+    "Lcom/facebook/marianatrench/integrationtests/MainActivityWithBaseImpl;.onStop:()V",
+    "Lcom/facebook/marianatrench/integrationtests/MainActivityWithOverriddenImpl;.onStop:()V"
   ],
   "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V" : 
   [
@@ -119,6 +151,7 @@
     "Lcom/facebook/auth/datastore/LoggedInUserAuthDataStore;.<init>:()V",
     "Lcom/facebook/base/activity/FragmentBaseActivityUtil;.<init>:()V",
     "Lcom/facebook/content/SecureContextHelper;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/BaseActivityWithDefaultSink;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
     "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V",

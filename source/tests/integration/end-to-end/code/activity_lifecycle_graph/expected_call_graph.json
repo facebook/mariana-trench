@@ -212,6 +212,20 @@
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/BaseActivityWithDefaultSink;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/BaseActivityWithDefaultSink;.onStart:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/MainActivity2;.<init>:()V" : 
   {
     "static" : 
@@ -266,6 +280,52 @@
     ]
   },
   "Lcom/facebook/marianatrench/integrationtests/MainActivity;.onStart:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/MainActivityWithBaseImpl;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/BaseActivityWithDefaultSink;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/MainActivityWithBaseImpl;.base_activity_default_sink_lifecycle_wrapper:()V" : 
+  {
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/BaseActivityWithDefaultSink;.onStart:()V",
+      "Lcom/facebook/marianatrench/integrationtests/MainActivityWithBaseImpl;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/MainActivityWithBaseImpl;.onStop:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/MainActivityWithBaseImpl;.onStop:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/MainActivityWithOverriddenImpl;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/BaseActivityWithDefaultSink;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/MainActivityWithOverriddenImpl;.base_activity_default_sink_lifecycle_wrapper:()V" : 
+  {
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/MainActivityWithOverriddenImpl;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/MainActivityWithOverriddenImpl;.onStart:()V",
+      "Lcom/facebook/marianatrench/integrationtests/MainActivityWithOverriddenImpl;.onStop:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/MainActivityWithOverriddenImpl;.onStop:()V" : 
   {
     "static" : 
     [

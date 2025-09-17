@@ -42,5 +42,47 @@
         ]
       }
     }
+  },
+  {
+    "base_class_name": "Lcom/facebook/marianatrench/integrationtests/BaseActivityWithDefaultSink;",
+    "method_name": "base_activity_default_sink_lifecycle_wrapper",
+    "control_flow_graph": {
+      "entry": {
+        "instructions": [
+          {
+            "method_name": "<init>",
+            "return_type": "V",
+            "argument_types": []
+          }
+        ],
+        "successors": [
+          "onStart"
+        ]
+      },
+      "onStart": {
+        "instructions": [
+          {
+            "method_name": "onStart",
+            "return_type": "V",
+            "argument_types": []
+          }
+        ],
+        "successors": [
+          "exit"
+        ]
+      },
+      "exit": {
+        "instructions": [
+          {
+            "method_name": "onStop",
+            "return_type": "V",
+            "argument_types": []
+          }
+        ],
+        "successors": [
+          "onStart"
+        ]
+      }
+    }
   }
 ]
