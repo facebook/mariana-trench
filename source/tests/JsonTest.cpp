@@ -3210,20 +3210,35 @@ TEST_F(JsonTest, LifecycleMethod) {
 
   auto graph = LifeCycleMethodGraph{};
   graph.add_node(
-      "entry",
-      std::vector<LifecycleMethodCall>{
-          {LifecycleMethodCall("onCreate", "V", {}, std::nullopt, false)}},
-      std::vector<std::string>{{"onStart"}});
+      /* node_name */ "entry",
+      /* method_calls */
+      std::vector<LifecycleMethodCall>{{LifecycleMethodCall(
+          "onCreate",
+          "V",
+          {},
+          /* defined_in_derived_class */ std::nullopt,
+          /* skip_base_implementation */ false)}},
+      /* successors */ std::vector<std::string>{{"onStart"}});
   graph.add_node(
-      "onStart",
-      std::vector<LifecycleMethodCall>{
-          {LifecycleMethodCall("onStart", "V", {}, std::nullopt, false)}},
-      std::vector<std::string>{{"exit"}});
+      /* node_name */ "onStart",
+      /* method_calls */
+      std::vector<LifecycleMethodCall>{{LifecycleMethodCall(
+          "onStart",
+          "V",
+          {},
+          /* defined_in_derived_class */ std::nullopt,
+          /* skip_base_implementation */ false)}},
+      /* successors */ std::vector<std::string>{{"exit"}});
   graph.add_node(
-      "exit",
-      std::vector<LifecycleMethodCall>{
-          {LifecycleMethodCall("onResume", "V", {}, std::nullopt, false)}},
-      std::vector<std::string>{});
+      /* node_name */ "exit",
+      /* method_calls */
+      std::vector<LifecycleMethodCall>{{LifecycleMethodCall(
+          "onResume",
+          "V",
+          {},
+          /* defined_in_derived_class */ std::nullopt,
+          /* skip_base_implementation */ true)}},
+      /* successors */ std::vector<std::string>{});
   EXPECT_EQ(
       LifecycleMethod::from_json(test::parse_json(R"({
         "base_class_name": "Landroidx/fragment/app/FragmentActivity;",
@@ -3239,13 +3254,15 @@ TEST_F(JsonTest, LifecycleMethod) {
             "instructions": [
                 { "method_name": "onStart", "return_type": "V" }
               ],
-              "successors": ["exit"]
+              "successors": ["exit"],
+              "skip_base_implementation": false
           },
           "exit": {
             "instructions": [
                 { "method_name": "onResume", "return_type": "V" }
               ],
               "successors": [],
+            "skip_base_implementation": true
           }
         }
       })")),
@@ -3278,7 +3295,7 @@ TEST_F(JsonTest, LifecycleMethod) {
             "return_type": "V",
             "argument_types": [],
             "skip_base_implementation": true
-          },
+          }
         ]
       })")),
       LifecycleMethod(

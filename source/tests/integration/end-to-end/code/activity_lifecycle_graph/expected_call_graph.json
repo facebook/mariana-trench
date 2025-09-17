@@ -297,7 +297,6 @@
   {
     "virtual" : 
     [
-      "Lcom/facebook/marianatrench/integrationtests/BaseActivityWithDefaultSink;.onStart:()V",
       "Lcom/facebook/marianatrench/integrationtests/MainActivityWithBaseImpl;.<init>:()V",
       "Lcom/facebook/marianatrench/integrationtests/MainActivityWithBaseImpl;.onStop:()V"
     ]

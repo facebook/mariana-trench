@@ -50,10 +50,6 @@
     "Lcom/facebook/marianatrench/integrationtests/MainActivityWithBaseImpl;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/MainActivityWithOverriddenImpl;.<init>:()V"
   ],
-  "Lcom/facebook/marianatrench/integrationtests/BaseActivityWithDefaultSink;.onStart:()V" : 
-  [
-    "Lcom/facebook/marianatrench/integrationtests/MainActivityWithBaseImpl;.base_activity_default_sink_lifecycle_wrapper:()V"
-  ],
   "Lcom/facebook/marianatrench/integrationtests/MainActivity2;.<init>:()V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/MainActivity2;.activity_lifecycle_wrapper:(Landroid/os/Bundle;)V"

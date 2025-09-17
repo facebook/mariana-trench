@@ -15,5 +15,5 @@ public class MainActivityWithBaseImpl extends BaseActivityWithDefaultSink {
     mSource = Origin.source();
   }
 
-  // FP because there is a flow from this.onStop() to super.onStart()
+  // No issue with super.onStart() since it is skipped in the base.
 }

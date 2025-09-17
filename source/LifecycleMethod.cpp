@@ -130,6 +130,7 @@ const DexMethod* MT_NULLABLE create_dex_method_from_callees(
  */
 const DexMethod* MT_NULLABLE create_dex_method_from_graph(
     DexClass* dex_klass,
+    const DexType* base_klass_type,
     const LifecycleMethod::TypeOrderedSet& ordered_types,
     MethodCreator method_creator,
     const LifeCycleMethodGraph& graph) {
@@ -161,8 +162,15 @@ const DexMethod* MT_NULLABLE create_dex_method_from_graph(
         continue;
       }
 
-      // TODO T238124541 : Add support for skip_base_implementation for
-      // lifecycle graphs
+      if (callee.skip_base_implementation() &&
+          dex_klass->get_type() != base_klass_type &&
+          dex_method->get_class() == base_klass_type) {
+        // When the callee is configured with `skip_base_implementation` and we
+        // are creating a lifecycle wrapper for a subclass of the base class, we
+        // skip generating the call to the base class implementation if the
+        // subclass does not override the method.
+        continue;
+      }
 
       ++callee_count;
 
@@ -710,7 +718,7 @@ const DexMethod* MT_NULLABLE LifecycleMethod::create_dex_method(
   } else {
     const auto& graph = std::get<LifeCycleMethodGraph>(body_);
     new_method = create_dex_method_from_graph(
-        dex_klass, ordered_types, std::move(method_creator), graph);
+        dex_klass, base_klass, ordered_types, std::move(method_creator), graph);
   }
 
   // Directly return if method creation was skipped

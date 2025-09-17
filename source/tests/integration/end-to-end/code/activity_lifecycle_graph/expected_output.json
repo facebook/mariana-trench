@@ -984,10 +984,8 @@
             "port" : "Argument(0)",
             "position" : 
             {
-              "end" : 19,
               "line" : 14,
-              "path" : "BaseActivityWithDefaultSink.java",
-              "start" : 16
+              "path" : "BaseActivityWithDefaultSink.java"
             }
           },
           "kinds" : 
@@ -1644,142 +1642,8 @@
       ]
     }
   ],
-  "issues" : 
-  [
-    {
-      "always_features" : 
-      [
-        "via-issue-broadening"
-      ],
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/BaseActivityWithDefaultSink;.onStart:()V",
-      "position" : 
-      {
-        "line" : 0
-      },
-      "rule" : 1,
-      "sink_index" : "0",
-      "sinks" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "line" : 0
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/BaseActivityWithDefaultSink;.onStart:()V"
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                37,
-                38
-              ],
-              "distance" : 1,
-              "kind" : "Sink",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-                  "port" : "Argument(0)"
-                }
-              ],
-              "preserves_type_context" : true
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0).mSource",
-            "position" : 
-            {
-              "line" : 0
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/MainActivityWithBaseImpl;.onStop:()V"
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                37,
-                38
-              ],
-              "distance" : 1,
-              "kind" : "Source",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-                  "port" : "Return"
-                }
-              ],
-              "preserves_type_context" : true
-            }
-          ],
-          "local_features" : 
-          {
-            "always_features" : 
-            [
-              "via-issue-broadening"
-            ]
-          }
-        }
-      ]
-    }
-  ],
   "method" : "Lcom/facebook/marianatrench/integrationtests/MainActivityWithBaseImpl;.base_activity_default_sink_lifecycle_wrapper:()V",
-  "position" : {},
-  "sinks" : 
-  [
-    {
-      "port" : "Argument(0)",
-      "taint" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "CallSite",
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "line" : 0
-            },
-            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/BaseActivityWithDefaultSink;.onStart:()V"
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                37,
-                38
-              ],
-              "distance" : 1,
-              "kind" : "Sink",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-                  "port" : "Argument(0)"
-                }
-              ],
-              "preserves_type_context" : true
-            }
-          ]
-        }
-      ]
-    }
-  ]
+  "position" : {}
 }
 {
   "generations" : 
@@ -1795,10 +1659,8 @@
             "port" : "Return",
             "position" : 
             {
-              "end" : 26,
               "line" : 15,
-              "path" : "MainActivityWithBaseImpl.java",
-              "start" : 21
+              "path" : "MainActivityWithBaseImpl.java"
             }
           },
           "kinds" : 
@@ -1823,9 +1685,7 @@
           "local_positions" : 
           [
             {
-              "end" : 29,
-              "line" : 15,
-              "start" : 14
+              "line" : 15
             }
           ]
         }
