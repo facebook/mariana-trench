@@ -47,6 +47,7 @@ void collect_argument_types_from_callees(
  */
 const DexMethod* MT_NULLABLE create_dex_method_from_callees(
     DexClass* dex_klass,
+    const DexType* base_klass_type,
     const LifecycleMethod::TypeOrderedSet& ordered_types,
     MethodCreator method_creator,
     const std::vector<LifecycleMethodCall>& callees) {
@@ -61,6 +62,16 @@ const DexMethod* MT_NULLABLE create_dex_method_from_callees(
     if (!dex_method) {
       // Dex method does not apply for current APK.
       // See `LifecycleMethod::validate()`.
+      continue;
+    }
+
+    if (callee.skip_base_implementation() &&
+        dex_klass->get_type() != base_klass_type &&
+        dex_method->get_class() == base_klass_type) {
+      // When the callee is configured with `skip_base_implementation` and we
+      // are creating a lifecycle wrapper for a subclass of the base class, we
+      // skip generating the call to the base class implementation if the
+      // subclass does not override the method.
       continue;
     }
 
@@ -149,6 +160,9 @@ const DexMethod* MT_NULLABLE create_dex_method_from_graph(
         // See `LifecycleMethod::validate()`.
         continue;
       }
+
+      // TODO T238124541 : Add support for skip_base_implementation for
+      // lifecycle graphs
 
       ++callee_count;
 
@@ -327,17 +341,17 @@ LifecycleMethodCall LifecycleMethodCall::from_json(const Json::Value& value) {
     argument_types.emplace_back(JsonValidation::string(argument_type));
   }
 
-  std::optional<std::string> defined_in_derived_class = std::nullopt;
-  if (JsonValidation::has_field(value, "defined_in_derived_class")) {
-    defined_in_derived_class =
-        JsonValidation::string(value, "defined_in_derived_class");
-  }
+  auto defined_in_derived_class =
+      JsonValidation::optional_string(value, "defined_in_derived_class");
+  auto skip_base_implementation = JsonValidation::optional_boolean(
+      value, "skip_base_implementation", false);
 
   return LifecycleMethodCall(
       method_name,
       return_type,
-      argument_types,
-      std::move(defined_in_derived_class));
+      std::move(argument_types),
+      std::move(defined_in_derived_class),
+      skip_base_implementation);
 }
 
 void LifecycleMethodCall::validate(
@@ -603,13 +617,16 @@ void LifecycleMethod::create_methods(
       base_class_name_,
       final_children.size());
 
-  auto queue = sparta::work_queue<DexType*>([&](DexType* child) {
-    if (const auto* dex_method = create_dex_method(child, ordered_types)) {
-      ++methods_created_count;
-      const auto* method = methods.create(dex_method);
-      class_to_lifecycle_method_.emplace(child, method);
-    }
-  });
+  auto queue = sparta::work_queue<DexType*>(
+      [base_class_type, this, &methods, &methods_created_count, &ordered_types](
+          DexType* child) {
+        if (const auto* dex_method =
+                create_dex_method(child, base_class_type, ordered_types)) {
+          ++methods_created_count;
+          const auto* method = methods.create(dex_method);
+          class_to_lifecycle_method_.emplace(child, method);
+        }
+      });
   for (const auto* final_child : final_children) {
     queue.add_item(const_cast<DexType*>(final_child));
   }
@@ -665,6 +682,7 @@ bool LifecycleMethod::operator==(const LifecycleMethod& other) const {
 
 const DexMethod* MT_NULLABLE LifecycleMethod::create_dex_method(
     DexType* klass,
+    const DexType* base_klass,
     const TypeOrderedSet& ordered_types) {
   auto method_creator = MethodCreator(
       /* class */ klass,
@@ -684,7 +702,11 @@ const DexMethod* MT_NULLABLE LifecycleMethod::create_dex_method(
   if (const auto* callees =
           std::get_if<std::vector<LifecycleMethodCall>>(&body_)) {
     new_method = create_dex_method_from_callees(
-        dex_klass, ordered_types, std::move(method_creator), *callees);
+        dex_klass,
+        base_klass,
+        ordered_types,
+        std::move(method_creator),
+        *callees);
   } else {
     const auto& graph = std::get<LifeCycleMethodGraph>(body_);
     new_method = create_dex_method_from_graph(

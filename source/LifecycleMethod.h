@@ -47,11 +47,13 @@ class LifecycleMethodCall {
       std::string method_name,
       std::string return_type,
       std::vector<std::string> argument_types,
-      std::optional<std::string> defined_in_derived_class)
+      std::optional<std::string> defined_in_derived_class,
+      bool skip_base_implementation)
       : method_name_(std::move(method_name)),
         return_type_(std::move(return_type)),
         argument_types_(std::move(argument_types)),
-        defined_in_derived_class_(std::move(defined_in_derived_class)) {}
+        defined_in_derived_class_(std::move(defined_in_derived_class)),
+        skip_base_implementation_(skip_base_implementation) {}
 
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(LifecycleMethodCall)
 
@@ -73,6 +75,10 @@ class LifecycleMethodCall {
   DexMethodRef* MT_NULLABLE get_dex_method(const DexClass* klass) const;
 
   const DexTypeList* MT_NULLABLE get_argument_types() const;
+
+  bool skip_base_implementation() const {
+    return skip_base_implementation_;
+  }
 
   std::string to_string() const {
     return fmt::format(
@@ -99,6 +105,7 @@ class LifecycleMethodCall {
   // Not required for functionality. Used for validation since it is easy to
   // make mistakes with the method signature.
   std::optional<std::string> defined_in_derived_class_;
+  bool skip_base_implementation_;
 };
 
 class LifecycleGraphNode {
@@ -225,8 +232,10 @@ class LifecycleMethod {
   bool operator==(const LifecycleMethod& other) const;
 
  private:
-  const DexMethod* MT_NULLABLE
-  create_dex_method(DexType* klass, const TypeOrderedSet& ordered_types);
+  const DexMethod* MT_NULLABLE create_dex_method(
+      DexType* klass,
+      const DexType* base_klass,
+      const TypeOrderedSet& ordered_types);
 
   std::string base_class_name_;
   std::string method_name_;

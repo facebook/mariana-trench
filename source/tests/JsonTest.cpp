@@ -3155,17 +3155,20 @@ TEST_F(JsonTest, LifecycleMethod) {
           /* base_class_name */ "Landroidx/fragment/app/FragmentActivity;",
           /* method_name */ "activity_lifecycle_wrapper",
           /* callees */
-          std::vector<LifecycleMethodCall>{
-              {LifecycleMethodCall(
-                   "onCreate",
-                   "V",
-                   {"Landroid/os/Bundle;"},
-                   /* defined_in_derived_class */ std::nullopt),
-               LifecycleMethodCall(
-                   "onStart",
-                   "V",
-                   {},
-                   /* defined_in_derived_class */ std::nullopt)}}));
+          std::vector<LifecycleMethodCall>{{
+              LifecycleMethodCall(
+                  "onCreate",
+                  "V",
+                  {"Landroid/os/Bundle;"},
+                  /* defined_in_derived_class */ std::nullopt,
+                  /* skip_base_implementation */ false),
+              LifecycleMethodCall(
+                  "onStart",
+                  "V",
+                  {},
+                  /* defined_in_derived_class */ std::nullopt,
+                  /* skip_base_implementation */ false),
+          }}));
 
   EXPECT_EQ(
       LifecycleMethod::from_json(test::parse_json(R"({
@@ -3196,28 +3199,30 @@ TEST_F(JsonTest, LifecycleMethod) {
                    "onCreate",
                    "V",
                    {"Landroid/os/Bundle;"},
-                   /* defined_in_derived_class */ std::nullopt),
+                   /* defined_in_derived_class */ std::nullopt,
+                   /* skip_base_implementation */ false),
                LifecycleMethodCall(
                    "afterOnStart",
                    "V",
                    {},
-                   /* defined_in_derived_class */ "CustomFragmentActivity")}}));
+                   /* defined_in_derived_class */ "CustomFragmentActivity",
+                   /* skip_base_implementation */ false)}}));
 
   auto graph = LifeCycleMethodGraph{};
   graph.add_node(
       "entry",
       std::vector<LifecycleMethodCall>{
-          {LifecycleMethodCall("onCreate", "V", {}, std::nullopt)}},
+          {LifecycleMethodCall("onCreate", "V", {}, std::nullopt, false)}},
       std::vector<std::string>{{"onStart"}});
   graph.add_node(
       "onStart",
       std::vector<LifecycleMethodCall>{
-          {LifecycleMethodCall("onStart", "V", {}, std::nullopt)}},
+          {LifecycleMethodCall("onStart", "V", {}, std::nullopt, false)}},
       std::vector<std::string>{{"exit"}});
   graph.add_node(
       "exit",
       std::vector<LifecycleMethodCall>{
-          {LifecycleMethodCall("onResume", "V", {}, std::nullopt)}},
+          {LifecycleMethodCall("onResume", "V", {}, std::nullopt, false)}},
       std::vector<std::string>{});
   EXPECT_EQ(
       LifecycleMethod::from_json(test::parse_json(R"({
@@ -3248,6 +3253,58 @@ TEST_F(JsonTest, LifecycleMethod) {
           /* base_class_name */ "Landroidx/fragment/app/FragmentActivity;",
           /* method_name */ "activity_lifecycle_wrapper",
           /* body */ graph));
+
+  // Test parsing lifecycle method with skip_base_implementation field
+  EXPECT_EQ(
+      LifecycleMethod::from_json(test::parse_json(R"({
+        "base_class_name": "Landroidx/fragment/app/FragmentActivity;",
+        "method_name": "activity_lifecycle_wrapper",
+        "callees": [
+          {
+            "method_name": "onCreate",
+            "return_type": "V",
+            "argument_types": [
+              "Landroid/os/Bundle;"
+            ]
+          },
+          {
+            "method_name": "onStart",
+            "return_type": "V",
+            "argument_types": [],
+            "skip_base_implementation": false
+          },
+          {
+            "method_name": "onResume",
+            "return_type": "V",
+            "argument_types": [],
+            "skip_base_implementation": true
+          },
+        ]
+      })")),
+      LifecycleMethod(
+          /* base_class_name */ "Landroidx/fragment/app/FragmentActivity;",
+          /* method_name */ "activity_lifecycle_wrapper",
+          /* callees */
+          std::vector<LifecycleMethodCall>{{
+              LifecycleMethodCall(
+                  "onCreate",
+                  "V",
+                  {"Landroid/os/Bundle;"},
+                  /* defined_in_derived_class */ std::nullopt,
+                  /* skip_base_implementation */ false),
+              LifecycleMethodCall(
+                  "onStart",
+                  "V",
+                  {},
+                  /* defined_in_derived_class */ std::nullopt,
+                  /* skip_base_implementation */ false),
+              LifecycleMethodCall(
+                  "onResume",
+                  "V",
+                  {},
+                  /* defined_in_derived_class */ std::nullopt,
+                  /* skip_base_implementation */ true),
+          }}));
 }
 
 TEST_F(JsonTest, LifecycleMethods) {

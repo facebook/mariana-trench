@@ -39,7 +39,8 @@
       {
         "method_name": "onStop",
         "return_type": "V",
-        "argument_types": []
+        "argument_types": [],
+        "skip_base_implementation": true
       }
     ]
   }
