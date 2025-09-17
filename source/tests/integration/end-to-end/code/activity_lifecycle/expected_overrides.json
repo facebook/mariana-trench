@@ -22,6 +22,15 @@
     "Lcom/facebook/marianatrench/integrationtests/MainActivity2;.doStart:()V",
     "Lcom/facebook/marianatrench/integrationtests/MainActivity;.doStart:()V"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/BaseActivityWithDefaultSink;.onStart:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/MainActivityWithBaseImpl;.onStart:()V",
+    "Lcom/facebook/marianatrench/integrationtests/MainActivityWithOverriddenImpl;.onStart:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/BaseActivityWithDefaultSink;.onStop:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/MainActivityWithOverriddenImpl;.onStop:()V"
+  ],
   "Ljava/lang/Object;.toString:()Ljava/lang/String;" : 
   [
     "Landroid/location/Location;.toString:()Ljava/lang/String;",

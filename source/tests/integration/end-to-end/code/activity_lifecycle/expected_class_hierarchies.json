@@ -22,6 +22,11 @@
       "Lcom/facebook/marianatrench/integrationtests/MainActivity2;",
       "Lcom/facebook/marianatrench/integrationtests/MainActivity;"
     ],
+    "Lcom/facebook/marianatrench/integrationtests/BaseActivityWithDefaultSink;" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/MainActivityWithBaseImpl;",
+      "Lcom/facebook/marianatrench/integrationtests/MainActivityWithOverriddenImpl;"
+    ],
     "Ljava/lang/Runnable;" : 
     [
       "Ljava/lang/Thread;"
