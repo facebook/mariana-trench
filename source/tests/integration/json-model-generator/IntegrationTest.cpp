@@ -123,7 +123,7 @@ TEST_P(JsonModelGeneratorIntegrationTest, CompareModels) {
   auto [models, field_models] =
       JsonModelGenerator::from_file(
           "TestModelGenerator", context, (directory / "model_generator.json"))
-          .run(*context.methods, *context.fields);
+          .run_optimized(*context.methods, method_mappings, *context.fields);
   auto registry =
       Registry(context, models, field_models, /* literal_models */ {});
 
