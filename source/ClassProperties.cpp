@@ -76,6 +76,16 @@ bool is_class_accessible_via_dfa(const DexClass* clazz) {
 }
 
 bool has_permission_check(const DexClass* clazz) {
+  static const std::vector<std::string_view> k_permission_check_patterns = {
+      "TrustedCaller",
+      "AbilityIPCPermissionManager",
+      "CallerInfoHelper",
+      "AppUpdateRequestIntentVerifier",
+      "TrustManager",
+      "CallingIpcPermissionManager",
+      "IntentHandlerScope;.SAME_KEY",
+      "IntentHandlerScope;.FAMILY"};
+
   auto methods = clazz->get_all_methods();
   for (DexMethod* method : methods) {
     const auto& code = method->get_code();
@@ -85,12 +95,16 @@ bool has_permission_check(const DexClass* clazz) {
     const cfg::ControlFlowGraph& cfg = code->cfg();
     for (const auto* block : cfg.blocks()) {
       auto show_block = show(block);
-      if (boost::contains(show_block, "TrustedCaller") ||
-          boost::contains(show_block, "AbilityIPCPermissionManager") ||
-          boost::contains(show_block, "CallerInfoHelper") ||
-          boost::contains(show_block, "AppUpdateRequestIntentVerifier") ||
-          boost::contains(show_block, "TrustManager") ||
-          boost::contains(show_block, "CallingIpcPermissionManager")) {
+
+      auto matched_string = std::find_if(
+          k_permission_check_patterns.begin(),
+          k_permission_check_patterns.end(),
+          [&show_block](const std::string_view pattern) {
+            return boost::contains(show_block, pattern);
+          });
+
+      if (matched_string != k_permission_check_patterns.end()) {
+        LOG(4, "Permission check found in block: {}", *matched_string);
         return true;
       }
     }
