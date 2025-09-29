@@ -12,6 +12,9 @@
     "name": "AndroidIntentLaunchSinkGenerator"
   },
   {
+    "name": "AndroidxNavigationSourceGenerator"
+  },
+  {
     "name": "CodeExecutionSinkGenerator"
   },
   {

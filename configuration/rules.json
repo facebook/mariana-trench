@@ -5,6 +5,7 @@
     "description": "Values from third-party controlled source may eventually flow into code execution sink",
     "sources": [
       "ActivityUserInput",
+      "AndroidxNavigationUserInput",
       "ProviderUserInput",
       "ReceiverUserInput",
       "ServiceUserInput"
@@ -19,6 +20,7 @@
     "description": "Values from third-party controlled source may eventually flow into sink file resolver",
     "sources": [
       "ActivityUserInput",
+      "AndroidxNavigationUserInput",
       "ProviderUserInput",
       "ReceiverUserInput",
       "ServiceUserInput"
@@ -38,6 +40,7 @@
       ],
       "b": [
         "ActivityUserInput",
+        "AndroidxNavigationUserInput",
         "ReceiverUserInput",
         "ServiceUserInput"
       ]
@@ -52,6 +55,7 @@
     "description": "Values from third-party controlled source may eventually flow into a raw SQL statement potentially causing SQL injection",
     "sources": [
       "ActivityUserInput",
+      "AndroidxNavigationUserInput",
       "ProviderUserInput",
       "ReceiverUserInput",
       "ServiceUserInput"
@@ -66,6 +70,7 @@
     "description": "Values from third-party controlled source may eventually flow into a Webview Javascript execution API",
     "sources": [
       "ActivityUserInput",
+      "AndroidxNavigationUserInput",
       "ProviderUserInput",
       "ReceiverUserInput",
       "ServiceUserInput"
