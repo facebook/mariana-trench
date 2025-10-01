@@ -31,6 +31,8 @@ module.exports = {
       collapsed: false,
       items: [
         fbContent({external: 'getting-started'}),
+        fbInternalOnly('fb/app-configuration'),
+        'configuration',
         fbInternalOnly({
           type: 'category',
           label: 'Running Mariana Trench',
@@ -40,8 +42,6 @@ module.exports = {
             'fb/running-on-3rd-party-apps',
           ],
         }),
-        'configuration',
-        fbInternalOnly('fb/app-configuration'),
         {
           type: 'category',
           label: 'Model/Taint Configuration',
