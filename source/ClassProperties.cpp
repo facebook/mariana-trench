@@ -40,7 +40,8 @@ std::string_view strip_inner_class(std::string_view class_name) {
 bool is_manifest_relevant_kind(const std::string_view kind) {
   return (
       kind == "ActivityUserInput" || kind == "ActivityLifecycle" ||
-      kind == "ReceiverUserInput" || kind == "ServiceUserInput" ||
+      kind == "ReceiverUserInput" || kind == "ReceiverLifecycle" ||
+      kind == "ServiceUserInput" || kind == "ServiceLifecycle" ||
       kind == "ServiceAIDLUserInput" || kind == "ProviderUserInput" ||
       kind == "ActivityExitNode" || kind == "ProviderExitNode" ||
       kind == "ServiceAIDLExitNode");
@@ -285,11 +286,13 @@ FeatureSet ClassProperties::get_class_features(
       features.join_with(get_manifest_features(clazz, activities_));
     }
 
-    if (named_kind->name() == "ReceiverUserInput") {
+    if (named_kind->name() == "ReceiverUserInput" ||
+        named_kind->name() == "ReceiverLifecycle") {
       features.join_with(get_manifest_features(clazz, receivers_));
     }
 
-    if (named_kind->name() == "ServiceUserInput") {
+    if (named_kind->name() == "ServiceUserInput" ||
+        named_kind->name() == "ServiceLifecycle") {
       features.join_with(get_manifest_features(clazz, services_));
     }
 
