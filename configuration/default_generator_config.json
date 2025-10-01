@@ -48,6 +48,9 @@
     "name": "SensitiveCookieDataGenerator"
   },
   {
+    "name": "ServiceSourceGenerator"
+  },
+  {
     "name": "service_sources"
   },
   {

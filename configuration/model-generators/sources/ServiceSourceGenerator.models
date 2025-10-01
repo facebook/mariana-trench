@@ -1,0 +1,29 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "extends": "Landroid/app/Service;",
+          "names": [
+            "onStartCommand",
+            "onCreate",
+            "onBind",
+            "stopService",
+            "stopSelf",
+            "onDestroy"
+          ]
+        }
+      ],
+      "model": {
+        "effect_sources": [
+          {
+            "type": "call-chain",
+            "kind": "ServiceLifecycle"
+          }
+        ]
+      }
+    }
+  ]
+}

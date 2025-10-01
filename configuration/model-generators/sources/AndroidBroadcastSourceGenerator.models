@@ -18,6 +18,12 @@
             "kind": "ReceiverUserInput",
             "port": "Argument(2)"
           }
+        ],
+        "effect_sources": [
+          {
+            "type": "call-chain",
+            "kind": "ReceiverLifecycle"
+          }
         ]
       }
     },
