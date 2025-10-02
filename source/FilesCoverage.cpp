@@ -51,6 +51,12 @@ FilesCoverage FilesCoverage::compute(
     walk::parallel::methods(
         scope,
         [&positions, &file_has_implementation](const DexMethod* dex_method) {
+          const auto clazz = type_class(dex_method->get_class());
+          if (clazz->get_access() &
+              (DexAccessFlags::ACC_ENUM | DexAccessFlags::ACC_INTERFACE)) {
+            return;
+          }
+
           const auto* source_file = positions.get_path(dex_method);
           if (source_file == nullptr) {
             return;
