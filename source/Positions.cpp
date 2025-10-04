@@ -114,8 +114,31 @@ void add_to_class_to_path_map(
   LOG(2, "Indexing {} files...", paths.size());
 
   re2::RE2 package_regex("^package\\s+([^;]+)(?:;|$)");
-  re2::RE2 class_regex(
-      "^\\s*(?:/\\*.*\\*/)?\\s*(?:public|internal|private)?\\s*(?:abstract|data|final|open|annotation|fun)?\\s*(?:class|enum|interface|object)\\s+([A-z0-9]+)");
+
+  re2::RE2 java_class_regex(
+      /* Skip white spaces and c-style comments */
+      "^\\s*(?:/\\*.*\\*/)?\\s*"
+      /* access modifiers */
+      "(?:public|private|protected)?\\s*"
+      /* modifiers */
+      "(?:abstract|final|sealed)?\\s*"
+      /* keywords */
+      "(?:class|enum|interface)\\s+"
+      /* capture group for the name */
+      "([A-z0-9]+)");
+
+  re2::RE2 kotlin_class_regex(
+      /* Skip white spaces and c-style comments */
+      "^\\s*(?:/\\*.*\\*/)?\\s*"
+      /* access modifiers */
+      "(?:public|private|protected|internal)?\\s*"
+      /* modifiers */
+      "(?:abstract|sealed|open|enum|data|final|annotation|fun|value|inline)?\\s*"
+      /* keywords */
+      "(?:class|interface|object)\\s+"
+      /* capture group for the name */
+      "([A-z0-9]+)");
+
   std::unordered_set<std::string> skipped_package_prefixes = {
       "android/",
   };
@@ -146,6 +169,10 @@ void add_to_class_to_path_map(
           final_path = find->second;
         }
 
+        bool is_kotlin = boost::ends_with(*path, ".kt");
+        const auto& class_regex =
+            is_kotlin ? kotlin_class_regex : java_class_regex;
+
         std::ifstream stream(*path);
         std::string line;
         while (std::getline(stream, line)) {
@@ -166,7 +193,8 @@ void add_to_class_to_path_map(
               LOG(3, "Skipping module `{}` at `{}`...", *package, *path);
               return;
             }
-            if (boost::ends_with(*path, ".kt")) {
+
+            if (is_kotlin) {
               auto pos = path->find_last_of("/");
               if (pos != std::string::npos) {
                 auto filename = path->substr(pos + 1, path->size() - pos - 4);
@@ -187,9 +215,12 @@ void add_to_class_to_path_map(
             }
           }
 
+          if (!package || !maybe_class(line)) {
+            continue;
+          }
+
           re2::StringPiece class_match;
-          if (package && maybe_class(line) &&
-              re2::RE2::PartialMatch(line, class_regex) &&
+          if (re2::RE2::PartialMatch(line, class_regex) &&
               re2::RE2::PartialMatch(line, class_regex, &class_match)) {
             auto classname = fmt::format("L{}/{};", *package, class_match);
 
