@@ -844,6 +844,9 @@ def _get_command_options_json(
     if arguments.grepo_metadata_path:
         options["grepo-metadata-path"] = arguments.grepo_metadata_path
 
+    if arguments.buck_target_metadata_path:
+        options["buck-target-metadata-path"] = arguments.buck_target_metadata_path
+
     if arguments.model_generator_search_paths:
         options["model-generator-search-paths"] = arguments.model_generator_search_paths
 

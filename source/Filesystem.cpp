@@ -43,8 +43,15 @@ std::vector<std::string> read_lines(const std::filesystem::path& path) {
 
   std::vector<std::string> lines;
   std::string line;
-  while (std::getline(file, line)) {
-    lines.push_back(path);
+  try {
+    while (std::getline(file, line)) {
+      lines.push_back(line);
+    }
+  } catch (const std::ifstream::failure&) {
+    if (!file.eof()) {
+      ERROR(1, "Error reading file: `{}`.", path);
+      throw;
+    }
   }
 
   return lines;
