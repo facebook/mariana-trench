@@ -4,15 +4,9 @@
       "find": "methods",
       "where": [
         {
-          "constraint": "name",
-          "pattern": "exec"
-        },
-        {
-          "constraint": "parent",
-          "inner": {
-            "constraint": "name",
-            "pattern": "Ljava/lang/Runtime;"
-          }
+          "constraint": "signature_match",
+          "parent": "Ljava/lang/Runtime;",
+          "name": "exec"
         }
       ],
       "model": {
@@ -37,23 +31,11 @@
       "find": "methods",
       "where": [
         {
-          "constraint": "parent",
-          "inner": {
-            "constraint": "name",
-            "pattern": "Ljava/lang/ProcessBuilder;"
-          }
-        },
-        {
-          "constraint": "any_of",
-          "inners": [
-            {
-              "constraint": "name",
-              "pattern": "\\<init\\>"
-            },
-            {
-              "constraint": "name",
-              "pattern": "command"
-            }
+          "constraint": "signature_match",
+          "parent": "Ljava/lang/ProcessBuilder;",
+          "names": [
+            "<init>",
+            "command"
           ]
         }
       ],
