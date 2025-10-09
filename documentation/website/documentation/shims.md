@@ -101,7 +101,7 @@ Each shim definition object consists of the following keys:
 
     Expected value: A string specifying the dex class containing the shim-target method.
 
-  - `type_of`: Used to specify an instance argument of the shimmed-method as the receiver.
+  - `type_of`: Used to specify an instance argument or the return value of the shimmed-method as the receiver.
 
     Expected value: A string specifying the _port_/_access path_ of the shimmed-method.
 
