@@ -47,39 +47,42 @@ TEST_F(ModelValidatorTest, ModelValidators) {
   {
     // All validators pass
     std::vector<std::unique_ptr<ModelValidator>> validators;
-    validators.push_back(std::make_unique<ExpectIssue>(
-        ModelValidatorTestType::GLOBAL,
-        /* is_false_positive */ false,
-        /* task */ std::nullopt,
-        IssueProperties(
-            /* code */ 1,
-            /* source_kinds */ std::set<std::string>{},
-            /* sink_kinds */ std::set<std::string>{},
-            /* source_origins */ std::set<std::string>{},
-            /* sink_origins */ std::set<std::string>{})));
-    validators.push_back(std::make_unique<ExpectIssue>(
-        ModelValidatorTestType::CATEGORY_SPECIFIC,
-        /* is_false_positive */ true,
-        /* task */ std::nullopt,
-        IssueProperties(
-            /* code */ 1,
-            /* source_kinds */ std::set<std::string>{"TestSource"},
-            /* sink_kinds */ std::set<std::string>{},
-            /* source_origins */ std::set<std::string>{},
-            /* sink_origins */ std::set<std::string>{})));
+    validators.push_back(
+        std::make_unique<ExpectIssue>(
+            ModelValidatorTestType::GLOBAL,
+            /* is_false_positive */ false,
+            /* task */ std::nullopt,
+            IssueProperties(
+                /* code */ 1,
+                /* source_kinds */ std::set<std::string>{},
+                /* sink_kinds */ std::set<std::string>{},
+                /* source_origins */ std::set<std::string>{},
+                /* sink_origins */ std::set<std::string>{})));
+    validators.push_back(
+        std::make_unique<ExpectIssue>(
+            ModelValidatorTestType::CATEGORY_SPECIFIC,
+            /* is_false_positive */ true,
+            /* task */ std::nullopt,
+            IssueProperties(
+                /* code */ 1,
+                /* source_kinds */ std::set<std::string>{"TestSource"},
+                /* sink_kinds */ std::set<std::string>{},
+                /* source_origins */ std::set<std::string>{},
+                /* sink_origins */ std::set<std::string>{})));
 
     // Presence of task does not affect validation but should be included in the
     // result.
-    validators.push_back(std::make_unique<ExpectIssue>(
-        ModelValidatorTestType::GLOBAL,
-        /* is_false_positive */ true,
-        /* task */ "T123456",
-        IssueProperties(
-            /* code */ 1,
-            /* source_kinds */ std::set<std::string>{},
-            /* sink_kinds */ std::set<std::string>{"TestSink"},
-            /* source_origins */ std::set<std::string>{},
-            /* sink_origins */ std::set<std::string>{})));
+    validators.push_back(
+        std::make_unique<ExpectIssue>(
+            ModelValidatorTestType::GLOBAL,
+            /* is_false_positive */ true,
+            /* task */ "T123456",
+            IssueProperties(
+                /* code */ 1,
+                /* source_kinds */ std::set<std::string>{},
+                /* sink_kinds */ std::set<std::string>{"TestSink"},
+                /* source_origins */ std::set<std::string>{},
+                /* sink_origins */ std::set<std::string>{})));
 
     ModelValidators validator(method, std::move(validators));
     auto result = validator.validate(model).to_json();
@@ -116,26 +119,28 @@ TEST_F(ModelValidatorTest, ModelValidators) {
   {
     // One validator fails
     std::vector<std::unique_ptr<ModelValidator>> validators;
-    validators.push_back(std::make_unique<ExpectIssue>(
-        ModelValidatorTestType::GLOBAL,
-        /* is_false_positive */ false,
-        /* task */ std::nullopt,
-        IssueProperties(
-            /* code */ 1,
-            /* source_kinds */ std::set<std::string>{},
-            /* sink_kinds */ std::set<std::string>{},
-            /* source_origins */ std::set<std::string>{},
-            /* sink_origins */ std::set<std::string>{})));
-    validators.push_back(std::make_unique<ExpectIssue>(
-        ModelValidatorTestType::CATEGORY_SPECIFIC,
-        /* is_false_positive */ true,
-        /* task */ std::nullopt,
-        IssueProperties(
-            /* code */ 2,
-            /* source_kinds */ std::set<std::string>{},
-            /* sink_kinds */ std::set<std::string>{},
-            /* source_origins */ std::set<std::string>{},
-            /* sink_origins */ std::set<std::string>{})));
+    validators.push_back(
+        std::make_unique<ExpectIssue>(
+            ModelValidatorTestType::GLOBAL,
+            /* is_false_positive */ false,
+            /* task */ std::nullopt,
+            IssueProperties(
+                /* code */ 1,
+                /* source_kinds */ std::set<std::string>{},
+                /* sink_kinds */ std::set<std::string>{},
+                /* source_origins */ std::set<std::string>{},
+                /* sink_origins */ std::set<std::string>{})));
+    validators.push_back(
+        std::make_unique<ExpectIssue>(
+            ModelValidatorTestType::CATEGORY_SPECIFIC,
+            /* is_false_positive */ true,
+            /* task */ std::nullopt,
+            IssueProperties(
+                /* code */ 2,
+                /* source_kinds */ std::set<std::string>{},
+                /* sink_kinds */ std::set<std::string>{},
+                /* source_origins */ std::set<std::string>{},
+                /* sink_origins */ std::set<std::string>{})));
 
     ModelValidators validator(method, std::move(validators));
     auto result = validator.validate(model).to_json();
@@ -164,16 +169,17 @@ TEST_F(ModelValidatorTest, ModelValidators) {
   {
     // All validators fail (and single validator)
     std::vector<std::unique_ptr<ModelValidator>> validators;
-    validators.push_back(std::make_unique<ExpectNoIssue>(
-        ModelValidatorTestType::GLOBAL,
-        /* is_false_negative */ true,
-        /* task */ std::nullopt,
-        IssueProperties(
-            /* code */ 1,
-            /* source_kinds */ std::set<std::string>{},
-            /* sink_kinds */ std::set<std::string>{},
-            /* source_origins */ std::set<std::string>{},
-            /* sink_origins */ std::set<std::string>{})));
+    validators.push_back(
+        std::make_unique<ExpectNoIssue>(
+            ModelValidatorTestType::GLOBAL,
+            /* is_false_negative */ true,
+            /* task */ std::nullopt,
+            IssueProperties(
+                /* code */ 1,
+                /* source_kinds */ std::set<std::string>{},
+                /* sink_kinds */ std::set<std::string>{},
+                /* source_origins */ std::set<std::string>{},
+                /* sink_origins */ std::set<std::string>{})));
 
     ModelValidators validator(method, std::move(validators));
     auto result = validator.validate(model).to_json();
@@ -196,39 +202,42 @@ TEST_F(ModelValidatorTest, ModelValidators) {
   {
     // All validators pass, with a different validator types
     std::vector<std::unique_ptr<ModelValidator>> validators;
-    validators.push_back(std::make_unique<ExpectIssue>(
-        ModelValidatorTestType::GLOBAL,
-        /* is_false_positive */ false,
-        /* task */ std::nullopt,
-        IssueProperties(
-            /* code */ 1,
-            /* source_kinds */ std::set<std::string>{},
-            /* sink_kinds */ std::set<std::string>{},
-            /* source_origins */ std::set<std::string>{},
-            /* sink_origins */ std::set<std::string>{})));
-    validators.push_back(std::make_unique<ExpectNoIssue>(
-        ModelValidatorTestType::GLOBAL,
-        /* is_false_negative */ true,
-        /* task */ std::nullopt,
-        IssueProperties(
-            /* code */ 2,
-            /* source_kinds */ std::set<std::string>{},
-            /* sink_kinds */ std::set<std::string>{},
-            /* source_origins */ std::set<std::string>{},
-            /* sink_origins */ std::set<std::string>{})));
+    validators.push_back(
+        std::make_unique<ExpectIssue>(
+            ModelValidatorTestType::GLOBAL,
+            /* is_false_positive */ false,
+            /* task */ std::nullopt,
+            IssueProperties(
+                /* code */ 1,
+                /* source_kinds */ std::set<std::string>{},
+                /* sink_kinds */ std::set<std::string>{},
+                /* source_origins */ std::set<std::string>{},
+                /* sink_origins */ std::set<std::string>{})));
+    validators.push_back(
+        std::make_unique<ExpectNoIssue>(
+            ModelValidatorTestType::GLOBAL,
+            /* is_false_negative */ true,
+            /* task */ std::nullopt,
+            IssueProperties(
+                /* code */ 2,
+                /* source_kinds */ std::set<std::string>{},
+                /* sink_kinds */ std::set<std::string>{},
+                /* source_origins */ std::set<std::string>{},
+                /* sink_origins */ std::set<std::string>{})));
 
     // Presence of task does not affect validation but should be included in the
     // result.
-    validators.push_back(std::make_unique<ExpectNoIssue>(
-        ModelValidatorTestType::CATEGORY_SPECIFIC,
-        /* is_false_negative */ true,
-        /* task */ "T234567",
-        IssueProperties(
-            /* code */ 3,
-            /* source_kinds */ std::set<std::string>{},
-            /* sink_kinds */ std::set<std::string>{},
-            /* source_origins */ std::set<std::string>{},
-            /* sink_origins */ std::set<std::string>{})));
+    validators.push_back(
+        std::make_unique<ExpectNoIssue>(
+            ModelValidatorTestType::CATEGORY_SPECIFIC,
+            /* is_false_negative */ true,
+            /* task */ "T234567",
+            IssueProperties(
+                /* code */ 3,
+                /* source_kinds */ std::set<std::string>{},
+                /* sink_kinds */ std::set<std::string>{},
+                /* source_origins */ std::set<std::string>{},
+                /* sink_origins */ std::set<std::string>{})));
 
     ModelValidators validator(method, std::move(validators));
     auto result = validator.validate(model).to_json();

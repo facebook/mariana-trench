@@ -161,10 +161,11 @@ std::string show_locally_inferred_types(const TypeEnvironment& environment) {
   std::string types_string = "(";
   for (const auto& [ir_register, type] : environment) {
     const auto* singleton_type = type.singleton_type();
-    types_string = types_string.append(fmt::format(
-        "{}: {}, ",
-        std::to_string(ir_register),
-        singleton_type ? singleton_type->str() : "unknown"));
+    types_string = types_string.append(
+        fmt::format(
+            "{}: {}, ",
+            std::to_string(ir_register),
+            singleton_type ? singleton_type->str() : "unknown"));
   }
   types_string.append(")");
   return types_string;
@@ -175,10 +176,11 @@ std::string show_globally_inferred_types(
     const RegTypeEnvironment& environment) {
   std::string types_string = "(";
   for (const auto& ir_register : instruction->srcs()) {
-    types_string.append(fmt::format(
-        "\n  Reg {}: {}, ",
-        std::to_string(ir_register),
-        show(environment.get(ir_register).get_single_domain())));
+    types_string.append(
+        fmt::format(
+            "\n  Reg {}: {}, ",
+            std::to_string(ir_register),
+            show(environment.get(ir_register).get_single_domain())));
 
     if (const auto& result = environment.get(ir_register).get_set_domain();
         result.kind() == sparta::AbstractValueKind::Value) {
@@ -202,11 +204,12 @@ std::string show_smallset_dex_types_selection(
   }
 
   for (const auto* type : small_set_dex_domain.get_types()) {
-    small_set_types.append(fmt::format(
-        "\n  {} {}",
-        show(type),
-        included_types.find(type) == included_types.end() ? "skipped!"
-                                                          : "added!"));
+    small_set_types.append(
+        fmt::format(
+            "\n  {} {}",
+            show(type),
+            included_types.find(type) == included_types.end() ? "skipped!"
+                                                              : "added!"));
   }
   return small_set_types;
 }
@@ -386,10 +389,11 @@ std::unique_ptr<TypeEnvironments> Types::infer_local_types_for_method(
          parameter_position++) {
       auto override = parameter_type_overrides.find(parameter_position);
       // Override parameter type if it's present in the map.
-      new_parameter_type_list.push_back(const_cast<DexType*>(
-          override == parameter_type_overrides.end()
-              ? parameter_type_list->at(parameter_position)
-              : override->second));
+      new_parameter_type_list.push_back(
+          const_cast<DexType*>(
+              override == parameter_type_overrides.end()
+                  ? parameter_type_list->at(parameter_position)
+                  : override->second));
     }
 
     parameter_type_list =

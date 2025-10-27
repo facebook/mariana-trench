@@ -88,26 +88,37 @@ TEST_F(TransformListTest, Canonicalize) {
   // Mix with transforms
   EXPECT_EQ(
       TransformList::canonicalize(
-          context.transforms_factory->create(std::vector{
-              transform_z, sanitize_b, sanitize_a, sanitize_a, transform_y}),
+          context.transforms_factory->create(
+              std::vector{
+                  transform_z,
+                  sanitize_b,
+                  sanitize_a,
+                  sanitize_a,
+                  transform_y}),
           *context.transforms_factory),
       *context.transforms_factory->create(
           std::vector{transform_z, sanitize_a_b, transform_y}));
 
   EXPECT_EQ(
       TransformList::canonicalize(
-          context.transforms_factory->create(std::vector{
-              sanitize_b,
+          context.transforms_factory->create(
+              std::vector{
+                  sanitize_b,
+                  sanitize_b,
+                  transform_x,
+                  transform_z,
+                  transform_y,
+                  sanitize_a,
+                  sanitize_b,
+                  sanitize_a}),
+          *context.transforms_factory),
+      *context.transforms_factory->create(
+          std::vector{
               sanitize_b,
               transform_x,
               transform_z,
               transform_y,
-              sanitize_a,
-              sanitize_b,
-              sanitize_a}),
-          *context.transforms_factory),
-      *context.transforms_factory->create(std::vector{
-          sanitize_b, transform_x, transform_z, transform_y, sanitize_a_b}));
+              sanitize_a_b}));
 }
 
 TEST_F(TransformListTest, Sanitize) {

@@ -218,8 +218,9 @@ void Path::reduce_to_common_prefix(const Path& other) {
   elements_.erase(result.first, elements_.end());
 }
 
-Path Path::resolve(const std::vector<std::optional<std::string>>&
-                       source_constant_arguments) const {
+Path Path::resolve(
+    const std::vector<std::optional<std::string>>& source_constant_arguments)
+    const {
   Path path;
   path.elements_.reserve(elements_.size());
 

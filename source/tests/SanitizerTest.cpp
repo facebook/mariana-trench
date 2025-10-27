@@ -25,9 +25,10 @@ TEST_F(SanitizerTest, SanitizerLeq) {
 
   // Comparison with bottom
   EXPECT_TRUE(Sanitizer::bottom().leq(Sanitizer::bottom()));
-  EXPECT_TRUE(Sanitizer::bottom().leq(Sanitizer(
-      SanitizerKind::Sources,
-      /* kinds */ KindSetAbstractDomain::top())));
+  EXPECT_TRUE(
+      Sanitizer::bottom().leq(Sanitizer(
+          SanitizerKind::Sources,
+          /* kinds */ KindSetAbstractDomain::top())));
   EXPECT_FALSE(Sanitizer(
                    SanitizerKind::Sources,
                    /* kinds */ KindSetAbstractDomain::top())
@@ -77,9 +78,10 @@ TEST_F(SanitizerTest, SanitizerLeq) {
 
 TEST_F(SanitizerTest, SanitizerEquals) {
   EXPECT_TRUE(Sanitizer::bottom().equals(Sanitizer::bottom()));
-  EXPECT_FALSE(Sanitizer::bottom().equals(Sanitizer(
-      SanitizerKind::Sources,
-      /* kinds */ KindSetAbstractDomain::top())));
+  EXPECT_FALSE(
+      Sanitizer::bottom().equals(Sanitizer(
+          SanitizerKind::Sources,
+          /* kinds */ KindSetAbstractDomain::top())));
 
   // Test that all possible bottom sanitizers are equal
   auto sources_bottom =

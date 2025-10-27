@@ -238,16 +238,16 @@ IntentRoutingData method_routes_intents_to(
   };
   auto* code = method->get_code();
   if (code == nullptr) {
-    return {
-        /* receiving_intent_root */ receiving_method, /* routed_intents */ {}};
+    return {/* receiving_intent_root */ receiving_method,
+            /* routed_intents */ {}};
   }
 
   if (!code->cfg_built()) {
     LOG(1,
         "CFG not built for method: {}. Cannot evaluate routed intents.",
         method->show());
-    return {
-        /* receiving_intent_root */ receiving_method, /* routed_intents */ {}};
+    return {/* receiving_intent_root */ receiving_method,
+            /* routed_intents */ {}};
   }
 
   auto context =

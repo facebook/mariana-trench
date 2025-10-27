@@ -934,8 +934,9 @@ void check_call_flows(
                 aliasing.widening_resolver(),
                 aliasing.register_memory_locations(*register_id),
                 port.path().resolve(callee.source_constant_arguments))
-            .collapse(FeatureMayAlwaysSet{
-                context->feature_factory.get_issue_broadening_feature()});
+            .collapse(
+                FeatureMayAlwaysSet{
+                    context->feature_factory.get_issue_broadening_feature()});
     check_sources_sinks_flows(
         context,
         instruction,
@@ -1032,8 +1033,9 @@ void check_flows_to_array_allocation(
             ->deep_read(
                 aliasing.widening_resolver(),
                 aliasing.register_memory_locations(register_id))
-            .collapse(FeatureMayAlwaysSet{
-                context->feature_factory.get_issue_broadening_feature()});
+            .collapse(
+                FeatureMayAlwaysSet{
+                    context->feature_factory.get_issue_broadening_feature()});
     // Fulfilled partial sinks ignored. No partial sinks for array allocation.
     check_sources_sinks_flows(
         context,
@@ -1678,8 +1680,9 @@ void infer_output_taint(
     const TaintTree& taint) {
   for (const auto& [output_path, sources] : taint.elements()) {
     auto generation = sources;
-    generation.add_locally_inferred_features(FeatureMayAlwaysSet::make_always(
-        context->previous_model.attach_to_sources(output_root)));
+    generation.add_locally_inferred_features(
+        FeatureMayAlwaysSet::make_always(
+            context->previous_model.attach_to_sources(output_root)));
     auto port = AccessPath(output_root, output_path);
     LOG_OR_DUMP(
         context, 4, "Inferred generation for port {}: {}", port, generation);
@@ -1754,8 +1757,9 @@ bool ForwardTaintTransfer::analyze_return(
       Taint sources =
           environment
               ->deep_read(aliasing.widening_resolver(), memory_locations, path)
-              .collapse(FeatureMayAlwaysSet{
-                  context->feature_factory.get_issue_broadening_feature()});
+              .collapse(
+                  FeatureMayAlwaysSet{
+                      context->feature_factory.get_issue_broadening_feature()});
       // Fulfilled partial sinks are not expected to be produced here. Return
       // sinks are never partial.
       check_sources_sinks_flows(

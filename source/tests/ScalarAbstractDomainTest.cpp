@@ -127,10 +127,12 @@ TEST_F(ScalarAbstractDomainTest, TopIsZeroMeetWith) {
 }
 
 TEST_F(ScalarAbstractDomainTest, BottomIsZeroLessOrEqual) {
-  EXPECT_TRUE(ScalarBottomIsZeroAbstractDomain().leq(
-      ScalarBottomIsZeroAbstractDomain::bottom()));
-  EXPECT_TRUE(ScalarBottomIsZeroAbstractDomain::bottom().leq(
-      ScalarBottomIsZeroAbstractDomain()));
+  EXPECT_TRUE(
+      ScalarBottomIsZeroAbstractDomain().leq(
+          ScalarBottomIsZeroAbstractDomain::bottom()));
+  EXPECT_TRUE(
+      ScalarBottomIsZeroAbstractDomain::bottom().leq(
+          ScalarBottomIsZeroAbstractDomain()));
 
   auto bottom_is_zero = ScalarBottomIsZeroAbstractDomain(1);
   EXPECT_FALSE(bottom_is_zero.leq(ScalarBottomIsZeroAbstractDomain()));
@@ -146,10 +148,12 @@ TEST_F(ScalarAbstractDomainTest, BottomIsZeroLessOrEqual) {
 }
 
 TEST_F(ScalarAbstractDomainTest, TopIsZeroLessOrEqual) {
-  EXPECT_TRUE(ScalarTopIsZeroAbstractDomain().leq(
-      ScalarTopIsZeroAbstractDomain::bottom()));
-  EXPECT_TRUE(ScalarTopIsZeroAbstractDomain::bottom().leq(
-      ScalarTopIsZeroAbstractDomain()));
+  EXPECT_TRUE(
+      ScalarTopIsZeroAbstractDomain().leq(
+          ScalarTopIsZeroAbstractDomain::bottom()));
+  EXPECT_TRUE(
+      ScalarTopIsZeroAbstractDomain::bottom().leq(
+          ScalarTopIsZeroAbstractDomain()));
 
   auto top_is_zero = ScalarTopIsZeroAbstractDomain(42);
   EXPECT_FALSE(top_is_zero.leq(ScalarTopIsZeroAbstractDomain()));
@@ -165,20 +169,24 @@ TEST_F(ScalarAbstractDomainTest, TopIsZeroLessOrEqual) {
 }
 
 TEST_F(ScalarAbstractDomainTest, BottomIsZeroEquals) {
-  EXPECT_TRUE(ScalarBottomIsZeroAbstractDomain().equals(
-      ScalarBottomIsZeroAbstractDomain::bottom()));
-  EXPECT_TRUE(ScalarBottomIsZeroAbstractDomain::bottom().equals(
-      ScalarBottomIsZeroAbstractDomain()));
-  EXPECT_TRUE(ScalarBottomIsZeroAbstractDomain::bottom().equals(
-      ScalarBottomIsZeroAbstractDomain(
-          ScalarBottomIsZeroAbstractDomain::Enum::Zero)));
+  EXPECT_TRUE(
+      ScalarBottomIsZeroAbstractDomain().equals(
+          ScalarBottomIsZeroAbstractDomain::bottom()));
+  EXPECT_TRUE(
+      ScalarBottomIsZeroAbstractDomain::bottom().equals(
+          ScalarBottomIsZeroAbstractDomain()));
+  EXPECT_TRUE(
+      ScalarBottomIsZeroAbstractDomain::bottom().equals(
+          ScalarBottomIsZeroAbstractDomain(
+              ScalarBottomIsZeroAbstractDomain::Enum::Zero)));
 
   EXPECT_TRUE(ScalarBottomIsZeroAbstractDomain(
                   ScalarBottomIsZeroAbstractDomain::Enum::Top)
                   .equals(ScalarBottomIsZeroAbstractDomain::top()));
-  EXPECT_TRUE(ScalarBottomIsZeroAbstractDomain::top().equals(
-      ScalarBottomIsZeroAbstractDomain(
-          ScalarBottomIsZeroAbstractDomain::Enum::Top)));
+  EXPECT_TRUE(
+      ScalarBottomIsZeroAbstractDomain::top().equals(
+          ScalarBottomIsZeroAbstractDomain(
+              ScalarBottomIsZeroAbstractDomain::Enum::Top)));
 
   auto bottom_is_zero = ScalarBottomIsZeroAbstractDomain(1);
   EXPECT_FALSE(bottom_is_zero.equals(ScalarBottomIsZeroAbstractDomain()));
@@ -196,16 +204,19 @@ TEST_F(ScalarAbstractDomainTest, BottomIsZeroEquals) {
 }
 
 TEST_F(ScalarAbstractDomainTest, TopIsZeroEquals) {
-  EXPECT_TRUE(ScalarTopIsZeroAbstractDomain().equals(
-      ScalarTopIsZeroAbstractDomain::bottom()));
-  EXPECT_TRUE(ScalarTopIsZeroAbstractDomain::bottom().equals(
-      ScalarTopIsZeroAbstractDomain()));
+  EXPECT_TRUE(
+      ScalarTopIsZeroAbstractDomain().equals(
+          ScalarTopIsZeroAbstractDomain::bottom()));
+  EXPECT_TRUE(
+      ScalarTopIsZeroAbstractDomain::bottom().equals(
+          ScalarTopIsZeroAbstractDomain()));
 
   EXPECT_TRUE(
       ScalarTopIsZeroAbstractDomain(ScalarTopIsZeroAbstractDomain::Enum::Top)
           .equals(ScalarTopIsZeroAbstractDomain::top()));
-  EXPECT_TRUE(ScalarTopIsZeroAbstractDomain::top().equals(
-      ScalarTopIsZeroAbstractDomain(ScalarTopIsZeroAbstractDomain::Enum::Top)));
+  EXPECT_TRUE(
+      ScalarTopIsZeroAbstractDomain::top().equals(ScalarTopIsZeroAbstractDomain(
+          ScalarTopIsZeroAbstractDomain::Enum::Top)));
   EXPECT_TRUE(
       ScalarTopIsZeroAbstractDomain::top().equals(ScalarTopIsZeroAbstractDomain(
           ScalarTopIsZeroAbstractDomain::Enum::Zero)));

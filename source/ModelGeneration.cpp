@@ -75,8 +75,10 @@ make_model_generators(
         Json::Value json = JsonReader::parse_json_file(entry.path());
 
         if (!json.isObject()) {
-          throw ModelGeneratorError(fmt::format(
-              "Unable to parse `{}` as a valid models JSON.", entry.path()));
+          throw ModelGeneratorError(
+              fmt::format(
+                  "Unable to parse `{}` as a valid models JSON.",
+                  entry.path()));
         }
 
         auto [_, inserted] = generators.emplace(
@@ -197,9 +199,10 @@ ModelGeneratorResult ModelGeneration::run(
   }
 
   if (!nonexistent_model_generators.empty()) {
-    throw std::invalid_argument(fmt::format(
-        "Model generator(s) {} either do not exist or couldn't be parsed.",
-        boost::algorithm::join(nonexistent_model_generators, ", ")));
+    throw std::invalid_argument(
+        fmt::format(
+            "Model generator(s) {} either do not exist or couldn't be parsed.",
+            boost::algorithm::join(nonexistent_model_generators, ", ")));
   }
 
   std::vector<Model> generated_models;
@@ -265,9 +268,8 @@ ModelGeneratorResult ModelGeneration::run(
     }
   }
 
-  return {
-      /* method_models */ generated_models,
-      /* field_models */ generated_field_models};
+  return {/* method_models */ generated_models,
+          /* field_models */ generated_field_models};
 }
 
 } // namespace marianatrench

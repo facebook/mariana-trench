@@ -216,14 +216,15 @@ TEST_F(AccessTest, AccessPathJoin) {
 TEST_F(AccessTest, Canonicalize) {
   Scope scope;
   auto context = test::make_empty_context();
-  auto static_method = context.methods->create(redex::create_void_method(
-      scope,
-      "class_a",
-      "method_a",
-      /* parameter_types */ "",
-      /* return_type */ "V",
-      /* super */ nullptr,
-      /* is_static */ true));
+  auto static_method = context.methods->create(
+      redex::create_void_method(
+          scope,
+          "class_a",
+          "method_a",
+          /* parameter_types */ "",
+          /* return_type */ "V",
+          /* super */ nullptr,
+          /* is_static */ true));
   auto non_static_method = context.methods->create(
       marianatrench::redex::create_void_method(scope, "class_b", "method_b"));
 

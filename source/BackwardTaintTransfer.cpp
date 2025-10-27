@@ -153,8 +153,9 @@ void infer_input_taint(
     auto sinks_iterator = partitioned_by_propagations.find(false);
     if (sinks_iterator != partitioned_by_propagations.end()) {
       auto& sinks = sinks_iterator->second;
-      sinks.add_locally_inferred_features(FeatureMayAlwaysSet::make_always(
-          context->previous_model.attach_to_sinks(input_root)));
+      sinks.add_locally_inferred_features(
+          FeatureMayAlwaysSet::make_always(
+              context->previous_model.attach_to_sinks(input_root)));
       auto port = input;
       port.extend(input_path);
       LOG_OR_DUMP(context, 4, "Inferred sink for port {}: {}", port, sinks);
@@ -1222,15 +1223,16 @@ bool BackwardTaintTransfer::analyze_return(
   taint.attach_position(position);
 
   // Add local return.
-  taint.join_with(TaintTree(Taint::propagation_taint(
-      /* kind */ context->kind_factory.local_return(),
-      /* output_paths */
-      PathTreeDomain{
-          {Path{},
-           CollapseDepth(
-               Heuristics::singleton().propagation_max_collapse_depth())}},
-      /* inferred_features */ {},
-      /* user_features */ {})));
+  taint.join_with(TaintTree(
+      Taint::propagation_taint(
+          /* kind */ context->kind_factory.local_return(),
+          /* output_paths */
+          PathTreeDomain{
+              {Path{},
+               CollapseDepth(
+                   Heuristics::singleton().propagation_max_collapse_depth())}},
+          /* inferred_features */ {},
+          /* user_features */ {})));
 
   if (instruction->srcs_size() == 1) {
     auto register_id = instruction->src(0);

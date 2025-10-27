@@ -852,30 +852,28 @@ TEST_F(DependenciesTest, ArtificialCalleesInvoke) {
   EXPECT_EQ(
       call_graph.artificial_callees(caller).begin()->second,
       (ArtificialCallees{
-          ArtificialCallee{
-              /* kind */ ArtificialCallee::Kind::AnonymousClass,
-              /* call_target */
-              CallTarget::direct_call(
-                  invoke,
-                  anonymous_one,
-                  /* call_index */ 0,
-                  anonymous_one->parameter_type(0)),
-              /* root_registers */ {{Root::argument(0), 1}},
-              /* features */
-              FeatureSet{context.feature_factory->get(
-                  "via-anonymous-class-to-obscure")}},
-          ArtificialCallee{
-              /* kind */ ArtificialCallee::Kind::AnonymousClass,
-              /* call_target */
-              CallTarget::direct_call(
-                  invoke,
-                  anonymous_two,
-                  /* call_index */ 0,
-                  anonymous_two->parameter_type(0)),
-              /* root_registers */ {{Root::argument(0), 1}},
-              /* features */
-              FeatureSet{context.feature_factory->get(
-                  "via-anonymous-class-to-obscure")}},
+          ArtificialCallee{/* kind */ ArtificialCallee::Kind::AnonymousClass,
+                           /* call_target */
+                           CallTarget::direct_call(
+                               invoke,
+                               anonymous_one,
+                               /* call_index */ 0,
+                               anonymous_one->parameter_type(0)),
+                           /* root_registers */ {{Root::argument(0), 1}},
+                           /* features */
+                           FeatureSet{context.feature_factory->get(
+                               "via-anonymous-class-to-obscure")}},
+          ArtificialCallee{/* kind */ ArtificialCallee::Kind::AnonymousClass,
+                           /* call_target */
+                           CallTarget::direct_call(
+                               invoke,
+                               anonymous_two,
+                               /* call_index */ 0,
+                               anonymous_two->parameter_type(0)),
+                           /* root_registers */ {{Root::argument(0), 1}},
+                           /* features */
+                           FeatureSet{context.feature_factory->get(
+                               "via-anonymous-class-to-obscure")}},
       }));
 
   EXPECT_THAT(
@@ -967,30 +965,28 @@ TEST_F(DependenciesTest, ArtificialCalleesIput) {
   EXPECT_EQ(
       call_graph.artificial_callees(task).begin()->second,
       (ArtificialCallees{
-          ArtificialCallee{
-              /* kind */ ArtificialCallee::Kind::AnonymousClass,
-              /* call_target */
-              CallTarget::direct_call(
-                  iput,
-                  anonymous_one,
-                  /* call_index */ 0,
-                  anonymous_one->parameter_type(0)),
-              /* root_registers */ {{Root::argument(0), 1}},
-              /* features */
-              FeatureSet{context.feature_factory->get(
-                  "via-anonymous-class-to-field")}},
-          ArtificialCallee{
-              /* kind */ ArtificialCallee::Kind::AnonymousClass,
-              /* call_target */
-              CallTarget::direct_call(
-                  iput,
-                  anonymous_two,
-                  /* call_index */ 0,
-                  anonymous_two->parameter_type(0)),
-              /* root_registers */ {{Root::argument(0), 1}},
-              /* features */
-              FeatureSet{context.feature_factory->get(
-                  "via-anonymous-class-to-field")}},
+          ArtificialCallee{/* kind */ ArtificialCallee::Kind::AnonymousClass,
+                           /* call_target */
+                           CallTarget::direct_call(
+                               iput,
+                               anonymous_one,
+                               /* call_index */ 0,
+                               anonymous_one->parameter_type(0)),
+                           /* root_registers */ {{Root::argument(0), 1}},
+                           /* features */
+                           FeatureSet{context.feature_factory->get(
+                               "via-anonymous-class-to-field")}},
+          ArtificialCallee{/* kind */ ArtificialCallee::Kind::AnonymousClass,
+                           /* call_target */
+                           CallTarget::direct_call(
+                               iput,
+                               anonymous_two,
+                               /* call_index */ 0,
+                               anonymous_two->parameter_type(0)),
+                           /* root_registers */ {{Root::argument(0), 1}},
+                           /* features */
+                           FeatureSet{context.feature_factory->get(
+                               "via-anonymous-class-to-field")}},
       }));
 
   EXPECT_THAT(

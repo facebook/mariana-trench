@@ -45,9 +45,10 @@ TEST_F(KindFramesTest, Add) {
           test::make_taint_config(source_kind_one, test::FrameProperties{})});
 
   // Add frame with more details (origins)
-  frames.add(test::make_taint_config(
-      source_kind_one,
-      test::FrameProperties{.origins = OriginSet{one_origin}}));
+  frames.add(
+      test::make_taint_config(
+          source_kind_one,
+          test::FrameProperties{.origins = OriginSet{one_origin}}));
   EXPECT_EQ(
       frames,
       (KindFrames{
@@ -58,9 +59,10 @@ TEST_F(KindFramesTest, Add) {
   EXPECT_EQ(1, frames.num_frames());
 
   // Add frame with a different interval
-  frames.add(test::make_taint_config(
-      source_kind_one,
-      test::FrameProperties{.class_interval_context = interval}));
+  frames.add(
+      test::make_taint_config(
+          source_kind_one,
+          test::FrameProperties{.class_interval_context = interval}));
   EXPECT_EQ(
       frames,
       (KindFrames{
@@ -97,8 +99,10 @@ TEST_F(KindFramesTest, Leq) {
 
   // Comparison to bottom
   EXPECT_TRUE(KindFrames::bottom().leq(KindFrames::bottom()));
-  EXPECT_TRUE(KindFrames::bottom().leq(KindFrames{
-      test::make_taint_config(test_kind_one, test::FrameProperties{})}));
+  EXPECT_TRUE(
+      KindFrames::bottom().leq(
+          KindFrames{test::make_taint_config(
+              test_kind_one, test::FrameProperties{})}));
   EXPECT_FALSE(
       (KindFrames{test::make_taint_config(
            test_kind_one,
@@ -113,24 +117,26 @@ TEST_F(KindFramesTest, Leq) {
   // Comparison to self
   EXPECT_TRUE((KindFrames{test::make_taint_config(
                    test_kind_one, test::FrameProperties{})})
-                  .leq(KindFrames{test::make_taint_config(
-                      test_kind_one, test::FrameProperties{})}));
+                  .leq(
+                      KindFrames{test::make_taint_config(
+                          test_kind_one, test::FrameProperties{})}));
 
   // Different intervals
   EXPECT_TRUE(
       (KindFrames{test::make_taint_config(
            test_kind_one,
            test::FrameProperties{.class_interval_context = interval_one})})
-          .leq(KindFrames{
-              test::make_taint_config(
-                  test_kind_one,
-                  test::FrameProperties{
-                      .class_interval_context = interval_one}),
-              test::make_taint_config(
-                  test_kind_one,
-                  test::FrameProperties{
-                      .class_interval_context = interval_two}),
-          }));
+          .leq(
+              KindFrames{
+                  test::make_taint_config(
+                      test_kind_one,
+                      test::FrameProperties{
+                          .class_interval_context = interval_one}),
+                  test::make_taint_config(
+                      test_kind_one,
+                      test::FrameProperties{
+                          .class_interval_context = interval_two}),
+              }));
   EXPECT_FALSE(
       (KindFrames{
            test::make_taint_config(
@@ -140,9 +146,11 @@ TEST_F(KindFramesTest, Leq) {
                test_kind_one,
                test::FrameProperties{.class_interval_context = interval_two}),
        })
-          .leq(KindFrames{test::make_taint_config(
-              test_kind_one,
-              test::FrameProperties{.class_interval_context = interval_one})}));
+          .leq(
+              KindFrames{test::make_taint_config(
+                  test_kind_one,
+                  test::FrameProperties{
+                      .class_interval_context = interval_one})}));
 
   // Different intervals (preserves_type_context)
   EXPECT_TRUE(
@@ -150,17 +158,18 @@ TEST_F(KindFramesTest, Leq) {
            test_kind_one,
            test::FrameProperties{
                .class_interval_context = interval_one_preserves_type_context})})
-          .leq(KindFrames{
-              test::make_taint_config(
-                  test_kind_one,
-                  test::FrameProperties{
-                      .class_interval_context = interval_one}),
-              test::make_taint_config(
-                  test_kind_one,
-                  test::FrameProperties{
-                      .class_interval_context =
-                          interval_one_preserves_type_context}),
-          }));
+          .leq(
+              KindFrames{
+                  test::make_taint_config(
+                      test_kind_one,
+                      test::FrameProperties{
+                          .class_interval_context = interval_one}),
+                  test::make_taint_config(
+                      test_kind_one,
+                      test::FrameProperties{
+                          .class_interval_context =
+                              interval_one_preserves_type_context}),
+              }));
   EXPECT_FALSE(
       (KindFrames{
            test::make_taint_config(
@@ -171,33 +180,37 @@ TEST_F(KindFramesTest, Leq) {
                test::FrameProperties{
                    .class_interval_context =
                        interval_two_preserves_type_context})})
-          .leq(KindFrames{test::make_taint_config(
-              test_kind_one,
-              test::FrameProperties{.class_interval_context = interval_one})}));
+          .leq(
+              KindFrames{test::make_taint_config(
+                  test_kind_one,
+                  test::FrameProperties{
+                      .class_interval_context = interval_one})}));
 
   // Same intervals, different frame details
   EXPECT_TRUE(
       (KindFrames{test::make_taint_config(
            test_kind_one,
            test::FrameProperties{.class_interval_context = interval_one})})
-          .leq(KindFrames{
-              test::make_taint_config(
-                  test_kind_one,
-                  test::FrameProperties{
-                      .class_interval_context = interval_one,
-                      .user_features = FeatureSet{feature_one}}),
-          }));
+          .leq(
+              KindFrames{
+                  test::make_taint_config(
+                      test_kind_one,
+                      test::FrameProperties{
+                          .class_interval_context = interval_one,
+                          .user_features = FeatureSet{feature_one}}),
+              }));
   EXPECT_FALSE((KindFrames{test::make_taint_config(
                     test_kind_one,
                     test::FrameProperties{
                         .class_interval_context = interval_one,
                         .user_features = FeatureSet{feature_one}})})
-                   .leq(KindFrames{
-                       test::make_taint_config(
-                           test_kind_one,
-                           test::FrameProperties{
-                               .class_interval_context = interval_one}),
-                   }));
+                   .leq(
+                       KindFrames{
+                           test::make_taint_config(
+                               test_kind_one,
+                               test::FrameProperties{
+                                   .class_interval_context = interval_one}),
+                       }));
 }
 
 TEST_F(KindFramesTest, Equals) {
@@ -213,9 +226,11 @@ TEST_F(KindFramesTest, Equals) {
 
   // Comparison to bottom
   EXPECT_TRUE(KindFrames::bottom().equals(KindFrames::bottom()));
-  EXPECT_FALSE(KindFrames::bottom().equals(KindFrames{test::make_taint_config(
-      test_kind_one,
-      test::FrameProperties{.class_interval_context = interval_one})}));
+  EXPECT_FALSE(
+      KindFrames::bottom().equals(
+          KindFrames{test::make_taint_config(
+              test_kind_one,
+              test::FrameProperties{.class_interval_context = interval_one})}));
   EXPECT_FALSE(
       (KindFrames{test::make_taint_config(
            test_kind_one,
@@ -225,31 +240,36 @@ TEST_F(KindFramesTest, Equals) {
   // Comparison to self
   EXPECT_TRUE((KindFrames{test::make_taint_config(
                    test_kind_one, test::FrameProperties{})})
-                  .equals(KindFrames{test::make_taint_config(
-                      test_kind_one, test::FrameProperties{})}));
+                  .equals(
+                      KindFrames{test::make_taint_config(
+                          test_kind_one, test::FrameProperties{})}));
 
   // Different intervals
   EXPECT_FALSE(
       (KindFrames{test::make_taint_config(
            test_kind_one,
            test::FrameProperties{.class_interval_context = interval_one})})
-          .equals(KindFrames{test::make_taint_config(
-              test_kind_one,
-              test::FrameProperties{.class_interval_context = interval_two})}));
+          .equals(
+              KindFrames{test::make_taint_config(
+                  test_kind_one,
+                  test::FrameProperties{
+                      .class_interval_context = interval_two})}));
 
   // Different intervals (preserves_type_context)
-  EXPECT_FALSE((KindFrames{test::make_taint_config(
-                    test_kind_one,
-                    test::FrameProperties{
-                        .class_interval_context = CallClassIntervalContext(
-                            ClassIntervals::Interval::top(),
-                            /* preserves_type_context */ true)})})
-                   .equals(KindFrames{test::make_taint_config(
-                       test_kind_one,
-                       test::FrameProperties{
-                           .class_interval_context = CallClassIntervalContext(
-                               ClassIntervals::Interval::top(),
-                               /* preserves_type_context */ false)})}));
+  EXPECT_FALSE(
+      (KindFrames{test::make_taint_config(
+           test_kind_one,
+           test::FrameProperties{
+               .class_interval_context = CallClassIntervalContext(
+                   ClassIntervals::Interval::top(),
+                   /* preserves_type_context */ true)})})
+          .equals(
+              KindFrames{test::make_taint_config(
+                  test_kind_one,
+                  test::FrameProperties{
+                      .class_interval_context = CallClassIntervalContext(
+                          ClassIntervals::Interval::top(),
+                          /* preserves_type_context */ false)})}));
 }
 
 TEST_F(KindFramesTest, JoinWith) {
@@ -268,8 +288,9 @@ TEST_F(KindFramesTest, JoinWith) {
 
   // Join with bottom
   EXPECT_EQ(
-      KindFrames::bottom().join(KindFrames{
-          test::make_taint_config(test_kind_one, test::FrameProperties{})}),
+      KindFrames::bottom().join(
+          KindFrames{
+              test::make_taint_config(test_kind_one, test::FrameProperties{})}),
       KindFrames{
           test::make_taint_config(test_kind_one, test::FrameProperties{})});
 
@@ -291,9 +312,10 @@ TEST_F(KindFramesTest, JoinWith) {
   frames = KindFrames{test::make_taint_config(
       test_kind_one,
       test::FrameProperties{.class_interval_context = interval_one})};
-  frames.join_with(KindFrames{test::make_taint_config(
-      test_kind_one,
-      test::FrameProperties{.class_interval_context = interval_two})});
+  frames.join_with(
+      KindFrames{test::make_taint_config(
+          test_kind_one,
+          test::FrameProperties{.class_interval_context = interval_two})});
   EXPECT_EQ(
       frames,
       (KindFrames{
@@ -310,11 +332,12 @@ TEST_F(KindFramesTest, JoinWith) {
       test::FrameProperties{
           .class_interval_context = interval_one,
           .inferred_features = FeatureMayAlwaysSet{feature_one}})};
-  frames.join_with(KindFrames{test::make_taint_config(
-      test_kind_one,
-      test::FrameProperties{
-          .class_interval_context = interval_one,
-          .inferred_features = FeatureMayAlwaysSet{feature_two}})});
+  frames.join_with(
+      KindFrames{test::make_taint_config(
+          test_kind_one,
+          test::FrameProperties{
+              .class_interval_context = interval_one,
+              .inferred_features = FeatureMayAlwaysSet{feature_two}})});
   EXPECT_EQ(
       frames,
       (KindFrames{test::make_taint_config(
@@ -346,9 +369,10 @@ TEST_F(KindFramesTest, Difference) {
   frames.difference_with(KindFrames{});
   EXPECT_TRUE(frames.is_bottom());
 
-  frames.difference_with(KindFrames{
-      test::make_taint_config(test_kind_one, test::FrameProperties{}),
-  });
+  frames.difference_with(
+      KindFrames{
+          test::make_taint_config(test_kind_one, test::FrameProperties{}),
+      });
   EXPECT_TRUE(frames.is_bottom());
 
   const auto initial_frames = KindFrames{
@@ -397,33 +421,36 @@ TEST_F(KindFramesTest, Difference) {
 
   // Left hand side has fewer intervals than right hand side.
   frames = initial_frames;
-  frames.difference_with(KindFrames{
-      test::make_taint_config(
-          test_kind_one,
-          test::FrameProperties{.class_interval_context = interval_one}),
-      test::make_taint_config(
-          test_kind_one,
-          test::FrameProperties{.class_interval_context = interval_two}),
-  });
+  frames.difference_with(
+      KindFrames{
+          test::make_taint_config(
+              test_kind_one,
+              test::FrameProperties{.class_interval_context = interval_one}),
+          test::make_taint_config(
+              test_kind_one,
+              test::FrameProperties{.class_interval_context = interval_two}),
+      });
   EXPECT_TRUE(frames.is_bottom());
 
   // Left hand side has a smaller `Frame`.
   frames = initial_frames;
-  frames.difference_with(KindFrames{
-      test::make_taint_config(
-          test_kind_one,
-          test::FrameProperties{
-              .class_interval_context = interval_one,
-              .user_features = FeatureSet{feature_one}}),
-  });
+  frames.difference_with(
+      KindFrames{
+          test::make_taint_config(
+              test_kind_one,
+              test::FrameProperties{
+                  .class_interval_context = interval_one,
+                  .user_features = FeatureSet{feature_one}}),
+      });
   EXPECT_EQ(frames, KindFrames{});
   EXPECT_TRUE(frames.is_bottom());
 
   // Left hand side and right hand side have incomparable intervals.
   frames = initial_frames;
-  frames.difference_with(KindFrames{
-      test::make_taint_config(test_kind_one, test::FrameProperties{}),
-  });
+  frames.difference_with(
+      KindFrames{
+          test::make_taint_config(test_kind_one, test::FrameProperties{}),
+      });
   EXPECT_EQ(frames, initial_frames);
 
   // Left hand side is smaller for one interval, and larger for another.
@@ -440,19 +467,20 @@ TEST_F(KindFramesTest, Difference) {
               .class_interval_context = interval_two,
           }),
   };
-  frames.difference_with(KindFrames{
-      test::make_taint_config(
-          test_kind_one,
-          test::FrameProperties{
-              .class_interval_context = interval_one,
-          }),
-      test::make_taint_config(
-          test_kind_one,
-          test::FrameProperties{
-              .class_interval_context = interval_one,
-              .user_features = FeatureSet{feature_one},
-          }),
-  });
+  frames.difference_with(
+      KindFrames{
+          test::make_taint_config(
+              test_kind_one,
+              test::FrameProperties{
+                  .class_interval_context = interval_one,
+              }),
+          test::make_taint_config(
+              test_kind_one,
+              test::FrameProperties{
+                  .class_interval_context = interval_one,
+                  .user_features = FeatureSet{feature_one},
+              }),
+      });
   EXPECT_EQ(
       frames,
       (KindFrames{test::make_taint_config(
@@ -972,8 +1000,9 @@ TEST_F(KindFramesTest, PropagateCrtex) {
                   .inferred_features = FeatureMayAlwaysSet{feature_one},
                   .canonical_names =
                       CanonicalNameSetAbstractDomain{
-                          CanonicalName(CanonicalName::InstantiatedValue{
-                              "constant value"}),
+                          CanonicalName(
+                              CanonicalName::InstantiatedValue{
+                                  "constant value"}),
                           expected_instantiated_name},
                   .call_kind = CallKind::origin()}),
       }));

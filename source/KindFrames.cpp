@@ -374,8 +374,9 @@ KindFrames KindFrames::propagate(
 
     // Propagate instantiated canonical names into origins.
     auto propagated_origins = frame.origins();
-    propagated_origins.join_with(CanonicalName::propagate(
-        propagated_canonical_names, *propagated_call_info.callee_port()));
+    propagated_origins.join_with(
+        CanonicalName::propagate(
+            propagated_canonical_names, *propagated_call_info.callee_port()));
 
     int propagated_distance = frame.distance() + 1;
     auto propagated_call_kind = propagated_call_info.call_kind();

@@ -330,10 +330,11 @@ class LocalTaint final : public sparta::AbstractDomain<LocalTaint> {
           const Position* MT_NULLABLE)>& new_call_position,
       const LocalPositionSet& new_local_positions) const;
 
-  void filter_invalid_frames(const std::function<bool(
-                                 const Method* MT_NULLABLE,
-                                 const AccessPath* MT_NULLABLE,
-                                 const Kind*)>& is_valid);
+  void filter_invalid_frames(
+      const std::function<bool(
+          const Method* MT_NULLABLE,
+          const AccessPath* MT_NULLABLE,
+          const Kind*)>& is_valid);
 
   bool contains_kind(const Kind*) const;
 

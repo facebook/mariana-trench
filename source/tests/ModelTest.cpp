@@ -505,8 +505,9 @@ TEST_F(ModelTest, LessOrEqual) {
           {{Root(Root::Kind::Return),
             SanitizerSet(Sanitizer(
                 SanitizerKind::Sources,
-                KindSetAbstractDomain(SourceSinkKind::source(
-                    context.kind_factory->get("Kind")))))}})
+                KindSetAbstractDomain(
+                    SourceSinkKind::source(
+                        context.kind_factory->get("Kind")))))}})
           .leq(Model(
               /* method */ nullptr,
               context,
@@ -812,18 +813,20 @@ TEST_F(ModelTest, Join) {
   model.join_with(model_with_source);
   EXPECT_THAT(
       model.generations().elements(),
-      testing::UnorderedElementsAre(PortTaint{
-          AccessPath(Root(Root::Kind::Return)),
-          Taint{test::make_leaf_taint_config(source_kind)}}));
+      testing::UnorderedElementsAre(
+          PortTaint{
+              AccessPath(Root(Root::Kind::Return)),
+              Taint{test::make_leaf_taint_config(source_kind)}}));
   EXPECT_TRUE(model.sinks().is_bottom());
 
   // Repeated application is idempotent.
   model.join_with(model_with_source);
   EXPECT_THAT(
       model.generations().elements(),
-      testing::UnorderedElementsAre(PortTaint{
-          AccessPath(Root(Root::Kind::Return)),
-          Taint{test::make_leaf_taint_config(source_kind)}}));
+      testing::UnorderedElementsAre(
+          PortTaint{
+              AccessPath(Root(Root::Kind::Return)),
+              Taint{test::make_leaf_taint_config(source_kind)}}));
   EXPECT_TRUE(model.sinks().is_bottom());
 
   const auto* other_source_kind = context.kind_factory->get("OtherTestSource");
@@ -839,11 +842,12 @@ TEST_F(ModelTest, Join) {
   model.join_with(model_with_other_source);
   EXPECT_THAT(
       model.generations().elements(),
-      testing::UnorderedElementsAre(PortTaint{
-          AccessPath(Root(Root::Kind::Return)),
-          Taint{
-              test::make_leaf_taint_config(source_kind),
-              test::make_leaf_taint_config(other_source_kind)}}));
+      testing::UnorderedElementsAre(
+          PortTaint{
+              AccessPath(Root(Root::Kind::Return)),
+              Taint{
+                  test::make_leaf_taint_config(source_kind),
+                  test::make_leaf_taint_config(other_source_kind)}}));
   EXPECT_TRUE(model.sinks().is_bottom());
 
   // Sinks are added.
@@ -861,16 +865,18 @@ TEST_F(ModelTest, Join) {
   model.join_with(model_with_sink);
   EXPECT_THAT(
       model.generations().elements(),
-      testing::UnorderedElementsAre(PortTaint{
-          AccessPath(Root(Root::Kind::Return)),
-          Taint{
-              test::make_leaf_taint_config(source_kind),
-              test::make_leaf_taint_config(other_source_kind)}}));
+      testing::UnorderedElementsAre(
+          PortTaint{
+              AccessPath(Root(Root::Kind::Return)),
+              Taint{
+                  test::make_leaf_taint_config(source_kind),
+                  test::make_leaf_taint_config(other_source_kind)}}));
   EXPECT_THAT(
       model.sinks().elements(),
-      testing::UnorderedElementsAre(PortTaint{
-          AccessPath(Root(Root::Kind::Argument, 0)),
-          Taint{test::make_leaf_taint_config(sink_kind)}}));
+      testing::UnorderedElementsAre(
+          PortTaint{
+              AccessPath(Root(Root::Kind::Argument, 0)),
+              Taint{test::make_leaf_taint_config(sink_kind)}}));
 
   // Taint-in-taint-out is added.
   Model model_with_propagation(

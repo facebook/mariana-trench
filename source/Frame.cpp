@@ -53,8 +53,9 @@ void Frame::add_exploitability_origin(
     const Method* exploitability_root,
     std::string_view callee,
     const Position* position) {
-  origins_.add(OriginFactory::singleton().exploitability_origin(
-      exploitability_root, callee, position));
+  origins_.add(
+      OriginFactory::singleton().exploitability_origin(
+          exploitability_root, callee, position));
 }
 
 OriginSet Frame::exploitability_origins() const {

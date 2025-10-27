@@ -116,8 +116,9 @@ TEST_F(LocalPositionSetTest, Join) {
   EXPECT_TRUE(set.is_value());
   EXPECT_EQ(set.elements().size(), Heuristics::kMaxNumberLocalPositions);
 
-  set.join_with(LocalPositionSet{context.positions->get(
-      std::nullopt, Heuristics::kMaxNumberLocalPositions)});
+  set.join_with(
+      LocalPositionSet{context.positions->get(
+          std::nullopt, Heuristics::kMaxNumberLocalPositions)});
   EXPECT_TRUE(set.is_top());
 }
 

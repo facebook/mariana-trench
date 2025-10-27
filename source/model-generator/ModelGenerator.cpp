@@ -53,19 +53,17 @@ ModelGenerator::ModelGenerator(const std::string& name, Context& context)
 ModelGeneratorResult ModelGenerator::run(
     const Methods& methods,
     const Fields& fields) {
-  return {
-      /* method_models */ emit_method_models(methods),
-      /* field_models */ emit_field_models(fields)};
+  return {/* method_models */ emit_method_models(methods),
+          /* field_models */ emit_field_models(fields)};
 }
 
 ModelGeneratorResult ModelGenerator::run_optimized(
     const Methods& methods,
     const MethodMappings& method_mappings,
     const Fields& fields) {
-  return {
-      /* method_models */ emit_method_models_optimized(
-          methods, method_mappings),
-      /* field_models */ emit_field_models(fields)};
+  return {/* method_models */ emit_method_models_optimized(
+              methods, method_mappings),
+          /* field_models */ emit_field_models(fields)};
 }
 
 std::vector<Model> ModelGenerator::emit_method_models_optimized(
@@ -205,8 +203,9 @@ generator::get_argument_types_string(const Method* method) {
   auto argument_types_dex = generator::get_argument_types(method);
 
   for (const auto& argument_type_dex : argument_types_dex) {
-    arguments.push_back(std::make_pair(
-        argument_type_dex.first, argument_type_dex.second->str()));
+    arguments.push_back(
+        std::make_pair(
+            argument_type_dex.first, argument_type_dex.second->str()));
   }
 
   return arguments;

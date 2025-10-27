@@ -479,9 +479,10 @@ TEST_F(IssueSetTest, Insertion) {
       /* source */ Taint{test::make_leaf_taint_config(
           source_kind,
           /* inferred_features */
-          FeatureMayAlwaysSet::make_always(FeatureSet{
-              context.feature_factory->get("Feature"),
-              context.feature_factory->get("Feature2")}),
+          FeatureMayAlwaysSet::make_always(
+              FeatureSet{
+                  context.feature_factory->get("Feature"),
+                  context.feature_factory->get("Feature2")}),
           /* locally_inferred_features */ FeatureMayAlwaysSet::bottom(),
           /* user_features */ FeatureSet::bottom(),
           /* origins */ {})},

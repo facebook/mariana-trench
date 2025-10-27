@@ -592,10 +592,11 @@ std::vector<LocalTaint> LocalTaint::update_origin_positions(
   return results;
 }
 
-void LocalTaint::filter_invalid_frames(const std::function<bool(
-                                           const Method* MT_NULLABLE,
-                                           const AccessPath* MT_NULLABLE,
-                                           const Kind*)>& is_valid) {
+void LocalTaint::filter_invalid_frames(
+    const std::function<bool(
+        const Method* MT_NULLABLE,
+        const AccessPath* MT_NULLABLE,
+        const Kind*)>& is_valid) {
   if (is_bottom()) {
     return;
   }

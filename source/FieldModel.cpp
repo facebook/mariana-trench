@@ -72,18 +72,20 @@ void FieldModel::check_taint_config_consistency(
     const TaintConfig& frame,
     std::string_view kind) const {
   if (frame.kind() == nullptr) {
-    FieldModelConsistencyError::raise(fmt::format(
-        "Model for field `{}` must have a kind {}.", show(field_), kind));
+    FieldModelConsistencyError::raise(
+        fmt::format(
+            "Model for field `{}` must have a kind {}.", show(field_), kind));
   }
   if ((frame.callee_port() != nullptr &&
        !frame.callee_port()->root().is_leaf()) ||
       frame.call_position() != nullptr || frame.distance() != 0 ||
       !frame.origins().is_bottom() || frame.via_type_of_ports().size() != 0 ||
       frame.canonical_names().size() != 0) {
-    FieldModelConsistencyError::raise(fmt::format(
-        "Frame in {}s for field `{}` contains an unexpected non-empty or non-bottom value for a field.",
-        show(kind),
-        show(field_)));
+    FieldModelConsistencyError::raise(
+        fmt::format(
+            "Frame in {}s for field `{}` contains an unexpected non-empty or non-bottom value for a field.",
+            show(kind),
+            show(field_)));
   }
 }
 
@@ -95,10 +97,11 @@ void FieldModel::check_taint_consistency(
     // declaration frame..
     const auto* origin = frame.origins().elements().singleton();
     if (field_ && (origin == nullptr || !(*origin)->is<FieldOrigin>())) {
-      FieldModelConsistencyError::raise(fmt::format(
-          "Model for field `{}` contains a {} without field origins.",
-          show(field_),
-          kind));
+      FieldModelConsistencyError::raise(
+          fmt::format(
+              "Model for field `{}` contains a {} without field origins.",
+              show(field_),
+              kind));
     }
   });
 }

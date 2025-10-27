@@ -344,10 +344,11 @@ Taint Taint::update_non_declaration_positions(
   return result;
 }
 
-void Taint::filter_invalid_frames(const std::function<bool(
-                                      const Method* MT_NULLABLE,
-                                      const AccessPath* MT_NULLABLE,
-                                      const Kind*)>& is_valid) {
+void Taint::filter_invalid_frames(
+    const std::function<bool(
+        const Method* MT_NULLABLE,
+        const AccessPath* MT_NULLABLE,
+        const Kind*)>& is_valid) {
   map_.transform([&is_valid](LocalTaint* local_taint) -> void {
     local_taint->filter_invalid_frames(is_valid);
   });

@@ -283,12 +283,14 @@ class Parser {
     }
 
     for (const auto& class_name : class_order_) {
-      parsed_sources.push_back(TestSource{
-          class_name,
-          /* methods */ class_name_to_methods_.at(class_name),
-          /* abstract methods */ class_name_to_abstract_methods_.at(class_name),
-          /* super */ class_name_to_super_.at(class_name),
-      });
+      parsed_sources.push_back(
+          TestSource{
+              class_name,
+              /* methods */ class_name_to_methods_.at(class_name),
+              /* abstract methods */
+              class_name_to_abstract_methods_.at(class_name),
+              /* super */ class_name_to_super_.at(class_name),
+          });
     }
     return parsed_sources;
   }
@@ -318,54 +320,60 @@ Scope stubs() {
       });
   stubs.push_back(ldata_class);
   // Add fields that are used in test cases
-  ldata_class->add_field(DexField::make_field(
-                             ldata_class->get_type(),
-                             DexString::make_string("field"),
-                             ldata_class->get_type())
-                             ->make_concrete(DexAccessFlags::ACC_PUBLIC));
-  ldata_class->add_field(DexField::make_field(
-                             ldata_class->get_type(),
-                             DexString::make_string("other_field"),
-                             ldata_class->get_type())
-                             ->make_concrete(DexAccessFlags::ACC_PUBLIC));
+  ldata_class->add_field(
+      DexField::make_field(
+          ldata_class->get_type(),
+          DexString::make_string("field"),
+          ldata_class->get_type())
+          ->make_concrete(DexAccessFlags::ACC_PUBLIC));
+  ldata_class->add_field(
+      DexField::make_field(
+          ldata_class->get_type(),
+          DexString::make_string("other_field"),
+          ldata_class->get_type())
+          ->make_concrete(DexAccessFlags::ACC_PUBLIC));
 
-  stubs.push_back(assembler::class_with_methods(
-      /* class_name */ "LSource;",
-      /* methods */
-      {
-          empty_method_with_signature("(public) \"LSource;.source:()LData;\""),
-          empty_method_with_signature(
-              "(public) \"LSource;.alternative_source:()LData;\""),
-      }));
+  stubs.push_back(
+      assembler::class_with_methods(
+          /* class_name */ "LSource;",
+          /* methods */
+          {
+              empty_method_with_signature(
+                  "(public) \"LSource;.source:()LData;\""),
+              empty_method_with_signature(
+                  "(public) \"LSource;.alternative_source:()LData;\""),
+          }));
 
-  stubs.push_back(assembler::class_with_methods(
-      /* class_name */ "LSink;",
-      /* methods */
-      {
-          empty_method_with_signature("(public) \"LSink;.sink:(LData;)V\""),
-          empty_method_with_signature(
-              "(public) \"LSink;.alternative_sink:(LData;)V\""),
-          empty_method_with_signature(
-              "(public) \"LSink;.sink_without_flow:(LData;)V\""),
-          empty_method_with_signature(
-              "(public) \"LSink;.sink_in_second_parameter:(II)V\""),
-          empty_method_with_signature(
-              "(public) \"LSink;.sink_with_two_kinds:(LData;)V\""),
-          empty_method_with_signature(
-              "(private) \"LSink;.private_sink:(LData;)V\""),
-          empty_method_with_signature(
-              "(public static) \"LSink;.static_sink:(LData;)V\""),
-          empty_method_with_signature(
-              "(public) \"LSink;.interface_sink:(LData;)V\""),
-      }));
+  stubs.push_back(
+      assembler::class_with_methods(
+          /* class_name */ "LSink;",
+          /* methods */
+          {
+              empty_method_with_signature("(public) \"LSink;.sink:(LData;)V\""),
+              empty_method_with_signature(
+                  "(public) \"LSink;.alternative_sink:(LData;)V\""),
+              empty_method_with_signature(
+                  "(public) \"LSink;.sink_without_flow:(LData;)V\""),
+              empty_method_with_signature(
+                  "(public) \"LSink;.sink_in_second_parameter:(II)V\""),
+              empty_method_with_signature(
+                  "(public) \"LSink;.sink_with_two_kinds:(LData;)V\""),
+              empty_method_with_signature(
+                  "(private) \"LSink;.private_sink:(LData;)V\""),
+              empty_method_with_signature(
+                  "(public static) \"LSink;.static_sink:(LData;)V\""),
+              empty_method_with_signature(
+                  "(public) \"LSink;.interface_sink:(LData;)V\""),
+          }));
 
-  stubs.push_back(assembler::class_with_methods(
-      /* class_name */ "LExternal;",
-      /* methods */
-      {
-          empty_method_with_signature(
-              "(public static) \"LExternal;.external:(LData;)V\""),
-      }));
+  stubs.push_back(
+      assembler::class_with_methods(
+          /* class_name */ "LExternal;",
+          /* methods */
+          {
+              empty_method_with_signature(
+                  "(public static) \"LExternal;.external:(LData;)V\""),
+          }));
   return stubs;
 }
 
@@ -402,11 +410,12 @@ void add_flow_class_fields(DexStore& store) {
     for (auto* klass : classes) {
       if (klass->get_name()->str() == "LFlow;") {
         for (auto name : {"successor", "left", "right"}) {
-          klass->add_field(DexField::make_field(
-                               klass->get_type(),
-                               DexString::make_string(name),
-                               klass->get_type())
-                               ->make_concrete(DexAccessFlags::ACC_PUBLIC));
+          klass->add_field(
+              DexField::make_field(
+                  klass->get_type(),
+                  DexString::make_string(name),
+                  klass->get_type())
+                  ->make_concrete(DexAccessFlags::ACC_PUBLIC));
         }
         const auto* data_type = DexType::get_type("LData;");
         mt_assert(data_type != nullptr);
@@ -447,8 +456,8 @@ TEST_P(IntegrationTest, ReturnsExpectedModel) {
     }
     for (const auto& method : source.abstract_methods) {
       method_specifications.push_back(
-          marianatrench::redex::DexMethodSpecification{
-              /* body */ method, /* abstract */ true});
+          marianatrench::redex::DexMethodSpecification{/* body */ method,
+                                                       /* abstract */ true});
     }
     const auto new_methods = marianatrench::redex::create_methods(
         scope,

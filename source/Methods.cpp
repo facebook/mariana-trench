@@ -40,9 +40,10 @@ const Method* Methods::get(
   mt_assert(method != nullptr);
   const auto* pointer = set_.get(Method(method, parameter_type_overrides));
   if (!pointer) {
-    throw std::logic_error(fmt::format(
-        "Method `{}` does not exist in the context",
-        Method(method, parameter_type_overrides)));
+    throw std::logic_error(
+        fmt::format(
+            "Method `{}` does not exist in the context",
+            Method(method, parameter_type_overrides)));
   }
   return pointer;
 }

@@ -80,20 +80,22 @@ TEST_F(UsedKindsTest, UsedTransformKinds) {
   EXPECT_EQ(t1234->size(), 4);
 
   std::vector<std::unique_ptr<Rule>> rule_list;
-  rule_list.push_back(std::make_unique<SourceSinkRule>(
-      /* name */ "Rule1",
-      /* code */ 1,
-      /* description */ "Test rule 1",
-      /* source_kinds */ Rule::KindSet{source_a},
-      /* sink_kinds */ Rule::KindSet{sink_x},
-      /* transforms */ t11));
-  rule_list.push_back(std::make_unique<SourceSinkRule>(
-      /* name */ "Rule2",
-      /* code */ 2,
-      /* description */ "Test rule 2",
-      /* source_kinds */ Rule::KindSet{source_a, source_b},
-      /* sink_kinds */ Rule::KindSet{sink_x, sink_y},
-      /* transforms */ t1234));
+  rule_list.push_back(
+      std::make_unique<SourceSinkRule>(
+          /* name */ "Rule1",
+          /* code */ 1,
+          /* description */ "Test rule 1",
+          /* source_kinds */ Rule::KindSet{source_a},
+          /* sink_kinds */ Rule::KindSet{sink_x},
+          /* transforms */ t11));
+  rule_list.push_back(
+      std::make_unique<SourceSinkRule>(
+          /* name */ "Rule2",
+          /* code */ 2,
+          /* description */ "Test rule 2",
+          /* source_kinds */ Rule::KindSet{source_a, source_b},
+          /* sink_kinds */ Rule::KindSet{sink_x, sink_y},
+          /* transforms */ t1234));
 
   auto rules = Rules(context, std::move(rule_list));
   auto used_kinds = UsedKinds::from_rules(rules, *context.transforms_factory);

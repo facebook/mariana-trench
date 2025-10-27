@@ -169,9 +169,10 @@ OriginSet CanonicalName::propagate(
     const AccessPath& callee_port) {
   OriginSet origins;
   for (const auto& name : instantiated_canonical_names.elements()) {
-    origins.add(OriginFactory::singleton().crtex_origin(
-        /* canonical_name */ *name.instantiated_value(),
-        /* port */ AccessPathFactory::singleton().get(callee_port)));
+    origins.add(
+        OriginFactory::singleton().crtex_origin(
+            /* canonical_name */ *name.instantiated_value(),
+            /* port */ AccessPathFactory::singleton().get(callee_port)));
   }
   return origins;
 }

@@ -21,10 +21,13 @@ TEST_F(CanonicalNameTest, Instantiate) {
   auto context = test::make_empty_context();
   const auto* method = context.methods->create(
       marianatrench::redex::create_void_method(scope, "LClass;", "one"));
-  const auto* method2 = context.methods->create(redex::create_void_method(
-      scope, "Lcom/facebook/graphql/calls/SomeMutationData;", "setSomeField"));
-  const auto* method3 =
-      context.methods->create(marianatrench::redex::create_void_method(
+  const auto* method2 = context.methods->create(
+      redex::create_void_method(
+          scope,
+          "Lcom/facebook/graphql/calls/SomeMutationData;",
+          "setSomeField"));
+  const auto* method3 = context.methods->create(
+      marianatrench::redex::create_void_method(
           scope,
           "Lcom/instagram/common/bloks/actions/BloksFooAsyncControllerAction;",
           "contentId"));
@@ -48,20 +51,24 @@ TEST_F(CanonicalNameTest, Instantiate) {
       CanonicalName(CanonicalName::TemplateValue{"%bloks_canonical_name%"})
           .instantiate(method3, /* via_type_ofs */ {})
           .value(),
-      CanonicalName(CanonicalName::InstantiatedValue{
-          "BloksFooAsyncController:content_id"}));
+      CanonicalName(
+          CanonicalName::InstantiatedValue{
+              "BloksFooAsyncController:content_id"}));
 
   EXPECT_EQ(
-      CanonicalName(CanonicalName::TemplateValue{
-                        "%programmatic_leaf_name%__%programmatic_leaf_name%"})
+      CanonicalName(
+          CanonicalName::TemplateValue{
+              "%programmatic_leaf_name%__%programmatic_leaf_name%"})
           .instantiate(method, /* via_type_ofs */ {})
           .value(),
-      CanonicalName(CanonicalName::InstantiatedValue{
-          "LClass;.one:()V__LClass;.one:()V"}));
+      CanonicalName(
+          CanonicalName::InstantiatedValue{
+              "LClass;.one:()V__LClass;.one:()V"}));
 
   EXPECT_EQ(
-      CanonicalName(CanonicalName::TemplateValue{
-                        "%programmatic_leaf_name%__%via_type_of%"})
+      CanonicalName(
+          CanonicalName::TemplateValue{
+              "%programmatic_leaf_name%__%via_type_of%"})
           .instantiate(method, /* via_type_ofs */ {feature1})
           .value(),
       CanonicalName(

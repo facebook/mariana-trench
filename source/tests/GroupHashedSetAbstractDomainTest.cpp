@@ -138,113 +138,122 @@ TEST_F(GroupHashedSetAbstractDomainTest, LessOrEqual) {
   EXPECT_TRUE(AbstractDomainT().leq(domain1));
   EXPECT_TRUE(domain1.leq(domain1));
 
-  EXPECT_TRUE((AbstractDomainT{
-                   Element{/* group */ 1, /* values */ IntSet{11}},
-               })
-                  .leq(AbstractDomainT{
-                      Element{/* group */ 1, /* values */ IntSet{10, 11, 12}},
-                  }));
+  EXPECT_TRUE(
+      (AbstractDomainT{
+           Element{/* group */ 1, /* values */ IntSet{11}},
+       })
+          .leq(
+              AbstractDomainT{
+                  Element{/* group */ 1, /* values */ IntSet{10, 11, 12}},
+              }));
 
   EXPECT_FALSE((AbstractDomainT{
                     Element{/* group */ 1, /* values */ IntSet{11}},
                 })
-                   .leq(AbstractDomainT{
-                       Element{/* group */ 1, /* values */ IntSet{10, 12}},
-                   }));
+                   .leq(
+                       AbstractDomainT{
+                           Element{/* group */ 1, /* values */ IntSet{10, 12}},
+                       }));
 
   EXPECT_TRUE((AbstractDomainT{
                    Element{/* group */ 1, /* values */ IntSet{11}},
                })
-                  .leq(AbstractDomainT{
-                      Element{
-                          /* group */ 1,
-                          /* values */ IntSet{10, 11, 12},
-                      },
-                      Element{
-                          /* group */ 2,
-                          /* values */ IntSet{20},
-                      },
-                  }));
+                  .leq(
+                      AbstractDomainT{
+                          Element{
+                              /* group */ 1,
+                              /* values */ IntSet{10, 11, 12},
+                          },
+                          Element{
+                              /* group */ 2,
+                              /* values */ IntSet{20},
+                          },
+                      }));
 
   EXPECT_FALSE((AbstractDomainT{
                     Element{/* group */ 1, /* values */ IntSet{11}},
                     Element{/* group */ 2, /* values */ IntSet{21}},
                 })
-                   .leq(AbstractDomainT{
-                       Element{
-                           /* group */ 1,
-                           /* values */ IntSet{10, 11, 12},
-                       },
-                   }));
+                   .leq(
+                       AbstractDomainT{
+                           Element{
+                               /* group */ 1,
+                               /* values */ IntSet{10, 11, 12},
+                           },
+                       }));
 
   EXPECT_TRUE((AbstractDomainT{
                    Element{/* group */ 1, /* values */ IntSet{11}},
                    Element{/* group */ 2, /* values */ IntSet{21}},
                })
-                  .leq(AbstractDomainT{
-                      Element{
-                          /* group */ 1,
-                          /* values */ IntSet{10, 11, 12},
-                      },
-                      Element{
-                          /* group */ 2,
-                          /* values */ IntSet{20, 21, 22},
-                      },
-                  }));
+                  .leq(
+                      AbstractDomainT{
+                          Element{
+                              /* group */ 1,
+                              /* values */ IntSet{10, 11, 12},
+                          },
+                          Element{
+                              /* group */ 2,
+                              /* values */ IntSet{20, 21, 22},
+                          },
+                      }));
 
   EXPECT_FALSE((AbstractDomainT{
                     Element{/* group */ 1, /* values */ IntSet{11}},
                     Element{/* group */ 2, /* values */ IntSet{20, 21, 23}},
                 })
-                   .leq(AbstractDomainT{
-                       Element{
-                           /* group */ 1,
-                           /* values */ IntSet{10, 11, 12},
-                       },
-                       Element{
-                           /* group */ 2,
-                           /* values */ IntSet{20, 21, 22},
-                       },
-                   }));
+                   .leq(
+                       AbstractDomainT{
+                           Element{
+                               /* group */ 1,
+                               /* values */ IntSet{10, 11, 12},
+                           },
+                           Element{
+                               /* group */ 2,
+                               /* values */ IntSet{20, 21, 22},
+                           },
+                       }));
 
   EXPECT_TRUE((AbstractDomainT{
                    Element{/* group */ 1, /* values */ IntSet{12, 11, 10}},
                    Element{/* group */ 2, /* values */ IntSet{22, 21, 20}},
                })
-                  .leq(AbstractDomainT{
-                      Element{
-                          /* group */ 1,
-                          /* values */ IntSet{10, 11, 12},
-                      },
-                      Element{
-                          /* group */ 2,
-                          /* values */ IntSet{20, 21, 22},
-                      },
-                      Element{
-                          /* group */ 3,
-                          /* values */ IntSet{},
-                      },
-                  }));
+                  .leq(
+                      AbstractDomainT{
+                          Element{
+                              /* group */ 1,
+                              /* values */ IntSet{10, 11, 12},
+                          },
+                          Element{
+                              /* group */ 2,
+                              /* values */ IntSet{20, 21, 22},
+                          },
+                          Element{
+                              /* group */ 3,
+                              /* values */ IntSet{},
+                          },
+                      }));
 
   EXPECT_FALSE((AbstractDomainT{
                     Element{/* group */ 1, /* values */ IntSet{12, 11, 10}},
                     Element{/* group */ 2, /* values */ IntSet{22, 21, 20}},
                     Element{/* group */ 4, /* values */ IntSet{0}},
                 })
-                   .leq(AbstractDomainT{
-                       Element{
-                           /* group */ 1,
-                           /* values */ IntSet{10, 11, 12},
-                       },
-                       Element{
-                           /* group */ 2,
-                           /* values */ IntSet{20, 21, 22},
-                       },
-                       Element{
-                           /* group */ 3,
-                           /* values */ IntSet{0},
-                       },
-                   }));
+                   .leq(
+                       AbstractDomainT{
+                           Element{
+                               /* group */ 1,
+                               /* values */ IntSet{10, 11, 12},
+                           },
+                           Element{
+                               /* group */ 2,
+                               /* values */ IntSet{20, 21, 22},
+                           },
+                           Element{
+                               /* group */ 3,
+                               /* values */ IntSet{0},
+                           },
+                       }));
 }
 
 TEST_F(GroupHashedSetAbstractDomainTest, Equals) {
@@ -265,106 +274,114 @@ TEST_F(GroupHashedSetAbstractDomainTest, Equals) {
   EXPECT_TRUE((AbstractDomainT{
                    Element{/* group */ 1, /* values */ IntSet{11}},
                })
-                  .equals(AbstractDomainT{
-                      Element{/* group */ 1, /* values */ IntSet{11}},
-                  }));
+                  .equals(
+                      AbstractDomainT{
+                          Element{/* group */ 1, /* values */ IntSet{11}},
+                      }));
 
   EXPECT_FALSE((AbstractDomainT{
                     Element{/* group */ 1, /* values */ IntSet{11}},
                 })
-                   .equals(AbstractDomainT{
-                       Element{/* group */ 1, /* values */ IntSet{12}},
-                   }));
+                   .equals(
+                       AbstractDomainT{
+                           Element{/* group */ 1, /* values */ IntSet{12}},
+                       }));
 
   EXPECT_FALSE((AbstractDomainT{
                     Element{/* group */ 1, /* values */ IntSet{11}},
                 })
-                   .equals(AbstractDomainT{
-                       Element{
-                           /* group */ 1,
-                           /* values */ IntSet{11},
-                       },
-                       Element{
-                           /* group */ 2,
-                           /* values */ IntSet{20},
-                       },
-                   }));
+                   .equals(
+                       AbstractDomainT{
+                           Element{
+                               /* group */ 1,
+                               /* values */ IntSet{11},
+                           },
+                           Element{
+                               /* group */ 2,
+                               /* values */ IntSet{20},
+                           },
+                       }));
 
   EXPECT_FALSE((AbstractDomainT{
                     Element{/* group */ 1, /* values */ IntSet{11}},
                     Element{/* group */ 2, /* values */ IntSet{21}},
                 })
-                   .equals(AbstractDomainT{
-                       Element{
-                           /* group */ 1,
-                           /* values */ IntSet{11},
-                       },
-                   }));
+                   .equals(
+                       AbstractDomainT{
+                           Element{
+                               /* group */ 1,
+                               /* values */ IntSet{11},
+                           },
+                       }));
 
   EXPECT_TRUE((AbstractDomainT{
                    Element{/* group */ 1, /* values */ IntSet{10, 11, 12}},
                    Element{/* group */ 2, /* values */ IntSet{20, 21, 22}},
                })
-                  .equals(AbstractDomainT{
-                      Element{
-                          /* group */ 1,
-                          /* values */ IntSet{10, 11, 12},
-                      },
-                      Element{
-                          /* group */ 2,
-                          /* values */ IntSet{20, 21, 22},
-                      },
-                  }));
+                  .equals(
+                      AbstractDomainT{
+                          Element{
+                              /* group */ 1,
+                              /* values */ IntSet{10, 11, 12},
+                          },
+                          Element{
+                              /* group */ 2,
+                              /* values */ IntSet{20, 21, 22},
+                          },
+                      }));
 
   EXPECT_FALSE((AbstractDomainT{
                     Element{/* group */ 1, /* values */ IntSet{11}},
                     Element{/* group */ 2, /* values */ IntSet{20, 21, 23}},
                 })
-                   .equals(AbstractDomainT{
-                       Element{
-                           /* group */ 1,
-                           /* values */ IntSet{11},
-                       },
-                       Element{
-                           /* group */ 2,
-                           /* values */ IntSet{20, 21, 22},
-                       },
-                   }));
+                   .equals(
+                       AbstractDomainT{
+                           Element{
+                               /* group */ 1,
+                               /* values */ IntSet{11},
+                           },
+                           Element{
+                               /* group */ 2,
+                               /* values */ IntSet{20, 21, 22},
+                           },
+                       }));
 
   EXPECT_TRUE((AbstractDomainT{
                    Element{/* group */ 1, /* values */ IntSet{12, 11, 10}},
                    Element{/* group */ 2, /* values */ IntSet{22, 21, 20}},
                })
-                  .equals(AbstractDomainT{
-                      Element{
-                          /* group */ 1,
-                          /* values */ IntSet{10, 11, 12},
-                      },
-                      Element{
-                          /* group */ 2,
-                          /* values */ IntSet{20, 21, 22},
-                      },
-                  }));
+                  .equals(
+                      AbstractDomainT{
+                          Element{
+                              /* group */ 1,
+                              /* values */ IntSet{10, 11, 12},
+                          },
+                          Element{
+                              /* group */ 2,
+                              /* values */ IntSet{20, 21, 22},
+                          },
+                      }));
 
   EXPECT_FALSE((AbstractDomainT{
                     Element{/* group */ 1, /* values */ IntSet{12, 11, 10}},
                     Element{/* group */ 2, /* values */ IntSet{22, 21, 20}},
                     Element{/* group */ 4, /* values */ IntSet{0}},
                 })
-                   .equals(AbstractDomainT{
-                       Element{
-                           /* group */ 1,
-                           /* values */ IntSet{10, 11, 12},
-                       },
-                       Element{
-                           /* group */ 2,
-                           /* values */ IntSet{20, 21, 22},
-                       },
-                       Element{
-                           /* group */ 3,
-                           /* values */ IntSet{0},
-                       },
-                   }));
+                   .equals(
+                       AbstractDomainT{
+                           Element{
+                               /* group */ 1,
+                               /* values */ IntSet{10, 11, 12},
+                           },
+                           Element{
+                               /* group */ 2,
+                               /* values */ IntSet{20, 21, 22},
+                           },
+                           Element{
+                               /* group */ 3,
+                               /* values */ IntSet{0},
+                           },
+                       }));
 }
 
 TEST_F(GroupHashedSetAbstractDomainTest, JoinWith) {
@@ -415,10 +432,11 @@ TEST_F(GroupHashedSetAbstractDomainTest, JoinWith) {
           Element{/* group */ 3, /* values */ IntSet{30}})));
 
   domain = AbstractDomainT();
-  domain.join_with(AbstractDomainT{
-      Element{/* group */ 1, /* values */ IntSet{10}},
-      Element{/* group */ 2, /* values */ IntSet{20}},
-  });
+  domain.join_with(
+      AbstractDomainT{
+          Element{/* group */ 1, /* values */ IntSet{10}},
+          Element{/* group */ 2, /* values */ IntSet{20}},
+      });
   EXPECT_TRUE(domain.size() == 2);
   EXPECT_THAT(
       domain,
@@ -430,11 +448,12 @@ TEST_F(GroupHashedSetAbstractDomainTest, JoinWith) {
       Element{/* group */ 1, /* values */ IntSet{10, 12}},
       Element{/* group */ 3, /* values */ IntSet{20, 22}},
   };
-  domain.join_with(AbstractDomainT{
-      Element{/* group */ 1, /* values */ IntSet{11, 13}},
-      Element{/* group */ 2, /* values */ IntSet{0}},
-      Element{/* group */ 3, /* values */ IntSet{21, 23}},
-  });
+  domain.join_with(
+      AbstractDomainT{
+          Element{/* group */ 1, /* values */ IntSet{11, 13}},
+          Element{/* group */ 2, /* values */ IntSet{0}},
+          Element{/* group */ 3, /* values */ IntSet{21, 23}},
+      });
   EXPECT_TRUE(domain.size() == 3);
   EXPECT_THAT(
       domain,
@@ -447,9 +466,10 @@ TEST_F(GroupHashedSetAbstractDomainTest, JoinWith) {
       Element{/* group */ 1, /* values */ IntSet{10, 12}},
       Element{/* group */ 3, /* values */ IntSet{20, 22}},
   };
-  domain.join_with(AbstractDomainT{
-      Element{/* group */ 2, /* values */ IntSet{11, 13}},
-  });
+  domain.join_with(
+      AbstractDomainT{
+          Element{/* group */ 2, /* values */ IntSet{11, 13}},
+      });
   EXPECT_TRUE(domain.size() == 3);
   EXPECT_THAT(
       domain,
@@ -460,10 +480,12 @@ TEST_F(GroupHashedSetAbstractDomainTest, JoinWith) {
 }
 
 TEST_F(GroupHashedSetAbstractDomainTest, Contains) {
-  EXPECT_TRUE(AbstractDomainT{}.contains(
-      Element{/* group */ 1, /* values */ IntSet{}}));
-  EXPECT_FALSE(AbstractDomainT{}.contains(
-      Element{/* group */ 1, /* values */ IntSet{10}}));
+  EXPECT_TRUE(
+      AbstractDomainT{}.contains(
+          Element{/* group */ 1, /* values */ IntSet{}}));
+  EXPECT_FALSE(
+      AbstractDomainT{}.contains(
+          Element{/* group */ 1, /* values */ IntSet{10}}));
   EXPECT_TRUE(
       (AbstractDomainT{Element{/* group */ 1, /* values */ IntSet{10, 11, 12}}})
           .contains(Element{/* group */ 1, /* values */ IntSet{}}));
@@ -566,8 +588,9 @@ TEST_F(GroupHashedSetAbstractDomainTest, Difference) {
 
   domain =
       AbstractDomainT{Element{/* group */ 1, /* values */ IntSet{10, 11, 12}}};
-  domain.difference_with(AbstractDomainT{
-      Element{/* group */ 1, /* values */ IntSet{10, 11, 12, 13}}});
+  domain.difference_with(
+      AbstractDomainT{
+          Element{/* group */ 1, /* values */ IntSet{10, 11, 12, 13}}});
   EXPECT_EQ(domain, AbstractDomainT{});
 
   domain = AbstractDomainT{
@@ -603,10 +626,11 @@ TEST_F(GroupHashedSetAbstractDomainTest, Difference) {
 
   domain =
       AbstractDomainT{Element{/* group */ 1, /* values */ IntSet{10, 11, 12}}};
-  domain.difference_with(AbstractDomainT{
-      Element{/* group */ 1, /* values */ IntSet{10}},
-      Element{/* group */ 2, /* values */ IntSet{20}},
-  });
+  domain.difference_with(
+      AbstractDomainT{
+          Element{/* group */ 1, /* values */ IntSet{10}},
+          Element{/* group */ 2, /* values */ IntSet{20}},
+      });
   EXPECT_EQ(
       domain,
       (AbstractDomainT{
@@ -614,10 +638,11 @@ TEST_F(GroupHashedSetAbstractDomainTest, Difference) {
 
   domain =
       AbstractDomainT{Element{/* group */ 1, /* values */ IntSet{10, 11, 12}}};
-  domain.difference_with(AbstractDomainT{
-      Element{/* group */ 1, /* values */ IntSet{10, 11, 12, 13}},
-      Element{/* group */ 2, /* values */ IntSet{20}},
-  });
+  domain.difference_with(
+      AbstractDomainT{
+          Element{/* group */ 1, /* values */ IntSet{10, 11, 12, 13}},
+          Element{/* group */ 2, /* values */ IntSet{20}},
+      });
   EXPECT_EQ(domain, AbstractDomainT{});
 }
 

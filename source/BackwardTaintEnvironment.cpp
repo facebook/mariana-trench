@@ -30,15 +30,17 @@ BackwardTaintEnvironment BackwardTaintEnvironment::initial(
   if (!is_static) {
     taint.set(
         context.memory_factory.make_parameter(0),
-        TaintTree(Taint::propagation_taint(
-            /* kind */ context.kind_factory.local_receiver(),
-            /* output_paths */
-            PathTreeDomain{
-                {Path{},
-                 CollapseDepth(Heuristics::singleton()
-                                   .propagation_max_collapse_depth())}},
-            /* inferred_features */ {},
-            /* user_features */ {})));
+        TaintTree(
+            Taint::propagation_taint(
+                /* kind */ context.kind_factory.local_receiver(),
+                /* output_paths */
+                PathTreeDomain{
+                    {Path{},
+                     CollapseDepth(
+                         Heuristics::singleton()
+                             .propagation_max_collapse_depth())}},
+                /* inferred_features */ {},
+                /* user_features */ {})));
   }
 
   if (context.options.propagate_across_arguments() &&
@@ -53,15 +55,17 @@ BackwardTaintEnvironment BackwardTaintEnvironment::initial(
 
       taint.set(
           context.memory_factory.make_parameter(i),
-          TaintTree(Taint::propagation_taint(
-              /* kind */ context.kind_factory.local_argument(i),
-              /* output_paths */
-              PathTreeDomain{
-                  {Path{},
-                   CollapseDepth(Heuristics::singleton()
-                                     .propagation_max_collapse_depth())}},
-              /* inferred_features */ {},
-              /* user_features */ {})));
+          TaintTree(
+              Taint::propagation_taint(
+                  /* kind */ context.kind_factory.local_argument(i),
+                  /* output_paths */
+                  PathTreeDomain{
+                      {Path{},
+                       CollapseDepth(
+                           Heuristics::singleton()
+                               .propagation_max_collapse_depth())}},
+                  /* inferred_features */ {},
+                  /* user_features */ {})));
     }
   }
 

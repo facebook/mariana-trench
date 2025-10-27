@@ -24,10 +24,10 @@
 namespace marianatrench {
 namespace test {
 
-Test::Test() : global_redex_context_(/* allow_class_duplicates */ false){};
+Test::Test() : global_redex_context_(/* allow_class_duplicates */ false) {};
 
 ContextGuard::ContextGuard()
-    : global_redex_context_(/* allow_class_duplicates */ false){};
+    : global_redex_context_(/* allow_class_duplicates */ false) {};
 
 /**
  * Empty options. Useful to initialize an empty context.

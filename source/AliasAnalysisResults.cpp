@@ -83,8 +83,9 @@ const InstructionAliasResults& AliasAnalysisResults::get(
   if (it == instructions_.end()) {
     // We might not have saved alias information for that instruction,
     // see `ShouldStoreAliasResults` in ForwardAliasFixpoint.cpp
-    throw std::runtime_error(fmt::format(
-        "No alias information for instruction `{}`", show(instruction)));
+    throw std::runtime_error(
+        fmt::format(
+            "No alias information for instruction `{}`", show(instruction)));
   }
 
   return it->second;

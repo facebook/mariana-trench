@@ -239,8 +239,9 @@ TEST_F(FieldConstraintTest, FieldNameConstraintFromJson) {
   auto context = test::make_empty_context();
 
   {
-    auto constraint = FieldConstraint::from_json(test::parse_json(
-        R"({
+    auto constraint = FieldConstraint::from_json(
+        test::parse_json(
+            R"({
           "constraint": "name",
           "pattern": "mfield"
         })"));
@@ -248,24 +249,27 @@ TEST_F(FieldConstraintTest, FieldNameConstraintFromJson) {
   }
 
   EXPECT_THROW(
-      FieldConstraint::from_json(test::parse_json(
-          R"({
+      FieldConstraint::from_json(
+          test::parse_json(
+              R"({
             "cOnstraint": "name",
             "pattern": "println"
           })")),
       JsonValidationError);
 
   EXPECT_THROW(
-      FieldConstraint::from_json(test::parse_json(
-          R"({
+      FieldConstraint::from_json(
+          test::parse_json(
+              R"({
             "constraint": "nAme",
             "pattern": "println"
           })")),
       JsonValidationError);
 
   EXPECT_THROW(
-      FieldConstraint::from_json(test::parse_json(
-          R"({
+      FieldConstraint::from_json(
+          test::parse_json(
+              R"({
             "constraint": "name",
             "paTtern": "println"
           })")),
@@ -276,16 +280,18 @@ TEST_F(FieldConstraintTest, SignaturePatternFieldConstraintFromJson) {
   auto context = test::make_empty_context();
 
   {
-    auto constraint = FieldConstraint::from_json(test::parse_json(
-        R"({
+    auto constraint = FieldConstraint::from_json(
+        test::parse_json(
+            R"({
           "constraint": "signature",
           "pattern": "LClass;.mfield:Ltype;"
         })"));
     EXPECT_EQ(
         SignaturePatternFieldConstraint("LClass;.mfield:Ltype;"), *constraint);
 
-    constraint = FieldConstraint::from_json(test::parse_json(
-        R"({
+    constraint = FieldConstraint::from_json(
+        test::parse_json(
+            R"({
           "constraint": "signature_pattern",
           "pattern": "LClass;.mfield:Ltype;"
         })"));
@@ -294,8 +300,9 @@ TEST_F(FieldConstraintTest, SignaturePatternFieldConstraintFromJson) {
   }
 
   EXPECT_THROW(
-      FieldConstraint::from_json(test::parse_json(
-          R"({
+      FieldConstraint::from_json(
+          test::parse_json(
+              R"({
             "constraint": "Signature",
             "pattern": "println"
           })")),
@@ -306,8 +313,9 @@ TEST_F(FieldConstraintTest, HasAnnotationFieldConstraintFromJson) {
   auto context = test::make_empty_context();
 
   {
-    auto constraint = FieldConstraint::from_json(test::parse_json(
-        R"({
+    auto constraint = FieldConstraint::from_json(
+        test::parse_json(
+            R"({
           "constraint": "has_annotation",
           "type": "Lcom/facebook/Annotation;",
           "pattern": "A"
@@ -318,8 +326,9 @@ TEST_F(FieldConstraintTest, HasAnnotationFieldConstraintFromJson) {
   }
 
   {
-    auto constraint = FieldConstraint::from_json(test::parse_json(
-        R"({
+    auto constraint = FieldConstraint::from_json(
+        test::parse_json(
+            R"({
           "constraint": "has_annotation",
           "type": "Lcom/facebook/Annotation;"
         })"));
@@ -329,8 +338,9 @@ TEST_F(FieldConstraintTest, HasAnnotationFieldConstraintFromJson) {
   }
 
   EXPECT_THROW(
-      FieldConstraint::from_json(test::parse_json(
-          R"({
+      FieldConstraint::from_json(
+          test::parse_json(
+              R"({
             "constraint": "Has_annotation",
             "type": "Lcom/facebook/Annotation;",
             "pattern": "A"
@@ -342,8 +352,9 @@ TEST_F(FieldConstraintTest, ParentFieldConstraintFromJson) {
   auto context = test::make_empty_context();
 
   {
-    auto constraint = FieldConstraint::from_json(test::parse_json(
-        R"({
+    auto constraint = FieldConstraint::from_json(
+        test::parse_json(
+            R"({
           "constraint": "parent",
           "inner": {
             "constraint": "name",
@@ -357,8 +368,9 @@ TEST_F(FieldConstraintTest, ParentFieldConstraintFromJson) {
   }
 
   EXPECT_THROW(
-      FieldConstraint::from_json(test::parse_json(
-          R"({
+      FieldConstraint::from_json(
+          test::parse_json(
+              R"({
             "constraint": "parent",
             "pattern": "LClass;"
           })")),
@@ -369,8 +381,9 @@ TEST_F(FieldConstraintTest, AllOfFieldConstraintFromJson) {
   auto context = test::make_empty_context();
 
   {
-    auto constraint = FieldConstraint::from_json(test::parse_json(
-        R"({
+    auto constraint = FieldConstraint::from_json(
+        test::parse_json(
+            R"({
           "constraint": "all_of",
           "inners": [
             {
@@ -387,16 +400,18 @@ TEST_F(FieldConstraintTest, AllOfFieldConstraintFromJson) {
     {
       std::vector<std::unique_ptr<FieldConstraint>> constraints;
       constraints.push_back(std::make_unique<FieldNameConstraint>("println"));
-      constraints.push_back(std::make_unique<HasAnnotationFieldConstraint>(
-          "Lcom/facebook/Annotation;", std::nullopt));
+      constraints.push_back(
+          std::make_unique<HasAnnotationFieldConstraint>(
+              "Lcom/facebook/Annotation;", std::nullopt));
 
       EXPECT_EQ(AllOfFieldConstraint(std::move(constraints)), *constraint);
     }
 
     {
       std::vector<std::unique_ptr<FieldConstraint>> constraints;
-      constraints.push_back(std::make_unique<HasAnnotationFieldConstraint>(
-          "Lcom/facebook/Annotation;", std::nullopt));
+      constraints.push_back(
+          std::make_unique<HasAnnotationFieldConstraint>(
+              "Lcom/facebook/Annotation;", std::nullopt));
       constraints.push_back(std::make_unique<FieldNameConstraint>("println"));
 
       EXPECT_EQ(AllOfFieldConstraint(std::move(constraints)), *constraint);
@@ -404,8 +419,9 @@ TEST_F(FieldConstraintTest, AllOfFieldConstraintFromJson) {
   }
 
   EXPECT_THROW(
-      FieldConstraint::from_json(test::parse_json(
-          R"({
+      FieldConstraint::from_json(
+          test::parse_json(
+              R"({
             "constraint": "All_of",
             "inners": [
               {
@@ -425,8 +441,9 @@ TEST_F(FieldConstraintTest, AnyOfFieldConstraintFromJson) {
   auto context = test::make_empty_context();
 
   {
-    auto constraint = FieldConstraint::from_json(test::parse_json(
-        R"({
+    auto constraint = FieldConstraint::from_json(
+        test::parse_json(
+            R"({
           "constraint": "any_of",
           "inners": [
             {
@@ -443,16 +460,18 @@ TEST_F(FieldConstraintTest, AnyOfFieldConstraintFromJson) {
     {
       std::vector<std::unique_ptr<FieldConstraint>> constraints;
       constraints.push_back(std::make_unique<FieldNameConstraint>("println"));
-      constraints.push_back(std::make_unique<HasAnnotationFieldConstraint>(
-          "Lcom/facebook/Annotation;", std::nullopt));
+      constraints.push_back(
+          std::make_unique<HasAnnotationFieldConstraint>(
+              "Lcom/facebook/Annotation;", std::nullopt));
 
       EXPECT_EQ(AnyOfFieldConstraint(std::move(constraints)), *constraint);
     }
 
     {
       std::vector<std::unique_ptr<FieldConstraint>> constraints;
-      constraints.push_back(std::make_unique<HasAnnotationFieldConstraint>(
-          "Lcom/facebook/Annotation;", std::nullopt));
+      constraints.push_back(
+          std::make_unique<HasAnnotationFieldConstraint>(
+              "Lcom/facebook/Annotation;", std::nullopt));
       constraints.push_back(std::make_unique<FieldNameConstraint>("println"));
 
       EXPECT_EQ(AnyOfFieldConstraint(std::move(constraints)), *constraint);
@@ -460,8 +479,9 @@ TEST_F(FieldConstraintTest, AnyOfFieldConstraintFromJson) {
   }
 
   EXPECT_THROW(
-      FieldConstraint::from_json(test::parse_json(
-          R"({
+      FieldConstraint::from_json(
+          test::parse_json(
+              R"({
             "constraint": "any_of",
             "inners":
               {

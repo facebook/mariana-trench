@@ -102,8 +102,8 @@ TEST_F(RulesCoverageTest, TestCoverageInfo) {
   // NOTE: When adding models for this method to the registry, the caller port
   // needs to be valid, i.e. Argument(0-1) only, and no Return. The make_model_*
   // helpers are named to indicate the hard-coded caller ports within them.
-  const auto* method =
-      context.methods->create(marianatrench::redex::create_void_method(
+  const auto* method = context.methods->create(
+      marianatrench::redex::create_void_method(
           scope,
           /* class_name */ "LClass;",
           /* method_name */ "returns_void",
@@ -166,14 +166,15 @@ TEST_F(RulesCoverageTest, TestCoverageInfo) {
         /* literal_models */ {});
     EXPECT_EQ(
         RulesCoverage::compute(registry, rules),
-        (RulesCoverage{/* covered_rules */
-                       {{1,
-                         CoveredRule{
-                             .code = 1,
-                             .used_sources = {source1},
-                             .used_sinks = {sink1},
-                             .used_transforms = {}}}},
-                       /* non_covered_rule_codes */ {2, 3}}));
+        (RulesCoverage{
+            /* covered_rules */
+            {{1,
+              CoveredRule{
+                  .code = 1,
+                  .used_sources = {source1},
+                  .used_sinks = {sink1},
+                  .used_transforms = {}}}},
+            /* non_covered_rule_codes */ {2, 3}}));
   }
 
   // Source-sink rule with transforms.
@@ -189,20 +190,21 @@ TEST_F(RulesCoverageTest, TestCoverageInfo) {
         /* literal_models */ {});
     EXPECT_EQ(
         RulesCoverage::compute(registry, rules),
-        (RulesCoverage{/* covered_rules */
-                       {{1,
-                         CoveredRule{
-                             .code = 1,
-                             .used_sources = {source1},
-                             .used_sinks = {sink1},
-                             .used_transforms = {}}},
-                        {2,
-                         CoveredRule{
-                             .code = 2,
-                             .used_sources = {source1},
-                             .used_sinks = {sink1},
-                             .used_transforms = {transform1}}}},
-                       /* non_covered_rule_codes */ {3}}));
+        (RulesCoverage{
+            /* covered_rules */
+            {{1,
+              CoveredRule{
+                  .code = 1,
+                  .used_sources = {source1},
+                  .used_sinks = {sink1},
+                  .used_transforms = {}}},
+             {2,
+              CoveredRule{
+                  .code = 2,
+                  .used_sources = {source1},
+                  .used_sinks = {sink1},
+                  .used_transforms = {transform1}}}},
+            /* non_covered_rule_codes */ {3}}));
   }
 
   // Multi-source rule with partial source/sink coverage.
@@ -219,9 +221,8 @@ TEST_F(RulesCoverageTest, TestCoverageInfo) {
         /* literal_models */ {});
     EXPECT_EQ(
         RulesCoverage::compute(source1_sinkA_registry, rules),
-        (RulesCoverage{
-            /* covered_rules */ {},
-            /* non_covered_rule_codes */ {1, 2, 3}}));
+        (RulesCoverage{/* covered_rules */ {},
+                       /* non_covered_rule_codes */ {1, 2, 3}}));
 
     auto multi_source_registry = Registry(
         context,
@@ -234,14 +235,15 @@ TEST_F(RulesCoverageTest, TestCoverageInfo) {
         /* literal_models */ {});
     EXPECT_EQ(
         RulesCoverage::compute(multi_source_registry, rules),
-        (RulesCoverage{/* covered_rules */
-                       {{3,
-                         CoveredRule{
-                             .code = 3,
-                             .used_sources = {source1, source2},
-                             .used_sinks = {partial_sink_a, partial_sink_b},
-                             .used_transforms = {}}}},
-                       /* non_covered_rule_codes */ {1, 2}}));
+        (RulesCoverage{
+            /* covered_rules */
+            {{3,
+              CoveredRule{
+                  .code = 3,
+                  .used_sources = {source1, source2},
+                  .used_sinks = {partial_sink_a, partial_sink_b},
+                  .used_transforms = {}}}},
+            /* non_covered_rule_codes */ {1, 2}}));
   }
 }
 

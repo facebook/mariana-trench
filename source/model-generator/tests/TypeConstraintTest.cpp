@@ -165,32 +165,36 @@ TEST_F(TypeConstraintTest, IsEnumTypeConstraintSatisfy) {
 
 TEST_F(TypeConstraintTest, TypeConstraintFromJson) {
   // TypePatternConstraint
-  auto constraint = TypeConstraint::from_json(test::parse_json(
-      R"({
+  auto constraint = TypeConstraint::from_json(
+      test::parse_json(
+          R"({
         "constraint": "name",
         "pattern": "Landroid/util/Log;"
       })"));
   EXPECT_EQ(TypePatternConstraint("Landroid/util/Log;"), *constraint);
 
   EXPECT_THROW(
-      TypeConstraint::from_json(test::parse_json(
-          R"({
+      TypeConstraint::from_json(
+          test::parse_json(
+              R"({
             "cOnstraint": "name",
             "pattern": "Landroid/util/Log;"
           })")),
       JsonValidationError);
 
   EXPECT_THROW(
-      TypeConstraint::from_json(test::parse_json(
-          R"({
+      TypeConstraint::from_json(
+          test::parse_json(
+              R"({
             "constraint": "nAme",
             "pattern": "Landroid/util/Log;"
           })")),
       JsonValidationError);
 
   EXPECT_THROW(
-      TypeConstraint::from_json(test::parse_json(
-          R"({
+      TypeConstraint::from_json(
+          test::parse_json(
+              R"({
             "constraint": "name",
             "paTtern": "Landroid/util/Log;"
           })")),
@@ -199,8 +203,9 @@ TEST_F(TypeConstraintTest, TypeConstraintFromJson) {
 
   // ExtendsConstraint
   {
-    auto constraint = TypeConstraint::from_json(test::parse_json(
-        R"({
+    auto constraint = TypeConstraint::from_json(
+        test::parse_json(
+            R"({
           "constraint": "extends",
           "include_self": true,
           "inner": {
@@ -216,8 +221,9 @@ TEST_F(TypeConstraintTest, TypeConstraintFromJson) {
   }
 
   {
-    auto constraint = TypeConstraint::from_json(test::parse_json(
-        R"({
+    auto constraint = TypeConstraint::from_json(
+        test::parse_json(
+            R"({
           "constraint": "extends",
           "inner": {
             "constraint": "name",
@@ -232,8 +238,9 @@ TEST_F(TypeConstraintTest, TypeConstraintFromJson) {
   }
 
   {
-    auto constraint = TypeConstraint::from_json(test::parse_json(
-        R"({
+    auto constraint = TypeConstraint::from_json(
+        test::parse_json(
+            R"({
           "constraint": "extends",
           "include_self": false,
           "inner": {
@@ -249,8 +256,9 @@ TEST_F(TypeConstraintTest, TypeConstraintFromJson) {
   }
 
   EXPECT_THROW(
-      TypeConstraint::from_json(test::parse_json(
-          R"({
+      TypeConstraint::from_json(
+          test::parse_json(
+              R"({
             "cOnstraint": "extends",
             "include_self": true,
             "inner": {
@@ -261,8 +269,9 @@ TEST_F(TypeConstraintTest, TypeConstraintFromJson) {
       JsonValidationError);
 
   EXPECT_THROW(
-      TypeConstraint::from_json(test::parse_json(
-          R"({
+      TypeConstraint::from_json(
+          test::parse_json(
+              R"({
             "constraint": "Extends",
             "include_self": true,
             "inner": {
@@ -273,8 +282,9 @@ TEST_F(TypeConstraintTest, TypeConstraintFromJson) {
       JsonValidationError);
 
   EXPECT_THROW(
-      TypeConstraint::from_json(test::parse_json(
-          R"({
+      TypeConstraint::from_json(
+          test::parse_json(
+              R"({
             "constraint": "extends",
             "include_self": true,
             "iNner": {
@@ -287,8 +297,9 @@ TEST_F(TypeConstraintTest, TypeConstraintFromJson) {
 
   // SuperConstraint
   {
-    auto constraint = TypeConstraint::from_json(test::parse_json(
-        R"({
+    auto constraint = TypeConstraint::from_json(
+        test::parse_json(
+            R"({
           "constraint": "super",
           "inner": {
             "constraint": "name",
@@ -302,8 +313,9 @@ TEST_F(TypeConstraintTest, TypeConstraintFromJson) {
   }
 
   EXPECT_THROW(
-      TypeConstraint::from_json(test::parse_json(
-          R"({
+      TypeConstraint::from_json(
+          test::parse_json(
+              R"({
             "cOnstraint": "super",
             "inner": {
               "constraint": "name",
@@ -313,8 +325,9 @@ TEST_F(TypeConstraintTest, TypeConstraintFromJson) {
       JsonValidationError);
 
   EXPECT_THROW(
-      TypeConstraint::from_json(test::parse_json(
-          R"({
+      TypeConstraint::from_json(
+          test::parse_json(
+              R"({
             "constraint": "Super",
             "inner": {
               "constraint": "name",
@@ -324,8 +337,9 @@ TEST_F(TypeConstraintTest, TypeConstraintFromJson) {
       JsonValidationError);
 
   EXPECT_THROW(
-      TypeConstraint::from_json(test::parse_json(
-          R"({
+      TypeConstraint::from_json(
+          test::parse_json(
+              R"({
             "constraint": "super",
             "iNner": {
               "constraint": "name",
@@ -337,8 +351,9 @@ TEST_F(TypeConstraintTest, TypeConstraintFromJson) {
 
   // HasAnnotationTypeConstraint
   {
-    auto constraint = TypeConstraint::from_json(test::parse_json(
-        R"({
+    auto constraint = TypeConstraint::from_json(
+        test::parse_json(
+            R"({
           "constraint": "has_annotation",
           "type": "Lcom/facebook/Annotation;",
           "pattern": "A"
@@ -349,8 +364,9 @@ TEST_F(TypeConstraintTest, TypeConstraintFromJson) {
   }
 
   {
-    auto constraint = TypeConstraint::from_json(test::parse_json(
-        R"({
+    auto constraint = TypeConstraint::from_json(
+        test::parse_json(
+            R"({
           "constraint": "has_annotation",
           "type": "Lcom/facebook/Annotation;"
         })"));
@@ -360,8 +376,9 @@ TEST_F(TypeConstraintTest, TypeConstraintFromJson) {
   }
 
   EXPECT_THROW(
-      TypeConstraint::from_json(test::parse_json(
-          R"({
+      TypeConstraint::from_json(
+          test::parse_json(
+              R"({
             "Constraint": "has_annotation",
             "type": "Lcom/facebook/Annotation;",
             "pattern": "A"
@@ -369,8 +386,9 @@ TEST_F(TypeConstraintTest, TypeConstraintFromJson) {
       JsonValidationError);
 
   EXPECT_THROW(
-      TypeConstraint::from_json(test::parse_json(
-          R"({
+      TypeConstraint::from_json(
+          test::parse_json(
+              R"({
             "constraint": "Has_annotation",
             "type": "Lcom/facebook/Annotation;",
             "pattern": "A"
@@ -378,8 +396,9 @@ TEST_F(TypeConstraintTest, TypeConstraintFromJson) {
       JsonValidationError);
 
   EXPECT_THROW(
-      TypeConstraint::from_json(test::parse_json(
-          R"({
+      TypeConstraint::from_json(
+          test::parse_json(
+              R"({
             "constraint": "has_annotation",
             "Type": "Lcom/facebook/Annotation;",
             "pattern": "A"
@@ -387,8 +406,9 @@ TEST_F(TypeConstraintTest, TypeConstraintFromJson) {
       JsonValidationError);
 
   EXPECT_THROW(
-      TypeConstraint::from_json(test::parse_json(
-          R"({
+      TypeConstraint::from_json(
+          test::parse_json(
+              R"({
             "constraint": "Has_annotation",
             "type": "Lcom/facebook/Annotation;",
             "Pattern": "A"
@@ -398,8 +418,9 @@ TEST_F(TypeConstraintTest, TypeConstraintFromJson) {
 
   // IsClassTypeConstraint
   {
-    auto constraint = TypeConstraint::from_json(test::parse_json(
-        R"({
+    auto constraint = TypeConstraint::from_json(
+        test::parse_json(
+            R"({
           "constraint": "is_class",
           "value": true
         })"));
@@ -407,8 +428,9 @@ TEST_F(TypeConstraintTest, TypeConstraintFromJson) {
   }
 
   {
-    auto constraint = TypeConstraint::from_json(test::parse_json(
-        R"({
+    auto constraint = TypeConstraint::from_json(
+        test::parse_json(
+            R"({
           "constraint": "is_class",
           "value": false
         })"));
@@ -416,16 +438,18 @@ TEST_F(TypeConstraintTest, TypeConstraintFromJson) {
   }
 
   {
-    auto constraint = TypeConstraint::from_json(test::parse_json(
-        R"({
+    auto constraint = TypeConstraint::from_json(
+        test::parse_json(
+            R"({
           "constraint": "is_class"
         })"));
     EXPECT_EQ(IsClassTypeConstraint(true), *constraint);
   }
 
   EXPECT_THROW(
-      TypeConstraint::from_json(test::parse_json(
-          R"({
+      TypeConstraint::from_json(
+          test::parse_json(
+              R"({
           "constraint": "is_class",
           "value": "true"
         })")),
@@ -434,8 +458,9 @@ TEST_F(TypeConstraintTest, TypeConstraintFromJson) {
 
   // IsInterfaceTypeConstraint
   {
-    auto constraint = TypeConstraint::from_json(test::parse_json(
-        R"({
+    auto constraint = TypeConstraint::from_json(
+        test::parse_json(
+            R"({
           "constraint": "is_interface",
           "value": true
         })"));
@@ -443,8 +468,9 @@ TEST_F(TypeConstraintTest, TypeConstraintFromJson) {
   }
 
   {
-    auto constraint = TypeConstraint::from_json(test::parse_json(
-        R"({
+    auto constraint = TypeConstraint::from_json(
+        test::parse_json(
+            R"({
           "constraint": "is_interface",
           "value": false
         })"));
@@ -452,16 +478,18 @@ TEST_F(TypeConstraintTest, TypeConstraintFromJson) {
   }
 
   {
-    auto constraint = TypeConstraint::from_json(test::parse_json(
-        R"({
+    auto constraint = TypeConstraint::from_json(
+        test::parse_json(
+            R"({
           "constraint": "is_interface"
         })"));
     EXPECT_EQ(IsInterfaceTypeConstraint(true), *constraint);
   }
 
   EXPECT_THROW(
-      TypeConstraint::from_json(test::parse_json(
-          R"({
+      TypeConstraint::from_json(
+          test::parse_json(
+              R"({
           "constraint": "is_interface",
           "value": "true"
         })")),

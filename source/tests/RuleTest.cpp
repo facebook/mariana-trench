@@ -50,34 +50,38 @@ TEST_F(RuleTest, Rules) {
       context.kind_factory->get_partial("kind", "labelB");
 
   std::vector<std::unique_ptr<Rule>> rule_list;
-  rule_list.push_back(std::make_unique<SourceSinkRule>(
-      /* name */ "Rule1",
-      /* code */ 1,
-      /* description */ "Test rule 1",
-      /* source_kinds */ Rule::KindSet{source_a},
-      /* sink_kinds */ Rule::KindSet{sink_x},
-      /* transforms */ nullptr));
-  rule_list.push_back(std::make_unique<SourceSinkRule>(
-      /* name */ "Rule2",
-      /* code */ 2,
-      /* description */ "Test rule 2",
-      /* source_kinds */ Rule::KindSet{source_a},
-      /* sink_kinds */ Rule::KindSet{sink_y},
-      /* transforms */ nullptr));
-  rule_list.push_back(std::make_unique<SourceSinkRule>(
-      /* name */ "Rule3",
-      /* code */ 3,
-      /* description */ "Test rule 3",
-      /* source_kinds */ Rule::KindSet{source_b},
-      /* sink_kinds */ Rule::KindSet{sink_y},
-      /* transforms */ nullptr));
-  rule_list.push_back(std::make_unique<SourceSinkRule>(
-      /* name */ "Rule4",
-      /* code */ 4,
-      /* description */ "Test rule 4",
-      /* source_kinds */ Rule::KindSet{source_b},
-      /* sink_kinds */ Rule::KindSet{sink_x, sink_y},
-      /* transforms */ nullptr));
+  rule_list.push_back(
+      std::make_unique<SourceSinkRule>(
+          /* name */ "Rule1",
+          /* code */ 1,
+          /* description */ "Test rule 1",
+          /* source_kinds */ Rule::KindSet{source_a},
+          /* sink_kinds */ Rule::KindSet{sink_x},
+          /* transforms */ nullptr));
+  rule_list.push_back(
+      std::make_unique<SourceSinkRule>(
+          /* name */ "Rule2",
+          /* code */ 2,
+          /* description */ "Test rule 2",
+          /* source_kinds */ Rule::KindSet{source_a},
+          /* sink_kinds */ Rule::KindSet{sink_y},
+          /* transforms */ nullptr));
+  rule_list.push_back(
+      std::make_unique<SourceSinkRule>(
+          /* name */ "Rule3",
+          /* code */ 3,
+          /* description */ "Test rule 3",
+          /* source_kinds */ Rule::KindSet{source_b},
+          /* sink_kinds */ Rule::KindSet{sink_y},
+          /* transforms */ nullptr));
+  rule_list.push_back(
+      std::make_unique<SourceSinkRule>(
+          /* name */ "Rule4",
+          /* code */ 4,
+          /* description */ "Test rule 4",
+          /* source_kinds */ Rule::KindSet{source_b},
+          /* sink_kinds */ Rule::KindSet{sink_x, sink_y},
+          /* transforms */ nullptr));
 
   auto multi_source_rule = std::make_unique<MultiSourceMultiSinkRule>(
       /* name */ "Rule5",
@@ -174,27 +178,30 @@ TEST_F(RuleTest, TransformRules) {
   EXPECT_EQ(t21->size(), 2);
 
   std::vector<std::unique_ptr<Rule>> rule_list;
-  rule_list.push_back(std::make_unique<SourceSinkRule>(
-      /* name */ "Rule1",
-      /* code */ 1,
-      /* description */ "Test rule 1",
-      /* source_kinds */ Rule::KindSet{source_a},
-      /* sink_kinds */ Rule::KindSet{sink_x},
-      /* transforms */ t1));
-  rule_list.push_back(std::make_unique<SourceSinkRule>(
-      /* name */ "Rule2",
-      /* code */ 2,
-      /* description */ "Test rule 2",
-      /* source_kinds */ Rule::KindSet{source_a},
-      /* sink_kinds */ Rule::KindSet{sink_x},
-      /* transforms */ t12));
-  rule_list.push_back(std::make_unique<SourceSinkRule>(
-      /* name */ "Rule3",
-      /* code */ 3,
-      /* description */ "Test rule 3",
-      /* source_kinds */ Rule::KindSet{source_b},
-      /* sink_kinds */ Rule::KindSet{sink_y},
-      /* transforms */ t12));
+  rule_list.push_back(
+      std::make_unique<SourceSinkRule>(
+          /* name */ "Rule1",
+          /* code */ 1,
+          /* description */ "Test rule 1",
+          /* source_kinds */ Rule::KindSet{source_a},
+          /* sink_kinds */ Rule::KindSet{sink_x},
+          /* transforms */ t1));
+  rule_list.push_back(
+      std::make_unique<SourceSinkRule>(
+          /* name */ "Rule2",
+          /* code */ 2,
+          /* description */ "Test rule 2",
+          /* source_kinds */ Rule::KindSet{source_a},
+          /* sink_kinds */ Rule::KindSet{sink_x},
+          /* transforms */ t12));
+  rule_list.push_back(
+      std::make_unique<SourceSinkRule>(
+          /* name */ "Rule3",
+          /* code */ 3,
+          /* description */ "Test rule 3",
+          /* source_kinds */ Rule::KindSet{source_b},
+          /* sink_kinds */ Rule::KindSet{sink_y},
+          /* transforms */ t12));
 
   auto rules = Rules(context, std::move(rule_list));
 

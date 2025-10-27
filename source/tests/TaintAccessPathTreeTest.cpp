@@ -496,9 +496,10 @@ TEST_F(TaintAccessPathTreeTest, Join) {
   const auto z = PathElement::field("z");
 
   auto tree = TaintAccessPathTree::bottom();
-  tree.join_with(TaintAccessPathTree{
-      {AccessPath(Root(Root::Kind::Return)), get_taint({"1"})},
-  });
+  tree.join_with(
+      TaintAccessPathTree{
+          {AccessPath(Root(Root::Kind::Return)), get_taint({"1"})},
+      });
   EXPECT_EQ(
       tree,
       (TaintAccessPathTree{
@@ -512,9 +513,10 @@ TEST_F(TaintAccessPathTreeTest, Join) {
           {AccessPath(Root(Root::Kind::Return)), get_taint({"1"})},
       }));
 
-  tree.join_with(TaintAccessPathTree{
-      {AccessPath(Root(Root::Kind::Return)), get_taint({"2"})},
-  });
+  tree.join_with(
+      TaintAccessPathTree{
+          {AccessPath(Root(Root::Kind::Return)), get_taint({"2"})},
+      });
   EXPECT_EQ(
       tree,
       (TaintAccessPathTree{
@@ -531,15 +533,16 @@ TEST_F(TaintAccessPathTreeTest, Join) {
        get_taint({"7", "8"})},
       {AccessPath(Root(Root::Kind::Argument, 1)), get_taint({"10"})},
   };
-  tree.join_with(TaintAccessPathTree{
-      {AccessPath(Root(Root::Kind::Return), Path{x}), get_taint({"1"})},
-      {AccessPath(Root(Root::Kind::Return), Path{y}), get_taint({"2"})},
-      {AccessPath(Root(Root::Kind::Argument, 0), Path{x}),
-       get_taint({"6", "7"})},
-      {AccessPath(Root(Root::Kind::Argument, 0), Path{x, x}),
-       get_taint({"8", "9"})},
-      {AccessPath(Root(Root::Kind::Argument, 2)), get_taint({"20"})},
-  });
+  tree.join_with(
+      TaintAccessPathTree{
+          {AccessPath(Root(Root::Kind::Return), Path{x}), get_taint({"1"})},
+          {AccessPath(Root(Root::Kind::Return), Path{y}), get_taint({"2"})},
+          {AccessPath(Root(Root::Kind::Argument, 0), Path{x}),
+           get_taint({"6", "7"})},
+          {AccessPath(Root(Root::Kind::Argument, 0), Path{x, x}),
+           get_taint({"8", "9"})},
+          {AccessPath(Root(Root::Kind::Argument, 2)), get_taint({"20"})},
+      });
   EXPECT_EQ(
       tree.read(Root(Root::Kind::Return)),
       (TaintTree{get_taint({"1", "2", "3"})}));
@@ -875,10 +878,12 @@ TEST_F(TaintAccessPathTreeTest, ShapeWith) {
   };
   tree.apply_config_overrides(config_override);
   // Add new root Argument(1) without config overrides
-  tree.join_with(TaintAccessPathTree{
-      {AccessPath(Root(Root::Kind::Argument, 1)), get_taint({"5"})},
-      {AccessPath(Root(Root::Kind::Argument, 1), Path{x}), get_taint({"6"})},
-  });
+  tree.join_with(
+      TaintAccessPathTree{
+          {AccessPath(Root(Root::Kind::Argument, 1)), get_taint({"5"})},
+          {AccessPath(Root(Root::Kind::Argument, 1), Path{x}),
+           get_taint({"6"})},
+      });
   EXPECT_TRUE(tree.config_overrides(Root(Root::Kind::Argument, 1)).is_bottom());
 
   // Dummy mold to only keep certain kinds
@@ -906,9 +911,10 @@ TEST_F(TaintAccessPathTreeTest, ShapeWith) {
       {AccessPath(Root(Root::Kind::Argument, 0), Path{x, y}), get_taint({"3"})},
   };
   expected_tree.apply_config_overrides(config_override);
-  expected_tree.join_with(TaintAccessPathTree{
-      {AccessPath(Root(Root::Kind::Argument, 1)), get_taint({"5", "6"})},
-  });
+  expected_tree.join_with(
+      TaintAccessPathTree{
+          {AccessPath(Root(Root::Kind::Argument, 1)), get_taint({"5", "6"})},
+      });
 
   EXPECT_FALSE(tree.config_overrides(Root(Root::Kind::Return)).is_bottom());
   EXPECT_EQ(tree.config_overrides(Root(Root::Kind::Return)), config_override);

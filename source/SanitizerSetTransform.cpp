@@ -46,8 +46,9 @@ std::string SanitizerSetTransform::to_trace_string() const {
   sanitized_kinds.reserve(kinds_.size());
 
   for (const auto kind : kinds_) {
-    sanitized_kinds.push_back(fmt::format(
-        "Sanitize[{}]", kind.to_trace_string(SanitizerKind::Propagations)));
+    sanitized_kinds.push_back(
+        fmt::format(
+            "Sanitize[{}]", kind.to_trace_string(SanitizerKind::Propagations)));
   }
 
   std::sort(sanitized_kinds.begin(), sanitized_kinds.end());

@@ -43,8 +43,9 @@ TEST_F(IntegerConstraintTest, IntegerConstraintSatisfy) {
 
 TEST_F(IntegerConstraintTest, IntegerConstraintFromJson) {
   {
-    auto constraint = IntegerConstraint::from_json(test::parse_json(
-        R"({
+    auto constraint = IntegerConstraint::from_json(
+        test::parse_json(
+            R"({
           "constraint": "==",
           "value": 3
         })"));
@@ -53,8 +54,9 @@ TEST_F(IntegerConstraintTest, IntegerConstraintFromJson) {
   }
 
   {
-    auto constraint = IntegerConstraint::from_json(test::parse_json(
-        R"({
+    auto constraint = IntegerConstraint::from_json(
+        test::parse_json(
+            R"({
           "constraint": ">=",
           "value": 3
         })"));
@@ -63,8 +65,9 @@ TEST_F(IntegerConstraintTest, IntegerConstraintFromJson) {
   }
 
   {
-    auto constraint = IntegerConstraint::from_json(test::parse_json(
-        R"({
+    auto constraint = IntegerConstraint::from_json(
+        test::parse_json(
+            R"({
           "constraint": ">",
           "value": 3
         })"));
@@ -73,8 +76,9 @@ TEST_F(IntegerConstraintTest, IntegerConstraintFromJson) {
   }
 
   {
-    auto constraint = IntegerConstraint::from_json(test::parse_json(
-        R"({
+    auto constraint = IntegerConstraint::from_json(
+        test::parse_json(
+            R"({
           "constraint": "<=",
           "value": 3
         })"));
@@ -83,8 +87,9 @@ TEST_F(IntegerConstraintTest, IntegerConstraintFromJson) {
   }
 
   {
-    auto constraint = IntegerConstraint::from_json(test::parse_json(
-        R"({
+    auto constraint = IntegerConstraint::from_json(
+        test::parse_json(
+            R"({
           "constraint": "<",
           "value": 3
         })"));
@@ -93,8 +98,9 @@ TEST_F(IntegerConstraintTest, IntegerConstraintFromJson) {
   }
 
   {
-    auto constraint = IntegerConstraint::from_json(test::parse_json(
-        R"({
+    auto constraint = IntegerConstraint::from_json(
+        test::parse_json(
+            R"({
           "constraint": "!=",
           "value": 3
         })"));
@@ -103,24 +109,27 @@ TEST_F(IntegerConstraintTest, IntegerConstraintFromJson) {
   }
 
   EXPECT_THROW(
-      IntegerConstraint::from_json(test::parse_json(
-          R"({
+      IntegerConstraint::from_json(
+          test::parse_json(
+              R"({
             "cOnstraint": "==",
             "value": 3
           })")),
       JsonValidationError);
 
   EXPECT_THROW(
-      IntegerConstraint::from_json(test::parse_json(
-          R"({
+      IntegerConstraint::from_json(
+          test::parse_json(
+              R"({
             "constraint": "!==",
             "value": 3
           })")),
       JsonValidationError);
 
   EXPECT_THROW(
-      IntegerConstraint::from_json(test::parse_json(
-          R"({
+      IntegerConstraint::from_json(
+          test::parse_json(
+              R"({
             "constraint": "==",
             "vAlue": 3
           })")),

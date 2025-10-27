@@ -163,8 +163,9 @@ void ShimParameterMapping::infer_parameters_from_types(
     if (auto shim_position =
             shim_method.type_position(dex_arguments->at(position))) {
       insert(
-          Root::argument(static_cast<ParameterPosition>(
-              position + first_parameter_position)),
+          Root::argument(
+              static_cast<ParameterPosition>(
+                  position + first_parameter_position)),
           *shim_position);
     }
   }

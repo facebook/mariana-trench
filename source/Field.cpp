@@ -14,7 +14,7 @@
 namespace marianatrench {
 
 Field::Field(const DexField* field)
-    : field_(field), show_cached_(::show(field)){};
+    : field_(field), show_cached_(::show(field)) {};
 
 bool Field::operator==(const Field& other) const {
   return field_ == other.field_;

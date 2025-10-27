@@ -1634,8 +1634,8 @@ Model Model::from_config_json(
   }
 
   if (value.isMember("inline_as_setter")) {
-    model.set_inline_as_setter(
-        SetterAccessPathConstantDomain(SetterAccessPath::from_json(
+    model.set_inline_as_setter(SetterAccessPathConstantDomain(
+        SetterAccessPath::from_json(
             JsonValidation::object(value, "inline_as_setter"))));
   }
 
@@ -2376,9 +2376,10 @@ bool Model::check_root_consistency(Root root) const {
   switch (root.kind()) {
     case Root::Kind::Return: {
       if (method_ && method_->returns_void()) {
-        ModelConsistencyError::raise(fmt::format(
-            "Model for method `{}` contains a `Return` port but method returns void.",
-            show(method_)));
+        ModelConsistencyError::raise(
+            fmt::format(
+                "Model for method `{}` contains a `Return` port but method returns void.",
+                show(method_)));
         return false;
       }
       return true;
@@ -2386,11 +2387,12 @@ bool Model::check_root_consistency(Root root) const {
     case Root::Kind::Argument: {
       auto position = root.parameter_position();
       if (method_ && position >= method_->number_of_parameters()) {
-        ModelConsistencyError::raise(fmt::format(
-            "Model for method `{}` contains a port on parameter {} but the method only has {} parameters.",
-            show(method_),
-            position,
-            method_->number_of_parameters()));
+        ModelConsistencyError::raise(
+            fmt::format(
+                "Model for method `{}` contains a port on parameter {} but the method only has {} parameters.",
+                show(method_),
+                position,
+                method_->number_of_parameters()));
         return false;
       }
       return true;
@@ -2400,10 +2402,11 @@ bool Model::check_root_consistency(Root root) const {
       return true;
     }
     default: {
-      ModelConsistencyError::raise(fmt::format(
-          "Model for method `{}` contains an invalid port: `{}`",
-          show(method_),
-          show(root)));
+      ModelConsistencyError::raise(
+          fmt::format(
+              "Model for method `{}` contains an invalid port: `{}`",
+              show(method_),
+              show(root)));
       return false;
     }
   }
@@ -2416,10 +2419,11 @@ bool Model::check_port_consistency(const AccessPath& access_path) const {
 bool Model::check_parameter_source_port_consistency(
     const AccessPath& access_path) const {
   if (access_path.root().is_return()) {
-    ModelConsistencyError::raise(fmt::format(
-        "Model for method `{}` contains a parameter source with a `Return` port."
-        " Use a generation instead.",
-        show(method_)));
+    ModelConsistencyError::raise(
+        fmt::format(
+            "Model for method `{}` contains a parameter source with a `Return` port."
+            " Use a generation instead.",
+            show(method_)));
     return false;
   }
 
@@ -2430,10 +2434,11 @@ bool Model::check_taint_config_consistency(
     const TaintConfig& config,
     std::string_view kind) const {
   if (config.kind() == nullptr) {
-    ModelConsistencyError::raise(fmt::format(
-        "Model for method `{}` contains a unknown kind for {}.",
-        show(method_),
-        kind));
+    ModelConsistencyError::raise(
+        fmt::format(
+            "Model for method `{}` contains a unknown kind for {}.",
+            show(method_),
+            kind));
     return false;
   }
   return true;
@@ -2448,9 +2453,10 @@ bool Model::check_inline_as_getter_consistency(
   }
 
   if (!access_path->root().is_argument()) {
-    ModelConsistencyError::raise(fmt::format(
-        "Model for method `{}` has an inline-as-getter with a non-argument root.",
-        show(method_)));
+    ModelConsistencyError::raise(
+        fmt::format(
+            "Model for method `{}` has an inline-as-getter with a non-argument root.",
+            show(method_)));
     return false;
   }
 
@@ -2466,16 +2472,18 @@ bool Model::check_inline_as_setter_consistency(
   }
 
   if (!setter->target().root().is_argument()) {
-    ModelConsistencyError::raise(fmt::format(
-        "Model for method `{}` has an inline-as-setter with a non-argument target.",
-        show(method_)));
+    ModelConsistencyError::raise(
+        fmt::format(
+            "Model for method `{}` has an inline-as-setter with a non-argument target.",
+            show(method_)));
     return false;
   }
 
   if (!setter->value().root().is_argument()) {
-    ModelConsistencyError::raise(fmt::format(
-        "Model for method `{}` has an inline-as-setter with a non-argument value.",
-        show(method_)));
+    ModelConsistencyError::raise(
+        fmt::format(
+            "Model for method `{}` has an inline-as-setter with a non-argument value.",
+            show(method_)));
     return false;
   }
 

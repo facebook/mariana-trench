@@ -365,11 +365,12 @@ TEST_F(CallGraphTest, FieldIndices) {
       FieldTarget{inherited_field, 0},
       FieldTarget{inherited_field, 1},
       FieldTarget{static_field, 1}};
-  EXPECT_TRUE(std::is_permutation(
-      field_targets.begin(),
-      field_targets.end(),
-      expected_targets.begin(),
-      expected_targets.end()));
+  EXPECT_TRUE(
+      std::is_permutation(
+          field_targets.begin(),
+          field_targets.end(),
+          expected_targets.begin(),
+          expected_targets.end()));
 }
 
 TEST_F(CallGraphTest, ReturnIndices) {
@@ -403,11 +404,12 @@ TEST_F(CallGraphTest, ReturnIndices) {
   const auto* method = context.methods->get(dex_method);
   auto return_indices = context.call_graph->return_indices(method);
   std::vector<TextualOrderIndex> expected_return_indices = {0, 1};
-  EXPECT_TRUE(std::is_permutation(
-      return_indices.begin(),
-      return_indices.end(),
-      expected_return_indices.begin(),
-      expected_return_indices.end()));
+  EXPECT_TRUE(
+      std::is_permutation(
+          return_indices.begin(),
+          return_indices.end(),
+          expected_return_indices.begin(),
+          expected_return_indices.end()));
 }
 
 TEST_F(CallGraphTest, ArrayAllocation) {
@@ -451,11 +453,12 @@ TEST_F(CallGraphTest, ArrayAllocation) {
       context.call_graph->array_allocation_indices(method);
   std::vector<TextualOrderIndex> expected_array_allocation_indices = {
       0, 1, 2, 3};
-  EXPECT_TRUE(std::is_permutation(
-      array_allocation_indices.begin(),
-      array_allocation_indices.end(),
-      expected_array_allocation_indices.begin(),
-      expected_array_allocation_indices.end()));
+  EXPECT_TRUE(
+      std::is_permutation(
+          array_allocation_indices.begin(),
+          array_allocation_indices.end(),
+          expected_array_allocation_indices.begin(),
+          expected_array_allocation_indices.end()));
 }
 
 TEST_F(CallGraphTest, VirtualCalleeStats) {

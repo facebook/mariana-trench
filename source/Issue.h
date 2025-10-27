@@ -118,15 +118,17 @@ class Issue final : public sparta::AbstractDomain<Issue> {
 
   void narrow_with(const Issue& other);
 
-  void filter_sources(const std::function<bool(
-                          const Method* MT_NULLABLE,
-                          const AccessPath* MT_NULLABLE,
-                          const Kind*)>& predicate);
+  void filter_sources(
+      const std::function<bool(
+          const Method* MT_NULLABLE,
+          const AccessPath* MT_NULLABLE,
+          const Kind*)>& predicate);
 
-  void filter_sinks(const std::function<bool(
-                        const Method* MT_NULLABLE,
-                        const AccessPath* MT_NULLABLE,
-                        const Kind*)>& predicate);
+  void filter_sinks(
+      const std::function<bool(
+          const Method* MT_NULLABLE,
+          const AccessPath* MT_NULLABLE,
+          const Kind*)>& predicate);
 
   FeatureMayAlwaysSet features() const;
 

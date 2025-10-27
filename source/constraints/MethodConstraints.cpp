@@ -259,7 +259,7 @@ bool NotMethodConstraint::operator==(const MethodConstraint& other) const {
 
 NumberParametersConstraint::NumberParametersConstraint(
     IntegerConstraint constraint)
-    : constraint_(constraint){};
+    : constraint_(constraint) {};
 
 bool NumberParametersConstraint::satisfy(const Method* method) const {
   return constraint_.satisfy(method->number_of_parameters());
@@ -278,7 +278,7 @@ bool NumberParametersConstraint::operator==(
 NumberOverridesConstraint::NumberOverridesConstraint(
     IntegerConstraint constraint,
     Context& context)
-    : constraint_(constraint), context_(context){};
+    : constraint_(constraint), context_(context) {};
 
 bool NumberOverridesConstraint::satisfy(const Method* method) const {
   return constraint_.satisfy(context_.overrides->get(method).size());

@@ -107,10 +107,11 @@ TEST_F(RootPatriciaTreeAbstractPartitionTest, Join) {
       {Root(Root::Kind::Return), IntSet{1}},
       {Root(Root::Kind::Argument, 0), IntSet{2}},
   };
-  map.join_with(RootToIntSetPartition{
-      {Root(Root::Kind::Return), IntSet{2}},
-      {Root(Root::Kind::Argument, 1), IntSet{3}},
-  });
+  map.join_with(
+      RootToIntSetPartition{
+          {Root(Root::Kind::Return), IntSet{2}},
+          {Root(Root::Kind::Argument, 1), IntSet{3}},
+      });
   EXPECT_EQ(
       map,
       (RootToIntSetPartition{

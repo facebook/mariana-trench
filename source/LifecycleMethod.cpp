@@ -404,17 +404,19 @@ void LifecycleMethodCall::validate(
 
   auto derived_types = class_hierarchies.extends(base_class->get_type());
   if (derived_types.find(derived_type) == derived_types.end()) {
-    throw LifecycleMethodValidationError(fmt::format(
-        "Derived class `{}` is not derived from base class `{}`.",
-        derived_class->str(),
-        base_class->str()));
+    throw LifecycleMethodValidationError(
+        fmt::format(
+            "Derived class `{}` is not derived from base class `{}`.",
+            derived_class->str(),
+            base_class->str()));
   }
 
   if (get_dex_method(derived_class) == nullptr) {
-    throw LifecycleMethodValidationError(fmt::format(
-        "Callee `{}` is not in derived class type `{}`.",
-        to_string(),
-        derived_class->str()));
+    throw LifecycleMethodValidationError(
+        fmt::format(
+            "Callee `{}` is not in derived class type `{}`.",
+            to_string(),
+            derived_class->str()));
   }
 
   // Validate that argument types can be resolved
@@ -500,10 +502,11 @@ void LifeCycleMethodGraph::validate(
 
     for (const auto& successor_name : node.successors()) {
       if (get_node(successor_name) == nullptr) {
-        throw LifecycleMethodValidationError(fmt::format(
-            "Node `{}` has a successor `{}` that is not a valid node in the lifecycle graph.",
-            node_name,
-            successor_name));
+        throw LifecycleMethodValidationError(
+            fmt::format(
+                "Node `{}` has a successor `{}` that is not a valid node in the lifecycle graph.",
+                node_name,
+                successor_name));
       }
     }
   }

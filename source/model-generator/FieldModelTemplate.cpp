@@ -31,8 +31,9 @@ FieldModelTemplate FieldModelTemplate::from_json(
     const Json::Value& field_model,
     Context& context) {
   JsonValidation::validate_object(field_model);
-  return FieldModelTemplate(FieldModel::from_config_json(
-      /* field */ nullptr, field_model, context));
+  return FieldModelTemplate(
+      FieldModel::from_config_json(
+          /* field */ nullptr, field_model, context));
 }
 
 } // namespace marianatrench

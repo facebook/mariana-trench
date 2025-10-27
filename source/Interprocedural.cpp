@@ -60,18 +60,21 @@ Model analyze(
 
   auto* code = method->get_code();
   if (!code) {
-    throw std::runtime_error(fmt::format(
-        "Attempting to analyze method `{}` with no code!", method->show()));
+    throw std::runtime_error(
+        fmt::format(
+            "Attempting to analyze method `{}` with no code!", method->show()));
   }
   if (!code->cfg_built()) {
-    throw std::runtime_error(fmt::format(
-        "Attempting to analyze method `{}` with no control flow graph!",
-        method->show()));
+    throw std::runtime_error(
+        fmt::format(
+            "Attempting to analyze method `{}` with no control flow graph!",
+            method->show()));
   }
   if (code->cfg().exit_block() == nullptr) {
-    throw std::runtime_error(fmt::format(
-        "Attempting to analyze control flow graph for `{}` with no exit block!",
-        method->show()));
+    throw std::runtime_error(
+        fmt::format(
+            "Attempting to analyze control flow graph for `{}` with no exit block!",
+            method->show()));
   }
 
   LOG_OR_DUMP(

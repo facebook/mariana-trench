@@ -1666,12 +1666,13 @@ TEST_F(AbstractTreeDomainTest, Join) {
   tree.join_with(IntSetTree{IntSet{3}});
   EXPECT_EQ(tree, (IntSetTree{IntSet{1, 2, 3}}));
 
-  tree.join_with(IntSetTree{
-      {Path{x}, IntSet{4}},
-      {Path{x, y}, IntSet{5, 6}},
-      {Path{x, z}, IntSet{7, 8}},
-      {Path{y}, IntSet{9, 10}},
-  });
+  tree.join_with(
+      IntSetTree{
+          {Path{x}, IntSet{4}},
+          {Path{x, y}, IntSet{5, 6}},
+          {Path{x, z}, IntSet{7, 8}},
+          {Path{y}, IntSet{9, 10}},
+      });
   EXPECT_EQ(
       tree,
       (IntSetTree{
@@ -1682,10 +1683,11 @@ TEST_F(AbstractTreeDomainTest, Join) {
           {Path{y}, IntSet{9, 10}},
       }));
 
-  tree.join_with(IntSetTree{
-      {Path{x}, IntSet{5, 6, 7}},
-      {Path{y}, IntSet{10, 11}},
-  });
+  tree.join_with(
+      IntSetTree{
+          {Path{x}, IntSet{5, 6, 7}},
+          {Path{y}, IntSet{10, 11}},
+      });
   EXPECT_EQ(
       tree,
       (IntSetTree{
@@ -1833,8 +1835,9 @@ TEST_F(AbstractTreeDomainTest, JoinIndex) {
   //              |- [y]: {4, 5, 6}
   //              |- [z]: {4, 5, 7}
   //              |- [*]: {4, 5, 8}
-  tree.join_with(IntSetTree{
-      {Path{yi}, IntSet{6}}, {Path{zi}, IntSet{7}}, {Path{ai}, IntSet{8}}});
+  tree.join_with(
+      IntSetTree{
+          {Path{yi}, IntSet{6}}, {Path{zi}, IntSet{7}}, {Path{ai}, IntSet{8}}});
   EXPECT_EQ(
       tree,
       (IntSetTree{
@@ -1878,12 +1881,13 @@ TEST_F(AbstractTreeDomainTest, JoinIndex) {
   //              |- [z]: {7}
   //                  |- [*]: {8}
   //              |- [*]: {8}
-  tree.join_with(IntSetTree{
-      {Path{x}, IntSet{6}},
-      {Path{x, xi}, IntSet{6, 7}},
-      {Path{yi, x}, IntSet{7}},
-      {Path{zi, ai}, IntSet{8}},
-  });
+  tree.join_with(
+      IntSetTree{
+          {Path{x}, IntSet{6}},
+          {Path{x, xi}, IntSet{6, 7}},
+          {Path{yi, x}, IntSet{7}},
+          {Path{zi, ai}, IntSet{8}},
+      });
   EXPECT_EQ(
       tree,
       (IntSetTree{
@@ -1936,12 +1940,13 @@ TEST_F(AbstractTreeDomainTest, Widen) {
   tree.widen_with(IntSetTree{IntSet{3}});
   EXPECT_EQ(tree, (IntSetTree{IntSet{1, 2, 3}}));
 
-  tree.widen_with(IntSetTree{
-      {Path{x}, IntSet{4}},
-      {Path{x, y}, IntSet{5, 6}},
-      {Path{x, z}, IntSet{7, 8}},
-      {Path{y}, IntSet{9, 10}},
-  });
+  tree.widen_with(
+      IntSetTree{
+          {Path{x}, IntSet{4}},
+          {Path{x, y}, IntSet{5, 6}},
+          {Path{x, z}, IntSet{7, 8}},
+          {Path{y}, IntSet{9, 10}},
+      });
   EXPECT_EQ(
       tree,
       (IntSetTree{
@@ -1952,10 +1957,11 @@ TEST_F(AbstractTreeDomainTest, Widen) {
           {Path{y}, IntSet{9, 10}},
       }));
 
-  tree.widen_with(IntSetTree{
-      {Path{x}, IntSet{5, 6, 7}},
-      {Path{y}, IntSet{10, 11}},
-  });
+  tree.widen_with(
+      IntSetTree{
+          {Path{x}, IntSet{5, 6, 7}},
+          {Path{y}, IntSet{10, 11}},
+      });
   EXPECT_EQ(
       tree,
       (IntSetTree{
@@ -1971,10 +1977,11 @@ TEST_F(AbstractTreeDomainTest, Widen) {
       {Path{x, y, z, x}, IntSet{2}},
       {Path{x, y, z, x, y}, IntSet{3}},
   };
-  tree.widen_with(IntSetTree{
-      {Path{}, IntSet{10}},
-      {Path{x, y, z, x, z}, IntSet{1, 4}},
-  });
+  tree.widen_with(
+      IntSetTree{
+          {Path{}, IntSet{10}},
+          {Path{x, y, z, x, z}, IntSet{1, 4}},
+      });
   EXPECT_EQ(
       tree,
       (IntSetTree{
@@ -2486,10 +2493,11 @@ TEST_F(AbstractTreeDomainTest, TransformOnSinkAndHoist) {
   tree = ScalarTree{
       {Path{x}, ScalarAbstractDomain(2)},
   };
-  tree.join_with(ScalarTree{
-      {Path{x, y}, ScalarAbstractDomain(1)},
-      {Path{x, z}, ScalarAbstractDomain(3)},
-  });
+  tree.join_with(
+      ScalarTree{
+          {Path{x, y}, ScalarAbstractDomain(1)},
+          {Path{x, z}, ScalarAbstractDomain(3)},
+      });
   EXPECT_EQ(
       tree,
       (ScalarTree{
@@ -2502,9 +2510,10 @@ TEST_F(AbstractTreeDomainTest, TransformOnSinkAndHoist) {
   tree = ScalarTree{
       {Path{x, x, x, y, x}, ScalarAbstractDomain(1)},
   };
-  tree.widen_with(ScalarTree{
-      {Path{x, x, x, z, x}, ScalarAbstractDomain(2)},
-  });
+  tree.widen_with(
+      ScalarTree{
+          {Path{x, x, x, z, x}, ScalarAbstractDomain(2)},
+      });
   EXPECT_EQ(
       tree,
       (ScalarTree{

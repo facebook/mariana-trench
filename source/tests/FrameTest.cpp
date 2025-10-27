@@ -48,57 +48,71 @@ TEST_F(FrameTest, FrameLeq) {
   auto* field_two = context.fields->get(dex_fields[1]);
 
   EXPECT_TRUE(Frame::bottom().leq(Frame::bottom()));
-  EXPECT_TRUE(Frame::bottom().leq(test::make_taint_frame(
-      /* kind */ context.kind_factory->get("TestSource"),
-      test::FrameProperties{})));
-  EXPECT_FALSE(test::make_taint_frame(
-                   /* kind */ context.kind_factory->get("TestSource"),
-                   test::FrameProperties{})
-                   .leq(Frame::bottom()));
+  EXPECT_TRUE(
+      Frame::bottom().leq(
+          test::make_taint_frame(
+              /* kind */ context.kind_factory->get("TestSource"),
+              test::FrameProperties{})));
+  EXPECT_FALSE(
+      test::make_taint_frame(
+          /* kind */ context.kind_factory->get("TestSource"),
+          test::FrameProperties{})
+          .leq(Frame::bottom()));
 
   // Compare kind.
-  EXPECT_TRUE(test::make_taint_frame(
+  EXPECT_TRUE(
+      test::make_taint_frame(
+          /* kind */ context.kind_factory->get("TestSource"),
+          test::FrameProperties{})
+          .leq(
+              test::make_taint_frame(
                   /* kind */ context.kind_factory->get("TestSource"),
-                  test::FrameProperties{})
-                  .leq(test::make_taint_frame(
-                      /* kind */ context.kind_factory->get("TestSource"),
-                      test::FrameProperties{})));
-  EXPECT_FALSE(test::make_taint_frame(
-                   /* kind */ context.kind_factory->get("TestSource"),
-                   test::FrameProperties{})
-                   .leq(test::make_taint_frame(
-                       /* kind */ context.kind_factory->get("TestSink"),
-                       test::FrameProperties{})));
+                  test::FrameProperties{})));
+  EXPECT_FALSE(
+      test::make_taint_frame(
+          /* kind */ context.kind_factory->get("TestSource"),
+          test::FrameProperties{})
+          .leq(
+              test::make_taint_frame(
+                  /* kind */ context.kind_factory->get("TestSink"),
+                  test::FrameProperties{})));
 
   // Compare distances.
-  EXPECT_TRUE(test::make_taint_frame(
+  EXPECT_TRUE(
+      test::make_taint_frame(
+          /* kind */ context.kind_factory->get("TestSource"),
+          test::FrameProperties{.distance = 1})
+          .leq(
+              test::make_taint_frame(
                   /* kind */ context.kind_factory->get("TestSource"),
-                  test::FrameProperties{.distance = 1})
-                  .leq(test::make_taint_frame(
-                      /* kind */ context.kind_factory->get("TestSource"),
-                      test::FrameProperties{.distance = 0})));
-  EXPECT_FALSE(test::make_taint_frame(
-                   /* kind */ context.kind_factory->get("TestSource"),
-                   test::FrameProperties{.distance = 0})
-                   .leq(test::make_taint_frame(
-                       /* kind */ context.kind_factory->get("TestSource"),
-                       test::FrameProperties{.distance = 1})));
+                  test::FrameProperties{.distance = 0})));
+  EXPECT_FALSE(
+      test::make_taint_frame(
+          /* kind */ context.kind_factory->get("TestSource"),
+          test::FrameProperties{.distance = 0})
+          .leq(
+              test::make_taint_frame(
+                  /* kind */ context.kind_factory->get("TestSource"),
+                  test::FrameProperties{.distance = 1})));
 
   // Compare origins.
-  EXPECT_TRUE(test::make_taint_frame(
+  EXPECT_TRUE(
+      test::make_taint_frame(
+          /* kind */ context.kind_factory->get("TestSource"),
+          test::FrameProperties{.origins = OriginSet{one_origin}})
+          .leq(
+              test::make_taint_frame(
                   /* kind */ context.kind_factory->get("TestSource"),
-                  test::FrameProperties{.origins = OriginSet{one_origin}})
-                  .leq(test::make_taint_frame(
-                      /* kind */ context.kind_factory->get("TestSource"),
-                      test::FrameProperties{
-                          .origins = OriginSet{one_origin, two_origin}})));
+                  test::FrameProperties{
+                      .origins = OriginSet{one_origin, two_origin}})));
   EXPECT_FALSE(
       test::make_taint_frame(
           /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{.origins = OriginSet{one_origin, two_origin}})
-          .leq(test::make_taint_frame(
-              /* kind */ context.kind_factory->get("TestSource"),
-              test::FrameProperties{.origins = OriginSet{one_origin}})));
+          .leq(
+              test::make_taint_frame(
+                  /* kind */ context.kind_factory->get("TestSource"),
+                  test::FrameProperties{.origins = OriginSet{one_origin}})));
 
   // Compare field origins.
   EXPECT_TRUE(
@@ -107,12 +121,13 @@ TEST_F(FrameTest, FrameLeq) {
           test::FrameProperties{
               .origins =
                   OriginSet{context.origin_factory->field_origin(field_one)}})
-          .leq(test::make_taint_frame(
-              /* kind */ context.kind_factory->get("TestSource"),
-              test::FrameProperties{
-                  .origins = OriginSet{
-                      context.origin_factory->field_origin(field_one),
-                      context.origin_factory->field_origin(field_two)}})));
+          .leq(
+              test::make_taint_frame(
+                  /* kind */ context.kind_factory->get("TestSource"),
+                  test::FrameProperties{
+                      .origins = OriginSet{
+                          context.origin_factory->field_origin(field_one),
+                          context.origin_factory->field_origin(field_two)}})));
   EXPECT_FALSE(
       test::make_taint_frame(
           /* kind */ context.kind_factory->get("TestSource"),
@@ -121,24 +136,27 @@ TEST_F(FrameTest, FrameLeq) {
                   OriginSet{
                       context.origin_factory->field_origin(field_one),
                       context.origin_factory->field_origin(field_two)}})
-          .leq(test::make_taint_frame(
-              /* kind */ context.kind_factory->get("TestSource"),
-              test::FrameProperties{
-                  .origins = OriginSet{
-                      context.origin_factory->field_origin(field_one)}})));
+          .leq(
+              test::make_taint_frame(
+                  /* kind */ context.kind_factory->get("TestSource"),
+                  test::FrameProperties{
+                      .origins = OriginSet{
+                          context.origin_factory->field_origin(field_one)}})));
 
   // Compare inferred features.
-  EXPECT_TRUE(test::make_taint_frame(
+  EXPECT_TRUE(
+      test::make_taint_frame(
+          /* kind */ context.kind_factory->get("TestSource"),
+          test::FrameProperties{
+              .inferred_features = FeatureMayAlwaysSet::make_may(
+                  {context.feature_factory->get("FeatureOne")})})
+          .leq(
+              test::make_taint_frame(
                   /* kind */ context.kind_factory->get("TestSource"),
                   test::FrameProperties{
                       .inferred_features = FeatureMayAlwaysSet::make_may(
-                          {context.feature_factory->get("FeatureOne")})})
-                  .leq(test::make_taint_frame(
-                      /* kind */ context.kind_factory->get("TestSource"),
-                      test::FrameProperties{
-                          .inferred_features = FeatureMayAlwaysSet::make_may(
-                              {context.feature_factory->get("FeatureOne"),
-                               context.feature_factory->get("FeatureTwo")})})));
+                          {context.feature_factory->get("FeatureOne"),
+                           context.feature_factory->get("FeatureTwo")})})));
   EXPECT_FALSE(
       test::make_taint_frame(
           /* kind */ context.kind_factory->get("TestSource"),
@@ -146,37 +164,42 @@ TEST_F(FrameTest, FrameLeq) {
               .inferred_features = FeatureMayAlwaysSet::make_may(
                   {context.feature_factory->get("FeatureOne"),
                    context.feature_factory->get("FeatureTwo")})})
-          .leq(test::make_taint_frame(
-              /* kind */ context.kind_factory->get("TestSource"),
-              test::FrameProperties{
-                  .inferred_features = FeatureMayAlwaysSet::make_may(
-                      {context.feature_factory->get("FeatureOne")})})));
-
-  // Compare user features.
-  EXPECT_TRUE(test::make_taint_frame(
+          .leq(
+              test::make_taint_frame(
                   /* kind */ context.kind_factory->get("TestSource"),
                   test::FrameProperties{
-                      .user_features = FeatureSet{context.feature_factory->get(
-                          "FeatureOne")}})
-                  .leq(test::make_taint_frame(
-                      /* kind */ context.kind_factory->get("TestSource"),
-                      test::FrameProperties{
-                          .locally_inferred_features = {},
-                          .user_features = FeatureSet{
-                              context.feature_factory->get("FeatureOne"),
-                              context.feature_factory->get("FeatureTwo")}})));
-  EXPECT_FALSE(test::make_taint_frame(
-                   /* kind */ context.kind_factory->get("TestSource"),
-                   test::FrameProperties{
-                       .user_features =
-                           FeatureSet{
-                               context.feature_factory->get("FeatureOne"),
-                               context.feature_factory->get("FeatureTwo")}})
-                   .leq(test::make_taint_frame(
-                       /* kind */ context.kind_factory->get("TestSource"),
-                       test::FrameProperties{
-                           .user_features = FeatureSet{
-                               context.feature_factory->get("FeatureOne")}})));
+                      .inferred_features = FeatureMayAlwaysSet::make_may(
+                          {context.feature_factory->get("FeatureOne")})})));
+
+  // Compare user features.
+  EXPECT_TRUE(
+      test::make_taint_frame(
+          /* kind */ context.kind_factory->get("TestSource"),
+          test::FrameProperties{
+              .user_features =
+                  FeatureSet{context.feature_factory->get("FeatureOne")}})
+          .leq(
+              test::make_taint_frame(
+                  /* kind */ context.kind_factory->get("TestSource"),
+                  test::FrameProperties{
+                      .locally_inferred_features = {},
+                      .user_features = FeatureSet{
+                          context.feature_factory->get("FeatureOne"),
+                          context.feature_factory->get("FeatureTwo")}})));
+  EXPECT_FALSE(
+      test::make_taint_frame(
+          /* kind */ context.kind_factory->get("TestSource"),
+          test::FrameProperties{
+              .user_features =
+                  FeatureSet{
+                      context.feature_factory->get("FeatureOne"),
+                      context.feature_factory->get("FeatureTwo")}})
+          .leq(
+              test::make_taint_frame(
+                  /* kind */ context.kind_factory->get("TestSource"),
+                  test::FrameProperties{
+                      .user_features = FeatureSet{
+                          context.feature_factory->get("FeatureOne")}})));
 
   // Compare via_type_of_ports
   EXPECT_TRUE(
@@ -185,35 +208,42 @@ TEST_F(FrameTest, FrameLeq) {
           test::FrameProperties{
               .via_type_of_ports = TaggedRootSet(
                   {TaggedRoot(Root(Root::Kind::Return), /* tag */ nullptr)})})
-          .leq(test::make_taint_frame(
-              /* kind */ context.kind_factory->get("TestSource"),
-              test::FrameProperties{
-                  .via_type_of_ports = TaggedRootSet(
-                      {TaggedRoot(Root(Root::Kind::Return), /* tag */ nullptr),
-                       TaggedRoot(
-                           Root(Root::Kind::Argument, 1),
-                           /* tag */ nullptr)})})));
-  EXPECT_FALSE(test::make_taint_frame(
-                   /* kind */ context.kind_factory->get("TestSource"),
-                   test::FrameProperties{
-                       .via_type_of_ports = TaggedRootSet({TaggedRoot(
-                           Root(Root::Kind::Return), /* tag */ nullptr)})})
-                   .leq(test::make_taint_frame(
-                       /* kind */ context.kind_factory->get("TestSource"),
-                       test::FrameProperties{
-                           .via_type_of_ports = TaggedRootSet({TaggedRoot(
+          .leq(
+              test::make_taint_frame(
+                  /* kind */ context.kind_factory->get("TestSource"),
+                  test::FrameProperties{
+                      .via_type_of_ports = TaggedRootSet(
+                          {TaggedRoot(
+                               Root(Root::Kind::Return), /* tag */ nullptr),
+                           TaggedRoot(
                                Root(Root::Kind::Argument, 1),
                                /* tag */ nullptr)})})));
+  EXPECT_FALSE(
+      test::make_taint_frame(
+          /* kind */ context.kind_factory->get("TestSource"),
+          test::FrameProperties{
+              .via_type_of_ports = TaggedRootSet(
+                  {TaggedRoot(Root(Root::Kind::Return), /* tag */ nullptr)})})
+          .leq(
+              test::make_taint_frame(
+                  /* kind */ context.kind_factory->get("TestSource"),
+                  test::FrameProperties{
+                      .via_type_of_ports = TaggedRootSet({TaggedRoot(
+                          Root(Root::Kind::Argument, 1),
+                          /* tag */ nullptr)})})));
 
   // Compare canonical names.
-  EXPECT_TRUE(test::make_taint_frame(
+  EXPECT_TRUE(
+      test::make_taint_frame(
+          /* kind */ context.kind_factory->get("TestSource"),
+          test::FrameProperties{})
+          .leq(
+              test::make_taint_frame(
                   /* kind */ context.kind_factory->get("TestSource"),
-                  test::FrameProperties{})
-                  .leq(test::make_taint_frame(
-                      /* kind */ context.kind_factory->get("TestSource"),
-                      test::FrameProperties{
-                          .canonical_names = CanonicalNameSetAbstractDomain{
-                              CanonicalName(CanonicalName::TemplateValue{
+                  test::FrameProperties{
+                      .canonical_names =
+                          CanonicalNameSetAbstractDomain{CanonicalName(
+                              CanonicalName::TemplateValue{
                                   "%programmatic_leaf_name%"})}})));
   EXPECT_FALSE(
       test::make_taint_frame(
@@ -221,9 +251,10 @@ TEST_F(FrameTest, FrameLeq) {
           test::FrameProperties{
               .canonical_names = CanonicalNameSetAbstractDomain{CanonicalName(
                   CanonicalName::TemplateValue{"%programmatic_leaf_name%"})}})
-          .leq(test::make_taint_frame(
-              /* kind */ context.kind_factory->get("TestSource"),
-              test::FrameProperties{})));
+          .leq(
+              test::make_taint_frame(
+                  /* kind */ context.kind_factory->get("TestSource"),
+                  test::FrameProperties{})));
 
   // Compare output paths.
   auto x = PathElement::field("x");
@@ -233,38 +264,43 @@ TEST_F(FrameTest, FrameLeq) {
           test::FrameProperties{
               .output_paths = PathTreeDomain{{Path{x}, CollapseDepth::zero()}},
           })
-          .leq(test::make_taint_frame(
-              context.kind_factory->local_return(),
-              test::FrameProperties{test::FrameProperties{
-                  .output_paths =
-                      PathTreeDomain{{Path{}, CollapseDepth::zero()}},
-              }})));
+          .leq(
+              test::make_taint_frame(
+                  context.kind_factory->local_return(),
+                  test::FrameProperties{test::FrameProperties{
+                      .output_paths =
+                          PathTreeDomain{{Path{}, CollapseDepth::zero()}},
+                  }})));
   EXPECT_FALSE(
       test::make_taint_frame(
           context.kind_factory->local_return(),
           test::FrameProperties{
               .output_paths = PathTreeDomain{{Path{}, CollapseDepth::zero()}},
           })
-          .leq(test::make_taint_frame(
-              context.kind_factory->local_return(),
-              test::FrameProperties{test::FrameProperties{
-                  .output_paths =
-                      PathTreeDomain{{Path{x}, CollapseDepth::zero()}},
-              }})));
+          .leq(
+              test::make_taint_frame(
+                  context.kind_factory->local_return(),
+                  test::FrameProperties{test::FrameProperties{
+                      .output_paths =
+                          PathTreeDomain{{Path{x}, CollapseDepth::zero()}},
+                  }})));
 }
 
 TEST_F(FrameTest, FrameEquals) {
   auto context = test::make_empty_context();
 
   EXPECT_TRUE(Frame::bottom().equals(Frame::bottom()));
-  EXPECT_FALSE(Frame::bottom().equals(test::make_taint_frame(
-      /* kind */ context.kind_factory->get("TestSource"),
-      test::FrameProperties{})));
+  EXPECT_FALSE(
+      Frame::bottom().equals(
+          test::make_taint_frame(
+              /* kind */ context.kind_factory->get("TestSource"),
+              test::FrameProperties{})));
 
-  EXPECT_FALSE(test::make_taint_frame(
-                   /* kind */ context.kind_factory->get("TestSource"),
-                   test::FrameProperties{})
-                   .equals(Frame::bottom()));
+  EXPECT_FALSE(
+      test::make_taint_frame(
+          /* kind */ context.kind_factory->get("TestSource"),
+          test::FrameProperties{})
+          .equals(Frame::bottom()));
 }
 
 TEST_F(FrameTest, FrameJoin) {
@@ -292,9 +328,10 @@ TEST_F(FrameTest, FrameJoin) {
 
   EXPECT_EQ(Frame::bottom().join(Frame::bottom()), Frame::bottom());
   EXPECT_EQ(
-      Frame::bottom().join(test::make_taint_frame(
-          /* kind */ context.kind_factory->get("TestSource"),
-          test::FrameProperties{})),
+      Frame::bottom().join(
+          test::make_taint_frame(
+              /* kind */ context.kind_factory->get("TestSource"),
+              test::FrameProperties{})),
       test::make_taint_frame(
           /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{}));
@@ -312,9 +349,10 @@ TEST_F(FrameTest, FrameJoin) {
       test::make_taint_frame(
           /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{})
-          .join_with(test::make_taint_frame(
-              /* kind */ context.kind_factory->get("TestSink"),
-              test::FrameProperties{})),
+          .join_with(
+              test::make_taint_frame(
+                  /* kind */ context.kind_factory->get("TestSink"),
+                  test::FrameProperties{})),
       std::exception);
 
   // Minimum distance.
@@ -322,9 +360,10 @@ TEST_F(FrameTest, FrameJoin) {
       test::make_taint_frame(
           /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{.distance = 2})
-          .join(test::make_taint_frame(
-              /* kind */ context.kind_factory->get("TestSource"),
-              test::FrameProperties{.distance = 1})),
+          .join(
+              test::make_taint_frame(
+                  /* kind */ context.kind_factory->get("TestSource"),
+                  test::FrameProperties{.distance = 1})),
       test::make_taint_frame(
           /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{.distance = 1}));
@@ -335,10 +374,11 @@ TEST_F(FrameTest, FrameJoin) {
           /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
               .distance = 1, .origins = OriginSet{one_origin}})
-          .join(test::make_taint_frame(
-              /* kind */ context.kind_factory->get("TestSource"),
-              test::FrameProperties{
-                  .distance = 1, .origins = OriginSet{two_origin}})),
+          .join(
+              test::make_taint_frame(
+                  /* kind */ context.kind_factory->get("TestSource"),
+                  test::FrameProperties{
+                      .distance = 1, .origins = OriginSet{two_origin}})),
       test::make_taint_frame(
           /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
@@ -352,12 +392,13 @@ TEST_F(FrameTest, FrameJoin) {
               .distance = 1,
               .origins =
                   OriginSet{context.origin_factory->field_origin(field_one)}})
-          .join(test::make_taint_frame(
-              /* kind */ context.kind_factory->get("TestSource"),
-              test::FrameProperties{
-                  .distance = 1,
-                  .origins = OriginSet{context.origin_factory->field_origin(
-                      field_two)}})),
+          .join(
+              test::make_taint_frame(
+                  /* kind */ context.kind_factory->get("TestSource"),
+                  test::FrameProperties{
+                      .distance = 1,
+                      .origins = OriginSet{context.origin_factory->field_origin(
+                          field_two)}})),
       test::make_taint_frame(
           /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
@@ -375,13 +416,14 @@ TEST_F(FrameTest, FrameJoin) {
               .inferred_features =
                   FeatureMayAlwaysSet{
                       context.feature_factory->get("FeatureOne")}})
-          .join(test::make_taint_frame(
-              /* kind */ context.kind_factory->get("TestSource"),
-              test::FrameProperties{
-                  .distance = 2,
-                  .inferred_features =
-                      FeatureMayAlwaysSet{
-                          context.feature_factory->get("FeatureTwo")}})),
+          .join(
+              test::make_taint_frame(
+                  /* kind */ context.kind_factory->get("TestSource"),
+                  test::FrameProperties{
+                      .distance = 2,
+                      .inferred_features =
+                          FeatureMayAlwaysSet{
+                              context.feature_factory->get("FeatureTwo")}})),
       test::make_taint_frame(
           /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
@@ -398,12 +440,13 @@ TEST_F(FrameTest, FrameJoin) {
               .distance = 2,
               .user_features =
                   FeatureSet{context.feature_factory->get("FeatureOne")}})
-          .join(test::make_taint_frame(
-              /* kind */ context.kind_factory->get("TestSource"),
-              test::FrameProperties{
-                  .distance = 2,
-                  .user_features =
-                      FeatureSet{context.feature_factory->get("FeatureTwo")}})),
+          .join(
+              test::make_taint_frame(
+                  /* kind */ context.kind_factory->get("TestSource"),
+                  test::FrameProperties{
+                      .distance = 2,
+                      .user_features = FeatureSet{context.feature_factory->get(
+                          "FeatureTwo")}})),
       test::make_taint_frame(
           /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
@@ -421,13 +464,14 @@ TEST_F(FrameTest, FrameJoin) {
               .via_type_of_ports = TaggedRootSet(
                   {TaggedRoot(Root(Root::Kind::Return), /* tag */ nullptr)}),
           })
-          .join(test::make_taint_frame(
-              /* kind */ context.kind_factory->get("TestSource"),
-              test::FrameProperties{
-                  .distance = 2,
-                  .via_type_of_ports = TaggedRootSet({TaggedRoot(
-                      Root(Root::Kind::Argument, 1), /* tag */ nullptr)}),
-              })),
+          .join(
+              test::make_taint_frame(
+                  /* kind */ context.kind_factory->get("TestSource"),
+                  test::FrameProperties{
+                      .distance = 2,
+                      .via_type_of_ports = TaggedRootSet({TaggedRoot(
+                          Root(Root::Kind::Argument, 1), /* tag */ nullptr)}),
+                  })),
       test::make_taint_frame(
           /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
@@ -445,12 +489,14 @@ TEST_F(FrameTest, FrameJoin) {
           test::FrameProperties{
               .canonical_names = CanonicalNameSetAbstractDomain{CanonicalName(
                   CanonicalName::TemplateValue{"%programmatic_leaf_name%"})}})
-          .join(test::make_taint_frame(
-              /* kind */ context.kind_factory->get("TestSource"),
-              test::FrameProperties{
-                  .canonical_names =
-                      CanonicalNameSetAbstractDomain{CanonicalName(
-                          CanonicalName::TemplateValue{"%via_type_of%"})}})),
+          .join(
+              test::make_taint_frame(
+                  /* kind */ context.kind_factory->get("TestSource"),
+                  test::FrameProperties{
+                      .canonical_names =
+                          CanonicalNameSetAbstractDomain{CanonicalName(
+                              CanonicalName::TemplateValue{
+                                  "%via_type_of%"})}})),
       test::make_taint_frame(
           /* kind */ context.kind_factory->get("TestSource"),
           test::FrameProperties{
@@ -469,12 +515,13 @@ TEST_F(FrameTest, FrameJoin) {
           test::FrameProperties{
               .output_paths = PathTreeDomain{{Path{x}, CollapseDepth::zero()}},
           })
-          .join(test::make_taint_frame(
-              context.kind_factory->local_return(),
-              test::FrameProperties{test::FrameProperties{
-                  .output_paths =
-                      PathTreeDomain{{Path{y}, CollapseDepth::zero()}},
-              }})),
+          .join(
+              test::make_taint_frame(
+                  context.kind_factory->local_return(),
+                  test::FrameProperties{test::FrameProperties{
+                      .output_paths =
+                          PathTreeDomain{{Path{y}, CollapseDepth::zero()}},
+                  }})),
       test::make_taint_frame(
           context.kind_factory->local_return(),
           test::FrameProperties{test::FrameProperties{

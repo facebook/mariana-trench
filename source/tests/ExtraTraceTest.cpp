@@ -23,12 +23,13 @@ TEST_F(ExtraTraceTest, ExtraTraceConstruct) {
   auto context = test::make_context(store);
 
   const auto* kind = context.kind_factory->get("TestKind");
-  const auto* callee = context.methods->create(redex::create_void_method(
-      scope,
-      /* class_name */ "LClass;",
-      /* method_name */ "one",
-      /* parameter_types */ "LClass;",
-      /* return_type */ "LClass;"));
+  const auto* callee = context.methods->create(
+      redex::create_void_method(
+          scope,
+          /* class_name */ "LClass;",
+          /* method_name */ "one",
+          /* parameter_types */ "LClass;",
+          /* return_type */ "LClass;"));
   const auto* call_position = context.positions->get(std::nullopt, 1);
   const auto* callee_port_arg0 = context.access_path_factory->get(
       AccessPath(Root(Root::Kind::Argument, 0)));

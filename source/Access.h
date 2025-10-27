@@ -411,8 +411,9 @@ class Path final {
 
   void reduce_to_common_prefix(const Path& other);
 
-  Path resolve(const std::vector<std::optional<std::string>>&
-                   source_constant_arguments) const;
+  Path resolve(
+      const std::vector<std::optional<std::string>>& source_constant_arguments)
+      const;
 
   /**
    * Split a string into path elements.

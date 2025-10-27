@@ -232,15 +232,16 @@ ArtificialCallees anonymous_class_artificial_callees(
 
     auto call_index =
         update_index(sink_textual_order_index, method->signature());
-    callees.push_back(ArtificialCallee{
-        /* kind */ ArtificialCallee::Kind::AnonymousClass,
-        /* call_target */
-        CallTarget::direct_call(
-            instruction, method, call_index, anonymous_class_type),
-        /* root_registers */
-        {{Root(Root::Kind::Argument, 0), register_id}},
-        /* features */ features,
-    });
+    callees.push_back(
+        ArtificialCallee{
+            /* kind */ ArtificialCallee::Kind::AnonymousClass,
+            /* call_target */
+            CallTarget::direct_call(
+                instruction, method, call_index, anonymous_class_type),
+            /* root_registers */
+            {{Root(Root::Kind::Argument, 0), register_id}},
+            /* features */ features,
+        });
   }
 
   return callees;
@@ -376,30 +377,32 @@ void process_shim_target(
 
   if (method->is_static()) {
     mt_assert(shim_target.is_static());
-    artificial_callees.push_back(ArtificialCallee{
-        /* kind */ ArtificialCallee::Kind::Shim,
-        /* call_target */
-        CallTarget::static_call(instruction, method, call_index),
-        /* root_registers */ root_registers,
-        /* features */ features,
-    });
+    artificial_callees.push_back(
+        ArtificialCallee{
+            /* kind */ ArtificialCallee::Kind::Shim,
+            /* call_target */
+            CallTarget::static_call(instruction, method, call_index),
+            /* root_registers */ root_registers,
+            /* features */ features,
+        });
     return;
   }
 
-  artificial_callees.push_back(ArtificialCallee{
-      /* kind */ ArtificialCallee::Kind::Shim,
-      /* call_target */
-      CallTarget::virtual_call(
-          instruction,
-          method,
-          call_index,
-          receiver_type,
-          receiver_local_extends,
-          class_hierarchies,
-          override_factory),
-      /* root_registers */ root_registers,
-      /* features */ features,
-  });
+  artificial_callees.push_back(
+      ArtificialCallee{
+          /* kind */ ArtificialCallee::Kind::Shim,
+          /* call_target */
+          CallTarget::virtual_call(
+              instruction,
+              method,
+              call_index,
+              receiver_type,
+              receiver_local_extends,
+              class_hierarchies,
+              override_factory),
+          /* root_registers */ root_registers,
+          /* features */ features,
+      });
 }
 
 void process_shim_reflection(
@@ -455,21 +458,22 @@ void process_shim_reflection(
   auto call_index =
       update_index(sink_textual_order_index, reflection_method->signature());
 
-  artificial_callees.push_back(ArtificialCallee{
-      /* kind */ ArtificialCallee::Kind::Shim,
-      /* call_target */
-      CallTarget::virtual_call(
-          instruction,
-          reflection_method,
-          call_index,
-          reflection_type,
-          /* receiver_local_extends */ nullptr,
-          class_hierarchies,
-          override_factory),
-      /* root_registers */ root_registers,
-      /* features */
-      FeatureSet{FeatureFactory.get_via_shim_feature(callee)},
-  });
+  artificial_callees.push_back(
+      ArtificialCallee{
+          /* kind */ ArtificialCallee::Kind::Shim,
+          /* call_target */
+          CallTarget::virtual_call(
+              instruction,
+              reflection_method,
+              call_index,
+              reflection_type,
+              /* receiver_local_extends */ nullptr,
+              class_hierarchies,
+              override_factory),
+          /* root_registers */ root_registers,
+          /* features */
+          FeatureSet{FeatureFactory.get_via_shim_feature(callee)},
+      });
 }
 
 void process_shim_lifecycle(
@@ -576,14 +580,16 @@ void process_shim_lifecycle(
     auto call_index =
         update_index(sink_textual_order_index, lifecycle_method->signature());
 
-    artificial_callees.push_back(ArtificialCallee{
-        /* kind */ ArtificialCallee::Kind::Shim,
-        /* call_target */
-        CallTarget::direct_call(
-            instruction, lifecycle_method, call_index, receiver_type),
-        /* root_registers */ root_registers,
-        /* features */ FeatureSet{feature_factory.get_via_shim_feature(callee)},
-    });
+    artificial_callees.push_back(
+        ArtificialCallee{
+            /* kind */ ArtificialCallee::Kind::Shim,
+            /* call_target */
+            CallTarget::direct_call(
+                instruction, lifecycle_method, call_index, receiver_type),
+            /* root_registers */ root_registers,
+            /* features */
+            FeatureSet{feature_factory.get_via_shim_feature(callee)},
+        });
   }
 }
 

@@ -247,9 +247,10 @@ Registry Registry::load(
     case AnalysisMode::CachedModels: {
       auto sharded_models_directory = options.sharded_models_directory();
       if (!sharded_models_directory.has_value()) {
-        throw std::runtime_error(fmt::format(
-            "Analysis mode `{}` requires sharded models to be provided.",
-            analysis_mode_to_string(analysis_mode)));
+        throw std::runtime_error(
+            fmt::format(
+                "Analysis mode `{}` requires sharded models to be provided.",
+                analysis_mode_to_string(analysis_mode)));
       }
       auto cached_registry =
           from_sharded_models(context, *sharded_models_directory);
@@ -263,9 +264,10 @@ Registry Registry::load(
     case AnalysisMode::Replay: {
       auto sharded_models_directory = options.sharded_models_directory();
       if (!sharded_models_directory.has_value()) {
-        throw std::runtime_error(fmt::format(
-            "Analysis mode `{}` requires sharded models to be provided.",
-            analysis_mode_to_string(analysis_mode)));
+        throw std::runtime_error(
+            fmt::format(
+                "Analysis mode `{}` requires sharded models to be provided.",
+                analysis_mode_to_string(analysis_mode)));
       }
       return from_sharded_models(context, *sharded_models_directory);
     }
@@ -298,8 +300,9 @@ Model Registry::get(const Method* method) const {
   try {
     return models_.at(method);
   } catch (const std::out_of_range&) {
-    throw std::runtime_error(fmt::format(
-        "Trying to get model for untracked method `{}`.", method->show()));
+    throw std::runtime_error(
+        fmt::format(
+            "Trying to get model for untracked method `{}`.", method->show()));
   }
 }
 
@@ -414,14 +417,15 @@ void Registry::dump_metadata(const std::filesystem::path& path) const {
   statistics["issues"] = Json::Value(static_cast<Json::UInt64>(issues_size()));
   statistics["methods_analyzed"] =
       Json::Value(static_cast<Json::UInt64>(models_.size()));
-  statistics["methods_without_code"] = Json::Value(static_cast<Json::UInt64>(
-      unordered_count_if(models_, [](const auto& model) {
-        return model.first->get_code() == nullptr;
-      })));
-  statistics["methods_skipped"] = Json::Value(static_cast<Json::UInt64>(
-      unordered_count_if(models_, [](const auto& model) {
-        return model.second.skip_analysis();
-      })));
+  statistics["methods_without_code"] = Json::Value(
+      static_cast<Json::UInt64>(
+          unordered_count_if(models_, [](const auto& model) {
+            return model.first->get_code() == nullptr;
+          })));
+  statistics["methods_skipped"] = Json::Value(
+      static_cast<Json::UInt64>(unordered_count_if(
+          models_,
+          [](const auto& model) { return model.second.skip_analysis(); })));
   value["stats"] = statistics;
 
   value["filename_spec"] = Json::Value("model@*.json");

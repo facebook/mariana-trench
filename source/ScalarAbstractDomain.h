@@ -65,13 +65,13 @@ struct ScalarBottomIsZero final {
 
 } // namespace scalar_impl
 
-#define MT_ENUM_HAS_MEMBER(Enum, Member)                               \
-  template <typename U>                                                \
-  static auto has_##Member(U*)->decltype(U::Member, std::true_type{}); \
-                                                                       \
-  template <typename>                                                  \
-  static auto has_##Member(...)->std::false_type;                      \
-                                                                       \
+#define MT_ENUM_HAS_MEMBER(Enum, Member)                                 \
+  template <typename U>                                                  \
+  static auto has_##Member(U*) -> decltype(U::Member, std::true_type{}); \
+                                                                         \
+  template <typename>                                                    \
+  static auto has_##Member(...) -> std::false_type;                      \
+                                                                         \
   static_assert(decltype(has_##Member<typename Enum>(0))::value);
 
 template <typename ScalarValue>
