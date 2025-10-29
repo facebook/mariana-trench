@@ -15,33 +15,33 @@ package com.facebook.marianatrench.integrationtests
 public class KotlinCheckCast {
 
   public open class Base {
-    public open fun run(argument: Object) = Unit
+    public open fun run(argument: Any) = Unit
   }
 
   public class DerivedWithSink : Base() {
-    public override fun run(argument: Object) {
+    public override fun run(argument: Any) {
       Origin.sink(argument)
     }
   }
 
   public class DerivedNoSink : Base() {
-    public override fun run(argument: Object) = Unit
+    public override fun run(argument: Any) = Unit
   }
 
   // User-defined shim to call klass.run(argument)
-  public fun shimmed(klass: Base, argument: Object) = Unit
+  public fun shimmed(klass: Base, argument: Any) = Unit
 
   public fun issueFromDerivedType() {
     // There is a check-cast instruction (DerivedWithSink to Base) in the byte
     // code. The corresponding register type is Base. Analysis will consider
     // all derived classes, hence this source is seen to flow into a sink.
-    shimmed(DerivedWithSink(), Origin.source() as Object)
+    shimmed(DerivedWithSink(), Origin.source() as Any)
   }
 
   public fun noIssueFromDerivedType() {
     // False positive because of check-cast instruction (see
     // `issueFromCheckCastType`).
-    shimmed(DerivedNoSink(), Origin.source() as Object)
+    shimmed(DerivedNoSink(), Origin.source() as Any)
   }
 
   public fun issueFromVirtualBaseType() {
@@ -55,12 +55,12 @@ public class KotlinCheckCast {
     }
 
     // No check-cast instruction here (type of `base` is already Base).
-    shimmed(base, Origin.source() as Object)
+    shimmed(base, Origin.source() as Any)
   }
 
   public fun issueFromCastedType(base: Base) {
     val derived = base as DerivedWithSink
-    shimmed(derived, Origin.source() as Object)
+    shimmed(derived, Origin.source() as Any)
   }
 
   public fun noIssueFromCastedType(base: Base) {
@@ -68,6 +68,6 @@ public class KotlinCheckCast {
     // check-cast instruction for it. However, another check-cast (to Base)
     // instruction is introduced when calling shimmed(derived, ...).
     val derived = base as DerivedNoSink
-    shimmed(derived, Origin.source() as Object)
+    shimmed(derived, Origin.source() as Any)
   }
 }

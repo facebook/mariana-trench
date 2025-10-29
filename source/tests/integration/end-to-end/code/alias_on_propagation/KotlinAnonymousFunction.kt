@@ -14,9 +14,9 @@ package com.facebook.marianatrench.integrationtests
  */
 public class KotlinAnonymousFunction {
   fun issue() {
-    var source: Object? = null
+    var source: Any? = null
 
-    val lambda = { -> source = Origin.source() as Object }
+    val lambda = { -> source = Origin.source() as Any }
     lambda()
 
     Origin.sink(source)
