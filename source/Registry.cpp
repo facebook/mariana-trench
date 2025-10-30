@@ -311,11 +311,7 @@ FieldModel Registry::get(const Field* field) const {
     throw std::runtime_error("Trying to get model for the `null` field");
   }
 
-  try {
-    return field_models_.at(field);
-  } catch (const std::out_of_range&) {
-    return FieldModel(field);
-  }
+  return field_models_.get(field, FieldModel(field));
 }
 
 void Registry::set(const Model& model) {
