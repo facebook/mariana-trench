@@ -182,3 +182,26 @@ export CC=/home/linuxbrew/.linuxbrew/bin/cc
 export CXX=/home/linuxbrew/.linuxbrew/bin/c++
 ```
 You will need to run all the instructions from this page again, starting from `Clone the repository`. We recommend starting from scratch, i.e delete the mariana-trench directory.
+
+### error: ZLIB::ZLIB target not found
+
+The following error indicates that cmake failed to find zlib:
+```
+CMake Error at CMakeLists.txt:131 (target_link_libraries):
+  Target "redex-all" links to:
+
+    ZLIB::ZLIB
+
+  but the target was not found.
+```
+
+This can be fixed by providing the path to zlib when running `cmake`:
+```
+cmake [options] -DZLIB_HOME=/path/to/zlib ..
+```
+(Note how the `cmake` command must end with `..` to refer to the parent directory)
+
+If zlib was installed with Homebrew (common on macOS), use:
+```
+cmake [options] -DZLIB_HOME="$(brew --prefix)/opt/zlib" ..
+```
