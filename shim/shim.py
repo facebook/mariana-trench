@@ -1096,7 +1096,11 @@ def main() -> None:
             )
         else:
             with tempfile.NamedTemporaryFile(
-                suffix=".json", mode="w", delete=False
+                prefix="config",
+                suffix=".json",
+                mode="w",
+                dir=arguments.output_directory,
+                delete=False,
             ) as options_file:
                 _set_environment_variables(arguments)
                 options_json = _get_command_options_json(
