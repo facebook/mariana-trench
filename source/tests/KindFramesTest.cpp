@@ -1047,4 +1047,121 @@ TEST_F(KindFramesTest, PropagateCrtex) {
       }));
 }
 
+TEST_F(KindFramesTest, PropagateSynthetic) {
+  auto context = test::make_empty_context();
+
+  Scope scope;
+  auto* dex_three = redex::create_void_method(scope, "LThree;", "three");
+
+  // Make method three synthetic
+  dex_three->set_access(ACC_SYNTHETIC);
+
+  auto* one =
+      context.methods->create(redex::create_void_method(scope, "LOne;", "one"));
+  auto* two =
+      context.methods->create(redex::create_void_method(scope, "LTwo;", "two"));
+  auto* three = context.methods->create(dex_three);
+
+  auto interval_one = CallClassIntervalContext(
+      ClassIntervals::Interval::finite(2, 3),
+      /* preserves_type_context */ false);
+  auto* test_kind_one = context.kind_factory->get("TestSinkOne");
+  auto* call_position = context.positions->get("Test.java", 1);
+  auto* leaf =
+      context.access_path_factory->get(AccessPath(Root(Root::Kind::Leaf)));
+  auto* one_origin = context.origin_factory->method_origin(one, leaf);
+
+  // Create two identical KindFrames with the same taint config
+  auto frames_one = KindFrames{
+      test::make_taint_config(
+          test_kind_one,
+          test::FrameProperties{
+              .callee = one,
+              .class_interval_context = interval_one,
+              .distance = 1,
+              .origins = OriginSet{one_origin},
+              .call_kind = CallKind::callsite()}),
+  };
+  auto frames_two = KindFrames{
+      test::make_taint_config(
+          test_kind_one,
+          test::FrameProperties{
+              .callee = one,
+              .class_interval_context = interval_one,
+              .distance = 1,
+              .origins = OriginSet{one_origin},
+              .call_kind = CallKind::callsite()}),
+  };
+
+  // Propagate frames_one through two (non-synthetic)
+  auto propagated_through_two = frames_one.propagate(
+      /* callee */ two,
+      /* propagated_call_info */
+      CallInfo(
+          two,
+          CallKind::callsite(),
+          context.access_path_factory->get(
+              AccessPath(Root(Root::Kind::Argument, 0))),
+          call_position),
+      /* locally_inferred_features */ FeatureMayAlwaysSet{},
+      /* maximum_source_sink_distance */ 100,
+      context,
+      /* source_register_types */ {},
+      /* source_constant_arguments */ {},
+      CallClassIntervalContext(),
+      ClassIntervals::Interval::top());
+
+  // Propagate frames_two through three (synthetic)
+  auto propagated_through_three = frames_two.propagate(
+      /* callee */ three,
+      /* propagated_call_info */
+      CallInfo(
+          three,
+          CallKind::callsite(),
+          context.access_path_factory->get(
+              AccessPath(Root(Root::Kind::Argument, 0))),
+          call_position),
+      /* locally_inferred_features */ FeatureMayAlwaysSet{},
+      /* maximum_source_sink_distance */ 100,
+      context,
+      /* source_register_types */ {},
+      /* source_constant_arguments */ {},
+      CallClassIntervalContext(),
+      ClassIntervals::Interval::top());
+
+  // Verify that the distance is increased by 1 when propagated through
+  // non-synthetic method (two)
+  EXPECT_EQ(
+      propagated_through_two,
+      (KindFrames{
+          test::make_taint_config(
+              test_kind_one,
+              test::FrameProperties{
+                  .callee_port = context.access_path_factory->get(
+                      AccessPath(Root(Root::Kind::Argument, 0))),
+                  .callee = two,
+                  .call_position = call_position,
+                  .distance = 2, // Non-synthetic method (two) is counted
+                  .origins = OriginSet{one_origin},
+                  .call_kind = CallKind::callsite()}),
+      }));
+
+  // Verify that the distance is NOT increased when propagated through
+  // synthetic method (three)
+  EXPECT_EQ(
+      propagated_through_three,
+      (KindFrames{
+          test::make_taint_config(
+              test_kind_one,
+              test::FrameProperties{
+                  .callee_port = context.access_path_factory->get(
+                      AccessPath(Root(Root::Kind::Argument, 0))),
+                  .callee = three,
+                  .call_position = call_position,
+                  .distance = 1, // Synthetic method (three) is not counted
+                  .origins = OriginSet{one_origin},
+                  .call_kind = CallKind::callsite()}),
+      }));
+}
+
 } // namespace marianatrench

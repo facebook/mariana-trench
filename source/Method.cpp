@@ -92,6 +92,10 @@ bool Method::is_abstract() const {
   return ::is_abstract(method_);
 }
 
+bool Method::is_synthetic() const {
+  return ::is_synthetic(method_);
+}
+
 bool Method::is_constructor() const {
   return method::is_init(method_);
 }

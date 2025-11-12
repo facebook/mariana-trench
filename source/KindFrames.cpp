@@ -378,7 +378,11 @@ KindFrames KindFrames::propagate(
         CanonicalName::propagate(
             propagated_canonical_names, *propagated_call_info.callee_port()));
 
-    int propagated_distance = frame.distance() + 1;
+    // Do not count synthetic methods into propagation distance
+    bool is_synthetic = callee != nullptr && callee->is_synthetic();
+    int propagated_distance =
+        is_synthetic ? frame.distance() : frame.distance() + 1;
+
     auto propagated_call_kind = propagated_call_info.call_kind();
     if (propagated_call_kind.is_origin()) {
       // Origins are the "leaf" of a trace and start at distance 0.
@@ -397,7 +401,7 @@ KindFrames KindFrames::propagate(
           !propagated_call_kind.is_declaration() &&
           !propagated_call_kind.is_origin());
     } else {
-      mt_assert(propagated_call_kind.is_origin());
+      mt_assert(propagated_call_kind.is_origin() || is_synthetic);
     }
 
     auto propagated_frame = Frame(
