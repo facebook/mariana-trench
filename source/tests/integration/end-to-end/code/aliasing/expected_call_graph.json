@@ -515,6 +515,72 @@
       "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/KotlinScopeFunctions;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/KotlinScopeFunctions;.testAlsoWithCaptures:()V" : 
+  {
+    "static" : 
+    [
+      "Landroid/content/Intent;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/State;.<init>:()V",
+      "Lkotlin/jvm/internal/Intrinsics;.checkNotNull:(Ljava/lang/Object;Ljava/lang/String;)V"
+    ],
+    "virtual" : 
+    [
+      "Landroid/content/Intent;.putExtra:(Ljava/lang/String;Ljava/lang/String;)V",
+      "Lcom/facebook/marianatrench/integrationtests/State;.getState:()Landroid/content/Intent;",
+      "Lcom/facebook/marianatrench/integrationtests/State;.updateResult:(Landroid/content/Intent;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/KotlinScopeFunctions;.testSimpleAlso:()V" : 
+  {
+    "static" : 
+    [
+      "Landroid/content/Intent;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/State;.<init>:()V",
+      "Lkotlin/jvm/internal/Intrinsics;.checkNotNull:(Ljava/lang/Object;Ljava/lang/String;)V"
+    ],
+    "virtual" : 
+    [
+      "Landroid/content/Intent;.putExtra:(Ljava/lang/String;Ljava/lang/String;)V",
+      "Lcom/facebook/marianatrench/integrationtests/State;.getState:()Landroid/content/Intent;",
+      "Lcom/facebook/marianatrench/integrationtests/State;.updateResult:(Landroid/content/Intent;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/KotlinScopeFunctions;.testWithAlsoChain:()V" : 
+  {
+    "static" : 
+    [
+      "Landroid/content/Intent;.<init>:()V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/State;.<init>:()V",
+      "Lkotlin/jvm/internal/Intrinsics;.checkNotNull:(Ljava/lang/Object;Ljava/lang/String;)V"
+    ],
+    "virtual" : 
+    [
+      "Landroid/content/Intent;.putExtra:(Ljava/lang/String;Ljava/lang/String;)V",
+      "Lcom/facebook/marianatrench/integrationtests/KotlinScopeFunctions;.tito:(Ljava/lang/Object;)Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/State;.getState:()Landroid/content/Intent;",
+      "Lcom/facebook/marianatrench/integrationtests/State;.updateResult:(Landroid/content/Intent;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/KotlinScopeFunctions;.tito:(Ljava/lang/Object;)Ljava/lang/Object;" : 
+  {
+    "static" : 
+    [
+      "Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V" : 
   {
     "static" : 
@@ -527,6 +593,20 @@
     "static" : 
     [
       "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/State;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/State;.updateResult:(Landroid/content/Intent;)V" : 
+  {
+    "static" : 
+    [
+      "Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V"
     ]
   },
   "Lcom/facebook/marianatrench/integrationtests/Tree;.<init>:()V" : 

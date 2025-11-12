@@ -11,7 +11,16 @@
   "Landroid/content/Intent;.<init>:()V" : 
   [
     "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
-    "Lcom/facebook/base/activity/FragmentBaseActivityUtil;.getDefaultActivityIntent:()Landroid/content/Intent;"
+    "Lcom/facebook/base/activity/FragmentBaseActivityUtil;.getDefaultActivityIntent:()Landroid/content/Intent;",
+    "Lcom/facebook/marianatrench/integrationtests/KotlinScopeFunctions;.testAlsoWithCaptures:()V",
+    "Lcom/facebook/marianatrench/integrationtests/KotlinScopeFunctions;.testSimpleAlso:()V",
+    "Lcom/facebook/marianatrench/integrationtests/KotlinScopeFunctions;.testWithAlsoChain:()V"
+  ],
+  "Landroid/content/Intent;.putExtra:(Ljava/lang/String;Ljava/lang/String;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/KotlinScopeFunctions;.testAlsoWithCaptures:()V",
+    "Lcom/facebook/marianatrench/integrationtests/KotlinScopeFunctions;.testSimpleAlso:()V",
+    "Lcom/facebook/marianatrench/integrationtests/KotlinScopeFunctions;.testWithAlsoChain:()V"
   ],
   "Landroid/database/Cursor;.<init>:()V" : 
   [
@@ -119,6 +128,10 @@
   [
     "Lcom/facebook/marianatrench/integrationtests/AliasingObjects;.falseNegative:()V"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/KotlinScopeFunctions;.tito:(Ljava/lang/Object;)Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/KotlinScopeFunctions;.testWithAlsoChain:()V"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/AliasingJava;.testAliasCycle:()V",
@@ -137,11 +150,35 @@
     "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.testSimple1:()V",
     "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.testSimple2:()V",
     "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.testSimpleTaintTreeGeneration:()V",
-    "Lcom/facebook/marianatrench/integrationtests/AliasingObjects;.falseNegative:()V"
+    "Lcom/facebook/marianatrench/integrationtests/AliasingObjects;.falseNegative:()V",
+    "Lcom/facebook/marianatrench/integrationtests/KotlinScopeFunctions;.testAlsoWithCaptures:()V",
+    "Lcom/facebook/marianatrench/integrationtests/KotlinScopeFunctions;.testSimpleAlso:()V",
+    "Lcom/facebook/marianatrench/integrationtests/KotlinScopeFunctions;.testWithAlsoChain:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/AliasingObjects;.falseNegative:()V"
+    "Lcom/facebook/marianatrench/integrationtests/AliasingObjects;.falseNegative:()V",
+    "Lcom/facebook/marianatrench/integrationtests/KotlinScopeFunctions;.testAlsoWithCaptures:()V",
+    "Lcom/facebook/marianatrench/integrationtests/KotlinScopeFunctions;.testSimpleAlso:()V",
+    "Lcom/facebook/marianatrench/integrationtests/KotlinScopeFunctions;.testWithAlsoChain:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/State;.<init>:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/KotlinScopeFunctions;.testAlsoWithCaptures:()V",
+    "Lcom/facebook/marianatrench/integrationtests/KotlinScopeFunctions;.testSimpleAlso:()V",
+    "Lcom/facebook/marianatrench/integrationtests/KotlinScopeFunctions;.testWithAlsoChain:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/State;.getState:()Landroid/content/Intent;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/KotlinScopeFunctions;.testAlsoWithCaptures:()V",
+    "Lcom/facebook/marianatrench/integrationtests/KotlinScopeFunctions;.testSimpleAlso:()V",
+    "Lcom/facebook/marianatrench/integrationtests/KotlinScopeFunctions;.testWithAlsoChain:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/State;.updateResult:(Landroid/content/Intent;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/KotlinScopeFunctions;.testAlsoWithCaptures:()V",
+    "Lcom/facebook/marianatrench/integrationtests/KotlinScopeFunctions;.testSimpleAlso:()V",
+    "Lcom/facebook/marianatrench/integrationtests/KotlinScopeFunctions;.testWithAlsoChain:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/Tree;.<init>:()V" : 
   [
@@ -282,8 +319,10 @@
     "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/AliasingObjects$MyClass;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/AliasingObjects;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/KotlinScopeFunctions;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+    "Lcom/facebook/marianatrench/integrationtests/State;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Tree;.<init>:()V",
     "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V",
     "Lcom/facebook/secure/context/SecureContextHelperV2;.<init>:()V",
@@ -314,9 +353,17 @@
   [
     "Ljava/lang/Thread;.run:()V"
   ],
+  "Lkotlin/jvm/internal/Intrinsics;.checkNotNull:(Ljava/lang/Object;Ljava/lang/String;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/KotlinScopeFunctions;.testAlsoWithCaptures:()V",
+    "Lcom/facebook/marianatrench/integrationtests/KotlinScopeFunctions;.testSimpleAlso:()V",
+    "Lcom/facebook/marianatrench/integrationtests/KotlinScopeFunctions;.testWithAlsoChain:()V"
+  ],
   "Lkotlin/jvm/internal/Intrinsics;.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/AliasingKotlin;.testConditionalAliasing:(Lcom/facebook/marianatrench/integrationtests/Tree;)V",
+    "Lcom/facebook/marianatrench/integrationtests/KotlinScopeFunctions;.tito:(Ljava/lang/Object;)Ljava/lang/Object;",
+    "Lcom/facebook/marianatrench/integrationtests/State;.updateResult:(Landroid/content/Intent;)V",
     "Lcom/facebook/marianatrench/integrationtests/Tree;.setBar:(Lcom/facebook/marianatrench/integrationtests/Tree;)V",
     "Lcom/facebook/marianatrench/integrationtests/Tree;.setBaz:(Lcom/facebook/marianatrench/integrationtests/Tree;)V",
     "Lcom/facebook/marianatrench/integrationtests/Tree;.setBiz:(Lcom/facebook/marianatrench/integrationtests/Tree;)V",
