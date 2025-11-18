@@ -30,6 +30,23 @@ std::unordered_set<std::string> provider_regex_strings = {
     ".*;\\.openPipeHelper:\\(Landroid/net/Uri;Ljava/lang/String;.*\\)Landroid/os/ParcelFileDescriptor;",
     ".*;\\.openTypedAssetFile:\\(Landroid/net/Uri;Ljava/lang/String;.*\\)Landroid/content/res/AssetFileDescriptor;"};
 
+const std::unordered_set<std::string_view> secure_provider_base_classes = {
+    "Lcom/facebook/secure/content/provider/SameKeyContentProvider;",
+    "Lcom/facebook/secure/content/provider/FamilyContentProvider;",
+    "Lcom/facebook/secure/content/provider/FbPermissionContentProvider;",
+    "Lcom/facebook/secure/content/provider/TrustedAppsContentProvider;"};
+
+bool is_secure_provider(const DexClass* dex_class) {
+  std::unordered_set<std::string_view> parent_classes =
+      generator::get_custom_parents_from_class(dex_class);
+  return std::any_of(
+      parent_classes.begin(),
+      parent_classes.end(),
+      [](std::string_view parent_class) {
+        return secure_provider_base_classes.count(parent_class) > 0;
+      });
+}
+
 Model create_model(
     const Method* method,
     const ModelGeneratorName* generator_name,
@@ -104,6 +121,11 @@ std::vector<Model> ContentProviderGenerator::emit_method_models(
     if (manifest_providers.count(outer_class)) {
       for (const auto& regex : provider_regexes) {
         if (re2::RE2::FullMatch(signature, *regex)) {
+          const auto* dex_class = type_class(method->get_class());
+          if (dex_class && is_secure_provider(dex_class)) {
+            break;
+          }
+
           std::lock_guard<std::mutex> lock(mutex);
           models.push_back(create_model(method, name_, context_));
           break;
