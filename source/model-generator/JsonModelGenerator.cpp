@@ -217,9 +217,17 @@ std::vector<Model> JsonModelGenerator::emit_method_models_optimized(
   std::vector<Model> models;
   for (auto& item : items_) {
     MethodHashedSet filtered_methods = item.may_satisfy(method_mappings);
+
     if (filtered_methods.is_bottom()) {
+      LOG(4, "Model generator `{}` emitted 0 models.", show(item.name()));
+      EventLogger::log_event(
+          "model_generator_match",
+          show(item.name()),
+          0,
+          /* verbosity_level */ 3);
       continue;
     }
+
     std::vector<Model> method_models;
     if (filtered_methods.is_top()) {
       method_models = item.emit_method_models(methods);
