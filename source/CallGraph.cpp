@@ -234,10 +234,13 @@ ArtificialCallees anonymous_class_artificial_callees(
         update_index(sink_textual_order_index, method->signature());
     callees.push_back(
         ArtificialCallee{
-            /* kind */ ArtificialCallee::Kind::AnonymousClass,
             /* call_target */
             CallTarget::direct_call(
-                instruction, method, call_index, anonymous_class_type),
+                instruction,
+                method,
+                anonymous_class_type,
+                CallTarget::CallKind::AnonymousClass,
+                call_index),
             /* root_registers */
             {{Root(Root::Kind::Argument, 0), register_id}},
             /* features */ features,
@@ -379,9 +382,9 @@ void process_shim_target(
     mt_assert(shim_target.is_static());
     artificial_callees.push_back(
         ArtificialCallee{
-            /* kind */ ArtificialCallee::Kind::Shim,
             /* call_target */
-            CallTarget::static_call(instruction, method, call_index),
+            CallTarget::static_call(
+                instruction, method, CallTarget::CallKind::Shim, call_index),
             /* root_registers */ root_registers,
             /* features */ features,
         });
@@ -390,16 +393,16 @@ void process_shim_target(
 
   artificial_callees.push_back(
       ArtificialCallee{
-          /* kind */ ArtificialCallee::Kind::Shim,
           /* call_target */
           CallTarget::virtual_call(
               instruction,
               method,
-              call_index,
               receiver_type,
               receiver_local_extends,
               class_hierarchies,
-              override_factory),
+              override_factory,
+              CallTarget::CallKind::Shim,
+              call_index),
           /* root_registers */ root_registers,
           /* features */ features,
       });
@@ -460,16 +463,16 @@ void process_shim_reflection(
 
   artificial_callees.push_back(
       ArtificialCallee{
-          /* kind */ ArtificialCallee::Kind::Shim,
           /* call_target */
           CallTarget::virtual_call(
               instruction,
               reflection_method,
-              call_index,
               reflection_type,
               /* receiver_local_extends */ nullptr,
               class_hierarchies,
-              override_factory),
+              override_factory,
+              CallTarget::CallKind::Shim,
+              call_index),
           /* root_registers */ root_registers,
           /* features */
           FeatureSet{FeatureFactory.get_via_shim_feature(callee)},
@@ -582,10 +585,13 @@ void process_shim_lifecycle(
 
     artificial_callees.push_back(
         ArtificialCallee{
-            /* kind */ ArtificialCallee::Kind::Shim,
             /* call_target */
             CallTarget::direct_call(
-                instruction, lifecycle_method, call_index, receiver_type),
+                instruction,
+                lifecycle_method,
+                receiver_type,
+                CallTarget::CallKind::Shim,
+                call_index),
             /* root_registers */ root_registers,
             /* features */
             FeatureSet{feature_factory.get_via_shim_feature(callee)},
@@ -846,6 +852,7 @@ InstructionCallGraphInformation process_instruction(
 CallTarget::CallTarget(
     const IRInstruction* instruction,
     const Method* MT_NULLABLE resolved_base_callee,
+    CallKind call_kind,
     TextualOrderIndex call_index,
     const DexType* MT_NULLABLE receiver_type,
     const std::unordered_set<const DexType*>* MT_NULLABLE
@@ -854,6 +861,7 @@ CallTarget::CallTarget(
     const std::unordered_set<const Method*>* MT_NULLABLE overrides)
     : instruction_(instruction),
       resolved_base_callee_(resolved_base_callee),
+      call_kind_(call_kind),
       call_index_(call_index),
       receiver_type_(receiver_type),
       receiver_local_extends_(receiver_local_extends),
@@ -863,23 +871,27 @@ CallTarget::CallTarget(
 CallTarget CallTarget::static_call(
     const IRInstruction* instruction,
     const Method* MT_NULLABLE callee,
+    CallKind call_kind,
     TextualOrderIndex call_index) {
   return CallTarget::direct_call(
       instruction,
       callee,
-      call_index,
-      /* receiver_type */ nullptr);
+      /* receiver_type */ nullptr,
+      call_kind,
+      call_index);
 }
 
 CallTarget CallTarget::direct_call(
     const IRInstruction* instruction,
     const Method* MT_NULLABLE callee,
-    TextualOrderIndex call_index,
-    const DexType* MT_NULLABLE receiver_type) {
+    const DexType* MT_NULLABLE receiver_type,
+    CallKind call_kind,
+    TextualOrderIndex call_index) {
   return CallTarget(
       instruction,
       /* resolved_base_callee */ callee,
-      /* call_index */ call_index,
+      call_kind,
+      call_index,
       /* receiver_type */ receiver_type,
       /* receiver_local_extends */ nullptr,
       /* receiver_extends */ nullptr,
@@ -889,12 +901,13 @@ CallTarget CallTarget::direct_call(
 CallTarget CallTarget::virtual_call(
     const IRInstruction* instruction,
     const Method* MT_NULLABLE resolved_base_callee,
-    TextualOrderIndex call_index,
     const DexType* MT_NULLABLE receiver_type,
     const std::unordered_set<const DexType*>* MT_NULLABLE
         receiver_local_extends,
     const ClassHierarchies& class_hierarchies,
-    const Overrides& override_factory) {
+    const Overrides& override_factory,
+    CallKind call_kind,
+    TextualOrderIndex call_index) {
   // All overrides are potential callees.
   const std::unordered_set<const Method*>* overrides = nullptr;
   if (resolved_base_callee != nullptr) {
@@ -927,6 +940,7 @@ CallTarget CallTarget::virtual_call(
   return CallTarget(
       instruction,
       resolved_base_callee,
+      call_kind,
       call_index,
       receiver_type,
       receiver_local_extends,
@@ -945,22 +959,24 @@ CallTarget CallTarget::from_call_instruction(
   mt_assert(opcode::is_an_invoke(instruction->opcode()));
   if (is_static_invoke(instruction)) {
     return CallTarget::static_call(
-        instruction, resolved_base_callee, call_index);
+        instruction, resolved_base_callee, CallKind::Normal, call_index);
   } else if (is_virtual_invoke(instruction)) {
     return CallTarget::virtual_call(
         instruction,
         resolved_base_callee,
-        call_index,
         types.receiver_type(caller, instruction),
         &types.receiver_local_extends(caller, instruction),
         class_hierarchies,
-        override_factory);
+        override_factory,
+        CallKind::Normal,
+        call_index);
   } else {
     return CallTarget::direct_call(
         instruction,
         resolved_base_callee,
-        call_index,
-        types.receiver_type(caller, instruction));
+        types.receiver_type(caller, instruction),
+        CallKind::Normal,
+        call_index);
   }
 }
 
@@ -987,16 +1003,33 @@ CallTarget::OverridesRange CallTarget::overrides() const {
 bool CallTarget::operator==(const CallTarget& other) const {
   return instruction_ == other.instruction_ &&
       resolved_base_callee_ == other.resolved_base_callee_ &&
-      call_index_ == other.call_index_ &&
+      call_kind_ == other.call_kind_ && call_index_ == other.call_index_ &&
       receiver_type_ == other.receiver_type_ &&
       receiver_local_extends_ == other.receiver_local_extends_ &&
       receiver_extends_ == other.receiver_extends_ &&
       overrides_ == other.overrides_;
 }
 
+namespace {
+
+std::string call_kind_to_string(CallTarget::CallKind kind) {
+  switch (kind) {
+    case CallTarget::CallKind::Normal:
+      return "normal";
+    case CallTarget::CallKind::AnonymousClass:
+      return "anonymous_class";
+    case CallTarget::CallKind::Shim:
+      return "shim";
+  }
+  mt_unreachable();
+}
+
+} // namespace
+
 std::ostream& operator<<(std::ostream& out, const CallTarget& call_target) {
   out << "CallTarget(instruction=`" << show(call_target.instruction())
       << "`, resolved_base_callee=`" << show(call_target.resolved_base_callee())
+      << "`, call_kind=`" << call_kind_to_string(call_target.call_kind_) << "`"
       << "`, call_index=`" << call_target.call_index_ << "`";
   if (const auto* receiver_type = call_target.receiver_type()) {
     out << ", receiver_type=`" << show(receiver_type) << "`";
@@ -1012,28 +1045,13 @@ std::ostream& operator<<(std::ostream& out, const CallTarget& call_target) {
 }
 
 bool ArtificialCallee::operator==(const ArtificialCallee& other) const {
-  return kind == other.kind && call_target == other.call_target &&
+  return call_target == other.call_target &&
       root_registers == other.root_registers && features == other.features;
 }
 
-namespace {
-
-std::string artificial_callee_kind_to_string(ArtificialCallee::Kind kind) {
-  switch (kind) {
-    case ArtificialCallee::Kind::AnonymousClass:
-      return "anonymous_class";
-    case ArtificialCallee::Kind::Shim:
-      return "shim";
-  }
-  mt_unreachable();
-}
-
-} // namespace
-
 std::ostream& operator<<(std::ostream& out, const ArtificialCallee& callee) {
-  out << "ArtificialCallee(kind="
-      << artificial_callee_kind_to_string(callee.kind)
-      << ", call_target=" << callee.call_target << ", root_registers={";
+  out << "ArtificialCallee(call_target=" << callee.call_target
+      << ", root_registers={";
   for (const auto& [root, register_id] : callee.root_registers) {
     out << " " << root << ": v" << register_id << ",";
   }
@@ -1419,11 +1437,11 @@ Json::Value CallGraph::to_json(const Method* method) const {
          instruction_artificial_callees->second) {
       for (const auto& artificial_callee : artificial_callees) {
         auto* resolved = artificial_callee.call_target.resolved_base_callee();
+        auto call_kind = artificial_callee.call_target.call_kind();
         mt_assert(resolved != nullptr);
-        if (artificial_callee.kind == ArtificialCallee::Kind::Shim) {
+        if (call_kind == CallTarget::CallKind::Shim) {
           shims.insert(resolved);
-        } else if (
-            artificial_callee.kind == ArtificialCallee::Kind::AnonymousClass) {
+        } else if (call_kind == CallTarget::CallKind::AnonymousClass) {
           anonymous_classes.insert(resolved);
         } else {
           mt_unreachable();

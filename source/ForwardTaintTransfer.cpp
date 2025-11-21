@@ -1058,12 +1058,15 @@ std::string_view get_sink_callee_for_artificial_call(
     return original_sink_callee;
   }
 
-  switch (artificial_callee.kind) {
-    case ArtificialCallee::Kind::AnonymousClass:
+  switch (artificial_callee.call_target.call_kind()) {
+    case CallTarget::CallKind::AnonymousClass:
       return callee->show();
 
-    case ArtificialCallee::Kind::Shim:
+    case CallTarget::CallKind::Shim:
       return original_sink_callee;
+
+    case CallTarget::CallKind::Normal:
+      mt_unreachable();
   }
 
   mt_unreachable();

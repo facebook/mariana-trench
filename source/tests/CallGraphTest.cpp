@@ -90,24 +90,29 @@ TEST_F(CallGraphTest, CallIndices) {
           CallTarget::static_call(
               /* intruction */ nullptr,
               callee,
+              CallTarget::CallKind::Normal,
               /* call_index */ 0),
           CallTarget::static_call(
               /* intruction */ nullptr,
               callee,
+              CallTarget::CallKind::Normal,
               /* call_index */ 1),
           // Call targets count the raw callee from the instruction rather than
           // the resolved callee
           CallTarget::static_call(
               /* intruction */ nullptr,
               inherited_method,
+              CallTarget::CallKind::Normal,
               /* call_index */ 0),
           CallTarget::static_call(
               /* intruction */ nullptr,
               inherited_method,
+              CallTarget::CallKind::Normal,
               /* call_index */ 0),
           CallTarget::static_call(
               /* intruction */ nullptr,
               inherited_method,
+              CallTarget::CallKind::Normal,
               /* call_index */ 0),
       }));
 }
@@ -211,27 +216,33 @@ TEST_F(CallGraphTest, ArtificialCallIndices) {
           CallTarget::static_call(
               /* intruction */ nullptr,
               anonymous_callee1,
+              CallTarget::CallKind::AnonymousClass,
               /* call_index */ 0),
           CallTarget::static_call(
               /* intruction */ nullptr,
               anonymous_callee1,
+              CallTarget::CallKind::AnonymousClass,
               /* call_index */ 1),
           CallTarget::static_call(
               /* intruction */ nullptr,
               anonymous_callee2,
+              CallTarget::CallKind::AnonymousClass,
               /* call_index */ 0),
           CallTarget::static_call(
               /* intruction */ nullptr,
               anonymous_callee2,
+              CallTarget::CallKind::AnonymousClass,
               /* call_index */ 1),
           // Assigning an anonymous class to a field causes artificial callees
           CallTarget::static_call(
               /* intruction */ nullptr,
               context.methods->get(anonymous_class_for_iput_callees[0]),
+              CallTarget::CallKind::AnonymousClass,
               /* call_index */ 0),
           CallTarget::static_call(
               /* intruction */ nullptr,
               context.methods->get(anonymous_class_for_iput_callees[1]),
+              CallTarget::CallKind::AnonymousClass,
               /* call_index */ 0),
       }));
 }
@@ -288,26 +299,30 @@ TEST_F(CallGraphTest, ShimCallIndices) {
           CallTarget::virtual_call(
               /* intruction */ nullptr,
               shimmed_method1,
-              /* call_index */ 0,
               /* receiver_type */ shimmed_method1->parameter_type(0),
               /* receiver_local_extends */ nullptr,
               *context.class_hierarchies,
-              *context.overrides),
+              *context.overrides,
+              CallTarget::CallKind::Shim,
+              /* call_index */ 0),
           CallTarget::static_call(
               /* intruction */ nullptr,
               shimmed_method2,
+              CallTarget::CallKind::Shim,
               /* call_index */ 0),
           CallTarget::virtual_call(
               /* intruction */ nullptr,
               shimmed_method1,
-              /* call_index */ 1,
               /* receiver_type */ shimmed_method1->parameter_type(0),
               /* receiver_local_extends */ nullptr,
               *context.class_hierarchies,
-              *context.overrides),
+              *context.overrides,
+              CallTarget::CallKind::Shim,
+              /* call_index */ 1),
           CallTarget::static_call(
               /* intruction */ nullptr,
               shimmed_method2,
+              CallTarget::CallKind::Shim,
               /* call_index */ 1),
       }));
 }

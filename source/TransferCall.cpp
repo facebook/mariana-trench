@@ -158,11 +158,7 @@ CalleeModel get_callee(
         "Unable to resolve call to `{}`",
         show(instruction->get_method()));
   } else {
-    LOG_OR_DUMP(
-        context,
-        4,
-        "Call resolved to `{}`",
-        show(call_target.resolved_base_callee()));
+    LOG_OR_DUMP(context, 4, "Call resolved to `{}`", call_target);
   }
 
   auto* position = context->positions.get(context->method(), dex_position);
@@ -199,8 +195,7 @@ CalleeModel get_callee(
   const auto* resolved_base_callee = callee.call_target.resolved_base_callee();
   mt_assert(resolved_base_callee != nullptr);
 
-  LOG_OR_DUMP(
-      context, 4, "Artificial call to `{}`", show(resolved_base_callee));
+  LOG_OR_DUMP(context, 4, "Artificial call to `{}`", callee.call_target);
 
   auto* position = context->positions.get(context->method(), dex_position);
 

@@ -40,6 +40,13 @@ namespace marianatrench {
  * Represents information about a specific call.
  */
 class CallTarget final {
+ public:
+  enum class CallKind {
+    Normal,
+    AnonymousClass,
+    Shim,
+  };
+
  private:
   struct FilterOverrides {
     bool operator()(const Method*) const;
@@ -60,24 +67,27 @@ class CallTarget final {
   static CallTarget direct_call(
       const IRInstruction* instruction,
       const Method* MT_NULLABLE callee,
-      TextualOrderIndex call_index,
-      const DexType* MT_NULLABLE receiver_type);
+      const DexType* MT_NULLABLE receiver_type,
+      CallKind call_kind,
+      TextualOrderIndex call_index);
 
   /* Call target for invoke-static (direct calls without a receiver) */
   static CallTarget static_call(
       const IRInstruction* instruction,
       const Method* MT_NULLABLE callee,
+      CallKind call_kind,
       TextualOrderIndex call_index);
 
   static CallTarget virtual_call(
       const IRInstruction* instruction,
       const Method* MT_NULLABLE resolved_base_callee,
-      TextualOrderIndex call_index,
       const DexType* MT_NULLABLE receiver_type,
       const std::unordered_set<const DexType*>* MT_NULLABLE
           receiver_local_extends,
       const ClassHierarchies& class_hierarchies,
-      const Overrides& override_factory);
+      const Overrides& override_factory,
+      CallKind call_kind,
+      TextualOrderIndex call_index);
 
   static CallTarget from_call_instruction(
       const Method* caller,
@@ -141,6 +151,10 @@ class CallTarget final {
    */
   OverridesRange overrides() const;
 
+  CallKind call_kind() const {
+    return call_kind_;
+  }
+
   bool operator==(const CallTarget& other) const;
 
   friend std::ostream& operator<<(
@@ -153,6 +167,7 @@ class CallTarget final {
   CallTarget(
       const IRInstruction* instruction,
       const Method* MT_NULLABLE resolved_base_callee,
+      CallKind call_kind,
       TextualOrderIndex call_index,
       const DexType* MT_NULLABLE receiver_type,
       const std::unordered_set<const DexType*>* MT_NULLABLE
@@ -163,6 +178,7 @@ class CallTarget final {
  private:
   const IRInstruction* instruction_;
   const Method* MT_NULLABLE resolved_base_callee_;
+  CallKind call_kind_;
   TextualOrderIndex call_index_;
   const DexType* MT_NULLABLE receiver_type_;
   // Precise types that the receiver can be assigned at this callsite.
@@ -180,6 +196,7 @@ struct std::hash<marianatrench::CallTarget> {
     std::size_t seed = 0;
     boost::hash_combine(seed, call_target.instruction_);
     boost::hash_combine(seed, call_target.resolved_base_callee_);
+    boost::hash_combine(seed, call_target.call_kind_);
     boost::hash_combine(seed, call_target.call_index_);
     boost::hash_combine(seed, call_target.receiver_type_);
     boost::hash_combine(seed, call_target.receiver_local_extends_);
@@ -204,12 +221,6 @@ namespace marianatrench {
  * argument(s).
  */
 struct ArtificialCallee {
-  enum class Kind {
-    AnonymousClass,
-    Shim,
-  };
-
-  Kind kind;
   CallTarget call_target;
   std::unordered_map<Root, Register> root_registers;
   FeatureSet features;
