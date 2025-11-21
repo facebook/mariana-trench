@@ -1063,6 +1063,7 @@ std::string_view get_sink_callee_for_artificial_call(
       return callee->show();
 
     case CallTarget::CallKind::Shim:
+    case CallTarget::CallKind::IntentRouting:
       return original_sink_callee;
 
     case CallTarget::CallKind::Normal:

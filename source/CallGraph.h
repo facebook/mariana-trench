@@ -45,6 +45,7 @@ class CallTarget final {
     Normal,
     AnonymousClass,
     Shim,
+    IntentRouting,
   };
 
  private:

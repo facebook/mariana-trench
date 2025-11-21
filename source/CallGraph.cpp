@@ -330,6 +330,7 @@ void process_shim_target(
     const Method* callee,
     const ShimTarget& shim_target,
     const IRInstruction* instruction,
+    CallTarget::CallKind call_kind,
     const Methods& method_factory,
     const Types& types,
     const Overrides& override_factory,
@@ -383,8 +384,7 @@ void process_shim_target(
     artificial_callees.push_back(
         ArtificialCallee{
             /* call_target */
-            CallTarget::static_call(
-                instruction, method, CallTarget::CallKind::Shim, call_index),
+            CallTarget::static_call(instruction, method, call_kind, call_index),
             /* root_registers */ root_registers,
             /* features */ features,
         });
@@ -401,7 +401,7 @@ void process_shim_target(
               receiver_local_extends,
               class_hierarchies,
               override_factory,
-              CallTarget::CallKind::Shim,
+              call_kind,
               call_index),
           /* root_registers */ root_registers,
           /* features */ features,
@@ -620,6 +620,7 @@ void add_shim_artificial_callees(
         callee,
         shim_target,
         instruction,
+        CallTarget::CallKind::Shim,
         method_factory,
         types,
         override_factory,
@@ -666,6 +667,7 @@ void add_shim_artificial_callees(
         callee,
         shim_target,
         instruction,
+        CallTarget::CallKind::IntentRouting,
         method_factory,
         types,
         override_factory,
@@ -1020,6 +1022,8 @@ std::string call_kind_to_string(CallTarget::CallKind kind) {
       return "anonymous_class";
     case CallTarget::CallKind::Shim:
       return "shim";
+    case CallTarget::CallKind::IntentRouting:
+      return "intent_routing";
   }
   mt_unreachable();
 }
@@ -1433,18 +1437,29 @@ Json::Value CallGraph::to_json(const Method* method) const {
   if (instruction_artificial_callees != artificial_callees_.end()) {
     std::unordered_set<const Method*> anonymous_classes;
     std::unordered_set<const Method*> shims;
+    std::unordered_set<const Method*> intent_routing;
     for (const auto& [instruction, artificial_callees] :
          instruction_artificial_callees->second) {
       for (const auto& artificial_callee : artificial_callees) {
         auto* resolved = artificial_callee.call_target.resolved_base_callee();
         auto call_kind = artificial_callee.call_target.call_kind();
         mt_assert(resolved != nullptr);
-        if (call_kind == CallTarget::CallKind::Shim) {
-          shims.insert(resolved);
-        } else if (call_kind == CallTarget::CallKind::AnonymousClass) {
-          anonymous_classes.insert(resolved);
-        } else {
-          mt_unreachable();
+
+        switch (call_kind) {
+          case CallTarget::CallKind::Shim:
+            shims.insert(resolved);
+            break;
+
+          case CallTarget::CallKind::AnonymousClass:
+            anonymous_classes.insert(resolved);
+            break;
+
+          case CallTarget::CallKind::IntentRouting:
+            intent_routing.insert(resolved);
+            break;
+
+          case CallTarget::CallKind::Normal:
+            mt_unreachable();
         }
       }
     }
@@ -1463,6 +1478,14 @@ Json::Value CallGraph::to_json(const Method* method) const {
         shims_value.append(Json::Value(show(callee)));
       }
       method_value["shim"] = shims_value;
+    }
+
+    if (!intent_routing.empty()) {
+      auto intent_routing_value = Json::Value(Json::arrayValue);
+      for (const auto* callee : intent_routing) {
+        intent_routing_value.append(Json::Value(show(callee)));
+      }
+      method_value["intent_routing"] = intent_routing_value;
     }
   }
 
