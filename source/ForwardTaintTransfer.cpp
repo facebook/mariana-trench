@@ -1141,13 +1141,20 @@ void check_call_effect_flows(
   const auto& caller_call_effect_sources =
       context->previous_model.call_effect_sources();
 
+  bool is_intent_routing_call =
+      callee.call_kind == CallTarget::CallKind::IntentRouting;
+
   auto* caller_position = context->positions.get(context->method());
   for (const auto& [port, sinks] : callee_call_effect_sinks.elements()) {
     const auto& sources = caller_call_effect_sources.read(port);
     if (sources.is_bottom()) {
-      if (port.root().is_call_chain_exploitability()) {
+      if (port.root().is_call_chain_exploitability() &&
+          !is_intent_routing_call) {
         // If an exploitability rule cannot be fulfilled,
         // pass it to backwards analysis to propagate it.
+        //
+        // However, when the CallKind is IntentRouting, the exploitability chain
+        // should be reset, and should not be propagated.
         context->partially_fulfilled_exploitability_state
             .add_source_as_transform_sinks(instruction, sinks);
       }

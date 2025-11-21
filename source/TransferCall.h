@@ -34,6 +34,7 @@ struct CalleeModel {
   const DexMethodRef* method_reference;
   const Method* MT_NULLABLE resolved_base_method;
   const Position* position;
+  CallTarget::CallKind call_kind;
   TextualOrderIndex call_index;
   // Resolved values of constant arguments passed to the callee.
   const std::vector<std::optional<std::string>> source_constant_arguments;

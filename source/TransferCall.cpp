@@ -183,6 +183,7 @@ CalleeModel get_callee(
       instruction->get_method(),
       call_target.resolved_base_callee(),
       position,
+      call_target.call_kind(),
       call_target.call_index(),
       std::move(source_constant_arguments),
       std::move(model)};
@@ -211,6 +212,7 @@ CalleeModel get_callee(
       resolved_base_callee->dex_method(),
       resolved_base_callee,
       position,
+      callee.call_target.call_kind(),
       callee.call_target.call_index(),
       /* source_constant_arguments */ {},
       std::move(model)};
