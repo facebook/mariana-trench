@@ -1,0 +1,22 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Ljava/io/File;",
+          "name": "<init>"
+        }
+      ],
+      "model": {
+        "generations": [
+          {
+            "kind": "FileCreation",
+            "port": "Argument(0)"
+          }
+        ]
+      }
+    }
+  ]
+}

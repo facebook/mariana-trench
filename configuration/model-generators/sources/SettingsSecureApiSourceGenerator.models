@@ -1,0 +1,26 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroid/provider/Settings$Secure;",
+          "name": "getString"
+        }
+      ],
+      "model": {
+        "sources": [
+          {
+            "kind": "SettingsSecureApi",
+            "via_value_of": [
+              {
+                "port": "Argument(1)"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

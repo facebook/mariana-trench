@@ -1,0 +1,21 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Ljava/security/cert/Certificate;",
+          "name": "toString"
+        }
+      ],
+      "model": {
+        "sources": [
+          {
+            "kind": "Certificate"
+          }
+        ]
+      }
+    }
+  ]
+}

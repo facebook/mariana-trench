@@ -1,0 +1,105 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "name",
+          "pattern": "createFromParcel"
+        },
+        {
+          "constraint": "number_parameters",
+          "inner": {
+            "constraint": "==",
+            "value": 2
+          }
+        },
+        {
+          "constraint": "parameter",
+          "idx": 1,
+          "inner": {
+            "constraint": "name",
+            "pattern": "Landroid/os/Parcel;"
+          }
+        },
+        {
+          "constraint": "not",
+          "inner": {
+            "constraint": "parent",
+            "inner": {
+              "constraint": "name",
+              "pattern": "L(android|com/google|org/|java).*"
+            }
+          }
+        },
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "extends",
+            "inner": {
+              "constraint": "name",
+              "pattern": "Landroid/os/Parcelable\\$(ClassLoader)?Creator;"
+            }
+          }
+        }
+      ],
+      "model": {
+        "sources": [
+          {
+            "kind": "SerializableUserInput",
+            "port": "Argument(1)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "name",
+          "pattern": "readObject"
+        },
+        {
+          "constraint": "parameter",
+          "idx": 1,
+          "inner": {
+            "constraint": "name",
+            "pattern": "Ljava/io/ObjectInputStream;"
+          }
+        },
+        {
+          "constraint": "visibility",
+          "is": "private"
+        },
+        {
+          "constraint": "not",
+          "inner": {
+            "constraint": "parent",
+            "inner": {
+              "constraint": "name",
+              "pattern": "L(android|com/google|org/|java).*"
+            }
+          }
+        },
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "extends",
+            "inner": {
+              "constraint": "name",
+              "pattern": "Ljava/io/Serializable;"
+            }
+          }
+        }
+      ],
+      "model": {
+        "sources": [
+          {
+            "kind": "SerializableUserInput",
+            "port": "Argument(1)"
+          }
+        ]
+      }
+    }
+  ]
+}

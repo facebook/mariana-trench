@@ -1,0 +1,25 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroid/content/ClipboardManager;",
+          "names": [
+            "getPrimaryClip",
+            "getText",
+            "getPrimaryClipDescription"
+          ]
+        }
+      ],
+      "model": {
+        "sources": [
+          {
+            "kind": "ClipboardText"
+          }
+        ]
+      }
+    }
+  ]
+}
