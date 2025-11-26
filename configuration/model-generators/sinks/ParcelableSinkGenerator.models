@@ -1,0 +1,112 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "names": [
+            "getParcelableExtra",
+            "getParcelableArrayExtra",
+            "getParcelableArrayListExtra",
+            "getSerializableExtra"
+          ],
+          "parent": "Landroid/content/Intent;"
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "ParcelableAccess",
+            "port": "Argument(0)[<Argument(1)>]",
+            "via_value_of": [
+              {
+                "port": "Argument(1)"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "names": [
+            "getParcelable",
+            "getParcelableArray",
+            "getParcelableArrayList",
+            "getSparseParcelableArray",
+            "getSerializable"
+          ],
+          "parent": "Landroid/os/Bundle;"
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "ParcelableAccess",
+            "port": "Argument(0)[<Argument(1)>]",
+            "via_value_of": [
+              {
+                "port": "Argument(1)"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "name": "createParser",
+          "parent": "Lcom/fasterxml/jackson/core/JsonFactory;"
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "ParcelableAccess",
+            "port": "Argument(1)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "name",
+          "pattern": "parseFromJson"
+        },
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "name",
+            "pattern": ".*__JsonHelper;"
+          }
+        }
+      ],
+      "model": {
+        "modes": [
+          "skip-analysis"
+        ],
+        "sinks": [
+          {
+            "kind": "ParcelableAccess",
+            "port": "Argument(0)"
+          }
+        ],
+        "propagation": [
+          {
+            "input": "Argument(0)",
+            "output": "Return"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroid/graphics/BitmapFactory;",
+          "names": [
+            "decodeByteArray",
+            "decodeFile",
+            "decodeFileDescriptor",
+            "decodeResourceStream",
+            "decodeStream"
+          ]
+        }
+      ],
+      "model": {
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [
+              {
+                "constraint": "any_of",
+                "inners": [
+                  {
+                    "constraint": "name",
+                    "pattern": "\\[B"
+                  },
+                  {
+                    "constraint": "name",
+                    "pattern": "Ljava/io/.*"
+                  },
+                  {
+                    "constraint": "name",
+                    "pattern": "Ljava/lang/String;"
+                  }
+                ]
+              }
+            ],
+            "sinks": [
+              {
+                "kind": "MediaParser",
+                "port": "Argument(x)"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroid/media/MediaExtractor;",
+          "name": "setDataSource"
+        }
+      ],
+      "model": {
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [
+              {
+                "constraint": "not",
+                "inner": {
+                  "constraint": "name",
+                  "pattern": "Landroid/content/Context;"
+                }
+              }
+            ],
+            "sinks": [
+              {
+                "kind": "MediaParser",
+                "port": "Argument(x)"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroid/media/MediaCodec;",
+          "name": "queueInputBuffer"
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "MediaParser",
+            "port": "Argument(1)"
+          },
+          {
+            "kind": "MediaParser",
+            "port": "Argument(2)"
+          },
+          {
+            "kind": "MediaParser",
+            "port": "Argument(3)"
+          }
+        ]
+      }
+    }
+  ]
+}

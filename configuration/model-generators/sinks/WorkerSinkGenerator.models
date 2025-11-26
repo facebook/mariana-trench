@@ -1,0 +1,48 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroidx/core/app/JobIntentService;",
+          "name": "enqueueWork"
+        }
+      ],
+      "model": {
+        "modes": [
+          "skip-analysis",
+          "no-join-virtual-overrides"
+        ],
+        "sinks": [
+          {
+            "kind": "EnqueueWork",
+            "port": "Argument(3)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroidx/work/WorkRequest$Builder;",
+          "name": "setInputData"
+        }
+      ],
+      "model": {
+        "modes": [
+          "skip-analysis",
+          "no-join-virtual-overrides"
+        ],
+        "sinks": [
+          {
+            "kind": "EnqueueWork",
+            "port": "Argument(1)"
+          }
+        ]
+      }
+    }
+  ]
+}

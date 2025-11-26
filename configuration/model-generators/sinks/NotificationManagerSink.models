@@ -1,0 +1,35 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_pattern",
+          "pattern": "Landroid.{0,15}/app/Notification.*\\.set.*"
+        }
+      ],
+      "model": {
+        "modes": [
+          "skip-analysis"
+        ],
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [
+              {
+                "constraint": "name",
+                "pattern": "Ljava/lang/CharSequence;"
+              }
+            ],
+            "sinks": [
+              {
+                "kind": "NotificationManager",
+                "port": "Argument(x)"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

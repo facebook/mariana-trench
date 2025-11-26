@@ -1,0 +1,100 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "name",
+            "pattern": "Landroid/accounts/AccountManager;"
+          }
+        },
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "name",
+              "pattern": "addAccount.*"
+            },
+            {
+              "constraint": "name",
+              "pattern": "clearPassword"
+            },
+            {
+              "constraint": "name",
+              "pattern": "editProperties"
+            },
+            {
+              "constraint": "name",
+              "pattern": "finishSession"
+            },
+            {
+              "constraint": "name",
+              "pattern": "invalidateAuthToken"
+            },
+            {
+              "constraint": "name",
+              "pattern": "notifyAccountAuthenticated"
+            },
+            {
+              "constraint": "name",
+              "pattern": "remove.*"
+            },
+            {
+              "constraint": "name",
+              "pattern": "renameAccount"
+            },
+            {
+              "constraint": "name",
+              "pattern": "set.*"
+            },
+            {
+              "constraint": "name",
+              "pattern": "start.*"
+            },
+            {
+              "constraint": "name",
+              "pattern": "update.*"
+            }
+          ]
+        }
+      ],
+      "model": {
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [
+              {
+                "constraint": "not",
+                "inner": {
+                  "constraint": "any_of",
+                  "inners": [
+                    {
+                      "constraint": "name",
+                      "pattern": "Landroid/app/Activity;"
+                    },
+                    {
+                      "constraint": "name",
+                      "pattern": "Landroid/accounts/AccountManagerCallback;"
+                    },
+                    {
+                      "constraint": "name",
+                      "pattern": "Landroid/os/Handler;"
+                    }
+                  ]
+                }
+              }
+            ],
+            "sinks": [
+              {
+                "kind": "AccountManager",
+                "port": "Argument(x)"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

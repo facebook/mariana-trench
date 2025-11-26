@@ -1,0 +1,64 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_pattern",
+          "pattern": "Landroidx.*"
+        }
+      ],
+      "model": {
+        "sanitizers": [
+          {
+            "sanitize": "sinks",
+            "kinds": [
+              {
+                "kind": "Exception"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "name",
+          "pattern": "<init>"
+        },
+        {
+          "constraint": "parent",
+          "inner": {
+            "constraint": "extends",
+            "include_self": true,
+            "inner": {
+              "constraint": "name",
+              "pattern": "Ljava/lang/Exception;"
+            }
+          }
+        }
+      ],
+      "model": {
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [
+              {
+                "constraint": "name",
+                "pattern": "Ljava/lang/String;"
+              }
+            ],
+            "sinks": [
+              {
+                "kind": "Exception",
+                "port": "Argument(x)"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

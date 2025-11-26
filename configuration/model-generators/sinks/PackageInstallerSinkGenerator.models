@@ -1,0 +1,50 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "any_of",
+          "inners": [
+            {
+              "constraint": "signature_match",
+              "parent": "Landroid/content/pm/PackageInstaller;",
+              "name": "uninstall"
+            },
+            {
+              "constraint": "signature_match",
+              "parent": "Landroid/content/pm/PackageInstaller;",
+              "name": "createSession"
+            }
+          ]
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "PackageInstaller",
+            "port": "Argument(1)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroid/content/pm/PackageInstaller$Session;",
+          "name": "openWrite"
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "PackageInstaller",
+            "port": "Argument(3)"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_pattern",
+          "pattern": "Landroid/view/View\\$OnTouchListener;\\.onTouch:\\(Landroid/view/View;Landroid/view/MotionEvent;\\)Z"
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "TouchEvent",
+            "port": "Argument(2)"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Ljava/util/regex/Pattern;",
+          "name": "matcher"
+        }
+      ],
+      "model": {
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [],
+            "propagation": [
+              {
+                "input": "Argument(x)",
+                "output": "Argument(0)"
+              }
+            ],
+            "sinks": [
+              {
+                "kind": "RegexMatching",
+                "port": "Argument(x)"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Ljava/util/regex/Pattern;",
+          "name": "compile"
+        }
+      ],
+      "model": {
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [],
+            "propagation": [
+              {
+                "input": "Argument(x)",
+                "output": "Argument(0)"
+              }
+            ],
+            "sinks": [
+              {
+                "kind": "RegexCompiling",
+                "port": "Argument(x)"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

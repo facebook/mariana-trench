@@ -1,0 +1,22 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Lokhttp3/OkHttpClient$Builder;",
+          "name": "build"
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "OkHttpBuild",
+            "port": "Argument(0)"
+          }
+        ]
+      }
+    }
+  ]
+}

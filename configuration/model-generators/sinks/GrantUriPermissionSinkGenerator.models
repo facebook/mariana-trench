@@ -1,0 +1,26 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroid/content/Context;",
+          "name": "grantUriPermission"
+        }
+      ],
+      "model": {
+        "sinks": [
+          {
+            "kind": "GrantUriPermission",
+            "port": "Argument(1)"
+          },
+          {
+            "kind": "GrantUriPermission",
+            "port": "Argument(2)"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "extends": "Lorg/apache/http/HttpMessage;",
+          "names": [
+            "addHeader",
+            "setHeader"
+          ]
+        }
+      ],
+      "model": {
+        "for_all_parameters": [
+          {
+            "variable": "x",
+            "where": [],
+            "sinks": [
+              {
+                "kind": "HttpMessageHeader",
+                "port": "Argument(x)"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
