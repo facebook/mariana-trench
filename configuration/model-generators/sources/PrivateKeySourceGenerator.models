@@ -5,7 +5,7 @@
       "where": [
         {
           "constraint": "signature_match",
-          "parent": "Ljava/security/PrivateKey;",
+          "parent": "Ljava/security/Key;",
           "name": "getEncoded"
         }
       ],
