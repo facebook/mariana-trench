@@ -100,7 +100,6 @@ Options::Options(
     const std::vector<std::string>& rules_paths,
     const std::vector<std::string>& lifecycles_paths,
     const std::vector<std::string>& shims_paths,
-    const std::string& graphql_metadata_paths,
     const std::vector<std::string>& proguard_configuration_paths,
     bool sequential,
     bool skip_source_indexing,
@@ -121,7 +120,6 @@ Options::Options(
       rules_paths_(rules_paths),
       lifecycles_paths_(lifecycles_paths),
       shims_paths_(shims_paths),
-      graphql_metadata_paths_(graphql_metadata_paths),
       proguard_configuration_paths_(proguard_configuration_paths),
       model_generators_configuration_(model_generators_configuration),
       model_generator_search_paths_(model_generator_search_paths),
@@ -195,13 +193,6 @@ Options::Options(const Json::Value& json) {
     shims_paths_ = parse_paths_list(
         JsonValidation::string(json, "shims-paths"),
         /* extension */ ".json");
-  }
-
-  if (json.isMember("graphql-metadata-paths")) {
-    graphql_metadata_paths_ = check_path_exists(
-        JsonValidation::string(json, "graphql-metadata-paths"));
-  } else {
-    graphql_metadata_paths_ = "";
   }
 
   if (json.isMember("third-party-library-package-ids-path")) {
@@ -383,10 +374,6 @@ const std::vector<std::string>& Options::lifecycles_paths() const {
 
 const std::vector<std::string>& Options::shims_paths() const {
   return shims_paths_;
-}
-
-const std::string& Options::graphql_metadata_paths() const {
-  return graphql_metadata_paths_;
 }
 
 const std::optional<std::string>&

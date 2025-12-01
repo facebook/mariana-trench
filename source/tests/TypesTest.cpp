@@ -67,7 +67,6 @@ Context test_types(
       /* rules_path */ std::vector<std::string>{},
       /* lifecycles_path */ std::vector<std::string>{},
       /* shims_path */ std::vector<std::string>{},
-      /* graphql_metadata_paths */ std::string{},
       /* proguard_configuration_paths */
       proguard_configuration_paths,
       /* sequential */ false,
