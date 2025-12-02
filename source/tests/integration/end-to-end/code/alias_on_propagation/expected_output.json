@@ -1327,7 +1327,7 @@
             "position" : 
             {
               "line" : 19,
-              "path" : "KotlinAnonymousFunction.kt"
+              "path" : "__SYNTHETIC:KotlinAnonymousFunction.kt"
             },
             "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/KotlinAnonymousFunction$issue$lambda$1;.invoke:()V"
           },
@@ -1359,7 +1359,7 @@
   "position" : 
   {
     "line" : 18,
-    "path" : "KotlinAnonymousFunction.kt"
+    "path" : "__SYNTHETIC:KotlinAnonymousFunction.kt"
   }
 }
 {

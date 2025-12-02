@@ -998,7 +998,7 @@
   "position" : 
   {
     "line" : 10,
-    "path" : "Flow.java"
+    "path" : "__SYNTHETIC:Flow.java"
   },
   "propagation" : 
   [
@@ -1080,7 +1080,7 @@
   "position" : 
   {
     "line" : 41,
-    "path" : "Flow.java"
+    "path" : "__SYNTHETIC:Flow.java"
   },
   "propagation" : 
   [

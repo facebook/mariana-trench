@@ -8,6 +8,7 @@
 #include <cstdio>
 #include <filesystem>
 #include <fstream>
+#include <string_view>
 #include <unordered_map>
 
 #include <boost/algorithm/string.hpp>
@@ -37,6 +38,7 @@ namespace marianatrench {
 namespace {
 
 constexpr int k_unknown_line = -1;
+constexpr std::string_view k_synthetic_prefix = "__SYNTHETIC:";
 
 struct GrepoPaths {
   std::vector<std::string> actual_paths;
@@ -392,7 +394,12 @@ Positions::Positions(const Options& options, const DexStoresVector& stores) {
         class_name = class_name.substr(0, class_name.find("$")) + ";";
         std::string path = class_to_path.get(class_name, /* default */ "");
 
-        if (!path.empty()) {
+        if (::is_synthetic(method)) {
+          // Synthetic methods will have a valid file path but are not part of
+          // the source code, so we need to check for them first.
+          method_to_path_.emplace(
+              method, paths_.insert(k_synthetic_prefix + path).first);
+        } else if (!path.empty()) {
           method_to_path_.emplace(method, paths_.insert(path).first);
         }
       });
