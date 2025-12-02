@@ -762,12 +762,12 @@ std::unique_ptr<MethodConstraint> MethodConstraint::from_json(
           /* field */ "parents",
           "Exactly one of \"parent\", \"parents\" and \"extends\" should be present.");
     }
-    if (name_count != 1) {
+    if (name_count > 1) {
       throw JsonValidationError(
           constraint,
           /* field */ "name",
           /* expected */
-          "Exactly one of \"name\" and \"names\" should be present.");
+          "At most one of \"name\" and \"names\" should be present.");
     }
     return std::make_unique<AllOfMethodConstraint>(std::move(constraints));
   } else if (constraint_name == "bytecode") {

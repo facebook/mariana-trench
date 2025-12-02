@@ -1537,15 +1537,21 @@ TEST_F(MethodConstraintTest, MethodConstraintFromJson) {
         AllOfMethodConstraint(std::move(expected_constraints)), *constraint);
   }
 
-  EXPECT_THROW(
-      MethodConstraint::from_json(
-          test::parse_json(
-              R"({
+  {
+    auto constraint = MethodConstraint::from_json(
+        test::parse_json(
+            R"({
           "constraint": "signature_match",
           "parent": "Landroid/app/Activity;"
         })"),
-          context),
-      JsonValidationError);
+        context);
+    std::vector<std::unique_ptr<MethodConstraint>> expected_constraints;
+    expected_constraints.push_back(
+        std::make_unique<ParentConstraint>(
+            std::make_unique<TypeNameConstraint>("Landroid/app/Activity;")));
+    EXPECT_EQ(
+        AllOfMethodConstraint(std::move(expected_constraints)), *constraint);
+  }
 
   EXPECT_THROW(
       MethodConstraint::from_json(
