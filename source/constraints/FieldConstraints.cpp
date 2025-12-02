@@ -172,6 +172,66 @@ bool AnyOfFieldConstraint::operator==(const FieldConstraint& other) const {
   }
 }
 
+namespace {
+
+std::unique_ptr<FieldConstraint> signature_match_field_name_constraint(
+    std::string name) {
+  return std::make_unique<FieldNameConstraint>(name);
+}
+
+std::unique_ptr<FieldConstraint> signature_match_field_name_constraint(
+    const Json::Value& names) {
+  std::vector<std::unique_ptr<FieldConstraint>> field_name_constraints;
+  for (const auto& name : names) {
+    field_name_constraints.push_back(
+        signature_match_field_name_constraint(JsonValidation::string(name)));
+  }
+  return std::make_unique<AnyOfFieldConstraint>(
+      std::move(field_name_constraints));
+}
+
+std::unique_ptr<FieldConstraint> signature_match_field_parent_constraint(
+    std::string parent) {
+  return std::make_unique<ParentFieldConstraint>(
+      std::make_unique<TypeNameConstraint>(parent));
+}
+
+std::unique_ptr<FieldConstraint> signature_match_field_parent_constraint(
+    const Json::Value& parents) {
+  std::vector<std::unique_ptr<FieldConstraint>> parent_name_constraints;
+  for (const auto& parent : parents) {
+    parent_name_constraints.push_back(signature_match_field_parent_constraint(
+        JsonValidation::string(parent)));
+  }
+  return std::make_unique<AnyOfFieldConstraint>(
+      std::move(parent_name_constraints));
+}
+
+std::unique_ptr<FieldConstraint>
+signature_match_field_parent_extends_constraint(
+    std::string parent,
+    bool includes_self) {
+  return std::make_unique<ParentFieldConstraint>(
+      std::make_unique<ExtendsConstraint>(
+          std::make_unique<TypeNameConstraint>(parent), includes_self));
+}
+
+std::unique_ptr<FieldConstraint>
+signature_match_field_parent_extends_constraint(
+    const Json::Value& parents,
+    bool includes_self) {
+  std::vector<std::unique_ptr<FieldConstraint>> parent_extends_constraints;
+  for (const auto& parent : parents) {
+    parent_extends_constraints.push_back(
+        signature_match_field_parent_extends_constraint(
+            JsonValidation::string(parent), includes_self));
+  }
+  return std::make_unique<AnyOfFieldConstraint>(
+      std::move(parent_extends_constraints));
+}
+
+} // namespace
+
 std::unique_ptr<FieldConstraint> FieldConstraint::from_json(
     const Json::Value& constraint) {
   JsonValidation::validate_object(constraint);
@@ -232,6 +292,68 @@ std::unique_ptr<FieldConstraint> FieldConstraint::from_json(
         constraint, {"constraint", "type", "inner"});
     return std::make_unique<ParentFieldConstraint>(TypeConstraint::from_json(
         JsonValidation::object(constraint, /* field */ "inner")));
+  } else if (constraint_name == "signature_match") {
+    JsonValidation::check_unexpected_members(
+        constraint,
+        {"constraint",
+         "name",
+         "names",
+         "parent",
+         "parents",
+         "extends",
+         "include_self"});
+    std::vector<std::unique_ptr<FieldConstraint>> constraints;
+    int name_count = 0;
+    int parent_count = 0;
+    if (constraint.isMember("name")) {
+      name_count++;
+      constraints.push_back(signature_match_field_name_constraint(
+          JsonValidation::string(constraint, /* field */ "name")));
+    }
+    if (constraint.isMember("names")) {
+      name_count++;
+      constraints.push_back(signature_match_field_name_constraint(
+          JsonValidation::nonempty_array(constraint, /* field */ "names")));
+    }
+    if (constraint.isMember("parent")) {
+      parent_count++;
+      constraints.push_back(signature_match_field_parent_constraint(
+          JsonValidation::string(constraint, /* field */ "parent")));
+    }
+    if (constraint.isMember("parents")) {
+      parent_count++;
+      constraints.push_back(signature_match_field_parent_constraint(
+          JsonValidation::nonempty_array(constraint, /* field */ "parents")));
+    }
+    if (constraint.isMember("extends")) {
+      parent_count++;
+      bool includes_self = constraint.isMember("include_self")
+          ? JsonValidation::boolean(constraint, /* field */ "include_self")
+          : true;
+      const auto& extends_field = constraint["extends"];
+      if (extends_field.isString()) {
+        constraints.push_back(signature_match_field_parent_extends_constraint(
+            JsonValidation::string(constraint, /* field */ "extends"),
+            includes_self));
+      } else {
+        constraints.push_back(signature_match_field_parent_extends_constraint(
+            JsonValidation::nonempty_array(constraint, /* field */ "extends"),
+            includes_self));
+      }
+    }
+    if (parent_count != 1) {
+      throw JsonValidationError(
+          constraint,
+          /* field */ "parents",
+          "Exactly one of \"parent\", \"parents\" and \"extends\" should be present.");
+    }
+    if (name_count != 1) {
+      throw JsonValidationError(
+          constraint,
+          /* field */ "name",
+          "Exactly one of \"name\" and \"names\" should be present.");
+    }
+    return std::make_unique<AllOfFieldConstraint>(std::move(constraints));
   } else {
     throw JsonValidationError(
         constraint,

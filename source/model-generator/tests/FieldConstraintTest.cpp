@@ -20,20 +20,121 @@ class FieldConstraintTest : public test::Test {};
 } // namespace
 
 TEST_F(FieldConstraintTest, FieldNameConstraintSatisfy) {
-  std::string field_name = "field_name";
+  Scope scope;
+  EXPECT_THROW(
+      FieldConstraint::from_json(
+          test::parse_json(
+              R"({
+              "constraint": "any_of",
+              "inners":
+                {
+                  "constraint": "name",
+                  "pattern": "println"
+                }
+            })")),
+      JsonValidationError);
+}
+
+TEST_F(FieldConstraintTest, SignatureMatchFieldConstraintFromJson) {
   Scope scope;
   auto dex_field = marianatrench::redex::create_field(
-      scope, "LClass;", /* field */ {field_name, type::java_lang_String()});
+      scope, "LClass;", /* field */ {"fieldA", type::java_lang_String()});
   DexStore store("stores");
   store.add_classes(scope);
   auto context = test::make_context(store);
   auto field = context.fields->get(dex_field);
 
-  EXPECT_TRUE(FieldNameConstraint(field_name).satisfy(field));
-  EXPECT_FALSE(FieldNameConstraint("LClass;.field_name:Ljava/lang/String;")
-                   .satisfy(field));
-  EXPECT_TRUE(FieldNameConstraint("([A-Za-z/]*_?)+").satisfy(field));
-  EXPECT_FALSE(FieldNameConstraint("([A-Za-z/]*_)+").satisfy(field));
+  // Test signature_match with parent and name
+  {
+    auto constraint = FieldConstraint::from_json(
+        test::parse_json(
+            R"({
+          "constraint": "signature_match",
+          "parent": "LClass;",
+          "name": "fieldA"
+        })"));
+    EXPECT_TRUE(constraint->satisfy(field));
+  }
+
+  // Test signature_match with parent and names
+  {
+    auto constraint = FieldConstraint::from_json(
+        test::parse_json(
+            R"({
+          "constraint": "signature_match",
+          "parent": "LClass;",
+          "names": ["fieldA", "fieldB"]
+        })"));
+    EXPECT_TRUE(constraint->satisfy(field));
+  }
+
+  // Test signature_match with parents and name
+  {
+    auto constraint = FieldConstraint::from_json(
+        test::parse_json(
+            R"({
+          "constraint": "signature_match",
+          "parents": ["LClass;", "LOtherClass;"],
+          "name": "fieldA"
+        })"));
+    EXPECT_TRUE(constraint->satisfy(field));
+  }
+
+  // Test signature_match with extends and name
+  {
+    auto constraint = FieldConstraint::from_json(
+        test::parse_json(
+            R"({
+          "constraint": "signature_match",
+          "extends": "LClass;",
+          "name": "fieldA"
+        })"));
+    EXPECT_TRUE(constraint->satisfy(field));
+  }
+
+  // Test that exactly one parent/parents/extends is required
+  EXPECT_THROW(
+      FieldConstraint::from_json(
+          test::parse_json(
+              R"({
+          "constraint": "signature_match",
+          "name": "fieldA"
+        })")),
+      JsonValidationError);
+
+  // Test that exactly one name/names is required
+  EXPECT_THROW(
+      FieldConstraint::from_json(
+          test::parse_json(
+              R"({
+          "constraint": "signature_match",
+          "parent": "LClass;"
+        })")),
+      JsonValidationError);
+
+  // Test that only one of name/names can be present
+  EXPECT_THROW(
+      FieldConstraint::from_json(
+          test::parse_json(
+              R"({
+          "constraint": "signature_match",
+          "name": "foo",
+          "names": ["foo", "bar"],
+          "parent": "LClass;"
+        })")),
+      JsonValidationError);
+
+  // Test that only one of parent/parents/extends can be present
+  EXPECT_THROW(
+      FieldConstraint::from_json(
+          test::parse_json(
+              R"({
+          "constraint": "signature_match",
+          "name": "foo",
+          "parent": "LClass;",
+          "parents": ["LClass;", "LOtherClass;"]
+        })")),
+      JsonValidationError);
 }
 
 TEST_F(FieldConstraintTest, SignaturePatternFieldConstraintSatisfy) {
