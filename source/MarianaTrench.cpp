@@ -170,6 +170,18 @@ Registry MarianaTrench::analyze(Context& context) {
       lifecycle_methods_timer.duration_in_seconds(),
       resident_set_size_in_gb());
 
+  Timer lifecycle_methods_file_path_timer;
+  LOG(1, "Setting file paths for life-cycle wrapper methods...");
+  for (const auto& [_, lifecycle_method] : lifecycle_methods.methods()) {
+    context.positions->set_lifecycle_wrapper_path(lifecycle_method);
+  }
+  context.statistics->log_time(
+      "lifecycle_methods_file_path", lifecycle_methods_file_path_timer);
+  LOG(1,
+      "Set file paths for lifecycle methods in {:.2f}s. Memory used, RSS: {:.2f}GB",
+      lifecycle_methods_file_path_timer.duration_in_seconds(),
+      resident_set_size_in_gb());
+
   // MethodMappings must be constructed after the life-cycle wrapper so that
   // life-cycle methods are added to it.
   Timer method_mapping_timer;

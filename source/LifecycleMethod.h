@@ -229,6 +229,11 @@ class LifecycleMethod {
       const std::unordered_set<const DexType*>& local_derived_receiver_types,
       const ClassHierarchies& class_hierarchies) const;
 
+  const ConcurrentMap<const DexType*, const Method*>&
+  class_to_lifecycle_method() const {
+    return class_to_lifecycle_method_;
+  }
+
   bool operator==(const LifecycleMethod& other) const;
 
  private:

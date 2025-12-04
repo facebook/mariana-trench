@@ -23,6 +23,8 @@
 
 namespace marianatrench {
 
+class LifecycleMethod;
+
 class Positions final {
  public:
   Positions() = default;
@@ -77,6 +79,8 @@ class Positions final {
   const Position* unknown() const;
 
   const std::string* MT_NULLABLE get_path(const DexMethod* method) const;
+
+  void set_lifecycle_wrapper_path(const LifecycleMethod& method);
 
   std::unordered_set<const std::string*> all_paths() const;
 

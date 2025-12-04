@@ -29,6 +29,7 @@
 #include <mariana-trench/Filesystem.h>
 #include <mariana-trench/JsonReaderWriter.h>
 #include <mariana-trench/JsonValidation.h>
+#include <mariana-trench/LifecycleMethod.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Positions.h>
 #include <mariana-trench/Timer.h>
@@ -38,7 +39,7 @@ namespace marianatrench {
 namespace {
 
 constexpr int k_unknown_line = -1;
-constexpr std::string_view k_synthetic_prefix = "__SYNTHETIC:";
+const inline std::string k_synthetic_prefix = "__SYNTHETIC:";
 
 struct GrepoPaths {
   std::vector<std::string> actual_paths;
@@ -580,6 +581,15 @@ const Position* Positions::unknown() const {
 const std::string* MT_NULLABLE
 Positions::get_path(const DexMethod* method) const {
   return method_to_path_.get(method, /* default */ nullptr);
+}
+
+void Positions::set_lifecycle_wrapper_path(
+    const LifecycleMethod& lifecycle_method) {
+  const auto* path = paths_.insert(k_synthetic_prefix).first;
+  for (const auto& [_, method] :
+       UnorderedIterable(lifecycle_method.class_to_lifecycle_method())) {
+    method_to_path_.emplace(method->dex_method(), path);
+  }
 }
 
 std::unordered_set<const std::string*> Positions::all_paths() const {

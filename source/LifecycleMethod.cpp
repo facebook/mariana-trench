@@ -113,6 +113,9 @@ const DexMethod* MT_NULLABLE create_dex_method_from_callees(
   code->build_cfg();
   code->cfg().calculate_exit_block();
 
+  // Mark the lifecycle wrappers we create as synthetic
+  new_method->set_access(new_method->get_access() | ACC_SYNTHETIC);
+
   // Add method to the class
   dex_klass->add_method(new_method);
 
@@ -268,6 +271,9 @@ const DexMethod* MT_NULLABLE create_dex_method_from_graph(
   }
 
   cfg.calculate_exit_block();
+
+  // Mark the lifecycle wrappers we create as synthetic
+  new_method->set_access(new_method->get_access() | ACC_SYNTHETIC);
 
   // Add method to the class
   dex_klass->add_method(new_method);

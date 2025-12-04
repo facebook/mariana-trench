@@ -1206,7 +1206,10 @@
 }
 {
   "method" : "Lcom/facebook/marianatrench/integrationtests/FragmentOneActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V",
-  "position" : {},
+  "position" : 
+  {
+    "path" : "__SYNTHETIC:"
+  },
   "sinks" : 
   [
     {
@@ -1220,7 +1223,10 @@
             "port" : "Argument(0).mArguments",
             "position" : 
             {
-              "line" : 0
+              "end" : 0,
+              "line" : 0,
+              "path" : "__SYNTHETIC:",
+              "start" : 0
             },
             "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/FragmentOneActivity;.onStart:()V"
           },
@@ -1258,7 +1264,10 @@
             "port" : "Argument(1)",
             "position" : 
             {
-              "line" : 0
+              "end" : 0,
+              "line" : 0,
+              "path" : "__SYNTHETIC:",
+              "start" : 0
             },
             "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/FragmentOneActivity;.onTest:(Ljava/lang/Object;)V"
           },
@@ -1511,7 +1520,10 @@
 }
 {
   "method" : "Lcom/facebook/marianatrench/integrationtests/FragmentThreeActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V",
-  "position" : {}
+  "position" : 
+  {
+    "path" : "__SYNTHETIC:"
+  }
 }
 {
   "method" : "Lcom/facebook/marianatrench/integrationtests/FragmentTwoActivity;.<init>:()V",
@@ -1523,7 +1535,10 @@
 }
 {
   "method" : "Lcom/facebook/marianatrench/integrationtests/FragmentTwoActivity;.activity_lifecycle_wrapper:(Landroid/os/Bundle;Ljava/lang/Object;)V",
-  "position" : {}
+  "position" : 
+  {
+    "path" : "__SYNTHETIC:"
+  }
 }
 {
   "method" : "Lcom/facebook/marianatrench/integrationtests/Handler;.<init>:()V",
@@ -2825,7 +2840,7 @@
                 5,
                 6
               ],
-              "distance" : 2,
+              "distance" : 1,
               "kind" : "Sink",
               "origins" : 
               [
@@ -2918,7 +2933,7 @@
                 5,
                 6
               ],
-              "distance" : 2,
+              "distance" : 1,
               "kind" : "Sink",
               "origins" : 
               [
@@ -2982,7 +2997,7 @@
                 5,
                 6
               ],
-              "distance" : 2,
+              "distance" : 1,
               "kind" : "Sink",
               "origins" : 
               [
@@ -3088,7 +3103,7 @@
                 5,
                 6
               ],
-              "distance" : 2,
+              "distance" : 1,
               "kind" : "Sink",
               "origins" : 
               [
@@ -3194,7 +3209,7 @@
                 5,
                 6
               ],
-              "distance" : 2,
+              "distance" : 1,
               "kind" : "Sink",
               "origins" : 
               [
@@ -3438,7 +3453,7 @@
                 5,
                 6
               ],
-              "distance" : 2,
+              "distance" : 1,
               "kind" : "Sink",
               "origins" : 
               [
@@ -3765,7 +3780,7 @@
                 5,
                 6
               ],
-              "distance" : 2,
+              "distance" : 1,
               "kind" : "Sink",
               "origins" : 
               [
