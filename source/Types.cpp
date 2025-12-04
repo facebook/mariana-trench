@@ -59,7 +59,9 @@ bool has_reflection(const IRCode& code) {
 
       auto* dex_arguments = method->get_proto()->get_args();
       if (std::any_of(
-              dex_arguments->begin(), dex_arguments->end(), [](DexType* type) {
+              dex_arguments->begin(),
+              dex_arguments->end(),
+              [](const DexType* type) {
                 return type->str() == type::java_lang_Class()->str();
               })) {
         return true;

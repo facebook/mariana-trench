@@ -103,10 +103,10 @@ std::optional<std::string_view> generator::get_super_type(
 std::unordered_set<std::string_view> generator::get_interfaces_from_class(
     DexClass* dex_class) {
   std::unordered_set<std::string_view> interfaces;
-  std::vector<DexType*> interface_types = std::vector<DexType*>(
+  std::vector<const DexType*> interface_types = std::vector<const DexType*>(
       dex_class->get_interfaces()->begin(), dex_class->get_interfaces()->end());
   while (!interface_types.empty()) {
-    DexType* interface = interface_types.back();
+    const DexType* interface = interface_types.back();
     interface_types.pop_back();
     interfaces.emplace(interface->get_name()->str());
     DexClass* interface_class = type_class(interface);

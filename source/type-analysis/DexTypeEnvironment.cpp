@@ -38,7 +38,7 @@ bool implements(const DexClass* cls, const DexType* intf) {
 
 // Is `left` a subset of `right`
 bool is_subset(DexTypeList* left, DexTypeList* right) {
-  std::unordered_set<DexType*> rset(right->begin(), right->end());
+  std::unordered_set<const DexType*> rset(right->begin(), right->end());
   for (auto ltype : *left) {
     if (rset.count(ltype) == 0) {
       return false;

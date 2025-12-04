@@ -189,7 +189,7 @@ void ClassHierarchies::init_from_stores(const DexStoresVector& stores) {
       if (super != type::java_lang_Object()) {
         graph.add_edge(/* child */ klass->get_type(), /* parent */ super);
       }
-      for (DexType* interface : *klass->get_interfaces()) {
+      for (const DexType* interface : *klass->get_interfaces()) {
         graph.add_edge(/* child */ klass->get_type(), /* parent */ interface);
       }
     });

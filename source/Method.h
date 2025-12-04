@@ -83,7 +83,7 @@ class Method final {
    *
    * Returns `nullptr` if the index is invalid.
    */
-  DexType* MT_NULLABLE parameter_type(ParameterPosition argument) const;
+  const DexType* MT_NULLABLE parameter_type(ParameterPosition argument) const;
 
   DexType* return_type() const;
 

@@ -22,7 +22,7 @@ namespace marianatrench {
 namespace {
 
 inline int get_index_of_type(
-    DexType* type,
+    const DexType* type,
     const LifecycleMethod::TypeOrderedSet& ordered_types) {
   auto it = ordered_types.find(type);
   mt_assert(it != ordered_types.end());

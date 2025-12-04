@@ -185,7 +185,7 @@ class LifeCycleMethodGraph {
 class LifecycleMethod {
  public:
   using TypeOrderedSet =
-      boost::container::flat_set<DexType*, dextypes_comparator>;
+      boost::container::flat_set<const DexType*, dextypes_comparator>;
 
   explicit LifecycleMethod(
       std::string base_class_name,

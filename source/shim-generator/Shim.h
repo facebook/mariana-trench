@@ -38,7 +38,7 @@ class ShimMethod final {
 
   const Method* method() const;
 
-  DexType* MT_NULLABLE parameter_type(ShimRoot argument) const;
+  const DexType* MT_NULLABLE parameter_type(ShimRoot argument) const;
 
   DexType* MT_NULLABLE return_type() const;
 

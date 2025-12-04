@@ -118,7 +118,8 @@ ParameterPosition Method::number_of_parameters() const {
       first_parameter_index();
 }
 
-DexType* MT_NULLABLE Method::parameter_type(ParameterPosition argument) const {
+const DexType* MT_NULLABLE
+Method::parameter_type(ParameterPosition argument) const {
   const auto* dex_arguments = method_->get_proto()->get_args();
 
   // We treat "this/self" for instance methods as argument 0

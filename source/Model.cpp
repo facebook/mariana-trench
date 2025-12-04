@@ -622,7 +622,7 @@ void Model::collapse_invalid_paths(Context& context) {
     // Leaf ports appear in callee ports. This only applies to caller ports.
     mt_assert(!root.is_leaf_port());
 
-    DexType* MT_NULLABLE root_type = nullptr;
+    const DexType* MT_NULLABLE root_type = nullptr;
     if (root.is_argument()) {
       root_type = method_->parameter_type(root.parameter_position());
     } else if (root.is_return()) {

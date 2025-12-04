@@ -74,7 +74,7 @@ const Method* ShimMethod::method() const {
   return method_;
 }
 
-DexType* MT_NULLABLE ShimMethod::parameter_type(ShimRoot argument) const {
+const DexType* MT_NULLABLE ShimMethod::parameter_type(ShimRoot argument) const {
   return method_->parameter_type(argument.parameter_position());
 }
 
