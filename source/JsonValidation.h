@@ -15,6 +15,11 @@
 
 #include <DexClass.h>
 
+#if defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdangling-reference"
+#endif
+
 namespace marianatrench {
 
 class JsonValidationError : public std::invalid_argument {
@@ -101,3 +106,8 @@ class JsonValidation final {
 };
 
 } // namespace marianatrench
+
+#if defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdangling-reference"
+#endif
