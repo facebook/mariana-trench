@@ -457,7 +457,7 @@ LifecycleMethodCall::get_dex_method(const DexClass* klass) const {
 const DexTypeList* MT_NULLABLE LifecycleMethodCall::get_argument_types() const {
   DexTypeList::ContainerType argument_types;
   for (const auto& argument_type : argument_types_) {
-    auto* type = DexType::get_type(argument_type);
+    const auto* type = DexType::get_type(argument_type);
     if (type == nullptr) {
       ERROR(1, "Could not find argument type `{}`.", argument_type);
       return nullptr;
