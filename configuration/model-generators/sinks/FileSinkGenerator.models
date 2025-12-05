@@ -90,15 +90,9 @@
       "find": "methods",
       "where": [
         {
-          "constraint": "name",
-          "pattern": "<init>"
-        },
-        {
-          "constraint": "parent",
-          "inner": {
-            "constraint": "name",
-            "pattern": "Ljava/.*InputStream;"
-          }
+          "constraint": "signature_match",
+          "extends": "Ljava/io/InputStream;",
+          "name": "<init>"
         },
         {
           "constraint": "number_parameters",
@@ -109,10 +103,30 @@
         }
       ],
       "model": {
-        "sinks": [
+        "for_all_parameters": [
           {
-            "kind": "InputStream",
-            "port": "Argument(1)"
+            "variable": "x",
+            "where": [
+              {
+                "constraint": "any_of",
+                "inners": [
+                  {
+                    "constraint": "name",
+                    "pattern": "Ljava/lang/String;"
+                  },
+                  {
+                    "constraint": "name",
+                    "pattern": "Ljava/util/Enumeration;"
+                  }
+                ]
+              }
+            ],
+            "sinks": [
+              {
+                "kind": "InputStream",
+                "port": "Argument(x)"
+              }
+            ]
           }
         ]
       }
