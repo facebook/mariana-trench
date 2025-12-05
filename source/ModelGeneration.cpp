@@ -39,75 +39,6 @@ namespace marianatrench {
 
 namespace {
 
-std::unordered_map<const ModelGeneratorName*, std::unique_ptr<ModelGenerator>>
-make_model_generators(
-    const Registry* MT_NULLABLE preloaded_models,
-    Context& context) {
-  std::unordered_map<const ModelGeneratorName*, std::unique_ptr<ModelGenerator>>
-      generators = ModelGeneration::make_builtin_model_generators(
-          preloaded_models, context);
-  // Find JSON model generators in search path.
-  for (const auto& path : context.options->model_generator_search_paths()) {
-    LOG(3, "Searching for model generators in `{}`...", path);
-    for (auto& entry : std::filesystem::recursive_directory_iterator(path)) {
-      if (entry.path().extension() == ".json") {
-        // TODO(T153463464): We no longer accept legacy .json files for models.
-        // Note that there could be rule definition files, lifecycle definition
-        // files, etc. that still use the .json extension. In the future, we
-        // should use the extension to differentiate between these file types.
-        WARNING(
-            1,
-            "Not parsing `{}`. .json files are deprecated. Use .models instead.",
-            entry.path());
-        continue;
-      }
-
-      if (entry.path().extension() != ".models") {
-        continue;
-      }
-
-      auto path_copy = entry.path();
-      auto identifier = path_copy.replace_extension("").filename().string();
-      const auto* name =
-          context.model_generator_name_factory->create(identifier);
-
-      try {
-        Json::Value json = JsonReader::parse_json_file(entry.path());
-
-        if (!json.isObject()) {
-          throw ModelGeneratorError(
-              fmt::format(
-                  "Unable to parse `{}` as a valid models JSON.",
-                  entry.path()));
-        }
-
-        auto [_, inserted] = generators.emplace(
-            name,
-            std::make_unique<JsonModelGenerator>(JsonModelGenerator::from_json(
-                name, context, entry.path(), json)));
-        if (!inserted) {
-          auto error = fmt::format(
-              "Duplicate model generator {} defined at {}",
-              identifier,
-              entry.path());
-          throw ModelGeneratorError(error);
-        }
-        LOG(3, "Found model generator `{}`", identifier);
-      } catch (const JsonValidationError& e) {
-        auto error = fmt::format(
-            "Unable to parse generator at `{}`: {}", entry.path(), e.what());
-        LOG(1, error);
-        EventLogger::log_event(
-            "model_generator_error",
-            fmt::format("{}\n{}", error, e.what()),
-            /* verbosity_level */ 1);
-      }
-    }
-  }
-
-  return generators;
-}
-
 } // namespace
 
 ModelGeneratorError::ModelGeneratorError(const std::string& message)
@@ -272,15 +203,70 @@ ModelGeneratorResult ModelGeneration::run(
           /* field_models */ generated_field_models};
 }
 
+std::unordered_map<const ModelGeneratorName*, std::unique_ptr<ModelGenerator>>
+ModelGeneration::make_model_generators(
+    const Registry* MT_NULLABLE preloaded_models,
+    Context& context) {
+  std::unordered_map<const ModelGeneratorName*, std::unique_ptr<ModelGenerator>>
+      generators = ModelGeneration::make_builtin_model_generators(
+          preloaded_models, context);
+
+  // Find JSON model generators using the shared function
+  auto json_generator_paths =
+      ModelGeneration::get_json_model_generator_paths(context);
+  for (const auto& [name, path] : json_generator_paths) {
+    LOG(3, "Found model generator `{}`", name->identifier());
+
+    try {
+      Json::Value json = JsonReader::parse_json_file(path);
+
+      if (!json.isObject()) {
+        throw ModelGeneratorError(fmt::format(
+            "Unable to parse `{}` as a valid models JSON.", path));
+      }
+
+      auto [_, inserted] = generators.emplace(
+          name,
+          std::make_unique<JsonModelGenerator>(JsonModelGenerator::from_json(
+              name, context, path, json)));
+      if (!inserted) {
+        auto error = fmt::format(
+            "Duplicate model generator {} defined at {}",
+            name->identifier(),
+            path);
+        throw ModelGeneratorError(error);
+      }
+    } catch (const JsonValidationError& e) {
+      auto error = fmt::format(
+          "Unable to parse generator at `{}`: {}", path, e.what());
+      LOG(1, error);
+      EventLogger::log_event(
+          "model_generator_error",
+          fmt::format("{}\n{}", error, e.what()),
+          /* verbosity_level */ 1);
+    }
+  }
+
+  return generators;
+}
+
 std::unordered_map<const ModelGeneratorName*, std::filesystem::path>
 ModelGeneration::get_json_model_generator_paths(Context& context) {
-  std::unordered_map<const ModelGeneratorName*, std::filesystem::path> paths;
-  
-  // Find JSON model generators in search paths
+  std::unordered_map<const ModelGeneratorName*, std::filesystem::path>
+      generator_paths;
+
   for (const auto& path : context.options->model_generator_search_paths()) {
+    LOG(3, "Searching for model generators in `{}`...", path);
     for (auto& entry : std::filesystem::recursive_directory_iterator(path)) {
       if (entry.path().extension() == ".json") {
-        // Skip deprecated .json files
+        // TODO(T153463464): We no longer accept legacy .json files for models.
+        // Note that there could be rule definition files, lifecycle definition
+        // files, etc. that still use the .json extension. In the future, we
+        // should use the extension to differentiate between these file types.
+        WARNING(
+            1,
+            "Not parsing `{}`. .json files are deprecated. Use .models instead.",
+            entry.path());
         continue;
       }
 
@@ -293,11 +279,18 @@ ModelGeneration::get_json_model_generator_paths(Context& context) {
       const auto* name =
           context.model_generator_name_factory->create(identifier);
 
-      paths.emplace(name, entry.path());
+      auto [_, inserted] = generator_paths.emplace(name, entry.path());
+      if (!inserted) {
+        auto error = fmt::format(
+            "Duplicate model generator {} defined at {}",
+            identifier,
+            entry.path());
+        throw ModelGeneratorError(error);
+      }
     }
   }
 
-  return paths;
+  return generator_paths;
 }
 
 } // namespace marianatrench

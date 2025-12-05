@@ -149,7 +149,7 @@ Options::Options(
       propagate_across_arguments_(propagate_across_arguments),
       list_all_rules_(false),
       list_all_model_generators_(false),
-      list_all_kinds_(false),
+
       list_all_kinds_in_rules_(false),
 
       list_all_lifecycles_(false) {}
@@ -328,8 +328,7 @@ Options::Options(const Json::Value& json) {
       JsonValidation::optional_boolean(json, "list-all-rules", false);
   list_all_model_generators_ = 
       JsonValidation::optional_boolean(json, "list-all-model-generators", false);
-  list_all_kinds_ = 
-      JsonValidation::optional_boolean(json, "list-all-kinds", false);
+
   list_all_kinds_in_rules_ = 
       JsonValidation::optional_boolean(json, "list-all-kinds-in-rules", false);
 
@@ -655,9 +654,7 @@ bool Options::list_all_model_generators() const {
 
 
 
-bool Options::list_all_kinds() const {
-  return list_all_kinds_;
-}
+
 
 bool Options::list_all_kinds_in_rules() const {
   return list_all_kinds_in_rules_;

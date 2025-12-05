@@ -20,7 +20,7 @@ class ListingCommands {
   // Individual listing command implementations
   static void list_all_rules(Context& context);
   static void list_all_model_generators(Context& context);
-  static void list_all_kinds(Context& context);
+
   static void list_all_kinds_in_rules(Context& context);
 
   static void list_all_lifecycles(Context& context);

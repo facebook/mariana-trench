@@ -37,7 +37,14 @@ class ModelGeneration {
           Context& context);
 
   static std::unordered_map<const ModelGeneratorName*, std::filesystem::path>
-      get_json_model_generator_paths(Context& context);
+  get_json_model_generator_paths(Context& context);
+
+  static std::
+      unordered_map<const ModelGeneratorName*, std::unique_ptr<ModelGenerator>>
+      make_model_generators(
+          const Registry* MT_NULLABLE preloaded_models,
+          Context& context);
+
 };
 
 } // namespace marianatrench
