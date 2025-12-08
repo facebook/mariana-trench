@@ -137,6 +137,12 @@ class Options final {
 
   const std::optional<std::filesystem::path> heuristics_path() const;
 
+  // Listing command flags
+  bool list_all_rules() const;
+  bool list_all_model_generators() const;
+  bool list_all_kinds_in_rules() const;
+  bool list_all_lifecycles() const;
+
  private:
   std::vector<std::string> models_paths_;
   std::vector<std::string> field_models_paths_;
@@ -201,6 +207,12 @@ class Options final {
   bool propagate_across_arguments_;
 
   std::optional<std::filesystem::path> heuristics_path_;
+
+  // Listing command flags
+  bool list_all_rules_;
+  bool list_all_model_generators_;
+  bool list_all_kinds_in_rules_;
+  bool list_all_lifecycles_;
 };
 
 } // namespace marianatrench

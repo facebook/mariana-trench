@@ -29,6 +29,7 @@
 #include <mariana-trench/JsonReaderWriter.h>
 #include <mariana-trench/Kind.h>
 #include <mariana-trench/LifecycleMethods.h>
+#include <mariana-trench/ListingCommands.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/MarianaTrench.h>
 #include <mariana-trench/MethodMappings.h>
@@ -262,6 +263,9 @@ Registry MarianaTrench::analyze(Context& context) {
       context.rules->size(),
       rules_timer.duration_in_seconds(),
       resident_set_size_in_gb());
+
+  // Execute any requested listing commands
+  ListingCommands::run(context);
 
   Timer transforms_timer;
   LOG(1, "Initializing used transform kinds...");

@@ -37,10 +37,45 @@
 
 namespace marianatrench {
 
-namespace {
+ModelGeneratorError::ModelGeneratorError(const std::string& message)
+    : std::invalid_argument(message) {}
+
+#ifndef MARIANA_TRENCH_FACEBOOK_BUILD
+std::unordered_map<const ModelGeneratorName*, std::unique_ptr<ModelGenerator>>
+ModelGeneration::make_builtin_model_generators(
+    const Registry* MT_NULLABLE preloaded_models,
+    Context& context) {
+  std::vector<std::unique_ptr<ModelGenerator>> builtin_generators;
+  builtin_generators.push_back(
+      std::make_unique<BroadcastReceiverGenerator>(context));
+  builtin_generators.push_back(
+      std::make_unique<ContentProviderGenerator>(context));
+  builtin_generators.push_back(
+      std::make_unique<ServiceSourceGenerator>(context));
+  builtin_generators.push_back(
+      std::make_unique<TaintInTaintThisGenerator>(preloaded_models, context));
+  builtin_generators.push_back(
+      std::make_unique<TaintInTaintOutGenerator>(preloaded_models, context));
+  builtin_generators.push_back(
+      std::make_unique<BuilderPatternGenerator>(context));
+  builtin_generators.push_back(
+      std::make_unique<JoinOverrideGenerator>(context));
+  builtin_generators.push_back(
+      std::make_unique<ManifestSourceGenerator>(context));
+  builtin_generators.push_back(std::make_unique<DFASourceGenerator>(context));
+
+  std::unordered_map<const ModelGeneratorName*, std::unique_ptr<ModelGenerator>>
+      builtin_generator_map;
+  for (auto& generator : builtin_generators) {
+    const auto* name = generator->name();
+    builtin_generator_map.emplace(name, std::move(generator));
+  }
+  return builtin_generator_map;
+}
+#endif
 
 std::unordered_map<const ModelGeneratorName*, std::unique_ptr<ModelGenerator>>
-make_model_generators(
+ModelGeneration::make_model_generators(
     const Registry* MT_NULLABLE preloaded_models,
     Context& context) {
   std::unordered_map<const ModelGeneratorName*, std::unique_ptr<ModelGenerator>>
@@ -107,45 +142,6 @@ make_model_generators(
 
   return generators;
 }
-
-} // namespace
-
-ModelGeneratorError::ModelGeneratorError(const std::string& message)
-    : std::invalid_argument(message) {}
-
-#ifndef MARIANA_TRENCH_FACEBOOK_BUILD
-std::unordered_map<const ModelGeneratorName*, std::unique_ptr<ModelGenerator>>
-ModelGeneration::make_builtin_model_generators(
-    const Registry* MT_NULLABLE preloaded_models,
-    Context& context) {
-  std::vector<std::unique_ptr<ModelGenerator>> builtin_generators;
-  builtin_generators.push_back(
-      std::make_unique<BroadcastReceiverGenerator>(context));
-  builtin_generators.push_back(
-      std::make_unique<ContentProviderGenerator>(context));
-  builtin_generators.push_back(
-      std::make_unique<ServiceSourceGenerator>(context));
-  builtin_generators.push_back(
-      std::make_unique<TaintInTaintThisGenerator>(preloaded_models, context));
-  builtin_generators.push_back(
-      std::make_unique<TaintInTaintOutGenerator>(preloaded_models, context));
-  builtin_generators.push_back(
-      std::make_unique<BuilderPatternGenerator>(context));
-  builtin_generators.push_back(
-      std::make_unique<JoinOverrideGenerator>(context));
-  builtin_generators.push_back(
-      std::make_unique<ManifestSourceGenerator>(context));
-  builtin_generators.push_back(std::make_unique<DFASourceGenerator>(context));
-
-  std::unordered_map<const ModelGeneratorName*, std::unique_ptr<ModelGenerator>>
-      builtin_generator_map;
-  for (auto& generator : builtin_generators) {
-    const auto* name = generator->name();
-    builtin_generator_map.emplace(name, std::move(generator));
-  }
-  return builtin_generator_map;
-}
-#endif
 
 ModelGeneratorResult ModelGeneration::run(
     Context& context,

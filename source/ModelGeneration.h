@@ -35,6 +35,12 @@ class ModelGeneration {
       make_builtin_model_generators(
           const Registry* MT_NULLABLE preloaded_models,
           Context& context);
+
+  static std::
+      unordered_map<const ModelGeneratorName*, std::unique_ptr<ModelGenerator>>
+      make_model_generators(
+          const Registry* MT_NULLABLE preloaded_models,
+          Context& context);
 };
 
 } // namespace marianatrench
