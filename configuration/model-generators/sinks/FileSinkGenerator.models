@@ -73,6 +73,36 @@
       "where": [
         {
           "constraint": "signature_match",
+          "extends": "Landroid/content/Context;",
+          "names": [
+            "openFileInput",
+            "openFileOutput"
+          ]
+        }
+      ],
+      "model": {
+        "freeze": [
+          "propagation"
+        ],
+        "propagation": [
+          {
+            "input": "Argument(1)",
+            "output": "Return"
+          }
+        ],
+        "sinks": [
+          {
+            "kind": "FileResolver",
+            "port": "Argument(1)"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
           "parent": "Ljava/io/FileOutputStream;",
           "name": "<init>"
         }
