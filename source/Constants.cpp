@@ -33,6 +33,8 @@ get_service_routing_methods() {
   return {
       {"Landroid/content/Context;.startService:(Landroid/content/Intent;)Landroid/content/ComponentName;",
        1},
+      {"Landroidx/core/app/JobIntentService;.enqueueWork:(Landroid/content/Context;Ljava/lang/Class;ILandroid/content/Intent;)V",
+       3},
   };
 }
 
@@ -58,6 +60,7 @@ get_intent_receiving_method_names() {
           intent_receiving_method_names = {
               {"onStartCommand", {1, Component::Service}},
               {"onHandleIntent", {1, Component::Service}},
+              {"onHandleWork", {1, Component::Service}},
               {"onNewIntent", {1, Component::Activity}},
               {"onReceive", {2, Component::BroadcastReceiver}}};
   return intent_receiving_method_names;
@@ -65,15 +68,17 @@ get_intent_receiving_method_names() {
 
 const std::unordered_map<std::string, ParameterPosition>&
 get_intent_class_setters() {
-  static const std::unordered_map<std::string, ParameterPosition> intent_class_setters =
-      {{"Landroid/content/Intent;.<init>:(Landroid/content/Context;Ljava/lang/Class;)V",
-        2},
-       {"Landroid/content/Intent;.<init>:(Ljava/lang/String;Landroid/net/Uri;Landroid/content/Context;Ljava/lang/Class;)V",
-        4},
-       {"Landroid/content/Intent;.setClass:(Landroid/content/Context;Ljava/lang/Class;)Landroid/content/Intent;",
-        2},
-       {"Landroid/content/ComponentName;.<init>:(Landroid/content/Context;Ljava/lang/Class;)V",
-        2}};
+  static const std::unordered_map<std::string, ParameterPosition> intent_class_setters = {
+      {"Landroid/content/Intent;.<init>:(Landroid/content/Context;Ljava/lang/Class;)V",
+       2},
+      {"Landroid/content/Intent;.<init>:(Ljava/lang/String;Landroid/net/Uri;Landroid/content/Context;Ljava/lang/Class;)V",
+       4},
+      {"Landroid/content/Intent;.setClass:(Landroid/content/Context;Ljava/lang/Class;)Landroid/content/Intent;",
+       2},
+      {"Landroid/content/ComponentName;.<init>:(Landroid/content/Context;Ljava/lang/Class;)V",
+       2},
+      {"Landroidx/core/app/JobIntentService;.enqueueWork:(Landroid/content/Context;Ljava/lang/Class;ILandroid/content/Intent;)V",
+       1}};
   return intent_class_setters;
 }
 

@@ -113,11 +113,18 @@ class Transfer final : public InstructionAnalyzerBase<
     if (intent_parameter_position != intent_class_setters.end()) {
       auto class_index = intent_parameter_position->second;
 
-      mt_assert(class_index > 0);
-      mt_assert(!::is_static(method));
+      auto argument_index = class_index;
+      if (!::is_static(method)) {
+        // For instance methods, class_index includes implicit `this` at
+        // position 0. Here, we want the index in the method proto's argument
+        // list, which does _not_ include the `this` argument.
+        mt_assert(class_index > 0);
+        argument_index = class_index - 1;
+      }
 
       const auto dex_arguments = method->get_proto()->get_args();
-      if (dex_arguments->at(class_index - 1) != type::java_lang_Class()) {
+      mt_assert(argument_index < dex_arguments->size());
+      if (dex_arguments->at(argument_index) != type::java_lang_Class()) {
         return false;
       }
       const auto& environment = context->types().const_class_environment(
