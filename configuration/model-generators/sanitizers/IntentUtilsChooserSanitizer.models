@@ -1,0 +1,29 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroid/content/Intent;",
+          "name": "createChooser"
+        }
+      ],
+      "model": {
+        "freeze": [
+          "propagation"
+        ],
+        "propagation": [
+          {
+            "input": "Argument(0)",
+            "output": "Return"
+          },
+          {
+            "input": "Argument(1)",
+            "output": "Return"
+          }
+        ]
+      }
+    }
+  ]
+}

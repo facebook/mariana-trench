@@ -39,6 +39,9 @@
     "name": "IntentDataFeatureGenerator"
   },
   {
+    "name": "IntentUtilsChooserSanitizer"
+  },
+  {
     "name": "join_override_generator"
   },
   {
