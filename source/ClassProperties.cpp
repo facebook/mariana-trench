@@ -27,7 +27,8 @@ namespace {
 
 // Various component sources are not matching the class names in the
 // manifest leading to features (like exported) not being added.
-std::string_view strip_inner_class(std::string_view class_name) {
+// This strips ALL inner class levels at once.
+std::string_view strip_all_inner_classes(std::string_view class_name) {
   auto position = class_name.find_first_of("$");
   if (position != std::string::npos) {
     return DexString::make_string(
@@ -194,8 +195,9 @@ FeatureSet ClassProperties::get_manifest_features(
     const std::unordered_map<std::string_view, ExportedKind>& component_set)
     const {
   FeatureSet features;
-  {
-    auto it = component_set.find(class_name);
+  std::optional<std::string_view> current_class = class_name;
+  while (current_class.has_value()) {
+    auto it = component_set.find(current_class.value());
     if (it != component_set.end()) {
       if (it->second == ExportedKind::Exported) {
         features.add(feature_factory_.get("via-caller-exported"));
@@ -207,21 +209,7 @@ FeatureSet ClassProperties::get_manifest_features(
       }
       return features;
     }
-  }
-  {
-    auto outer_class = strip_inner_class(class_name);
-    auto it = component_set.find(outer_class);
-    if (it != component_set.end()) {
-      if (it->second == ExportedKind::Exported) {
-        features.add(feature_factory_.get("via-caller-exported"));
-      } else if (it->second == ExportedKind::ExportedWithPermission) {
-        features.add(feature_factory_.get("via-caller-exported"));
-        features.add(feature_factory_.get("via-caller-permission"));
-      } else if (it->second == ExportedKind::Unexported) {
-        features.add(feature_factory_.get("via-caller-unexported"));
-      }
-      return features;
-    }
+    current_class = generator::strip_one_inner_class(current_class.value());
   }
 
   return features;
@@ -229,13 +217,13 @@ FeatureSet ClassProperties::get_manifest_features(
 
 bool ClassProperties::has_inline_permissions(
     std::string_view class_name) const {
-  auto outer_class = strip_inner_class(class_name);
+  auto outer_class = strip_all_inner_classes(class_name);
   return inline_permission_classes_.count(class_name) > 0 ||
       inline_permission_classes_.count(outer_class) > 0;
 }
 
 bool ClassProperties::is_dfa_public(std::string_view class_name) const {
-  auto outer_class = strip_inner_class(class_name);
+  auto outer_class = strip_all_inner_classes(class_name);
   return dfa_public_scheme_classes_.count(class_name) > 0 ||
       dfa_public_scheme_classes_.count(outer_class) > 0;
 }

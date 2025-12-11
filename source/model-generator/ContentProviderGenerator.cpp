@@ -94,12 +94,10 @@ std::vector<Model> ContentProviderGenerator::emit_method_models(
           std::unordered_set<std::string_view> parent_classes =
               generator::get_custom_parents_from_class(dex_class);
           for (const auto& parent_class : parent_classes) {
-            manifest_providers.emplace(
-                generator::get_outer_class(parent_class));
+            manifest_providers.emplace(parent_class);
           }
         }
-        manifest_providers.emplace(
-            generator::get_outer_class(tag_info.classname));
+        manifest_providers.emplace(tag_info.classname);
       }
     }
   } catch (const std::exception& e) {
@@ -117,8 +115,8 @@ std::vector<Model> ContentProviderGenerator::emit_method_models(
   std::vector<Model> models;
   auto queue = sparta::work_queue<const Method*>([&](const Method* method) {
     const auto& signature = method->signature();
-    const auto outer_class = generator::get_outer_class(signature);
-    if (manifest_providers.count(outer_class)) {
+    // Check if any class in the hierarchy (from precise to coarse) matches.
+    if (generator::is_class_in_manifest_set(signature, manifest_providers)) {
       for (const auto& regex : provider_regexes) {
         if (re2::RE2::FullMatch(signature, *regex)) {
           const auto* dex_class = type_class(method->get_class());

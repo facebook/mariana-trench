@@ -68,14 +68,10 @@ std::vector<Model> ServiceSourceGenerator::emit_method_models(
           std::unordered_set<std::string_view> parent_classes =
               generator::get_custom_parents_from_class(dex_class);
           for (const auto& parent_class : parent_classes) {
-            auto manifest_class_start =
-                parent_class.substr(0, parent_class.find(";", 0));
-            manifest_services.emplace(str_copy(manifest_class_start));
+            manifest_services.emplace(parent_class);
           }
         }
-        auto manifest_class_start =
-            tag_info.classname.substr(0, tag_info.classname.find(";", 0));
-        manifest_services.emplace(manifest_class_start);
+        manifest_services.emplace(tag_info.classname);
       }
     }
   } catch (const std::exception& e) {
@@ -102,8 +98,7 @@ std::vector<Model> ServiceSourceGenerator::emit_method_models(
     }
 
     if (service_methods.find(method_name) != service_methods.end() &&
-        manifest_services.find(generator::get_outer_class(class_name)) !=
-            manifest_services.end()) {
+        generator::is_class_in_manifest_set(class_name, manifest_services)) {
       auto model = source_first_argument(method, name_, context_);
       std::lock_guard<std::mutex> lock(mutex);
       models.push_back(model);

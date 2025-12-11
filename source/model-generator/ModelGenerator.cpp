@@ -165,9 +165,45 @@ std::unordered_set<std::string_view> generator::get_custom_parents_from_class(
   return parent_classes;
 }
 
-std::string generator::get_outer_class(std::string_view classname) {
-  auto class_start = classname.substr(0, classname.find(";", 0));
-  return str_copy(class_start.substr(0, class_start.find("$", 0)));
+std::optional<std::string_view> generator::strip_one_inner_class(
+    std::string_view class_name) {
+  std::string_view name_without_semi = class_name;
+  if (!name_without_semi.empty() && name_without_semi.back() == ';') {
+    name_without_semi =
+        name_without_semi.substr(0, name_without_semi.size() - 1);
+  }
+
+  auto position = name_without_semi.rfind('$');
+  if (position == std::string::npos) {
+    return std::nullopt;
+  }
+
+  return DexString::make_string(
+             fmt::format("{};", name_without_semi.substr(0, position)))
+      ->str();
+}
+
+bool generator::is_class_in_manifest_set(
+    std::string_view classname,
+    const std::unordered_set<std::string>& manifest_set) {
+  // Extract the class name with trailing semicolon.
+  // Input might be a full signature like "Lcom/example/Outer$Inner;.method:()V"
+  // or just a class like "Lcom/example/Outer$Inner;"
+  auto class_end = classname.find(";", 0);
+  if (class_end == std::string::npos) {
+    return false;
+  }
+
+  // Loop from precise matches to coarse matches.
+  std::optional<std::string_view> current =
+      classname.substr(0, class_end + 1); // Include the semicolon
+  while (current.has_value()) {
+    if (manifest_set.count(std::string(current.value())) > 0) {
+      return true;
+    }
+    current = strip_one_inner_class(current.value());
+  }
+  return false;
 }
 
 std::vector<std::pair<ParameterPosition, const DexType*>>
