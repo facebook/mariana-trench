@@ -446,7 +446,7 @@ LifecycleMethodCall::get_dex_method(const DexClass* klass) const {
     return nullptr;
   }
 
-  return resolve_method(
+  return resolve_method_deprecated(
       /* type */ klass,
       /* name */ DexString::make_string(method_name_),
       /* proto */

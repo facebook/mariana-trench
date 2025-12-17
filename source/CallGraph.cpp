@@ -67,7 +67,7 @@ const DexMethod* MT_NULLABLE resolve_call(
     case OPCODE_INVOKE_STATIC:
     case OPCODE_INVOKE_SUPER: {
       // No need to consider the runtime type.
-      method = resolve_method(
+      method = resolve_method_deprecated(
           dex_method_reference,
           opcode_to_search(instruction->opcode()),
           caller->dex_method());
@@ -79,9 +79,10 @@ const DexMethod* MT_NULLABLE resolve_call(
       const DexType* type = types.receiver_type(caller, instruction);
       const DexClass* klass = type ? type_class(type) : nullptr;
       if (!klass) {
-        method = resolve_method(dex_method_reference, MethodSearch::Virtual);
+        method = resolve_method_deprecated(
+            dex_method_reference, MethodSearch::Virtual);
       } else {
-        method = resolve_method(
+        method = resolve_method_deprecated(
             klass,
             dex_method_reference->get_name(),
             dex_method_reference->get_proto(),
@@ -90,7 +91,7 @@ const DexMethod* MT_NULLABLE resolve_call(
 
       if (!method) {
         // `MethodSearch::Virtual` returns null for interface methods.
-        method = resolve_method(
+        method = resolve_method_deprecated(
             dex_method_reference, MethodSearch::InterfaceVirtual);
       }
       break;
@@ -354,7 +355,7 @@ void process_shim_target(
     receiver_type = method_spec.cls;
   }
 
-  const auto* dex_method = resolve_method(
+  const auto* dex_method = resolve_method_deprecated(
       type_class(receiver_type),
       method_spec.name,
       method_spec.proto,
@@ -437,7 +438,7 @@ void process_shim_reflection(
     return;
   }
 
-  auto dex_reflection_method = resolve_method(
+  auto dex_reflection_method = resolve_method_deprecated(
       type_class(reflection_type),
       method_spec.name,
       method_spec.proto,

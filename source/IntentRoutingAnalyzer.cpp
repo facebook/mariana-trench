@@ -99,7 +99,7 @@ class Transfer final : public InstructionAnalyzerBase<
       InstructionsToRoutedIntents* /* current_state */) {
     LOG_OR_DUMP(context, 4, "Analyzing instruction: {}", show(instruction));
     DexMethodRef* dex_method_reference = instruction->get_method();
-    auto method = resolve_method(
+    auto method = resolve_method_deprecated(
         dex_method_reference,
         opcode_to_search(instruction->opcode()),
         context->method()->dex_method());
