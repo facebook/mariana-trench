@@ -1030,12 +1030,9 @@ def main() -> None:
                     LOG.warning(" Extra argument is unknown. Skipping...")
 
         if arguments.system_jar_configuration_path is None:
-            default_system_jar_configuration_path = _system_jar_configuration_path(
+            arguments.system_jar_configuration_path = _system_jar_configuration_path(
                 # pyre-fixme[16]: Module `shim` has no attribute `configuration`.
                 os.fspath(configuration.get_path("default_system_jar_paths.json"))
-            )
-            LOG.warning(
-                f"--system-jar-configuration-path was not specified. Consider specifying {default_system_jar_configuration_path}"
             )
 
         if arguments.rules_paths is None:
@@ -1063,6 +1060,11 @@ def main() -> None:
             arguments.shims_paths = _separated_paths_exist(
                 # pyre-fixme[16]: Module `shim` has no attribute `configuration`.
                 os.fspath(configuration.get_path("shims.json"))
+            )
+        if arguments.heuristics is None:
+            arguments.heuristics = _heuristics_json_config_exists(
+                # pyre-fixme[16]: Module `shim` has no attribute `configuration`.
+                os.fspath(configuration.get_path("heuristics.json"))
             )
 
         if (
