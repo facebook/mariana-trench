@@ -10,6 +10,7 @@
 #include <DexAccess.h>
 #include <DexUtil.h>
 #include <Show.h>
+#include <TypeUtil.h>
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/Heuristics.h>
