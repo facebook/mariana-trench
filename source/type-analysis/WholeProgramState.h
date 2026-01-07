@@ -14,6 +14,7 @@
 #include <CallGraph.h>
 #include <ConcurrentContainers.h>
 #include <InstructionAnalyzer.h>
+#include <MethodUtil.h>
 #include <Trace.h>
 
 #include <mariana-trench/type-analysis/DexTypeEnvironment.h>

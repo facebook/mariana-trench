@@ -10,6 +10,7 @@
 #include <sparta/WorkQueue.h>
 
 #include <DexUtil.h>
+#include <MethodUtil.h>
 
 #include <mariana-trench/FrameType.h>
 #include <mariana-trench/Highlights.h>

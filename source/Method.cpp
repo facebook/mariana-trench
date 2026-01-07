@@ -9,6 +9,7 @@
 
 #include <DexAccess.h>
 #include <DexUtil.h>
+#include <MethodUtil.h>
 #include <Show.h>
 #include <TypeUtil.h>
 
