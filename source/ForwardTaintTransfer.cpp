@@ -679,6 +679,9 @@ void check_partially_fulfilled_exploitability_rules(
   if (exploitability_sources.is_bottom()) {
     // If an exploitability rule cannot be fulfilled, pass it to backwards
     // analysis to propagate the source-as-transform sinks.
+    // Add extra features (e.g., via-intent-routing) to the sink taint.
+    transformed_sink_with_extra_trace.add_locally_inferred_features(
+        extra_features);
     context->partially_fulfilled_exploitability_state
         .add_source_as_transform_sinks(
             instruction, transformed_sink_with_extra_trace);
@@ -1200,12 +1203,22 @@ void check_artificial_calls_effect_flows(
       continue;
     }
 
+    bool is_intent_routing_call =
+        callee.call_kind == CallTarget::CallKind::IntentRouting;
+
+    auto extra_features =
+        FeatureMayAlwaysSet::make_always(artificial_callee.features);
+
     for (const auto& [port, sinks] : callee_call_effect_sinks.elements()) {
       const auto& sources = caller_call_effect_sources.read(port);
       if (sources.is_bottom()) {
-        if (port.root().is_call_chain_exploitability()) {
+        if (port.root().is_call_chain_exploitability() &&
+            !is_intent_routing_call) {
           // If an exploitability rule cannot be fulfilled, pass it to backwards
           // analysis to propagate it.
+          //
+          // However, when the CallKind is IntentRouting, the exploitability
+          // chain should be reset, and should not be propagated.
           context->partially_fulfilled_exploitability_state
               .add_source_as_transform_sinks(instruction, sinks);
         }
@@ -1224,7 +1237,7 @@ void check_artificial_calls_effect_flows(
             /* sink_callee */
             get_sink_callee_for_artificial_call(
                 artificial_callee, original_sink_callee),
-            /* extra features */ {},
+            extra_features,
             /* fulfilled partial sinks */ nullptr);
       }
     }
