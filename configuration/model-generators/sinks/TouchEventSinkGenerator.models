@@ -4,8 +4,9 @@
       "find": "methods",
       "where": [
         {
-          "constraint": "signature_pattern",
-          "pattern": "Landroid/view/View\\$OnTouchListener;\\.onTouch:\\(Landroid/view/View;Landroid/view/MotionEvent;\\)Z"
+          "constraint": "signature_match",
+          "parent": "Landroid/view/View$OnTouchListener;",
+          "name": "onTouch"
         }
       ],
       "model": {

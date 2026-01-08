@@ -4,20 +4,12 @@
       "find": "methods",
       "where": [
         {
-          "constraint": "any_of",
-          "inners": [
-            {
-              "constraint": "signature_pattern",
-              "pattern": "Landroid/content/pm/PackageManager;\\.getInstalledPackages:\\(I\\)Ljava/util/List;"
-            },
-            {
-              "constraint": "signature_pattern",
-              "pattern": "Landroid/content/pm/PackageManager;\\.getInstalledApplications:\\(I\\)Ljava/util/List;"
-            },
-            {
-              "constraint": "signature_pattern",
-              "pattern": "Landroid/content/pm/PackageManager;\\.queryIntentActivities:\\(Landroid/content/Intent;I\\)Ljava/util/List;"
-            }
+          "constraint": "signature_match",
+          "parent": "Landroid/content/pm/PackageManager;",
+          "names": [
+            "getInstalledPackages",
+            "getInstalledApplications",
+            "queryIntentActivities"
           ]
         }
       ],
