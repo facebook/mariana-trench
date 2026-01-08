@@ -7,6 +7,13 @@
           "constraint": "signature_match",
           "parent": "Lokhttp3/OkHttpClient$Builder;",
           "name": "<init>"
+        },
+        {
+          "constraint": "number_parameters",
+          "inner": {
+            "constraint": "==",
+            "value": 1
+          }
         }
       ],
       "model": {
