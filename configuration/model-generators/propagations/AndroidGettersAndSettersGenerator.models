@@ -84,7 +84,7 @@
           "parents": [
             "Ljava/util/Set;",
             "Ljava/util/List;",
-            "Ljava/util/ArrayList",
+            "Ljava/util/ArrayList;",
             "Ljava/util/HashSet;",
             "Ljava/util/AbstractSequentialList;",
             "Ljava/lang/Iterable;"
