@@ -495,4 +495,37 @@ TEST_F(TypeConstraintTest, TypeConstraintFromJson) {
         })")),
       JsonValidationError);
   // IsInterfaceTypeConstraint
+
+  EXPECT_THROW(
+      TypeConstraint::from_json(
+          test::parse_json(
+              R"({
+          "constraint": "signature_match",
+          "parent": "Landroid/util/Log",
+          "name": "v",
+        })")),
+      std::invalid_argument);
+
+  EXPECT_THROW(
+      TypeConstraint::from_json(
+          test::parse_json(
+              R"({
+          "constraint": "signature_match",
+          "parent": "android/util/Log;",
+          "name": "v",
+        })")),
+      std::invalid_argument);
+
+  EXPECT_THROW(
+      TypeConstraint::from_json(
+          test::parse_json(
+              R"({
+          "constraint": "signature_match",
+          "parent": [
+            "Lfoo/bar/Baz;",
+            "Landroid/util/Log"
+          ],
+          "name": "v",
+        })")),
+      std::invalid_argument);
 }

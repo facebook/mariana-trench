@@ -54,7 +54,12 @@ bool TypePatternConstraint::operator==(const TypeConstraint& other) const {
 }
 
 TypeNameConstraint::TypeNameConstraint(std::string name)
-    : name_(std::move(name)) {}
+    : name_(std::move(name)) {
+  if (!name_.starts_with('L') || !name_.ends_with(';')) {
+    throw std::invalid_argument(
+        "Invalid class name in TypeNameConstraint: \"" + name_ + "\"\n");
+  }
+}
 
 MethodHashedSet TypeNameConstraint::may_satisfy(
     const MethodMappings& method_mappings,
