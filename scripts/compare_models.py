@@ -105,9 +105,9 @@ if __name__ == "__main__":
     path_2 = Path(arguments.second)
     directories: bool = arguments.directories
     if directories:
-        assert (
-            path_1.is_dir() and path_2.is_dir()
-        ), "Both paths must be directories if --directories(-d) flag is specified"
+        assert path_1.is_dir() and path_2.is_dir(), (
+            "Both paths must be directories if --directories(-d) flag is specified"
+        )
 
         for model_file in list(path_1.glob("*.json")):
             process_file(model_file)
