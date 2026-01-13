@@ -17,6 +17,7 @@
 #include <mariana-trench/Context.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Kind.h>
+#include <mariana-trench/MultiCaseRule.h>
 #include <mariana-trench/MultiSourceMultiSinkRule.h>
 #include <mariana-trench/PartialKind.h>
 #include <mariana-trench/Rule.h>
@@ -38,14 +39,10 @@ class Rules final {
           std::vector<const MultiSourceMultiSinkRule*>>>;
   using SourceSinkExploitabilityRulesMap = std::unordered_map<
       const Kind*,
-      std::unordered_map<
-          const Kind*,
-          std::vector<const SourceSinkWithExploitabilityRule*>>>;
+      std::unordered_map<const Kind*, std::vector<const Rule*>>>;
   using EffectSourceSinkExploitabilityRulesMap = std::unordered_map<
       const Kind*,
-      std::unordered_map<
-          const TransformKind*,
-          std::vector<const SourceSinkWithExploitabilityRule*>>>;
+      std::unordered_map<const TransformKind*, std::vector<const Rule*>>>;
 
  private:
   struct ExposeRulePointer {
@@ -91,6 +88,13 @@ class Rules final {
   /* This is NOT thread-safe. */
   void add(Context& context, std::unique_ptr<Rule> rule);
 
+ private:
+  void add_internal(
+      Context& context,
+      const Rule* rule,
+      const Rule* MT_NULLABLE register_as_rule = nullptr);
+
+ public:
   /**
    * Return the set of rules matching the given source kind and sink kind.
    * Satisfying these rules should result in the creation of an issue (this
@@ -118,8 +122,7 @@ class Rules final {
    * responsibility of the caller to create the corresponding
    * source-as-transform sinks.
    */
-  const std::vector<const SourceSinkWithExploitabilityRule*>&
-  partially_fulfilled_exploitability_rules(
+  const std::vector<const Rule*>& partially_fulfilled_exploitability_rules(
       const Kind* source_kind,
       const Kind* sink_kind) const;
 
@@ -132,8 +135,7 @@ class Rules final {
    * partially fulfulled. It is the responsibility of the caller to create an
    * issue.
    */
-  const std::vector<const SourceSinkWithExploitabilityRule*>&
-  fulfilled_exploitability_rules(
+  const std::vector<const Rule*>& fulfilled_exploitability_rules(
       const Kind* source_kind,
       const TransformKind* source_as_transform_sinks) const;
 
@@ -180,8 +182,7 @@ class Rules final {
   SourcePartialSinkRulesMap source_to_partial_sink_to_rules_;
   std::vector<const Rule*> empty_rule_set_;
   std::vector<const MultiSourceMultiSinkRule*> empty_multi_source_rule_set_;
-  std::vector<const SourceSinkWithExploitabilityRule*>
-      empty_exploitability_rule_set_;
+  std::vector<const Rule*> empty_exploitability_rule_set_;
 };
 
 } // namespace marianatrench

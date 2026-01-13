@@ -103,6 +103,11 @@ class JsonValidation final {
   static void check_unexpected_members(
       const Json::Value& value,
       const std::unordered_set<std::string>& valid_members);
+
+  /* Error if invalid members present in a json object. */
+  static void check_invalid_members(
+      const Json::Value& value,
+      const std::unordered_set<std::string>& invalid_members);
 };
 
 } // namespace marianatrench

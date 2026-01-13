@@ -405,7 +405,7 @@ void Registry::dump_metadata(const std::filesystem::path& path) const {
 
   auto rules = Json::Value(Json::arrayValue);
   for (const auto* rule : *context_.rules) {
-    rules.append(rule->to_json());
+    rules.append(rule->to_json(/* include_metadata */ true));
   }
   value["rules"] = rules;
 

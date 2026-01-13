@@ -104,7 +104,15 @@ class Rule {
   static std::unique_ptr<Rule> from_json(
       const Json::Value& value,
       Context& context);
-  virtual Json::Value to_json() const;
+
+  static std::unique_ptr<Rule> from_json(
+      const std::string& name,
+      int code,
+      const std::string& description,
+      const Json::Value& value,
+      Context& context);
+
+  virtual Json::Value to_json(bool include_metadata) const;
 
  private:
   std::string name_;

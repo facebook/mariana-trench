@@ -95,8 +95,8 @@ std::unique_ptr<Rule> SourceSinkRule::from_json(
       name, code, description, source_kinds, sink_kinds, transforms);
 }
 
-Json::Value SourceSinkRule::to_json() const {
-  auto value = Rule::to_json();
+Json::Value SourceSinkRule::to_json(bool include_metadata) const {
+  auto value = Rule::to_json(include_metadata);
   auto source_kinds_value = Json::Value(Json::arrayValue);
   for (const auto* source_kind : source_kinds_) {
     source_kinds_value.append(source_kind->to_json());

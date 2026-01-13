@@ -327,4 +327,29 @@ void JsonValidation::check_unexpected_members(
   }
 }
 
+void JsonValidation::check_invalid_members(
+    const Json::Value& value,
+    const std::unordered_set<std::string>& invalid_members) {
+  validate_object(value);
+
+  for (const std::string& member : value.getMemberNames()) {
+    if (invalid_members.find(member) != invalid_members.end()) {
+      throw JsonValidationError(
+          value,
+          /* field */ std::nullopt,
+          /* expected */
+          fmt::format(
+              "none of fields {}, got `{}`",
+              fmt::join(
+                  boost::adaptors::transform(
+                      invalid_members,
+                      [](const std::string& member) {
+                        return fmt::format("`{}`", member);
+                      }),
+                  ", "),
+              member));
+    }
+  }
+}
+
 } // namespace marianatrench

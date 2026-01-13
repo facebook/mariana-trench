@@ -151,8 +151,8 @@ std::unique_ptr<Rule> MultiSourceMultiSinkRule::from_json(
       name, code, description, multi_source_kinds, partial_sink_kinds);
 }
 
-Json::Value MultiSourceMultiSinkRule::to_json() const {
-  auto value = Rule::to_json();
+Json::Value MultiSourceMultiSinkRule::to_json(bool include_metadata) const {
+  auto value = Rule::to_json(include_metadata);
   auto multi_sources_value = Json::Value(Json::objectValue);
   for (const auto& [label, source_kinds] : multi_source_kinds_) {
     auto source_kinds_value = Json::Value(Json::arrayValue);

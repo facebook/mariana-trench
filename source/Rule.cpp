@@ -7,6 +7,7 @@
 
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/KindFactory.h>
+#include <mariana-trench/MultiCaseRule.h>
 #include <mariana-trench/MultiSourceMultiSinkRule.h>
 #include <mariana-trench/Rule.h>
 #include <mariana-trench/SourceSinkRule.h>
@@ -23,8 +24,19 @@ std::unique_ptr<Rule> Rule::from_json(
   int code = JsonValidation::integer(value, /* field */ "code");
   auto description = JsonValidation::string(value, /* field */ "description");
 
+  return Rule::from_json(name, code, description, value, context);
+}
+
+std::unique_ptr<Rule> Rule::from_json(
+    const std::string& name,
+    int code,
+    const std::string& description,
+    const Json::Value& value,
+    Context& context) {
   // This uses the presence of specific keys to determine the rule kind.
-  if (value.isMember("effect_sources")) {
+  if (value.isMember("cases")) {
+    return MultiCaseRule::from_json(name, code, description, value, context);
+  } else if (value.isMember("effect_sources")) {
     return SourceSinkWithExploitabilityRule::from_json(
         name, code, description, value, context);
   } else if (value.isMember("sources") && value.isMember("sinks")) {
@@ -37,12 +49,17 @@ std::unique_ptr<Rule> Rule::from_json(
     throw JsonValidationError(
         value,
         std::nullopt,
-        "keys: sources+[transforms+]sinks or multi_sources+partial_sinks or effect_sources+sources+sinks");
+        "keys: sources+[transforms+]sinks or multi_sources+partial_sinks or effect_sources+sources+sinks or cases");
   }
 }
 
-Json::Value Rule::to_json() const {
+Json::Value Rule::to_json(bool include_metadata) const {
   auto value = Json::Value(Json::objectValue);
+
+  if (!include_metadata) {
+    return value;
+  }
+
   value["name"] = name_;
   value["code"] = Json::Value(code_);
   value["description"] = description_;

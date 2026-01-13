@@ -70,7 +70,7 @@ class MultiSourceMultiSinkRule final : public Rule {
       const std::string& description,
       const Json::Value& value,
       Context& context);
-  Json::Value to_json() const override;
+  Json::Value to_json(bool include_metadata) const override;
 
  private:
   MultiSourceKindsByLabel multi_source_kinds_;

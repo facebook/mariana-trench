@@ -11,6 +11,7 @@
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/KindFactory.h>
 #include <mariana-trench/Log.h>
+#include <mariana-trench/MultiCaseRule.h>
 #include <mariana-trench/MultiSourceMultiSinkRule.h>
 #include <mariana-trench/Options.h>
 #include <mariana-trench/Rules.h>
@@ -56,8 +57,10 @@ void Rules::add(Context& context, std::unique_ptr<Rule> rule) {
         1,
         "A rule for code {} already exists! Duplicate rules are:\n{}\n{}",
         rule->code(),
-        JsonWriter::to_styled_string(rule->to_json()),
-        JsonWriter::to_styled_string(existing->second->to_json()));
+        JsonWriter::to_styled_string(
+            rule->to_json(/* include_metadata */ true)),
+        JsonWriter::to_styled_string(
+            existing->second->to_json(/* include_metadata */ true)));
     return;
   }
 
@@ -65,13 +68,23 @@ void Rules::add(Context& context, std::unique_ptr<Rule> rule) {
   auto result = rules_.emplace(code, std::move(rule));
   const Rule* rule_pointer = result.first->second.get();
 
-  if (auto* source_sink_rule = rule_pointer->as<SourceSinkRule>()) {
+  add_internal(context, rule_pointer);
+}
+
+void Rules::add_internal(
+    Context& context,
+    const Rule* rule,
+    const Rule* register_as_rule) {
+  const Rule* rule_to_register =
+      register_as_rule != nullptr ? register_as_rule : rule;
+
+  if (auto* source_sink_rule = rule->as<SourceSinkRule>()) {
     for (const auto* source_kind : source_sink_rule->source_kinds()) {
       for (const auto* sink_kind : source_sink_rule->sink_kinds()) {
         const auto* transforms = source_sink_rule->transform_kinds();
         if (transforms == nullptr) {
           source_to_sink_to_rules_[source_kind][sink_kind].push_back(
-              rule_pointer);
+              rule_to_register);
           continue;
         }
 
@@ -81,12 +94,11 @@ void Rules::add(Context& context, std::unique_ptr<Rule> rule) {
             /* global transforms */ nullptr);
 
         source_to_sink_to_rules_[source_kind][sink_transform_kind].push_back(
-            rule_pointer);
+            rule_to_register);
       }
     }
   } else if (
-      const auto* multi_source_rule =
-          rule_pointer->as<MultiSourceMultiSinkRule>()) {
+      const auto* multi_source_rule = rule->as<MultiSourceMultiSinkRule>()) {
     // Consider the rule:
     //   Code: 1000
     //   Sources: { lblA: [SourceA], lblB: [SourceB] }
@@ -123,18 +135,18 @@ void Rules::add(Context& context, std::unique_ptr<Rule> rule) {
           source_to_partial_sink_to_rules_[source_kind][sink_kind].push_back(
               multi_source_rule);
           source_to_sink_to_rules_[source_kind][triggered].push_back(
-              multi_source_rule);
+              rule_to_register);
         }
       }
     }
   } else if (
       const auto* exploitability_rule =
-          rule_pointer->as<SourceSinkWithExploitabilityRule>()) {
+          rule->as<SourceSinkWithExploitabilityRule>()) {
     for (const auto* source_kind : exploitability_rule->source_kinds()) {
       for (const auto* sink_kind : exploitability_rule->sink_kinds()) {
         // Create normal source to sink rule for initial matching.
         source_to_sink_to_exploitability_rules_[source_kind][sink_kind]
-            .push_back(exploitability_rule);
+            .push_back(rule_to_register);
 
         // Create rule for effect-source to sink as a transform kind with
         // source-as-transform local transforms for final matching.
@@ -149,11 +161,17 @@ void Rules::add(Context& context, std::unique_ptr<Rule> rule) {
              exploitability_rule->effect_source_kinds()) {
           effect_source_to_sink_to_exploitability_rules_
               [effect_source_kind][source_as_transform_sink_kind]
-                  .push_back(exploitability_rule);
+                  .push_back(rule_to_register);
         }
       }
     }
-
+  } else if (const auto* multi_case_rule = rule->as<MultiCaseRule>()) {
+    // MultiCaseRule contains multiple cases, each of which is a valid
+    // rule with source/sink/transform combinations.
+    // We register each case as the multi_case_rule.
+    for (const auto& rule_case : multi_case_rule->cases()) {
+      add_internal(context, rule_case.get(), multi_case_rule);
+    }
   } else {
     // Unreachable code. Did we add a new type of rule?
     mt_unreachable();
@@ -254,8 +272,7 @@ const std::vector<const Rule*>& Rules::rules(
   return rules->second;
 }
 
-const std::vector<const SourceSinkWithExploitabilityRule*>&
-Rules::partially_fulfilled_exploitability_rules(
+const std::vector<const Rule*>& Rules::partially_fulfilled_exploitability_rules(
     const Kind* source_kind,
     const Kind* sink_kind) const {
   LOG(4,
@@ -289,8 +306,7 @@ Rules::partially_fulfilled_exploitability_rules(
   return rules->second;
 }
 
-const std::vector<const SourceSinkWithExploitabilityRule*>&
-Rules::fulfilled_exploitability_rules(
+const std::vector<const Rule*>& Rules::fulfilled_exploitability_rules(
     const Kind* effect_source_kind,
     const TransformKind* source_as_transform_sink_kind) const {
   LOG(4,

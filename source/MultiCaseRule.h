@@ -8,8 +8,7 @@
 #pragma once
 
 #include <string>
-#include <unordered_map>
-#include <unordered_set>
+#include <vector>
 
 #include <json/json.h>
 
@@ -23,38 +22,40 @@
 namespace marianatrench {
 
 /**
- * Represents the typical source -> sink rule
- * e.g. UserControlled -> LaunchIntent
- * Optionally, transforms can be specified as a part of the rule which specifies
- * an ordered list of transform kinds that the source and/or sink goes through.
- * e.g. UserControlled -> T1 -> ... Tn -> LaunchIntent
+ * Represents a rule that combines distinct rules, each identifying a
+ * different flow, into a single issue code.
+ *
+ * Example JSON format:
+ * {
+ *   "name": "My Rule",
+ *   "code": 4001,
+ *   "description": "Description",
+ *   "cases": [
+ *     {
+ *       "sources": ["SourceA"],
+ *       "sinks": ["SinkX", "SinkY"],
+ *       "transforms": ["T1"]
+ *     },
+ *     {
+ *       "sources": ["SourceB"],
+ *       "sinks": ["SinkZ"]
+ *     }
+ *   ]
+ * }
  */
-class SourceSinkRule final : public Rule {
+class MultiCaseRule final : public Rule {
  public:
-  SourceSinkRule(
+  MultiCaseRule(
       const std::string& name,
       int code,
       const std::string& description,
-      const KindSet& source_kinds,
-      const KindSet& sink_kinds,
-      const TransformList* transforms)
-      : Rule(name, code, description),
-        source_kinds_(source_kinds),
-        sink_kinds_(sink_kinds),
-        transforms_(transforms) {}
+      std::vector<std::unique_ptr<Rule>> cases)
+      : Rule(name, code, description), cases_(std::move(cases)) {}
 
-  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(SourceSinkRule)
+  DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(MultiCaseRule)
 
-  const KindSet& source_kinds() const {
-    return source_kinds_;
-  }
-
-  const KindSet& sink_kinds() const {
-    return sink_kinds_;
-  }
-
-  const TransformList* MT_NULLABLE transform_kinds() const {
-    return transforms_;
+  const std::vector<std::unique_ptr<Rule>>& cases() const {
+    return cases_;
   }
 
   bool uses(const Kind*) const override;
@@ -73,9 +74,7 @@ class SourceSinkRule final : public Rule {
   Json::Value to_json(bool include_metadata) const override;
 
  private:
-  KindSet source_kinds_;
-  KindSet sink_kinds_;
-  const TransformList* MT_NULLABLE transforms_;
+  std::vector<std::unique_ptr<Rule>> cases_;
 };
 
 } // namespace marianatrench
