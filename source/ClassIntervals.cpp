@@ -12,6 +12,7 @@
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/ClassIntervals.h>
+#include <mariana-trench/Debug.h>
 #include <mariana-trench/JsonReaderWriter.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
@@ -53,7 +54,8 @@ void dfs_on_hierarchy(
 ClassIntervals::ClassIntervalsMap read_class_intervals(
     const std::filesystem::path& class_intervals_file) {
   if (!std::filesystem::exists(class_intervals_file)) {
-    throw std::runtime_error("Class intervals file must exist.");
+    throw exception_with_backtrace<std::runtime_error>(
+        "Class intervals file must exist.");
   }
 
   LOG(1, "Reading class intervals from `{}`", class_intervals_file.native());

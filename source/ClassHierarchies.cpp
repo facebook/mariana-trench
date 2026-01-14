@@ -10,6 +10,7 @@
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/ClassHierarchies.h>
+#include <mariana-trench/Debug.h>
 #include <mariana-trench/JsonReaderWriter.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
@@ -145,7 +146,7 @@ namespace {
 ClassHierarchies::MapType read_class_hierarchies(
     const std::filesystem::path& class_hierarchies_file) {
   if (!std::filesystem::exists(class_hierarchies_file)) {
-    throw std::runtime_error(
+    throw exception_with_backtrace<std::runtime_error>(
         "Class hierarchies file must exist when sharded input models are provided.");
   }
 

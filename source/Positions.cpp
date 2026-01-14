@@ -26,6 +26,7 @@
 #include <Walkers.h>
 
 #include <mariana-trench/Assert.h>
+#include <mariana-trench/Debug.h>
 #include <mariana-trench/Filesystem.h>
 #include <mariana-trench/JsonReaderWriter.h>
 #include <mariana-trench/JsonValidation.h>
@@ -461,7 +462,7 @@ std::string Positions::execute_and_catch_output(
   std::unique_ptr<FILE, decltype(pclose_wrapper)> pipe(
       popen(command.c_str(), "r"), pclose_wrapper);
   if (!pipe) {
-    throw std::runtime_error(
+    throw exception_with_backtrace<std::runtime_error>(
         fmt::format("Unable to open pipe to command `{}`.", command));
   }
   std::array<char, 128> buffer;

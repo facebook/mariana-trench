@@ -16,6 +16,7 @@
 #include <Walkers.h>
 
 #include <mariana-trench/AccessPathFactory.h>
+#include <mariana-trench/Debug.h>
 #include <mariana-trench/FeatureFactory.h>
 #include <mariana-trench/Fields.h>
 #include <mariana-trench/Log.h>
@@ -294,7 +295,7 @@ void static verify_parameter_position(
       error.append(fmt::format("argument size is {}", argument_size));
     }
     error.append(fmt::format(", parameter position is {}", parameter_position));
-    throw std::invalid_argument(error);
+    throw exception_with_backtrace<std::invalid_argument>(error);
   }
 }
 

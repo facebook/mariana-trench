@@ -18,6 +18,7 @@
 #include <mariana-trench/BackwardTaintTransfer.h>
 #include <mariana-trench/ClassProperties.h>
 #include <mariana-trench/Context.h>
+#include <mariana-trench/Debug.h>
 #include <mariana-trench/Dependencies.h>
 #include <mariana-trench/EventLogger.h>
 #include <mariana-trench/FeatureFactory.h>
@@ -60,21 +61,18 @@ Model analyze(
 
   auto* code = method->get_code();
   if (!code) {
-    throw std::runtime_error(
-        fmt::format(
-            "Attempting to analyze method `{}` with no code!", method->show()));
+    throw exception_with_backtrace<std::runtime_error>(fmt::format(
+        "Attempting to analyze method `{}` with no code!", method->show()));
   }
   if (!code->cfg_built()) {
-    throw std::runtime_error(
-        fmt::format(
-            "Attempting to analyze method `{}` with no control flow graph!",
-            method->show()));
+    throw exception_with_backtrace<std::runtime_error>(fmt::format(
+        "Attempting to analyze method `{}` with no control flow graph!",
+        method->show()));
   }
   if (code->cfg().exit_block() == nullptr) {
-    throw std::runtime_error(
-        fmt::format(
-            "Attempting to analyze control flow graph for `{}` with no exit block!",
-            method->show()));
+    throw exception_with_backtrace<std::runtime_error>(fmt::format(
+        "Attempting to analyze control flow graph for `{}` with no exit block!",
+        method->show()));
   }
 
   LOG_OR_DUMP(
@@ -246,7 +244,8 @@ void Interprocedural::run_analysis(Context& context, Registry& registry) {
         message.append(fmt::format("\n`{}`", method->show()));
       }
       LOG(1, message);
-      throw std::runtime_error("Too many iterations, exiting.");
+      throw exception_with_backtrace<std::runtime_error>(
+          "Too many iterations, exiting.");
     }
 
     auto new_methods_to_analyze =

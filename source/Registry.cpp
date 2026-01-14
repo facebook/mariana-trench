@@ -19,6 +19,7 @@
 
 #include <mariana-trench/ArtificialMethods.h>
 #include <mariana-trench/Constants.h>
+#include <mariana-trench/Debug.h>
 #include <mariana-trench/JsonReaderWriter.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
@@ -247,10 +248,9 @@ Registry Registry::load(
     case AnalysisMode::CachedModels: {
       auto sharded_models_directory = options.sharded_models_directory();
       if (!sharded_models_directory.has_value()) {
-        throw std::runtime_error(
-            fmt::format(
-                "Analysis mode `{}` requires sharded models to be provided.",
-                analysis_mode_to_string(analysis_mode)));
+        throw exception_with_backtrace<std::runtime_error>(fmt::format(
+            "Analysis mode `{}` requires sharded models to be provided.",
+            analysis_mode_to_string(analysis_mode)));
       }
       auto cached_registry =
           from_sharded_models(context, *sharded_models_directory);
@@ -264,10 +264,9 @@ Registry Registry::load(
     case AnalysisMode::Replay: {
       auto sharded_models_directory = options.sharded_models_directory();
       if (!sharded_models_directory.has_value()) {
-        throw std::runtime_error(
-            fmt::format(
-                "Analysis mode `{}` requires sharded models to be provided.",
-                analysis_mode_to_string(analysis_mode)));
+        throw exception_with_backtrace<std::runtime_error>(fmt::format(
+            "Analysis mode `{}` requires sharded models to be provided.",
+            analysis_mode_to_string(analysis_mode)));
       }
       return from_sharded_models(context, *sharded_models_directory);
     }
@@ -294,21 +293,22 @@ bool Registry::has_model(const Method* method) const {
 
 Model Registry::get(const Method* method) const {
   if (!method) {
-    throw std::runtime_error("Trying to get model for the `null` method");
+    throw exception_with_backtrace<std::runtime_error>(
+        "Trying to get model for the `null` method");
   }
 
   try {
     return models_.at(method);
   } catch (const std::out_of_range&) {
-    throw std::runtime_error(
-        fmt::format(
-            "Trying to get model for untracked method `{}`.", method->show()));
+    throw exception_with_backtrace<std::runtime_error>(fmt::format(
+        "Trying to get model for untracked method `{}`.", method->show()));
   }
 }
 
 FieldModel Registry::get(const Field* field) const {
   if (!field) {
-    throw std::runtime_error("Trying to get model for the `null` field");
+    throw exception_with_backtrace<std::runtime_error>(
+        "Trying to get model for the `null` field");
   }
 
   return field_models_.get(field, FieldModel(field));

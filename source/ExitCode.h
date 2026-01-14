@@ -9,6 +9,7 @@
 
 #include <iostream>
 
+#include <mariana-trench/Debug.h>
 #include <mariana-trench/EventLogger.h>
 
 class ExitCode {
@@ -29,6 +30,12 @@ class ExitCode {
     std::cerr << "MarianaTrench " << #NAME << ": " << message << std::endl; \
     marianatrench::EventLogger::log_event(#NAME, message, 1);               \
     return NAME();                                                          \
+  }                                                                         \
+                                                                            \
+  static int NAME(const std::exception& exception) {                        \
+    int code = NAME(exception.what());                                      \
+    marianatrench::print_exception_backtrace(std::cerr, exception);         \
+    return code;                                                            \
   }
 #include "ExitCodes.def"
 #undef EXITCODE

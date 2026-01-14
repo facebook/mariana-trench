@@ -13,6 +13,7 @@
 #include <Walkers.h>
 
 #include <mariana-trench/Assert.h>
+#include <mariana-trench/Debug.h>
 #include <mariana-trench/JsonReaderWriter.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
@@ -135,7 +136,7 @@ Overrides::MapType read_overrides(
     const std::filesystem::path& overrides_file,
     Methods& methods) {
   if (!std::filesystem::exists(overrides_file)) {
-    throw std::runtime_error(
+    throw exception_with_backtrace<std::runtime_error>(
         "Overrides file must exist when sharded input models are provided.");
   }
 

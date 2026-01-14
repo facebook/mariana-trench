@@ -17,6 +17,7 @@
 #include <DebugUtils.h>
 #include <RedexContext.h>
 
+#include <mariana-trench/Debug.h>
 #include <mariana-trench/ExitCode.h>
 #include <mariana-trench/GlobalRedexContext.h>
 #include <mariana-trench/JsonReaderWriter.h>
@@ -75,21 +76,21 @@ int main(int argc, char* argv[]) {
     }
     return ExitCode::redex_error(aggregate_exception.what());
   } catch (const marianatrench::ModelGeneratorError& exception) {
-    return ExitCode::model_generator_error(exception.what());
+    return ExitCode::model_generator_error(exception);
   } catch (const marianatrench::LifecycleMethodsJsonError& exception) {
-    return ExitCode::lifecycle_error(exception.what());
+    return ExitCode::lifecycle_error(exception);
   } catch (const marianatrench::LifecycleMethodValidationError& exception) {
-    return ExitCode::lifecycle_error(exception.what());
+    return ExitCode::lifecycle_error(exception);
   } catch (const marianatrench::ShimGeneratorError& exception) {
-    return ExitCode::shim_generator_error(exception.what());
+    return ExitCode::shim_generator_error(exception);
   } catch (const std::invalid_argument& exception) {
-    return ExitCode::invalid_argument_error(exception.what());
+    return ExitCode::invalid_argument_error(exception);
   } catch (const std::runtime_error& exception) {
-    return ExitCode::mariana_trench_error(exception.what());
+    return ExitCode::mariana_trench_error(exception);
   } catch (const std::logic_error& exception) {
-    return ExitCode::mariana_trench_error(exception.what());
+    return ExitCode::mariana_trench_error(exception);
   } catch (const std::exception& exception) {
-    return ExitCode::error(exception.what());
+    return ExitCode::error(exception);
   }
 
   return ExitCode::success();

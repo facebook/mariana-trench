@@ -13,6 +13,7 @@
 #include <Walkers.h>
 
 #include <mariana-trench/Assert.h>
+#include <mariana-trench/Debug.h>
 #include <mariana-trench/Fields.h>
 
 namespace marianatrench {
@@ -28,7 +29,7 @@ const Field* Fields::get(const DexField* field) const {
   mt_assert(field != nullptr);
   const auto* pointer = set_.get(Field(field));
   if (!pointer) {
-    throw std::logic_error(
+    throw exception_with_backtrace<std::logic_error>(
         fmt::format("Field `{}` does not exist in the context", Field(field)));
   }
   return pointer;

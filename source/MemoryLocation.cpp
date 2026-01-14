@@ -10,6 +10,7 @@
 #include <Show.h>
 
 #include <mariana-trench/Assert.h>
+#include <mariana-trench/Debug.h>
 #include <mariana-trench/MemoryLocation.h>
 
 namespace marianatrench {
@@ -163,7 +164,7 @@ ParameterMemoryLocation* MemoryFactory::make_parameter(
     ParameterPosition parameter_position) {
   static_assert(std::is_unsigned_v<ParameterPosition>);
   if (parameter_position >= parameters_.size()) {
-    throw std::out_of_range(
+    throw exception_with_backtrace<std::out_of_range>(
         "Accessing out of bounds parameter in memory factory.");
   }
 

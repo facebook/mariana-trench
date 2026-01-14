@@ -14,6 +14,7 @@
 
 #include <sparta/WorkQueue.h>
 
+#include <mariana-trench/Debug.h>
 #include <mariana-trench/JsonReaderWriter.h>
 #include <mariana-trench/Log.h>
 
@@ -27,7 +28,8 @@ Json::Value JsonReader::parse_json(std::string string) {
   Json::Value json;
 
   if (!Json::parseFromStream(reader, stream, &json, &errors)) {
-    throw std::invalid_argument(fmt::format("Invalid json: {}", errors));
+    throw exception_with_backtrace<std::invalid_argument>(
+        fmt::format("Invalid json: {}", errors));
   }
   return json;
 }
@@ -47,7 +49,7 @@ Json::Value JsonReader::parse_json_file(const std::filesystem::path& path) {
   Json::Value json;
 
   if (!Json::parseFromStream(reader, file, &json, &errors)) {
-    throw std::invalid_argument(
+    throw exception_with_backtrace<std::invalid_argument>(
         fmt::format("File `{}` is not valid json: {}", path.string(), errors));
   }
   return json;

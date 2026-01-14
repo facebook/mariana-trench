@@ -13,6 +13,7 @@
 #include <Walkers.h>
 
 #include <mariana-trench/Assert.h>
+#include <mariana-trench/Debug.h>
 #include <mariana-trench/Methods.h>
 #include <mariana-trench/Redex.h>
 
@@ -40,10 +41,9 @@ const Method* Methods::get(
   mt_assert(method != nullptr);
   const auto* pointer = set_.get(Method(method, parameter_type_overrides));
   if (!pointer) {
-    throw std::logic_error(
-        fmt::format(
-            "Method `{}` does not exist in the context",
-            Method(method, parameter_type_overrides)));
+    throw exception_with_backtrace<std::logic_error>(fmt::format(
+        "Method `{}` does not exist in the context",
+        Method(method, parameter_type_overrides)));
   }
   return pointer;
 }

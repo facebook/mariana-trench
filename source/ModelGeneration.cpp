@@ -13,6 +13,7 @@
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/Context.h>
+#include <mariana-trench/Debug.h>
 #include <mariana-trench/Dependencies.h>
 #include <mariana-trench/EventLogger.h>
 #include <mariana-trench/JsonReaderWriter.h>
@@ -110,10 +111,8 @@ ModelGeneration::make_model_generators(
         Json::Value json = JsonReader::parse_json_file(entry.path());
 
         if (!json.isObject()) {
-          throw ModelGeneratorError(
-              fmt::format(
-                  "Unable to parse `{}` as a valid models JSON.",
-                  entry.path()));
+          throw exception_with_backtrace<ModelGeneratorError>(fmt::format(
+              "Unable to parse `{}` as a valid models JSON.", entry.path()));
         }
 
         auto [_, inserted] = generators.emplace(
@@ -125,7 +124,7 @@ ModelGeneration::make_model_generators(
               "Duplicate model generator {} defined at {}",
               identifier,
               entry.path());
-          throw ModelGeneratorError(error);
+          throw exception_with_backtrace<ModelGeneratorError>(error);
         }
         LOG(3, "Found model generator `{}`", identifier);
       } catch (const JsonValidationError& e) {
@@ -195,10 +194,9 @@ ModelGeneratorResult ModelGeneration::run(
   }
 
   if (!nonexistent_model_generators.empty()) {
-    throw std::invalid_argument(
-        fmt::format(
-            "Model generator(s) {} either do not exist or couldn't be parsed.",
-            boost::algorithm::join(nonexistent_model_generators, ", ")));
+    throw exception_with_backtrace<std::invalid_argument>(fmt::format(
+        "Model generator(s) {} either do not exist or couldn't be parsed.",
+        boost::algorithm::join(nonexistent_model_generators, ", ")));
   }
 
   std::vector<Model> generated_models;

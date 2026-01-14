@@ -11,6 +11,7 @@
 
 #include <mariana-trench/AnalysisMode.h>
 #include <mariana-trench/Assert.h>
+#include <mariana-trench/Debug.h>
 
 namespace marianatrench {
 
@@ -23,10 +24,9 @@ AnalysisMode analysis_mode_from_string(std::string_view value) {
     return AnalysisMode::Replay;
   }
 
-  throw std::invalid_argument(
-      fmt::format(
-          "Invalid analysis mode: {}. Expected one of: normal|cached_models|replay",
-          value));
+  throw exception_with_backtrace<std::invalid_argument>(fmt::format(
+      "Invalid analysis mode: {}. Expected one of: normal|cached_models|replay",
+      value));
 }
 
 std::string analysis_mode_to_string(AnalysisMode mode) {

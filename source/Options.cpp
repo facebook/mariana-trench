@@ -10,6 +10,7 @@
 #include <boost/algorithm/string.hpp>
 #include <fmt/format.h>
 
+#include <mariana-trench/Debug.h>
 #include <mariana-trench/JsonReaderWriter.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
@@ -21,14 +22,15 @@ namespace {
 
 std::string check_path_exists(const std::string& path) {
   if (!std::filesystem::exists(path)) {
-    throw std::invalid_argument(fmt::format("File `{}` does not exist.", path));
+    throw exception_with_backtrace<std::invalid_argument>(
+        fmt::format("File `{}` does not exist.", path));
   }
   return path;
 }
 
 std::string check_directory_exists(const std::string& path) {
   if (!std::filesystem::is_directory(path)) {
-    throw std::invalid_argument(
+    throw exception_with_backtrace<std::invalid_argument>(
         fmt::format("Directory `{}` does not exist.", path));
   }
   return path;
@@ -57,7 +59,7 @@ std::vector<std::string> parse_paths_list(
       WARNING(2, "Argument path does not exist: `{}`", path);
       paths.push_back(path);
     } else {
-      throw std::invalid_argument(
+      throw exception_with_backtrace<std::invalid_argument>(
           fmt::format("File `{}` does not exist.", path));
     }
   }
@@ -70,7 +72,7 @@ std::vector<std::string> parse_search_paths(const std::string& input) {
 
   for (const auto& path : paths) {
     if (!std::filesystem::is_directory(path)) {
-      throw std::invalid_argument(
+      throw exception_with_backtrace<std::invalid_argument>(
           fmt::format("Directory `{}` does not exist.", path));
     }
   }

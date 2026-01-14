@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <mariana-trench/Debug.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Overrides.h>
 #include <mariana-trench/RE2.h>

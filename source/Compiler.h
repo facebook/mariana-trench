@@ -21,6 +21,9 @@
 #define MT_GNU_DISABLE_WARNING_INTERNAL2(warningName) #warningName
 #define MT_GNU_DISABLE_WARNING(warningName) \
   _Pragma(MT_GNU_DISABLE_WARNING_INTERNAL2(GCC diagnostic ignored warningName))
+// Use __attribute__ instead of [[gnu::always_inline]] to allow this macro to
+// appear in more places in the function declaration/definition.
+#define MT_ALWAYS_INLINE inline __attribute__((__always_inline__))
 #ifdef __clang__
 #define MT_CLANG_DISABLE_WARNING(warningName) \
   MT_GNU_DISABLE_WARNING(warningName)
@@ -38,6 +41,7 @@
 #define MT_CLANG_DISABLE_WARNING(warningName)
 #define MT_MSVC_DISABLE_WARNING(warningNumber) \
   __pragma(warning(disable : warningNumber))
+#define MT_ALWAYS_INLINE __forceinline
 #else
 #define MT_PUSH_WARNING
 #define MT_POP_WARNING
@@ -45,6 +49,7 @@
 #define MT_GCC_DISABLE_WARNING(warningName)
 #define MT_CLANG_DISABLE_WARNING(warningName)
 #define MT_MSVC_DISABLE_WARNING(warningNumber)
+#define MT_ALWAYS_INLINE inline
 #endif
 
 /**
