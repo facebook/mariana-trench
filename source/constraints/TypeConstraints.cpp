@@ -54,11 +54,18 @@ bool TypePatternConstraint::operator==(const TypeConstraint& other) const {
 }
 
 TypeNameConstraint::TypeNameConstraint(std::string name)
-    : name_(std::move(name)) {
-  if (!name_.starts_with('L') || !name_.ends_with(';')) {
-    throw std::invalid_argument(
-        "Invalid class name in TypeNameConstraint: \"" + name_ + "\"\n");
+    : name_(std::move(name)) {}
+
+std::unique_ptr<TypeNameConstraint> TypeNameConstraint::from_json(
+    const Json::Value& value) {
+  auto class_name = JsonValidation::string(value);
+  if (!class_name.starts_with("L") || !class_name.ends_with(";")) {
+    throw JsonValidationError(
+        value,
+        /* field */ std::nullopt,
+        "must be a valid class name (with pattern '^L.*;$')");
   }
+  return std::make_unique<TypeNameConstraint>(std::move(class_name));
 }
 
 MethodHashedSet TypeNameConstraint::may_satisfy(

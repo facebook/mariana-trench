@@ -165,13 +165,15 @@ TEST_F(TypeConstraintTest, IsEnumTypeConstraintSatisfy) {
 
 TEST_F(TypeConstraintTest, TypeConstraintFromJson) {
   // TypePatternConstraint
-  auto constraint = TypeConstraint::from_json(
-      test::parse_json(
-          R"({
+  {
+    auto constraint = TypeConstraint::from_json(
+        test::parse_json(
+            R"({
         "constraint": "name",
         "pattern": "Landroid/util/Log;"
       })"));
-  EXPECT_EQ(TypePatternConstraint("Landroid/util/Log;"), *constraint);
+    EXPECT_EQ(TypePatternConstraint("Landroid/util/Log;"), *constraint);
+  }
 
   EXPECT_THROW(
       TypeConstraint::from_json(
@@ -496,36 +498,19 @@ TEST_F(TypeConstraintTest, TypeConstraintFromJson) {
       JsonValidationError);
   // IsInterfaceTypeConstraint
 
-  EXPECT_THROW(
-      TypeConstraint::from_json(
-          test::parse_json(
-              R"({
-          "constraint": "signature_match",
-          "parent": "Landroid/util/Log",
-          "name": "v",
-        })")),
-      std::invalid_argument);
+  // TypeNameConstraint
+  {
+    auto constraint =
+        TypeNameConstraint::from_json(Json::Value("Landroid/util/Log;"));
+    EXPECT_EQ(TypeNameConstraint("Landroid/util/Log;"), *constraint);
+  }
 
   EXPECT_THROW(
-      TypeConstraint::from_json(
-          test::parse_json(
-              R"({
-          "constraint": "signature_match",
-          "parent": "android/util/Log;",
-          "name": "v",
-        })")),
-      std::invalid_argument);
+      TypeNameConstraint::from_json(Json::Value("Landroid/util/Log")),
+      JsonValidationError);
 
   EXPECT_THROW(
-      TypeConstraint::from_json(
-          test::parse_json(
-              R"({
-          "constraint": "signature_match",
-          "parent": [
-            "Lfoo/bar/Baz;",
-            "Landroid/util/Log"
-          ],
-          "name": "v",
-        })")),
-      std::invalid_argument);
+      TypeNameConstraint::from_json(Json::Value("android/util/Log;")),
+      JsonValidationError);
+  // TypeNameConstraint
 }

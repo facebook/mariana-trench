@@ -573,27 +573,15 @@ std::unique_ptr<MethodConstraint> signature_match_name_constraint(
 }
 
 std::unique_ptr<MethodConstraint> signature_match_parent_constraint(
-    std::string parent) {
-  return std::make_unique<ParentConstraint>(
-      std::make_unique<TypeNameConstraint>(parent));
-}
-
-std::unique_ptr<MethodConstraint> signature_match_parent_constraint(
     const Json::Value& parents) {
   std::vector<std::unique_ptr<MethodConstraint>> parent_name_constraints;
   for (const auto& parent : parents) {
     parent_name_constraints.push_back(
-        signature_match_parent_constraint(JsonValidation::string(parent)));
+        std::make_unique<ParentConstraint>(
+            TypeNameConstraint::from_json(parent)));
   }
   return std::make_unique<AnyOfMethodConstraint>(
       std::move(parent_name_constraints));
-}
-
-std::unique_ptr<MethodConstraint> signature_match_parent_extends_constraint(
-    std::string parent,
-    bool includes_self) {
-  return std::make_unique<ParentConstraint>(std::make_unique<ExtendsConstraint>(
-      std::make_unique<TypeNameConstraint>(parent), includes_self));
 }
 
 std::unique_ptr<MethodConstraint> signature_match_parent_extends_constraint(
@@ -602,8 +590,8 @@ std::unique_ptr<MethodConstraint> signature_match_parent_extends_constraint(
   std::vector<std::unique_ptr<MethodConstraint>> parent_extends_constraints;
   for (const auto& parent : parents) {
     parent_extends_constraints.push_back(
-        signature_match_parent_extends_constraint(
-            JsonValidation::string(parent), includes_self));
+        std::make_unique<ParentConstraint>(std::make_unique<ExtendsConstraint>(
+            TypeNameConstraint::from_json(parent), includes_self)));
   }
   return std::make_unique<AnyOfMethodConstraint>(
       std::move(parent_extends_constraints));
@@ -732,8 +720,9 @@ std::unique_ptr<MethodConstraint> MethodConstraint::from_json(
     }
     if (constraint.isMember("parent")) {
       parent_count++;
-      constraints.push_back(signature_match_parent_constraint(
-          JsonValidation::string(constraint, /* field */ "parent")));
+      constraints.push_back(
+          std::make_unique<ParentConstraint>(
+              TypeNameConstraint::from_json(constraint["parent"])));
     }
     if (constraint.isMember("parents")) {
       parent_count++;
@@ -747,9 +736,11 @@ std::unique_ptr<MethodConstraint> MethodConstraint::from_json(
           : true;
       const auto& extends_field = constraint["extends"];
       if (extends_field.isString()) {
-        constraints.push_back(signature_match_parent_extends_constraint(
-            JsonValidation::string(constraint, /* field */ "extends"),
-            includes_self));
+        constraints.push_back(
+            std::make_unique<ParentConstraint>(
+                std::make_unique<ExtendsConstraint>(
+                    TypeNameConstraint::from_json(constraint["extends"]),
+                    includes_self)));
       } else {
         constraints.push_back(signature_match_parent_extends_constraint(
             JsonValidation::nonempty_array(constraint, /* field */ "extends"),

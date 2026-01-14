@@ -62,6 +62,9 @@ class TypeNameConstraint final : public TypeConstraint {
   bool satisfy(const DexType* type) const override;
   bool operator==(const TypeConstraint& other) const override;
 
+  static std::unique_ptr<TypeNameConstraint> from_json(
+      const Json::Value& value);
+
  private:
   std::string name_;
 };

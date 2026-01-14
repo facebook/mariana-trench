@@ -135,6 +135,47 @@ TEST_F(FieldConstraintTest, SignatureMatchFieldConstraintFromJson) {
           "parents": ["LClass;", "LOtherClass;"]
         })")),
       JsonValidationError);
+
+  // Test invalid parent/extends class names
+  EXPECT_THROW(
+      FieldConstraint::from_json(
+          test::parse_json(
+              R"({
+          "constraint": "signature_match",
+          "parent": "Landroid/app/Activity",
+          "name": "foo"
+        })")),
+      JsonValidationError);
+
+  EXPECT_THROW(
+      FieldConstraint::from_json(
+          test::parse_json(
+              R"({
+          "constraint": "signature_match",
+          "parents": ["Landroid/app/Activity;", "Landroid/some/Activity"],
+          "name": "foo"
+        })")),
+      JsonValidationError);
+
+  EXPECT_THROW(
+      FieldConstraint::from_json(
+          test::parse_json(
+              R"({
+          "constraint": "signature_match",
+          "extends": "Landroid/app/Activity",
+          "name": "foo"
+        })")),
+      JsonValidationError);
+
+  EXPECT_THROW(
+      FieldConstraint::from_json(
+          test::parse_json(
+              R"({
+          "constraint": "signature_match",
+          "extends": ["Landroid/app/Activity;", "Landroid/some/Activity"],
+          "name": "foo"
+        })")),
+      JsonValidationError);
 }
 
 TEST_F(FieldConstraintTest, SignaturePatternFieldConstraintSatisfy) {

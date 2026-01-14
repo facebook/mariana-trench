@@ -1586,6 +1586,51 @@ TEST_F(MethodConstraintTest, MethodConstraintFromJson) {
           context),
       JsonValidationError);
 
+  // Test invalid parent/extends class names
+  EXPECT_THROW(
+      MethodConstraint::from_json(
+          test::parse_json(
+              R"({
+          "constraint": "signature_match",
+          "parent": "Landroid/app/Activity",
+          "name": "foo"
+        })"),
+          context),
+      JsonValidationError);
+
+  EXPECT_THROW(
+      MethodConstraint::from_json(
+          test::parse_json(
+              R"({
+          "constraint": "signature_match",
+          "parents": ["Landroid/app/Activity;", "Landroid/some/Activity"],
+          "name": "foo"
+        })"),
+          context),
+      JsonValidationError);
+
+  EXPECT_THROW(
+      MethodConstraint::from_json(
+          test::parse_json(
+              R"({
+          "constraint": "signature_match",
+          "extends": "Landroid/app/Activity",
+          "name": "foo"
+        })"),
+          context),
+      JsonValidationError);
+
+  EXPECT_THROW(
+      MethodConstraint::from_json(
+          test::parse_json(
+              R"({
+          "constraint": "signature_match",
+          "extends": ["Landroid/app/Activity;", "Landroid/some/Activity"],
+          "name": "foo"
+        })"),
+          context),
+      JsonValidationError);
+
   // SignatureMatchConstraint
 
   // SignatureMultipleMethodMatchConstraint
