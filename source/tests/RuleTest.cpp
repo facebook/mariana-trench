@@ -422,6 +422,8 @@ TEST_F(RuleTest, SourceSinkWithExploitabilityRuleTest) {
   auto* sink_x = context.kind_factory->get("X");
   auto* sink_y = context.kind_factory->get("Y");
 
+  auto* t1 = context.transforms_factory->create({"T1"}, context);
+
   auto rule1 = std::make_unique<SourceSinkWithExploitabilityRule>(
       /* name */ "Rule1",
       /* code */ 1,
@@ -455,6 +457,23 @@ TEST_F(RuleTest, SourceSinkWithExploitabilityRuleTest) {
   EXPECT_TRUE(rule2->uses(source_b));
   EXPECT_TRUE(rule2->uses(sink_x));
   EXPECT_TRUE(rule2->uses(sink_y));
+
+  auto rule3 = std::make_unique<SourceSinkWithExploitabilityRule>(
+      /* name */ "Rule3",
+      /* code */ 3,
+      /* description */ "Test rule 3",
+      /* effect_source_kinds */ Rule::KindSet{effect_source_e},
+      /* source_kinds */ Rule::KindSet{source_a},
+      /* sink_kinds */
+      Rule::KindSet{sink_y},
+      /* source_as_transforms */
+      SourceSinkWithExploitabilityRule::KindToTransformsMap{
+          {source_a, source_a_as_transform}},
+      /* transforms */ t1);
+
+  EXPECT_TRUE(rule3->uses(effect_source_e));
+  EXPECT_TRUE(rule3->uses(source_a));
+  EXPECT_TRUE(rule3->uses(sink_y));
 
   // TODO: T176363060 Add tests for checking rule matches.
 }

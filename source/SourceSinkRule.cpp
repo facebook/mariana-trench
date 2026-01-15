@@ -36,12 +36,11 @@ std::optional<CoveredRule> SourceSinkRule::coverage(
   }
 
   TransformSet used_rule_transforms;
-  auto rule_transforms = transforms_ != nullptr
-      ? TransformSet(transforms_->begin(), transforms_->end())
-      : TransformSet{};
-  if (!rule_transforms.empty()) {
-    // Not all rules have transforms. Only check for transform usage if the
-    // rule actually involves these.
+  // Not all rules have transforms. Only check for transform usage if the
+  // rule actually involves these.
+  if (transforms_ != nullptr) {
+    auto rule_transforms =
+        TransformSet(transforms_->begin(), transforms_->end());
     used_rule_transforms =
         Rule::intersecting_kinds(rule_transforms, transforms);
     if (used_rule_transforms.empty()) {
