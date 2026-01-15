@@ -10,6 +10,9 @@
 #include <concepts>
 #include <ostream>
 
+#ifdef __APPLE__
+#define BOOST_STACKTRACE_GNU_SOURCE_NOT_REQUIRED
+#endif
 #include <boost/exception/all.hpp>
 #include <boost/stacktrace.hpp>
 
