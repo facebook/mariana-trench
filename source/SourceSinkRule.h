@@ -8,14 +8,11 @@
 #pragma once
 
 #include <string>
-#include <unordered_map>
-#include <unordered_set>
-
-#include <json/json.h>
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/Context.h>
 #include <mariana-trench/IncludeMacros.h>
+#include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Kind.h>
 #include <mariana-trench/Rule.h>
 #include <mariana-trench/TransformList.h>

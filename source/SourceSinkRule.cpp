@@ -5,7 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/NamedKind.h>
 #include <mariana-trench/Rule.h>
 #include <mariana-trench/RulesCoverage.h>
