@@ -419,10 +419,13 @@ TEST_F(RuleTest, SourceSinkWithExploitabilityRuleTest) {
   auto* source_b_as_transform = context.transforms_factory->create(
       TransformList::from_kind(source_b, context));
   auto* effect_source_e = context.kind_factory->get("E");
+  auto* effect_source_f = context.kind_factory->get("F");
   auto* sink_x = context.kind_factory->get("X");
   auto* sink_y = context.kind_factory->get("Y");
 
   auto* t1 = context.transforms_factory->create({"T1"}, context);
+  auto* source_a_as_transform_t1 =
+      context.transforms_factory->concat(source_a_as_transform, t1);
 
   auto rule1 = std::make_unique<SourceSinkWithExploitabilityRule>(
       /* name */ "Rule1",
@@ -475,7 +478,97 @@ TEST_F(RuleTest, SourceSinkWithExploitabilityRuleTest) {
   EXPECT_TRUE(rule3->uses(source_a));
   EXPECT_TRUE(rule3->uses(sink_y));
 
-  // TODO: T176363060 Add tests for checking rule matches.
+  // Rule matching tests
+
+  std::vector<std::unique_ptr<Rule>> rule_list;
+  rule_list.push_back(std::move(rule1));
+  rule_list.push_back(std::move(rule2));
+  rule_list.push_back(std::move(rule3));
+
+  auto rules = Rules(context, std::move(rule_list));
+
+  EXPECT_EQ(rules.size(), 3);
+
+  // Check partially fulfilled rules
+  EXPECT_THAT(
+      to_codes(
+          rules.partially_fulfilled_exploitability_rules(source_a, sink_x)),
+      testing::UnorderedElementsAre(1, 2));
+  EXPECT_THAT(
+      to_codes(
+          rules.partially_fulfilled_exploitability_rules(source_b, sink_x)),
+      testing::UnorderedElementsAre(2));
+  EXPECT_THAT(
+      to_codes(
+          rules.partially_fulfilled_exploitability_rules(source_b, sink_y)),
+      testing::UnorderedElementsAre(2));
+
+  // Check partially fulfilled rules with transforms
+  EXPECT_THAT(
+      to_codes(rules.partially_fulfilled_exploitability_rules(
+          context.kind_factory->transform_kind(
+              /* base_kind */ source_a,
+              /* local_transforms */ t1,
+              /* global_transforms */ nullptr),
+          sink_y)),
+      testing::UnorderedElementsAre(3));
+  EXPECT_THAT(
+      to_codes(rules.partially_fulfilled_exploitability_rules(
+          context.kind_factory->transform_kind(
+              /* base_kind */ source_a,
+              /* local_transforms */ nullptr,
+              /* global_transforms */ t1),
+          sink_y)),
+      testing::UnorderedElementsAre(3));
+  EXPECT_THAT(
+      to_codes(rules.partially_fulfilled_exploitability_rules(
+          source_a,
+          context.kind_factory->transform_kind(
+              /* base_kind */ sink_y,
+              /* local_transforms */ t1,
+              /* global_transforms */ nullptr))),
+      testing::UnorderedElementsAre(3));
+  EXPECT_THAT(
+      to_codes(rules.partially_fulfilled_exploitability_rules(
+          source_a,
+          context.kind_factory->transform_kind(
+              /* base_kind */ sink_y,
+              /* local_transforms */ nullptr,
+              /* global_transforms */ t1))),
+      testing::UnorderedElementsAre(3));
+
+  // Check fulfilled rules
+  EXPECT_THAT(
+      to_codes(rules.fulfilled_exploitability_rules(
+          effect_source_e,
+          context.kind_factory->transform_kind(
+              /* base_kind */ sink_x,
+              /* local_transforms */ source_a_as_transform,
+              /* global_transforms */ nullptr))),
+      testing::UnorderedElementsAre(1, 2));
+  EXPECT_TRUE(to_codes(rules.fulfilled_exploitability_rules(
+                           effect_source_f,
+                           context.kind_factory->transform_kind(
+                               /* base_kind */ sink_x,
+                               /* local_transforms */ source_a_as_transform,
+                               /* global_transforms */ nullptr)))
+                  .empty());
+  EXPECT_THAT(
+      to_codes(rules.fulfilled_exploitability_rules(
+          effect_source_e,
+          context.kind_factory->transform_kind(
+              /* base_kind */ sink_y,
+              /* local_transforms */ source_a_as_transform_t1,
+              /* global_transforms */ nullptr))),
+      testing::UnorderedElementsAre(3));
+  EXPECT_THAT(
+      to_codes(rules.fulfilled_exploitability_rules(
+          effect_source_e,
+          context.kind_factory->transform_kind(
+              /* base_kind */ sink_y,
+              /* local_transforms */ source_a_as_transform,
+              /* global_transforms */ t1))),
+      testing::UnorderedElementsAre(3));
 }
 
 TEST_F(RuleTest, SerializationDeserialization) {

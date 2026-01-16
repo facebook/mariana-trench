@@ -15,6 +15,7 @@
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Kind.h>
 #include <mariana-trench/SanitizerSetTransform.h>
+#include <mariana-trench/SourceAsTransform.h>
 #include <mariana-trench/Transform.h>
 #include <mariana-trench/TransformKind.h>
 
@@ -201,6 +202,8 @@ class TransformList final {
         });
   }
 
+  void add_source_as_transform(const SourceAsTransform* source_as_transform);
+
   bool has_source_as_transform() const;
 
   bool has_non_sanitize_transform() const;
@@ -217,8 +220,8 @@ class TransformList final {
   static TransformList from_kind(const Kind* kind, Context& context);
 
   static TransformList concat(
-      const TransformList* left,
-      const TransformList* right);
+      const TransformList* MT_NULLABLE left,
+      const TransformList* MT_NULLABLE right);
 
   static TransformList canonicalize(
       const TransformList* transforms,

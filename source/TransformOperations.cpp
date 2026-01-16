@@ -78,6 +78,7 @@ TaintTree apply_propagation(
 
 Taint apply_source_as_transform_to_sink(
     MethodContext* context,
+    const Kind* extra_trace_kind,
     const Taint& source_taint,
     const TransformList* source_as_transform,
     const Taint& sink_taint,
@@ -100,7 +101,12 @@ Taint apply_source_as_transform_to_sink(
 
   // Add extra trace and exploitability origin to source frame
   transformed_sink_taint.update_with_extra_trace_and_exploitability_origin(
-      source_taint, FrameType::source(), context->method(), callee, position);
+      extra_trace_kind,
+      source_taint,
+      FrameType::source(),
+      context->method(),
+      callee,
+      position);
 
   LOG(5, "Materialized source-as-transform sink: {}", transformed_sink_taint);
 

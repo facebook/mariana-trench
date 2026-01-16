@@ -46,6 +46,14 @@ TransformList TransformList::discard_sanitizers(
   return TransformList(std::move(no_sanitizers));
 }
 
+void TransformList::add_source_as_transform(
+    const SourceAsTransform* source_as_transform) {
+  mt_assert(source_as_transform != nullptr);
+  mt_assert(!has_source_as_transform());
+
+  transforms_.push_back(source_as_transform);
+}
+
 bool TransformList::has_source_as_transform() const {
   return std::any_of(
       transforms_.begin(), transforms_.end(), [](const Transform* transform) {
@@ -120,8 +128,18 @@ TransformList TransformList::from_kind(const Kind* kind, Context& context) {
 }
 
 TransformList TransformList::concat(
-    const TransformList* left,
-    const TransformList* right) {
+    const TransformList* MT_NULLABLE left,
+    const TransformList* MT_NULLABLE right) {
+  if (left == nullptr && right == nullptr) {
+    return TransformList();
+  }
+  if (left == nullptr) {
+    return *right;
+  }
+  if (right == nullptr) {
+    return *left;
+  }
+
   List transforms{};
   transforms.reserve(left->size() + right->size());
   transforms.insert(transforms.end(), left->begin(), left->end());

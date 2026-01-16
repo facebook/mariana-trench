@@ -67,7 +67,7 @@ class TransformsFactory final {
   reverse(const TransformList* MT_NULLABLE transforms) const;
 
   const TransformList* MT_NULLABLE
-  get_source_as_transform(const Kind* kind) const;
+  get_source_as_transform_list(const Kind* kind) const;
 
   TransformCombinations all_combinations(const TransformList* transforms) const;
 

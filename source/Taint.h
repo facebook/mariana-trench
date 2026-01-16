@@ -230,6 +230,7 @@ class Taint final : public sparta::AbstractDomain<Taint> {
       const TransformsFactory& transforms_factory) const;
 
   void update_with_extra_trace_and_exploitability_origin(
+      const Kind* extra_trace_kind,
       const Taint& source_taint,
       FrameType frame_type,
       const Method* exploitability_root,

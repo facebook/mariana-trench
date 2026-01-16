@@ -233,18 +233,20 @@ Taint Taint::update_with_propagation_trace(
 }
 
 void Taint::update_with_extra_trace_and_exploitability_origin(
+    const Kind* extra_trace_kind,
     const Taint& extra_trace_taint,
     FrameType frame_type,
     const Method* exploitability_root,
     std::string_view callee,
     const Position* position) {
   // Collect all extra-trace frames to add.
-  std::vector<ExtraTrace> extra_traces{};
+  ExtraTraceSet extra_traces;
   extra_trace_taint.visit_frames(
-      [&extra_traces, frame_type](
+      [&extra_traces, extra_trace_kind, frame_type](
           const CallInfo& source_call_info, const Frame& source_frame) {
-        extra_traces.push_back(ExtraTrace(
-            source_frame.kind(),
+        extra_traces.join_with(source_frame.extra_traces());
+        extra_traces.add(ExtraTrace(
+            extra_trace_kind,
             source_call_info.callee(),
             source_call_info.call_position(),
             source_call_info.callee_port(),

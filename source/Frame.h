@@ -185,6 +185,8 @@ class Frame final : public sparta::AbstractDomain<Frame> {
 
   void add_extra_trace(ExtraTrace&& extra_trace);
 
+  void add_extra_traces(const ExtraTraceSet& extra_traces);
+
   void add_extra_traces(const std::vector<ExtraTrace>& extra_traces);
 
   const ExtraTraceSet& extra_traces() const {

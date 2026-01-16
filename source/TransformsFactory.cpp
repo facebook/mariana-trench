@@ -76,13 +76,36 @@ TransformsFactory::reverse(const TransformList* MT_NULLABLE transforms) const {
 }
 
 const TransformList* MT_NULLABLE
-TransformsFactory::get_source_as_transform(const Kind* kind) const {
-  if (const auto* source_as_transform =
-          source_as_transform_.get(kind->discard_transforms())) {
+TransformsFactory::get_source_as_transform_list(const Kind* kind) const {
+  const auto* source_as_transform =
+      source_as_transform_.get(kind->discard_transforms());
+
+  if (source_as_transform == nullptr) {
+    return nullptr;
+  }
+
+  const auto* transform_kind = kind->as<TransformKind>();
+  if (transform_kind == nullptr) {
     return transform_lists_.get(TransformList({source_as_transform}));
   }
 
-  return nullptr;
+  // For TransformKind, we discard sanitizer kinds, and collect the
+  // remaining local and global transforms into a single TransformList and
+  // append the SourceAsTransform.
+  auto source_as_transform_list = TransformList::concat(
+      transform_kind->local_transforms(), transform_kind->global_transforms());
+
+  source_as_transform_list =
+      TransformList::discard_sanitizers(&source_as_transform_list);
+  // Append the source as transform
+  source_as_transform_list.add_source_as_transform(source_as_transform);
+
+  // SourceAsTransform is constructed from the base_kind of the source
+  // TransformKind where the local and global TransformLists are stored in
+  // backward direction. Since source_as_transform_list is applied to the sink
+  // taint to represent the source kind used during partial match, we reverse
+  // the order here.
+  return reverse(&source_as_transform_list);
 }
 
 TransformCombinations TransformsFactory::all_combinations(

@@ -657,15 +657,30 @@ void check_partially_fulfilled_exploitability_rules(
     return;
   }
 
-  const auto* source_as_transform =
-      context->transforms_factory.get_source_as_transform(source_kind);
-  mt_assert(source_as_transform != nullptr);
+  const auto* source_as_transform_list =
+      context->transforms_factory.get_source_as_transform_list(source_kind);
+  mt_assert(source_as_transform_list != nullptr);
+
+  // Compute the kind to use for extra trace. This is the source kind with any
+  // local_transforms removed.
+  const auto* extra_trace_kind = source_kind;
+  if (const auto* transform_kind = source_kind->as<TransformKind>()) {
+    if (const auto* global_transforms = transform_kind->global_transforms()) {
+      extra_trace_kind = context->kind_factory.transform_kind(
+          /* base_kind */ transform_kind->base_kind(),
+          /* local_transforms */ nullptr,
+          /* global_transforms */ global_transforms);
+    } else {
+      extra_trace_kind = transform_kind->base_kind();
+    }
+  }
 
   auto transformed_sink_with_extra_trace =
       transforms::apply_source_as_transform_to_sink(
           context,
+          extra_trace_kind,
           source_taint,
-          source_as_transform,
+          source_as_transform_list,
           sink_taint,
           callee,
           position);

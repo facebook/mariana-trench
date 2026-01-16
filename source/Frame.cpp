@@ -94,6 +94,10 @@ void Frame::add_extra_trace(ExtraTrace&& extra_trace) {
   extra_traces_.add(std::move(extra_trace));
 }
 
+void Frame::add_extra_traces(const ExtraTraceSet& extra_traces) {
+  extra_traces_.join_with(extra_traces);
+}
+
 void Frame::add_extra_traces(const std::vector<ExtraTrace>& extra_traces) {
   extra_traces_.add(extra_traces.begin(), extra_traces.end());
 }

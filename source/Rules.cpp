@@ -50,6 +50,40 @@ Rules Rules::load(Context& context, const Options& options) {
   return rules;
 }
 
+namespace {
+
+/**
+ * Get the canonicalized sink kind when adding a rule.
+ *
+ * For SourceSinkRule or SourceSinkWithExploitabilityRule's partial match, we
+ * allow optional transform kinds. When adding these rules, the transforms are
+ * applied to the sink kind. This is the canonicalized sink kind that is used
+ * during rule matching.
+ */
+const Kind* canonicalize_sink_kind_for_add(
+    const KindFactory& kind_factory,
+    const TransformsFactory& transforms_factory,
+    const Kind* sink_kind,
+    const TransformList* MT_NULLABLE transforms) {
+  if (transforms == nullptr) {
+    return sink_kind;
+  }
+
+  if (const auto* transform_kind = sink_kind->as<TransformKind>()) {
+    mt_assert(transform_kind->global_transforms() == nullptr);
+
+    transforms = transforms_factory.concat(
+        transforms, transform_kind->local_transforms());
+  }
+
+  return kind_factory.transform_kind(
+      sink_kind->discard_transforms(),
+      /* local transforms */ transforms,
+      /* global transforms */ nullptr);
+}
+
+} // namespace
+
 void Rules::add(Context& context, std::unique_ptr<Rule> rule) {
   auto existing = rules_.find(rule->code());
   if (existing != rules_.end()) {
@@ -81,20 +115,14 @@ void Rules::add_internal(
   if (auto* source_sink_rule = rule->as<SourceSinkRule>()) {
     for (const auto* source_kind : source_sink_rule->source_kinds()) {
       for (const auto* sink_kind : source_sink_rule->sink_kinds()) {
-        const auto* transforms = source_sink_rule->transform_kinds();
-        if (transforms == nullptr) {
-          source_to_sink_to_rules_[source_kind][sink_kind].push_back(
-              rule_to_register);
-          continue;
-        }
-
-        const auto* sink_transform_kind = context.kind_factory->transform_kind(
+        const auto* canonicalized_sink_kind = canonicalize_sink_kind_for_add(
+            *context.kind_factory,
+            *context.transforms_factory,
             sink_kind,
-            /* local transforms */ transforms,
-            /* global transforms */ nullptr);
+            source_sink_rule->transform_kinds());
 
-        source_to_sink_to_rules_[source_kind][sink_transform_kind].push_back(
-            rule_to_register);
+        source_to_sink_to_rules_[source_kind][canonicalized_sink_kind]
+            .push_back(rule_to_register);
       }
     }
   } else if (
@@ -145,18 +173,31 @@ void Rules::add_internal(
     for (const auto* source_kind : exploitability_rule->source_kinds()) {
       for (const auto* sink_kind : exploitability_rule->sink_kinds()) {
         // Create normal source to sink rule for initial matching.
-        source_to_sink_to_exploitability_rules_[source_kind][sink_kind]
-            .push_back(rule_to_register);
+        const auto* canonicalized_sink_kind = canonicalize_sink_kind_for_add(
+            *context.kind_factory,
+            *context.transforms_factory,
+            sink_kind,
+            exploitability_rule->transform_kinds());
+
+        source_to_sink_to_exploitability_rules_[source_kind]
+                                               [canonicalized_sink_kind]
+                                                   .push_back(
+                                                       exploitability_rule);
 
         // Create rule for effect-source to sink as a transform kind with
         // source-as-transform local transforms for final matching.
+        const auto* source_as_transform = context.transforms_factory->create(
+            TransformList::from_kind(source_kind, context));
         const auto* source_as_transform_sink_kind =
-            context.kind_factory->transform_kind(
-                sink_kind,
-                /* local transforms */
-                context.transforms_factory->create(
-                    TransformList::from_kind(source_kind, context)),
-                /* global transforms */ nullptr);
+            canonicalize_sink_kind_for_add(
+                *context.kind_factory,
+                *context.transforms_factory,
+                canonicalized_sink_kind,
+                source_as_transform)
+                ->as<TransformKind>();
+
+        mt_assert(source_as_transform_sink_kind != nullptr);
+
         for (const auto* effect_source_kind :
              exploitability_rule->effect_source_kinds()) {
           effect_source_to_sink_to_exploitability_rules_

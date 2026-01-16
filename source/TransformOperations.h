@@ -28,6 +28,7 @@ TaintTree apply_propagation(
 
 Taint apply_source_as_transform_to_sink(
     MethodContext* context,
+    const Kind* extra_trace_kind,
     const Taint& source_taint,
     const TransformList* source_as_transform,
     const Taint& sink_taint,
