@@ -108,6 +108,9 @@ class Transfer final : public InstructionAnalyzerBase<
       return false;
     }
 
+    // Check for reflection-based-based (java.lang.Class or java.lang.String)
+    // intent class setters. E.g., Intent(context, MyActivity.class),
+    // Intent(context, "MyActivity")
     const auto& intent_class_setters = constants::get_intent_class_setters();
     auto intent_parameter_position = intent_class_setters.find(show(method));
     if (intent_parameter_position != intent_class_setters.end()) {
@@ -124,24 +127,27 @@ class Transfer final : public InstructionAnalyzerBase<
 
       const auto dex_arguments = method->get_proto()->get_args();
       mt_assert(argument_index < dex_arguments->size());
-      if (dex_arguments->at(argument_index) != type::java_lang_Class()) {
-        return false;
-      }
-      const auto& environment = context->types().const_class_environment(
-          context->method(), instruction);
-      mt_assert(class_index < instruction->srcs_size());
-      auto found = environment.find(instruction->src(class_index));
-      if (found == environment.end()) {
+      const auto* argument = dex_arguments->at(argument_index);
+
+      if (argument != type::java_lang_Class() &&
+          argument != type::java_lang_String()) {
         return false;
       }
 
-      const auto* type = found->second.singleton_type();
+      const auto* type = context->types().register_reflected_type(
+          context->method(), instruction, instruction->src(class_index));
+
+      if (type == nullptr) {
+        return false;
+      }
+
       LOG_OR_DUMP(
           context,
           4,
           "Method `{}` routes Intent to `{}`",
           context->method()->show(),
           show(type));
+
       context->add_routed_intent(instruction, type);
     } else if (
         method->get_name()->str() == "getIntent" &&
@@ -154,6 +160,7 @@ class Transfer final : public InstructionAnalyzerBase<
       context->mark_as_getting_routed_intent(
           Root(Root::Kind::CallEffectIntent), Component::Activity);
     }
+
     return false;
   }
 };
@@ -242,6 +249,8 @@ IntentRoutingData method_routes_intents_to(
     const Options& options) {
   ReceivingMethod receiving_method = {
       .method = method,
+      .root = std::nullopt,
+      .component = std::nullopt,
   };
   auto* code = method->get_code();
   if (code == nullptr) {

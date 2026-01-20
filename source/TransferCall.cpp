@@ -32,9 +32,8 @@ std::vector<const DexType * MT_NULLABLE> get_source_register_types(
         context->method(), instruction, source_register);
 
     if (register_type == type::java_lang_Class()) {
-      if (const auto* const_class_type =
-              context->types.register_const_class_type(
-                  context->method(), instruction, source_register)) {
+      if (const auto* const_class_type = context->types.register_reflected_type(
+              context->method(), instruction, source_register)) {
         register_type = const_class_type;
       }
     }

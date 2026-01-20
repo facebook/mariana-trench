@@ -106,7 +106,7 @@ std::unordered_map<int, const DexType*> register_types_for_method(
         auto* dex_type =
             context.types->register_type(method, instruction, register_id);
         if (resolve_reflection && dex_type == type::java_lang_Class()) {
-          auto* resolved_dex_type = context.types->register_const_class_type(
+          auto* resolved_dex_type = context.types->register_reflected_type(
               method, instruction, register_id);
           dex_type =
               resolved_dex_type != nullptr ? resolved_dex_type : dex_type;

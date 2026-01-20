@@ -9,7 +9,6 @@
 
 #include <string>
 #include <unordered_map>
-#include <vector>
 
 #include <mariana-trench/Access.h>
 
@@ -33,13 +32,17 @@ std::string_view get_public_access_scope();
 // needs to be known.
 std::unordered_map<std::string, ParameterPosition>
 get_activity_routing_methods();
+
 std::unordered_map<std::string, ParameterPosition>
 get_service_routing_methods();
+
 const std::unordered_set<std::string>&
 get_broadcast_receiver_routing_method_names();
+
 const std::unordered_map<std::string, std::pair<ParameterPosition, Component>>&
 get_intent_receiving_method_names();
-const std::unordered_map<std::string, ParameterPosition>&
+
+const std::unordered_map<std::string_view, ParameterPosition>&
 get_intent_class_setters();
 
 } // namespace constants

@@ -76,7 +76,7 @@ class Types final {
       const Method* method,
       const IRInstruction* instruction) const;
 
-  const TypeEnvironment& const_class_environment(
+  const TypeEnvironment& reflection_environment(
       const Method* method,
       const IRInstruction* instruction) const;
 
@@ -127,7 +127,7 @@ class Types final {
    *
    * Returns `nullptr` if we could not infer the type.
    */
-  const DexType* MT_NULLABLE register_const_class_type(
+  const DexType* MT_NULLABLE register_reflected_type(
       const Method* method,
       const IRInstruction* instruction,
       Register register_id) const;
@@ -135,7 +135,7 @@ class Types final {
  private:
   const TypeEnvironments& environments(const Method* method) const;
 
-  const TypeEnvironments& const_class_environments(const Method* method) const;
+  const TypeEnvironments& reflection_environments(const Method* method) const;
 
   std::unique_ptr<TypeEnvironments> infer_local_types_for_method(
       const Method* method) const;
@@ -147,7 +147,7 @@ class Types final {
   mutable UniquePointerConcurrentMap<const Method*, TypeEnvironments>
       environments_;
   mutable UniquePointerConcurrentMap<const DexMethod*, TypeEnvironments>
-      const_class_environments_;
+      reflection_environments_;
   std::unique_ptr<marianatrench::type_analyzer::global::GlobalTypeAnalyzer>
       global_type_analyzer_;
   std::vector<std::string> log_method_types_;

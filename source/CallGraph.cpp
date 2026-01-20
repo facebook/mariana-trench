@@ -423,7 +423,7 @@ void process_shim_reflection(
         sink_textual_order_index,
     std::vector<ArtificialCallee>& artificial_callees) {
   const auto& method_spec = shim_reflection.method_spec();
-  const auto* reflection_type = types.register_const_class_type(
+  const auto* reflection_type = types.register_reflected_type(
       caller, instruction, shim_reflection.receiver_register(instruction));
 
   if (reflection_type == nullptr) {
@@ -497,7 +497,7 @@ void process_shim_lifecycle(
   auto receiver_register = shim_lifecycle.receiver_register(instruction);
 
   const auto* receiver_type = shim_lifecycle.is_reflection()
-      ? types.register_const_class_type(caller, instruction, receiver_register)
+      ? types.register_reflected_type(caller, instruction, receiver_register)
       : types.register_type(caller, instruction, receiver_register);
   if (receiver_type == nullptr) {
     EventLogger::log_event(

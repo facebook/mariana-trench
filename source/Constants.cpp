@@ -66,9 +66,10 @@ get_intent_receiving_method_names() {
   return intent_receiving_method_names;
 }
 
-const std::unordered_map<std::string, ParameterPosition>&
+const std::unordered_map<std::string_view, ParameterPosition>&
 get_intent_class_setters() {
-  static const std::unordered_map<std::string, ParameterPosition> intent_class_setters = {
+  static const std::unordered_map<std::string_view, ParameterPosition> intent_class_setters = {
+      // Apis with java.lang.Class based reflection
       {"Landroid/content/Intent;.<init>:(Landroid/content/Context;Ljava/lang/Class;)V",
        2},
       {"Landroid/content/Intent;.<init>:(Ljava/lang/String;Landroid/net/Uri;Landroid/content/Context;Ljava/lang/Class;)V",
@@ -78,7 +79,16 @@ get_intent_class_setters() {
       {"Landroid/content/ComponentName;.<init>:(Landroid/content/Context;Ljava/lang/Class;)V",
        2},
       {"Landroidx/core/app/JobIntentService;.enqueueWork:(Landroid/content/Context;Ljava/lang/Class;ILandroid/content/Intent;)V",
-       1}};
+       1},
+      // Apis with java.lang.String based reflection
+      {"Landroid/content/ComponentName;.<init>:(Landroid/content/Context;Ljava/lang/String;)V",
+       2},
+      {"Landroid/content/ComponentName;.<init>:(Ljava/lang/String;Ljava/lang/String;)V",
+       2},
+      {"Landroid/content/Intent;.setClassName:(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;",
+       2},
+      {"Landroid/content/Intent;.setClassName:(Ljava/lang/String;Ljava/lang/String;)Landroid/content/Intent;",
+       2}};
   return intent_class_setters;
 }
 

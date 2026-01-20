@@ -6,21 +6,23 @@
  */
 
 #include <algorithm>
-#include <optional>
 
 #include <boost/iterator/filter_iterator.hpp>
 #include <fmt/format.h>
 
+#include <DexUtil.h>
 #include <ReflectionAnalysis.h>
 #include <Show.h>
 #include <TypeInference.h>
 #include <Walkers.h>
 
 #include <mariana-trench/Assert.h>
+#include <mariana-trench/Constants.h>
 #include <mariana-trench/EventLogger.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/OperatingSystem.h>
 #include <mariana-trench/Options.h>
+#include <mariana-trench/Redex.h>
 #include <mariana-trench/Timer.h>
 #include <mariana-trench/Types.h>
 #include <mariana-trench/type-analysis/DexTypeEnvironment.h>
@@ -43,12 +45,17 @@ bool has_reflection(const IRCode& code) {
   for (cfg::Block* block : code.cfg().blocks()) {
     for (auto& entry : InstructionIterable(block)) {
       IRInstruction* instruction = entry.insn;
+
       if (!opcode::is_an_invoke(instruction->opcode())) {
         continue;
       }
 
       const auto* method = instruction->get_method();
       if (method->get_class()->str() == type::java_lang_Class()->str()) {
+        return true;
+      }
+
+      if (constants::get_intent_class_setters().count(show(method)) == 1) {
         return true;
       }
 
@@ -80,20 +87,46 @@ bool is_interesting_opcode(IROpcode opcode) {
  * Create the environments for a method using the result from redex's reflection
  * analysis. This extracts what the analysis requires and discards the rest.
  */
-TypeEnvironments make_environments(reflection::ReflectionAnalysis& analysis) {
+TypeEnvironments make_reflection_environments(
+    const IRCode& code,
+    reflection::ReflectionAnalysis& analysis) {
   TypeEnvironments result;
 
-  for (const auto& [instruction, reflection_site] :
-       analysis.get_reflection_sites()) {
-    TypeEnvironment environment;
-    for (const auto& [register_id, entry] : reflection_site) {
-      auto& abstract_object = entry.first;
-      if (abstract_object.obj_kind == reflection::AbstractObjectKind::CLASS &&
-          abstract_object.dex_type != nullptr) {
-        environment.emplace(register_id, abstract_object.dex_type);
+  for (cfg::Block* block : code.cfg().blocks()) {
+    for (auto& entry : InstructionIterable(block)) {
+      IRInstruction* instruction = entry.insn;
+      TypeEnvironment environment;
+
+      for (auto register_id : instruction->srcs()) {
+        auto abstract_object =
+            analysis.get_abstract_object(register_id, instruction);
+
+        if (!abstract_object) {
+          continue;
+        }
+
+        if (abstract_object->is_class() &&
+            abstract_object->dex_type != nullptr) {
+          environment.emplace(register_id, abstract_object->dex_type);
+          continue;
+        }
+
+        if (!abstract_object->is_string() ||
+            abstract_object->dex_string == nullptr) {
+          continue;
+        }
+
+        if (const auto* dex_type = redex::get_type(
+                java_names::external_to_internal(
+                    abstract_object->dex_string->str()))) {
+          environment.emplace(register_id, dex_type);
+        }
+      }
+
+      if (!environment.empty()) {
+        result.emplace(instruction, std::move(environment));
       }
     }
-    result.emplace(instruction, std::move(environment));
   }
 
   return result;
@@ -361,9 +394,10 @@ Types::Types(const Options& options, const DexStoresVector& stores) {
             /* summary_query_fn */ nullptr,
             /* metadata_cache */ &reflection_metadata_cache);
 
-        const_class_environments_.emplace(
+        reflection_environments_.emplace(
             method,
-            std::make_unique<TypeEnvironments>(make_environments(analysis)));
+            std::make_unique<TypeEnvironments>(
+                make_reflection_environments(code, analysis)));
       });
   LOG(1,
       "Reflection analysis {:.2f}s. Memory used, RSS: {:.2f}GB",
@@ -575,10 +609,10 @@ const TypeEnvironments& Types::environments(const Method* method) const {
   return *environments_.at(method);
 }
 
-const TypeEnvironments& Types::const_class_environments(
+const TypeEnvironments& Types::reflection_environments(
     const Method* method) const {
-  auto* environments = const_class_environments_.get(
-      method->dex_method(), /* default */ nullptr);
+  auto* environments =
+      reflection_environments_.get(method->dex_method(), /* default */ nullptr);
   if (environments != nullptr) {
     return *environments;
   }
@@ -598,10 +632,10 @@ const TypeEnvironment& Types::environment(
   }
 }
 
-const TypeEnvironment& Types::const_class_environment(
+const TypeEnvironment& Types::reflection_environment(
     const Method* method,
     const IRInstruction* instruction) const {
-  const auto& environments = this->const_class_environments(method);
+  const auto& environments = this->reflection_environments(method);
   auto environment = environments.find(instruction);
   if (environment == environments.end()) {
     return empty_environment;
@@ -668,12 +702,13 @@ const std::unordered_set<const DexType*>& Types::receiver_local_extends(
       method, instruction, instruction->src(/* source_position */ 0));
 }
 
-const DexType* MT_NULLABLE Types::register_const_class_type(
+const DexType* MT_NULLABLE Types::register_reflected_type(
     const Method* method,
     const IRInstruction* instruction,
     Register register_id) const {
-  const auto& environment = this->const_class_environment(method, instruction);
+  const auto& environment = this->reflection_environment(method, instruction);
   auto type = environment.find(register_id);
+
   if (type == environment.end()) {
     return nullptr;
   }
