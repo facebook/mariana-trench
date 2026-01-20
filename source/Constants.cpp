@@ -19,50 +19,61 @@ std::string_view get_public_access_scope() {
   return "<undefined>";
 }
 
-std::unordered_map<std::string, ParameterPosition>
+const std::unordered_map<std::string_view, ParameterPosition>&
 get_activity_routing_methods() {
-  return {
-      // For ShimsTest.cpp
-      {"LClass;.startActivity:(Landroid/content/Intent;)V", 1},
-      {"Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V", 1},
-  };
+  static std::unordered_map<std::string_view, ParameterPosition>
+      activity_routing_methods = {
+          // For ShimsTest.cpp
+          {"LClass;.startActivity:(Landroid/content/Intent;)V", 1},
+          {"Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V",
+           1},
+      };
+
+  return activity_routing_methods;
 }
 
-std::unordered_map<std::string, ParameterPosition>
+const std::unordered_map<std::string_view, ParameterPosition>&
 get_service_routing_methods() {
-  return {
-      {"Landroid/content/Context;.startService:(Landroid/content/Intent;)Landroid/content/ComponentName;",
-       1},
-      {"Landroidx/core/app/JobIntentService;.enqueueWork:(Landroid/content/Context;Ljava/lang/Class;ILandroid/content/Intent;)V",
-       3},
-  };
+  static std::unordered_map<std::string_view, ParameterPosition>
+      service_routing_methods = {
+          {"Landroid/content/Context;.startService:(Landroid/content/Intent;)Landroid/content/ComponentName;",
+           1},
+          {"Landroidx/core/app/JobIntentService;.enqueueWork:(Landroid/content/Context;Ljava/lang/Class;ILandroid/content/Intent;)V",
+           3},
+      };
+
+  return service_routing_methods;
 }
 
-const std::unordered_set<std::string>&
+const std::unordered_set<std::string_view>&
 get_broadcast_receiver_routing_method_names() {
-  static const std::unordered_set<std::string> receiver_routing_method_names = {
-      "sendBroadcast",
-      "sendBroadcastAsUser",
-      "sendBroadcastWithMultiplePermissions",
-      "sendOrderedBroadcast",
-      "sendOrderedBroadcastAsUser",
-      "sendStickyBroadcast",
-      "sendStickyBroadcastAsUser",
-      "sendStickyOrderedBroadcast",
-      "sendStickyOrderedBroadcastAsUser"};
+  static const std::unordered_set<std::string_view>
+      receiver_routing_method_names = {
+          "sendBroadcast",
+          "sendBroadcastAsUser",
+          "sendBroadcastWithMultiplePermissions",
+          "sendOrderedBroadcast",
+          "sendOrderedBroadcastAsUser",
+          "sendStickyBroadcast",
+          "sendStickyBroadcastAsUser",
+          "sendStickyOrderedBroadcast",
+          "sendStickyOrderedBroadcastAsUser"};
+
   return receiver_routing_method_names;
 }
 
-const std::unordered_map<std::string, std::pair<ParameterPosition, Component>>&
-get_intent_receiving_method_names() {
+const std::
+    unordered_map<std::string_view, std::pair<ParameterPosition, Component>>&
+    get_intent_receiving_method_names() {
   static const std::
-      unordered_map<std::string, std::pair<ParameterPosition, Component>>
+      unordered_map<std::string_view, std::pair<ParameterPosition, Component>>
           intent_receiving_method_names = {
               {"onStartCommand", {1, Component::Service}},
               {"onHandleIntent", {1, Component::Service}},
               {"onHandleWork", {1, Component::Service}},
               {"onNewIntent", {1, Component::Activity}},
               {"onReceive", {2, Component::BroadcastReceiver}}};
+
   return intent_receiving_method_names;
 }
 
@@ -89,6 +100,7 @@ get_intent_class_setters() {
        2},
       {"Landroid/content/Intent;.setClassName:(Ljava/lang/String;Ljava/lang/String;)Landroid/content/Intent;",
        2}};
+
   return intent_class_setters;
 }
 

@@ -7,8 +7,9 @@
 
 #pragma once
 
-#include <string>
+#include <string_view>
 #include <unordered_map>
+#include <unordered_set>
 
 #include <mariana-trench/Access.h>
 
@@ -30,17 +31,18 @@ std::string_view get_public_access_scope();
 // For now, use a mapping of method signature to intent argument position.
 // Taint is routed via the intent, so its position per activity routing method
 // needs to be known.
-std::unordered_map<std::string, ParameterPosition>
+const std::unordered_map<std::string_view, ParameterPosition>&
 get_activity_routing_methods();
 
-std::unordered_map<std::string, ParameterPosition>
+const std::unordered_map<std::string_view, ParameterPosition>&
 get_service_routing_methods();
 
-const std::unordered_set<std::string>&
+const std::unordered_set<std::string_view>&
 get_broadcast_receiver_routing_method_names();
 
-const std::unordered_map<std::string, std::pair<ParameterPosition, Component>>&
-get_intent_receiving_method_names();
+const std::
+    unordered_map<std::string_view, std::pair<ParameterPosition, Component>>&
+    get_intent_receiving_method_names();
 
 const std::unordered_map<std::string_view, ParameterPosition>&
 get_intent_class_setters();
