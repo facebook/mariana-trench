@@ -57,6 +57,11 @@
     "axios": "^0.30.2",
     "brace-expansion": "^4.0.0",
     "node-forge": "^1.3.2",
-    "qs": "^6.14.1"
+    "qs": "^6.14.1",
+    "@babel/helpers": "^7.28.4",
+    "@babel/runtime": "^7.28.4",
+    "@babel/runtime-corejs3": "^7.28.4",
+    "diff": "^5.2.2",
+    "http-proxy-middleware": "^2.0.9"
   }
 }
