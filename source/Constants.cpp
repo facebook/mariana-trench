@@ -77,6 +77,10 @@ const std::
   return intent_receiving_method_names;
 }
 
+const std::string_view get_intent_receiving_api_method_name() {
+  return "getIntent";
+}
+
 const std::unordered_map<std::string_view, ParameterPosition>&
 get_intent_class_setters() {
   static const std::unordered_map<std::string_view, ParameterPosition> intent_class_setters = {

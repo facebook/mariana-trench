@@ -55,12 +55,12 @@ Context test_types(const Scope& scope) {
 using SerializedMultimap =
     std::vector<std::pair<std::string, std::vector<std::string>>>;
 
-SerializedMultimap serialize_classes_to_intent_receivers(
-    const IntentRoutingAnalyzer::ClassesToIntentReceiversMap&
-        classes_to_intent_receivers) {
+SerializedMultimap serialize_target_classes_to_receive_points(
+    const IntentRoutingAnalyzer::TargetClassesToReceivePointsMap&
+        target_classes_to_receive_points) {
   SerializedMultimap serialized;
   for (const auto& [dex_type, receiving_methods] :
-       UnorderedIterable(classes_to_intent_receivers)) {
+       UnorderedIterable(target_classes_to_receive_points)) {
     std::vector<std::string> serialized_methods;
     for (const auto& receiving_method : receiving_methods) {
       serialized_methods.push_back(receiving_method.method->show());
@@ -72,12 +72,12 @@ SerializedMultimap serialize_classes_to_intent_receivers(
   return serialized;
 }
 
-SerializedMultimap serialize_methods_to_routed_intents(
-    const IntentRoutingAnalyzer::MethodToRoutedIntentClassesMap&
-        method_to_routed_intents) {
+SerializedMultimap serialize_method_to_send_targets(
+    const IntentRoutingAnalyzer::MethodToSendTargetsMap&
+        method_to_send_targets) {
   SerializedMultimap serialized;
   for (const auto& [method, dex_types] :
-       UnorderedIterable(method_to_routed_intents)) {
+       UnorderedIterable(method_to_send_targets)) {
     std::vector<std::string> serialized_types;
     for (const auto& dex_type : dex_types) {
       serialized_types.emplace_back(dex_type->str());
@@ -190,19 +190,21 @@ TEST_F(ShimsTest, TestBuildCrossComponentAnalysisShims) {
   auto intent_routing_analyzer = IntentRoutingAnalyzer::run(
       *context.methods, *context.types, *context.options);
 
-  auto classes_to_intent_receivers = serialize_classes_to_intent_receivers(
-      intent_routing_analyzer->classes_to_intent_receivers());
+  auto target_classes_to_receive_points =
+      serialize_target_classes_to_receive_points(
+          intent_routing_analyzer->target_classes_to_receive_points());
   SerializedMultimap expected_classes_to_intent_receivers{std::make_pair(
       "LClass;",
       std::vector<std::string>{
           "LClass;.also_gets_routed_intent:()V",
           "LClass;.gets_routed_intent:()V",
       })};
-  EXPECT_EQ(classes_to_intent_receivers, expected_classes_to_intent_receivers);
+  EXPECT_EQ(
+      target_classes_to_receive_points, expected_classes_to_intent_receivers);
 
-  auto methods_to_routed_intents = serialize_methods_to_routed_intents(
-      intent_routing_analyzer->methods_to_routed_intents());
-  SerializedMultimap expected_methods_to_routed_intents{
+  auto method_to_send_targets = serialize_method_to_send_targets(
+      intent_routing_analyzer->method_to_send_targets());
+  SerializedMultimap expected_method_to_send_targets{
       std::make_pair(
           "LClass;.routes_intent_via_constructor:()V",
           std::vector<std::string>{"LRouteTo;"}),
@@ -211,7 +213,7 @@ TEST_F(ShimsTest, TestBuildCrossComponentAnalysisShims) {
           std::vector<std::string>{"LRouteTo;"}),
 
   };
-  EXPECT_EQ(methods_to_routed_intents, expected_methods_to_routed_intents);
+  EXPECT_EQ(method_to_send_targets, expected_method_to_send_targets);
 }
 
 TEST_F(ShimsTest, TestGetShimForCaller) {

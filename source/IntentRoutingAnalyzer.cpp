@@ -20,50 +20,48 @@ namespace marianatrench {
 
 namespace {
 
-using RoutedIntents = PatriciaTreeSetAbstractDomain<
+using SendTargetsDomain = PatriciaTreeSetAbstractDomain<
     const DexType*,
     /* bottom_is_empty */ true,
     /* with_top */ true>;
 
-using InstructionsToRoutedIntents = sparta::
-    PatriciaTreeMapAbstractPartition<const IRInstruction*, RoutedIntents>;
+using SendPointToSendTargetsDomain = sparta::
+    PatriciaTreeMapAbstractPartition<const IRInstruction*, SendTargetsDomain>;
 
 class IntentRoutingContext final {
  public:
   IntentRoutingContext(
-      ReceivingMethod& method,
+      IntentRoutingAnalyzer::ReceivePoint& method,
       const Types& types,
       const Options& options)
-      : routed_intents_({}),
-        receiving_method_(method),
+      : send_point_to_send_targets_({}),
+        receiving_point_(method),
         types_(types),
-        dump_(receiving_method_.method->should_be_logged(options)) {}
+        dump_(receiving_point_.method->should_be_logged(options)) {}
 
   DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(IntentRoutingContext)
 
-  void add_routed_intent(
-      const IRInstruction* instruction,
-      const DexType* type) {
-    auto routed_intents = routed_intents_.get(instruction);
-    routed_intents.add(type);
-    routed_intents_.set(instruction, routed_intents);
+  void add_send_target(const IRInstruction* instruction, const DexType* type) {
+    auto send_targets = send_point_to_send_targets_.get(instruction);
+    send_targets.add(type);
+    send_point_to_send_targets_.set(instruction, send_targets);
   }
 
-  void mark_as_getting_routed_intent(Root root, Component component) {
-    receiving_method_.root = root;
-    receiving_method_.component = component;
+  void mark_as_receive_point(Root root, Component component) {
+    receiving_point_.root = root;
+    receiving_point_.component = component;
   }
 
-  ReceivingMethod method_gets_routed_intent() {
-    return receiving_method_;
+  IntentRoutingAnalyzer::ReceivePoint receive_point() {
+    return receiving_point_;
   }
 
-  const InstructionsToRoutedIntents& instructions_to_routed_intents() {
-    return routed_intents_;
+  const SendPointToSendTargetsDomain& send_points_to_send_targets() {
+    return send_point_to_send_targets_;
   }
 
   const Method* method() {
-    return receiving_method_.method;
+    return receiving_point_.method;
   }
 
   const Types& types() {
@@ -75,28 +73,28 @@ class IntentRoutingContext final {
   }
 
  private:
-  InstructionsToRoutedIntents routed_intents_;
-  ReceivingMethod receiving_method_;
+  SendPointToSendTargetsDomain send_point_to_send_targets_;
+  IntentRoutingAnalyzer::ReceivePoint receiving_point_;
   const Types& types_;
   bool dump_;
 };
 
 class Transfer final : public InstructionAnalyzerBase<
                            Transfer,
-                           InstructionsToRoutedIntents,
+                           SendPointToSendTargetsDomain,
                            IntentRoutingContext*> {
  public:
   static bool analyze_default(
       IntentRoutingContext* /* context */,
       const IRInstruction* /* instruction */,
-      InstructionsToRoutedIntents* /* current_state */) {
+      SendPointToSendTargetsDomain* /* current_state */) {
     return false;
   }
 
   static bool analyze_invoke(
       IntentRoutingContext* context,
       const IRInstruction* instruction,
-      InstructionsToRoutedIntents* /* current_state */) {
+      SendPointToSendTargetsDomain* /* current_state */) {
     LOG_OR_DUMP(context, 4, "Analyzing instruction: {}", show(instruction));
     DexMethodRef* dex_method_reference = instruction->get_method();
     auto method = resolve_method_deprecated(
@@ -108,11 +106,14 @@ class Transfer final : public InstructionAnalyzerBase<
       return false;
     }
 
+    auto method_signature = show(method);
+
     // Check for reflection-based-based (java.lang.Class or java.lang.String)
     // intent class setters. E.g., Intent(context, MyActivity.class),
     // Intent(context, "MyActivity")
     const auto& intent_class_setters = constants::get_intent_class_setters();
-    auto intent_parameter_position = intent_class_setters.find(show(method));
+    auto intent_parameter_position =
+        intent_class_setters.find(method_signature);
     if (intent_parameter_position != intent_class_setters.end()) {
       auto class_index = intent_parameter_position->second;
 
@@ -148,16 +149,18 @@ class Transfer final : public InstructionAnalyzerBase<
           context->method()->show(),
           show(type));
 
-      context->add_routed_intent(instruction, type);
+      context->add_send_target(instruction, type);
     } else if (
-        method->get_name()->str() == "getIntent" &&
+        method->get_name()->str() ==
+            constants::get_intent_receiving_api_method_name() &&
         method->get_proto()->get_rtype()->str() == "Landroid/content/Intent;") {
       LOG_OR_DUMP(
           context,
           4,
-          "Method `{}` calls getIntent()",
-          context->method()->show());
-      context->mark_as_getting_routed_intent(
+          "Method `{}` calls receive-api `{}`",
+          context->method()->show(),
+          method_signature);
+      context->mark_as_receive_point(
           Root(Root::Kind::CallEffectIntent), Component::Activity);
     }
 
@@ -168,17 +171,17 @@ class Transfer final : public InstructionAnalyzerBase<
 class IntentRoutingFixpointIterator final
     : public sparta::MonotonicFixpointIterator<
           cfg::GraphInterface,
-          InstructionsToRoutedIntents> {
+          SendPointToSendTargetsDomain> {
  public:
   IntentRoutingFixpointIterator(
       const cfg::ControlFlowGraph& cfg,
-      InstructionAnalyzer<InstructionsToRoutedIntents> instruction_analyzer)
+      InstructionAnalyzer<SendPointToSendTargetsDomain> instruction_analyzer)
       : MonotonicFixpointIterator(cfg),
         instruction_analyzer_(instruction_analyzer) {}
 
   void analyze_node(
       const NodeId& block,
-      InstructionsToRoutedIntents* current_state) const override {
+      SendPointToSendTargetsDomain* current_state) const override {
     for (auto& entry : *block) {
       switch (entry.type) {
         case MFLOW_OPCODE:
@@ -191,20 +194,20 @@ class IntentRoutingFixpointIterator final
     }
   }
 
-  InstructionsToRoutedIntents analyze_edge(
+  SendPointToSendTargetsDomain analyze_edge(
       const cfg::GraphInterface::EdgeId&,
-      const InstructionsToRoutedIntents& exit_state) const override {
+      const SendPointToSendTargetsDomain& exit_state) const override {
     return exit_state;
   }
 
  private:
-  InstructionAnalyzer<InstructionsToRoutedIntents> instruction_analyzer_;
+  InstructionAnalyzer<SendPointToSendTargetsDomain> instruction_analyzer_;
 };
 
 struct IntentRoutingData {
  public:
-  ReceivingMethod receiving_intent_root;
-  std::vector<const DexType*> routed_intents;
+  IntentRoutingAnalyzer::ReceivePoint receive_point;
+  IntentRoutingAnalyzer::SendTargets send_targets;
 };
 
 std::pair<std::optional<Component>, std::optional<ShimRoot>>
@@ -247,27 +250,27 @@ IntentRoutingData method_routes_intents_to(
     const Method* method,
     const Types& types,
     const Options& options) {
-  ReceivingMethod receiving_method = {
+  IntentRoutingAnalyzer::ReceivePoint receive_point = {
       .method = method,
       .root = std::nullopt,
       .component = std::nullopt,
   };
   auto* code = method->get_code();
   if (code == nullptr) {
-    return {/* receiving_intent_root */ receiving_method,
-            /* routed_intents */ {}};
+    return {/* receive_point */ receive_point,
+            /* send_targets */ {}};
   }
 
   if (!code->cfg_built()) {
     LOG(1,
         "CFG not built for method: {}. Cannot evaluate routed intents.",
         method->show());
-    return {/* receiving_intent_root */ receiving_method,
-            /* routed_intents */ {}};
+    return {/* receive_point */ receive_point,
+            /* send_targets */ {}};
   }
 
   auto context =
-      std::make_unique<IntentRoutingContext>(receiving_method, types, options);
+      std::make_unique<IntentRoutingContext>(receive_point, types, options);
 
   auto intent_receiving_method_names =
       constants::get_intent_receiving_method_names();
@@ -278,7 +281,7 @@ IntentRoutingData method_routes_intents_to(
     if (args->size() >= match->second.first &&
         args->at(match->second.first - 1) ==
             DexType::get_type("Landroid/content/Intent;")) {
-      context->mark_as_getting_routed_intent(
+      context->mark_as_receive_point(
           Root(Root::Kind::Argument, match->second.first),
           match->second.second);
     }
@@ -286,18 +289,17 @@ IntentRoutingData method_routes_intents_to(
 
   auto fixpoint = IntentRoutingFixpointIterator(
       code->cfg(), InstructionAnalyzerCombiner<Transfer>(context.get()));
-  InstructionsToRoutedIntents instructions_to_routed_intents{};
-  fixpoint.run(instructions_to_routed_intents);
-  std::vector<const DexType*> routed_intents;
+  SendPointToSendTargetsDomain send_points_to_send_targets{};
+  fixpoint.run(send_points_to_send_targets);
+  IntentRoutingAnalyzer::SendTargets send_targets;
   for (auto& instruction_to_intents :
-       context->instructions_to_routed_intents().bindings()) {
+       context->send_points_to_send_targets().bindings()) {
     for (auto intent : instruction_to_intents.second.elements()) {
-      routed_intents.push_back(intent);
+      send_targets.push_back(intent);
     }
   }
-  return IntentRoutingData{
-      /* receiving_intent_root */ context->method_gets_routed_intent(),
-      routed_intents};
+  return IntentRoutingData{/* receive_point */ context->receive_point(),
+                           send_targets};
 }
 
 } // namespace
@@ -310,28 +312,32 @@ std::unique_ptr<IntentRoutingAnalyzer> IntentRoutingAnalyzer::run(
 
   auto queue = sparta::work_queue<const Method*>([&](const Method* method) {
     auto intent_routing_data = method_routes_intents_to(method, types, options);
-    if (intent_routing_data.receiving_intent_root.root != std::nullopt) {
+
+    // Process receive-points: Methods that receive intents from other
+    // components
+    if (intent_routing_data.receive_point.root != std::nullopt) {
       LOG(5,
-          "Shimming {} as a method that receives an Intent.",
+          "Shimming {} as a method that receives an Intent (receive-point).",
           method->show());
       auto klass = method->get_class();
-      analyzer->classes_to_intent_receivers_.update(
+      analyzer->target_classes_to_receive_points_.update(
           klass,
           [&intent_routing_data](
               const DexType* /* key */,
-              std::vector<ReceivingMethod>& methods,
+              std::vector<ReceivePoint>& methods,
               bool /* exists */) {
-            methods.emplace_back(intent_routing_data.receiving_intent_root);
+            methods.emplace_back(intent_routing_data.receive_point);
             return methods;
           });
     }
 
-    if (!intent_routing_data.routed_intents.empty()) {
+    // Process send-points: Methods that route intents to other components
+    if (!intent_routing_data.send_targets.empty()) {
       LOG(5,
-          "Shimming {} as a method that routes intents cross-component.",
+          "Shimming {} as a method that routes intents cross-component (send-point).",
           method->show());
-      analyzer->methods_to_routed_intents_.emplace(
-          method, intent_routing_data.routed_intents);
+      analyzer->method_to_send_targets_.emplace(
+          method, intent_routing_data.send_targets);
     }
   });
 
@@ -349,31 +355,40 @@ IntentRoutingAnalyzer::get_intent_routing_targets(
     const Method* caller) const {
   InstantiatedShim::FlatSet<ShimTarget> intent_routing_targets;
 
-  // Check if callee is an intent launcher
+  // Check if callee is a send-point (intent launcher API like startActivity)
   auto [component, position] = get_position_from_callee(original_callee);
   if (!component || !position) {
     return intent_routing_targets;
   }
 
-  // check if the method handles incoming intents (e.g. getIntent())
-  auto routed_intent_classes = methods_to_routed_intents_.find(caller);
-  if (routed_intent_classes == methods_to_routed_intents_.end()) {
+  // Check if the caller is a method that sets target classes for intents
+  auto send_targets_entry = method_to_send_targets_.find(caller);
+  if (send_targets_entry == method_to_send_targets_.end()) {
     return intent_routing_targets;
   }
 
-  for (const auto& intent_class : routed_intent_classes->second) {
-    auto intent_receivers = classes_to_intent_receivers_.find(intent_class);
-    if (intent_receivers == classes_to_intent_receivers_.end()) {
+  // For each target class, find all receive-points that can handle the intent
+  for (const auto& target_class : send_targets_entry->second) {
+    auto receive_points_entry =
+        target_classes_to_receive_points_.find(target_class);
+    if (receive_points_entry == target_classes_to_receive_points_.end()) {
       continue;
     }
-    for (const auto& intent_receiver : intent_receivers->second) {
-      if (*component != intent_receiver.component ||
-          intent_receiver.root == std::nullopt) {
+
+    // For each receive-point in the target class
+    for (const auto& receive_point : receive_points_entry->second) {
+      // Skip if component type doesn't match or if the receive-point doesn't
+      // have a root
+      if (*component != receive_point.component ||
+          receive_point.root == std::nullopt) {
         continue;
       }
+
+      // Create a parameter mapping to connect the send-point to the
+      // receive-point
       intent_routing_targets.emplace(
-          intent_receiver.method,
-          ShimParameterMapping({{*intent_receiver.root, *position}}));
+          receive_point.method,
+          ShimParameterMapping({{*receive_point.root, *position}}));
     }
   }
 

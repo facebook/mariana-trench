@@ -44,6 +44,8 @@ const std::
     unordered_map<std::string_view, std::pair<ParameterPosition, Component>>&
     get_intent_receiving_method_names();
 
+const std::string_view get_intent_receiving_api_method_name();
+
 const std::unordered_map<std::string_view, ParameterPosition>&
 get_intent_class_setters();
 
