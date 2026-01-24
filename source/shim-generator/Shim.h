@@ -55,25 +55,24 @@ class ShimMethod final {
 };
 
 /**
- * Tracks the mapping of parameter positions from
- * `shim-target` (`ParameterPosition`) to
+ * Tracks the mapping of parameter positions from `shim-target` (`Root`) to
  * parameter positions / return ports in the `shimmed-method` (`ShimRoot`)
  */
-class ShimParameterMapping final {
+class ShimTargetPortMapping final {
  public:
   using MapType = boost::container::flat_map<Root, ShimRoot>;
 
  public:
-  explicit ShimParameterMapping(
+  explicit ShimTargetPortMapping(
       std::initializer_list<MapType::value_type> init = {});
 
-  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ShimParameterMapping)
+  INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ShimTargetPortMapping)
 
-  bool operator==(const ShimParameterMapping& other) const;
+  bool operator==(const ShimTargetPortMapping& other) const;
 
-  bool operator<(const ShimParameterMapping& other) const;
+  bool operator<(const ShimTargetPortMapping& other) const;
 
-  static ShimParameterMapping from_json(
+  static ShimTargetPortMapping from_json(
       const Json::Value& value,
       bool infer_from_types);
 
@@ -99,7 +98,7 @@ class ShimParameterMapping final {
 
   void add_receiver(ShimRoot shim_parameter_position);
 
-  ShimParameterMapping instantiate_parameters(
+  ShimTargetPortMapping instantiate(
       std::string_view shim_target_method,
       const DexType* shim_target_class,
       const DexProto* shim_target_proto,
@@ -113,9 +112,9 @@ class ShimParameterMapping final {
 
   friend std::ostream& operator<<(
       std::ostream& out,
-      const ShimParameterMapping& map);
+      const ShimTargetPortMapping& map);
 
-  friend std::hash<ShimParameterMapping>;
+  friend std::hash<ShimTargetPortMapping>;
 
  private:
   MapType map_;
@@ -129,12 +128,10 @@ class ShimTarget final {
  public:
   explicit ShimTarget(
       DexMethodSpec method_spec,
-      ShimParameterMapping parameter_mapping,
+      ShimTargetPortMapping port_mapping,
       bool is_static);
 
-  explicit ShimTarget(
-      const Method* method,
-      ShimParameterMapping parameter_mapping);
+  explicit ShimTarget(const Method* method, ShimTargetPortMapping port_mapping);
 
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ShimTarget)
 
@@ -164,7 +161,7 @@ class ShimTarget final {
 
  private:
   DexMethodSpec method_spec_;
-  ShimParameterMapping parameter_mapping_;
+  ShimTargetPortMapping port_mapping_;
   bool is_static_;
 };
 
@@ -176,7 +173,7 @@ class ShimReflectionTarget final {
  public:
   explicit ShimReflectionTarget(
       DexMethodSpec method_spec,
-      ShimParameterMapping parameter_mapping);
+      ShimTargetPortMapping port_mapping);
 
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ShimReflectionTarget)
 
@@ -202,7 +199,7 @@ class ShimReflectionTarget final {
 
  private:
   DexMethodSpec method_spec_;
-  ShimParameterMapping parameter_mapping_;
+  ShimTargetPortMapping port_mapping_;
 };
 
 /**
@@ -216,7 +213,7 @@ class ShimLifecycleTarget final {
       std::string method_name,
       ShimRoot receiver_position,
       bool is_reflection,
-      bool infer_parameter_mapping);
+      bool infer_from_types);
 
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ShimLifecycleTarget)
 
@@ -262,16 +259,17 @@ using ShimTargetVariant =
 } // namespace marianatrench
 
 template <>
-struct std::hash<marianatrench::ShimParameterMapping> {
+struct std::hash<marianatrench::ShimTargetPortMapping> {
   std::size_t operator()(
-      const marianatrench::ShimParameterMapping& shim_parameter_mapping) const {
+      const marianatrench::ShimTargetPortMapping& port_mapping) const {
     std::size_t seed = 0;
-    boost::hash_combine(seed, shim_parameter_mapping.infer_from_types_);
-    for (const auto& [root, shim_root] : shim_parameter_mapping.map_) {
+    boost::hash_combine(seed, port_mapping.infer_from_types_);
+    for (const auto& [root, shim_root] : port_mapping.map_) {
       boost::hash_combine(seed, std::hash<marianatrench::Root>()(root));
       boost::hash_combine(
           seed, std::hash<marianatrench::ShimRoot>()(shim_root));
     }
+
     return seed;
   }
 };
@@ -284,8 +282,8 @@ struct std::hash<marianatrench::ShimTarget> {
         seed, std::hash<DexMethodSpec>()(shim_target.method_spec_));
     boost::hash_combine(
         seed,
-        std::hash<marianatrench::ShimParameterMapping>()(
-            shim_target.parameter_mapping_));
+        std::hash<marianatrench::ShimTargetPortMapping>()(
+            shim_target.port_mapping_));
     boost::hash_combine(seed, shim_target.is_static_);
     return seed;
   }
@@ -300,8 +298,8 @@ struct std::hash<marianatrench::ShimReflectionTarget> {
         seed, std::hash<DexMethodSpec>()(shim_reflection_target.method_spec_));
     boost::hash_combine(
         seed,
-        std::hash<marianatrench::ShimParameterMapping>()(
-            shim_reflection_target.parameter_mapping_));
+        std::hash<marianatrench::ShimTargetPortMapping>()(
+            shim_reflection_target.port_mapping_));
     return seed;
   }
 };

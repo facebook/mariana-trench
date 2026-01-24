@@ -97,29 +97,31 @@ std::optional<ShimRoot> ShimMethod::type_position(
   return found->second;
 }
 
-ShimParameterMapping::ShimParameterMapping(
+ShimTargetPortMapping::ShimTargetPortMapping(
     std::initializer_list<MapType::value_type> init)
     : map_(init), infer_from_types_(false) {}
 
-bool ShimParameterMapping::operator==(const ShimParameterMapping& other) const {
+bool ShimTargetPortMapping::operator==(
+    const ShimTargetPortMapping& other) const {
   return infer_from_types_ == other.infer_from_types_ && map_ == other.map_;
 }
 
-bool ShimParameterMapping::operator<(const ShimParameterMapping& other) const {
+bool ShimTargetPortMapping::operator<(
+    const ShimTargetPortMapping& other) const {
   // Lexicographic comparison
   return std::tie(infer_from_types_, map_) <
       std::tie(other.infer_from_types_, other.map_);
 }
 
-bool ShimParameterMapping::empty() const {
+bool ShimTargetPortMapping::empty() const {
   return map_.empty();
 }
 
-bool ShimParameterMapping::contains(Root position) const {
+bool ShimTargetPortMapping::contains(Root position) const {
   return map_.count(position) > 0;
 }
 
-std::optional<ShimRoot> ShimParameterMapping::at(
+std::optional<ShimRoot> ShimTargetPortMapping::at(
     Root parameter_position) const {
   auto found = map_.find(parameter_position);
   if (found == map_.end()) {
@@ -129,26 +131,26 @@ std::optional<ShimRoot> ShimParameterMapping::at(
   return found->second;
 }
 
-void ShimParameterMapping::insert(
+void ShimTargetPortMapping::insert(
     Root parameter_position,
     ShimRoot shim_parameter_position) {
   map_.insert({parameter_position, shim_parameter_position});
 }
 
-void ShimParameterMapping::set_infer_from_types(bool value) {
+void ShimTargetPortMapping::set_infer_from_types(bool value) {
   infer_from_types_ = value;
 }
 
-bool ShimParameterMapping::infer_from_types() const {
+bool ShimTargetPortMapping::infer_from_types() const {
   return infer_from_types_;
 }
 
-void ShimParameterMapping::add_receiver(ShimRoot shim_parameter_position) {
+void ShimTargetPortMapping::add_receiver(ShimRoot shim_parameter_position) {
   // Include `this` as argument 0
   insert(Root::argument(0), shim_parameter_position);
 }
 
-void ShimParameterMapping::infer_parameters_from_types(
+void ShimTargetPortMapping::infer_parameters_from_types(
     const DexProto* shim_target_proto,
     bool shim_target_is_static,
     const ShimMethod& shim_method) {
@@ -171,14 +173,14 @@ void ShimParameterMapping::infer_parameters_from_types(
   }
 }
 
-ShimParameterMapping ShimParameterMapping::from_json(
+ShimTargetPortMapping ShimTargetPortMapping::from_json(
     const Json::Value& value,
     bool infer_from_types) {
-  ShimParameterMapping parameter_mapping;
-  parameter_mapping.set_infer_from_types(infer_from_types);
+  ShimTargetPortMapping port_mapping;
+  port_mapping.set_infer_from_types(infer_from_types);
 
   if (value.isNull()) {
-    return parameter_mapping;
+    return port_mapping;
   }
 
   JsonValidation::validate_object(value);
@@ -186,21 +188,21 @@ ShimParameterMapping ShimParameterMapping::from_json(
   for (auto item = value.begin(); item != value.end(); ++item) {
     auto parameter_argument = JsonValidation::string(item.key());
     auto shim_argument = JsonValidation::string(*item);
-    parameter_mapping.insert(
+    port_mapping.insert(
         Root::from_json(parameter_argument), Root::from_json(shim_argument));
   }
 
-  return parameter_mapping;
+  return port_mapping;
 }
 
-ShimParameterMapping ShimParameterMapping::instantiate_parameters(
+ShimTargetPortMapping ShimTargetPortMapping::instantiate(
     std::string_view shim_target_method,
     const DexType* shim_target_class,
     const DexProto* shim_target_proto,
     bool shim_target_is_static,
     const ShimMethod& shim_method) const {
-  ShimParameterMapping parameter_mapping;
-  parameter_mapping.set_infer_from_types(infer_from_types());
+  ShimTargetPortMapping port_mapping;
+  port_mapping.set_infer_from_types(infer_from_types());
 
   for (const auto& [shim_target_position, shim_position] : map_) {
     if (shim_target_position.is_argument() &&
@@ -213,43 +215,41 @@ ShimParameterMapping ShimParameterMapping::instantiate_parameters(
       continue;
     }
 
-    parameter_mapping.insert(shim_target_position, shim_position);
+    port_mapping.insert(shim_target_position, shim_position);
   }
 
   if (infer_from_types()) {
-    parameter_mapping.infer_parameters_from_types(
+    port_mapping.infer_parameters_from_types(
         shim_target_proto, shim_target_is_static, shim_method);
   }
 
-  return parameter_mapping;
+  return port_mapping;
 }
 
 ShimTarget::ShimTarget(
     DexMethodSpec method_spec,
-    ShimParameterMapping parameter_mapping,
+    ShimTargetPortMapping port_mapping,
     bool is_static)
     : method_spec_(std::move(method_spec)),
-      parameter_mapping_(std::move(parameter_mapping)),
+      port_mapping_(std::move(port_mapping)),
       is_static_(is_static) {
   mt_assert(
       method_spec_.cls != nullptr && method_spec_.name != nullptr &&
       method_spec_.proto != nullptr);
 }
 
-ShimTarget::ShimTarget(
-    const Method* method,
-    ShimParameterMapping parameter_mapping)
+ShimTarget::ShimTarget(const Method* method, ShimTargetPortMapping port_mapping)
     : ShimTarget(
           DexMethodSpec{
               method->get_class(),
               DexString::get_string(method->get_name()),
               method->get_proto()},
-          std::move(parameter_mapping),
+          std::move(port_mapping),
           method->is_static()) {}
 
 bool ShimTarget::operator==(const ShimTarget& other) const {
   return is_static_ == other.is_static_ && method_spec_ == other.method_spec_ &&
-      parameter_mapping_ == other.parameter_mapping_;
+      port_mapping_ == other.port_mapping_;
 }
 
 bool ShimTarget::operator<(const ShimTarget& other) const {
@@ -259,13 +259,13 @@ bool ShimTarget::operator<(const ShimTarget& other) const {
              method_spec_.cls,
              method_spec_.name,
              method_spec_.proto,
-             parameter_mapping_) <
+             port_mapping_) <
       std::tie(
              other.is_static_,
              other.method_spec_.cls,
              other.method_spec_.name,
              other.method_spec_.proto,
-             other.parameter_mapping_);
+             other.port_mapping_);
 }
 
 std::optional<Register> ShimTarget::receiver_register(
@@ -274,7 +274,7 @@ std::optional<Register> ShimTarget::receiver_register(
     return std::nullopt;
   }
 
-  auto receiver_position = parameter_mapping_.at(Root::argument(0));
+  auto receiver_position = port_mapping_.at(Root::argument(0));
   if (!receiver_position) {
     return std::nullopt;
   }
@@ -293,7 +293,7 @@ std::unordered_map<Root, Register> ShimTarget::root_registers(
     const IRInstruction* instruction) const {
   std::unordered_map<Root, Register> root_registers;
 
-  for (const auto& [root, shimmed_method_root] : parameter_mapping_) {
+  for (const auto& [root, shimmed_method_root] : port_mapping_) {
     if (shimmed_method_root.is_return()) {
       mt_assert_log(
           root.is_argument() && root.parameter_position() == 0,
@@ -311,20 +311,19 @@ std::unordered_map<Root, Register> ShimTarget::root_registers(
 
 ShimReflectionTarget::ShimReflectionTarget(
     DexMethodSpec method_spec,
-    ShimParameterMapping parameter_mapping)
-    : method_spec_(method_spec),
-      parameter_mapping_(std::move(parameter_mapping)) {
+    ShimTargetPortMapping port_mapping)
+    : method_spec_(method_spec), port_mapping_(std::move(port_mapping)) {
   mt_assert(
       method_spec_.cls == type::java_lang_Class() &&
       method_spec_.name != nullptr && method_spec_.proto != nullptr);
   mt_assert_log(
-      parameter_mapping_.contains(Root::argument(0)),
+      port_mapping_.contains(Root::argument(0)),
       "Missing parameter mapping for receiver for reflection shim target");
 }
 
 bool ShimReflectionTarget::operator==(const ShimReflectionTarget& other) const {
   return method_spec_ == other.method_spec_ &&
-      parameter_mapping_ == other.parameter_mapping_;
+      port_mapping_ == other.port_mapping_;
 }
 
 bool ShimReflectionTarget::operator<(const ShimReflectionTarget& other) const {
@@ -333,18 +332,18 @@ bool ShimReflectionTarget::operator<(const ShimReflectionTarget& other) const {
              method_spec_.cls,
              method_spec_.name,
              method_spec_.proto,
-             parameter_mapping_) <
+             port_mapping_) <
       std::tie(
              other.method_spec_.cls,
              other.method_spec_.name,
              other.method_spec_.proto,
-             other.parameter_mapping_);
+             other.port_mapping_);
 }
 
 Register ShimReflectionTarget::receiver_register(
     const IRInstruction* instruction) const {
   auto receiver_parameter_position =
-      parameter_mapping_.at(Root::argument(0))->parameter_position();
+      port_mapping_.at(Root::argument(0))->parameter_position();
   mt_assert(receiver_parameter_position < instruction->srcs_size());
 
   return instruction->src(receiver_parameter_position);
@@ -360,7 +359,7 @@ std::unordered_map<Root, Register> ShimReflectionTarget::root_registers(
   for (ParameterPosition position = 1;
        position < resolved_reflection->number_of_parameters();
        ++position) {
-    if (auto shim_position = parameter_mapping_.at(Root::argument(position))) {
+    if (auto shim_position = port_mapping_.at(Root::argument(position))) {
       auto shim_parameter_position = shim_position->parameter_position();
       mt_assert(shim_parameter_position < instruction->srcs_size());
       root_registers.emplace(
@@ -422,22 +421,22 @@ std::unordered_map<Root, Register> ShimLifecycleTarget::root_registers(
   std::unordered_map<Root, Register> root_registers;
   ShimMethod shim_method{callee};
 
-  ShimParameterMapping parameter_mapping;
+  ShimTargetPortMapping port_mapping;
 
   // For reflection receivers, do not propagate the `this` argument, as it
   // is always a new instance.
   if (!is_reflection()) {
-    parameter_mapping.add_receiver(receiver_position_);
+    port_mapping.add_receiver(receiver_position_);
   }
 
   if (infer_from_types()) {
-    parameter_mapping.infer_parameters_from_types(
+    port_mapping.infer_parameters_from_types(
         lifecycle_method->get_proto(),
         lifecycle_method->is_static(),
         shim_method);
   }
 
-  for (const auto& [root, shimmed_method_root] : parameter_mapping) {
+  for (const auto& [root, shimmed_method_root] : port_mapping) {
     if (shimmed_method_root.is_return()) {
       // Return position maps to RESULT_REGISTER
       root_registers.emplace(root, RESULT_REGISTER);
@@ -514,7 +513,7 @@ std::ostream& operator<<(std::ostream& out, const ShimMethod& shim_method) {
   return out;
 }
 
-std::ostream& operator<<(std::ostream& out, const ShimParameterMapping& map) {
+std::ostream& operator<<(std::ostream& out, const ShimTargetPortMapping& map) {
   out << "infer_from_types=`";
   out << (map.infer_from_types() ? "true" : "false") << "`, ";
   out << "parameters_map={";
@@ -533,7 +532,7 @@ std::ostream& operator<<(std::ostream& out, const ShimTarget& shim_target) {
   out << "`, proto=`";
   out << show(shim_target.method_spec_.proto);
   out << "`";
-  out << ", " << shim_target.parameter_mapping_;
+  out << ", " << shim_target.port_mapping_;
   return out << ")";
 }
 
@@ -544,7 +543,7 @@ std::ostream& operator<<(
   out << show(shim_reflection_target.method_spec_.name);
   out << "`, proto=`";
   out << show(shim_reflection_target.method_spec_.proto);
-  out << "`, " << shim_reflection_target.parameter_mapping_;
+  out << "`, " << shim_reflection_target.port_mapping_;
   return out << ")";
 }
 

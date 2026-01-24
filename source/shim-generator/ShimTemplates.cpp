@@ -55,23 +55,20 @@ std::optional<ShimTarget> try_make_shim_target(
   }
 
   bool is_static = receiver_info.kind() == ReceiverInfo::Kind::STATIC;
-  auto instantiated_parameter_map =
-      target_template.parameter_map().instantiate_parameters(
-          method_spec->name->str(),
-          method_spec->cls,
-          method_spec->proto,
-          is_static,
-          shim_method);
+  auto instantiated_port_map = target_template.port_mapping().instantiate(
+      method_spec->name->str(),
+      method_spec->cls,
+      method_spec->proto,
+      is_static,
+      shim_method);
 
   if (!is_static) {
-    instantiated_parameter_map.add_receiver(
+    instantiated_port_map.add_receiver(
         std::get<ShimRoot>(receiver_info.receiver()));
   }
 
   return ShimTarget(
-      std::move(*method_spec),
-      std::move(instantiated_parameter_map),
-      is_static);
+      std::move(*method_spec), std::move(instantiated_port_map), is_static);
 }
 
 std::optional<ShimReflectionTarget> try_make_shim_reflection_target(
@@ -103,18 +100,17 @@ std::optional<ShimReflectionTarget> try_make_shim_reflection_target(
     return std::nullopt;
   }
 
-  auto instantiated_parameter_map =
-      target_template.parameter_map().instantiate_parameters(
-          method_spec->name->str(),
-          method_spec->cls,
-          method_spec->proto,
-          /* shim_target_is_static */ false,
-          shim_method);
-  instantiated_parameter_map.add_receiver(
+  auto instantiated_port_map = target_template.port_mapping().instantiate(
+      method_spec->name->str(),
+      method_spec->cls,
+      method_spec->proto,
+      /* shim_target_is_static */ false,
+      shim_method);
+  instantiated_port_map.add_receiver(
       std::get<ShimRoot>(receiver_info.receiver()));
 
   return ShimReflectionTarget(
-      std::move(*method_spec), std::move(instantiated_parameter_map));
+      std::move(*method_spec), std::move(instantiated_port_map));
 }
 
 std::optional<ShimLifecycleTarget> try_make_shim_lifecycle_target(
@@ -139,7 +135,7 @@ std::optional<ShimLifecycleTarget> try_make_shim_lifecycle_target(
       std::string(target_template.target()),
       std::get<ShimRoot>(receiver_info.receiver()),
       receiver_info.kind() == ReceiverInfo::Kind::REFLECTION,
-      target_template.parameter_map().infer_from_types());
+      target_template.port_mapping().infer_from_types());
 }
 
 } // namespace
@@ -205,11 +201,11 @@ TargetTemplate::TargetTemplate(
     Kind kind,
     std::string target,
     ReceiverInfo receiver_info,
-    ShimParameterMapping parameter_map)
+    ShimTargetPortMapping port_mapping)
     : kind_(kind),
       target_(std::move(target)),
       receiver_info_(std::move(receiver_info)),
-      parameter_map_(std::move(parameter_map)) {}
+      port_mapping_(std::move(port_mapping)) {}
 
 TargetTemplate TargetTemplate::from_json(const Json::Value& callee) {
   JsonValidation::check_unexpected_members(
@@ -224,7 +220,8 @@ TargetTemplate TargetTemplate::from_json(const Json::Value& callee) {
 
   const auto& parameters_map =
       JsonValidation::null_or_object(callee, "parameters_map");
-  auto parameter_map = ShimParameterMapping::from_json(
+
+  auto port_mapping = ShimTargetPortMapping::from_json(
       parameters_map,
       callee.isMember("infer_parameters_from_types")
           ? JsonValidation::boolean(callee, "infer_parameters_from_types")
@@ -238,13 +235,13 @@ TargetTemplate TargetTemplate::from_json(const Json::Value& callee) {
             : Kind::DEFINED,
         JsonValidation::string(callee, "method_name"),
         std::move(receiver_info),
-        std::move(parameter_map)};
+        std::move(port_mapping)};
   } else if (callee.isMember("lifecycle_name")) {
     return TargetTemplate{
         Kind::LIFECYCLE,
         JsonValidation::string(callee, "lifecycle_name"),
         std::move(receiver_info),
-        std::move(parameter_map)};
+        std::move(port_mapping)};
   }
 
   throw JsonValidationError(
@@ -292,7 +289,7 @@ std::ostream& operator<<(std::ostream& out, const TargetTemplate& target) {
     out << "lifecycle ";
   }
   out << "method=" << target.target_;
-  out << ", " << target.parameter_map_;
+  out << ", " << target.port_mapping_;
 
   return out << ")";
 }

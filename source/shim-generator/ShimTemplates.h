@@ -66,7 +66,7 @@ class TargetTemplate final {
       Kind kind,
       std::string target,
       ReceiverInfo receiver_info,
-      ShimParameterMapping parameter_mapping);
+      ShimTargetPortMapping port_mapping);
 
  public:
   static TargetTemplate from_json(const Json::Value& callee);
@@ -82,8 +82,8 @@ class TargetTemplate final {
     return receiver_info_;
   }
 
-  const ShimParameterMapping& parameter_map() const {
-    return parameter_map_;
+  const ShimTargetPortMapping& port_mapping() const {
+    return port_mapping_;
   }
 
   friend std::ostream& operator<<(
@@ -94,7 +94,7 @@ class TargetTemplate final {
   Kind kind_;
   std::string target_;
   ReceiverInfo receiver_info_;
-  ShimParameterMapping parameter_map_;
+  ShimTargetPortMapping port_mapping_;
 };
 
 } // namespace shim

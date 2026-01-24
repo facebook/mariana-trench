@@ -388,7 +388,7 @@ IntentRoutingAnalyzer::get_intent_routing_targets(
       // receive-point
       intent_routing_targets.emplace(
           receive_point.method,
-          ShimParameterMapping({{*receive_point.root, *position}}));
+          ShimTargetPortMapping({{*receive_point.root, *position}}));
     }
   }
 

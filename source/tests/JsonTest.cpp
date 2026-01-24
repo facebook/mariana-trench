@@ -3685,7 +3685,7 @@ TEST_F(JsonTest, ShimTargetTemplateTest) {
   EXPECT_EQ(
       std::get<std::string>(target_template.receiver_info().receiver()),
       "Lcom/example/TestClass;");
-  EXPECT_TRUE(target_template.parameter_map().empty());
+  EXPECT_TRUE(target_template.port_mapping().empty());
 
   // type_of
   target_template = TargetTemplate::from_json(test::parse_json(R"#({
@@ -3699,7 +3699,7 @@ TEST_F(JsonTest, ShimTargetTemplateTest) {
   EXPECT_EQ(
       std::get<Root>(target_template.receiver_info().receiver()),
       (Root{Root::Kind::Argument, 1}));
-  EXPECT_TRUE(target_template.parameter_map().empty());
+  EXPECT_TRUE(target_template.port_mapping().empty());
 
   // type_of with lifecycle
   target_template = TargetTemplate::from_json(test::parse_json(R"#({
@@ -3713,7 +3713,7 @@ TEST_F(JsonTest, ShimTargetTemplateTest) {
   EXPECT_EQ(
       std::get<Root>(target_template.receiver_info().receiver()),
       (Root{Root::Kind::Argument, 1}));
-  EXPECT_TRUE(target_template.parameter_map().empty());
+  EXPECT_TRUE(target_template.port_mapping().empty());
 
   // type_of with return as receiver
   target_template = TargetTemplate::from_json(test::parse_json(R"#({
@@ -3727,7 +3727,7 @@ TEST_F(JsonTest, ShimTargetTemplateTest) {
   // TODO: T233167172 Shims on return
   EXPECT_EQ(
       std::get<Root>(target_template.receiver_info().receiver()), (Root{}));
-  EXPECT_TRUE(target_template.parameter_map().empty());
+  EXPECT_TRUE(target_template.port_mapping().empty());
 
   // reflected_type_of
   target_template = TargetTemplate::from_json(test::parse_json(R"#({
@@ -3741,7 +3741,7 @@ TEST_F(JsonTest, ShimTargetTemplateTest) {
   EXPECT_EQ(
       std::get<Root>(target_template.receiver_info().receiver()),
       (Root{Root::Kind::Argument, 2}));
-  EXPECT_TRUE(target_template.parameter_map().empty());
+  EXPECT_TRUE(target_template.port_mapping().empty());
 
   // parameters_map
   target_template = TargetTemplate::from_json(test::parse_json(R"#({
@@ -3761,8 +3761,8 @@ TEST_F(JsonTest, ShimTargetTemplateTest) {
       std::get<Root>(target_template.receiver_info().receiver()),
       (Root{Root::Kind::Argument, 2}));
   EXPECT_EQ(
-      target_template.parameter_map(),
-      (ShimParameterMapping{std::pair{
+      target_template.port_mapping(),
+      (ShimTargetPortMapping{std::pair{
           Root{Root::Kind::Argument, 2}, Root{Root::Kind::Argument, 3}}}));
 
   // Test with infer_parameters_from_types
@@ -3780,7 +3780,7 @@ TEST_F(JsonTest, ShimTargetTemplateTest) {
   EXPECT_EQ(
       std::get<Root>(target_template.receiver_info().receiver()),
       (Root{Root::Kind::Argument, 1}));
-  EXPECT_TRUE(target_template.parameter_map().infer_from_types());
+  EXPECT_TRUE(target_template.port_mapping().infer_from_types());
 }
 
 } // namespace marianatrench
