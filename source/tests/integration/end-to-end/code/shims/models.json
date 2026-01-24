@@ -43,5 +43,17 @@
         "port": "Argument(1)"
       }
     ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/StringBuilder;.append:(Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/StringBuilder;",
+    "modes": [
+      "skip-analysis"
+    ],
+    "propagation": [
+      {
+        "input": "Argument(1)",
+        "output": "Argument(0)"
+      }
+    ]
   }
 ]

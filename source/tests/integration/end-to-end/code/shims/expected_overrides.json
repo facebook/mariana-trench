@@ -33,7 +33,8 @@
   "Ljava/lang/Object;.toString:()Ljava/lang/String;" : 
   [
     "Landroid/location/Location;.toString:()Ljava/lang/String;",
-    "Landroid/net/Uri;.toString:()Ljava/lang/String;"
+    "Landroid/net/Uri;.toString:()Ljava/lang/String;",
+    "Lcom/facebook/marianatrench/integrationtests/ReturnTo;.toString:()Ljava/lang/String;"
   ],
   "Ljava/lang/Runnable;.run:()V" : 
   [
