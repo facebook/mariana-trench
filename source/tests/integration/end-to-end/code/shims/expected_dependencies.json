@@ -322,6 +322,13 @@
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testReturnToReturn:()V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testReturnToShimmedMethod:()V"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/ReturnTo;.toString:()Ljava/lang/String;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/Shims;.testReturnToInlinedAsGetter:()V",
+    "Lcom/facebook/marianatrench/integrationtests/Shims;.testReturnToInlinedAsSetter:()V",
+    "Lcom/facebook/marianatrench/integrationtests/Shims;.testReturnToReturn:()V",
+    "Lcom/facebook/marianatrench/integrationtests/Shims;.testReturnToShimmedMethod:()V"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/ShimTarget;.<init>:()V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testDefinedAndInferredArgument:()V",

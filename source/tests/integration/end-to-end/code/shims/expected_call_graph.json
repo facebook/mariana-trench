@@ -779,6 +779,10 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/Shims;.testReturnToInlinedAsGetter:()V" : 
   {
+    "shim" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/ReturnTo;.toString:()Ljava/lang/String;"
+    ],
     "static" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
@@ -792,6 +796,10 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/Shims;.testReturnToInlinedAsSetter:()V" : 
   {
+    "shim" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/ReturnTo;.toString:()Ljava/lang/String;"
+    ],
     "static" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
@@ -805,6 +813,10 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/Shims;.testReturnToReturn:()V" : 
   {
+    "shim" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/ReturnTo;.toString:()Ljava/lang/String;"
+    ],
     "static" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
@@ -818,6 +830,10 @@
   },
   "Lcom/facebook/marianatrench/integrationtests/Shims;.testReturnToShimmedMethod:()V" : 
   {
+    "shim" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/ReturnTo;.toString:()Ljava/lang/String;"
+    ],
     "static" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",

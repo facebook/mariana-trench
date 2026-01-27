@@ -216,16 +216,25 @@ TargetTemplate TargetTemplate::from_json(const Json::Value& callee) {
        "method_name",
        "lifecycle_name",
        "parameters_map",
-       "infer_parameters_from_types"});
+       "infer_parameters_from_types",
+       "return_to"});
 
   const auto& parameters_map =
       JsonValidation::null_or_object(callee, "parameters_map");
+
+  // Parse return_to
+  std::optional<ShimRoot> return_to = std::nullopt;
+  if (callee.isMember("return_to")) {
+    return_to =
+        ShimRoot::from_json(JsonValidation::string(callee, "return_to"));
+  }
 
   auto port_mapping = ShimTargetPortMapping::from_json(
       parameters_map,
       callee.isMember("infer_parameters_from_types")
           ? JsonValidation::boolean(callee, "infer_parameters_from_types")
-          : parameters_map.isNull());
+          : parameters_map.isNull(),
+      std::move(return_to));
   auto receiver_info = ReceiverInfo::from_json(callee);
 
   if (callee.isMember("method_name")) {

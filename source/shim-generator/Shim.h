@@ -42,6 +42,8 @@ class ShimMethod final {
 
   DexType* MT_NULLABLE return_type() const;
 
+  bool is_valid_port(ShimRoot port) const;
+
   std::optional<ShimRoot> type_position(const DexType* type) const;
 
   friend std::ostream& operator<<(
@@ -55,8 +57,15 @@ class ShimMethod final {
 };
 
 /**
- * Tracks the mapping of parameter positions from `shim-target` (`Root`) to
- * parameter positions / return ports in the `shimmed-method` (`ShimRoot`)
+ * Tracks the port mapping betwee `shim-target` and `shimmed-method`.
+ *
+ * - map_: Tracks the mapping of parameter positions from `shim-target` (`Root`)
+ * to parameter positions / return ports in the `shimmed-method` (`ShimRoot`).
+ * This is used for retrieving the arguments for the call to the shim-target
+ * from the arguments/return value of shimmed-method.
+ *
+ * - return_to_: This tracks the shimmed-method's port where the return value of
+ * the call to the shim-target will be forwarded.
  */
 class ShimTargetPortMapping final {
  public:
@@ -74,7 +83,8 @@ class ShimTargetPortMapping final {
 
   static ShimTargetPortMapping from_json(
       const Json::Value& value,
-      bool infer_from_types);
+      bool infer_from_types,
+      std::optional<ShimRoot> return_to = std::nullopt);
 
   bool empty() const;
 
@@ -110,6 +120,10 @@ class ShimTargetPortMapping final {
       bool shim_target_is_static,
       const ShimMethod& shim_method);
 
+  const std::optional<ShimRoot>& return_to() const;
+
+  void set_return_to(std::optional<ShimRoot> return_to);
+
   friend std::ostream& operator<<(
       std::ostream& out,
       const ShimTargetPortMapping& map);
@@ -119,6 +133,7 @@ class ShimTargetPortMapping final {
  private:
   MapType map_;
   bool infer_from_types_;
+  std::optional<ShimRoot> return_to_;
 };
 
 /**
@@ -158,6 +173,10 @@ class ShimTarget final {
       const ShimTarget& shim_target);
 
   friend struct std::hash<ShimTarget>;
+
+  const std::optional<ShimRoot>& return_to() const {
+    return port_mapping_.return_to();
+  }
 
  private:
   DexMethodSpec method_spec_;
@@ -269,7 +288,10 @@ struct std::hash<marianatrench::ShimTargetPortMapping> {
       boost::hash_combine(
           seed, std::hash<marianatrench::ShimRoot>()(shim_root));
     }
-
+    if (port_mapping.return_to_.has_value()) {
+      boost::hash_combine(
+          seed, std::hash<marianatrench::ShimRoot>()(*port_mapping.return_to_));
+    }
     return seed;
   }
 };

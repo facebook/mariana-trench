@@ -5,8 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <algorithm>
-
 #include <Show.h>
 #include <TypeUtil.h>
 
@@ -50,6 +48,57 @@ bool verify_has_parameter_type(
       dex_proto->get_args()->at(position - (is_static ? 0u : 1u)) != nullptr);
 }
 
+bool verify_to_return(
+    std::string_view shim_target_method,
+    const DexProto* shim_target_proto,
+    bool shim_target_is_static,
+    const ShimTargetPortMapping& instantiated_port_mapping,
+    const ShimMethod& shim_method,
+    ShimRoot return_to) {
+  bool is_valid = true;
+
+  if (shim_target_proto->get_rtype() == type::_void()) {
+    ERROR(
+        1,
+        "return_to specified but shim target `{}` has void return type",
+        shim_target_method);
+    is_valid = false;
+  }
+
+  if (!shim_method.is_valid_port(return_to)) {
+    ERROR(
+        1,
+        "return_to `{}` is not a valid port for shim method `{}`",
+        return_to,
+        shim_method.method()->show());
+
+    is_valid = false;
+  }
+
+  if (!shim_target_is_static && return_to.is_argument()) {
+    const auto receiver_port = instantiated_port_mapping.at(Root::argument(0));
+    if (receiver_port && receiver_port->is_return()) {
+      // This case is unusual but can be used to model a body of the
+      // shimmed-method like:
+      //
+      // ```
+      // ReturnedValue shimmed_method(arg1) {
+      //  ret = new ReturnedValue();
+      //  arg1 = ret.shimTargetReturnsASource();
+      //  return ret;
+      // }
+      // ```
+      WARNING(
+          1,
+          "Shim on Return port of `{}` specifies a return_to to `{}`. Verify that this is intentional.",
+          shim_method.method()->show(),
+          return_to);
+    }
+  }
+
+  return is_valid;
+}
+
 } // namespace
 
 ShimMethod::ShimMethod(const Method* method) : method_(method) {
@@ -82,6 +131,15 @@ DexType* MT_NULLABLE ShimMethod::return_type() const {
   return method_->return_type();
 }
 
+bool ShimMethod::is_valid_port(ShimRoot port) const {
+  if (port.is_argument()) {
+    return parameter_type(port) != nullptr;
+  } else if (port.is_return()) {
+    return return_type() != nullptr;
+  }
+  return false;
+}
+
 std::optional<ShimRoot> ShimMethod::type_position(
     const DexType* dex_type) const {
   auto found = types_to_position_.find(dex_type);
@@ -99,18 +157,19 @@ std::optional<ShimRoot> ShimMethod::type_position(
 
 ShimTargetPortMapping::ShimTargetPortMapping(
     std::initializer_list<MapType::value_type> init)
-    : map_(init), infer_from_types_(false) {}
+    : map_(init), infer_from_types_(false), return_to_(std::nullopt) {}
 
 bool ShimTargetPortMapping::operator==(
     const ShimTargetPortMapping& other) const {
-  return infer_from_types_ == other.infer_from_types_ && map_ == other.map_;
+  return infer_from_types_ == other.infer_from_types_ && map_ == other.map_ &&
+      return_to_ == other.return_to_;
 }
 
 bool ShimTargetPortMapping::operator<(
     const ShimTargetPortMapping& other) const {
   // Lexicographic comparison
-  return std::tie(infer_from_types_, map_) <
-      std::tie(other.infer_from_types_, other.map_);
+  return std::tie(infer_from_types_, map_, return_to_) <
+      std::tie(other.infer_from_types_, other.map_, other.return_to_);
 }
 
 bool ShimTargetPortMapping::empty() const {
@@ -173,11 +232,21 @@ void ShimTargetPortMapping::infer_parameters_from_types(
   }
 }
 
+const std::optional<ShimRoot>& ShimTargetPortMapping::return_to() const {
+  return return_to_;
+}
+
+void ShimTargetPortMapping::set_return_to(std::optional<ShimRoot> return_to) {
+  return_to_ = std::move(return_to);
+}
+
 ShimTargetPortMapping ShimTargetPortMapping::from_json(
     const Json::Value& value,
-    bool infer_from_types) {
+    bool infer_from_types,
+    std::optional<ShimRoot> return_to) {
   ShimTargetPortMapping port_mapping;
   port_mapping.set_infer_from_types(infer_from_types);
+  port_mapping.set_return_to(std::move(return_to));
 
   if (value.isNull()) {
     return port_mapping;
@@ -201,8 +270,8 @@ ShimTargetPortMapping ShimTargetPortMapping::instantiate(
     const DexProto* shim_target_proto,
     bool shim_target_is_static,
     const ShimMethod& shim_method) const {
-  ShimTargetPortMapping port_mapping;
-  port_mapping.set_infer_from_types(infer_from_types());
+  ShimTargetPortMapping instantiated_port_mapping;
+  instantiated_port_mapping.set_infer_from_types(infer_from_types());
 
   for (const auto& [shim_target_position, shim_position] : map_) {
     if (shim_target_position.is_argument() &&
@@ -215,15 +284,27 @@ ShimTargetPortMapping ShimTargetPortMapping::instantiate(
       continue;
     }
 
-    port_mapping.insert(shim_target_position, shim_position);
+    instantiated_port_mapping.insert(shim_target_position, shim_position);
   }
 
   if (infer_from_types()) {
-    port_mapping.infer_parameters_from_types(
+    instantiated_port_mapping.infer_parameters_from_types(
         shim_target_proto, shim_target_is_static, shim_method);
   }
 
-  return port_mapping;
+  // Validate and set return_to
+  if (return_to_.has_value() &&
+      verify_to_return(
+          shim_target_method,
+          shim_target_proto,
+          shim_target_is_static,
+          instantiated_port_mapping,
+          shim_method,
+          *return_to_)) {
+    instantiated_port_mapping.set_return_to(return_to_);
+  }
+
+  return instantiated_port_mapping;
 }
 
 ShimTarget::ShimTarget(
@@ -521,7 +602,11 @@ std::ostream& operator<<(std::ostream& out, const ShimTargetPortMapping& map) {
     out << " " << parameter << ":";
     out << " " << shim_parameter << ",";
   }
-  return out << " }";
+  out << " }";
+  if (map.return_to_.has_value()) {
+    out << ", return_to=`" << *map.return_to_ << "`";
+  }
+  return out;
 }
 
 std::ostream& operator<<(std::ostream& out, const ShimTarget& shim_target) {
