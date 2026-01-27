@@ -220,10 +220,16 @@ namespace marianatrench {
  * the instruction also accepts taint from other ports, typically call-effects,
  * which simulates flow of taint into the callee via means other than its
  * argument(s).
+ *
+ * `return_to_register` optionally specifies where the return value of the
+ * artificial call should flow. When set, taint from the callee's return value
+ * will be propagated to the specified register. Use RESULT_REGISTER when the
+ * return should flow to the call's result.
  */
 struct ArtificialCallee {
   CallTarget call_target;
   std::unordered_map<Root, Register> root_registers;
+  std::optional<Register> return_to_register;
   FeatureSet features;
 
   bool operator==(const ArtificialCallee& other) const;

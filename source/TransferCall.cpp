@@ -222,6 +222,7 @@ namespace {
 bool is_safe_to_inline(
     const MethodContext* context,
     const CalleeModel& callee,
+    const ArtificialCallees& artificial_callees,
     const AccessPath& input,
     const Kind* output_kind,
     const Path& output_path) {
@@ -267,6 +268,13 @@ bool is_safe_to_inline(
         "Could not inline call because callee model has extra propagations");
     return false;
   }
+  if (artificial_callees.size() > 0) {
+    LOG_OR_DUMP(
+        context,
+        4,
+        "Could not inline call because callee has multiple artificial callees");
+    return false;
+  }
 
   return true;
 }
@@ -296,7 +304,8 @@ MemoryLocation* MT_NULLABLE try_inline_invoke_as_getter(
     const MethodContext* context,
     const RegisterMemoryLocationsMap& register_memory_locations_map,
     const IRInstruction* instruction,
-    const CalleeModel& callee) {
+    const CalleeModel& callee,
+    const ArtificialCallees& artificial_callees) {
   auto access_path = callee.model.inline_as_getter().get_constant();
   if (!access_path) {
     return nullptr;
@@ -316,6 +325,7 @@ MemoryLocation* MT_NULLABLE try_inline_invoke_as_getter(
   if (!is_safe_to_inline(
           context,
           callee,
+          artificial_callees,
           /* input */ *access_path,
           /* output */ context->kind_factory.local_return(),
           /* output_path */ Path{})) {
@@ -329,7 +339,8 @@ std::optional<SetterInlineMemoryLocations> try_inline_invoke_as_setter(
     const MethodContext* context,
     const RegisterMemoryLocationsMap& register_memory_locations_map,
     const IRInstruction* instruction,
-    const CalleeModel& callee) {
+    const CalleeModel& callee,
+    const ArtificialCallees& artificial_callees) {
   auto setter = callee.model.inline_as_setter().get_constant();
   if (!setter) {
     return std::nullopt;
@@ -360,6 +371,7 @@ std::optional<SetterInlineMemoryLocations> try_inline_invoke_as_setter(
   if (!is_safe_to_inline(
           context,
           callee,
+          artificial_callees,
           /* input */ setter->value(),
           /* output */
           context->kind_factory.local_argument(

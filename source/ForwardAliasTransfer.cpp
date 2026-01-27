@@ -174,8 +174,16 @@ MemoryLocationsDomain invoke_result_memory_location(
     return MemoryLocationsDomain::bottom();
   }
 
+  const auto& artificial_callees =
+      context->call_graph.artificial_callees(context->method(), instruction);
+
   auto* memory_location = try_inline_invoke_as_getter(
-      context, register_memory_locations_map, instruction, callee);
+      context,
+      register_memory_locations_map,
+      instruction,
+      callee,
+      artificial_callees);
+
   if (memory_location != nullptr) {
     LOG_OR_DUMP(context, 4, "Inlining method call");
     return MemoryLocationsDomain{memory_location};

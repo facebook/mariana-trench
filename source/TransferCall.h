@@ -58,7 +58,8 @@ MemoryLocation* MT_NULLABLE try_inline_invoke_as_getter(
     const MethodContext* context,
     const RegisterMemoryLocationsMap& register_memory_locations_map,
     const IRInstruction* instruction,
-    const CalleeModel& callee);
+    const CalleeModel& callee,
+    const ArtificialCallees& callees);
 
 struct SetterInlineMemoryLocations {
   MemoryLocation* target;
@@ -72,7 +73,8 @@ std::optional<SetterInlineMemoryLocations> try_inline_invoke_as_setter(
     const MethodContext* context,
     const RegisterMemoryLocationsMap& register_memory_locations_map,
     const IRInstruction* instruction,
-    const CalleeModel& callee);
+    const CalleeModel& callee,
+    const ArtificialCallees& callees);
 
 /* Add a set of hardcoded features on field access. */
 void add_field_features(

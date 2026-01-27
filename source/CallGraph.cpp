@@ -244,6 +244,7 @@ ArtificialCallees anonymous_class_artificial_callees(
                 call_index),
             /* root_registers */
             {{Root(Root::Kind::Argument, 0), register_id}},
+            /* return_to_register */ std::nullopt,
             /* features */ features,
         });
   }
@@ -380,6 +381,9 @@ void process_shim_target(
   auto features = FeatureSet{feature_factory.get_via_shim_feature(callee)}.join(
       extra_features);
 
+  // Compute return_to_register from shim target
+  auto return_to_register = shim_target.return_to_register(instruction);
+
   if (method->is_static()) {
     mt_assert(shim_target.is_static());
     artificial_callees.push_back(
@@ -387,6 +391,7 @@ void process_shim_target(
             /* call_target */
             CallTarget::static_call(instruction, method, call_kind, call_index),
             /* root_registers */ root_registers,
+            /* return_to_register */ return_to_register,
             /* features */ features,
         });
     return;
@@ -405,6 +410,7 @@ void process_shim_target(
               call_kind,
               call_index),
           /* root_registers */ root_registers,
+          /* return_to_register */ return_to_register,
           /* features */ features,
       });
 }
@@ -475,6 +481,7 @@ void process_shim_reflection(
               CallTarget::CallKind::Shim,
               call_index),
           /* root_registers */ root_registers,
+          /* return_to_register */ std::nullopt,
           /* features */
           FeatureSet{FeatureFactory.get_via_shim_feature(callee)},
       });
@@ -594,6 +601,7 @@ void process_shim_lifecycle(
                 CallTarget::CallKind::Shim,
                 call_index),
             /* root_registers */ root_registers,
+            /* return_to_register */ std::nullopt,
             /* features */
             FeatureSet{feature_factory.get_via_shim_feature(callee)},
         });
@@ -1051,7 +1059,8 @@ std::ostream& operator<<(std::ostream& out, const CallTarget& call_target) {
 
 bool ArtificialCallee::operator==(const ArtificialCallee& other) const {
   return call_target == other.call_target &&
-      root_registers == other.root_registers && features == other.features;
+      root_registers == other.root_registers && features == other.features &&
+      return_to_register == other.return_to_register;
 }
 
 std::ostream& operator<<(std::ostream& out, const ArtificialCallee& callee) {
@@ -1060,7 +1069,11 @@ std::ostream& operator<<(std::ostream& out, const ArtificialCallee& callee) {
   for (const auto& [root, register_id] : callee.root_registers) {
     out << " " << root << ": v" << register_id << ",";
   }
-  return out << "}, features=" << callee.features << ")";
+  out << "}, features=" << callee.features;
+  if (callee.return_to_register.has_value()) {
+    out << ", return_to_register=v" << *callee.return_to_register;
+  }
+  return out << ")";
 }
 
 bool FieldTarget::operator==(const FieldTarget& other) const {

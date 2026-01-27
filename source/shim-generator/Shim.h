@@ -168,6 +168,9 @@ class ShimTarget final {
   std::unordered_map<Root, Register> root_registers(
       const IRInstruction* instruction) const;
 
+  std::optional<Register> return_to_register(
+      const IRInstruction* instruction) const;
+
   friend std::ostream& operator<<(
       std::ostream& out,
       const ShimTarget& shim_target);

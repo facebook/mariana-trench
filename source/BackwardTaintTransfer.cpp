@@ -848,6 +848,9 @@ bool BackwardTaintTransfer::analyze_invoke(
 
   const BackwardTaintEnvironment previous_environment = *environment;
 
+  const auto& artificial_callees =
+      context->call_graph.artificial_callees(context->method(), instruction);
+
   TaintTree result_taint = TaintTree::bottom();
   if (callee.resolved_base_method &&
       callee.resolved_base_method->returns_void()) {
@@ -857,7 +860,8 @@ bool BackwardTaintTransfer::analyze_invoke(
           context,
           aliasing.register_memory_locations_map(),
           instruction,
-          callee) != nullptr) {
+          callee,
+          artificial_callees) != nullptr) {
     // Since we are inlining the call, we should NOT propagate result taint.
     LOG_OR_DUMP(context, 4, "Inlining method call");
   } else {
@@ -884,7 +888,8 @@ bool BackwardTaintTransfer::analyze_invoke(
           context,
           aliasing.register_memory_locations_map(),
           instruction,
-          callee);
+          callee,
+          artificial_callees);
       setter) {
     apply_inline_setter(context, *setter, &previous_environment, environment);
   } else {

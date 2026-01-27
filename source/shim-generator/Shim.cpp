@@ -390,6 +390,25 @@ std::unordered_map<Root, Register> ShimTarget::root_registers(
   return root_registers;
 }
 
+std::optional<Register> ShimTarget::return_to_register(
+    const IRInstruction* instruction) const {
+  const auto& return_to = port_mapping_.return_to();
+  if (!return_to) {
+    return std::nullopt;
+  }
+
+  if (return_to->is_return()) {
+    return RESULT_REGISTER;
+  }
+
+  auto parameter_position = return_to->parameter_position();
+  mt_assert_log(
+      parameter_position < instruction->srcs_size(),
+      "Invalid return_to parameter position");
+
+  return instruction->src(parameter_position);
+}
+
 ShimReflectionTarget::ShimReflectionTarget(
     DexMethodSpec method_spec,
     ShimTargetPortMapping port_mapping)

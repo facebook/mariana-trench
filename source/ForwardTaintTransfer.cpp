@@ -213,7 +213,8 @@ void apply_artificial_calls_generations(
     MethodContext* context,
     const InstructionAliasResults& aliasing,
     const IRInstruction* instruction,
-    ForwardTaintEnvironment* environment) {
+    ForwardTaintEnvironment* environment,
+    TaintTree& result_taint) {
   const auto& artificial_callees =
       context->call_graph.artificial_callees(context->method(), instruction);
 
@@ -230,15 +231,41 @@ void apply_artificial_calls_generations(
       return found->second;
     };
 
-    // Result taint from an artificial call is never used.
-    TaintTree result_taint_to_ignore;
+    TaintTree artificial_callee_result_taint;
     apply_generations(
         context,
         aliasing,
         environment,
         callee,
         get_register,
-        result_taint_to_ignore);
+        artificial_callee_result_taint);
+
+    // If return_to_register is specified, propagate return taint to that
+    // register
+    if (artificial_callee.return_to_register.has_value() &&
+        !artificial_callee_result_taint.is_bottom()) {
+      auto return_to_reg = *artificial_callee.return_to_register;
+      if (return_to_reg == RESULT_REGISTER) {
+        // If the return register is the result register, we need to join the
+        // result taint with the artificial callee result taint
+        result_taint.join_with(artificial_callee_result_taint);
+      } else {
+        auto memory_locations =
+            aliasing.register_memory_locations(return_to_reg);
+        LOG_OR_DUMP(
+            context,
+            4,
+            "Propagating artificial call return taint to register {} at {} with {}",
+            return_to_reg,
+            memory_locations,
+            artificial_callee_result_taint);
+        environment->deep_write(
+            aliasing.widening_resolver(),
+            memory_locations,
+            artificial_callee_result_taint,
+            UpdateKind::Weak);
+      }
+    }
   }
 }
 
@@ -1300,11 +1327,15 @@ bool ForwardTaintTransfer::analyze_invoke(
       instruction,
       callee);
 
+  const auto& artificial_callees =
+      context->call_graph.artificial_callees(context->method(), instruction);
+
   if (auto setter = try_inline_invoke_as_setter(
           context,
           aliasing.register_memory_locations_map(),
           instruction,
-          callee);
+          callee,
+          artificial_callees);
       setter) {
     apply_inline_setter(
         context,
@@ -1351,10 +1382,10 @@ bool ForwardTaintTransfer::analyze_invoke(
   // Consider also applying other parts of the model (e.g.
   // add_features_to_arguments, propagations, etc.) for artificial calls. In
   // theory, an artificial call/shim should be handled like a real call. Main
-  // difference is that its returned value is never used (i.e. `result_taint`
-  // can be ignored).
+  // difference is that its returned value is not used (i.e. `result_taint`
+  // is ignored) unless the artifical call is a shim with "return_to" specified.
   apply_artificial_calls_generations(
-      context, aliasing, instruction, environment);
+      context, aliasing, instruction, environment, result_taint);
 
   if (callee.resolved_base_method &&
       callee.resolved_base_method->returns_void()) {
@@ -1364,7 +1395,8 @@ bool ForwardTaintTransfer::analyze_invoke(
           context,
           aliasing.register_memory_locations_map(),
           instruction,
-          callee) != nullptr) {
+          callee,
+          artificial_callees) != nullptr) {
     // Since we are inlining the call, we should NOT write any taint.
     LOG_OR_DUMP(context, 4, "Inlining method call");
   } else {

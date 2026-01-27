@@ -860,6 +860,7 @@ TEST_F(DependenciesTest, ArtificialCalleesInvoke) {
                   CallTarget::CallKind::AnonymousClass,
                   /* call_index */ 0),
               /* root_registers */ {{Root::argument(0), 1}},
+              /* return_to_register */ std::nullopt,
               /* features */
               FeatureSet{context.feature_factory->get(
                   "via-anonymous-class-to-obscure")}},
@@ -872,6 +873,7 @@ TEST_F(DependenciesTest, ArtificialCalleesInvoke) {
                   CallTarget::CallKind::AnonymousClass,
                   /* call_index */ 0),
               /* root_registers */ {{Root::argument(0), 1}},
+              /* return_to_register */ std::nullopt,
               /* features */
               FeatureSet{context.feature_factory->get(
                   "via-anonymous-class-to-obscure")}},
@@ -975,6 +977,7 @@ TEST_F(DependenciesTest, ArtificialCalleesIput) {
                   CallTarget::CallKind::AnonymousClass,
                   /* call_index */ 0),
               /* root_registers */ {{Root::argument(0), 1}},
+              /* return_to_register */ std::nullopt,
               /* features */
               FeatureSet{context.feature_factory->get(
                   "via-anonymous-class-to-field")}},
@@ -987,6 +990,7 @@ TEST_F(DependenciesTest, ArtificialCalleesIput) {
                   CallTarget::CallKind::AnonymousClass,
                   /* call_index */ 0),
               /* root_registers */ {{Root::argument(0), 1}},
+              /* return_to_register */ std::nullopt,
               /* features */
               FeatureSet{context.feature_factory->get(
                   "via-anonymous-class-to-field")}},
