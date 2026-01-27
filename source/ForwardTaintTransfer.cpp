@@ -245,7 +245,7 @@ void apply_artificial_calls_generations(
     if (artificial_callee.return_to_register.has_value() &&
         !artificial_callee_result_taint.is_bottom()) {
       auto return_to_reg = *artificial_callee.return_to_register;
-      if (return_to_reg == RESULT_REGISTER) {
+      if (return_to_reg == k_result_register) {
         // If the return register is the result register, we need to join the
         // result taint with the artificial callee result taint
         result_taint.join_with(artificial_callee_result_taint);

@@ -223,7 +223,7 @@ namespace marianatrench {
  *
  * `return_to_register` optionally specifies where the return value of the
  * artificial call should flow. When set, taint from the callee's return value
- * will be propagated to the specified register. Use RESULT_REGISTER when the
+ * will be propagated to the specified register. Use k_result_register when the
  * return should flow to the call's result.
  */
 struct ArtificialCallee {

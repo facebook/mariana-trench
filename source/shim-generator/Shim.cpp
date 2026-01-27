@@ -360,9 +360,9 @@ std::optional<Register> ShimTarget::receiver_register(
     return std::nullopt;
   }
 
-  // Return value is stored in the special RESULT_REGISTER
+  // Return value is stored in the special k_result_register
   if (receiver_position->is_return()) {
-    return RESULT_REGISTER;
+    return k_result_register;
   } else {
     auto receiver_parameter_position = receiver_position->parameter_position();
     mt_assert(receiver_parameter_position < instruction->srcs_size());
@@ -379,7 +379,7 @@ std::unordered_map<Root, Register> ShimTarget::root_registers(
       mt_assert_log(
           root.is_argument() && root.parameter_position() == 0,
           "Return port can only be receiver");
-      root_registers.emplace(root, RESULT_REGISTER);
+      root_registers.emplace(root, k_result_register);
     } else {
       auto shim_parameter_position = shimmed_method_root.parameter_position();
       mt_assert(shim_parameter_position < instruction->srcs_size());
@@ -398,7 +398,7 @@ std::optional<Register> ShimTarget::return_to_register(
   }
 
   if (return_to->is_return()) {
-    return RESULT_REGISTER;
+    return k_result_register;
   }
 
   auto parameter_position = return_to->parameter_position();
@@ -504,9 +504,9 @@ bool ShimLifecycleTarget::operator<(const ShimLifecycleTarget& other) const {
 
 Register ShimLifecycleTarget::receiver_register(
     const IRInstruction* instruction) const {
-  // Return value is stored in the special RESULT_REGISTER
+  // Return value is stored in the special k_result_register
   if (receiver_position_.is_return()) {
-    return RESULT_REGISTER;
+    return k_result_register;
   }
 
   auto receiver_parameter_position = receiver_position_.parameter_position();
@@ -538,8 +538,8 @@ std::unordered_map<Root, Register> ShimLifecycleTarget::root_registers(
 
   for (const auto& [root, shimmed_method_root] : port_mapping) {
     if (shimmed_method_root.is_return()) {
-      // Return position maps to RESULT_REGISTER
-      root_registers.emplace(root, RESULT_REGISTER);
+      // Return position maps to k_result_register
+      root_registers.emplace(root, k_result_register);
     } else {
       auto shim_parameter_position = shimmed_method_root.parameter_position();
       mt_assert(shim_parameter_position < instruction->srcs_size());

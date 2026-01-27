@@ -37,6 +37,16 @@ using Register = std::uint32_t;
 // This should match with the type `reg_t` used in Redex.
 static_assert(std::is_same_v<Register, reg_t>, "type mismatch");
 
+/* Special register to denote the result of a method invocation or
+ * a filled-array creation.
+ */
+constexpr Register k_result_register = std::numeric_limits<Register>::max() - 1;
+
+// This should match with the value of `RESULT_REGISTER` used in Redex.
+static_assert(
+    k_result_register == RESULT_REGISTER,
+    "k_result_register must equal RESULT_REGISTER");
+
 /* Integer type representing a parameter number. */
 using ParameterPosition = std::uint32_t;
 

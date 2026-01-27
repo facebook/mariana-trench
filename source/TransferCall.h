@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include <limits>
-
 #include <mariana-trench/Access.h>
 #include <mariana-trench/CallGraph.h>
 #include <mariana-trench/ForwardAliasEnvironment.h>
@@ -21,10 +19,6 @@
 #include <mariana-trench/TaintTree.h>
 
 namespace marianatrench {
-
-namespace {
-constexpr Register k_result_register = std::numeric_limits<Register>::max();
-}
 
 void log_instruction(
     const MethodContext* context,
