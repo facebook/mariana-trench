@@ -1335,6 +1335,27 @@ bool ForwardTaintTransfer::analyze_invoke(
       },
       result_taint);
 
+  // Process artificial calls.
+  auto sink_callee_for_artificial_calls = callee.resolved_base_method
+      ? callee.resolved_base_method->show()
+      : k_unresolved_callee;
+  check_artificial_calls_flows(
+      context,
+      aliasing,
+      instruction,
+      sink_callee_for_artificial_calls,
+      environment);
+  check_artificial_calls_effect_flows(
+      context, aliasing, instruction, sink_callee_for_artificial_calls);
+
+  // Consider also applying other parts of the model (e.g.
+  // add_features_to_arguments, propagations, etc.) for artificial calls. In
+  // theory, an artificial call/shim should be handled like a real call. Main
+  // difference is that its returned value is never used (i.e. `result_taint`
+  // can be ignored).
+  apply_artificial_calls_generations(
+      context, aliasing, instruction, environment);
+
   if (callee.resolved_base_method &&
       callee.resolved_base_method->returns_void()) {
     // No result.
@@ -1356,26 +1377,6 @@ bool ForwardTaintTransfer::analyze_invoke(
         result_taint,
         UpdateKind::Weak);
   }
-
-  auto sink_callee_for_artificial_calls = callee.resolved_base_method
-      ? callee.resolved_base_method->show()
-      : k_unresolved_callee;
-  check_artificial_calls_flows(
-      context,
-      aliasing,
-      instruction,
-      sink_callee_for_artificial_calls,
-      environment);
-  check_artificial_calls_effect_flows(
-      context, aliasing, instruction, sink_callee_for_artificial_calls);
-
-  // Consider also applying other parts of the model (e.g.
-  // add_features_to_arguments, propagations, etc.) for artificial calls. In
-  // theory, an artificial call/shim should be handled like a real call. Main
-  // difference is that its returned value is never used (i.e. `result_taint`
-  // can be ignored).
-  apply_artificial_calls_generations(
-      context, aliasing, instruction, environment);
 
   return false;
 }
