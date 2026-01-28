@@ -55,5 +55,11 @@
         "output": "Argument(0)"
       }
     ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/StringBuilder;.append:(Ljava/lang/Class;)Lcom/facebook/marianatrench/integrationtests/StringBuilder;",
+    "modes": [
+      "skip-analysis"
+    ]
   }
 ]

@@ -133,37 +133,6 @@ class ParameterMapping {
   }
 }
 
-class ReturnTo {
-  ReturnTo() {}
-
-  @Override
-  public String toString() {
-    return (String) Origin.source();
-  }
-}
-
-class StringBuilder {
-  Object data;
-
-  StringBuilder append(Object o) {
-    // Model as obscure with user defined propagation: Argument(1) -> Argument(0)
-    return this;
-  }
-
-  StringBuilder inlinedAsGetter(Object o) {
-    // This will be inlined-as getter.
-    return this;
-  }
-
-  void inlinedAsSetter(Object o) {
-    this.data = o;
-  }
-
-  Object get(Object o) {
-    return data;
-  }
-}
-
 public class Shims {
   static Messenger getMessenger(Handler handler) {
     return new Messenger(handler);
@@ -277,49 +246,5 @@ public class Shims {
     new Messenger().getHandlerOne(new Object(), Origin.source());
     // Expect no issue
     new Messenger().getHandlerOne(Origin.source(), new Object());
-  }
-
-  static void testReturnToShimmedMethod() {
-    ReturnTo returnTo = new ReturnTo();
-
-    StringBuilder sb = new StringBuilder();
-    // Expect artificial call: ReturnTo.toString()
-    sb.append(returnTo);
-
-    // Expect issue
-    Origin.sink(sb);
-  }
-
-  static void testReturnToInlinedAsGetter() {
-    ReturnTo returnTo = new ReturnTo();
-
-    StringBuilder sb = new StringBuilder();
-    // Expect artificial call: ReturnTo.toString()
-    sb.inlinedAsGetter(returnTo);
-
-    // Expect issue
-    Origin.sink(sb);
-  }
-
-  static void testReturnToInlinedAsSetter() {
-    ReturnTo returnTo = new ReturnTo();
-
-    StringBuilder sb = new StringBuilder();
-    // Expect artificial call: ReturnTo.toString()
-    sb.inlinedAsSetter(returnTo);
-
-    // Expect issue
-    Origin.sink(sb);
-  }
-
-  static void testReturnToReturn() {
-    ReturnTo returnTo = new ReturnTo();
-
-    StringBuilder sb = new StringBuilder();
-    // Expect artificial call: ReturnTo.toString()
-    Object o = sb.get(returnTo);
-
-    // Expect issue
-    Origin.sink(o);
   }
 }

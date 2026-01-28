@@ -234,12 +234,14 @@
     "Lcom/facebook/marianatrench/integrationtests/FragmentOneActivity;.onTest:(Ljava/lang/Object;)V",
     "Lcom/facebook/marianatrench/integrationtests/HandlerOne;.handleMessage:(Ljava/lang/Object;)V",
     "Lcom/facebook/marianatrench/integrationtests/HandlerTwo;.handleMessage:(Ljava/lang/Object;)V",
+    "Lcom/facebook/marianatrench/integrationtests/ReturnToShims;.testReturnToInlinedAsGetter:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ReturnToShims;.testReturnToInlinedAsSetter:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ReturnToShims;.testReturnToReturn:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ReturnToShims;.testReturnToReturnReflection:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ReturnToShims;.testReturnToShimmedMethod:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ReturnToShims;.testReturnToThisReflection:()V",
     "Lcom/facebook/marianatrench/integrationtests/ShimTarget;.multipleArguments:(ILjava/lang/String;Ljava/lang/Object;)V",
     "Lcom/facebook/marianatrench/integrationtests/ShimTarget;.staticMethod:(Ljava/lang/Object;)V",
-    "Lcom/facebook/marianatrench/integrationtests/Shims;.testReturnToInlinedAsGetter:()V",
-    "Lcom/facebook/marianatrench/integrationtests/Shims;.testReturnToInlinedAsSetter:()V",
-    "Lcom/facebook/marianatrench/integrationtests/Shims;.testReturnToReturn:()V",
-    "Lcom/facebook/marianatrench/integrationtests/Shims;.testReturnToShimmedMethod:()V",
     "Lcom/facebook/marianatrench/integrationtests/ShimsWithArgumentGenerations;.issue1:()V",
     "Lcom/facebook/marianatrench/integrationtests/ShimsWithArgumentGenerations;.issue2:()V",
     "Lcom/facebook/marianatrench/integrationtests/ShimsWithThisGenerations;.sourceAndSinkOnThis:()V",
@@ -317,17 +319,19 @@
   ],
   "Lcom/facebook/marianatrench/integrationtests/ReturnTo;.<init>:()V" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/Shims;.testReturnToInlinedAsGetter:()V",
-    "Lcom/facebook/marianatrench/integrationtests/Shims;.testReturnToInlinedAsSetter:()V",
-    "Lcom/facebook/marianatrench/integrationtests/Shims;.testReturnToReturn:()V",
-    "Lcom/facebook/marianatrench/integrationtests/Shims;.testReturnToShimmedMethod:()V"
+    "Lcom/facebook/marianatrench/integrationtests/ReturnToShims;.testReturnToInlinedAsGetter:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ReturnToShims;.testReturnToInlinedAsSetter:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ReturnToShims;.testReturnToReturn:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ReturnToShims;.testReturnToShimmedMethod:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/ReturnTo;.toString:()Ljava/lang/String;" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/Shims;.testReturnToInlinedAsGetter:()V",
-    "Lcom/facebook/marianatrench/integrationtests/Shims;.testReturnToInlinedAsSetter:()V",
-    "Lcom/facebook/marianatrench/integrationtests/Shims;.testReturnToReturn:()V",
-    "Lcom/facebook/marianatrench/integrationtests/Shims;.testReturnToShimmedMethod:()V"
+    "Lcom/facebook/marianatrench/integrationtests/ReturnToShims;.testReturnToInlinedAsGetter:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ReturnToShims;.testReturnToInlinedAsSetter:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ReturnToShims;.testReturnToReturn:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ReturnToShims;.testReturnToReturnReflection:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ReturnToShims;.testReturnToShimmedMethod:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ReturnToShims;.testReturnToThisReflection:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/ShimTarget;.<init>:()V" : 
   [
@@ -379,26 +383,36 @@
   ],
   "Lcom/facebook/marianatrench/integrationtests/StringBuilder;.<init>:()V" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/Shims;.testReturnToInlinedAsGetter:()V",
-    "Lcom/facebook/marianatrench/integrationtests/Shims;.testReturnToInlinedAsSetter:()V",
-    "Lcom/facebook/marianatrench/integrationtests/Shims;.testReturnToReturn:()V",
-    "Lcom/facebook/marianatrench/integrationtests/Shims;.testReturnToShimmedMethod:()V"
+    "Lcom/facebook/marianatrench/integrationtests/ReturnToShims;.testReturnToInlinedAsGetter:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ReturnToShims;.testReturnToInlinedAsSetter:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ReturnToShims;.testReturnToReturn:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ReturnToShims;.testReturnToReturnReflection:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ReturnToShims;.testReturnToShimmedMethod:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ReturnToShims;.testReturnToThisReflection:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/StringBuilder;.append:(Ljava/lang/Class;)Lcom/facebook/marianatrench/integrationtests/StringBuilder;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/ReturnToShims;.testReturnToThisReflection:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/StringBuilder;.append:(Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/StringBuilder;" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/Shims;.testReturnToShimmedMethod:()V"
+    "Lcom/facebook/marianatrench/integrationtests/ReturnToShims;.testReturnToShimmedMethod:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/StringBuilder;.get:(Ljava/lang/Class;)Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/ReturnToShims;.testReturnToReturnReflection:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/StringBuilder;.get:(Ljava/lang/Object;)Ljava/lang/Object;" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/Shims;.testReturnToReturn:()V"
+    "Lcom/facebook/marianatrench/integrationtests/ReturnToShims;.testReturnToReturn:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/StringBuilder;.inlinedAsGetter:(Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/StringBuilder;" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/Shims;.testReturnToInlinedAsGetter:()V"
+    "Lcom/facebook/marianatrench/integrationtests/ReturnToShims;.testReturnToInlinedAsGetter:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/StringBuilder;.inlinedAsSetter:(Ljava/lang/Object;)V" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/Shims;.testReturnToInlinedAsSetter:()V"
+    "Lcom/facebook/marianatrench/integrationtests/ReturnToShims;.testReturnToInlinedAsSetter:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/WithParameterOverrides$1;.<init>:()V" : 
   [
@@ -471,6 +485,7 @@
     "Lcom/facebook/marianatrench/integrationtests/ParameterMapping;.<init>:(Lcom/facebook/marianatrench/integrationtests/Handler;Lcom/facebook/marianatrench/integrationtests/Handler;Ljava/lang/Object;Ljava/lang/Object;)V",
     "Lcom/facebook/marianatrench/integrationtests/ReflectionShims;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/ReturnTo;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ReturnToShims;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/ShimTarget;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Shims;.testParameterMappingIssue:()Lcom/facebook/marianatrench/integrationtests/ParameterMapping;",

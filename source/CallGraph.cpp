@@ -463,8 +463,13 @@ void process_shim_reflection(
   }
 
   const auto* reflection_method = method_factory.get(dex_reflection_method);
-  auto root_registers =
-      shim_reflection.root_registers(reflection_method, instruction);
+  auto resolved_shim_reflection =
+      shim_reflection.resolve(callee, reflection_method);
+
+  auto root_registers = resolved_shim_reflection.root_registers(instruction);
+  auto return_to_register =
+      resolved_shim_reflection.return_to_register(instruction);
+
   auto call_index =
       update_index(sink_textual_order_index, reflection_method->signature());
 
@@ -481,7 +486,7 @@ void process_shim_reflection(
               CallTarget::CallKind::Shim,
               call_index),
           /* root_registers */ root_registers,
-          /* return_to_register */ std::nullopt,
+          /* return_to_register */ return_to_register,
           /* features */
           FeatureSet{FeatureFactory.get_via_shim_feature(callee)},
       });

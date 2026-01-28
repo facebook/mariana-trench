@@ -57,7 +57,7 @@ class ShimMethod final {
 };
 
 /**
- * Tracks the port mapping betwee `shim-target` and `shimmed-method`.
+ * Tracks the port mapping between `shim-target` and `shimmed-method`.
  *
  * - map_: Tracks the mapping of parameter positions from `shim-target` (`Root`)
  * to parameter positions / return ports in the `shimmed-method` (`ShimRoot`).
@@ -107,6 +107,8 @@ class ShimTargetPortMapping final {
   bool infer_from_types() const;
 
   void add_receiver(ShimRoot shim_parameter_position);
+
+  void remove_receiver();
 
   ShimTargetPortMapping instantiate(
       std::string_view shim_target_method,
@@ -193,11 +195,30 @@ class ShimTarget final {
  */
 class ShimReflectionTarget final {
  public:
+  /**
+   * Constructs an unresolved shim reflection target where the receiver class in
+   * the DexMethodSpec is always java.lang.Class. Once the receiver (hence the
+   * shim-target method) is resolved at the callsite, a resolved shim reflection
+   * target can be created (see resolve() below) with the appropriate receiver
+   * type.
+   */
   explicit ShimReflectionTarget(
       DexMethodSpec method_spec,
       ShimTargetPortMapping port_mapping);
 
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ShimReflectionTarget)
+
+ private:
+  /* Constructs a resolved shim reflection target using the
+   * resolved_reflection_method */
+  explicit ShimReflectionTarget(
+      const Method* resolved_reflection_method,
+      ShimTargetPortMapping instantiated_port_mapping);
+
+ public:
+  ShimReflectionTarget resolve(
+      const Method* shimmed_callee,
+      const Method* resolved_reflection) const;
 
   bool operator==(const ShimReflectionTarget& other) const;
 
@@ -210,7 +231,9 @@ class ShimReflectionTarget final {
   Register receiver_register(const IRInstruction* instruction) const;
 
   std::unordered_map<Root, Register> root_registers(
-      const Method* resolved_reflection,
+      const IRInstruction* instruction) const;
+
+  std::optional<Register> return_to_register(
       const IRInstruction* instruction) const;
 
   friend std::ostream& operator<<(
@@ -222,6 +245,7 @@ class ShimReflectionTarget final {
  private:
   DexMethodSpec method_spec_;
   ShimTargetPortMapping port_mapping_;
+  bool is_resolved_;
 };
 
 /**
@@ -325,6 +349,7 @@ struct std::hash<marianatrench::ShimReflectionTarget> {
         seed,
         std::hash<marianatrench::ShimTargetPortMapping>()(
             shim_reflection_target.port_mapping_));
+    boost::hash_combine(seed, shim_reflection_target.is_resolved_);
     return seed;
   }
 };

@@ -44,6 +44,11 @@ bool verify_has_parameter_type(
     return false;
   }
 
+  if (!is_static && position == 0u) {
+    // `this` parameter position is always valid.
+    return true;
+  }
+
   return (
       dex_proto->get_args()->at(position - (is_static ? 0u : 1u)) != nullptr);
 }
@@ -97,6 +102,47 @@ bool verify_to_return(
   }
 
   return is_valid;
+}
+
+std::unordered_map<Root, Register> get_root_registers(
+    const IRInstruction* instruction,
+    const ShimTargetPortMapping& port_mapping) {
+  std::unordered_map<Root, Register> root_registers;
+
+  for (const auto& [root, shimmed_method_root] : port_mapping) {
+    if (shimmed_method_root.is_return()) {
+      mt_assert_log(
+          root.is_argument() && root.parameter_position() == 0,
+          "Return port can only be receiver");
+      root_registers.emplace(root, k_result_register);
+    } else {
+      auto shim_parameter_position = shimmed_method_root.parameter_position();
+      mt_assert(shim_parameter_position < instruction->srcs_size());
+      root_registers.emplace(root, instruction->src(shim_parameter_position));
+    }
+  }
+
+  return root_registers;
+}
+
+std::optional<Register> get_return_to_register(
+    const IRInstruction* instruction,
+    const ShimTargetPortMapping& port_mapping) {
+  const auto& return_to = port_mapping.return_to();
+  if (!return_to) {
+    return std::nullopt;
+  }
+
+  if (return_to->is_return()) {
+    return k_result_register;
+  }
+
+  auto parameter_position = return_to->parameter_position();
+  mt_assert_log(
+      parameter_position < instruction->srcs_size(),
+      "Invalid return_to parameter position");
+
+  return instruction->src(parameter_position);
 }
 
 } // namespace
@@ -207,6 +253,11 @@ bool ShimTargetPortMapping::infer_from_types() const {
 void ShimTargetPortMapping::add_receiver(ShimRoot shim_parameter_position) {
   // Include `this` as argument 0
   insert(Root::argument(0), shim_parameter_position);
+}
+
+void ShimTargetPortMapping::remove_receiver() {
+  // Remove `this` as argument 0
+  map_.erase(Root::argument(0));
 }
 
 void ShimTargetPortMapping::infer_parameters_from_types(
@@ -372,47 +423,20 @@ std::optional<Register> ShimTarget::receiver_register(
 
 std::unordered_map<Root, Register> ShimTarget::root_registers(
     const IRInstruction* instruction) const {
-  std::unordered_map<Root, Register> root_registers;
-
-  for (const auto& [root, shimmed_method_root] : port_mapping_) {
-    if (shimmed_method_root.is_return()) {
-      mt_assert_log(
-          root.is_argument() && root.parameter_position() == 0,
-          "Return port can only be receiver");
-      root_registers.emplace(root, k_result_register);
-    } else {
-      auto shim_parameter_position = shimmed_method_root.parameter_position();
-      mt_assert(shim_parameter_position < instruction->srcs_size());
-      root_registers.emplace(root, instruction->src(shim_parameter_position));
-    }
-  }
-
-  return root_registers;
+  return get_root_registers(instruction, port_mapping_);
 }
 
 std::optional<Register> ShimTarget::return_to_register(
     const IRInstruction* instruction) const {
-  const auto& return_to = port_mapping_.return_to();
-  if (!return_to) {
-    return std::nullopt;
-  }
-
-  if (return_to->is_return()) {
-    return k_result_register;
-  }
-
-  auto parameter_position = return_to->parameter_position();
-  mt_assert_log(
-      parameter_position < instruction->srcs_size(),
-      "Invalid return_to parameter position");
-
-  return instruction->src(parameter_position);
+  return get_return_to_register(instruction, port_mapping_);
 }
 
 ShimReflectionTarget::ShimReflectionTarget(
     DexMethodSpec method_spec,
     ShimTargetPortMapping port_mapping)
-    : method_spec_(method_spec), port_mapping_(std::move(port_mapping)) {
+    : method_spec_(method_spec),
+      port_mapping_(std::move(port_mapping)),
+      is_resolved_(false) {
   mt_assert(
       method_spec_.cls == type::java_lang_Class() &&
       method_spec_.name != nullptr && method_spec_.proto != nullptr);
@@ -421,9 +445,24 @@ ShimReflectionTarget::ShimReflectionTarget(
       "Missing parameter mapping for receiver for reflection shim target");
 }
 
+ShimReflectionTarget::ShimReflectionTarget(
+    const Method* resolved_reflection_method,
+    ShimTargetPortMapping instantiated_port_mapping) {
+  mt_assert(!resolved_reflection_method->is_static());
+  mt_assert(!instantiated_port_mapping.contains(Root::argument(0)));
+
+  method_spec_ = DexMethodSpec{
+      resolved_reflection_method->get_class(),
+      DexString::get_string(resolved_reflection_method->get_name()),
+      resolved_reflection_method->get_proto()};
+  port_mapping_ = std::move(instantiated_port_mapping);
+  is_resolved_ = true;
+}
+
 bool ShimReflectionTarget::operator==(const ShimReflectionTarget& other) const {
   return method_spec_ == other.method_spec_ &&
-      port_mapping_ == other.port_mapping_;
+      port_mapping_ == other.port_mapping_ &&
+      is_resolved_ == other.is_resolved_;
 }
 
 bool ShimReflectionTarget::operator<(const ShimReflectionTarget& other) const {
@@ -432,12 +471,14 @@ bool ShimReflectionTarget::operator<(const ShimReflectionTarget& other) const {
              method_spec_.cls,
              method_spec_.name,
              method_spec_.proto,
-             port_mapping_) <
+             port_mapping_,
+             is_resolved_) <
       std::tie(
              other.method_spec_.cls,
              other.method_spec_.name,
              other.method_spec_.proto,
-             other.port_mapping_);
+             other.port_mapping_,
+             other.is_resolved_);
 }
 
 Register ShimReflectionTarget::receiver_register(
@@ -449,26 +490,36 @@ Register ShimReflectionTarget::receiver_register(
   return instruction->src(receiver_parameter_position);
 }
 
-std::unordered_map<Root, Register> ShimReflectionTarget::root_registers(
-    const Method* resolved_reflection,
-    const IRInstruction* instruction) const {
-  std::unordered_map<Root, Register> root_registers;
+ShimReflectionTarget ShimReflectionTarget::resolve(
+    const Method* shimmed_callee,
+    const Method* resolved_reflection) const {
+  ShimMethod shimmed_method{shimmed_callee};
+
+  auto instantiated_port_mapping = port_mapping_.instantiate(
+      resolved_reflection->get_name(),
+      resolved_reflection->get_class(),
+      resolved_reflection->get_proto(),
+      resolved_reflection->is_static(),
+      shimmed_method);
 
   // For reflection receivers, do not propagate the `this` argument, as it
   // is always a new instance.
-  for (ParameterPosition position = 1;
-       position < resolved_reflection->number_of_parameters();
-       ++position) {
-    if (auto shim_position = port_mapping_.at(Root::argument(position))) {
-      auto shim_parameter_position = shim_position->parameter_position();
-      mt_assert(shim_parameter_position < instruction->srcs_size());
-      root_registers.emplace(
-          Root(Root::Kind::Argument, position),
-          instruction->src(shim_parameter_position));
-    }
-  }
+  instantiated_port_mapping.remove_receiver();
 
-  return root_registers;
+  return ShimReflectionTarget{
+      resolved_reflection, std::move(instantiated_port_mapping)};
+}
+
+std::unordered_map<Root, Register> ShimReflectionTarget::root_registers(
+    const IRInstruction* instruction) const {
+  mt_assert(is_resolved_);
+  return get_root_registers(instruction, port_mapping_);
+}
+
+std::optional<Register> ShimReflectionTarget::return_to_register(
+    const IRInstruction* instruction) const {
+  mt_assert(is_resolved_);
+  return get_return_to_register(instruction, port_mapping_);
 }
 
 ShimLifecycleTarget::ShimLifecycleTarget(
@@ -648,7 +699,8 @@ std::ostream& operator<<(
   out << "`, proto=`";
   out << show(shim_reflection_target.method_spec_.proto);
   out << "`, " << shim_reflection_target.port_mapping_;
-  return out << ")";
+  out << ", is_resolved=`" << shim_reflection_target.is_resolved_;
+  return out << "`)";
 }
 
 std::ostream& operator<<(

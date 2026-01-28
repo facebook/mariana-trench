@@ -371,5 +371,59 @@
         }
       ]
     }
+  },
+  {
+    "find": "methods",
+    "where": [
+      {
+        "constraint": "signature_match",
+        "parent": "Lcom/facebook/marianatrench/integrationtests/StringBuilder;",
+        "name": "append"
+      },
+      {
+        "constraint": "parameter",
+        "idx": 1,
+        "inner": {
+          "constraint": "name",
+          "pattern": "Ljava/lang/Class;"
+        }
+      }
+    ],
+    "shim": {
+      "callees": [
+        {
+          "reflected_type_of": "Argument(1)",
+          "method_name": "toString:()Ljava/lang/String;",
+          "return_to": "Argument(0)"
+        }
+      ]
+    }
+  },
+  {
+    "find": "methods",
+    "where": [
+      {
+        "constraint": "signature_match",
+        "parent": "Lcom/facebook/marianatrench/integrationtests/StringBuilder;",
+        "name": "get"
+      },
+      {
+        "constraint": "parameter",
+        "idx": 1,
+        "inner": {
+          "constraint": "name",
+          "pattern": "Ljava/lang/Class;"
+        }
+      }
+    ],
+    "shim": {
+      "callees": [
+        {
+          "reflected_type_of": "Argument(1)",
+          "method_name": "toString:()Ljava/lang/String;",
+          "return_to": "Return"
+        }
+      ]
+    }
   }
 ]
