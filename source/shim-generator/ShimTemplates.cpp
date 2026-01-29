@@ -131,11 +131,13 @@ std::optional<ShimLifecycleTarget> try_make_shim_lifecycle_target(
     return std::nullopt;
   }
 
+  ShimTargetPortMapping port_mapping = target_template.port_mapping();
+  port_mapping.add_receiver(std::get<ShimRoot>(receiver_info.receiver()));
+
   return ShimLifecycleTarget(
       std::string(target_template.target()),
-      std::get<ShimRoot>(receiver_info.receiver()),
-      receiver_info.kind() == ReceiverInfo::Kind::REFLECTION,
-      target_template.port_mapping().infer_from_types());
+      std::move(port_mapping),
+      receiver_info.kind() == ReceiverInfo::Kind::REFLECTION);
 }
 
 } // namespace
@@ -234,7 +236,7 @@ TargetTemplate TargetTemplate::from_json(const Json::Value& callee) {
       callee.isMember("infer_parameters_from_types")
           ? JsonValidation::boolean(callee, "infer_parameters_from_types")
           : parameters_map.isNull(),
-      std::move(return_to));
+      return_to);
   auto receiver_info = ReceiverInfo::from_json(callee);
 
   if (callee.isMember("method_name")) {
@@ -246,6 +248,13 @@ TargetTemplate TargetTemplate::from_json(const Json::Value& callee) {
         std::move(receiver_info),
         std::move(port_mapping)};
   } else if (callee.isMember("lifecycle_name")) {
+    if (return_to.has_value()) {
+      throw JsonValidationError(
+          callee,
+          /* field */ "return_to",
+          /* expected */
+          "`return_to` is not supported with `lifecycle_name` as lifecycle methods never return any values.");
+    }
     return TargetTemplate{
         Kind::LIFECYCLE,
         JsonValidation::string(callee, "lifecycle_name"),

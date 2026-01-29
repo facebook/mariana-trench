@@ -288,7 +288,7 @@ const std::optional<ShimRoot>& ShimTargetPortMapping::return_to() const {
 }
 
 void ShimTargetPortMapping::set_return_to(std::optional<ShimRoot> return_to) {
-  return_to_ = std::move(return_to);
+  return_to_ = return_to;
 }
 
 ShimTargetPortMapping ShimTargetPortMapping::from_json(
@@ -297,7 +297,7 @@ ShimTargetPortMapping ShimTargetPortMapping::from_json(
     std::optional<ShimRoot> return_to) {
   ShimTargetPortMapping port_mapping;
   port_mapping.set_infer_from_types(infer_from_types);
-  port_mapping.set_return_to(std::move(return_to));
+  port_mapping.set_return_to(return_to);
 
   if (value.isNull()) {
     return port_mapping;
@@ -524,81 +524,86 @@ std::optional<Register> ShimReflectionTarget::return_to_register(
 
 ShimLifecycleTarget::ShimLifecycleTarget(
     std::string method_name,
-    ShimRoot receiver_position,
-    bool is_reflection,
-    bool infer_from_types)
+    ShimTargetPortMapping port_mapping,
+    bool is_reflection)
     : method_name_(std::move(method_name)),
-      receiver_position_(std::move(receiver_position)),
+      port_mapping_(std::move(port_mapping)),
       is_reflection_(is_reflection),
-      infer_from_types_(infer_from_types) {}
+      is_resolved_(false) {}
+
+ShimLifecycleTarget::ShimLifecycleTarget(
+    const Method* lifecycle_method,
+    ShimTargetPortMapping instantiated_port_mapping,
+    bool is_reflection)
+    : method_name_(lifecycle_method->get_name()),
+      port_mapping_(std::move(instantiated_port_mapping)),
+      is_reflection_(is_reflection),
+      is_resolved_(true) {}
+
+ShimLifecycleTarget ShimLifecycleTarget::resolve(
+    const Method* shimmed_callee,
+    const Method* lifecycle_method) const {
+  ShimMethod shimmed_method{shimmed_callee};
+
+  auto receiver_position = port_mapping_.at(Root::argument(0));
+  mt_assert_log(
+      receiver_position.has_value(),
+      "Missing receiver position in unresolved ShimLifecycleTarget");
+
+  auto instantiated_port_mapping = port_mapping_.instantiate(
+      lifecycle_method->get_name(),
+      lifecycle_method->get_class(),
+      lifecycle_method->get_proto(),
+      lifecycle_method->is_static(),
+      shimmed_method);
+
+  // For reflection receivers, do not propagate the `this` argument, as it
+  // is always a new instance.
+  if (is_reflection_) {
+    instantiated_port_mapping.remove_receiver();
+  }
+
+  return ShimLifecycleTarget{
+      lifecycle_method, std::move(instantiated_port_mapping), is_reflection_};
+}
 
 bool ShimLifecycleTarget::operator==(const ShimLifecycleTarget& other) const {
-  return infer_from_types_ == other.infer_from_types_ &&
+  return is_resolved_ == other.is_resolved_ &&
       is_reflection_ == other.is_reflection_ &&
-      receiver_position_ == other.receiver_position_ &&
-      method_name_ == other.method_name_;
+      method_name_ == other.method_name_ &&
+      port_mapping_ == other.port_mapping_;
 }
 
 bool ShimLifecycleTarget::operator<(const ShimLifecycleTarget& other) const {
-  // Lexicographic comparison
-  return std::tie(
-             infer_from_types_,
-             is_reflection_,
-             receiver_position_,
-             method_name_) <
+  return std::tie(is_resolved_, is_reflection_, method_name_, port_mapping_) <
       std::tie(
-             other.infer_from_types_,
+             other.is_resolved_,
              other.is_reflection_,
-             other.receiver_position_,
-             other.method_name_);
+             other.method_name_,
+             other.port_mapping_);
 }
 
 Register ShimLifecycleTarget::receiver_register(
     const IRInstruction* instruction) const {
+  auto receiver_position = port_mapping_.at(Root::argument(0));
+  mt_assert_log(
+      receiver_position.has_value(),
+      "Missing receiver position in ShimLifecycleTarget");
+
   // Return value is stored in the special k_result_register
-  if (receiver_position_.is_return()) {
+  if (receiver_position->is_return()) {
     return k_result_register;
   }
 
-  auto receiver_parameter_position = receiver_position_.parameter_position();
+  auto receiver_parameter_position = receiver_position->parameter_position();
   mt_assert(receiver_parameter_position < instruction->srcs_size());
   return instruction->src(receiver_parameter_position);
 }
 
 std::unordered_map<Root, Register> ShimLifecycleTarget::root_registers(
-    const Method* callee,
-    const Method* lifecycle_method,
     const IRInstruction* instruction) const {
-  std::unordered_map<Root, Register> root_registers;
-  ShimMethod shim_method{callee};
-
-  ShimTargetPortMapping port_mapping;
-
-  // For reflection receivers, do not propagate the `this` argument, as it
-  // is always a new instance.
-  if (!is_reflection()) {
-    port_mapping.add_receiver(receiver_position_);
-  }
-
-  if (infer_from_types()) {
-    port_mapping.infer_parameters_from_types(
-        lifecycle_method->get_proto(),
-        lifecycle_method->is_static(),
-        shim_method);
-  }
-
-  for (const auto& [root, shimmed_method_root] : port_mapping) {
-    if (shimmed_method_root.is_return()) {
-      // Return position maps to k_result_register
-      root_registers.emplace(root, k_result_register);
-    } else {
-      auto shim_parameter_position = shimmed_method_root.parameter_position();
-      mt_assert(shim_parameter_position < instruction->srcs_size());
-      root_registers.emplace(root, instruction->src(shim_parameter_position));
-    }
-  }
-
-  return root_registers;
+  mt_assert(is_resolved_);
+  return get_root_registers(instruction, port_mapping_);
 }
 
 InstantiatedShim::InstantiatedShim(const Method* method) : method_(method) {}
@@ -708,12 +713,11 @@ std::ostream& operator<<(
     const ShimLifecycleTarget& shim_lifecycle_target) {
   out << "ShimLifecycleTarget(method_name=`";
   out << shim_lifecycle_target.method_name_;
-  out << "`, receiver_position=Argument("
-      << shim_lifecycle_target.receiver_position_ << ")";
   out << "`, is_reflection=`";
-  out << (shim_lifecycle_target.is_reflection_ ? "true" : "false") << "`, ";
-  out << "`, infer_from_types=`";
-  out << (shim_lifecycle_target.infer_from_types_ ? "true" : "false") << "`, ";
+  out << (shim_lifecycle_target.is_reflection_ ? "true" : "false") << "`";
+  out << ", is_resolved=`"
+      << (shim_lifecycle_target.is_resolved_ ? "true" : "false") << "`";
+  out << ", " << shim_lifecycle_target.port_mapping_;
   return out << ")";
 }
 

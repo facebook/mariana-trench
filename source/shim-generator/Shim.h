@@ -257,11 +257,23 @@ class ShimLifecycleTarget final {
  public:
   explicit ShimLifecycleTarget(
       std::string method_name,
-      ShimRoot receiver_position,
-      bool is_reflection,
-      bool infer_from_types);
+      ShimTargetPortMapping port_mapping,
+      bool is_reflection);
 
   INCLUDE_DEFAULT_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(ShimLifecycleTarget)
+
+ private:
+  /* Constructs a resolved shim lifecycle target using the
+   * resolved_lifecycle_method */
+  explicit ShimLifecycleTarget(
+      const Method* lifecycle_method,
+      ShimTargetPortMapping instantiated_port_mapping,
+      bool is_reflection);
+
+ public:
+  ShimLifecycleTarget resolve(
+      const Method* shimmed_callee,
+      const Method* lifecycle_method) const;
 
   bool operator==(const ShimLifecycleTarget& other) const;
 
@@ -274,8 +286,6 @@ class ShimLifecycleTarget final {
   Register receiver_register(const IRInstruction* instruction) const;
 
   std::unordered_map<Root, Register> root_registers(
-      const Method* callee,
-      const Method* lifecycle_method,
       const IRInstruction* instruction) const;
 
   bool is_reflection() const {
@@ -283,7 +293,7 @@ class ShimLifecycleTarget final {
   }
 
   bool infer_from_types() const {
-    return infer_from_types_;
+    return port_mapping_.infer_from_types();
   }
 
   friend std::ostream& operator<<(
@@ -294,9 +304,9 @@ class ShimLifecycleTarget final {
 
  private:
   std::string method_name_;
-  ShimRoot receiver_position_;
+  ShimTargetPortMapping port_mapping_;
   bool is_reflection_;
-  bool infer_from_types_;
+  bool is_resolved_;
 };
 
 using ShimTargetVariant =
@@ -362,10 +372,10 @@ struct std::hash<marianatrench::ShimLifecycleTarget> {
     boost::hash_combine(seed, shim_lifecycle_target.method_name_);
     boost::hash_combine(
         seed,
-        std::hash<marianatrench::ShimRoot>()(
-            shim_lifecycle_target.receiver_position_));
+        std::hash<marianatrench::ShimTargetPortMapping>()(
+            shim_lifecycle_target.port_mapping_));
     boost::hash_combine(seed, shim_lifecycle_target.is_reflection_);
-    boost::hash_combine(seed, shim_lifecycle_target.infer_from_types_);
+    boost::hash_combine(seed, shim_lifecycle_target.is_resolved_);
     return seed;
   }
 };

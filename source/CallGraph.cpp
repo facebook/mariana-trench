@@ -376,13 +376,11 @@ void process_shim_target(
 
   const auto* method = method_factory.get(dex_method);
   auto root_registers = shim_target.root_registers(instruction);
+  auto return_to_register = shim_target.return_to_register(instruction);
 
   auto call_index = update_index(sink_textual_order_index, method->signature());
   auto features = FeatureSet{feature_factory.get_via_shim_feature(callee)}.join(
       extra_features);
-
-  // Compute return_to_register from shim target
-  auto return_to_register = shim_target.return_to_register(instruction);
 
   if (method->is_static()) {
     mt_assert(shim_target.is_static());
@@ -390,7 +388,7 @@ void process_shim_target(
         ArtificialCallee{
             /* call_target */
             CallTarget::static_call(instruction, method, call_kind, call_index),
-            /* root_registers */ root_registers,
+            /* root_registers */ std::move(root_registers),
             /* return_to_register */ return_to_register,
             /* features */ features,
         });
@@ -409,7 +407,7 @@ void process_shim_target(
               override_factory,
               call_kind,
               call_index),
-          /* root_registers */ root_registers,
+          /* root_registers */ std::move(root_registers),
           /* return_to_register */ return_to_register,
           /* features */ features,
       });
@@ -485,7 +483,7 @@ void process_shim_reflection(
               override_factory,
               CallTarget::CallKind::Shim,
               call_index),
-          /* root_registers */ root_registers,
+          /* root_registers */ std::move(root_registers),
           /* return_to_register */ return_to_register,
           /* features */
           FeatureSet{FeatureFactory.get_via_shim_feature(callee)},
@@ -591,8 +589,9 @@ void process_shim_lifecycle(
   }
 
   for (const auto* lifecycle_method : target_lifecycle_methods) {
-    auto root_registers =
-        shim_lifecycle.root_registers(callee, lifecycle_method, instruction);
+    auto resolved_shim_lifecycle =
+        shim_lifecycle.resolve(callee, lifecycle_method);
+    auto root_registers = resolved_shim_lifecycle.root_registers(instruction);
     auto call_index =
         update_index(sink_textual_order_index, lifecycle_method->signature());
 
@@ -605,7 +604,7 @@ void process_shim_lifecycle(
                 receiver_type,
                 CallTarget::CallKind::Shim,
                 call_index),
-            /* root_registers */ root_registers,
+            /* root_registers */ std::move(root_registers),
             /* return_to_register */ std::nullopt,
             /* features */
             FeatureSet{feature_factory.get_via_shim_feature(callee)},
