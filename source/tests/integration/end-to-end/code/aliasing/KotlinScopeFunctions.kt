@@ -21,7 +21,7 @@ class State {
   }
 }
 
-public class KotlinScopeFunctions {
+class KotlinScopeFunctions {
   fun tito(o: Any): Any {
     return o
   }

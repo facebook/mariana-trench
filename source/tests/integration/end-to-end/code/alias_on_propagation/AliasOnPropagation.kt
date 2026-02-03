@@ -12,7 +12,7 @@ package com.facebook.marianatrench.integrationtests
  * lambdas. Coroutines are another common source of anonymous classes, but the coroutine libraries
  * are not mocked in the integration tests.
  */
-public class AliasOnPropagation {
+class AliasOnPropagation {
   class Ref {
     var intValue: Int = 0
   }
