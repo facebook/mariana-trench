@@ -116,6 +116,8 @@ class Options final {
   bool emit_all_via_cast_features() const;
   const std::vector<std::string>& allow_via_cast_features() const;
 
+  const std::vector<int>& only_rules() const;
+
   const std::vector<std::string>& log_methods() const;
   const std::vector<std::string>& log_method_types() const;
   bool dump_class_hierarchies() const;
@@ -186,6 +188,7 @@ class Options final {
   int maximum_source_sink_distance_;
   bool emit_all_via_cast_features_;
   std::vector<std::string> allow_via_cast_features_;
+  std::vector<int> only_rules_;
 
   std::vector<std::string> log_methods_;
   std::vector<std::string> log_method_types_;

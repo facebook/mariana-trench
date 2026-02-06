@@ -5,6 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <algorithm>
+
 #include <Show.h>
 
 #include <mariana-trench/JsonReaderWriter.h>
@@ -39,11 +41,18 @@ Rules::Rules(Context& context, const Json::Value& rules_value)
 
 Rules Rules::load(Context& context, const Options& options) {
   Rules rules(context);
+  const auto& only_rules = options.only_rules();
 
   for (const auto& rules_path : options.rules_paths()) {
     auto rules_value = JsonReader::parse_json_file(rules_path);
     for (const auto& rule_value : JsonValidation::null_or_array(rules_value)) {
-      rules.add(context, Rule::from_json(rule_value, context));
+      auto rule = Rule::from_json(rule_value, context);
+      // Only add if no filter specified, or rule code is in the filter
+      if (only_rules.empty() ||
+          std::find(only_rules.begin(), only_rules.end(), rule->code()) !=
+              only_rules.end()) {
+        rules.add(context, std::move(rule));
+      }
     }
   }
 

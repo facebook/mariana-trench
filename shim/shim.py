@@ -529,6 +529,13 @@ def _add_configuration_arguments(parser: argparse.ArgumentParser) -> None:
             "available heuristics parameters."
         ),
     )
+    configuration_arguments.add_argument(
+        "--only-rules",
+        type=int,
+        action="extend",
+        nargs="+",
+        help="Only include rules with these codes. Other rules will be ignored.",
+    )
 
 
 def _add_source_indexing_arguments(parser: argparse.ArgumentParser) -> None:
@@ -917,6 +924,11 @@ def _get_command_options_json(
 
     if arguments.heuristics:
         options["heuristics"] = arguments.heuristics
+
+    if arguments.only_rules:
+        options["only-rules"] = []
+        for rule_code in arguments.only_rules:
+            options["only-rules"].append(rule_code)
 
     options["sequential"] = arguments.sequential
     options["skip-source-indexing"] = arguments.skip_source_indexing

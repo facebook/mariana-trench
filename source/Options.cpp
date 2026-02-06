@@ -293,6 +293,13 @@ Options::Options(const Json::Value& json) {
     }
   }
 
+  if (json.isMember("only-rules")) {
+    for (const auto& value :
+         JsonValidation::nonempty_array(json, "only-rules")) {
+      only_rules_.push_back(JsonValidation::integer(value));
+    }
+  }
+
   if (json.isMember("log-method")) {
     for (const auto& value :
          JsonValidation::nonempty_array(json, "log-method")) {
@@ -572,6 +579,10 @@ bool Options::emit_all_via_cast_features() const {
 
 const std::vector<std::string>& Options::allow_via_cast_features() const {
   return allow_via_cast_features_;
+}
+
+const std::vector<int>& Options::only_rules() const {
+  return only_rules_;
 }
 
 const std::vector<std::string>& Options::log_methods() const {
