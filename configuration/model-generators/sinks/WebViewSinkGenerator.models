@@ -120,6 +120,33 @@
           }
         ]
       }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_match",
+          "parent": "Landroid/webkit/CookieManager;",
+          "name": "setCookie"
+        }
+      ],
+      "model": {
+        "modes": [
+          "skip-analysis"
+        ],
+        "sinks": [
+          {
+            "kind": "SetCookie",
+            "partial_label": "arg0",
+            "port": "Argument(1)"
+          },
+          {
+            "kind": "SetCookie",
+            "partial_label": "arg1",
+            "port": "Argument(2)"
+          }
+        ]
+      }
     }
   ]
 }
