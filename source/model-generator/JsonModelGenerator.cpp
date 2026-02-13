@@ -258,6 +258,17 @@ std::vector<FieldModel> JsonModelGenerator::emit_field_models(
   std::vector<FieldModel> models;
   for (auto& item : field_items_) {
     std::vector<FieldModel> field_models = item.emit_field_models(fields);
+
+    LOG(4,
+        "Field model generator `{}` emitted {} models.",
+        show(item.name()),
+        field_models.size());
+    EventLogger::log_event(
+        "model_generator_match",
+        show(item.name()),
+        field_models.size(),
+        /* verbosity_level */ 3);
+
     models.insert(
         models.end(),
         std::make_move_iterator(field_models.begin()),
