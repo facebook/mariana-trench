@@ -8,7 +8,7 @@ This documentation aims to help you build Mariana Trench from source and run the
 
 ## Supported Platforms
 
-Mariana Trench is currently supported on **macOS** (tested on *Big Sur 11.4*) and **Linux** (tested on *Ubuntu 20.04 LTS*).
+Mariana Trench is currently supported on **macOS** (tested on *Big Sur 11.4*), **Linux** (tested on *Ubuntu 20.04 LTS*), and **Android** (via *Termux*).
 
 ## Dependencies
 
@@ -58,6 +58,36 @@ On **Linux**, you will need to install Java to run the tests. For instance, on *
 $ sudo apt install default-jre default-jdk
 ```
 
+**On Android (Termux):**
+```shell
+$ pkg install -y git zlib boost googletest jsoncpp openjdk-17 jsoncpp-static boost-headers binutils build-essential rsync
+```
+
+On Termux, you will also need to build RE2 and Google Benchmark from source:
+
+```shell
+# Build RE2
+$ cd "$HOME"
+$ git clone https://github.com/google/re2.git --depth 1
+$ cd re2/
+$ cmake -DCMAKE_INSTALL_PREFIX="${PREFIX}" -S . -B build
+$ cd build
+$ make
+$ make install
+
+# Build benchmark
+$ cd "$HOME"
+$ git clone https://github.com/google/benchmark.git --depth 1
+$ cd benchmark
+$ cmake -DBENCHMARK_DOWNLOAD_DEPENDENCIES=on -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${PREFIX}" -DBENCHMARK_ENABLE_GTEST_TESTS=OFF -S . -B "build"
+$ cmake --build "build" --config Release --target install
+```
+
+And, you also need to clone libbinder (required for building Redex):
+```shell
+$ git clone https://github.com/D-os/libbinder.git --depth 1 "$TMPDIR/libbinder"
+```
+
 ### Clone the repository
 
 First of, clone the Mariana Trench repository. We will also set an environment variable `MARIANA_TRENCH_DIRECTORY` that points to it for the following instructions.
@@ -93,13 +123,30 @@ $ make install
 
 ### Building Redex
 
-We also need to build [Redex](https://fbredex.com/) from source, run:
+We also need to build [Redex](https://fbredex.com/) from source.
+
+First, navigate to the dependencies directory and clone Redex:
 ```shell
 $ cd "$MARIANA_TRENCH_DIRECTORY/dependencies"
 $ git clone https://github.com/facebook/redex.git
 $ mkdir redex/build
 $ cd redex/build
+```
+
+Then, run `cmake` with platform-specific flags:
+
+**On macOS/Linux:**
+```shell
 $ cmake -DCMAKE_INSTALL_PREFIX="$MARIANA_TRENCH_DIRECTORY/install" ..
+```
+
+**On Termux:**
+```shell
+$ cmake -DCMAKE_INSTALL_PREFIX="$MARIANA_TRENCH_DIRECTORY/install" -DCMAKE_CXX_FLAGS="-I$TMPDIR/libbinder/include" ..
+```
+
+Finally, build and install Redex:
+```shell
 $ make -j4
 $ make install
 ```
@@ -126,8 +173,8 @@ Once inside a virtual environment (after using the `activate` script), run:
 ```shell
 $ cd "$MARIANA_TRENCH_DIRECTORY"
 $ python scripts/setup.py \
-  --binary "$MT_INSTALL_DIRECTORY/bin/mariana-trench-binary" \
-  --pyredex "$MT_INSTALL_DIRECTORY/bin/pyredex" \
+  --binary "$MARIANA_TRENCH_DIRECTORY/install/bin/mariana-trench-binary" \
+  --pyredex "$MARIANA_TRENCH_DIRECTORY/install/bin/pyredex" \
   install
 ```
 
