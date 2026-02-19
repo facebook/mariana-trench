@@ -21,7 +21,7 @@ Below is a list of the required dependencies. Most of them can be installed with
 * Boost >= 1.75.0
 * GoogleTest >= 1.10.0
 * JsonCpp >= 1.9.4
-* fmt >= 7.1.2, <= 9.1.0
+* fmt >= 7.1.2, \<= 9.1.0
 * RE2
 * Java (Optional)
 * Android SDK (Optional)
