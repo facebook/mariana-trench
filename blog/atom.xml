@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-    <id>https://mariana-tren.ch/blog</id>
+    <id>https://mariana-tren.ch/blog/</id>
     <title>Mariana Trench Blog</title>
     <updated>2020-01-27T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
-    <link rel="alternate" href="https://mariana-tren.ch/blog"/>
+    <link rel="alternate" href="https://mariana-tren.ch/blog/"/>
     <subtitle>Mariana Trench Blog</subtitle>
     <icon>https://mariana-tren.ch/img/favicon.ico</icon>
     <entry>
         <title type="html"><![CDATA[Welcome]]></title>
-        <id>welcome</id>
-        <link href="https://mariana-tren.ch/blog/welcome"/>
+        <id>https://mariana-tren.ch/blog/welcome/</id>
+        <link href="https://mariana-tren.ch/blog/welcome/"/>
         <updated>2020-01-27T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[First post]]></summary>
         <content type="html"><![CDATA[<p>First post</p>]]></content>
