@@ -70,7 +70,7 @@ On Termux, you will also need to build RE2 and Google Benchmark from source:
 $ cd "$HOME"
 $ git clone https://github.com/google/re2.git --depth 1
 $ cd re2/
-$ cmake -DCMAKE_INSTALL_PREFIX="${PREFIX}" -S . -B build
+$ cmake -DCMAKE_INSTALL_PREFIX="$MARIANA_TRENCH_DIRECTORY/install" -S . -B build
 $ cd build
 $ make
 $ make install
@@ -79,7 +79,7 @@ $ make install
 $ cd "$HOME"
 $ git clone https://github.com/google/benchmark.git --depth 1
 $ cd benchmark
-$ cmake -DBENCHMARK_DOWNLOAD_DEPENDENCIES=on -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${PREFIX}" -DBENCHMARK_ENABLE_GTEST_TESTS=OFF -S . -B "build"
+$ cmake -DBENCHMARK_DOWNLOAD_DEPENDENCIES=on -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$MARIANA_TRENCH_DIRECTORY/install" -DBENCHMARK_ENABLE_GTEST_TESTS=OFF -S . -B "build"
 $ cmake --build "build" --config Release --target install
 ```
 
