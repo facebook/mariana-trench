@@ -1,0 +1,27 @@
+[
+  {
+    "name": "SubkindFlow",
+    "code": 1,
+    "description": "Source to Sink flow",
+    "sources": [
+      "Source"
+    ],
+    "sinks": [
+      "Sink"
+    ]
+  },
+  {
+    "name": "SubkindFlowWithTransform",
+    "code": 2,
+    "description": "Source to Sink flow with T1 transform",
+    "sources": [
+      "Source"
+    ],
+    "transforms": [
+      "T1"
+    ],
+    "sinks": [
+      "Sink"
+    ]
+  }
+]

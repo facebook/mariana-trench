@@ -1,0 +1,90 @@
+[
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+    "generations": [
+      {
+        "kind": "Source",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+    "sinks": [
+      {
+        "kind": "Sink",
+        "port": "Argument(0)"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Subkinds;.getSourceA:()Ljava/lang/Object;",
+    "generations": [
+      {
+        "kind": "Source",
+        "subkind": "A",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Subkinds;.getSourceB:()Ljava/lang/Object;",
+    "generations": [
+      {
+        "kind": "Source",
+        "subkind": "B",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkA:(Ljava/lang/Object;)V",
+    "sinks": [
+      {
+        "kind": "Sink",
+        "subkind": "A",
+        "port": "Argument(0)"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkB:(Ljava/lang/Object;)V",
+    "sinks": [
+      {
+        "kind": "Sink",
+        "subkind": "B",
+        "port": "Argument(0)"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkAAndB:(Ljava/lang/Object;Ljava/lang/Object;)V",
+    "sinks": [
+      {
+        "kind": "Sink",
+        "subkind": "A",
+        "port": "Argument(0)"
+      },
+      {
+        "kind": "Sink",
+        "subkind": "B",
+        "port": "Argument(1)"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Subkinds;.transform:(Ljava/lang/Object;)Ljava/lang/Object;",
+    "freeze": [
+      "propagation"
+    ],
+    "propagation": [
+      {
+        "input": "Argument(0)",
+        "output": "Return",
+        "transforms": [
+          "T1"
+        ]
+      }
+    ]
+  }
+]
