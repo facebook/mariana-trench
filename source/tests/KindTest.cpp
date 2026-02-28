@@ -10,7 +10,9 @@
 
 #include <mariana-trench/Kind.h>
 #include <mariana-trench/MultiSourceMultiSinkRule.h>
+#include <mariana-trench/NamedKind.h>
 #include <mariana-trench/Redex.h>
+#include <mariana-trench/TransformKind.h>
 #include <mariana-trench/tests/Test.h>
 
 namespace marianatrench {
@@ -130,6 +132,42 @@ TEST_F(KindTest, SerializationDeserialization) {
       Kind::from_trace_string(
           triggered_partial_kind->to_trace_string(), context),
       KindNotSupportedError);
+}
+
+TEST_F(KindTest, SubkindInfrastructure) {
+  auto context = test::make_empty_context();
+
+  {
+    // discard_subkind() returns base NamedKind
+    const auto* with_subkind = context.kind_factory->get("Source", "s1");
+    const auto* base = context.kind_factory->get("Source");
+    EXPECT_EQ(with_subkind->discard_subkind(), base);
+    EXPECT_EQ(base->discard_subkind(), base); // no-op on base kind
+  }
+
+  {
+    // TransformKind wrapping NamedKind with subkind: discard_subkind()
+    const auto* with_subkind = context.kind_factory->get("Source", "s1");
+    const auto* local_transforms =
+        context.transforms_factory->create({"T1"}, context);
+    const auto* transform = context.kind_factory->transform_kind(
+        with_subkind, local_transforms, /* global_transforms */ nullptr);
+    const auto* discarded = transform->discard_subkind();
+    // Should be TransformKind wrapping base NamedKind
+    EXPECT_TRUE(discarded->is<TransformKind>());
+    EXPECT_EQ(
+        discarded->as<TransformKind>()->base_kind(),
+        context.kind_factory->get("Source"));
+  }
+
+  {
+    // Pointer identity: different subkinds are different kinds
+    const auto* a = context.kind_factory->get("Sink", "s1");
+    const auto* b = context.kind_factory->get("Sink", "s2");
+    const auto* base = context.kind_factory->get("Sink");
+    EXPECT_NE(a, b);
+    EXPECT_NE(a, base);
+  }
 }
 
 } // namespace marianatrench

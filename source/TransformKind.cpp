@@ -95,6 +95,15 @@ const Kind* TransformKind::discard_transforms() const {
   return base_kind_;
 }
 
+const Kind* TransformKind::discard_subkind() const {
+  const auto* new_base = base_kind_->discard_subkind();
+  if (new_base == base_kind_) {
+    return this;
+  }
+  return KindFactory::singleton().transform_kind(
+      new_base, local_transforms_, global_transforms_);
+}
+
 bool TransformKind::has_source_as_transform() const {
   return (local_transforms_ && local_transforms_->has_source_as_transform()) ||
       (global_transforms_ && global_transforms_->has_source_as_transform());

@@ -26,4 +26,11 @@ std::string NamedKind::to_trace_string() const {
   return name_;
 }
 
+const Kind* NamedKind::discard_subkind() const {
+  if (!subkind_.has_value()) {
+    return this;
+  }
+  return KindFactory::singleton().get(name_);
+}
+
 } // namespace marianatrench

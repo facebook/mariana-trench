@@ -68,6 +68,10 @@ class Kind {
     return this;
   }
 
+  virtual const Kind* discard_subkind() const {
+    return this;
+  }
+
   virtual Json::Value to_json() const;
   static const Kind* from_json(const Json::Value& value, Context& context);
 

@@ -63,6 +63,8 @@ class TransformKind final : public Kind {
 
   const Kind* discard_transforms() const override;
 
+  const Kind* discard_subkind() const override;
+
   bool has_source_as_transform() const;
 
   bool has_non_sanitize_transform() const;

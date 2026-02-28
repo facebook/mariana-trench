@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <optional>
 #include <string>
 
 #include <boost/iterator/transform_iterator.hpp>
@@ -37,6 +38,9 @@ class KindFactory final {
 
   const NamedKind* get(const std::string& name) const;
 
+  const NamedKind* get(const std::string& name, const std::string& subkind)
+      const;
+
   const PartialKind* get_partial(
       const std::string& name,
       const std::string& label) const;
@@ -61,7 +65,11 @@ class KindFactory final {
   static const KindFactory& singleton();
 
  private:
-  UniquePointerFactory<std::string, NamedKind> named_;
+  UniquePointerFactory<
+      std::tuple<std::string, std::optional<std::string>>,
+      NamedKind,
+      TupleHash<std::string, std::optional<std::string>>>
+      named_;
   std::unique_ptr<LocalReturnKind> local_return_;
   UniquePointerFactory<ParameterPosition, LocalArgumentKind> local_argument_;
   const LocalArgumentKind* local_receiver_;

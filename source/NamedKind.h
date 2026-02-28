@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <optional>
 #include <ostream>
 #include <string>
 
@@ -24,7 +25,10 @@ namespace marianatrench {
  */
 class NamedKind final : public Kind {
  public:
-  explicit NamedKind(std::string name) : name_(std::move(name)) {}
+  explicit NamedKind(
+      std::string name,
+      std::optional<std::string> subkind = std::nullopt)
+      : name_(std::move(name)), subkind_(std::move(subkind)) {}
 
   DELETE_COPY_CONSTRUCTORS_AND_ASSIGNMENTS(NamedKind)
 
@@ -37,8 +41,19 @@ class NamedKind final : public Kind {
     return name_;
   }
 
+  const std::optional<std::string>& subkind() const {
+    return subkind_;
+  }
+
+  [[nodiscard]] bool has_subkind() const {
+    return subkind_.has_value();
+  }
+
+  const Kind* discard_subkind() const override;
+
  private:
   std::string name_;
+  std::optional<std::string> subkind_;
 };
 
 } // namespace marianatrench

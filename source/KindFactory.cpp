@@ -21,7 +21,16 @@ KindFactory::KindFactory()
 }
 
 const NamedKind* KindFactory::get(const std::string& name) const {
-  return named_.create(name);
+  return named_.create(std::make_tuple(name, std::nullopt), name);
+}
+
+const NamedKind* KindFactory::get(
+    const std::string& name,
+    const std::string& subkind) const {
+  return named_.create(
+      std::make_tuple(name, std::optional<std::string>(subkind)),
+      name,
+      std::optional<std::string>(subkind));
 }
 
 const PartialKind* KindFactory::get_partial(
