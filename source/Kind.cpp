@@ -12,6 +12,7 @@
 #include <mariana-trench/Kind.h>
 #include <mariana-trench/KindFactory.h>
 #include <mariana-trench/LocalArgumentKind.h>
+#include <mariana-trench/NamedKind.h>
 #include <mariana-trench/TriggeredPartialKind.h>
 
 namespace marianatrench {
@@ -59,6 +60,8 @@ const Kind* Kind::from_json(const Json::Value& value, Context& context) {
       // to differentiate between TriggeredPartialKind and PartialKind. The
       // "partial_label" key exists in both.
       return PartialKind::from_inner_json(leaf_kind, context);
+    } else if (leaf_kind.isMember("subkind")) {
+      return NamedKind::from_inner_json(leaf_kind, context);
     } else {
       throw JsonValidationError(
           value,
@@ -84,10 +87,20 @@ const Kind* Kind::from_config_json(
     Context& context,
     bool check_unexpected_members) {
   if (check_unexpected_members) {
-    JsonValidation::check_unexpected_members(value, {"kind", "partial_label"});
+    JsonValidation::check_unexpected_members(
+        value, {"kind", "partial_label", "subkind"});
   }
+
   const auto leaf_kind = JsonValidation::string(value, /* field */ "kind");
-  if (value.isMember("partial_label")) {
+  if (value.isMember("subkind") && value.isMember("partial_label")) {
+    throw JsonValidationError(
+        value,
+        std::nullopt,
+        "'subkind' and 'partial_label' cannot both be specified");
+  } else if (value.isMember("subkind")) {
+    return context.kind_factory->get(
+        leaf_kind, JsonValidation::string(value, /* field */ "subkind"));
+  } else if (value.isMember("partial_label")) {
     return context.kind_factory->get_partial(
         leaf_kind, JsonValidation::string(value, /* field */ "partial_label"));
   } else {
@@ -113,6 +126,16 @@ const Kind* Kind::from_trace_string(const std::string& kind, Context& context) {
     throw KindNotSupportedError(
         kind,
         /* expected */ "Non-Transform Kind");
+  }
+
+  // Check for subkind paren notation: "BaseKind(SubKind)"
+  // No collision with LocalArgument(N) — that is matched first by the
+  // boost::starts_with(kind, "LocalArgument(") check above.
+  auto paren_pos = kind.find('(');
+  if (paren_pos != std::string::npos && kind.back() == ')') {
+    auto name = kind.substr(0, paren_pos);
+    auto subkind = kind.substr(paren_pos + 1, kind.size() - paren_pos - 2);
+    return context.kind_factory->get(name, subkind);
   }
 
   // Defaults to NamedKind.

@@ -149,7 +149,7 @@ UsedKinds UsedKinds::from_rules(
 }
 
 bool UsedKinds::should_keep(const TransformKind* transform_kind) const {
-  const auto* base_kind = transform_kind->base_kind();
+  const auto* base_kind = transform_kind->base_kind()->discard_subkind();
 
   const auto* transforms_to_check =
       transforms_factory_.discard_sanitizers(transforms_factory_.concat(

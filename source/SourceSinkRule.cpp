@@ -5,6 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <mariana-trench/JsonValidation.h>
+#include <mariana-trench/KindFactory.h>
 #include <mariana-trench/NamedKind.h>
 #include <mariana-trench/Rule.h>
 #include <mariana-trench/RulesCoverage.h>
@@ -14,8 +16,9 @@
 namespace marianatrench {
 
 bool SourceSinkRule::uses(const Kind* kind) const {
-  return source_kinds_.count(kind->discard_transforms()) != 0 ||
-      sink_kinds_.count(kind->discard_transforms()) != 0;
+  const auto* base_kind = kind->discard_transforms()->discard_subkind();
+  return source_kinds_.count(base_kind) != 0 ||
+      sink_kinds_.count(base_kind) != 0;
 }
 
 std::optional<CoveredRule> SourceSinkRule::coverage(
@@ -74,13 +77,13 @@ std::unique_ptr<Rule> SourceSinkRule::from_json(
   KindSet source_kinds;
   for (const auto& source_kind :
        JsonValidation::nonempty_array(value, /* field */ "sources")) {
-    source_kinds.insert(NamedKind::from_json(source_kind, context));
+    source_kinds.insert(NamedKind::from_rule_json(source_kind, context));
   }
 
   KindSet sink_kinds;
   for (const auto& sink_kind :
        JsonValidation::nonempty_array(value, /* field */ "sinks")) {
-    sink_kinds.insert(NamedKind::from_json(sink_kind, context));
+    sink_kinds.insert(NamedKind::from_rule_json(sink_kind, context));
   }
 
   const TransformList* transforms = nullptr;

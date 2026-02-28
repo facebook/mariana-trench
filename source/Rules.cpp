@@ -283,7 +283,7 @@ const Kind* MT_NULLABLE canonicalize_sink_kind(
     }
   }
 
-  return sink_kind;
+  return sink_kind->discard_subkind();
 }
 
 } // namespace
@@ -296,8 +296,9 @@ const std::vector<const Rule*>& Rules::rules(
       source_kind->to_trace_string(),
       sink_kind->to_trace_string());
 
-  auto sink_to_rules =
-      source_to_sink_to_rules_.find(source_kind->discard_transforms());
+  const auto* source_base_kind =
+      source_kind->discard_transforms()->discard_subkind();
+  auto sink_to_rules = source_to_sink_to_rules_.find(source_base_kind);
   if (sink_to_rules == source_to_sink_to_rules_.end()) {
     return empty_rule_set_;
   }
@@ -316,7 +317,7 @@ const std::vector<const Rule*>& Rules::rules(
 
   LOG(4,
       "Found rule match for: {}->{} ",
-      source_kind->discard_transforms()->to_trace_string(),
+      source_base_kind->to_trace_string(),
       canonicalized_sink_kind->to_trace_string());
 
   return rules->second;
@@ -330,8 +331,10 @@ const std::vector<const Rule*>& Rules::partially_fulfilled_exploitability_rules(
       source_kind->to_trace_string(),
       sink_kind->to_trace_string());
 
-  auto sink_to_rules = source_to_sink_to_exploitability_rules_.find(
-      source_kind->discard_transforms());
+  const auto* source_base_kind =
+      source_kind->discard_transforms()->discard_subkind();
+  auto sink_to_rules =
+      source_to_sink_to_exploitability_rules_.find(source_base_kind);
   if (sink_to_rules == source_to_sink_to_exploitability_rules_.end()) {
     return empty_exploitability_rule_set_;
   }
@@ -350,7 +353,7 @@ const std::vector<const Rule*>& Rules::partially_fulfilled_exploitability_rules(
 
   LOG(4,
       "Found partially fulfilled exploitability rule match for: {}->{} ",
-      source_kind->discard_transforms()->to_trace_string(),
+      source_base_kind->to_trace_string(),
       canonicalized_sink_kind->to_trace_string());
 
   return rules->second;
@@ -398,7 +401,9 @@ const std::vector<const Rule*>& Rules::fulfilled_exploitability_rules(
 const std::vector<const MultiSourceMultiSinkRule*>& Rules::partial_rules(
     const Kind* source_kind,
     const PartialKind* sink_kind) const {
-  auto sink_to_rules = source_to_partial_sink_to_rules_.find(source_kind);
+  const auto* source_base_kind =
+      source_kind->discard_transforms()->discard_subkind();
+  auto sink_to_rules = source_to_partial_sink_to_rules_.find(source_base_kind);
   if (sink_to_rules == source_to_partial_sink_to_rules_.end()) {
     return empty_multi_source_rule_set_;
   }

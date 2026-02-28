@@ -16,6 +16,7 @@
 #include <mariana-trench/Fields.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/JsonValidation.h>
+#include <mariana-trench/Kind.h>
 #include <mariana-trench/LifecycleMethod.h>
 #include <mariana-trench/LifecycleMethods.h>
 #include <mariana-trench/LocalPositionSet.h>
@@ -1244,6 +1245,120 @@ TEST_F(JsonTest, Frame_Crtex) {
               })#"),
           context),
       expected_taint_config);
+}
+
+TEST_F(JsonTest, Kind) {
+  auto context = test::make_empty_context();
+
+  // NamedKind without subkind: to_json produces {"kind": "Source"}
+  {
+    const auto* kind = context.kind_factory->get("Source");
+    auto json = kind->to_json();
+    EXPECT_EQ(json, test::parse_json(R"({"kind": "Source"})"));
+
+    // from_json roundtrip
+    const auto* parsed = Kind::from_json(json, context);
+    EXPECT_EQ(parsed, kind);
+  }
+
+  // NamedKind with subkind: to_json produces {"kind": {"name": "Sink",
+  // "subkind": "s1"}}
+  {
+    const auto* kind = context.kind_factory->get("Sink", "s1");
+    auto json = kind->to_json();
+    EXPECT_EQ(
+        json,
+        test::parse_json(R"({"kind": {"name": "Sink", "subkind": "s1"}})"));
+
+    // from_json roundtrip
+    const auto* parsed = Kind::from_json(json, context);
+    EXPECT_EQ(parsed, kind);
+  }
+
+  // Kind::from_json: object with "name" but no "subkind" should throw
+  {
+    EXPECT_THROW(
+        Kind::from_json(
+            test::parse_json(R"({"kind": {"name": "Source"}})"), context),
+        JsonValidationError);
+  }
+
+  // Kind::from_json: pointer identity across from_json calls
+  {
+    const auto* parsed_1 = Kind::from_json(
+        test::parse_json(R"({"kind": {"name": "Sink", "subkind": "s1"}})"),
+        context);
+    const auto* parsed_2 = Kind::from_json(
+        test::parse_json(R"({"kind": {"name": "Sink", "subkind": "s1"}})"),
+        context);
+    const auto* parsed_different = Kind::from_json(
+        test::parse_json(R"({"kind": {"name": "Sink", "subkind": "s2"}})"),
+        context);
+    EXPECT_EQ(parsed_1, parsed_2);
+    EXPECT_NE(parsed_1, parsed_different);
+  }
+
+  // Kind::from_json: subkind kind differs from base kind
+  {
+    const auto* base =
+        Kind::from_json(test::parse_json(R"({"kind": "Sink"})"), context);
+    const auto* with_subkind = Kind::from_json(
+        test::parse_json(R"({"kind": {"name": "Sink", "subkind": "s1"}})"),
+        context);
+    EXPECT_NE(base, with_subkind);
+  }
+
+  // from_config_json with flat subkind format
+  {
+    const auto* kind = context.kind_factory->get("Source", "s1");
+    const auto* parsed = Kind::from_config_json(
+        test::parse_json(R"({"kind": "Source", "subkind": "s1"})"), context);
+    EXPECT_EQ(parsed, kind);
+  }
+
+  // from_config_json without subkind
+  {
+    const auto* kind = context.kind_factory->get("Sink");
+    const auto* parsed = Kind::from_config_json(
+        test::parse_json(R"({"kind": "Sink"})"), context);
+    EXPECT_EQ(parsed, kind);
+  }
+
+  // from_config_json with both subkind and partial_label throws
+  EXPECT_THROW(
+      Kind::from_config_json(
+          test::parse_json(
+              R"({"kind": "Source", "subkind": "s1", "partial_label": "a"})"),
+          context),
+      JsonValidationError);
+
+  // from_trace_string with subkind + roundtrip
+  {
+    const auto* kind = context.kind_factory->get("Source", "s1");
+    const auto* parsed = Kind::from_trace_string("Source(s1)", context);
+    EXPECT_EQ(parsed, kind);
+    EXPECT_EQ(Kind::from_trace_string(kind->to_trace_string(), context), kind);
+  }
+
+  // TransformKind wrapping NamedKind with subkind: to_json produces
+  // {"kind": {"base": "Source(s1)", "local": "T1"}}
+  {
+    const auto* subkind = context.kind_factory->get("Source", "s1");
+    const auto* transform_kind = context.kind_factory->transform_kind(
+        subkind,
+        /* local_transforms */
+        context.transforms_factory->create({"T1"}, context),
+        /* global_transforms */ nullptr);
+    auto json = transform_kind->to_json();
+    EXPECT_EQ(
+        json,
+        test::parse_json(
+            R"#({"kind": {"base": "Source(s1)", "local": "T1"}})#"));
+
+    // from_json roundtrip
+    const auto* parsed = Kind::from_json(json, context);
+    EXPECT_EQ(parsed, transform_kind);
+  }
 }
 
 TEST_F(JsonTest, Frame) {

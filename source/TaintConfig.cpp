@@ -106,6 +106,7 @@ TaintConfig TaintConfig::from_json(const Json::Value& value, Context& context) {
        "type", // Only when called from `Model::from_config_json` for effects
        "kind",
        "partial_label",
+       "subkind",
        "callee_port",
        "callee",
        "call_position",

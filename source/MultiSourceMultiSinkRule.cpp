@@ -27,13 +27,14 @@ MultiSourceMultiSinkRule::partial_sink_kinds(const std::string& label) const {
 }
 
 bool MultiSourceMultiSinkRule::uses(const Kind* kind) const {
+  const auto* base_kind = kind->discard_transforms()->discard_subkind();
   for (const auto& [_label, kinds] : multi_source_kinds_) {
-    if (kinds.count(kind) != 0) {
+    if (kinds.count(base_kind) != 0) {
       return true;
     }
   }
 
-  return partial_sink_kinds_.count(kind->as<PartialKind>()) != 0;
+  return partial_sink_kinds_.count(base_kind->as<PartialKind>()) != 0;
 }
 
 bool MultiSourceMultiSinkRule::operator==(
@@ -126,7 +127,7 @@ std::unique_ptr<Rule> MultiSourceMultiSinkRule::from_json(
   for (const auto& label : labels) {
     KindSet kinds;
     for (const auto& kind : JsonValidation::nonempty_array(sources, label)) {
-      kinds.insert(NamedKind::from_json(kind, context));
+      kinds.insert(NamedKind::from_rule_json(kind, context));
     }
     multi_source_kinds.emplace(label, std::move(kinds));
   }
