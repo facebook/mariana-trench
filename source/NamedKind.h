@@ -51,7 +51,7 @@ class NamedKind final : public Kind {
     return subkind_;
   }
 
-  [[nodiscard]] bool has_subkind() const {
+  [[nodiscard]] bool has_subkind() const override {
     return subkind_.has_value();
   }
 

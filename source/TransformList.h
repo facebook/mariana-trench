@@ -197,8 +197,10 @@ class TransformList final {
         sanitizer_range.begin(),
         sanitizer_range.end(),
         [kind, direction](const SanitizerSetTransform* sanitizer) {
-          return sanitizer->kinds().contains(
-              SourceSinkKind::from_transform_direction(kind, direction));
+          return kind->matches_sanitizer([sanitizer, direction](const Kind* k) {
+            return sanitizer->kinds().contains(
+                SourceSinkKind::from_transform_direction(k, direction));
+          });
         });
   }
 

@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <concepts>
 #include <ostream>
 #include <string>
 
@@ -68,8 +69,23 @@ class Kind {
     return this;
   }
 
+  [[nodiscard]] virtual bool has_subkind() const {
+    return false;
+  }
+
   virtual const Kind* discard_subkind() const {
     return this;
+  }
+
+  /**
+   * Returns true if `matches_fn` matches this kind, or if this kind has a
+   * subkind, its base kind (via discard_subkind()). This allows a sanitizer
+   * for a base kind (e.g., "SourceKind") to also match subkinds (e.g.,
+   * "SourceKind(A)").
+   */
+  [[nodiscard]] bool matches_sanitizer(
+      const std::predicate<const Kind*> auto& matches_fn) const {
+    return matches_fn(this) || (has_subkind() && matches_fn(discard_subkind()));
   }
 
   virtual Json::Value to_json() const;

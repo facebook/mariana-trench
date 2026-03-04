@@ -63,6 +63,10 @@ class TransformKind final : public Kind {
 
   const Kind* discard_transforms() const override;
 
+  [[nodiscard]] bool has_subkind() const override {
+    return base_kind_->has_subkind();
+  }
+
   const Kind* discard_subkind() const override;
 
   bool has_source_as_transform() const;

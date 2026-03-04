@@ -116,12 +116,14 @@ Json::Value SourceSinkKind::to_json(SanitizerKind sanitizer_kind) const {
 
   const auto source_or_sink = is_source() ? "Source" : "Sink";
 
-  // Create the regular json for the kind, then add the source/sink prefix to
-  // the kind string
   auto kind_json = kind->to_json();
-  kind_json["kind"] =
-      fmt::format("{}[{}]", source_or_sink, kind_json["kind"].asString());
-
+  auto& kind_value = kind_json["kind"];
+  if (kind_value.isString()) {
+    kind_value = fmt::format("{}[{}]", source_or_sink, kind_value.asString());
+  } else {
+    kind_value["name"] =
+        fmt::format("{}[{}]", source_or_sink, kind_value["name"].asString());
+  }
   return kind_json;
 }
 
