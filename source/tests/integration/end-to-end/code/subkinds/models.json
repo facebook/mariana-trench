@@ -3,7 +3,7 @@
     "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
     "generations": [
       {
-        "kind": "Source",
+        "kind": "SourceKind",
         "port": "Return"
       }
     ]
@@ -12,7 +12,7 @@
     "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
     "sinks": [
       {
-        "kind": "Sink",
+        "kind": "SinkKind",
         "port": "Argument(0)"
       }
     ]
@@ -21,7 +21,7 @@
     "method": "Lcom/facebook/marianatrench/integrationtests/Subkinds;.getSourceA:()Ljava/lang/Object;",
     "generations": [
       {
-        "kind": "Source",
+        "kind": "SourceKind",
         "subkind": "A",
         "port": "Return"
       }
@@ -31,7 +31,7 @@
     "method": "Lcom/facebook/marianatrench/integrationtests/Subkinds;.getSourceB:()Ljava/lang/Object;",
     "generations": [
       {
-        "kind": "Source",
+        "kind": "SourceKind",
         "subkind": "B",
         "port": "Return"
       }
@@ -41,7 +41,7 @@
     "method": "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkA:(Ljava/lang/Object;)V",
     "sinks": [
       {
-        "kind": "Sink",
+        "kind": "SinkKind",
         "subkind": "A",
         "port": "Argument(0)"
       }
@@ -51,7 +51,7 @@
     "method": "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkB:(Ljava/lang/Object;)V",
     "sinks": [
       {
-        "kind": "Sink",
+        "kind": "SinkKind",
         "subkind": "B",
         "port": "Argument(0)"
       }
@@ -61,12 +61,12 @@
     "method": "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkAAndB:(Ljava/lang/Object;Ljava/lang/Object;)V",
     "sinks": [
       {
-        "kind": "Sink",
+        "kind": "SinkKind",
         "subkind": "A",
         "port": "Argument(0)"
       },
       {
-        "kind": "Sink",
+        "kind": "SinkKind",
         "subkind": "B",
         "port": "Argument(1)"
       }
@@ -83,6 +83,103 @@
         "output": "Return",
         "transforms": [
           "T1"
+        ]
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Subkinds;.getSanitizedSourceBaseKind:()Ljava/lang/Object;",
+    "sanitizers": [
+      {
+        "sanitize": "sources",
+        "kinds": [
+          {
+            "kind": "SourceKind"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Subkinds;.getSanitizedSourceSubkindA:()Ljava/lang/Object;",
+    "sanitizers": [
+      {
+        "sanitize": "sources",
+        "kinds": [
+          {
+            "kind": "SourceKind",
+            "subkind": "A"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Subkinds;.getSanitizedSourceSubkindAOnly:(Ljava/lang/Object;)Ljava/lang/Object;",
+    "sanitizers": [
+      {
+        "sanitize": "sources",
+        "kinds": [
+          {
+            "kind": "SourceKind",
+            "subkind": "A"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Subkinds;.toSanitizedSinkBaseKind:(Ljava/lang/Object;)V",
+    "sanitizers": [
+      {
+        "sanitize": "sinks",
+        "kinds": [
+          {
+            "kind": "SinkKind"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Subkinds;.toSanitizedSinkSubkindA:(Ljava/lang/Object;)V",
+    "sanitizers": [
+      {
+        "sanitize": "sinks",
+        "kinds": [
+          {
+            "kind": "SinkKind",
+            "subkind": "A"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Subkinds;.propagateSanitizeSink:(Ljava/lang/Object;)Ljava/lang/Object;",
+    "sanitizers": [
+      {
+        "sanitize": "propagations",
+        "port": "Argument(0)",
+        "kinds": [
+          {
+            "kind": "Sink[SinkKind]"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Subkinds;.propagateSanitizeSinkSubkindA:(Ljava/lang/Object;)Ljava/lang/Object;",
+    "sanitizers": [
+      {
+        "sanitize": "propagations",
+        "port": "Argument(0)",
+        "kinds": [
+          {
+            "kind": "Sink[SinkKind]",
+            "subkind": "A"
+          }
         ]
       }
     ]

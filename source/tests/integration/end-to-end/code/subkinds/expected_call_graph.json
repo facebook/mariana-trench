@@ -224,20 +224,26 @@
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/Subkinds;.baselineFlow:()V" : 
+  "Lcom/facebook/marianatrench/integrationtests/Subkinds;.getSanitizedSourceBaseKind:()Ljava/lang/Object;" : 
   {
     "static" : 
     [
-      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+      "Lcom/facebook/marianatrench/integrationtests/Subkinds;.getSourceA:()Ljava/lang/Object;"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/Subkinds;.bothSubkindFlow:()V" : 
+  "Lcom/facebook/marianatrench/integrationtests/Subkinds;.getSanitizedSourceSubkindA:()Ljava/lang/Object;" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Subkinds;.getSourceA:()Ljava/lang/Object;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Subkinds;.getSanitizedSourceSubkindAOnly:(Ljava/lang/Object;)Ljava/lang/Object;" : 
   {
     "static" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/Subkinds;.getSourceA:()Ljava/lang/Object;",
-      "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkA:(Ljava/lang/Object;)V"
+      "Lcom/facebook/marianatrench/integrationtests/Subkinds;.getSourceB:()Ljava/lang/Object;"
     ]
   },
   "Lcom/facebook/marianatrench/integrationtests/Subkinds;.getSourceA:()Ljava/lang/Object;" : 
@@ -254,7 +260,110 @@
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkSubkindFlow:()V" : 
+  "Lcom/facebook/marianatrench/integrationtests/Subkinds;.propagateAndSinkA:(Ljava/lang/Object;)V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkA:(Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Subkinds;.wrapPropagateSanitizeSink:(Ljava/lang/Object;)Ljava/lang/Object;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Subkinds;.propagateSubkindAAndSinkAB:(Ljava/lang/Object;)V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkA:(Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkB:(Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Subkinds;.wrapPropagateSanitizeSinkSubkindA:(Ljava/lang/Object;)Ljava/lang/Object;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Subkinds;.testBaselineFlow:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Subkinds;.testBothSubkindFlow:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Subkinds;.getSourceA:()Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkA:(Ljava/lang/Object;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Subkinds;.testPropagationSanitizerBaseKindBlocksSubkind:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/Subkinds;.propagateSanitizeSink:(Ljava/lang/Object;)Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkA:(Ljava/lang/Object;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Subkinds;.testPropagationSanitizerSubkindBlocksOnlyMatching:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/Subkinds;.propagateSanitizeSinkSubkindA:(Ljava/lang/Object;)Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkA:(Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkB:(Ljava/lang/Object;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Subkinds;.testPropagationSanitizerSubkindThroughDoubleWrapper:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/Subkinds;.propagateSubkindAAndSinkAB:(Ljava/lang/Object;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Subkinds;.testPropagationSanitizerSubkindThroughWrapper:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkA:(Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkB:(Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Subkinds;.wrapPropagateSanitizeSinkSubkindA:(Ljava/lang/Object;)Ljava/lang/Object;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Subkinds;.testPropagationSanitizerThroughDoubleWrapper:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/Subkinds;.propagateAndSinkA:(Ljava/lang/Object;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Subkinds;.testPropagationSanitizerThroughWrapper:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkA:(Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Subkinds;.wrapPropagateSanitizeSink:(Ljava/lang/Object;)Ljava/lang/Object;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Subkinds;.testSinkSanitizerBaseKindBlocksSubkind:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/Subkinds;.toSanitizedSinkBaseKind:(Ljava/lang/Object;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Subkinds;.testSinkSanitizerSubkindBlocksOnlyMatching:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+      "Lcom/facebook/marianatrench/integrationtests/Subkinds;.toSanitizedSinkSubkindA:(Ljava/lang/Object;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Subkinds;.testSinkSubkindFlow:()V" : 
   {
     "static" : 
     [
@@ -262,7 +371,7 @@
       "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkA:(Ljava/lang/Object;)V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkSubkindWithTransformFlow:()V" : 
+  "Lcom/facebook/marianatrench/integrationtests/Subkinds;.testSinkSubkindWithTransformFlow:()V" : 
   {
     "static" : 
     [
@@ -271,7 +380,31 @@
       "Lcom/facebook/marianatrench/integrationtests/Subkinds;.transform:(Ljava/lang/Object;)Ljava/lang/Object;"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sourceSubkindFlow:()V" : 
+  "Lcom/facebook/marianatrench/integrationtests/Subkinds;.testSourceSanitizerBaseKindBlocksSubkind:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Subkinds;.getSanitizedSourceBaseKind:()Ljava/lang/Object;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Subkinds;.testSourceSanitizerSubkindBlocksExact:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Subkinds;.getSanitizedSourceSubkindA:()Ljava/lang/Object;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Subkinds;.testSourceSanitizerSubkindBlocksOnlyMatching:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Subkinds;.getSanitizedSourceSubkindAOnly:(Ljava/lang/Object;)Ljava/lang/Object;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Subkinds;.testSourceSubkindFlow:()V" : 
   {
     "static" : 
     [
@@ -279,7 +412,7 @@
       "Lcom/facebook/marianatrench/integrationtests/Subkinds;.getSourceA:()Ljava/lang/Object;"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sourceSubkindWithTransformFlow:()V" : 
+  "Lcom/facebook/marianatrench/integrationtests/Subkinds;.testSourceSubkindWithTransformFlow:()V" : 
   {
     "static" : 
     [
@@ -288,7 +421,7 @@
       "Lcom/facebook/marianatrench/integrationtests/Subkinds;.transform:(Ljava/lang/Object;)Ljava/lang/Object;"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/Subkinds;.twoSinkSubkindsSameSink:()V" : 
+  "Lcom/facebook/marianatrench/integrationtests/Subkinds;.testTwoSinkSubkindsSameSink:()V" : 
   {
     "static" : 
     [
@@ -296,7 +429,7 @@
       "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkAAndB:(Ljava/lang/Object;Ljava/lang/Object;)V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/Subkinds;.twoSinkSubkindsSameSource:()V" : 
+  "Lcom/facebook/marianatrench/integrationtests/Subkinds;.testTwoSinkSubkindsSameSource:()V" : 
   {
     "static" : 
     [
@@ -305,13 +438,42 @@
       "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkB:(Ljava/lang/Object;)V"
     ]
   },
-  "Lcom/facebook/marianatrench/integrationtests/Subkinds;.twoSourceSubkindsSameSink:(Z)V" : 
+  "Lcom/facebook/marianatrench/integrationtests/Subkinds;.testTwoSourceSubkindsSameSink:(Z)V" : 
   {
     "static" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
       "Lcom/facebook/marianatrench/integrationtests/Subkinds;.getSourceA:()Ljava/lang/Object;",
       "Lcom/facebook/marianatrench/integrationtests/Subkinds;.getSourceB:()Ljava/lang/Object;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Subkinds;.toSanitizedSinkBaseKind:(Ljava/lang/Object;)V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkA:(Ljava/lang/Object;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Subkinds;.toSanitizedSinkSubkindA:(Ljava/lang/Object;)V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkA:(Ljava/lang/Object;)V",
+      "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkB:(Ljava/lang/Object;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Subkinds;.wrapPropagateSanitizeSink:(Ljava/lang/Object;)Ljava/lang/Object;" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Subkinds;.propagateSanitizeSink:(Ljava/lang/Object;)Ljava/lang/Object;"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Subkinds;.wrapPropagateSanitizeSinkSubkindA:(Ljava/lang/Object;)Ljava/lang/Object;" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Subkinds;.propagateSanitizeSinkSubkindA:(Ljava/lang/Object;)Ljava/lang/Object;"
     ]
   },
   "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V" : 

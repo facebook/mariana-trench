@@ -1013,7 +1013,7 @@
           "kinds" : 
           [
             {
-              "kind" : "Sink",
+              "kind" : "SinkKind",
               "origins" : 
               [
                 {
@@ -1043,7 +1043,7 @@
           "kinds" : 
           [
             {
-              "kind" : "Source",
+              "kind" : "SourceKind",
               "origins" : 
               [
                 {
@@ -1070,6 +1070,527 @@
     "line" : 9,
     "path" : "Subkinds.java"
   }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.getSanitizedSourceBaseKind:()Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 121,
+    "path" : "Subkinds.java"
+  },
+  "sanitizers" : 
+  [
+    {
+      "kinds" : 
+      [
+        {
+          "kind" : "SourceKind"
+        }
+      ],
+      "sanitize" : "sources"
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.getSanitizedSourceSubkindA:()Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 127,
+    "path" : "Subkinds.java"
+  },
+  "sanitizers" : 
+  [
+    {
+      "kinds" : 
+      [
+        {
+          "kind" : 
+          {
+            "name" : "SourceKind",
+            "subkind" : "A"
+          }
+        }
+      ],
+      "sanitize" : "sources"
+    }
+  ]
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 20,
+              "line" : 138,
+              "path" : "Subkinds.java",
+              "start" : 11
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                34,
+                35
+              ],
+              "kind" : 
+              {
+                "name" : "SourceKind",
+                "subkind" : "B"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.getSourceB:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.getSanitizedSourceSubkindAOnly:(Ljava/lang/Object;)Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 134,
+    "path" : "Subkinds.java"
+  },
+  "sanitizers" : 
+  [
+    {
+      "kinds" : 
+      [
+        {
+          "kind" : 
+          {
+            "name" : "SourceKind",
+            "subkind" : "A"
+          }
+        }
+      ],
+      "sanitize" : "sources"
+    }
+  ]
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : 
+              {
+                "name" : "SourceKind",
+                "subkind" : "A"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.getSourceA:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.getSourceA:()Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 14,
+    "path" : "Subkinds.java"
+  }
+}
+{
+  "generations" : 
+  [
+    {
+      "port" : "Return",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : 
+              {
+                "name" : "SourceKind",
+                "subkind" : "B"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.getSourceB:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.getSourceB:()Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 18,
+    "path" : "Subkinds.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.propagateAndSinkA:(Ljava/lang/Object;)V",
+  "position" : 
+  {
+    "line" : 173,
+    "path" : "Subkinds.java"
+  }
+}
+{
+  "inline_as_getter" : "Argument(0)",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.propagateSanitizeSink:(Ljava/lang/Object;)Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 155,
+    "path" : "Subkinds.java"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : 
+              {
+                "base" : "LocalReturn",
+                "local" : "Sanitize[Sink[SinkKind]]"
+              },
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "sanitizers" : 
+  [
+    {
+      "kinds" : 
+      [
+        {
+          "kind" : "Sink[SinkKind]"
+        }
+      ],
+      "port" : "Argument(0)",
+      "sanitize" : "propagations"
+    }
+  ]
+}
+{
+  "inline_as_getter" : "Argument(0)",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.propagateSanitizeSinkSubkindA:(Ljava/lang/Object;)Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 159,
+    "path" : "Subkinds.java"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : 
+              {
+                "base" : "LocalReturn",
+                "local" : "Sanitize[Sink[SinkKind(A)]]"
+              },
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "sanitizers" : 
+  [
+    {
+      "kinds" : 
+      [
+        {
+          "kind" : 
+          {
+            "name" : "Sink[SinkKind]",
+            "subkind" : "A"
+          }
+        }
+      ],
+      "port" : "Argument(0)",
+      "sanitize" : "propagations"
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.propagateSubkindAAndSinkAB:(Ljava/lang/Object;)V",
+  "position" : 
+  {
+    "line" : 178,
+    "path" : "Subkinds.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(0)",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 10,
+              "line" : 181,
+              "path" : "Subkinds.java",
+              "start" : 10
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                34,
+                35
+              ],
+              "kind" : 
+              {
+                "name" : "SinkKind",
+                "subkind" : "B"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkB:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 42,
+              "line" : 179,
+              "start" : 42
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkA:(Ljava/lang/Object;)V",
+  "position" : 
+  {
+    "line" : 22,
+    "path" : "Subkinds.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(0)",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : 
+              {
+                "name" : "SinkKind",
+                "subkind" : "A"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkA:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkAAndB:(Ljava/lang/Object;Ljava/lang/Object;)V",
+  "position" : 
+  {
+    "line" : 28,
+    "path" : "Subkinds.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(0)",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : 
+              {
+                "name" : "SinkKind",
+                "subkind" : "A"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkAAndB:(Ljava/lang/Object;Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "port" : "Argument(1)",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : 
+              {
+                "name" : "SinkKind",
+                "subkind" : "B"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkAAndB:(Ljava/lang/Object;Ljava/lang/Object;)V",
+                  "port" : "Argument(1)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkB:(Ljava/lang/Object;)V",
+  "position" : 
+  {
+    "line" : 24,
+    "path" : "Subkinds.java"
+  },
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(0)",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Declaration"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : 
+              {
+                "name" : "SinkKind",
+                "subkind" : "B"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkB:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
 {
   "issues" : 
@@ -1106,7 +1627,7 @@
                 34,
                 35
               ],
-              "kind" : "Sink",
+              "kind" : "SinkKind",
               "origins" : 
               [
                 {
@@ -1142,7 +1663,7 @@
                 34,
                 35
               ],
-              "kind" : "Source",
+              "kind" : "SourceKind",
               "origins" : 
               [
                 {
@@ -1157,7 +1678,7 @@
       ]
     }
   ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.baselineFlow:()V",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.testBaselineFlow:()V",
   "position" : 
   {
     "line" : 38,
@@ -1201,7 +1722,7 @@
               ],
               "kind" : 
               {
-                "name" : "Sink",
+                "name" : "SinkKind",
                 "subkind" : "A"
               },
               "origins" : 
@@ -1241,7 +1762,7 @@
               ],
               "kind" : 
               {
-                "name" : "Source",
+                "name" : "SourceKind",
                 "subkind" : "A"
               },
               "origins" : 
@@ -1258,7 +1779,7 @@
       ]
     }
   ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.bothSubkindFlow:()V",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.testBothSubkindFlow:()V",
   "position" : 
   {
     "line" : 62,
@@ -1266,218 +1787,51 @@
   }
 }
 {
-  "generations" : 
-  [
-    {
-      "port" : "Return",
-      "taint" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Declaration"
-          },
-          "kinds" : 
-          [
-            {
-              "kind" : 
-              {
-                "name" : "Source",
-                "subkind" : "A"
-              },
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.getSourceA:()Ljava/lang/Object;",
-                  "port" : "Return"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.getSourceA:()Ljava/lang/Object;",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.testPropagationSanitizerBaseKindBlocksSubkind:()V",
   "position" : 
   {
-    "line" : 14,
+    "line" : 231,
     "path" : "Subkinds.java"
   }
 }
 {
-  "generations" : 
+  "issues" : 
   [
     {
-      "port" : "Return",
-      "taint" : 
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkB:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 246,
+        "path" : "Subkinds.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
       [
         {
           "call_info" : 
           {
-            "call_kind" : "Declaration"
-          },
-          "kinds" : 
-          [
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
             {
-              "kind" : 
-              {
-                "name" : "Source",
-                "subkind" : "B"
-              },
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.getSourceB:()Ljava/lang/Object;",
-                  "port" : "Return"
-                }
-              ]
+              "end" : 10,
+              "line" : 246,
+              "path" : "Subkinds.java",
+              "start" : 10
             }
-          ]
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.getSourceB:()Ljava/lang/Object;",
-  "position" : 
-  {
-    "line" : 18,
-    "path" : "Subkinds.java"
-  }
-}
-{
-  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkA:(Ljava/lang/Object;)V",
-  "position" : 
-  {
-    "line" : 22,
-    "path" : "Subkinds.java"
-  },
-  "sinks" : 
-  [
-    {
-      "port" : "Argument(0)",
-      "taint" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Declaration"
           },
           "kinds" : 
           [
             {
-              "kind" : 
-              {
-                "name" : "Sink",
-                "subkind" : "A"
-              },
-              "origins" : 
+              "callee_interval" : 
               [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkA:(Ljava/lang/Object;)V",
-                  "port" : "Argument(0)"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
-{
-  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkAAndB:(Ljava/lang/Object;Ljava/lang/Object;)V",
-  "position" : 
-  {
-    "line" : 28,
-    "path" : "Subkinds.java"
-  },
-  "sinks" : 
-  [
-    {
-      "port" : "Argument(0)",
-      "taint" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Declaration"
-          },
-          "kinds" : 
-          [
-            {
+                34,
+                35
+              ],
               "kind" : 
               {
-                "name" : "Sink",
-                "subkind" : "A"
-              },
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkAAndB:(Ljava/lang/Object;Ljava/lang/Object;)V",
-                  "port" : "Argument(0)"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "port" : "Argument(1)",
-      "taint" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Declaration"
-          },
-          "kinds" : 
-          [
-            {
-              "kind" : 
-              {
-                "name" : "Sink",
-                "subkind" : "B"
-              },
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkAAndB:(Ljava/lang/Object;Ljava/lang/Object;)V",
-                  "port" : "Argument(1)"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
-{
-  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkB:(Ljava/lang/Object;)V",
-  "position" : 
-  {
-    "line" : 24,
-    "path" : "Subkinds.java"
-  },
-  "sinks" : 
-  [
-    {
-      "port" : "Argument(0)",
-      "taint" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Declaration"
-          },
-          "kinds" : 
-          [
-            {
-              "kind" : 
-              {
-                "name" : "Sink",
+                "name" : "SinkKind",
                 "subkind" : "B"
               },
               "origins" : 
@@ -1486,13 +1840,399 @@
                   "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkB:(Ljava/lang/Object;)V",
                   "port" : "Argument(0)"
                 }
-              ]
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 27,
+              "line" : 243,
+              "path" : "Subkinds.java",
+              "start" : 22
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                34,
+                35
+              ],
+              "kind" : 
+              {
+                "base" : "SourceKind",
+                "local" : "Sanitize[Sink[SinkKind(A)]]"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 38,
+              "line" : 244,
+              "start" : 38
             }
           ]
         }
       ]
     }
-  ]
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.testPropagationSanitizerSubkindBlocksOnlyMatching:()V",
+  "position" : 
+  {
+    "line" : 242,
+    "path" : "Subkinds.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.propagateSubkindAAndSinkAB:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 285,
+        "path" : "Subkinds.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 31,
+              "line" : 285,
+              "path" : "Subkinds.java",
+              "start" : 31
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.propagateSubkindAAndSinkAB:(Ljava/lang/Object;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                34,
+                35
+              ],
+              "distance" : 1,
+              "kind" : 
+              {
+                "name" : "SinkKind",
+                "subkind" : "B"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkB:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : false
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 27,
+              "line" : 284,
+              "path" : "Subkinds.java",
+              "start" : 22
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                34,
+                35
+              ],
+              "kind" : "SourceKind",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.testPropagationSanitizerSubkindThroughDoubleWrapper:()V",
+  "position" : 
+  {
+    "line" : 283,
+    "path" : "Subkinds.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkB:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 269,
+        "path" : "Subkinds.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 10,
+              "line" : 269,
+              "path" : "Subkinds.java",
+              "start" : 10
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                34,
+                35
+              ],
+              "kind" : 
+              {
+                "name" : "SinkKind",
+                "subkind" : "B"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkB:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 27,
+              "line" : 266,
+              "path" : "Subkinds.java",
+              "start" : 22
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                34,
+                35
+              ],
+              "kind" : 
+              {
+                "base" : "SourceKind",
+                "local" : "Sanitize[Sink[SinkKind(A)]]"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 42,
+              "line" : 267,
+              "start" : 42
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.testPropagationSanitizerSubkindThroughWrapper:()V",
+  "position" : 
+  {
+    "line" : 265,
+    "path" : "Subkinds.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.testPropagationSanitizerThroughDoubleWrapper:()V",
+  "position" : 
+  {
+    "line" : 275,
+    "path" : "Subkinds.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.testPropagationSanitizerThroughWrapper:()V",
+  "position" : 
+  {
+    "line" : 254,
+    "path" : "Subkinds.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.testSinkSanitizerBaseKindBlocksSubkind:()V",
+  "position" : 
+  {
+    "line" : 213,
+    "path" : "Subkinds.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.toSanitizedSinkSubkindA:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 224,
+        "path" : "Subkinds.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 28,
+              "line" : 224,
+              "path" : "Subkinds.java",
+              "start" : 28
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.toSanitizedSinkSubkindA:(Ljava/lang/Object;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                34,
+                35
+              ],
+              "distance" : 1,
+              "kind" : 
+              {
+                "name" : "SinkKind",
+                "subkind" : "B"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkB:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : false
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 27,
+              "line" : 223,
+              "path" : "Subkinds.java",
+              "start" : 22
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                34,
+                35
+              ],
+              "kind" : "SourceKind",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.testSinkSanitizerSubkindBlocksOnlyMatching:()V",
+  "position" : 
+  {
+    "line" : 222,
+    "path" : "Subkinds.java"
+  }
 }
 {
   "issues" : 
@@ -1531,7 +2271,7 @@
               ],
               "kind" : 
               {
-                "name" : "Sink",
+                "name" : "SinkKind",
                 "subkind" : "A"
               },
               "origins" : 
@@ -1569,7 +2309,7 @@
                 34,
                 35
               ],
-              "kind" : "Source",
+              "kind" : "SourceKind",
               "origins" : 
               [
                 {
@@ -1584,7 +2324,7 @@
       ]
     }
   ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkSubkindFlow:()V",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.testSinkSubkindFlow:()V",
   "position" : 
   {
     "line" : 54,
@@ -1628,7 +2368,7 @@
               ],
               "kind" : 
               {
-                "name" : "Sink",
+                "name" : "SinkKind",
                 "subkind" : "A"
               },
               "origins" : 
@@ -1689,7 +2429,7 @@
               ],
               "kind" : 
               {
-                "base" : "Source",
+                "base" : "SourceKind",
                 "local" : "T1"
               },
               "origins" : 
@@ -1714,10 +2454,125 @@
       ]
     }
   ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkSubkindWithTransformFlow:()V",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.testSinkSubkindWithTransformFlow:()V",
   "position" : 
   {
     "line" : 79,
+    "path" : "Subkinds.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.testSourceSanitizerBaseKindBlocksSubkind:()V",
+  "position" : 
+  {
+    "line" : 187,
+    "path" : "Subkinds.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.testSourceSanitizerSubkindBlocksExact:()V",
+  "position" : 
+  {
+    "line" : 196,
+    "path" : "Subkinds.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 207,
+        "path" : "Subkinds.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 16,
+              "line" : 207,
+              "path" : "Subkinds.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                34,
+                35
+              ],
+              "kind" : "SinkKind",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "CallSite",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 44,
+              "line" : 206,
+              "path" : "Subkinds.java",
+              "start" : 15
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.getSanitizedSourceSubkindAOnly:(Ljava/lang/Object;)Ljava/lang/Object;"
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                34,
+                35
+              ],
+              "distance" : 1,
+              "kind" : 
+              {
+                "name" : "SourceKind",
+                "subkind" : "B"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.getSourceB:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : false
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.testSourceSanitizerSubkindBlocksOnlyMatching:()V",
+  "position" : 
+  {
+    "line" : 205,
     "path" : "Subkinds.java"
   }
 }
@@ -1756,7 +2611,7 @@
                 34,
                 35
               ],
-              "kind" : "Sink",
+              "kind" : "SinkKind",
               "origins" : 
               [
                 {
@@ -1794,7 +2649,7 @@
               ],
               "kind" : 
               {
-                "name" : "Source",
+                "name" : "SourceKind",
                 "subkind" : "A"
               },
               "origins" : 
@@ -1811,7 +2666,7 @@
       ]
     }
   ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sourceSubkindFlow:()V",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.testSourceSubkindFlow:()V",
   "position" : 
   {
     "line" : 46,
@@ -1853,7 +2708,7 @@
                 34,
                 35
               ],
-              "kind" : "Sink",
+              "kind" : "SinkKind",
               "origins" : 
               [
                 {
@@ -1912,7 +2767,7 @@
               ],
               "kind" : 
               {
-                "base" : "Source(A)",
+                "base" : "SourceKind(A)",
                 "local" : "T1"
               },
               "origins" : 
@@ -1937,12 +2792,553 @@
       ]
     }
   ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sourceSubkindWithTransformFlow:()V",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.testSourceSubkindWithTransformFlow:()V",
   "position" : 
   {
     "line" : 70,
     "path" : "Subkinds.java"
   }
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkAAndB:(Ljava/lang/Object;Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 114,
+        "path" : "Subkinds.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 14,
+              "line" : 114,
+              "path" : "Subkinds.java",
+              "start" : 14
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                34,
+                35
+              ],
+              "kind" : 
+              {
+                "name" : "SinkKind",
+                "subkind" : "A"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkAAndB:(Ljava/lang/Object;Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        },
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(1)",
+            "position" : 
+            {
+              "end" : 17,
+              "line" : 114,
+              "path" : "Subkinds.java",
+              "start" : 17
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                34,
+                35
+              ],
+              "kind" : 
+              {
+                "name" : "SinkKind",
+                "subkind" : "B"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkAAndB:(Ljava/lang/Object;Ljava/lang/Object;)V",
+                  "port" : "Argument(1)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 27,
+              "line" : 113,
+              "path" : "Subkinds.java",
+              "start" : 22
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                34,
+                35
+              ],
+              "kind" : "SourceKind",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.testTwoSinkSubkindsSameSink:()V",
+  "position" : 
+  {
+    "line" : 112,
+    "path" : "Subkinds.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkA:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 103,
+        "path" : "Subkinds.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 10,
+              "line" : 103,
+              "path" : "Subkinds.java",
+              "start" : 10
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                34,
+                35
+              ],
+              "kind" : 
+              {
+                "name" : "SinkKind",
+                "subkind" : "A"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkA:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 27,
+              "line" : 102,
+              "path" : "Subkinds.java",
+              "start" : 22
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                34,
+                35
+              ],
+              "kind" : "SourceKind",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkB:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 104,
+        "path" : "Subkinds.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 10,
+              "line" : 104,
+              "path" : "Subkinds.java",
+              "start" : 10
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                34,
+                35
+              ],
+              "kind" : 
+              {
+                "name" : "SinkKind",
+                "subkind" : "B"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkB:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 27,
+              "line" : 102,
+              "path" : "Subkinds.java",
+              "start" : 22
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                34,
+                35
+              ],
+              "kind" : "SourceKind",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.testTwoSinkSubkindsSameSource:()V",
+  "position" : 
+  {
+    "line" : 101,
+    "path" : "Subkinds.java"
+  }
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 95,
+        "path" : "Subkinds.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 16,
+              "line" : 95,
+              "path" : "Subkinds.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                34,
+                35
+              ],
+              "kind" : "SinkKind",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 19,
+              "line" : 91,
+              "path" : "Subkinds.java",
+              "start" : 10
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                34,
+                35
+              ],
+              "kind" : 
+              {
+                "name" : "SourceKind",
+                "subkind" : "A"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.getSourceA:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        },
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 19,
+              "line" : 93,
+              "path" : "Subkinds.java",
+              "start" : 10
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                34,
+                35
+              ],
+              "kind" : 
+              {
+                "name" : "SourceKind",
+                "subkind" : "B"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.getSourceB:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.testTwoSourceSubkindsSameSink:(Z)V",
+  "position" : 
+  {
+    "line" : 89,
+    "path" : "Subkinds.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.toSanitizedSinkBaseKind:(Ljava/lang/Object;)V",
+  "position" : 
+  {
+    "line" : 143,
+    "path" : "Subkinds.java"
+  },
+  "sanitizers" : 
+  [
+    {
+      "kinds" : 
+      [
+        {
+          "kind" : "SinkKind"
+        }
+      ],
+      "sanitize" : "sinks"
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.toSanitizedSinkSubkindA:(Ljava/lang/Object;)V",
+  "position" : 
+  {
+    "line" : 149,
+    "path" : "Subkinds.java"
+  },
+  "sanitizers" : 
+  [
+    {
+      "kinds" : 
+      [
+        {
+          "kind" : 
+          {
+            "name" : "SinkKind",
+            "subkind" : "A"
+          }
+        }
+      ],
+      "sanitize" : "sinks"
+    }
+  ],
+  "sinks" : 
+  [
+    {
+      "port" : "Argument(0)",
+      "taint" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 10,
+              "line" : 151,
+              "path" : "Subkinds.java",
+              "start" : 10
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                34,
+                35
+              ],
+              "kind" : 
+              {
+                "name" : "SinkKind",
+                "subkind" : "B"
+              },
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkB:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
 {
   "freeze" : 
@@ -1994,455 +3390,80 @@
   ]
 }
 {
-  "issues" : 
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.wrapPropagateSanitizeSink:(Ljava/lang/Object;)Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 164,
+    "path" : "Subkinds.java"
+  },
+  "propagation" : 
   [
     {
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkAAndB:(Ljava/lang/Object;Ljava/lang/Object;)V",
-      "position" : 
-      {
-        "line" : 114,
-        "path" : "Subkinds.java"
-      },
-      "rule" : 1,
-      "sink_index" : "0",
-      "sinks" : 
+      "input" : "Argument(0)",
+      "output" : 
       [
         {
           "call_info" : 
           {
-            "call_kind" : "Origin",
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 14,
-              "line" : 114,
-              "path" : "Subkinds.java",
-              "start" : 14
-            }
+            "call_kind" : "Propagation",
+            "port" : "Return"
           },
           "kinds" : 
           [
             {
-              "callee_interval" : 
-              [
-                34,
-                35
-              ],
               "kind" : 
               {
-                "name" : "Sink",
-                "subkind" : "A"
+                "base" : "LocalReturn",
+                "global" : "Sanitize[Sink[SinkKind]]"
               },
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkAAndB:(Ljava/lang/Object;Ljava/lang/Object;)V",
-                  "port" : "Argument(0)"
-                }
-              ],
-              "preserves_type_context" : true
-            }
-          ]
-        },
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Origin",
-            "port" : "Argument(1)",
-            "position" : 
-            {
-              "end" : 17,
-              "line" : 114,
-              "path" : "Subkinds.java",
-              "start" : 17
-            }
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                34,
-                35
-              ],
-              "kind" : 
+              "output_paths" : 
               {
-                "name" : "Sink",
-                "subkind" : "B"
-              },
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkAAndB:(Ljava/lang/Object;Ljava/lang/Object;)V",
-                  "port" : "Argument(1)"
-                }
-              ],
-              "preserves_type_context" : true
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Origin",
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 27,
-              "line" : 113,
-              "path" : "Subkinds.java",
-              "start" : 22
-            }
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                34,
-                35
-              ],
-              "kind" : "Source",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-                  "port" : "Return"
-                }
-              ],
-              "preserves_type_context" : true
+                "" : 4
+              }
             }
           ]
         }
       ]
     }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.twoSinkSubkindsSameSink:()V",
-  "position" : 
-  {
-    "line" : 112,
-    "path" : "Subkinds.java"
-  }
+  ]
 }
 {
-  "issues" : 
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.wrapPropagateSanitizeSinkSubkindA:(Ljava/lang/Object;)Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 168,
+    "path" : "Subkinds.java"
+  },
+  "propagation" : 
   [
     {
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkA:(Ljava/lang/Object;)V",
-      "position" : 
-      {
-        "line" : 103,
-        "path" : "Subkinds.java"
-      },
-      "rule" : 1,
-      "sink_index" : "0",
-      "sinks" : 
+      "input" : "Argument(0)",
+      "output" : 
       [
         {
           "call_info" : 
           {
-            "call_kind" : "Origin",
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 10,
-              "line" : 103,
-              "path" : "Subkinds.java",
-              "start" : 10
-            }
+            "call_kind" : "Propagation",
+            "port" : "Return"
           },
           "kinds" : 
           [
             {
-              "callee_interval" : 
-              [
-                34,
-                35
-              ],
               "kind" : 
               {
-                "name" : "Sink",
-                "subkind" : "A"
+                "base" : "LocalReturn",
+                "global" : "Sanitize[Sink[SinkKind(A)]]"
               },
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkA:(Ljava/lang/Object;)V",
-                  "port" : "Argument(0)"
-                }
-              ],
-              "preserves_type_context" : true
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Origin",
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 27,
-              "line" : 102,
-              "path" : "Subkinds.java",
-              "start" : 22
-            }
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                34,
-                35
-              ],
-              "kind" : "Source",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-                  "port" : "Return"
-                }
-              ],
-              "preserves_type_context" : true
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkB:(Ljava/lang/Object;)V",
-      "position" : 
-      {
-        "line" : 104,
-        "path" : "Subkinds.java"
-      },
-      "rule" : 1,
-      "sink_index" : "0",
-      "sinks" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Origin",
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 10,
-              "line" : 104,
-              "path" : "Subkinds.java",
-              "start" : 10
-            }
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                34,
-                35
-              ],
-              "kind" : 
+              "output_paths" : 
               {
-                "name" : "Sink",
-                "subkind" : "B"
-              },
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.sinkB:(Ljava/lang/Object;)V",
-                  "port" : "Argument(0)"
-                }
-              ],
-              "preserves_type_context" : true
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Origin",
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 27,
-              "line" : 102,
-              "path" : "Subkinds.java",
-              "start" : 22
-            }
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                34,
-                35
-              ],
-              "kind" : "Source",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
-                  "port" : "Return"
-                }
-              ],
-              "preserves_type_context" : true
+                "" : 4
+              }
             }
           ]
         }
       ]
     }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.twoSinkSubkindsSameSource:()V",
-  "position" : 
-  {
-    "line" : 101,
-    "path" : "Subkinds.java"
-  }
-}
-{
-  "issues" : 
-  [
-    {
-      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-      "position" : 
-      {
-        "line" : 95,
-        "path" : "Subkinds.java"
-      },
-      "rule" : 1,
-      "sink_index" : "0",
-      "sinks" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Origin",
-            "port" : "Argument(0)",
-            "position" : 
-            {
-              "end" : 16,
-              "line" : 95,
-              "path" : "Subkinds.java",
-              "start" : 16
-            }
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                34,
-                35
-              ],
-              "kind" : "Sink",
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
-                  "port" : "Argument(0)"
-                }
-              ],
-              "preserves_type_context" : true
-            }
-          ]
-        }
-      ],
-      "sources" : 
-      [
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Origin",
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 19,
-              "line" : 91,
-              "path" : "Subkinds.java",
-              "start" : 10
-            }
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                34,
-                35
-              ],
-              "kind" : 
-              {
-                "name" : "Source",
-                "subkind" : "A"
-              },
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.getSourceA:()Ljava/lang/Object;",
-                  "port" : "Return"
-                }
-              ],
-              "preserves_type_context" : true
-            }
-          ]
-        },
-        {
-          "call_info" : 
-          {
-            "call_kind" : "Origin",
-            "port" : "Return",
-            "position" : 
-            {
-              "end" : 19,
-              "line" : 93,
-              "path" : "Subkinds.java",
-              "start" : 10
-            }
-          },
-          "kinds" : 
-          [
-            {
-              "callee_interval" : 
-              [
-                34,
-                35
-              ],
-              "kind" : 
-              {
-                "name" : "Source",
-                "subkind" : "B"
-              },
-              "origins" : 
-              [
-                {
-                  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.getSourceB:()Ljava/lang/Object;",
-                  "port" : "Return"
-                }
-              ],
-              "preserves_type_context" : true
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "method" : "Lcom/facebook/marianatrench/integrationtests/Subkinds;.twoSourceSubkindsSameSink:(Z)V",
-  "position" : 
-  {
-    "line" : 89,
-    "path" : "Subkinds.java"
-  }
+  ]
 }
 {
   "method" : "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V",

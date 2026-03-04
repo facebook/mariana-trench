@@ -4,10 +4,10 @@
     "code": 1,
     "description": "Source to Sink flow",
     "sources": [
-      "Source"
+      "SourceKind"
     ],
     "sinks": [
-      "Sink"
+      "SinkKind"
     ]
   },
   {
@@ -15,13 +15,13 @@
     "code": 2,
     "description": "Source to Sink flow with T1 transform",
     "sources": [
-      "Source"
+      "SourceKind"
     ],
     "transforms": [
       "T1"
     ],
     "sinks": [
-      "Sink"
+      "SinkKind"
     ]
   }
 ]
