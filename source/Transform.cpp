@@ -5,7 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <boost/algorithm/string/predicate.hpp>
 #include <fmt/format.h>
 
 #include <mariana-trench/JsonValidation.h>
@@ -25,9 +24,9 @@ const Transform* Transform::from_json(
 const Transform* Transform::from_trace_string(
     const std::string& transform,
     Context& context) {
-  if (boost::starts_with(transform, "SourceAsTransform[")) {
+  if (transform.starts_with("SourceAsTransform[")) {
     return SourceAsTransform::from_trace_string(transform, context);
-  } else if (boost::starts_with(transform, "Sanitize[")) {
+  } else if (transform.starts_with("Sanitize[")) {
     return SanitizerSetTransform::from_trace_string(transform, context);
   }
   // Default to NamedTransform

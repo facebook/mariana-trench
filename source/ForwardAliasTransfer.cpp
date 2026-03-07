@@ -217,7 +217,7 @@ maybe_get_aliasing_output_path_element(const Path& output_path) {
   // Currently, just check for this$
   auto* field_name = path_element.name();
   mt_assert(field_name != nullptr);
-  if (!boost::starts_with(field_name->str(), "this$")) {
+  if (!field_name->str().starts_with("this$")) {
     return nullptr;
   }
 

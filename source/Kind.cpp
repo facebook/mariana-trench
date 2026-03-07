@@ -5,7 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <boost/algorithm/string/predicate.hpp>
 #include <fmt/format.h>
 
 #include <mariana-trench/JsonValidation.h>
@@ -114,13 +113,13 @@ const Kind* Kind::from_trace_string(const std::string& kind, Context& context) {
   // the old string representation, so parsing them here is disabled.
   if (kind == "LocalReturn") {
     return context.kind_factory->local_return();
-  } else if (boost::starts_with(kind, "LocalArgument(")) {
+  } else if (kind.starts_with("LocalArgument(")) {
     return LocalArgumentKind::from_trace_string(kind, context);
-  } else if (boost::starts_with(kind, "TriggeredPartial:")) {
+  } else if (kind.starts_with("TriggeredPartial:")) {
     throw KindNotSupportedError(
         kind,
         /* expected */ "Non-TriggeredPartial Kind");
-  } else if (boost::starts_with(kind, "Partial:")) {
+  } else if (kind.starts_with("Partial:")) {
     throw KindNotSupportedError(kind, /* expected */ "Non-Partial Kind");
   } else if (kind.find_first_of(":@") != std::string::npos) {
     throw KindNotSupportedError(
@@ -130,7 +129,7 @@ const Kind* Kind::from_trace_string(const std::string& kind, Context& context) {
 
   // Check for subkind paren notation: "BaseKind(SubKind)"
   // No collision with LocalArgument(N) — that is matched first by the
-  // boost::starts_with(kind, "LocalArgument(") check above.
+  // kind.starts_with("LocalArgument(") check above.
   auto paren_pos = kind.find('(');
   if (paren_pos != std::string::npos && kind.back() == ')') {
     auto name = kind.substr(0, paren_pos);

@@ -5,7 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <boost/algorithm/string/predicate.hpp>
 #include <boost/algorithm/string/replace.hpp>
 #include <fmt/format.h>
 
@@ -22,8 +21,7 @@ void SourceAsTransform::show(std::ostream& out) const {
 const SourceAsTransform* SourceAsTransform::from_trace_string(
     const std::string& transform,
     Context& context) {
-  if (boost::starts_with(transform, "SourceAsTransform[") &&
-      boost::ends_with(transform, "]")) {
+  if (transform.starts_with("SourceAsTransform[") && transform.ends_with("]")) {
     auto kind_str =
         boost::replace_first_copy(transform, "SourceAsTransform[", "");
     boost::replace_last(kind_str, "]", "");

@@ -154,7 +154,7 @@ void add_to_class_to_path_map(
           LOG(2, "Indexed {} of {} files.", iteration.load(), paths.size());
         }
 
-        if (boost::starts_with(*path, "./")) {
+        if (path->starts_with("./")) {
           // Remove the `./` prefix added by `find`.
           path->erase(0, 2);
         }
@@ -162,7 +162,7 @@ void add_to_class_to_path_map(
           return;
         }
         for (const auto& exclude_directory : exclude_directories) {
-          if (boost::starts_with(*path, exclude_directory)) {
+          if (path->starts_with(exclude_directory)) {
             return;
           }
         }
@@ -173,7 +173,7 @@ void add_to_class_to_path_map(
           final_path = find->second;
         }
 
-        bool is_kotlin = boost::ends_with(*path, ".kt");
+        bool is_kotlin = path->ends_with(".kt");
         const auto& class_regex =
             is_kotlin ? kotlin_class_regex : java_class_regex;
 
@@ -192,7 +192,7 @@ void add_to_class_to_path_map(
                     skipped_package_prefixes.begin(),
                     skipped_package_prefixes.end(),
                     [&package](const auto& skipped_prefix) {
-                      return boost::starts_with(*package, skipped_prefix);
+                      return package->starts_with(skipped_prefix);
                     })) {
               LOG(3, "Skipping module `{}` at `{}`...", *package, *path);
               return;
@@ -289,7 +289,7 @@ Positions::Positions(const Options& options, const DexStoresVector& stores) {
 
     auto exclude_directories = options.source_exclude_directories();
     for (auto& exclude_directory : exclude_directories) {
-      if (!boost::ends_with(exclude_directory, "/")) {
+      if (!exclude_directory.ends_with("/")) {
         exclude_directory.push_back('/');
       }
     }

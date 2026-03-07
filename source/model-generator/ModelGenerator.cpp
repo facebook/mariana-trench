@@ -8,7 +8,6 @@
 #include <iterator>
 #include <mutex>
 
-#include <boost/algorithm/string/predicate.hpp>
 #include <fmt/format.h>
 
 #include <RedexResources.h>
@@ -149,9 +148,8 @@ std::unordered_set<std::string_view> generator::get_custom_parents_from_class(
 
   while (true) {
     const DexType* super_type = dex_class->get_super_class();
-    if (super_type &&
-        !boost::starts_with(super_type->get_name()->str(), "Landroid") &&
-        !boost::starts_with(super_type->get_name()->str(), "Ljava")) {
+    if (super_type && !super_type->get_name()->str().starts_with("Landroid") &&
+        !super_type->get_name()->str().starts_with("Ljava")) {
       parent_classes.emplace(super_type->get_name()->str());
       DexClass* super_class = type_class(super_type);
       if (super_class) {

@@ -5,7 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <boost/algorithm/string/predicate.hpp>
 #include <boost/algorithm/string/replace.hpp>
 
 #include <mariana-trench/Sanitizer.h>
@@ -23,24 +22,24 @@ std::pair<std::string, bool> parse_source_sink_kind(
   // The only case we do not already know the source/sink info is when we have a
   // propagation sanitizer
   if (sanitizer_kind == SanitizerKind::Sources) {
-    mt_assert(!boost::starts_with(kind, "Source["));
+    mt_assert(!kind.starts_with("Source["));
     return std::make_pair(std::move(kind), true);
   } else if (sanitizer_kind == SanitizerKind::Sinks) {
-    mt_assert(!boost::starts_with(kind, "Sink["));
+    mt_assert(!kind.starts_with("Sink["));
     return std::make_pair(std::move(kind), false);
   }
 
   // This is a propagation sanitizer. Remove the Source[]/Sink[] wrapper from
   // kind string.
   mt_assert(sanitizer_kind == SanitizerKind::Propagations);
-  mt_assert(boost::ends_with(kind, "]"));
+  mt_assert(kind.ends_with("]"));
   boost::replace_last(kind, "]", "");
 
   bool is_source;
-  if (boost::starts_with(kind, "Source[")) {
+  if (kind.starts_with("Source[")) {
     boost::replace_first(kind, "Source[", "");
     is_source = true;
-  } else if (boost::starts_with(kind, "Sink[")) {
+  } else if (kind.starts_with("Sink[")) {
     boost::replace_first(kind, "Sink[", "");
     is_source = false;
   } else {

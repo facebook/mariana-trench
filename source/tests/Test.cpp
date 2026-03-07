@@ -416,7 +416,7 @@ std::string normalize_json_lines(const std::string& input) {
     if (line.empty()) {
       continue;
     }
-    if (boost::starts_with(line, "//")) {
+    if (line.starts_with("//")) {
       normalized_lines.push_back(line);
       continue;
     }

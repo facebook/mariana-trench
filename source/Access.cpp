@@ -7,7 +7,6 @@
 
 #include <algorithm>
 
-#include <boost/algorithm/string/predicate.hpp>
 #include <fmt/format.h>
 
 #include <Show.h>
@@ -108,8 +107,7 @@ std::string PathElement::to_string() const {
 PathElement PathElement::from_string(std::string_view value) {
   auto path_element = value;
 
-  if (!boost::starts_with(path_element, "[") ||
-      !boost::ends_with(path_element, "]")) {
+  if (!path_element.starts_with("[") || !path_element.ends_with("]")) {
     return PathElement::field(path_element);
   }
 
@@ -128,8 +126,7 @@ PathElement PathElement::from_string(std::string_view value) {
     return PathElement::any_index();
   }
 
-  if (!boost::starts_with(path_element, "<") ||
-      !boost::ends_with(path_element, ">")) {
+  if (!path_element.starts_with("<") || !path_element.ends_with(">")) {
     return PathElement::index(path_element);
   }
 
@@ -372,8 +369,8 @@ Json::Value Root::to_json() const {
 
 Root Root::from_json(const Json::Value& value) {
   auto root_string = JsonValidation::string(value);
-  if (boost::starts_with(root_string, "Argument(") &&
-      boost::ends_with(root_string, ")") && root_string.size() >= 11) {
+  if (root_string.starts_with("Argument(") && root_string.ends_with(")") &&
+      root_string.size() >= 11) {
     auto parameter_string = root_string.substr(9, root_string.size() - 10);
     auto parameter = parse_parameter_position(parameter_string);
     if (!parameter) {

@@ -6,7 +6,6 @@
  */
 
 #include <boost/algorithm/string/join.hpp>
-#include <boost/algorithm/string/predicate.hpp>
 #include <boost/algorithm/string/replace.hpp>
 #include <fmt/format.h>
 
@@ -24,8 +23,7 @@ void SanitizerSetTransform::show(std::ostream& out) const {
 const SanitizerSetTransform* SanitizerSetTransform::from_trace_string(
     const std::string& transform,
     Context& context) {
-  if (boost::starts_with(transform, "Sanitize[") &&
-      boost::ends_with(transform, "]")) {
+  if (transform.starts_with("Sanitize[") && transform.ends_with("]")) {
     auto kind_str = boost::replace_first_copy(transform, "Sanitize[", "");
     boost::replace_last(kind_str, "]", "");
 

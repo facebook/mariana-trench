@@ -9,7 +9,6 @@
 #include <sstream>
 #include <string>
 
-#include <boost/algorithm/string/predicate.hpp>
 #include <fmt/format.h>
 
 #include <sparta/WorkQueue.h>
@@ -68,7 +67,7 @@ void JsonReader::read_sharded_json_files(
   for (auto& file : std::filesystem::directory_iterator(input_directory)) {
     const auto& file_path = file.path();
     if (std::filesystem::is_regular_file(file_path) &&
-        boost::starts_with(file_path.filename().string(), filename_prefix)) {
+        file_path.filename().string().starts_with(filename_prefix)) {
       files.emplace_back(file_path);
     }
   }
@@ -85,7 +84,7 @@ void JsonReader::read_sharded_json_files(
 
         std::string line;
         while (std::getline(batch_stream, line)) {
-          if (boost::starts_with(line, "//")) {
+          if (line.starts_with("//")) {
             // Ignore comments.
             continue;
           }
@@ -150,7 +149,7 @@ void JsonWriter::write_sharded_json_files(
   for (auto& file : std::filesystem::directory_iterator(output_directory)) {
     const auto& file_path = file.path();
     if (std::filesystem::is_regular_file(file_path) &&
-        boost::starts_with(file_path.filename().string(), filename_prefix)) {
+        file_path.filename().string().starts_with(filename_prefix)) {
       std::filesystem::remove(file_path);
     }
   }

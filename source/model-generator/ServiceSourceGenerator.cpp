@@ -86,8 +86,7 @@ std::vector<Model> ServiceSourceGenerator::emit_method_models(
     const auto argument_types = generator::get_argument_types(method);
     const auto class_name = generator::get_class_name(method);
 
-    if (boost::starts_with(class_name, "Landroid") ||
-        argument_types.size() < 1) {
+    if (class_name.starts_with("Landroid") || argument_types.size() < 1) {
       return;
     }
 

@@ -21,10 +21,10 @@ std::vector<Model> JoinOverrideGenerator::visit_method(
         Model(method, context_, Model::Mode::NoJoinVirtualOverrides));
   } else {
     const auto class_name = generator::get_class_name(method);
-    if ((boost::starts_with(class_name, "Landroid") ||
-         boost::starts_with(class_name, "Lcom/google") ||
-         boost::starts_with(class_name, "Lkotlin/") ||
-         boost::starts_with(class_name, "Ljava")) &&
+    if ((class_name.starts_with("Landroid") ||
+         class_name.starts_with("Lcom/google") ||
+         class_name.starts_with("Lkotlin/") ||
+         class_name.starts_with("Ljava")) &&
         overrides.size() >=
             context_.heuristics->android_join_override_threshold()) {
       models.push_back(

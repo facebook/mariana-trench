@@ -8,8 +8,6 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include <boost/algorithm/string/predicate.hpp>
-
 #include <mariana-trench/Constants.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Method.h>
@@ -30,7 +28,7 @@ bool skip_shim_for_caller(const Method* caller) {
       k_exclude_caller_in_packages.begin(),
       k_exclude_caller_in_packages.end(),
       [caller_klass](const auto& exclude_prefix) {
-        return boost::starts_with(caller_klass, exclude_prefix);
+        return caller_klass.starts_with(exclude_prefix);
       });
 }
 

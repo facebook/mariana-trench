@@ -5,8 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <boost/algorithm/string.hpp>
-
 #include <mariana-trench/model-generator/ModelGenerator.h>
 #include <mariana-trench/model-generator/TaintInTaintThisGenerator.h>
 
@@ -48,12 +46,12 @@ std::vector<Model> TaintInTaintThisGenerator::visit_method(
 
   const auto class_name = generator::get_class_name(method);
   const auto method_name = generator::get_method_name(method);
-  if (boost::ends_with(class_name, "$Builder;") ||
+  if (class_name.ends_with("$Builder;") ||
       std::any_of(
           k_allowlist_setter_method_prefixes.begin(),
           k_allowlist_setter_method_prefixes.end(),
           [method_name](const auto& prefix) {
-            return boost::starts_with(method_name, prefix);
+            return method_name.starts_with(prefix);
           })) {
     auto model = Model(method, context_);
     for (ParameterPosition parameter_position = 1;

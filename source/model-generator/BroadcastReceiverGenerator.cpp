@@ -86,7 +86,7 @@ std::vector<Model> BroadcastReceiverGenerator::emit_method_models(
       sparta::work_queue<const Method*>([&](const Method* method) {
         const auto method_signature = show(method);
         for (const auto& signature : k_exported_register_signatures) {
-          if (boost::starts_with(method_signature, signature)) {
+          if (method_signature.starts_with(signature)) {
             exported_register_methods.emplace(method);
           }
         }

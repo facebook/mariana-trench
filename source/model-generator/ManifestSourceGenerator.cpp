@@ -7,7 +7,6 @@
 
 #include <algorithm>
 
-#include <boost/algorithm/string/predicate.hpp>
 #include <boost/range/adaptor/filtered.hpp>
 #include <boost/range/adaptor/transformed.hpp>
 
@@ -38,7 +37,7 @@ bool has_secure_base_class(const DexClass* dex_class) {
   auto parent_classes = generator::get_custom_parents_from_class(dex_class);
   for (const auto& parent_class : parent_classes) {
     for (const auto& class_prefix : permission_base_class_prefixes) {
-      if (boost::starts_with(parent_class, class_prefix)) {
+      if (parent_class.starts_with(class_prefix)) {
         return true;
       }
     }
@@ -93,7 +92,7 @@ std::vector<Model> ManifestSourceGenerator::emit_method_models(
             auto dex_klass_prefix = exported_class->get_name()->str_copy();
             dex_klass_prefix.erase(dex_klass_prefix.length() - 1);
 
-            if (boost::starts_with(show(clazz), dex_klass_prefix)) {
+            if (show(clazz).starts_with(dex_klass_prefix)) {
               nested_exported_classes.emplace(clazz);
             }
           }

@@ -158,7 +158,7 @@ ModelGeneratorResult ModelGeneration::run(
          std::filesystem::directory_iterator(*generated_models_directory)) {
       const auto& file_path = file.path();
       if (std::filesystem::is_regular_file(file_path) &&
-          boost::ends_with(file_path.filename().string(), ".json")) {
+          file_path.filename().string().ends_with(".json")) {
         std::filesystem::remove(file_path);
       }
     }

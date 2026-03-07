@@ -61,8 +61,7 @@ std::optional<CanonicalName> CanonicalName::instantiate(
     if (pos != std::string::npos && class_signature.size() > (pos + 2)) {
       std::string class_name = str_copy(
           class_signature.substr(pos + 1, class_signature.size() - pos - 2));
-      if (boost::ends_with(class_name, "Action") ||
-          boost::ends_with(class_name, "Screen")) {
+      if (class_name.ends_with("Action") || class_name.ends_with("Screen")) {
         class_name = class_name.substr(0, class_name.size() - 6);
 
         std::string method_name = str_copy(method->get_name());

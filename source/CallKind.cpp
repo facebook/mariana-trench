@@ -7,7 +7,6 @@
 
 #include <algorithm>
 
-#include <boost/algorithm/string/predicate.hpp>
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/CallKind.h>
 #include <mariana-trench/JsonValidation.h>
@@ -20,7 +19,7 @@ CallKind CallKind::from_trace_string(std::string_view trace_string) {
   Encoding encoding = 0;
 
   size_t current_position = 0;
-  if (boost::starts_with(trace_string, "PropagationWithTrace:")) {
+  if (trace_string.starts_with("PropagationWithTrace:")) {
     encoding |= CallKind::PropagationWithTrace;
     current_position += sizeof("PropagationWithTrace:") - 1;
   }

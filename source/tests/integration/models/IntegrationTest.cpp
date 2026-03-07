@@ -250,9 +250,8 @@ class Parser {
     bool abstract = false;
 
     for (const auto& line : lines) {
-      if (boost::starts_with(line, "(method ") ||
-          boost::starts_with(line, "(super ") ||
-          boost::starts_with(line, "(abstract method ")) {
+      if (line.starts_with("(method ") || line.starts_with("(super ") ||
+          line.starts_with("(abstract method ")) {
         if (!buffer.empty()) {
           parse_method(boost::join(buffer, "\n"), super, abstract);
           buffer.clear();
@@ -261,13 +260,13 @@ class Parser {
         }
       }
 
-      if (boost::starts_with(line, "(super ")) {
+      if (line.starts_with("(super ")) {
         auto offset = line.find("\"") + 1;
         super = line.substr(offset, line.find("\"", offset) - offset);
         continue;
       }
 
-      if (boost::starts_with(line, "(abstract method ")) {
+      if (line.starts_with("(abstract method ")) {
         abstract = true;
         auto modified_line = line;
         buffer.push_back(

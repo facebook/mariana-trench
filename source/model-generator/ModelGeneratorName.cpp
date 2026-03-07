@@ -5,7 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <boost/algorithm/string/predicate.hpp>
 #include <fmt/format.h>
 
 #include <Show.h>
@@ -35,7 +34,7 @@ const ModelGeneratorName* ModelGeneratorName::from_json(
   auto name = JsonValidation::string(value);
 
   bool is_sharded = false;
-  if (boost::starts_with(name, "sharded:")) {
+  if (name.starts_with("sharded:")) {
     is_sharded = true;
     name = name.substr(std::string("sharded:").length());
   }

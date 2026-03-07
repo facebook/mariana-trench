@@ -5,7 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <boost/algorithm/string.hpp>
 #include <fmt/format.h>
 
 #include <mariana-trench/JsonValidation.h>
@@ -48,8 +47,8 @@ Root RootTemplate::instantiate(
 
 RootTemplate RootTemplate::from_json(const Json::Value& value) {
   auto root_string = JsonValidation::string(value);
-  if (boost::starts_with(root_string, "Argument(") &&
-      boost::ends_with(root_string, ")") && root_string.size() >= 11) {
+  if (root_string.starts_with("Argument(") && root_string.ends_with(")") &&
+      root_string.size() >= 11) {
     auto parameter_string = root_string.substr(9, root_string.size() - 10);
     auto parameter = parse_parameter_position(parameter_string);
     if (parameter) {

@@ -7,8 +7,6 @@
 
 #include <fstream>
 
-#include <boost/algorithm/string.hpp>
-
 #include <mariana-trench/Log.h>
 #include <mariana-trench/OperatingSystem.h>
 
@@ -36,7 +34,7 @@ double resident_set_size_in_gb() {
     std::ifstream infile("/proc/self/status");
     std::string line;
     while (std::getline(infile, line)) {
-      if (boost::starts_with(line, "VmRSS:")) {
+      if (line.starts_with("VmRSS:")) {
         return static_cast<double>(std::stoll(line.substr(7), nullptr)) /
             1000.0 / 1000.0;
       }

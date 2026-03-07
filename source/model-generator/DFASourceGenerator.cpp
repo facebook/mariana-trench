@@ -65,7 +65,7 @@ std::vector<Model> DFASourceGenerator::emit_method_models(
             auto dex_klass_prefix = exported_class->get_name()->str_copy();
             dex_klass_prefix.erase(dex_klass_prefix.length() - 1);
 
-            if (boost::starts_with(show(clazz), dex_klass_prefix)) {
+            if (show(clazz).starts_with(dex_klass_prefix)) {
               nested_dfa_classes.emplace(clazz);
             }
           }

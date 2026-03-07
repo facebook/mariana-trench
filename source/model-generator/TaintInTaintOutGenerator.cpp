@@ -5,9 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <boost/algorithm/string.hpp>
-#include <boost/algorithm/string/predicate.hpp>
-
 #include <mariana-trench/model-generator/ModelGenerator.h>
 #include <mariana-trench/model-generator/TaintInTaintOutGenerator.h>
 
@@ -42,9 +39,9 @@ std::vector<Model> TaintInTaintOutGenerator::visit_method(
   }
 
   const auto method_signature = method->show();
-  if (boost::ends_with(method_signature, ".size:()I") ||
-      boost::ends_with(method_signature, ".hashCode:()I") ||
-      boost::starts_with(method_signature, "Ljava/lang/Object;.getClass:")) {
+  if (method_signature.ends_with(".size:()I") ||
+      method_signature.ends_with(".hashCode:()I") ||
+      method_signature.starts_with("Ljava/lang/Object;.getClass:")) {
     return {};
   }
 
