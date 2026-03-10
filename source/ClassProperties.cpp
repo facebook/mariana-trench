@@ -8,6 +8,8 @@
 #include <exception>
 #include <mutex>
 
+#include <boost/algorithm/string.hpp>
+
 #include <InstructionAnalyzer.h>
 #include <RedexResources.h>
 #include <Walkers.h>

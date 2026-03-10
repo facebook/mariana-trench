@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <boost/algorithm/string.hpp>
 #include <re2/re2.h>
 
 #include <Walkers.h>
