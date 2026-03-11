@@ -50,7 +50,7 @@ TEST_F(CallGraphTest, CallIndices) {
       scope,
       "LParent;",
       "inherited_method",
-      /* paramater_types */ "",
+      /* parameter_types */ "",
       /* return_type */ "V",
       /* super */ nullptr,
       /* is_static */ true);
@@ -88,29 +88,29 @@ TEST_F(CallGraphTest, CallIndices) {
       callees,
       {
           CallTarget::static_call(
-              /* intruction */ nullptr,
+              /* instruction */ nullptr,
               callee,
               CallTarget::CallKind::Normal,
               /* call_index */ 0),
           CallTarget::static_call(
-              /* intruction */ nullptr,
+              /* instruction */ nullptr,
               callee,
               CallTarget::CallKind::Normal,
               /* call_index */ 1),
           // Call targets count the raw callee from the instruction rather than
           // the resolved callee
           CallTarget::static_call(
-              /* intruction */ nullptr,
+              /* instruction */ nullptr,
               inherited_method,
               CallTarget::CallKind::Normal,
               /* call_index */ 0),
           CallTarget::static_call(
-              /* intruction */ nullptr,
+              /* instruction */ nullptr,
               inherited_method,
               CallTarget::CallKind::Normal,
               /* call_index */ 0),
           CallTarget::static_call(
-              /* intruction */ nullptr,
+              /* instruction */ nullptr,
               inherited_method,
               CallTarget::CallKind::Normal,
               /* call_index */ 0),
@@ -214,33 +214,33 @@ TEST_F(CallGraphTest, ArtificialCallIndices) {
           // Providing an anonymous class as an arg to a method with no code
           // causes artificial callees
           CallTarget::static_call(
-              /* intruction */ nullptr,
+              /* instruction */ nullptr,
               anonymous_callee1,
               CallTarget::CallKind::AnonymousClass,
               /* call_index */ 0),
           CallTarget::static_call(
-              /* intruction */ nullptr,
+              /* instruction */ nullptr,
               anonymous_callee1,
               CallTarget::CallKind::AnonymousClass,
               /* call_index */ 1),
           CallTarget::static_call(
-              /* intruction */ nullptr,
+              /* instruction */ nullptr,
               anonymous_callee2,
               CallTarget::CallKind::AnonymousClass,
               /* call_index */ 0),
           CallTarget::static_call(
-              /* intruction */ nullptr,
+              /* instruction */ nullptr,
               anonymous_callee2,
               CallTarget::CallKind::AnonymousClass,
               /* call_index */ 1),
           // Assigning an anonymous class to a field causes artificial callees
           CallTarget::static_call(
-              /* intruction */ nullptr,
+              /* instruction */ nullptr,
               context.methods->get(anonymous_class_for_iput_callees[0]),
               CallTarget::CallKind::AnonymousClass,
               /* call_index */ 0),
           CallTarget::static_call(
-              /* intruction */ nullptr,
+              /* instruction */ nullptr,
               context.methods->get(anonymous_class_for_iput_callees[1]),
               CallTarget::CallKind::AnonymousClass,
               /* call_index */ 0),
@@ -297,7 +297,7 @@ TEST_F(CallGraphTest, ShimCallIndices) {
       artificial_callee_targets,
       {
           CallTarget::virtual_call(
-              /* intruction */ nullptr,
+              /* instruction */ nullptr,
               shimmed_method1,
               /* receiver_type */ shimmed_method1->parameter_type(0),
               /* receiver_local_extends */ nullptr,
@@ -306,12 +306,12 @@ TEST_F(CallGraphTest, ShimCallIndices) {
               CallTarget::CallKind::Shim,
               /* call_index */ 0),
           CallTarget::static_call(
-              /* intruction */ nullptr,
+              /* instruction */ nullptr,
               shimmed_method2,
               CallTarget::CallKind::Shim,
               /* call_index */ 0),
           CallTarget::virtual_call(
-              /* intruction */ nullptr,
+              /* instruction */ nullptr,
               shimmed_method1,
               /* receiver_type */ shimmed_method1->parameter_type(0),
               /* receiver_local_extends */ nullptr,
@@ -320,7 +320,7 @@ TEST_F(CallGraphTest, ShimCallIndices) {
               CallTarget::CallKind::Shim,
               /* call_index */ 1),
           CallTarget::static_call(
-              /* intruction */ nullptr,
+              /* instruction */ nullptr,
               shimmed_method2,
               CallTarget::CallKind::Shim,
               /* call_index */ 1),
