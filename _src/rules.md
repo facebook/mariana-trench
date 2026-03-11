@@ -31,6 +31,8 @@ Here is an example of a rule in JSON:
 
 For guidance on modeling sources and sinks, see the next section, [Models and Model Generators](./models.md).
 
+Rules always reference **base kinds** only (plain strings like `"UserInput"`). If a source or sink has a [subkind](./models.md#subkinds) (e.g, `UserInput(A)`), it will automatically match rules written for its base kind (`UserInput`). You do not need to specify subkinds in rules.
+
 Rules used by Mariana Trench can be specified with the `--rules-paths` argument. The default set of rules that run can be found in [configuration/rules.json](https://github.com/facebook/mariana-trench/blob/main/configuration/rules.json).
 
 ### Transform Rules
