@@ -110,6 +110,27 @@ Examples:
 
 A source has a **kind** that describes its content (e.g, user input, file system, etc). A sink also has a **kind** that describes the operation the method performs (e.g, execute a command, read a file, etc.). Kinds can be arbitrary strings (e.g, `UserInput`). We usually avoid whitespaces.
 
+#### Subkinds
+
+A kind can optionally have a **subkind**, which is a named variant of the base kind. For example, `SourceKind` might have subkinds `SourceKind(A)` and `SourceKind(B)`. Subkinds allow fine-grained taint tracking while reusing rules written for the base kind.
+
+To specify a subkind in a model, add a `"subkind"` field alongside the `"kind"` field:
+
+```json
+{
+  "kind": "SourceKind",
+  "subkind": "A",
+  "port": "Return"
+}
+```
+
+Key properties of subkinds:
+
+- **Rule matching**: Rules reference only base kinds (e.g, `"SourceKind"`). A source or sink with a subkind (e.g, `SourceKind(A)`) automatically matches rules for its base kind. You do not need to write separate rules for each subkind.
+- **Distinct tracking**: During analysis, `SourceKind(A)` and `SourceKind(B)` are tracked as distinct taint labels. Issues will report the specific subkind that flowed.
+- **Sanitizer interaction**: A sanitizer for a base kind (e.g, `SourceKind`) blocks all of its subkinds. A sanitizer for a specific subkind (e.g, `SourceKind(A)`) blocks only that subkind. See [Kind-specific Sanitizers](#kind-specific-sanitizers) for details.
+- **Mutual exclusion with `partial_label`**: A kind cannot have both a `subkind` and a `partial_label`. These are mutually exclusive features.
+
 ### Sources
 
 Sources describe taint *produced* or *received* by a given method. A source has a **kind** that describes its content (e.g, user input, file system, etc).
@@ -896,7 +917,7 @@ Note, if there are any user-specified sources, sinks or propagations on the mode
 
 #### Kind-specific Sanitizers
 
-`sources` and `sinks` sanitizers may include a list of kinds (each with or without a partial_label) to restrict the sanitizer to only sanitizing taint of those kinds. (When unspecified, as in the example above, all taint is sanitized regardless of kind).
+`sources` and `sinks` sanitizers may include a list of kinds (each with or without a `partial_label` or `subkind`) to restrict the sanitizer to only sanitizing taint of those kinds. (When unspecified, as in the example above, all taint is sanitized regardless of kind).
 
 ```json
 "sanitizers": [
@@ -909,6 +930,25 @@ Note, if there are any user-specified sources, sinks or propagations on the mode
       {
         "kind": "SinkKindB",
         "partial_label": "A"
+      }
+    ]
+  }
+]
+```
+
+When using [subkinds](#subkinds), sanitizers follow hierarchical matching:
+
+- A sanitizer for a **base kind** blocks all subkinds of that kind. For example, a sanitizer for `SinkKind` will also block `SinkKind(A)` and `SinkKind(B)`.
+- A sanitizer for a **specific subkind** blocks only that subkind. For example, a sanitizer for `SinkKind(A)` will block `SinkKind(A)` but not `SinkKind(B)` or `SinkKind` (without subkind).
+
+```json
+"sanitizers": [
+  {
+    "sanitize": "sinks",
+    "kinds": [
+      {
+        "kind": "SinkKind",
+        "subkind": "A"
       }
     ]
   }
@@ -1247,11 +1287,13 @@ Each "rule" defines a "filter" (which uses "constraints" to specify methods for 
   - **For method models**
     - `sources`\*: A list of sources, i.e a source *flowing out* of the method via return value or *flowing in* via an argument. To specify sources *flowing out* via an argument, specify it as `generations`. A source/generation has the following key/values:
       - `kind`: The source name;
+      - `subkind`\*: An optional subkind for fine-grained tracking (see [Subkinds](#subkinds));
       - `port`\*\*: The source access path (e.g, `"Return"` or `"Argument(1)"`);
       - `features`\*: A list of features/breadcrumbs names;
       - `via_type_of`\*: A list of ports;
     - `sinks`\*: A list of sinks, i.e describing that a parameter of the method flows into a sink. A sink has the following key/values:
       - `kind`: The sink name;
+      - `subkind`\*: An optional subkind for fine-grained tracking (see [Subkinds](#subkinds));
       - `port`: The sink access path (e.g, `"Return"` or `"Argument(1)"`);
       - `features`\*: A list of features/breadcrumbs names;
       - `via_type_of`\*: A list of ports;
