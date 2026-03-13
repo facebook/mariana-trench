@@ -138,6 +138,7 @@ class Options final {
   bool propagate_across_arguments() const;
 
   const std::optional<std::filesystem::path> heuristics_path() const;
+  const std::optional<std::string>& graphql_metadata_path() const;
 
   // Listing command flags
   bool list_all_rules() const;
@@ -210,6 +211,7 @@ class Options final {
   bool propagate_across_arguments_;
 
   std::optional<std::filesystem::path> heuristics_path_;
+  std::optional<std::string> graphql_metadata_path_;
 
   // Listing command flags
   bool list_all_rules_;

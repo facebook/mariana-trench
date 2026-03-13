@@ -361,6 +361,11 @@ Options::Options(const Json::Value& json) {
     heuristics_path_ = std::filesystem::path(
         check_path_exists(JsonValidation::string(json, "heuristics")));
   }
+
+  if (json.isMember("graphql-metadata-path")) {
+    graphql_metadata_path_ = check_path_exists(
+        JsonValidation::string(json, "graphql-metadata-path"));
+  }
 }
 
 std::unique_ptr<Options> Options::from_json_file(
@@ -651,6 +656,10 @@ bool Options::propagate_across_arguments() const {
 
 const std::optional<std::filesystem::path> Options::heuristics_path() const {
   return heuristics_path_;
+}
+
+const std::optional<std::string>& Options::graphql_metadata_path() const {
+  return graphql_metadata_path_;
 }
 
 bool Options::list_all_rules() const {

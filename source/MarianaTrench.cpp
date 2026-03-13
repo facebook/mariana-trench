@@ -395,6 +395,10 @@ void MarianaTrench::run(const program_options::variables_map& variables) {
   context.options = Options::from_json_file(json_file_path);
   const auto& options = *context.options;
 
+  if (auto graphql_metadata_path = options.graphql_metadata_path()) {
+    LOG(1, "GraphQL metadata path: `{}`", *graphql_metadata_path);
+  }
+
   if (auto heuristics_path = options.heuristics_path()) {
     Heuristics::init_from_file(*heuristics_path);
   }

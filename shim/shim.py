@@ -536,6 +536,12 @@ def _add_configuration_arguments(parser: argparse.ArgumentParser) -> None:
         nargs="+",
         help="Only include rules with these codes. Other rules will be ignored.",
     )
+    configuration_arguments.add_argument(
+        "--graphql-metadata-path",
+        type=_path_exists,
+        default=None,
+        help="Path to graphql metadata.",
+    )
 
 
 def _add_source_indexing_arguments(parser: argparse.ArgumentParser) -> None:
@@ -979,6 +985,9 @@ def _get_command_options_json(
         options["dump-class-intervals"] = True
         options["dump-overrides"] = True
         options["always-export-origins"] = True
+
+    if arguments.graphql_metadata_path:
+        options["graphql-metadata-path"] = arguments.graphql_metadata_path
 
     # Add listing command flags if present
     if getattr(arguments, "list_all_rules", False):
