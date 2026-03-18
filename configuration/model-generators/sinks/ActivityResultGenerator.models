@@ -109,7 +109,8 @@
           "constraint": "signature_match",
           "parents": [
             "Lcom/facebook/secure/secureresult/FBSecureResult$Companion;",
-            "Lcom/facebook/secure/secureresult/FBSecureResult;"
+            "Lcom/facebook/secure/secureresult/FBSecureResult;",
+            "Lcom/facebook/secure/secureresult/SecureResult;"
           ],
           "name": "setFamilyResult"
         }
