@@ -66,10 +66,14 @@
     "lodash": "^4.17.23",
     "nanoid": "^3.3.11",
     "prismjs": "^1.30.0",
-    "serialize-javascript": "^6.0.2",
+    "serialize-javascript": "^7.0.3",
     "ajv": "^8.18.0",
     "semver": "^5.7.2",
     "schema-utils": "^4",
-    "minimatch": "^10.2.1"
+    "minimatch": "^10.2.3",
+    "flatted": "^3.4.2",
+    "svgo": "^3.3.3",
+    "dompurify": "^3.3.3",
+    "express": "^4.22.1"
   }
 }
