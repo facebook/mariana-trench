@@ -16,6 +16,7 @@
 
 #include <mariana-trench/AccessPathFactory.h>
 #include <mariana-trench/Debug.h>
+#include <mariana-trench/EventLogger.h>
 #include <mariana-trench/FeatureFactory.h>
 #include <mariana-trench/Fields.h>
 #include <mariana-trench/Log.h>
@@ -53,17 +54,34 @@ ModelGenerator::ModelGenerator(const std::string& name, Context& context)
 ModelGeneratorResult ModelGenerator::run(
     const Methods& methods,
     const Fields& fields) {
-  return {/* method_models */ emit_method_models(methods),
-          /* field_models */ emit_field_models(fields)};
+  auto method_models = emit_method_models(methods);
+  auto field_models = emit_field_models(fields);
+
+  EventLogger::log_event(
+      "model_generator_match",
+      show(name_),
+      method_models.size() + field_models.size(),
+      /* verbosity_level */ 3);
+
+  return {/* method_models */ std::move(method_models),
+          /* field_models */ std::move(field_models)};
 }
 
 ModelGeneratorResult ModelGenerator::run_optimized(
     const Methods& methods,
     const MethodMappings& method_mappings,
     const Fields& fields) {
-  return {/* method_models */ emit_method_models_optimized(
-              methods, method_mappings),
-          /* field_models */ emit_field_models(fields)};
+  auto method_models = emit_method_models_optimized(methods, method_mappings);
+  auto field_models = emit_field_models(fields);
+
+  EventLogger::log_event(
+      "model_generator_match",
+      show(name_),
+      method_models.size() + field_models.size(),
+      /* verbosity_level */ 3);
+
+  return {/* method_models */ std::move(method_models),
+          /* field_models */ std::move(field_models)};
 }
 
 std::vector<Model> ModelGenerator::emit_method_models_optimized(
