@@ -15,21 +15,26 @@
 namespace marianatrench {
 namespace local_flow {
 
+namespace {
+
+LabelKind label_kind_from_structural_op(StructuralOp op) {
+  switch (op) {
+    case StructuralOp::Project:
+      return LabelKind::Project;
+    case StructuralOp::Inject:
+      return LabelKind::Inject;
+    case StructuralOp::ContraProject:
+      return LabelKind::ContraProject;
+    case StructuralOp::ContraInject:
+      return LabelKind::ContraInject;
+  }
+  return LabelKind::Project; // unreachable
+}
+
+} // namespace
+
 Label::Label(const StructuralLabel& sl)
-    : kind([&] {
-        switch (sl.op) {
-          case StructuralOp::Project:
-            return LabelKind::Project;
-          case StructuralOp::Inject:
-            return LabelKind::Inject;
-          case StructuralOp::ContraProject:
-            return LabelKind::ContraProject;
-          case StructuralOp::ContraInject:
-            return LabelKind::ContraInject;
-        }
-        return LabelKind::Project; // unreachable
-      }()),
-      value(sl.field) {}
+    : kind(label_kind_from_structural_op(sl.op)), value(sl.field) {}
 
 bool Label::operator==(const Label& other) const {
   return kind == other.kind && value == other.value &&
