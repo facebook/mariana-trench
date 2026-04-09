@@ -3,5 +3,65 @@
   {
     "@generated" : true
   },
-  "results" : []
+  "results" :
+  [
+    {
+      "callable" : "LMyObj;||getA:()Ljava/lang/Object;",
+      "callable_line" : 0,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "labels" :
+            [
+              "ContraProject:p0",
+              "Inject:this_out"
+            ],
+            "left" : "M{LMyObj;||getA:()Ljava/lang/Object;}",
+            "right" : "M{LMyObj;||getA:()Ljava/lang/Object;}"
+          },
+          {
+            "labels" :
+            [
+              "ContraProject:p0",
+              "Inject:result",
+              "Project:a"
+            ],
+            "left" : "M{LMyObj;||getA:()Ljava/lang/Object;}",
+            "right" : "M{LMyObj;||getA:()Ljava/lang/Object;}"
+          }
+        ],
+        "node" : "M{LMyObj;||getA:()Ljava/lang/Object;}"
+      },
+      "path" : "MyObj.java"
+    },
+    {
+      "callable" : "Class{LMyObj;}",
+      "callable_line" : 0,
+      "code" : 20001,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "left" : "C{LMyObj;}",
+            "right" : "O{LMyObj;}"
+          },
+          {
+            "labels" :
+            [
+              "Inject:getA:()Ljava/lang/Object;"
+            ],
+            "left" : "M{LMyObj;||getA:()Ljava/lang/Object;}",
+            "right" : "C{LMyObj;}"
+          }
+        ],
+        "interval" : "[0,1]",
+        "node" : "C{LMyObj;}"
+      },
+      "path" : ""
+    }
+  ]
 }

@@ -3,5 +3,40 @@
   {
     "@generated" : true
   },
-  "results" : []
+  "results" :
+  [
+    {
+      "callable" : "LBasic;||field_construction2:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+      "callable_line" : 0,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "labels" :
+            [
+              "ContraProject:p0",
+              "Inject:a",
+              "Inject:result"
+            ],
+            "left" : "G{LBasic;||field_construction2:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;}",
+            "right" : "G{LBasic;||field_construction2:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;}"
+          },
+          {
+            "labels" :
+            [
+              "ContraProject:p1",
+              "Inject:b",
+              "Inject:result"
+            ],
+            "left" : "G{LBasic;||field_construction2:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;}",
+            "right" : "G{LBasic;||field_construction2:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;}"
+          }
+        ],
+        "node" : "G{LBasic;||field_construction2:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;}"
+      },
+      "path" : "Basic.java"
+    }
+  ]
 }

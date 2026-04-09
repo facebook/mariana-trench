@@ -3,5 +3,137 @@
   {
     "@generated" : true
   },
-  "results" : []
+  "results" :
+  [
+    {
+      "callable" : "LA;||doWork:(Ljava/lang/Object;)Ljava/lang/Object;",
+      "callable_line" : 0,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "labels" :
+            [
+              "ContraProject:p0",
+              "Inject:this_out"
+            ],
+            "left" : "M{LA;||doWork:(Ljava/lang/Object;)Ljava/lang/Object;}",
+            "right" : "M{LA;||doWork:(Ljava/lang/Object;)Ljava/lang/Object;}"
+          },
+          {
+            "labels" :
+            [
+              "ContraProject:p1",
+              "Inject:result"
+            ],
+            "left" : "M{LA;||doWork:(Ljava/lang/Object;)Ljava/lang/Object;}",
+            "right" : "M{LA;||doWork:(Ljava/lang/Object;)Ljava/lang/Object;}"
+          }
+        ],
+        "node" : "M{LA;||doWork:(Ljava/lang/Object;)Ljava/lang/Object;}"
+      },
+      "path" : "A.java"
+    },
+    {
+      "callable" : "LDispatch;||call_virtual:(LA;Ljava/lang/Object;)Ljava/lang/Object;",
+      "callable_line" : 0,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(0,0)",
+              "ContraInject:ctrl",
+              "ContraProject:ctrl",
+              "Inject:doWork:(Ljava/lang/Object;)Ljava/lang/Object;"
+            ],
+            "left" : "G{LDispatch;||call_virtual:(LA;Ljava/lang/Object;)Ljava/lang/Object;}",
+            "right" : "C{LA;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(0,0)",
+              "ContraInject:p0",
+              "ContraProject:p1",
+              "Inject:doWork:(Ljava/lang/Object;)Ljava/lang/Object;"
+            ],
+            "left" : "G{LDispatch;||call_virtual:(LA;Ljava/lang/Object;)Ljava/lang/Object;}",
+            "right" : "C{LA;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(0,0)",
+              "ContraInject:this",
+              "ContraProject:p0",
+              "Inject:doWork:(Ljava/lang/Object;)Ljava/lang/Object;"
+            ],
+            "left" : "G{LDispatch;||call_virtual:(LA;Ljava/lang/Object;)Ljava/lang/Object;}",
+            "right" : "C{LA;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Inject:ctrl",
+              "Project:ctrl",
+              "Project:doWork:(Ljava/lang/Object;)Ljava/lang/Object;",
+              "Return:(0,0)"
+            ],
+            "left" : "C{LA;}",
+            "right" : "G{LDispatch;||call_virtual:(LA;Ljava/lang/Object;)Ljava/lang/Object;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Inject:result",
+              "Project:doWork:(Ljava/lang/Object;)Ljava/lang/Object;",
+              "Project:result",
+              "Return:(0,0)"
+            ],
+            "left" : "C{LA;}",
+            "right" : "G{LDispatch;||call_virtual:(LA;Ljava/lang/Object;)Ljava/lang/Object;}"
+          }
+        ],
+        "node" : "G{LDispatch;||call_virtual:(LA;Ljava/lang/Object;)Ljava/lang/Object;}"
+      },
+      "path" : "Dispatch.java"
+    },
+    {
+      "callable" : "Class{LA;}",
+      "callable_line" : 0,
+      "code" : 20001,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "left" : "C{LA;}",
+            "right" : "O{LA;}"
+          },
+          {
+            "labels" :
+            [
+              "Inject:doWork:(Ljava/lang/Object;)Ljava/lang/Object;"
+            ],
+            "left" : "M{LA;||doWork:(Ljava/lang/Object;)Ljava/lang/Object;}",
+            "right" : "C{LA;}"
+          }
+        ],
+        "interval" : "[0,1]",
+        "node" : "C{LA;}"
+      },
+      "path" : ""
+    }
+  ]
 }

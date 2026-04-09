@@ -3,5 +3,165 @@
   {
     "@generated" : true
   },
-  "results" : []
+  "results" :
+  [
+    {
+      "callable" : "LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;",
+      "callable_line" : 0,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "labels" :
+            [
+              "ContraProject:p0",
+              "Inject:result",
+              "Project:value"
+            ],
+            "left" : "G{LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;}",
+            "right" : "G{LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;}"
+          },
+          {
+            "labels" :
+            [
+              "ContraProject:p0",
+              "Inject:result",
+              "Project:next",
+              "Project:value"
+            ],
+            "left" : "G{LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;}",
+            "right" : "G{LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;}"
+          },
+          {
+            "labels" :
+            [
+              "ContraProject:p0",
+              "Inject:result",
+              "Project:next",
+              "Project:next",
+              "Project:value"
+            ],
+            "left" : "G{LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;}",
+            "right" : "G{LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;}"
+          },
+          {
+            "labels" :
+            [
+              "ContraProject:p0",
+              "Inject:result",
+              "Project:next",
+              "Project:next",
+              "Project:next",
+              "Project:value"
+            ],
+            "left" : "G{LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;}",
+            "right" : "G{LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;}"
+          },
+          {
+            "labels" :
+            [
+              "ContraProject:p0",
+              "Inject:result",
+              "Project:next",
+              "Project:next",
+              "Project:next",
+              "Project:next",
+              "Project:value"
+            ],
+            "left" : "G{LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;}",
+            "right" : "G{LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;}"
+          },
+          {
+            "labels" :
+            [
+              "ContraProject:p0",
+              "Inject:result",
+              "Project:next",
+              "Project:next",
+              "Project:next",
+              "Project:next",
+              "Project:next",
+              "Project:value"
+            ],
+            "left" : "G{LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;}",
+            "right" : "G{LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;}"
+          },
+          {
+            "labels" :
+            [
+              "ContraProject:p0",
+              "Inject:result",
+              "Project:next",
+              "Project:next",
+              "Project:next",
+              "Project:next",
+              "Project:next",
+              "Project:next",
+              "Project:value"
+            ],
+            "left" : "G{LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;}",
+            "right" : "G{LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;}"
+          },
+          {
+            "labels" :
+            [
+              "ContraProject:p0",
+              "Inject:result",
+              "Project:next",
+              "Project:next",
+              "Project:next",
+              "Project:next",
+              "Project:next",
+              "Project:next",
+              "Project:next",
+              "Project:value"
+            ],
+            "left" : "G{LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;}",
+            "right" : "G{LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;}"
+          },
+          {
+            "labels" :
+            [
+              "ContraProject:p0",
+              "Inject:result",
+              "Project:next",
+              "Project:next",
+              "Project:next",
+              "Project:next",
+              "Project:next",
+              "Project:next",
+              "Project:next",
+              "Project:next",
+              "Project:value"
+            ],
+            "left" : "G{LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;}",
+            "right" : "G{LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;}"
+          },
+          {
+            "labels" :
+            [
+              "ContraProject:p0",
+              "Inject:result",
+              "Project:next",
+              "Project:next",
+              "Project:next",
+              "Project:next",
+              "Project:next",
+              "Project:next",
+              "Project:next",
+              "Project:next",
+              "Project:next",
+              "Project:value"
+            ],
+            "left" : "G{LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;}",
+            "right" : "G{LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;}"
+          }
+        ],
+        "node" : "G{LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;}"
+      },
+      "path" : "Loop.java"
+    }
+  ]
 }

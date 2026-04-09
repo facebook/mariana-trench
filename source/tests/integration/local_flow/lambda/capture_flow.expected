@@ -3,5 +3,100 @@
   {
     "@generated" : true
   },
-  "results" : []
+  "results" :
+  [
+    {
+      "callable" : "LMyLambda;||<init>:(Ljava/lang/Object;)V",
+      "callable_line" : 0,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "labels" :
+            [
+              "ContraProject:p0",
+              "Inject:this_out"
+            ],
+            "left" : "M{LMyLambda;||<init>:(Ljava/lang/Object;)V}",
+            "right" : "M{LMyLambda;||<init>:(Ljava/lang/Object;)V}"
+          },
+          {
+            "labels" :
+            [
+              "ContraProject:p1",
+              "Inject:captured",
+              "Inject:p0"
+            ],
+            "left" : "M{LMyLambda;||<init>:(Ljava/lang/Object;)V}",
+            "right" : "M{LMyLambda;||<init>:(Ljava/lang/Object;)V}"
+          }
+        ],
+        "node" : "M{LMyLambda;||<init>:(Ljava/lang/Object;)V}"
+      },
+      "path" : "MyLambda.java"
+    },
+    {
+      "callable" : "LMyLambda;||create:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;",
+      "callable_line" : 0,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(0,0)",
+              "ContraInject:ctrl",
+              "ContraProject:ctrl",
+              "Inject:<init>:(Ljava/lang/Object;)V"
+            ],
+            "left" : "G{LMyLambda;||create:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;}",
+            "right" : "G{LMyLambda;||<init>:(Ljava/lang/Object;)V}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(0,0)",
+              "ContraInject:p0",
+              "ContraProject:p0",
+              "Inject:<init>:(Ljava/lang/Object;)V"
+            ],
+            "left" : "G{LMyLambda;||create:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;}",
+            "right" : "G{LMyLambda;||<init>:(Ljava/lang/Object;)V}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Inject:ctrl",
+              "Project:<init>:(Ljava/lang/Object;)V",
+              "Project:ctrl",
+              "Return:(0,0)"
+            ],
+            "left" : "G{LMyLambda;||<init>:(Ljava/lang/Object;)V}",
+            "right" : "G{LMyLambda;||create:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Inject:result",
+              "Project:<init>:(Ljava/lang/Object;)V",
+              "Project:this_out",
+              "Return:(0,0)"
+            ],
+            "left" : "G{LMyLambda;||<init>:(Ljava/lang/Object;)V}",
+            "right" : "G{LMyLambda;||create:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;}"
+          }
+        ],
+        "node" : "G{LMyLambda;||create:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;}"
+      },
+      "path" : "MyLambda.java"
+    }
+  ]
 }

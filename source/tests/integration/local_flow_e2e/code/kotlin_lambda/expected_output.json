@@ -3,5 +3,894 @@
   {
     "@generated" : true
   },
-  "results" : []
+  "results" :
+  [
+    {
+      "callable" : "Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion$createCapture$1;||<init>:(Ljava/lang/Object;)V",
+      "callable_line" : 0,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "labels" :
+            [
+              "ContraProject:p1",
+              "Inject:$captured",
+              "Inject:p0"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion$createCapture$1;||<init>:(Ljava/lang/Object;)V}",
+            "right" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion$createCapture$1;||<init>:(Ljava/lang/Object;)V}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(0,0)",
+              "ContraInject:ctrl",
+              "ContraProject:ctrl",
+              "Inject:<init>:(I)V"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion$createCapture$1;||<init>:(Ljava/lang/Object;)V}",
+            "right" : "G{Lkotlin/jvm/internal/Lambda;||<init>:(I)V}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(0,0)",
+              "ContraInject:p0",
+              "ContraProject:C<0>",
+              "Inject:<init>:(I)V"
+            ],
+            "left" : "C<0>",
+            "right" : "G{Lkotlin/jvm/internal/Lambda;||<init>:(I)V}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(0,0)",
+              "ContraInject:this",
+              "ContraProject:p0",
+              "Inject:<init>:(I)V"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion$createCapture$1;||<init>:(Ljava/lang/Object;)V}",
+            "right" : "G{Lkotlin/jvm/internal/Lambda;||<init>:(I)V}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Inject:ctrl",
+              "Project:<init>:(I)V",
+              "Project:ctrl",
+              "Return:(0,0)"
+            ],
+            "left" : "G{Lkotlin/jvm/internal/Lambda;||<init>:(I)V}",
+            "right" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion$createCapture$1;||<init>:(Ljava/lang/Object;)V}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Inject:this_out",
+              "Project:<init>:(I)V",
+              "Project:this_out",
+              "Return:(0,0)"
+            ],
+            "left" : "G{Lkotlin/jvm/internal/Lambda;||<init>:(I)V}",
+            "right" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion$createCapture$1;||<init>:(Ljava/lang/Object;)V}"
+          }
+        ],
+        "node" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion$createCapture$1;||<init>:(Ljava/lang/Object;)V}"
+      },
+      "path" : "com/facebook/marianatrench/integrationtests/KotlinLambda.java"
+    },
+    {
+      "callable" : "Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion$createCapture$1;||invoke:()Ljava/lang/Object;",
+      "callable_line" : 26,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "labels" :
+            [
+              "ContraProject:p0",
+              "Inject:this_out"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion$createCapture$1;||invoke:()Ljava/lang/Object;}",
+            "right" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion$createCapture$1;||invoke:()Ljava/lang/Object;}"
+          },
+          {
+            "labels" :
+            [
+              "ContraProject:p0",
+              "Inject:result",
+              "Project:$captured"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion$createCapture$1;||invoke:()Ljava/lang/Object;}",
+            "right" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion$createCapture$1;||invoke:()Ljava/lang/Object;}"
+          }
+        ],
+        "node" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion$createCapture$1;||invoke:()Ljava/lang/Object;}"
+      },
+      "path" : "com/facebook/marianatrench/integrationtests/KotlinLambda.java"
+    },
+    {
+      "callable" : "Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||<init>:()V",
+      "callable_line" : 10,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "labels" :
+            [
+              "ContraProject:p0",
+              "Inject:this_out"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||<init>:()V}",
+            "right" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||<init>:()V}"
+          }
+        ],
+        "node" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||<init>:()V}"
+      },
+      "path" : "com/facebook/marianatrench/integrationtests/KotlinLambda.java"
+    },
+    {
+      "callable" : "Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||<init>:(Lkotlin/jvm/internal/DefaultConstructorMarker;)V",
+      "callable_line" : 0,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(0,0)",
+              "ContraInject:ctrl",
+              "ContraProject:ctrl",
+              "Inject:<init>:()V"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||<init>:(Lkotlin/jvm/internal/DefaultConstructorMarker;)V}",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||<init>:()V}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(0,0)",
+              "ContraInject:this",
+              "ContraProject:p0",
+              "Inject:<init>:()V"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||<init>:(Lkotlin/jvm/internal/DefaultConstructorMarker;)V}",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||<init>:()V}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Inject:ctrl",
+              "Project:<init>:()V",
+              "Project:ctrl",
+              "Return:(0,0)"
+            ],
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||<init>:()V}",
+            "right" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||<init>:(Lkotlin/jvm/internal/DefaultConstructorMarker;)V}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Inject:this_out",
+              "Project:<init>:()V",
+              "Project:this_out",
+              "Return:(0,0)"
+            ],
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||<init>:()V}",
+            "right" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||<init>:(Lkotlin/jvm/internal/DefaultConstructorMarker;)V}"
+          }
+        ],
+        "node" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||<init>:(Lkotlin/jvm/internal/DefaultConstructorMarker;)V}"
+      },
+      "path" : "com/facebook/marianatrench/integrationtests/KotlinLambda.java"
+    },
+    {
+      "callable" : "Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||applyTransform:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;",
+      "callable_line" : 17,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "labels" :
+            [
+              "ContraProject:p0",
+              "Inject:this_out"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||applyTransform:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}",
+            "right" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||applyTransform:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "ContraInject:ctrl",
+              "ContraProject:ctrl",
+              "HoCall:(18,0)",
+              "Inject:invoke:(Ljava/lang/Object;)Ljava/lang/Object;"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||applyTransform:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}",
+            "right" : "C{Lkotlin/jvm/functions/Function1;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "ContraInject:p0",
+              "ContraProject:p1",
+              "HoCall:(18,0)",
+              "Inject:invoke:(Ljava/lang/Object;)Ljava/lang/Object;"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||applyTransform:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}",
+            "right" : "C{Lkotlin/jvm/functions/Function1;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "ContraInject:this",
+              "ContraProject:p2",
+              "HoCall:(18,0)",
+              "Inject:invoke:(Ljava/lang/Object;)Ljava/lang/Object;"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||applyTransform:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}",
+            "right" : "C{Lkotlin/jvm/functions/Function1;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "HoReturn:(18,0)",
+              "Inject:ctrl",
+              "Project:ctrl",
+              "Project:invoke:(Ljava/lang/Object;)Ljava/lang/Object;"
+            ],
+            "left" : "C{Lkotlin/jvm/functions/Function1;}",
+            "right" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||applyTransform:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "HoReturn:(18,0)",
+              "Inject:result",
+              "Project:invoke:(Ljava/lang/Object;)Ljava/lang/Object;",
+              "Project:result"
+            ],
+            "left" : "C{Lkotlin/jvm/functions/Function1;}",
+            "right" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||applyTransform:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}"
+          }
+        ],
+        "node" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||applyTransform:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}"
+      },
+      "path" : "com/facebook/marianatrench/integrationtests/KotlinLambda.java"
+    },
+    {
+      "callable" : "Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||compose:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;",
+      "callable_line" : 32,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "labels" :
+            [
+              "ContraProject:p0",
+              "Inject:this_out"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||compose:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}",
+            "right" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||compose:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "ContraInject:ctrl",
+              "ContraProject:ctrl",
+              "HoCall:(33,0)",
+              "Inject:invoke:(Ljava/lang/Object;)Ljava/lang/Object;"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||compose:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}",
+            "right" : "C{Lkotlin/jvm/functions/Function1;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "ContraInject:ctrl",
+              "ContraProject:ctrl",
+              "HoCall:(33,1)",
+              "Inject:invoke:(Ljava/lang/Object;)Ljava/lang/Object;"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||compose:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}",
+            "right" : "C{Lkotlin/jvm/functions/Function1;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "ContraInject:p0",
+              "ContraProject:p1",
+              "HoCall:(33,0)",
+              "Inject:invoke:(Ljava/lang/Object;)Ljava/lang/Object;"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||compose:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}",
+            "right" : "C{Lkotlin/jvm/functions/Function1;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "ContraInject:this",
+              "ContraProject:p2",
+              "HoCall:(33,0)",
+              "Inject:invoke:(Ljava/lang/Object;)Ljava/lang/Object;"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||compose:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}",
+            "right" : "C{Lkotlin/jvm/functions/Function1;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "ContraInject:this",
+              "ContraProject:p3",
+              "HoCall:(33,1)",
+              "Inject:invoke:(Ljava/lang/Object;)Ljava/lang/Object;"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||compose:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}",
+            "right" : "C{Lkotlin/jvm/functions/Function1;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "HoReturn:(33,0)",
+              "Inject:ctrl",
+              "Project:ctrl",
+              "Project:invoke:(Ljava/lang/Object;)Ljava/lang/Object;"
+            ],
+            "left" : "C{Lkotlin/jvm/functions/Function1;}",
+            "right" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||compose:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "HoReturn:(33,1)",
+              "Inject:ctrl",
+              "Project:ctrl",
+              "Project:invoke:(Ljava/lang/Object;)Ljava/lang/Object;"
+            ],
+            "left" : "C{Lkotlin/jvm/functions/Function1;}",
+            "right" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||compose:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "HoReturn:(33,1)",
+              "Inject:result",
+              "Project:invoke:(Ljava/lang/Object;)Ljava/lang/Object;",
+              "Project:result"
+            ],
+            "left" : "C{Lkotlin/jvm/functions/Function1;}",
+            "right" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||compose:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}"
+          }
+        ],
+        "node" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||compose:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}"
+      },
+      "path" : "com/facebook/marianatrench/integrationtests/KotlinLambda.java"
+    },
+    {
+      "callable" : "Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||createCapture:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;",
+      "callable_line" : 26,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "labels" :
+            [
+              "ContraProject:p0",
+              "Inject:this_out"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||createCapture:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;}",
+            "right" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||createCapture:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(27,0)",
+              "ContraInject:ctrl",
+              "ContraProject:ctrl",
+              "Inject:<init>:(Ljava/lang/Object;)V"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||createCapture:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;}",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion$createCapture$1;||<init>:(Ljava/lang/Object;)V}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(27,0)",
+              "ContraInject:p0",
+              "ContraProject:p1",
+              "Inject:<init>:(Ljava/lang/Object;)V"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||createCapture:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;}",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion$createCapture$1;||<init>:(Ljava/lang/Object;)V}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Inject:ctrl",
+              "Project:<init>:(Ljava/lang/Object;)V",
+              "Project:ctrl",
+              "Return:(27,0)"
+            ],
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion$createCapture$1;||<init>:(Ljava/lang/Object;)V}",
+            "right" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||createCapture:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Inject:result",
+              "Project:<init>:(Ljava/lang/Object;)V",
+              "Project:this_out",
+              "Return:(27,0)"
+            ],
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion$createCapture$1;||<init>:(Ljava/lang/Object;)V}",
+            "right" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||createCapture:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;}"
+          }
+        ],
+        "node" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||createCapture:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;}"
+      },
+      "path" : "com/facebook/marianatrench/integrationtests/KotlinLambda.java"
+    },
+    {
+      "callable" : "Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||<clinit>:()V",
+      "callable_line" : 0,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(0,0)",
+              "ContraInject:ctrl",
+              "ContraProject:ctrl",
+              "Inject:<init>:(Lkotlin/jvm/internal/DefaultConstructorMarker;)V"
+            ],
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||<clinit>:()V}",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||<init>:(Lkotlin/jvm/internal/DefaultConstructorMarker;)V}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(0,0)",
+              "ContraInject:p0",
+              "ContraProject:C<0>",
+              "Inject:<init>:(Lkotlin/jvm/internal/DefaultConstructorMarker;)V"
+            ],
+            "left" : "C<0>",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||<init>:(Lkotlin/jvm/internal/DefaultConstructorMarker;)V}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Inject:Companion",
+              "Project:<init>:(Lkotlin/jvm/internal/DefaultConstructorMarker;)V",
+              "Project:this_out",
+              "Return:(0,0)"
+            ],
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||<init>:(Lkotlin/jvm/internal/DefaultConstructorMarker;)V}",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||Companion}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Inject:ctrl",
+              "Project:<init>:(Lkotlin/jvm/internal/DefaultConstructorMarker;)V",
+              "Project:ctrl",
+              "Return:(0,0)"
+            ],
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||<init>:(Lkotlin/jvm/internal/DefaultConstructorMarker;)V}",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||<clinit>:()V}"
+          }
+        ],
+        "node" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||<clinit>:()V}"
+      },
+      "path" : "com/facebook/marianatrench/integrationtests/KotlinLambda.java"
+    },
+    {
+      "callable" : "Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||<init>:()V",
+      "callable_line" : 9,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "labels" :
+            [
+              "ContraProject:p0",
+              "Inject:this_out"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||<init>:()V}",
+            "right" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||<init>:()V}"
+          }
+        ],
+        "node" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||<init>:()V}"
+      },
+      "path" : "com/facebook/marianatrench/integrationtests/KotlinLambda.java"
+    },
+    {
+      "callable" : "Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||applyTransform:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;",
+      "callable_line" : 18,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "labels" :
+            [
+              "Call:(0,0)",
+              "ContraInject:this",
+              "Inject:applyTransform:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;",
+              "Project:Companion"
+            ],
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||Companion}",
+            "right" : "C{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(0,0)",
+              "ContraInject:ctrl",
+              "ContraProject:ctrl",
+              "Inject:applyTransform:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;"
+            ],
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||applyTransform:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}",
+            "right" : "C{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(0,0)",
+              "ContraInject:p0",
+              "ContraProject:p0",
+              "Inject:applyTransform:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;"
+            ],
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||applyTransform:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}",
+            "right" : "C{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(0,0)",
+              "ContraInject:p1",
+              "ContraProject:p1",
+              "Inject:applyTransform:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;"
+            ],
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||applyTransform:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}",
+            "right" : "C{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Inject:ctrl",
+              "Project:applyTransform:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;",
+              "Project:ctrl",
+              "Return:(0,0)"
+            ],
+            "left" : "C{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;}",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||applyTransform:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Inject:result",
+              "Project:applyTransform:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;",
+              "Project:result",
+              "Return:(0,0)"
+            ],
+            "left" : "C{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;}",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||applyTransform:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}"
+          }
+        ],
+        "node" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||applyTransform:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}"
+      },
+      "path" : "com/facebook/marianatrench/integrationtests/KotlinLambda.java"
+    },
+    {
+      "callable" : "Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||compose:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;",
+      "callable_line" : 33,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "labels" :
+            [
+              "Call:(0,0)",
+              "ContraInject:this",
+              "Inject:compose:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;",
+              "Project:Companion"
+            ],
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||Companion}",
+            "right" : "C{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(0,0)",
+              "ContraInject:ctrl",
+              "ContraProject:ctrl",
+              "Inject:compose:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;"
+            ],
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||compose:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}",
+            "right" : "C{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(0,0)",
+              "ContraInject:p0",
+              "ContraProject:p0",
+              "Inject:compose:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;"
+            ],
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||compose:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}",
+            "right" : "C{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(0,0)",
+              "ContraInject:p1",
+              "ContraProject:p1",
+              "Inject:compose:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;"
+            ],
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||compose:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}",
+            "right" : "C{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(0,0)",
+              "ContraInject:p2",
+              "ContraProject:p2",
+              "Inject:compose:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;"
+            ],
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||compose:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}",
+            "right" : "C{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Inject:ctrl",
+              "Project:compose:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;",
+              "Project:ctrl",
+              "Return:(0,0)"
+            ],
+            "left" : "C{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;}",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||compose:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Inject:result",
+              "Project:compose:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;",
+              "Project:result",
+              "Return:(0,0)"
+            ],
+            "left" : "C{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;}",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||compose:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}"
+          }
+        ],
+        "node" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||compose:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}"
+      },
+      "path" : "com/facebook/marianatrench/integrationtests/KotlinLambda.java"
+    },
+    {
+      "callable" : "Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||createCapture:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;",
+      "callable_line" : 27,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "labels" :
+            [
+              "Call:(0,0)",
+              "ContraInject:this",
+              "Inject:createCapture:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;",
+              "Project:Companion"
+            ],
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||Companion}",
+            "right" : "C{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(0,0)",
+              "ContraInject:ctrl",
+              "ContraProject:ctrl",
+              "Inject:createCapture:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;"
+            ],
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||createCapture:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;}",
+            "right" : "C{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(0,0)",
+              "ContraInject:p0",
+              "ContraProject:p0",
+              "Inject:createCapture:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;"
+            ],
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||createCapture:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;}",
+            "right" : "C{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Inject:ctrl",
+              "Project:createCapture:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;",
+              "Project:ctrl",
+              "Return:(0,0)"
+            ],
+            "left" : "C{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;}",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||createCapture:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Inject:result",
+              "Project:createCapture:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;",
+              "Project:result",
+              "Return:(0,0)"
+            ],
+            "left" : "C{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;}",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||createCapture:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;}"
+          }
+        ],
+        "node" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||createCapture:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;}"
+      },
+      "path" : "com/facebook/marianatrench/integrationtests/KotlinLambda.java"
+    },
+    {
+      "callable" : "Class{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion$createCapture$1;}",
+      "callable_line" : 0,
+      "code" : 20001,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "left" : "C{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion$createCapture$1;}",
+            "right" : "O{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion$createCapture$1;}"
+          },
+          {
+            "labels" :
+            [
+              "Inject:Interval:[0,1]"
+            ],
+            "left" : "O{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion$createCapture$1;}",
+            "right" : "O{Lkotlin/jvm/functions/Function0;}"
+          },
+          {
+            "labels" :
+            [
+              "Inject:Interval:[0,1]"
+            ],
+            "left" : "O{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion$createCapture$1;}",
+            "right" : "O{Lkotlin/jvm/internal/Lambda;}"
+          },
+          {
+            "labels" :
+            [
+              "Inject:invoke:()Ljava/lang/Object;"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion$createCapture$1;||invoke:()Ljava/lang/Object;}",
+            "right" : "C{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion$createCapture$1;}"
+          }
+        ],
+        "interval" : "[0,1]",
+        "node" : "C{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion$createCapture$1;}"
+      },
+      "path" : "KotlinLambda.kt"
+    },
+    {
+      "callable" : "Class{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;}",
+      "callable_line" : 0,
+      "code" : 20001,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "left" : "C{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;}",
+            "right" : "O{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;}"
+          },
+          {
+            "labels" :
+            [
+              "Inject:applyTransform:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||applyTransform:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}",
+            "right" : "C{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;}"
+          },
+          {
+            "labels" :
+            [
+              "Inject:compose:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||compose:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}",
+            "right" : "C{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;}"
+          },
+          {
+            "labels" :
+            [
+              "Inject:createCapture:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||createCapture:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;}",
+            "right" : "C{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;}"
+          }
+        ],
+        "interval" : "[2,3]",
+        "node" : "C{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;}"
+      },
+      "path" : "KotlinLambda.kt"
+    }
+  ]
 }

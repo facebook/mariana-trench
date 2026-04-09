@@ -3,5 +3,75 @@
   {
     "@generated" : true
   },
-  "results" : []
+  "results" :
+  [
+    {
+      "callable" : "LRec;||process:(Ljava/lang/Object;)Ljava/lang/Object;",
+      "callable_line" : 0,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "labels" :
+            [
+              "ContraProject:C<0>",
+              "Inject:result"
+            ],
+            "left" : "C<0>",
+            "right" : "G{LRec;||process:(Ljava/lang/Object;)Ljava/lang/Object;}"
+          },
+          {
+            "labels" :
+            [
+              "ContraProject:SelfRec",
+              "Inject:ctrl",
+              "Project:ctrl",
+              "Return:(0,0)"
+            ],
+            "left" : "SelfRec",
+            "right" : "G{LRec;||process:(Ljava/lang/Object;)Ljava/lang/Object;}"
+          },
+          {
+            "labels" :
+            [
+              "ContraProject:SelfRec",
+              "Inject:result",
+              "Project:result",
+              "Return:(0,0)"
+            ],
+            "left" : "SelfRec",
+            "right" : "G{LRec;||process:(Ljava/lang/Object;)Ljava/lang/Object;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(0,0)",
+              "ContraInject:ctrl",
+              "ContraProject:ctrl",
+              "Inject:SelfRec"
+            ],
+            "left" : "G{LRec;||process:(Ljava/lang/Object;)Ljava/lang/Object;}",
+            "right" : "SelfRec"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(0,0)",
+              "ContraInject:p0",
+              "ContraProject:p0",
+              "Inject:SelfRec"
+            ],
+            "left" : "G{LRec;||process:(Ljava/lang/Object;)Ljava/lang/Object;}",
+            "right" : "SelfRec"
+          }
+        ],
+        "node" : "G{LRec;||process:(Ljava/lang/Object;)Ljava/lang/Object;}"
+      },
+      "path" : "Rec.java"
+    }
+  ]
 }

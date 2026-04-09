@@ -3,5 +3,56 @@
   {
     "@generated" : true
   },
-  "results" : []
+  "results" :
+  [
+    {
+      "callable" : "LThrow;||test:(Ljava/lang/String;)V",
+      "callable_line" : 0,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(0,0)",
+              "ContraInject:ctrl",
+              "ContraProject:ctrl",
+              "Inject:<init>:(Ljava/lang/String;)V"
+            ],
+            "left" : "G{LThrow;||test:(Ljava/lang/String;)V}",
+            "right" : "G{Ljava/lang/Exception;||<init>:(Ljava/lang/String;)V}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(0,0)",
+              "ContraInject:p0",
+              "ContraProject:p0",
+              "Inject:<init>:(Ljava/lang/String;)V"
+            ],
+            "left" : "G{LThrow;||test:(Ljava/lang/String;)V}",
+            "right" : "G{Ljava/lang/Exception;||<init>:(Ljava/lang/String;)V}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Inject:ctrl",
+              "Project:<init>:(Ljava/lang/String;)V",
+              "Project:ctrl",
+              "Return:(0,0)"
+            ],
+            "left" : "G{Ljava/lang/Exception;||<init>:(Ljava/lang/String;)V}",
+            "right" : "G{LThrow;||test:(Ljava/lang/String;)V}"
+          }
+        ],
+        "node" : "G{LThrow;||test:(Ljava/lang/String;)V}"
+      },
+      "path" : "Throw.java"
+    }
+  ]
 }

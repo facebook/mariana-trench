@@ -3,5 +3,39 @@
   {
     "@generated" : true
   },
-  "results" : []
+  "results" :
+  [
+    {
+      "callable" : "LLoop;||forEachArray:([Ljava/lang/Object;)Ljava/lang/Object;",
+      "callable_line" : 0,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "labels" :
+            [
+              "ContraProject:C<0>",
+              "Inject:result"
+            ],
+            "left" : "C<0>",
+            "right" : "G{LLoop;||forEachArray:([Ljava/lang/Object;)Ljava/lang/Object;}"
+          },
+          {
+            "labels" :
+            [
+              "ContraProject:p0",
+              "Inject:result",
+              "Project:*"
+            ],
+            "left" : "G{LLoop;||forEachArray:([Ljava/lang/Object;)Ljava/lang/Object;}",
+            "right" : "G{LLoop;||forEachArray:([Ljava/lang/Object;)Ljava/lang/Object;}"
+          }
+        ],
+        "node" : "G{LLoop;||forEachArray:([Ljava/lang/Object;)Ljava/lang/Object;}"
+      },
+      "path" : "Loop.java"
+    }
+  ]
 }

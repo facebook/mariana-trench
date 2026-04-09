@@ -3,5 +3,172 @@
   {
     "@generated" : true
   },
-  "results" : []
+  "results" :
+  [
+    {
+      "callable" : "LBuilder;||setName:(Ljava/lang/String;)LBuilder;",
+      "callable_line" : 0,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "labels" :
+            [
+              "ContraProject:p0",
+              "Inject:result"
+            ],
+            "left" : "M{LBuilder;||setName:(Ljava/lang/String;)LBuilder;}",
+            "right" : "M{LBuilder;||setName:(Ljava/lang/String;)LBuilder;}"
+          },
+          {
+            "labels" :
+            [
+              "ContraProject:p0",
+              "Inject:this_out"
+            ],
+            "left" : "M{LBuilder;||setName:(Ljava/lang/String;)LBuilder;}",
+            "right" : "M{LBuilder;||setName:(Ljava/lang/String;)LBuilder;}"
+          },
+          {
+            "labels" :
+            [
+              "ContraProject:p1",
+              "Inject:name",
+              "Inject:p0"
+            ],
+            "left" : "M{LBuilder;||setName:(Ljava/lang/String;)LBuilder;}",
+            "right" : "M{LBuilder;||setName:(Ljava/lang/String;)LBuilder;}"
+          }
+        ],
+        "node" : "M{LBuilder;||setName:(Ljava/lang/String;)LBuilder;}"
+      },
+      "path" : "Builder.java"
+    },
+    {
+      "callable" : "LBuilder;||test:(Ljava/lang/String;Ljava/lang/String;)LBuilder;",
+      "callable_line" : 0,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "labels" :
+            [
+              "Call:(0,1)",
+              "ContraInject:this",
+              "Inject:setName:(Ljava/lang/String;)LBuilder;",
+              "Project:<init>:()V",
+              "Project:this_out",
+              "Return:(0,0)"
+            ],
+            "left" : "G{LBuilder;||<init>:()V}",
+            "right" : "C{LBuilder;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(0,0)",
+              "ContraInject:ctrl",
+              "ContraProject:ctrl",
+              "Inject:<init>:()V"
+            ],
+            "left" : "G{LBuilder;||test:(Ljava/lang/String;Ljava/lang/String;)LBuilder;}",
+            "right" : "G{LBuilder;||<init>:()V}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(0,1)",
+              "ContraInject:ctrl",
+              "ContraProject:ctrl",
+              "Inject:setName:(Ljava/lang/String;)LBuilder;"
+            ],
+            "left" : "G{LBuilder;||test:(Ljava/lang/String;Ljava/lang/String;)LBuilder;}",
+            "right" : "C{LBuilder;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(0,1)",
+              "ContraInject:p0",
+              "ContraProject:p0",
+              "Inject:setName:(Ljava/lang/String;)LBuilder;"
+            ],
+            "left" : "G{LBuilder;||test:(Ljava/lang/String;Ljava/lang/String;)LBuilder;}",
+            "right" : "C{LBuilder;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Inject:ctrl",
+              "Project:<init>:()V",
+              "Project:ctrl",
+              "Return:(0,0)"
+            ],
+            "left" : "G{LBuilder;||<init>:()V}",
+            "right" : "G{LBuilder;||test:(Ljava/lang/String;Ljava/lang/String;)LBuilder;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Inject:ctrl",
+              "Project:ctrl",
+              "Project:setName:(Ljava/lang/String;)LBuilder;",
+              "Return:(0,1)"
+            ],
+            "left" : "C{LBuilder;}",
+            "right" : "G{LBuilder;||test:(Ljava/lang/String;Ljava/lang/String;)LBuilder;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Inject:result",
+              "Project:result",
+              "Project:setName:(Ljava/lang/String;)LBuilder;",
+              "Return:(0,1)"
+            ],
+            "left" : "C{LBuilder;}",
+            "right" : "G{LBuilder;||test:(Ljava/lang/String;Ljava/lang/String;)LBuilder;}"
+          }
+        ],
+        "node" : "G{LBuilder;||test:(Ljava/lang/String;Ljava/lang/String;)LBuilder;}"
+      },
+      "path" : "Builder.java"
+    },
+    {
+      "callable" : "Class{LBuilder;}",
+      "callable_line" : 0,
+      "code" : 20001,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "left" : "C{LBuilder;}",
+            "right" : "O{LBuilder;}"
+          },
+          {
+            "labels" :
+            [
+              "Inject:setName:(Ljava/lang/String;)LBuilder;"
+            ],
+            "left" : "M{LBuilder;||setName:(Ljava/lang/String;)LBuilder;}",
+            "right" : "C{LBuilder;}"
+          }
+        ],
+        "interval" : "[0,1]",
+        "node" : "C{LBuilder;}"
+      },
+      "path" : ""
+    }
+  ]
 }

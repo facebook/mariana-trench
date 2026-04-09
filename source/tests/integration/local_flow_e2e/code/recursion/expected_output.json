@@ -3,5 +3,228 @@
   {
     "@generated" : true
   },
-  "results" : []
+  "results" :
+  [
+    {
+      "callable" : "Lcom/facebook/marianatrench/integrationtests/Recursion;||<init>:()V",
+      "callable_line" : 9,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "labels" :
+            [
+              "ContraProject:p0",
+              "Inject:this_out"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/Recursion;||<init>:()V}",
+            "right" : "M{Lcom/facebook/marianatrench/integrationtests/Recursion;||<init>:()V}"
+          }
+        ],
+        "node" : "M{Lcom/facebook/marianatrench/integrationtests/Recursion;||<init>:()V}"
+      },
+      "path" : "com/facebook/marianatrench/integrationtests/Recursion.java"
+    },
+    {
+      "callable" : "Lcom/facebook/marianatrench/integrationtests/Recursion;||mutualA:(Ljava/lang/Object;)Ljava/lang/Object;",
+      "callable_line" : 18,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "labels" :
+            [
+              "ContraProject:C<0>",
+              "Inject:result"
+            ],
+            "left" : "C<0>",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||mutualA:(Ljava/lang/Object;)Ljava/lang/Object;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(22,0)",
+              "ContraInject:ctrl",
+              "ContraProject:ctrl",
+              "Inject:mutualB:(Ljava/lang/Object;)Ljava/lang/Object;"
+            ],
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||mutualA:(Ljava/lang/Object;)Ljava/lang/Object;}",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||mutualB:(Ljava/lang/Object;)Ljava/lang/Object;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(22,0)",
+              "ContraInject:p0",
+              "ContraProject:p0",
+              "Inject:mutualB:(Ljava/lang/Object;)Ljava/lang/Object;"
+            ],
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||mutualA:(Ljava/lang/Object;)Ljava/lang/Object;}",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||mutualB:(Ljava/lang/Object;)Ljava/lang/Object;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Inject:ctrl",
+              "Project:ctrl",
+              "Project:mutualB:(Ljava/lang/Object;)Ljava/lang/Object;",
+              "Return:(22,0)"
+            ],
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||mutualB:(Ljava/lang/Object;)Ljava/lang/Object;}",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||mutualA:(Ljava/lang/Object;)Ljava/lang/Object;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Inject:result",
+              "Project:mutualB:(Ljava/lang/Object;)Ljava/lang/Object;",
+              "Project:result",
+              "Return:(22,0)"
+            ],
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||mutualB:(Ljava/lang/Object;)Ljava/lang/Object;}",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||mutualA:(Ljava/lang/Object;)Ljava/lang/Object;}"
+          }
+        ],
+        "node" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||mutualA:(Ljava/lang/Object;)Ljava/lang/Object;}"
+      },
+      "path" : "com/facebook/marianatrench/integrationtests/Recursion.java"
+    },
+    {
+      "callable" : "Lcom/facebook/marianatrench/integrationtests/Recursion;||mutualB:(Ljava/lang/Object;)Ljava/lang/Object;",
+      "callable_line" : 25,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(26,0)",
+              "ContraInject:ctrl",
+              "ContraProject:ctrl",
+              "Inject:mutualA:(Ljava/lang/Object;)Ljava/lang/Object;"
+            ],
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||mutualB:(Ljava/lang/Object;)Ljava/lang/Object;}",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||mutualA:(Ljava/lang/Object;)Ljava/lang/Object;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(26,0)",
+              "ContraInject:p0",
+              "ContraProject:p0",
+              "Inject:mutualA:(Ljava/lang/Object;)Ljava/lang/Object;"
+            ],
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||mutualB:(Ljava/lang/Object;)Ljava/lang/Object;}",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||mutualA:(Ljava/lang/Object;)Ljava/lang/Object;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Inject:ctrl",
+              "Project:ctrl",
+              "Project:mutualA:(Ljava/lang/Object;)Ljava/lang/Object;",
+              "Return:(26,0)"
+            ],
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||mutualA:(Ljava/lang/Object;)Ljava/lang/Object;}",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||mutualB:(Ljava/lang/Object;)Ljava/lang/Object;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Inject:result",
+              "Project:mutualA:(Ljava/lang/Object;)Ljava/lang/Object;",
+              "Project:result",
+              "Return:(26,0)"
+            ],
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||mutualA:(Ljava/lang/Object;)Ljava/lang/Object;}",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||mutualB:(Ljava/lang/Object;)Ljava/lang/Object;}"
+          }
+        ],
+        "node" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||mutualB:(Ljava/lang/Object;)Ljava/lang/Object;}"
+      },
+      "path" : "com/facebook/marianatrench/integrationtests/Recursion.java"
+    },
+    {
+      "callable" : "Lcom/facebook/marianatrench/integrationtests/Recursion;||selfRecursive:(Ljava/lang/Object;)Ljava/lang/Object;",
+      "callable_line" : 11,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "labels" :
+            [
+              "ContraProject:C<0>",
+              "Inject:result"
+            ],
+            "left" : "C<0>",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||selfRecursive:(Ljava/lang/Object;)Ljava/lang/Object;}"
+          },
+          {
+            "labels" :
+            [
+              "ContraProject:SelfRec",
+              "Inject:ctrl",
+              "Project:ctrl",
+              "Return:(15,0)"
+            ],
+            "left" : "SelfRec",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||selfRecursive:(Ljava/lang/Object;)Ljava/lang/Object;}"
+          },
+          {
+            "labels" :
+            [
+              "ContraProject:SelfRec",
+              "Inject:result",
+              "Project:result",
+              "Return:(15,0)"
+            ],
+            "left" : "SelfRec",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||selfRecursive:(Ljava/lang/Object;)Ljava/lang/Object;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(15,0)",
+              "ContraInject:ctrl",
+              "ContraProject:ctrl",
+              "Inject:SelfRec"
+            ],
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||selfRecursive:(Ljava/lang/Object;)Ljava/lang/Object;}",
+            "right" : "SelfRec"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(15,0)",
+              "ContraInject:p0",
+              "ContraProject:p0",
+              "Inject:SelfRec"
+            ],
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||selfRecursive:(Ljava/lang/Object;)Ljava/lang/Object;}",
+            "right" : "SelfRec"
+          }
+        ],
+        "node" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||selfRecursive:(Ljava/lang/Object;)Ljava/lang/Object;}"
+      },
+      "path" : "com/facebook/marianatrench/integrationtests/Recursion.java"
+    }
+  ]
 }

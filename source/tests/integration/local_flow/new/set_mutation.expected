@@ -3,5 +3,185 @@
   {
     "@generated" : true
   },
-  "results" : []
+  "results" :
+  [
+    {
+      "callable" : "LMutate;||<init>:()V",
+      "callable_line" : 0,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "labels" :
+            [
+              "ContraProject:p0",
+              "Inject:this_out"
+            ],
+            "left" : "M{LMutate;||<init>:()V}",
+            "right" : "M{LMutate;||<init>:()V}"
+          }
+        ],
+        "node" : "M{LMutate;||<init>:()V}"
+      },
+      "path" : "Mutate.java"
+    },
+    {
+      "callable" : "LMutate;||setA:(Ljava/lang/Object;)V",
+      "callable_line" : 0,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "labels" :
+            [
+              "ContraProject:p0",
+              "Inject:this_out"
+            ],
+            "left" : "M{LMutate;||setA:(Ljava/lang/Object;)V}",
+            "right" : "M{LMutate;||setA:(Ljava/lang/Object;)V}"
+          },
+          {
+            "labels" :
+            [
+              "ContraProject:p1",
+              "Inject:a",
+              "Inject:p0"
+            ],
+            "left" : "M{LMutate;||setA:(Ljava/lang/Object;)V}",
+            "right" : "M{LMutate;||setA:(Ljava/lang/Object;)V}"
+          }
+        ],
+        "node" : "M{LMutate;||setA:(Ljava/lang/Object;)V}"
+      },
+      "path" : "Mutate.java"
+    },
+    {
+      "callable" : "LMutate;||test:(Ljava/lang/Object;)LMutate;",
+      "callable_line" : 0,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "labels" :
+            [
+              "Call:(0,1)",
+              "ContraInject:this",
+              "Inject:setA:(Ljava/lang/Object;)V",
+              "Project:<init>:()V",
+              "Project:this_out",
+              "Return:(0,0)"
+            ],
+            "left" : "G{LMutate;||<init>:()V}",
+            "right" : "C{LMutate;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(0,0)",
+              "ContraInject:ctrl",
+              "ContraProject:ctrl",
+              "Inject:<init>:()V"
+            ],
+            "left" : "G{LMutate;||test:(Ljava/lang/Object;)LMutate;}",
+            "right" : "G{LMutate;||<init>:()V}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(0,1)",
+              "ContraInject:ctrl",
+              "ContraProject:ctrl",
+              "Inject:setA:(Ljava/lang/Object;)V"
+            ],
+            "left" : "G{LMutate;||test:(Ljava/lang/Object;)LMutate;}",
+            "right" : "C{LMutate;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(0,1)",
+              "ContraInject:p0",
+              "ContraProject:p0",
+              "Inject:setA:(Ljava/lang/Object;)V"
+            ],
+            "left" : "G{LMutate;||test:(Ljava/lang/Object;)LMutate;}",
+            "right" : "C{LMutate;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Inject:ctrl",
+              "Project:<init>:()V",
+              "Project:ctrl",
+              "Return:(0,0)"
+            ],
+            "left" : "G{LMutate;||<init>:()V}",
+            "right" : "G{LMutate;||test:(Ljava/lang/Object;)LMutate;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Inject:ctrl",
+              "Project:ctrl",
+              "Project:setA:(Ljava/lang/Object;)V",
+              "Return:(0,1)"
+            ],
+            "left" : "C{LMutate;}",
+            "right" : "G{LMutate;||test:(Ljava/lang/Object;)LMutate;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Inject:result",
+              "Project:setA:(Ljava/lang/Object;)V",
+              "Project:this_out",
+              "Return:(0,1)"
+            ],
+            "left" : "C{LMutate;}",
+            "right" : "G{LMutate;||test:(Ljava/lang/Object;)LMutate;}"
+          }
+        ],
+        "node" : "G{LMutate;||test:(Ljava/lang/Object;)LMutate;}"
+      },
+      "path" : "Mutate.java"
+    },
+    {
+      "callable" : "Class{LMutate;}",
+      "callable_line" : 0,
+      "code" : 20001,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "left" : "C{LMutate;}",
+            "right" : "O{LMutate;}"
+          },
+          {
+            "labels" :
+            [
+              "Inject:setA:(Ljava/lang/Object;)V"
+            ],
+            "left" : "M{LMutate;||setA:(Ljava/lang/Object;)V}",
+            "right" : "C{LMutate;}"
+          }
+        ],
+        "interval" : "[0,1]",
+        "node" : "C{LMutate;}"
+      },
+      "path" : ""
+    }
+  ]
 }

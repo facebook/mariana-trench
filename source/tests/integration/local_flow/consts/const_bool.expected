@@ -3,5 +3,29 @@
   {
     "@generated" : true
   },
-  "results" : []
+  "results" :
+  [
+    {
+      "callable" : "LConsts;||test_bool:()Z",
+      "callable_line" : 0,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "labels" :
+            [
+              "ContraProject:C<1>",
+              "Inject:result"
+            ],
+            "left" : "C<1>",
+            "right" : "G{LConsts;||test_bool:()Z}"
+          }
+        ],
+        "node" : "G{LConsts;||test_bool:()Z}"
+      },
+      "path" : "Consts.java"
+    }
+  ]
 }

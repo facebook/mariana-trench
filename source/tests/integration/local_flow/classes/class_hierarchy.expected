@@ -3,5 +3,167 @@
   {
     "@generated" : true
   },
-  "results" : []
+  "results" :
+  [
+    {
+      "callable" : "LA;||method:()V",
+      "callable_line" : 0,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "labels" :
+            [
+              "ContraProject:p0",
+              "Inject:this_out"
+            ],
+            "left" : "M{LA;||method:()V}",
+            "right" : "M{LA;||method:()V}"
+          }
+        ],
+        "node" : "M{LA;||method:()V}"
+      },
+      "path" : "A.java"
+    },
+    {
+      "callable" : "LB;||method:()V",
+      "callable_line" : 0,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "labels" :
+            [
+              "ContraProject:p0",
+              "Inject:this_out"
+            ],
+            "left" : "M{LB;||method:()V}",
+            "right" : "M{LB;||method:()V}"
+          }
+        ],
+        "node" : "M{LB;||method:()V}"
+      },
+      "path" : "B.java"
+    },
+    {
+      "callable" : "LC;||method:()V",
+      "callable_line" : 0,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "labels" :
+            [
+              "ContraProject:p0",
+              "Inject:this_out"
+            ],
+            "left" : "M{LC;||method:()V}",
+            "right" : "M{LC;||method:()V}"
+          }
+        ],
+        "node" : "M{LC;||method:()V}"
+      },
+      "path" : "C.java"
+    },
+    {
+      "callable" : "Class{LA;}",
+      "callable_line" : 0,
+      "code" : 20001,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "left" : "C{LA;}",
+            "right" : "O{LA;}"
+          },
+          {
+            "labels" :
+            [
+              "Inject:method:()V"
+            ],
+            "left" : "M{LA;||method:()V}",
+            "right" : "C{LA;}"
+          }
+        ],
+        "interval" : "[0,5]",
+        "node" : "C{LA;}"
+      },
+      "path" : ""
+    },
+    {
+      "callable" : "Class{LB;}",
+      "callable_line" : 0,
+      "code" : 20001,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "left" : "C{LB;}",
+            "right" : "O{LB;}"
+          },
+          {
+            "labels" :
+            [
+              "Inject:Interval:[1,4]"
+            ],
+            "left" : "O{LB;}",
+            "right" : "O{LA;}"
+          },
+          {
+            "labels" :
+            [
+              "Inject:method:()V"
+            ],
+            "left" : "M{LB;||method:()V}",
+            "right" : "C{LB;}"
+          }
+        ],
+        "interval" : "[1,4]",
+        "node" : "C{LB;}"
+      },
+      "path" : ""
+    },
+    {
+      "callable" : "Class{LC;}",
+      "callable_line" : 0,
+      "code" : 20001,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "left" : "C{LC;}",
+            "right" : "O{LC;}"
+          },
+          {
+            "labels" :
+            [
+              "Inject:Interval:[2,3]"
+            ],
+            "left" : "O{LC;}",
+            "right" : "O{LB;}"
+          },
+          {
+            "labels" :
+            [
+              "Inject:method:()V"
+            ],
+            "left" : "M{LC;||method:()V}",
+            "right" : "C{LC;}"
+          }
+        ],
+        "interval" : "[2,3]",
+        "node" : "C{LC;}"
+      },
+      "path" : ""
+    }
+  ]
 }

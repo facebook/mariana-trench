@@ -3,5 +3,65 @@
   {
     "@generated" : true
   },
-  "results" : []
+  "results" :
+  [
+    {
+      "callable" : "LSetter;||setValue:(Ljava/lang/Object;)V",
+      "callable_line" : 0,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "labels" :
+            [
+              "ContraProject:p0",
+              "Inject:this_out"
+            ],
+            "left" : "M{LSetter;||setValue:(Ljava/lang/Object;)V}",
+            "right" : "M{LSetter;||setValue:(Ljava/lang/Object;)V}"
+          },
+          {
+            "labels" :
+            [
+              "ContraProject:p1",
+              "Inject:p0",
+              "Inject:value"
+            ],
+            "left" : "M{LSetter;||setValue:(Ljava/lang/Object;)V}",
+            "right" : "M{LSetter;||setValue:(Ljava/lang/Object;)V}"
+          }
+        ],
+        "node" : "M{LSetter;||setValue:(Ljava/lang/Object;)V}"
+      },
+      "path" : "Setter.java"
+    },
+    {
+      "callable" : "Class{LSetter;}",
+      "callable_line" : 0,
+      "code" : 20001,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "left" : "C{LSetter;}",
+            "right" : "O{LSetter;}"
+          },
+          {
+            "labels" :
+            [
+              "Inject:setValue:(Ljava/lang/Object;)V"
+            ],
+            "left" : "M{LSetter;||setValue:(Ljava/lang/Object;)V}",
+            "right" : "C{LSetter;}"
+          }
+        ],
+        "interval" : "[0,1]",
+        "node" : "C{LSetter;}"
+      },
+      "path" : ""
+    }
+  ]
 }

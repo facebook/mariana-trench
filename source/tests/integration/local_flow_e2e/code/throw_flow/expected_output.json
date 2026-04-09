@@ -3,5 +3,136 @@
   {
     "@generated" : true
   },
-  "results" : []
+  "results" :
+  [
+    {
+      "callable" : "Lcom/facebook/marianatrench/integrationtests/ThrowFlow;||<init>:()V",
+      "callable_line" : 9,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "labels" :
+            [
+              "ContraProject:p0",
+              "Inject:this_out"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/ThrowFlow;||<init>:()V}",
+            "right" : "M{Lcom/facebook/marianatrench/integrationtests/ThrowFlow;||<init>:()V}"
+          }
+        ],
+        "node" : "M{Lcom/facebook/marianatrench/integrationtests/ThrowFlow;||<init>:()V}"
+      },
+      "path" : "com/facebook/marianatrench/integrationtests/ThrowFlow.java"
+    },
+    {
+      "callable" : "Lcom/facebook/marianatrench/integrationtests/ThrowFlow;||throwOrReturn:(ZLjava/lang/Object;)Ljava/lang/Object;",
+      "callable_line" : 15,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "labels" :
+            [
+              "ContraProject:p1",
+              "Inject:result"
+            ],
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/ThrowFlow;||throwOrReturn:(ZLjava/lang/Object;)Ljava/lang/Object;}",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/ThrowFlow;||throwOrReturn:(ZLjava/lang/Object;)Ljava/lang/Object;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(17,0)",
+              "ContraInject:ctrl",
+              "ContraProject:ctrl",
+              "Inject:<init>:(Ljava/lang/String;)V"
+            ],
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/ThrowFlow;||throwOrReturn:(ZLjava/lang/Object;)Ljava/lang/Object;}",
+            "right" : "G{Ljava/lang/IllegalArgumentException;||<init>:(Ljava/lang/String;)V}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(17,0)",
+              "ContraInject:p0",
+              "ContraProject:C<bad>",
+              "Inject:<init>:(Ljava/lang/String;)V"
+            ],
+            "left" : "C<bad>",
+            "right" : "G{Ljava/lang/IllegalArgumentException;||<init>:(Ljava/lang/String;)V}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Inject:ctrl",
+              "Project:<init>:(Ljava/lang/String;)V",
+              "Project:ctrl",
+              "Return:(17,0)"
+            ],
+            "left" : "G{Ljava/lang/IllegalArgumentException;||<init>:(Ljava/lang/String;)V}",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/ThrowFlow;||throwOrReturn:(ZLjava/lang/Object;)Ljava/lang/Object;}"
+          }
+        ],
+        "node" : "G{Lcom/facebook/marianatrench/integrationtests/ThrowFlow;||throwOrReturn:(ZLjava/lang/Object;)Ljava/lang/Object;}"
+      },
+      "path" : "com/facebook/marianatrench/integrationtests/ThrowFlow.java"
+    },
+    {
+      "callable" : "Lcom/facebook/marianatrench/integrationtests/ThrowFlow;||throwWithMessage:(Ljava/lang/String;)V",
+      "callable_line" : 11,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(12,0)",
+              "ContraInject:ctrl",
+              "ContraProject:ctrl",
+              "Inject:<init>:(Ljava/lang/String;)V"
+            ],
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/ThrowFlow;||throwWithMessage:(Ljava/lang/String;)V}",
+            "right" : "G{Ljava/lang/RuntimeException;||<init>:(Ljava/lang/String;)V}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Call:(12,0)",
+              "ContraInject:p0",
+              "ContraProject:p0",
+              "Inject:<init>:(Ljava/lang/String;)V"
+            ],
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/ThrowFlow;||throwWithMessage:(Ljava/lang/String;)V}",
+            "right" : "G{Ljava/lang/RuntimeException;||<init>:(Ljava/lang/String;)V}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Inject:ctrl",
+              "Project:<init>:(Ljava/lang/String;)V",
+              "Project:ctrl",
+              "Return:(12,0)"
+            ],
+            "left" : "G{Ljava/lang/RuntimeException;||<init>:(Ljava/lang/String;)V}",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/ThrowFlow;||throwWithMessage:(Ljava/lang/String;)V}"
+          }
+        ],
+        "node" : "G{Lcom/facebook/marianatrench/integrationtests/ThrowFlow;||throwWithMessage:(Ljava/lang/String;)V}"
+      },
+      "path" : "com/facebook/marianatrench/integrationtests/ThrowFlow.java"
+    }
+  ]
 }

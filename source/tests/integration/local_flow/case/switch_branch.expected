@@ -3,5 +3,38 @@
   {
     "@generated" : true
   },
-  "results" : []
+  "results" :
+  [
+    {
+      "callable" : "LSwitch;||branch:(ILjava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+      "callable_line" : 0,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "labels" :
+            [
+              "ContraProject:p1",
+              "Inject:result"
+            ],
+            "left" : "G{LSwitch;||branch:(ILjava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;}",
+            "right" : "G{LSwitch;||branch:(ILjava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;}"
+          },
+          {
+            "labels" :
+            [
+              "ContraProject:p2",
+              "Inject:result"
+            ],
+            "left" : "G{LSwitch;||branch:(ILjava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;}",
+            "right" : "G{LSwitch;||branch:(ILjava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;}"
+          }
+        ],
+        "node" : "G{LSwitch;||branch:(ILjava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;}"
+      },
+      "path" : "Switch.java"
+    }
+  ]
 }

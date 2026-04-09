@@ -3,5 +3,49 @@
   {
     "@generated" : true
   },
-  "results" : []
+  "results" :
+  [
+    {
+      "callable" : "LMyObj;||<init>:(Ljava/lang/Object;Ljava/lang/Object;)V",
+      "callable_line" : 0,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "labels" :
+            [
+              "ContraProject:p0",
+              "Inject:this_out"
+            ],
+            "left" : "M{LMyObj;||<init>:(Ljava/lang/Object;Ljava/lang/Object;)V}",
+            "right" : "M{LMyObj;||<init>:(Ljava/lang/Object;Ljava/lang/Object;)V}"
+          },
+          {
+            "labels" :
+            [
+              "ContraProject:p1",
+              "Inject:a",
+              "Inject:p0"
+            ],
+            "left" : "M{LMyObj;||<init>:(Ljava/lang/Object;Ljava/lang/Object;)V}",
+            "right" : "M{LMyObj;||<init>:(Ljava/lang/Object;Ljava/lang/Object;)V}"
+          },
+          {
+            "labels" :
+            [
+              "ContraProject:p2",
+              "Inject:b",
+              "Inject:p0"
+            ],
+            "left" : "M{LMyObj;||<init>:(Ljava/lang/Object;Ljava/lang/Object;)V}",
+            "right" : "M{LMyObj;||<init>:(Ljava/lang/Object;Ljava/lang/Object;)V}"
+          }
+        ],
+        "node" : "M{LMyObj;||<init>:(Ljava/lang/Object;Ljava/lang/Object;)V}"
+      },
+      "path" : "MyObj.java"
+    }
+  ]
 }
