@@ -80,9 +80,16 @@ bool LocalFlowNode::is_root() const {
     case NodeKind::ThisOut:
     case NodeKind::Ctrl:
       return true;
-    default:
+    case NodeKind::Global:
+    case NodeKind::Meth:
+    case NodeKind::CVar:
+    case NodeKind::OVar:
+    case NodeKind::SelfRec:
+    case NodeKind::Constant:
+    case NodeKind::Temp:
       return false;
   }
+  mt_unreachable();
 }
 
 bool LocalFlowNode::is_global() const {
@@ -94,9 +101,15 @@ bool LocalFlowNode::is_global() const {
     case NodeKind::SelfRec:
     case NodeKind::Constant:
       return true;
-    default:
+    case NodeKind::Param:
+    case NodeKind::Result:
+    case NodeKind::This:
+    case NodeKind::ThisOut:
+    case NodeKind::Ctrl:
+    case NodeKind::Temp:
       return false;
   }
+  mt_unreachable();
 }
 
 bool LocalFlowNode::is_callee_node() const {

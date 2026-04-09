@@ -67,9 +67,15 @@ bool Label::is_structural() const {
     case LabelKind::ContraInject:
     case LabelKind::Interval:
       return true;
-    default:
+    case LabelKind::Call:
+    case LabelKind::Return:
+    case LabelKind::HoCall:
+    case LabelKind::HoReturn:
+    case LabelKind::Capture:
+    case LabelKind::HoCapture:
       return false;
   }
+  mt_unreachable();
 }
 
 bool Label::is_call() const {
@@ -81,9 +87,14 @@ bool Label::is_call() const {
     case LabelKind::Capture:
     case LabelKind::HoCapture:
       return true;
-    default:
+    case LabelKind::Project:
+    case LabelKind::Inject:
+    case LabelKind::ContraProject:
+    case LabelKind::ContraInject:
+    case LabelKind::Interval:
       return false;
   }
+  mt_unreachable();
 }
 
 bool Label::is_call_boundary() const {
@@ -141,8 +152,14 @@ std::string Label::to_string() const {
         case LabelKind::ContraInject:
           kind_str = "ContraInject";
           break;
-        default:
-          break;
+        case LabelKind::Call:
+        case LabelKind::Return:
+        case LabelKind::HoCall:
+        case LabelKind::HoReturn:
+        case LabelKind::Capture:
+        case LabelKind::HoCapture:
+        case LabelKind::Interval:
+          mt_unreachable();
       }
       return fmt::format("{}:{}", kind_str, field_str);
     }
@@ -172,8 +189,12 @@ std::string Label::to_string() const {
         case LabelKind::HoCapture:
           kind_str = "HoCapture";
           break;
-        default:
-          break;
+        case LabelKind::Project:
+        case LabelKind::Inject:
+        case LabelKind::ContraProject:
+        case LabelKind::ContraInject:
+        case LabelKind::Interval:
+          mt_unreachable();
       }
       std::string result = kind_str;
       if (preserves_context) {
@@ -197,7 +218,7 @@ Json::Value Label::to_json() const {
 }
 
 bool is_contra_path(const LabelPath& labels) {
-  int contra_count =
+  auto contra_count =
       std::count_if(labels.begin(), labels.end(), [](const Label& l) {
         return l.kind == LabelKind::ContraProject ||
             l.kind == LabelKind::ContraInject;

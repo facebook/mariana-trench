@@ -64,7 +64,7 @@ struct Label {
   bool preserves_context = false;
   std::string call_site;
 
-  Label(
+  explicit Label(
       LabelKind kind,
       std::string value = {},
       bool preserves_context = false,
