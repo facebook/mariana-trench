@@ -9,6 +9,7 @@
 
 #include <mariana-trench/AnalysisPass.h>
 #include <mariana-trench/Assert.h>
+#include <mariana-trench/LocalFlowAnalysisPass.h>
 #include <mariana-trench/TaintAnalysisPass.h>
 
 namespace marianatrench {
@@ -17,6 +18,9 @@ AnalysisPassKind analysis_pass_kind_from_string(const std::string& value) {
   if (value == "taint") {
     return AnalysisPassKind::Taint;
   }
+  if (value == "local_flow") {
+    return AnalysisPassKind::LocalFlow;
+  }
   throw std::invalid_argument("Unknown analysis pass: " + value);
 }
 
@@ -24,6 +28,8 @@ std::unique_ptr<AnalysisPass> AnalysisPass::create(AnalysisPassKind kind) {
   switch (kind) {
     case AnalysisPassKind::Taint:
       return std::make_unique<TaintAnalysisPass>();
+    case AnalysisPassKind::LocalFlow:
+      return std::make_unique<LocalFlowAnalysisPass>();
   }
   mt_unreachable();
 }

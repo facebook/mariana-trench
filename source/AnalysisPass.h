@@ -17,10 +17,11 @@ class Context;
 
 enum class AnalysisPassKind {
   Taint,
+  LocalFlow,
 };
 
 // Parse string to enum. Throws for unknown values.
-// Valid: "taint"
+// Valid: "taint", "local_flow"
 AnalysisPassKind analysis_pass_kind_from_string(const std::string& value);
 
 class AnalysisPass {

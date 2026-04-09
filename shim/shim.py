@@ -630,7 +630,7 @@ def _add_analysis_arguments(parser: argparse.ArgumentParser) -> None:
         type=str,
         nargs="+",
         default=["taint"],
-        help="Analysis passes to run. Valid values: taint. Default: taint.",
+        help="Analysis passes to run. Valid values: taint, local_flow. Default: taint.",
     )
 
 

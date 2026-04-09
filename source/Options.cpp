@@ -369,6 +369,11 @@ Options::Options(const Json::Value& json) {
   propagate_across_arguments_ = JsonValidation::optional_boolean(
       json, "propagate-across-arguments", false);
 
+  if (json.isMember("max-local-flow-structure-depth")) {
+    max_local_flow_structure_depth_ =
+        JsonValidation::integer(json, "max-local-flow-structure-depth");
+  }
+
   if (json.isMember("heuristics")) {
     heuristics_path_ = std::filesystem::path(
         check_path_exists(JsonValidation::string(json, "heuristics")));
@@ -668,6 +673,14 @@ const std::vector<AnalysisPassKind>& Options::analysis_passes() const {
 
 const std::filesystem::path& Options::output_directory() const {
   return output_directory_;
+}
+
+const std::filesystem::path Options::local_flow_output_path() const {
+  return output_directory_;
+}
+
+int Options::max_local_flow_structure_depth() const {
+  return max_local_flow_structure_depth_;
 }
 
 bool Options::propagate_across_arguments() const {

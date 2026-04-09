@@ -97,6 +97,9 @@ class Options final {
   const std::filesystem::path file_coverage_output_path() const;
   const std::filesystem::path rule_coverage_output_path() const;
   const std::filesystem::path verification_output_path() const;
+  const std::filesystem::path local_flow_output_path() const;
+
+  int max_local_flow_structure_depth() const;
 
   const std::optional<std::filesystem::path> sharded_models_directory() const;
   const std::optional<std::filesystem::path> overrides_input_path() const;
@@ -214,6 +217,8 @@ class Options final {
   AnalysisMode analysis_mode_;
   std::vector<AnalysisPassKind> analysis_passes_;
   bool propagate_across_arguments_;
+
+  int max_local_flow_structure_depth_ = 5;
 
   std::optional<std::filesystem::path> heuristics_path_;
   std::optional<std::string> graphql_metadata_path_;
