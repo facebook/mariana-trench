@@ -145,7 +145,6 @@ class Options final {
   const std::optional<std::string>& graphql_metadata_path() const;
 
   const std::vector<AnalysisPassKind>& analysis_passes() const;
-  const std::filesystem::path& output_directory() const;
 
   // Listing command flags
   bool list_all_rules() const;

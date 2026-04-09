@@ -671,10 +671,6 @@ const std::vector<AnalysisPassKind>& Options::analysis_passes() const {
   return analysis_passes_;
 }
 
-const std::filesystem::path& Options::output_directory() const {
-  return output_directory_;
-}
-
 const std::filesystem::path Options::local_flow_output_path() const {
   return output_directory_;
 }

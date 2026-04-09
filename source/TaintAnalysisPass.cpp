@@ -368,7 +368,7 @@ void TaintAnalysisPass::run(Context& context) {
   registry_ = std::make_unique<Registry>(
       run_analysis(context, std::move(method_mappings)));
 
-  // Only write output when an output directory is configured (not in tests).
+  // Only write output when an output directory is configured.
   if (!context.options->models_output_path().empty()) {
     write_output(*registry_, context);
   }
