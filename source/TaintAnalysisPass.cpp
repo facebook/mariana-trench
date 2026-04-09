@@ -41,7 +41,7 @@ namespace marianatrench {
 
 namespace {
 
-void initialize_context(Context& context) {
+MethodMappings initialize_context(Context& context) {
   Timer control_flow_graphs_timer;
   LOG(1, "Building control flow graphs...");
   context.control_flow_graphs =
@@ -178,14 +178,13 @@ void initialize_context(Context& context) {
       "Built call graph in {:.2f}s. Memory used, RSS: {:.2f}GB",
       call_graph_timer.duration_in_seconds(),
       resident_set_size_in_gb());
+
+  return method_mappings;
 }
 
-Registry run_analysis(Context& context) {
+Registry run_analysis(Context& context, MethodMappings&& method_mappings) {
   Timer registry_timer;
   LOG(1, "Initializing models...");
-  // Model generation takes place within Registry::load() unless the analysis
-  // mode does not require it.
-  MethodMappings method_mappings{*context.methods};
   auto registry = Registry::load(
       context,
       *context.options,
@@ -365,8 +364,9 @@ void write_output(const Registry& registry, const Context& context) {
 } // namespace
 
 void TaintAnalysisPass::run(Context& context) {
-  initialize_context(context);
-  registry_ = std::make_unique<Registry>(run_analysis(context));
+  auto method_mappings = initialize_context(context);
+  registry_ = std::make_unique<Registry>(
+      run_analysis(context, std::move(method_mappings)));
 
   // Only write output when an output directory is configured (not in tests).
   if (!context.options->models_output_path().empty()) {
