@@ -625,6 +625,13 @@ def _add_analysis_arguments(parser: argparse.ArgumentParser) -> None:
             "only."
         ),
     )
+    analysis_arguments.add_argument(
+        "--analysis-passes",
+        type=str,
+        nargs="+",
+        default=["taint"],
+        help="Analysis passes to run. Valid values: taint. Default: taint.",
+    )
 
 
 def _add_metadata_arguments(parser: argparse.ArgumentParser) -> None:
@@ -868,6 +875,7 @@ def _get_command_options_json(
         arguments.model_generator_configuration_paths
     )
     options["analysis-mode"] = arguments.analysis_mode
+    options["analysis-passes"] = arguments.analysis_passes
 
     if arguments.system_jar_configuration_path:
         options["system-jar-paths"] = arguments.system_jar_configuration_path

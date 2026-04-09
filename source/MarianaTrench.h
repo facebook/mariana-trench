@@ -9,12 +9,9 @@
 
 #include <boost/program_options.hpp>
 
-#include <gtest/gtest_prod.h>
-
 #include <Tool.h>
 
 #include <mariana-trench/Context.h>
-#include <mariana-trench/Registry.h>
 
 namespace marianatrench {
 
@@ -24,9 +21,9 @@ class MarianaTrench : public Tool {
 
   void run(const boost::program_options::variables_map& variables) override;
 
- private:
-  FRIEND_TEST(IntegrationTest, CompareFlows);
-  Registry analyze(Context& context);
+  // Build shared infrastructure needed by all analysis passes:
+  // Methods, Fields, Positions.
+  static void initialize_context(Context& context);
 };
 
 } // namespace marianatrench

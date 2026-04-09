@@ -23,6 +23,7 @@
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/MarianaTrench.h>
+#include <mariana-trench/TaintAnalysisPass.h>
 #include <mariana-trench/tests/Test.h>
 
 using namespace marianatrench;
@@ -184,16 +185,19 @@ TEST_P(IntegrationTest, CompareFlows) {
       DexLocation::make_location("dex", dex_path.c_str())));
   context.stores.push_back(root_store);
 
-  // Run the analysis.
-  auto tool = MarianaTrench();
-  auto registry = tool.analyze(context);
+  // Build shared infrastructure.
+  MarianaTrench::initialize_context(context);
+
+  // Run taint analysis.
+  TaintAnalysisPass taint_pass;
+  taint_pass.run(context);
 
   // Compare the results.
   compare_expected(
       directory,
       "expected_output.json",
       expected_output,
-      registry.dump_models());
+      taint_pass.registry().dump_models());
   compare_expected(
       directory,
       "expected_class_hierarchies.json",

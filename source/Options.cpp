@@ -148,6 +148,7 @@ Options::Options(
       enable_cross_component_analysis_(enable_cross_component_analysis),
       export_origins_mode_(export_origins_mode),
       analysis_mode_(analysis_mode),
+      analysis_passes_({AnalysisPassKind::Taint}),
       propagate_across_arguments_(propagate_across_arguments),
       list_all_rules_(false),
       list_all_model_generators_(false),
@@ -353,6 +354,17 @@ Options::Options(const Json::Value& json) {
 
   analysis_mode_ = analysis_mode_from_string(
       JsonValidation::string_or_default(json, "analysis-mode", "normal"));
+
+  // Parse analysis passes. Default to just taint analysis.
+  if (json.isMember("analysis-passes")) {
+    for (const auto& value :
+         JsonValidation::nonempty_array(json, "analysis-passes")) {
+      analysis_passes_.push_back(
+          analysis_pass_kind_from_string(JsonValidation::string(value)));
+    }
+  } else {
+    analysis_passes_ = {AnalysisPassKind::Taint};
+  }
 
   propagate_across_arguments_ = JsonValidation::optional_boolean(
       json, "propagate-across-arguments", false);
@@ -648,6 +660,14 @@ ExportOriginsMode Options::export_origins_mode() const {
 
 AnalysisMode Options::analysis_mode() const {
   return analysis_mode_;
+}
+
+const std::vector<AnalysisPassKind>& Options::analysis_passes() const {
+  return analysis_passes_;
+}
+
+const std::filesystem::path& Options::output_directory() const {
+  return output_directory_;
 }
 
 bool Options::propagate_across_arguments() const {

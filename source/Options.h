@@ -16,6 +16,7 @@
 #include <json/json.h>
 
 #include <mariana-trench/AnalysisMode.h>
+#include <mariana-trench/AnalysisPass.h>
 #include <mariana-trench/ExportOriginsMode.h>
 #include <mariana-trench/Heuristics.h>
 #include <mariana-trench/IncludeMacros.h>
@@ -140,6 +141,9 @@ class Options final {
   const std::optional<std::filesystem::path> heuristics_path() const;
   const std::optional<std::string>& graphql_metadata_path() const;
 
+  const std::vector<AnalysisPassKind>& analysis_passes() const;
+  const std::filesystem::path& output_directory() const;
+
   // Listing command flags
   bool list_all_rules() const;
   bool list_all_model_generators() const;
@@ -208,6 +212,7 @@ class Options final {
   bool enable_cross_component_analysis_;
   ExportOriginsMode export_origins_mode_;
   AnalysisMode analysis_mode_;
+  std::vector<AnalysisPassKind> analysis_passes_;
   bool propagate_across_arguments_;
 
   std::optional<std::filesystem::path> heuristics_path_;
