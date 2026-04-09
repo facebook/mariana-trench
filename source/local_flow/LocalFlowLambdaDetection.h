@@ -9,7 +9,7 @@
 
 #include <string_view>
 
-#include <DexClass.h>
+class DexMethodRef;
 
 namespace marianatrench {
 namespace local_flow {

@@ -9,6 +9,8 @@
 
 #include <string>
 
+#include <DexClass.h>
+
 namespace marianatrench {
 namespace local_flow {
 
@@ -27,13 +29,15 @@ bool LambdaDetection::is_kotlin_lambda_class(std::string_view type_name) {
     return false;
   }
 
-  // Check if suffix is a number (0-22) or "N" followed by ";"
+  // Check if suffix is "N" (varargs) or a number followed by ";"
   auto suffix = type_name.substr(suffix_start);
   if (suffix.starts_with("N;") || suffix.starts_with("N$")) {
     return true;
   }
 
-  // Check for numeric suffix (0-22)
+  // Check for numeric suffix 0-22 (Kotlin ABI supports Function0 through
+  // Function22 for lambdas with up to 22 parameters; beyond that uses
+  // FunctionN)
   std::string num_str;
   for (auto ch : suffix) {
     if (ch >= '0' && ch <= '9') {
@@ -52,7 +56,7 @@ bool LambdaDetection::is_kotlin_lambda_class(std::string_view type_name) {
 }
 
 bool LambdaDetection::is_lambda_invoke(const DexMethodRef* method_ref) {
-  auto method_name = std::string(method_ref->get_name()->str());
+  auto method_name = method_ref->get_name()->str();
   if (method_name != "invoke") {
     return false;
   }
@@ -62,7 +66,7 @@ bool LambdaDetection::is_lambda_invoke(const DexMethodRef* method_ref) {
     return false;
   }
 
-  auto type_name = std::string(class_type->str());
+  auto type_name = class_type->str();
   return is_kotlin_lambda_class(type_name);
 }
 
