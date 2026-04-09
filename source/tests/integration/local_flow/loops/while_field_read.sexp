@@ -1,0 +1,15 @@
+(method (public static) "LLoop;.whileFieldRead:(LNode;)Ljava/lang/Object;"
+ (
+  (load-param-object v0)
+  (move-object v1 v0)
+  (:loop_head)
+  (if-eqz v1 :done)
+  (iget-object v1 "LNode;.next:LNode;")
+  (move-result-pseudo-object v1)
+  (goto :loop_head)
+  (:done)
+  (iget-object v1 "LNode;.value:Ljava/lang/Object;")
+  (move-result-pseudo-object v2)
+  (return-object v2)
+ )
+)

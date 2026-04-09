@@ -1,0 +1,15 @@
+(method (public static) "LLoop;.forEachArray:([Ljava/lang/Object;)Ljava/lang/Object;"
+ (
+  (load-param-object v0)
+  (const v1 0)
+  (const v3 0)
+  (:loop_head)
+  (if-eqz v1 :done)
+  (aget-object v0 v1)
+  (move-result-pseudo-object v2)
+  (move-object v3 v2)
+  (goto :loop_head)
+  (:done)
+  (return-object v3)
+ )
+)
