@@ -17,8 +17,7 @@ namespace marianatrench {
 AnalysisPassKind analysis_pass_kind_from_string(const std::string& value) {
   if (value == "taint") {
     return AnalysisPassKind::Taint;
-  }
-  if (value == "local_flow") {
+  } else if (value == "local_flow") {
     return AnalysisPassKind::LocalFlow;
   }
   throw std::invalid_argument("Unknown analysis pass: " + value);

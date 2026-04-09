@@ -9,7 +9,8 @@
 
 #include <memory>
 #include <string>
-#include <string_view>
+
+#include <mariana-trench/IncludeMacros.h>
 
 namespace marianatrench {
 
@@ -26,7 +27,11 @@ AnalysisPassKind analysis_pass_kind_from_string(const std::string& value);
 
 class AnalysisPass {
  public:
-  virtual ~AnalysisPass() = default;
+  AnalysisPass() = default;
+
+  MOVE_CONSTRUCTOR_ONLY_VIRTUAL_DESTRUCTOR(AnalysisPass)
+
+ public:
   virtual std::string_view name() const = 0;
   virtual void run(Context& context) = 0;
 
