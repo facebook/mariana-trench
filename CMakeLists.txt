@@ -110,6 +110,7 @@ file(GLOB library_sources
      "source/*.def"
      "source/*.cpp"
      "source/constraints/*.cpp"
+     "source/local_flow/*.cpp"
      "source/model-generator/*.cpp"
      "source/shim-generator/*.cpp"
      "source/type-analysis/*.cpp")
