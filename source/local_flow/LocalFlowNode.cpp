@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <mariana-trench/Assert.h>
 #include <mariana-trench/local_flow/LocalFlowNode.h>
 
 #include <fmt/format.h>
@@ -222,7 +223,8 @@ std::string LocalFlowNode::to_string() const {
       return fmt::format("t{}", id);
     }
   }
-  return "Unknown";
+
+  mt_unreachable();
 }
 
 Json::Value LocalFlowNode::to_json() const {
