@@ -14,7 +14,7 @@
 #include <IRAssembler.h>
 #include <RedexContext.h>
 #include <Show.h>
-#include <boost/regex.hpp>
+#include <re2/re2.h>
 
 #include <mariana-trench/ArtificialMethods.h>
 #include <mariana-trench/ClassHierarchies.h>
@@ -337,8 +337,8 @@ TEST_P(IntegrationTest, ReturnsExpectedResults) {
     filesystem::load_string_file(expected_path, expected_output);
   }
   auto actual_output = JsonWriter::to_styled_string(value);
-  actual_output =
-      boost::regex_replace(actual_output, boost::regex("\\s+\n"), "\n");
+  static const re2::RE2 trailing_whitespace_re("\\s+\n");
+  RE2::GlobalReplace(&actual_output, trailing_whitespace_re, "\n");
   actual_output += "\n";
 
   if (actual_output != expected_output) {
