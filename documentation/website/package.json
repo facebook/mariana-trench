@@ -63,7 +63,7 @@
     "diff": "^5.2.2",
     "dom-iterator": "^1.0.2",
     "http-proxy-middleware": "^2.0.9",
-    "lodash": "^4.17.23",
+    "lodash": "^4.18.1",
     "nanoid": "^3.3.11",
     "prismjs": "^1.30.0",
     "serialize-javascript": "^7.0.3",
