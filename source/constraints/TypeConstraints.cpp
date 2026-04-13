@@ -419,7 +419,6 @@ std::unique_ptr<TypeConstraint> TypeConstraint::from_json(
         constraint,
         /* field */ "constraint",
         /* expected */ "valid constraint type");
-    return nullptr;
   }
 }
 
