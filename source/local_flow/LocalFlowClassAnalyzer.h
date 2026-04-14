@@ -21,15 +21,22 @@ namespace local_flow {
 /**
  * Generates class-level dispatch edges for local flow analysis.
  *
- * For each class with concrete instance methods, generates:
- * 1. Meth -> CVar edges (one per declared method)
- * 2. CVar -> OVar edge (exact dispatch subsumes override dispatch)
- * 3. OVar -> OVar edges with Interval labels for supertypes/interfaces
+ * Uses a two-phase parent-centric generation model:
+ *
+ * Phase 1 (parallel): For each class, generates self edges stored in
+ *   the class's own entry:
+ *   1. Meth -> CVar edges (one per declared method)
+ *   2. CVar -> OVar edge (exact dispatch subsumes override dispatch)
+ *   Override hierarchy edges (OVar -> OVar) are collected separately.
+ *
+ * Phase 2 (sequential): Redistributes override hierarchy edges into
+ *   the parent's entry. Each O{Child} -> O{Parent} edge is stored in
+ *   Parent's Class entry, enabling the LFE to load O{Parent} and
+ *   discover all subclass edges for virtual dispatch traversal.
  *
  * When relevant_types is provided (non-null), only classes whose type is
- * in the set are processed. This is demand-driven: only classes whose
- * methods are actually referenced during the method-level analysis get
- * dispatch edges.
+ * in the set are processed. Parent types not in the set may still get
+ * stub entries if they receive override edges from processed children.
  */
 class LocalFlowClassAnalyzer {
  public:

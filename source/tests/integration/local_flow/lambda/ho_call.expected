@@ -23,7 +23,7 @@
               "Inject:invoke:(Ljava/lang/Object;)Ljava/lang/Object;"
             ],
             "left" : "G{LLambda;||applyFunction:(Lkotlin/jvm/functions/Function1;Ljava/lang/Object;)Ljava/lang/Object;}",
-            "right" : "C{Lkotlin/jvm/functions/Function1;}"
+            "right" : "O{Lkotlin/jvm/functions/Function1;}"
           },
           {
             "guard" : "Bwd",
@@ -35,7 +35,7 @@
               "Inject:invoke:(Ljava/lang/Object;)Ljava/lang/Object;"
             ],
             "left" : "G{LLambda;||applyFunction:(Lkotlin/jvm/functions/Function1;Ljava/lang/Object;)Ljava/lang/Object;}",
-            "right" : "C{Lkotlin/jvm/functions/Function1;}"
+            "right" : "O{Lkotlin/jvm/functions/Function1;}"
           },
           {
             "guard" : "Bwd",
@@ -47,7 +47,7 @@
               "Inject:invoke:(Ljava/lang/Object;)Ljava/lang/Object;"
             ],
             "left" : "G{LLambda;||applyFunction:(Lkotlin/jvm/functions/Function1;Ljava/lang/Object;)Ljava/lang/Object;}",
-            "right" : "C{Lkotlin/jvm/functions/Function1;}"
+            "right" : "O{Lkotlin/jvm/functions/Function1;}"
           },
           {
             "guard" : "Bwd",
@@ -58,7 +58,7 @@
               "Project:ctrl",
               "Project:invoke:(Ljava/lang/Object;)Ljava/lang/Object;"
             ],
-            "left" : "C{Lkotlin/jvm/functions/Function1;}",
+            "left" : "O{Lkotlin/jvm/functions/Function1;}",
             "right" : "G{LLambda;||applyFunction:(Lkotlin/jvm/functions/Function1;Ljava/lang/Object;)Ljava/lang/Object;}"
           },
           {
@@ -70,7 +70,7 @@
               "Project:invoke:(Ljava/lang/Object;)Ljava/lang/Object;",
               "Project:result"
             ],
-            "left" : "C{Lkotlin/jvm/functions/Function1;}",
+            "left" : "O{Lkotlin/jvm/functions/Function1;}",
             "right" : "G{LLambda;||applyFunction:(Lkotlin/jvm/functions/Function1;Ljava/lang/Object;)Ljava/lang/Object;}"
           }
         ],

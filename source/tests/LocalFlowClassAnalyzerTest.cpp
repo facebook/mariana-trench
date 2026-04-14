@@ -150,9 +150,18 @@ TEST_F(LocalFlowClassAnalyzerTest, ClassWithSuperclassHasOVarEdge) {
   const auto* derived_result = find_class_result(results, "LDerived;");
   ASSERT_NE(derived_result, nullptr);
 
-  // OVar(LDerived;) -> OVar(LBase;) with Interval label
-  EXPECT_TRUE(
+  // Derived should have self edges but no O->O override edge (moved to parent)
+  EXPECT_TRUE(has_dispatch_edge(*derived_result, "M{", "C{"));
+  EXPECT_TRUE(has_dispatch_edge(*derived_result, "C{", "O{"));
+  EXPECT_FALSE(
       has_dispatch_edge_with_label(*derived_result, "O{", "O{", "Interval:"));
+
+  // OVar(LDerived;) -> OVar(LBase;) with Interval label is in Base's entry
+  // (parent-centric model: override edges stored in the parent's Class entry)
+  const auto* base_result = find_class_result(results, "LBase;");
+  ASSERT_NE(base_result, nullptr);
+  EXPECT_TRUE(
+      has_dispatch_edge_with_label(*base_result, "O{", "O{", "Interval:"));
 }
 
 TEST_F(LocalFlowClassAnalyzerTest, InterfaceClassIsSkipped) {

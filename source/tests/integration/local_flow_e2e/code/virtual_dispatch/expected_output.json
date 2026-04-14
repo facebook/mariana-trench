@@ -76,7 +76,7 @@
               "Inject:apply:(Ljava/lang/Object;)Ljava/lang/Object;"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/ConcreteProcessor;||callInterface:(Lcom/facebook/marianatrench/integrationtests/Processor;Ljava/lang/Object;)Ljava/lang/Object;}",
-            "right" : "C{Lcom/facebook/marianatrench/integrationtests/Processor;}"
+            "right" : "O{Lcom/facebook/marianatrench/integrationtests/Processor;}"
           },
           {
             "guard" : "Bwd",
@@ -88,7 +88,7 @@
               "Inject:apply:(Ljava/lang/Object;)Ljava/lang/Object;"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/ConcreteProcessor;||callInterface:(Lcom/facebook/marianatrench/integrationtests/Processor;Ljava/lang/Object;)Ljava/lang/Object;}",
-            "right" : "C{Lcom/facebook/marianatrench/integrationtests/Processor;}"
+            "right" : "O{Lcom/facebook/marianatrench/integrationtests/Processor;}"
           },
           {
             "guard" : "Bwd",
@@ -100,7 +100,7 @@
               "Inject:apply:(Ljava/lang/Object;)Ljava/lang/Object;"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/ConcreteProcessor;||callInterface:(Lcom/facebook/marianatrench/integrationtests/Processor;Ljava/lang/Object;)Ljava/lang/Object;}",
-            "right" : "C{Lcom/facebook/marianatrench/integrationtests/Processor;}"
+            "right" : "O{Lcom/facebook/marianatrench/integrationtests/Processor;}"
           },
           {
             "guard" : "Bwd",
@@ -111,7 +111,7 @@
               "Project:ctrl",
               "Return:(38,0)"
             ],
-            "left" : "C{Lcom/facebook/marianatrench/integrationtests/Processor;}",
+            "left" : "O{Lcom/facebook/marianatrench/integrationtests/Processor;}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/ConcreteProcessor;||callInterface:(Lcom/facebook/marianatrench/integrationtests/Processor;Ljava/lang/Object;)Ljava/lang/Object;}"
           },
           {
@@ -123,7 +123,7 @@
               "Project:result",
               "Return:(38,0)"
             ],
-            "left" : "C{Lcom/facebook/marianatrench/integrationtests/Processor;}",
+            "left" : "O{Lcom/facebook/marianatrench/integrationtests/Processor;}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/ConcreteProcessor;||callInterface:(Lcom/facebook/marianatrench/integrationtests/Processor;Ljava/lang/Object;)Ljava/lang/Object;}"
           }
         ],
@@ -263,7 +263,7 @@
               "Inject:process:(Ljava/lang/Object;)Ljava/lang/Object;"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/VirtualDispatch;||callVirtual:(Lcom/facebook/marianatrench/integrationtests/VirtualDispatch;Ljava/lang/Object;)Ljava/lang/Object;}",
-            "right" : "C{Lcom/facebook/marianatrench/integrationtests/VirtualDispatch;}"
+            "right" : "O{Lcom/facebook/marianatrench/integrationtests/VirtualDispatch;}"
           },
           {
             "guard" : "Bwd",
@@ -275,7 +275,7 @@
               "Inject:process:(Ljava/lang/Object;)Ljava/lang/Object;"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/VirtualDispatch;||callVirtual:(Lcom/facebook/marianatrench/integrationtests/VirtualDispatch;Ljava/lang/Object;)Ljava/lang/Object;}",
-            "right" : "C{Lcom/facebook/marianatrench/integrationtests/VirtualDispatch;}"
+            "right" : "O{Lcom/facebook/marianatrench/integrationtests/VirtualDispatch;}"
           },
           {
             "guard" : "Bwd",
@@ -287,7 +287,7 @@
               "Inject:process:(Ljava/lang/Object;)Ljava/lang/Object;"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/VirtualDispatch;||callVirtual:(Lcom/facebook/marianatrench/integrationtests/VirtualDispatch;Ljava/lang/Object;)Ljava/lang/Object;}",
-            "right" : "C{Lcom/facebook/marianatrench/integrationtests/VirtualDispatch;}"
+            "right" : "O{Lcom/facebook/marianatrench/integrationtests/VirtualDispatch;}"
           },
           {
             "guard" : "Bwd",
@@ -298,7 +298,7 @@
               "Project:process:(Ljava/lang/Object;)Ljava/lang/Object;",
               "Return:(16,0)"
             ],
-            "left" : "C{Lcom/facebook/marianatrench/integrationtests/VirtualDispatch;}",
+            "left" : "O{Lcom/facebook/marianatrench/integrationtests/VirtualDispatch;}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/VirtualDispatch;||callVirtual:(Lcom/facebook/marianatrench/integrationtests/VirtualDispatch;Ljava/lang/Object;)Ljava/lang/Object;}"
           },
           {
@@ -310,7 +310,7 @@
               "Project:result",
               "Return:(16,0)"
             ],
-            "left" : "C{Lcom/facebook/marianatrench/integrationtests/VirtualDispatch;}",
+            "left" : "O{Lcom/facebook/marianatrench/integrationtests/VirtualDispatch;}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/VirtualDispatch;||callVirtual:(Lcom/facebook/marianatrench/integrationtests/VirtualDispatch;Ljava/lang/Object;)Ljava/lang/Object;}"
           }
         ],
@@ -364,14 +364,6 @@
           {
             "labels" :
             [
-              "Inject:Interval:[0,1]"
-            ],
-            "left" : "O{Lcom/facebook/marianatrench/integrationtests/ConcreteProcessor;}",
-            "right" : "O{Lcom/facebook/marianatrench/integrationtests/Processor;}"
-          },
-          {
-            "labels" :
-            [
               "Inject:apply:(Ljava/lang/Object;)Ljava/lang/Object;"
             ],
             "left" : "M{Lcom/facebook/marianatrench/integrationtests/ConcreteProcessor;||apply:(Ljava/lang/Object;)Ljava/lang/Object;}",
@@ -398,14 +390,6 @@
           {
             "labels" :
             [
-              "Inject:Interval:[3,4]"
-            ],
-            "left" : "O{Lcom/facebook/marianatrench/integrationtests/DerivedDispatch;}",
-            "right" : "O{Lcom/facebook/marianatrench/integrationtests/VirtualDispatch;}"
-          },
-          {
-            "labels" :
-            [
               "Inject:process:(Ljava/lang/Object;)Ljava/lang/Object;"
             ],
             "left" : "M{Lcom/facebook/marianatrench/integrationtests/DerivedDispatch;||process:(Ljava/lang/Object;)Ljava/lang/Object;}",
@@ -414,6 +398,28 @@
         ],
         "interval" : "[3,4]",
         "node" : "C{Lcom/facebook/marianatrench/integrationtests/DerivedDispatch;}"
+      },
+      "path" : "VirtualDispatch.java"
+    },
+    {
+      "callable" : "Class{Lcom/facebook/marianatrench/integrationtests/Processor;}",
+      "callable_line" : 0,
+      "code" : 20001,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "labels" :
+            [
+              "Inject:Interval:[0,1]"
+            ],
+            "left" : "O{Lcom/facebook/marianatrench/integrationtests/ConcreteProcessor;}",
+            "right" : "O{Lcom/facebook/marianatrench/integrationtests/Processor;}"
+          }
+        ],
+        "interval" : "[-2147483648,2147483647]",
+        "node" : "C{Lcom/facebook/marianatrench/integrationtests/Processor;}"
       },
       "path" : "VirtualDispatch.java"
     },
@@ -427,6 +433,14 @@
         [
           {
             "left" : "C{Lcom/facebook/marianatrench/integrationtests/VirtualDispatch;}",
+            "right" : "O{Lcom/facebook/marianatrench/integrationtests/VirtualDispatch;}"
+          },
+          {
+            "labels" :
+            [
+              "Inject:Interval:[3,4]"
+            ],
+            "left" : "O{Lcom/facebook/marianatrench/integrationtests/DerivedDispatch;}",
             "right" : "O{Lcom/facebook/marianatrench/integrationtests/VirtualDispatch;}"
           },
           {

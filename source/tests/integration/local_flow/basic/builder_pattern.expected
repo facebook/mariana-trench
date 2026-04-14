@@ -65,7 +65,7 @@
               "Return:(0,0)"
             ],
             "left" : "G{LBuilder;||<init>:()V}",
-            "right" : "C{LBuilder;}"
+            "right" : "O{LBuilder;}"
           },
           {
             "guard" : "Bwd",
@@ -89,7 +89,7 @@
               "Inject:setName:(Ljava/lang/String;)LBuilder;"
             ],
             "left" : "G{LBuilder;||test:(Ljava/lang/String;Ljava/lang/String;)LBuilder;}",
-            "right" : "C{LBuilder;}"
+            "right" : "O{LBuilder;}"
           },
           {
             "guard" : "Bwd",
@@ -101,7 +101,7 @@
               "Inject:setName:(Ljava/lang/String;)LBuilder;"
             ],
             "left" : "G{LBuilder;||test:(Ljava/lang/String;Ljava/lang/String;)LBuilder;}",
-            "right" : "C{LBuilder;}"
+            "right" : "O{LBuilder;}"
           },
           {
             "guard" : "Bwd",
@@ -124,7 +124,7 @@
               "Project:setName:(Ljava/lang/String;)LBuilder;",
               "Return:(0,1)"
             ],
-            "left" : "C{LBuilder;}",
+            "left" : "O{LBuilder;}",
             "right" : "G{LBuilder;||test:(Ljava/lang/String;Ljava/lang/String;)LBuilder;}"
           },
           {
@@ -136,7 +136,7 @@
               "Project:setName:(Ljava/lang/String;)LBuilder;",
               "Return:(0,1)"
             ],
-            "left" : "C{LBuilder;}",
+            "left" : "O{LBuilder;}",
             "right" : "G{LBuilder;||test:(Ljava/lang/String;Ljava/lang/String;)LBuilder;}"
           }
         ],

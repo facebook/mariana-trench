@@ -54,7 +54,7 @@
               "Inject:doWork:(Ljava/lang/Object;)Ljava/lang/Object;"
             ],
             "left" : "G{LDispatch;||call_virtual:(LA;Ljava/lang/Object;)Ljava/lang/Object;}",
-            "right" : "C{LA;}"
+            "right" : "O{LA;}"
           },
           {
             "guard" : "Bwd",
@@ -66,7 +66,7 @@
               "Inject:doWork:(Ljava/lang/Object;)Ljava/lang/Object;"
             ],
             "left" : "G{LDispatch;||call_virtual:(LA;Ljava/lang/Object;)Ljava/lang/Object;}",
-            "right" : "C{LA;}"
+            "right" : "O{LA;}"
           },
           {
             "guard" : "Bwd",
@@ -78,7 +78,7 @@
               "Inject:doWork:(Ljava/lang/Object;)Ljava/lang/Object;"
             ],
             "left" : "G{LDispatch;||call_virtual:(LA;Ljava/lang/Object;)Ljava/lang/Object;}",
-            "right" : "C{LA;}"
+            "right" : "O{LA;}"
           },
           {
             "guard" : "Bwd",
@@ -89,7 +89,7 @@
               "Project:doWork:(Ljava/lang/Object;)Ljava/lang/Object;",
               "Return:(0,0)"
             ],
-            "left" : "C{LA;}",
+            "left" : "O{LA;}",
             "right" : "G{LDispatch;||call_virtual:(LA;Ljava/lang/Object;)Ljava/lang/Object;}"
           },
           {
@@ -101,7 +101,7 @@
               "Project:result",
               "Return:(0,0)"
             ],
-            "left" : "C{LA;}",
+            "left" : "O{LA;}",
             "right" : "G{LDispatch;||call_virtual:(LA;Ljava/lang/Object;)Ljava/lang/Object;}"
           }
         ],

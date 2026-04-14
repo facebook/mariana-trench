@@ -68,13 +68,14 @@ Json::Value LocalFlowMethodResult::to_json() const {
       if (node.is_root()) {
         return callable_node;
       }
-      // Route Meth callee references through C{} dispatch table. The method is
-      // selected via the Inject:vtable_name label already in the self-loop
-      // path. The dispatch table's Project:vtable_name edge cancels the Inject,
-      // enabling multi-hop traversal.
+      // Route Meth callee references through O{} override dispatch. The
+      // method is selected via the Inject:vtable_name label already in the
+      // self-loop path. Routing through O{} enters the override hierarchy,
+      // enabling traversal from a base type to all overriding subclass
+      // implementations.
       if (node.kind() == NodeKind::Meth) {
         auto class_name = LocalFlowNode::extract_class_name(node);
-        return fmt::format("C{{{}}}", class_name);
+        return fmt::format("O{{{}}}", class_name);
       }
       return node.to_string();
     };
