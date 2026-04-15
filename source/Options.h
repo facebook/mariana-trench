@@ -135,6 +135,7 @@ class Options final {
 
   const std::optional<std::string>& job_id() const;
   const std::optional<std::string>& metarun_id() const;
+  const std::optional<std::string>& commit_hash() const;
 
   bool enable_cross_component_analysis() const;
   ExportOriginsMode export_origins_mode() const;
@@ -210,6 +211,7 @@ class Options final {
 
   std::optional<std::string> job_id_;
   std::optional<std::string> metarun_id_;
+  std::optional<std::string> commit_hash_;
 
   bool enable_cross_component_analysis_;
   ExportOriginsMode export_origins_mode_;

@@ -431,6 +431,11 @@ void Registry::dump_metadata(const std::filesystem::path& path) const {
   value["tool"] = Json::Value("mariana_trench");
   value["version"] = Json::Value("0.2");
 
+  const auto& commit_hash = context_.options->commit_hash();
+  if (commit_hash.has_value()) {
+    value["commit"] = Json::Value(commit_hash.value());
+  }
+
   JsonWriter::write_json_file(path, value);
 }
 

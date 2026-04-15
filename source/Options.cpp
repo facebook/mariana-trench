@@ -343,6 +343,7 @@ Options::Options(const Json::Value& json) {
 
   job_id_ = JsonValidation::optional_string(json, "job-id");
   metarun_id_ = JsonValidation::optional_string(json, "metarun-id");
+  commit_hash_ = JsonValidation::optional_string(json, "commit-hash");
 
   enable_cross_component_analysis_ = JsonValidation::optional_boolean(
       json, "enable-cross-component-analysis", false);
@@ -653,6 +654,10 @@ const std::optional<std::string>& Options::job_id() const {
 
 const std::optional<std::string>& Options::metarun_id() const {
   return metarun_id_;
+}
+
+const std::optional<std::string>& Options::commit_hash() const {
+  return commit_hash_;
 }
 
 bool Options::enable_cross_component_analysis() const {

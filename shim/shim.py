@@ -646,6 +646,11 @@ def _add_metadata_arguments(parser: argparse.ArgumentParser) -> None:
         type=str,
         help="Specify identifier for a group of analysis runs.",
     )
+    metadata_arguments.add_argument(
+        "--commit-hash",
+        type=str,
+        help="Specify the commit hash of the source repository.",
+    )
 
 
 def _add_debug_arguments(parser: argparse.ArgumentParser) -> None:
@@ -966,6 +971,9 @@ def _get_command_options_json(
 
     if arguments.metarun_id:
         options["metarun-id"] = arguments.metarun_id
+
+    if arguments.commit_hash:
+        options["commit-hash"] = arguments.commit_hash
 
     if arguments.log_method:
         options["log-method"] = []

@@ -71,6 +71,8 @@ void LocalFlowAnalysisPass::run(Context& context) {
   Json::Value metadata;
   metadata["tool"] = "mariana_trench";
   metadata["filename_spec"] = "local_flow@*.json";
+  const auto& commit_hash = context.options->commit_hash();
+  metadata["commit"] = commit_hash.has_value() ? commit_hash.value() : "";
   std::ofstream metadata_file(metadata_path);
   metadata_file << metadata.toStyledString();
 
