@@ -31,12 +31,12 @@ class MockAndroidResources : public AndroidResources {
   explicit MockAndroidResources() : AndroidResources("") {}
   ~MockAndroidResources() override {}
 
-  boost::optional<int32_t> get_min_sdk() override {
-    return boost::none;
+  std::optional<int32_t> get_min_sdk() override {
+    return std::nullopt;
   }
 
-  boost::optional<std::string> get_manifest_package_name() override {
-    return boost::none;
+  std::optional<std::string> get_manifest_package_name() override {
+    return std::nullopt;
   }
 
   void fully_qualify_layout(
