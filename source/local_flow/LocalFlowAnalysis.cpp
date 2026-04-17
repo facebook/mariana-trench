@@ -26,6 +26,45 @@
 namespace marianatrench {
 namespace local_flow {
 
+namespace {
+
+MethodMetadata extract_metadata(const Method* method) {
+  MethodMetadata meta;
+
+  // Parameter types (skip `this` for instance methods)
+  for (ParameterPosition i = method->first_parameter_index();
+       i < method->number_of_parameters();
+       ++i) {
+    const auto* param_type = method->parameter_type(i);
+    if (param_type != nullptr) {
+      meta.param_types.emplace_back(param_type->str());
+    }
+  }
+
+  // Return type
+  meta.return_type = std::string(method->return_type()->str());
+
+  // External status
+  const auto* dex_method = method->dex_method();
+  meta.is_external = (dex_method != nullptr && dex_method->is_external());
+
+  // Method-level annotations
+  if (dex_method != nullptr) {
+    const auto* anno_set = dex_method->get_anno_set();
+    if (anno_set != nullptr) {
+      for (const auto& anno : anno_set->get_annotations()) {
+        if (anno->type() != nullptr) {
+          meta.annotations.emplace_back(anno->type()->str());
+        }
+      }
+    }
+  }
+
+  return meta;
+}
+
+} // namespace
+
 void LocalFlowAnalysis::run(
     const Context& context,
     LocalFlowRegistry& registry,
@@ -48,6 +87,7 @@ void LocalFlowAnalysis::run(
     auto result = LocalFlowMethodAnalyzer::analyze(
         method, max_structural_depth, positions, call_graph);
     if (result.has_value()) {
+      result->method_metadata = extract_metadata(method);
       registry.set(method, std::move(*result));
     }
   };
@@ -91,7 +131,7 @@ void LocalFlowAnalysis::run(
     // All parameters → result (for non-void methods)
     if (!returns_void) {
       auto num_params = method->number_of_parameters();
-      for (uint32_t i = 0; i < num_params; i++) {
+      for (uint32_t i = 0; i < num_params; ++i) {
         constraints.add_edge(
             LocalFlowNode::make_param(i), LocalFlowNode::make_result());
       }
@@ -101,15 +141,15 @@ void LocalFlowAnalysis::run(
       return;
     }
 
-    registry.set(
-        method,
-        LocalFlowMethodResult{
-            LocalFlowNode::jvm_to_lfe_separator(method->signature()),
-            std::move(constraints),
-            {},
-            "",
-            0,
-            is_static});
+    auto stub_result = LocalFlowMethodResult{
+        LocalFlowNode::jvm_to_lfe_separator(method->signature()),
+        std::move(constraints),
+        {},
+        "",
+        0,
+        is_static};
+    stub_result.method_metadata = extract_metadata(method);
+    registry.set(method, std::move(stub_result));
     stub_count++;
   };
 

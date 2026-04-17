@@ -7,9 +7,11 @@
 
 #pragma once
 
+#include <optional>
 #include <ostream>
 #include <string>
 #include <unordered_set>
+#include <vector>
 
 #include <json/json.h>
 
@@ -19,6 +21,17 @@ class DexType;
 
 namespace marianatrench {
 namespace local_flow {
+
+/**
+ * Structured method metadata emitted from the C++ analysis pass.
+ * Consumed downstream by process_lfgs to populate metadata tables.
+ */
+struct MethodMetadata {
+  std::vector<std::string> param_types; // explicit params only (no this)
+  std::string return_type; // e.g., "V", "Ljava/lang/String;"
+  bool is_external = false;
+  std::vector<std::string> annotations; // method-level annotation type names
+};
 
 /**
  * Per-callable local flow result: final constraints + metadata.
@@ -34,6 +47,7 @@ struct LocalFlowMethodResult {
   std::string path; // Source file path (relative)
   int callable_line = 0; // Line number of the method definition
   bool is_static = false; // Static methods use G{}, instance methods use M{}
+  std::optional<MethodMetadata> method_metadata;
 
   LocalFlowMethodResult(
       std::string callable,
@@ -41,13 +55,15 @@ struct LocalFlowMethodResult {
       std::unordered_set<const DexType*> relevant_types = {},
       std::string path = {},
       int callable_line = 0,
-      bool is_static = false)
+      bool is_static = false,
+      std::optional<MethodMetadata> method_metadata = std::nullopt)
       : callable(std::move(callable)),
         constraints(std::move(constraints)),
         relevant_types(std::move(relevant_types)),
         path(std::move(path)),
         callable_line(callable_line),
-        is_static(is_static) {}
+        is_static(is_static),
+        method_metadata(std::move(method_metadata)) {}
 
   /**
    * Serialize as normalized self-loop format (code 20000).

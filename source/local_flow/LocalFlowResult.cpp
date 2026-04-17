@@ -107,6 +107,27 @@ Json::Value LocalFlowMethodResult::to_json() const {
   result["path"] = path;
   result["callable_line"] = callable_line;
   result["localflow"] = localflow;
+
+  if (method_metadata.has_value()) {
+    auto meta_json = Json::Value(Json::objectValue);
+
+    auto params_json = Json::Value(Json::arrayValue);
+    for (const auto& pt : method_metadata->param_types) {
+      params_json.append(pt);
+    }
+    meta_json["param_types"] = params_json;
+    meta_json["return_type"] = method_metadata->return_type;
+    meta_json["is_external"] = method_metadata->is_external;
+
+    auto annos_json = Json::Value(Json::arrayValue);
+    for (const auto& a : method_metadata->annotations) {
+      annos_json.append(a);
+    }
+    meta_json["annotations"] = annos_json;
+
+    result["method_metadata"] = meta_json;
+  }
+
   return result;
 }
 
