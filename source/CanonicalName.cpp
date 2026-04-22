@@ -159,7 +159,6 @@ Json::Value CanonicalName::to_json() const {
   }
 
   mt_unreachable();
-  return result;
 }
 
 OriginSet CanonicalName::propagate(
@@ -188,7 +187,6 @@ std::ostream& operator<<(std::ostream& out, const CanonicalName& root) {
   }
 
   mt_unreachable();
-  return out;
 }
 
 } // namespace marianatrench
