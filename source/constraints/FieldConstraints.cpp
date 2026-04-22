@@ -349,7 +349,6 @@ std::unique_ptr<FieldConstraint> FieldConstraint::from_json(
         constraint,
         /* field */ "constraint",
         /* expected */ "valid field constraint type");
-    return nullptr;
   }
 }
 
