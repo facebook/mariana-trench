@@ -822,7 +822,6 @@ std::unique_ptr<MethodConstraint> MethodConstraint::from_json(
         constraint,
         /* field */ "constraint",
         /* expected */ "valid constraint type");
-    return nullptr;
   }
 }
 
