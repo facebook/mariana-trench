@@ -83,7 +83,7 @@ std::vector<const DexField*> create_fields(
 } // namespace
 } // namespace redex
 
-DexClass* redex::get_class(std::string_view class_name) {
+DexClass* MT_NULLABLE redex::get_class(std::string_view class_name) {
   auto* type = get_type(class_name);
   if (type) {
     return type_class(type);
@@ -91,7 +91,7 @@ DexClass* redex::get_class(std::string_view class_name) {
   return nullptr;
 }
 
-DexMethod* redex::get_method(std::string_view signature) {
+DexMethod* MT_NULLABLE redex::get_method(std::string_view signature) {
   auto method_reference = DexMethod::get_method(signature);
   if (!method_reference) {
     return nullptr;
