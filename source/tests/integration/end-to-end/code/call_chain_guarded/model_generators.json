@@ -1,0 +1,21 @@
+{
+  "model_generators": [
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "name",
+          "pattern": "entry"
+        }
+      ],
+      "model": {
+        "effect_sources": [
+          {
+            "type": "call-chain",
+            "kind": "CallChainOrigin"
+          }
+        ]
+      }
+    }
+  ]
+}

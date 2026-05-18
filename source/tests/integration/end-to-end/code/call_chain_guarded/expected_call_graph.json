@@ -1,0 +1,395 @@
+// @generated
+{
+  "Landroid/app/Activity;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Landroid/content/Context;.<init>:()V"
+    ]
+  },
+  "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;" : 
+  {
+    "static" : 
+    [
+      "Landroid/content/Intent;.<init>:()V"
+    ]
+  },
+  "Landroid/content/ContentProvider;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Landroid/content/ContentProvider;.query:(Landroid/net/Uri;[Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;)Landroid/database/Cursor;" : 
+  {
+    "static" : 
+    [
+      "Landroid/database/Cursor;.<init>:()V"
+    ]
+  },
+  "Landroid/content/Context;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Landroid/content/Intent;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Landroid/content/Intent;.<init>:(Landroid/content/Context;Ljava/lang/Class;)V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Landroid/content/Intent;.<init>:(Ljava/lang/String;Landroid/net/Uri;)V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Landroid/content/Intent;.getBundleExtra:(Ljava/lang/String;)Landroid/os/Bundle;" : 
+  {
+    "static" : 
+    [
+      "Landroid/os/Bundle;.<init>:()V"
+    ]
+  },
+  "Landroid/content/Intent;.getData:()Landroid/net/Uri;" : 
+  {
+    "static" : 
+    [
+      "Landroid/net/Uri;.<init>:()V"
+    ]
+  },
+  "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;" : 
+  {
+    "static" : 
+    [
+      "Landroid/os/Bundle;.<init>:()V"
+    ]
+  },
+  "Landroid/database/Cursor;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Landroid/location/Location;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Landroid/net/Uri$Builder;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Landroid/net/Uri$Builder;.build:()Landroid/net/Uri;" : 
+  {
+    "static" : 
+    [
+      "Landroid/net/Uri;.<init>:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V"
+    ]
+  },
+  "Landroid/net/Uri;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Landroid/net/Uri;.<init>:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Landroid/net/Uri;.parse:(Ljava/lang/String;)Landroid/net/Uri;" : 
+  {
+    "static" : 
+    [
+      "Landroid/net/Uri;.<init>:()V"
+    ]
+  },
+  "Landroid/net/Uri;.toString:()Ljava/lang/String;" : 
+  {
+    "virtual" : 
+    [
+      "Ljava/lang/String;.concat:(Ljava/lang/String;)Ljava/lang/String;"
+    ]
+  },
+  "Landroid/os/Bundle;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Landroid/text/TextUtils;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Landroid/util/Log;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Landroid/webkit/WebViewClient;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Landroidx/fragment/app/FragmentActivity;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Landroid/app/Activity;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/auth/datastore/LoggedInUserAuthDataStore;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/auth/datastore/LoggedInUserAuthDataStore;.getLoggedInUser:()Lcom/facebook/user/model/User;" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/user/model/User;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/base/activity/FragmentBaseActivityUtil;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/base/activity/FragmentBaseActivityUtil;.getDefaultActivityIntent:()Landroid/content/Intent;" : 
+  {
+    "static" : 
+    [
+      "Landroid/content/Intent;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/content/SecureContextHelper;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/CallChainGuarded;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/CallChainGuarded;.callChainIssue:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Exported;.<init>:()V"
+    ],
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/Exported;.entry:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/CallChainService;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/CallChainService;.request:(Ljava/lang/String;)V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.<init>:()V"
+    ],
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V",
+      "Ljava/lang/Object;.equals:(Ljava/lang/Object;)Z"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Exported;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Exported;.entry:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/CallChainService;.<init>:()V"
+    ],
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/CallChainService;.request:(Ljava/lang/String;)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/secure/context/SecureContextHelperV2;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/secure/context/SecureContextHelperV2;.get:()Lcom/facebook/secure/context/SecureContextHelperV2;" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/secure/context/SecureContextHelperV2;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/secure/context/SecureContextHelperV2;.inAppBrowser:()Lcom/facebook/secure/context/IntentLauncher;" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/secure/context/SecureContextHelperV2;.internal:()Lcom/facebook/secure/context/IntentLauncher;" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V"
+    ]
+  },
+  "Lcom/facebook/user/model/User;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/instagram/common/analytics/IgAnalyticsLogger;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/instagram/common/analytics/IgAnalyticsLogger;.getInstance:()Lcom/instagram/common/analytics/IgAnalyticsLogger;" : 
+  {
+    "static" : 
+    [
+      "Lcom/instagram/common/analytics/IgAnalyticsLogger;.<init>:()V"
+    ]
+  },
+  "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.obtain:(Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;" : 
+  {
+    "static" : 
+    [
+      "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.<init>:()V"
+    ]
+  },
+  "Ljava/lang/Integer;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Ljava/lang/String;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Ljava/lang/String;.concat:(Ljava/lang/String;)Ljava/lang/String;" : 
+  {
+    "virtual" : 
+    [
+      "Ljava/lang/String;.isEmpty:()Z"
+    ]
+  },
+  "Ljava/lang/Thread;.<init>:(Ljava/lang/Runnable;)V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
+  "Ljava/lang/Thread;.run:()V" : 
+  {
+    "virtual" : 
+    [
+      "Ljava/lang/Runnable;.run:()V",
+      "Ljava/lang/Thread;.run:()V"
+    ]
+  },
+  "Ljava/util/TreeMap;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  }
+}

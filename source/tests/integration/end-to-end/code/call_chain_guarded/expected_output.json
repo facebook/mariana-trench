@@ -1,0 +1,1571 @@
+// @generated
+{
+  "method" : "Landroid/app/Activity;.<init>:()V",
+  "position" : 
+  {
+    "line" : 13
+  }
+}
+{
+  "method" : "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
+  "position" : 
+  {
+    "line" : 22
+  }
+}
+{
+  "method" : "Landroid/app/Activity;.onCreate:()V",
+  "position" : 
+  {
+    "line" : 15
+  }
+}
+{
+  "method" : "Landroid/app/Activity;.onCreate:(Landroid/os/Bundle;)V",
+  "position" : 
+  {
+    "line" : 17
+  }
+}
+{
+  "method" : "Landroid/app/Activity;.onStart:()V",
+  "position" : 
+  {
+    "line" : 19
+  }
+}
+{
+  "method" : "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V",
+  "position" : 
+  {
+    "line" : 26
+  }
+}
+{
+  "method" : "Landroid/content/ContentProvider;.<init>:()V",
+  "position" : 
+  {
+    "line" : 12
+  }
+}
+{
+  "method" : "Landroid/content/ContentProvider;.query:(Landroid/net/Uri;[Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;)Landroid/database/Cursor;",
+  "position" : 
+  {
+    "line" : 15
+  }
+}
+{
+  "method" : "Landroid/content/Context;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9
+  }
+}
+{
+  "method" : "Landroid/content/Context;.startActivity:(Landroid/content/Intent;)V",
+  "position" : 
+  {
+    "line" : 11
+  }
+}
+{
+  "method" : "Landroid/content/Intent;.<init>:()V",
+  "position" : 
+  {
+    "line" : 17
+  }
+}
+{
+  "method" : "Landroid/content/Intent;.<init>:(Landroid/content/Context;Ljava/lang/Class;)V",
+  "position" : 
+  {
+    "line" : 21
+  }
+}
+{
+  "method" : "Landroid/content/Intent;.<init>:(Ljava/lang/String;Landroid/net/Uri;)V",
+  "position" : 
+  {
+    "line" : 19
+  }
+}
+{
+  "method" : "Landroid/content/Intent;.getBundleExtra:(Ljava/lang/String;)Landroid/os/Bundle;",
+  "position" : 
+  {
+    "line" : 58
+  }
+}
+{
+  "method" : "Landroid/content/Intent;.getData:()Landroid/net/Uri;",
+  "position" : 
+  {
+    "line" : 50
+  }
+}
+{
+  "method" : "Landroid/content/Intent;.getDataString:()Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 24
+  }
+}
+{
+  "method" : "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;",
+  "position" : 
+  {
+    "line" : 54
+  }
+}
+{
+  "method" : "Landroid/content/Intent;.getFlags:()I",
+  "position" : 
+  {
+    "line" : 28
+  }
+}
+{
+  "method" : "Landroid/content/Intent;.getIntExtra:(Ljava/lang/String;)I",
+  "position" : 
+  {
+    "line" : 42
+  }
+}
+{
+  "method" : "Landroid/content/Intent;.getIntExtra:(Ljava/lang/String;I)I",
+  "position" : 
+  {
+    "line" : 46
+  }
+}
+{
+  "method" : "Landroid/content/Intent;.getStringExtra:(Ljava/lang/String;)Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 38
+  }
+}
+{
+  "method" : "Landroid/content/Intent;.hasExtra:(Ljava/lang/String;)Z",
+  "position" : 
+  {
+    "line" : 34
+  }
+}
+{
+  "method" : "Landroid/content/Intent;.putExtra:(Ljava/lang/String;Ljava/lang/String;)V",
+  "position" : 
+  {
+    "line" : 65
+  }
+}
+{
+  "method" : "Landroid/content/Intent;.putExtra:(Ljava/lang/String;Z)V",
+  "position" : 
+  {
+    "line" : 67
+  }
+}
+{
+  "method" : "Landroid/content/Intent;.putExtras:(Landroid/os/Bundle;)V",
+  "position" : 
+  {
+    "line" : 63
+  }
+}
+{
+  "method" : "Landroid/content/Intent;.setData:(Landroid/net/Uri;)V",
+  "position" : 
+  {
+    "line" : 61
+  }
+}
+{
+  "method" : "Landroid/content/Intent;.setFlags:(I)V",
+  "position" : 
+  {
+    "line" : 31
+  }
+}
+{
+  "method" : "Landroid/database/Cursor;.<init>:()V",
+  "position" : 
+  {
+    "line" : 11
+  }
+}
+{
+  "method" : "Landroid/location/Location;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9
+  }
+}
+{
+  "method" : "Landroid/location/Location;.getLatitude:()D",
+  "position" : 
+  {
+    "line" : 12
+  }
+}
+{
+  "method" : "Landroid/location/Location;.getLongitude:()D",
+  "position" : 
+  {
+    "line" : 16
+  }
+}
+{
+  "method" : "Landroid/location/Location;.toString:()Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 20
+  }
+}
+{
+  "method" : "Landroid/location/LocationListener;.onLocationChanged:(Landroid/location/Location;)V",
+  "modes" : 
+  [
+    "add-via-obscure-feature",
+    "skip-analysis"
+  ],
+  "position" : {}
+}
+{
+  "method" : "Landroid/net/Uri$Builder;.<init>:()V",
+  "position" : 
+  {
+    "line" : 51
+  }
+}
+{
+  "method" : "Landroid/net/Uri$Builder;.build:()Landroid/net/Uri;",
+  "position" : 
+  {
+    "line" : 72
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0).host",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                ".host" : 3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input" : "Argument(0).path",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                ".path" : 3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input" : "Argument(0).scheme",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                ".scheme" : 3
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Landroid/net/Uri$Builder;.host:(Ljava/lang/String;)Landroid/net/Uri$Builder;",
+  "position" : 
+  {
+    "line" : 62
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input" : "Argument(1)",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              {
+                ".host" : 3
+              }
+            }
+          ]
+        },
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                ".host" : 3
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Landroid/net/Uri$Builder;.path:(Ljava/lang/String;)Landroid/net/Uri$Builder;",
+  "position" : 
+  {
+    "line" : 67
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input" : "Argument(1)",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              {
+                ".path" : 3
+              }
+            }
+          ]
+        },
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                ".path" : 3
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Landroid/net/Uri$Builder;.scheme:(Ljava/lang/String;)Landroid/net/Uri$Builder;",
+  "position" : 
+  {
+    "line" : 54
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input" : "Argument(1)",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              {
+                ".scheme" : 3
+              }
+            }
+          ]
+        },
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                ".scheme" : 3
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Landroid/net/Uri;.<init>:()V",
+  "position" : 
+  {
+    "line" : 14
+  }
+}
+{
+  "method" : "Landroid/net/Uri;.<init>:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V",
+  "position" : 
+  {
+    "line" : 16
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(1)",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              {
+                ".scheme" : 3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input" : "Argument(2)",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              {
+                ".host" : 3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input" : "Argument(3)",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              {
+                ".path" : 3
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Landroid/net/Uri;.decode:(Ljava/lang/String;)Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 27
+  }
+}
+{
+  "inline_as_getter" : "Argument(0).host",
+  "method" : "Landroid/net/Uri;.getHost:()Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 35
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0).host",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Landroid/net/Uri;.getQueryParameter:(Ljava/lang/String;)Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 39
+  }
+}
+{
+  "inline_as_getter" : "Argument(0).scheme",
+  "method" : "Landroid/net/Uri;.getScheme:()Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 31
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0).scheme",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Landroid/net/Uri;.parse:(Ljava/lang/String;)Landroid/net/Uri;",
+  "position" : 
+  {
+    "line" : 23
+  }
+}
+{
+  "method" : "Landroid/net/Uri;.toString:()Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 43
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0).host",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input" : "Argument(0).path",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input" : "Argument(0).scheme",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Landroid/os/Bundle;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9
+  }
+}
+{
+  "method" : "Landroid/os/Bundle;.containsKey:(Ljava/lang/String;)Z",
+  "position" : 
+  {
+    "line" : 20
+  }
+}
+{
+  "method" : "Landroid/os/Bundle;.getString:(Ljava/lang/String;)Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 12
+  }
+}
+{
+  "method" : "Landroid/os/Bundle;.putBoolean:(Ljava/lang/String;Ljava/lang/Boolean;)V",
+  "position" : 
+  {
+    "line" : 17
+  }
+}
+{
+  "method" : "Landroid/os/Bundle;.putString:(Ljava/lang/String;Ljava/lang/String;)V",
+  "position" : 
+  {
+    "line" : 15
+  }
+}
+{
+  "method" : "Landroid/text/TextUtils;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9
+  }
+}
+{
+  "method" : "Landroid/text/TextUtils;.isEmpty:(Ljava/lang/String;)Z",
+  "position" : 
+  {
+    "line" : 11
+  }
+}
+{
+  "method" : "Landroid/util/Log;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9
+  }
+}
+{
+  "method" : "Landroid/util/Log;.e:(Ljava/lang/String;Ljava/lang/String;)I",
+  "position" : 
+  {
+    "line" : 12
+  }
+}
+{
+  "method" : "Landroid/webkit/WebViewClient;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9
+  }
+}
+{
+  "method" : "Landroid/webkit/WebViewClient;.onPageFinished:(Ljava/lang/String;)V",
+  "position" : 
+  {
+    "line" : 11
+  }
+}
+{
+  "method" : "Landroidx/fragment/app/FragmentActivity;.<init>:()V",
+  "position" : 
+  {
+    "line" : 11
+  }
+}
+{
+  "method" : "Landroidx/fragment/app/FragmentActivity;.onActivityCreate:()V",
+  "position" : 
+  {
+    "line" : 13
+  }
+}
+{
+  "method" : "Lcom/facebook/auth/datastore/LoggedInUserAuthDataStore;.<init>:()V",
+  "position" : 
+  {
+    "line" : 11
+  }
+}
+{
+  "method" : "Lcom/facebook/auth/datastore/LoggedInUserAuthDataStore;.getLoggedInUser:()Lcom/facebook/user/model/User;",
+  "position" : 
+  {
+    "line" : 18
+  }
+}
+{
+  "method" : "Lcom/facebook/auth/datastore/LoggedInUserAuthDataStore;.isLoggedIn:()Z",
+  "position" : 
+  {
+    "line" : 14
+  }
+}
+{
+  "method" : "Lcom/facebook/base/activity/FragmentBaseActivityUtil;.<init>:()V",
+  "position" : 
+  {
+    "line" : 11
+  }
+}
+{
+  "method" : "Lcom/facebook/base/activity/FragmentBaseActivityUtil;.getDefaultActivityIntent:()Landroid/content/Intent;",
+  "position" : 
+  {
+    "line" : 14
+  }
+}
+{
+  "method" : "Lcom/facebook/content/SecureContextHelper;.<init>:()V",
+  "position" : 
+  {
+    "line" : 13
+  }
+}
+{
+  "method" : "Lcom/facebook/content/SecureContextHelper;.startFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
+  "position" : 
+  {
+    "line" : 15
+  }
+}
+{
+  "method" : "Lcom/facebook/content/SecureContextHelper;.startFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V",
+  "position" : 
+  {
+    "line" : 17
+  }
+}
+{
+  "method" : "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivity:(Landroid/content/Intent;Landroid/content/Context;)V",
+  "position" : 
+  {
+    "line" : 19
+  }
+}
+{
+  "method" : "Lcom/facebook/content/SecureContextHelper;.startNonFacebookActivityForResult:(Landroid/content/Intent;ILandroid/app/Activity;)V",
+  "position" : 
+  {
+    "line" : 22
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/CallChainGuarded;.<init>:()V",
+  "position" : 
+  {
+    "line" : 20,
+    "path" : "CallChainGuarded.java"
+  }
+}
+{
+  "effect_sinks" : 
+  [
+    {
+      "port" : "call-chain",
+      "taint" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "call-chain",
+            "position" : 
+            {
+              "line" : 23,
+              "path" : "CallChainGuarded.java"
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/Exported;.entry:()V"
+          },
+          "kinds" : 
+          [
+            {
+              "call_info" : "CallSite",
+              "distance" : 2,
+              "kind" : "CallChainSink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/CallChainGuarded;.callChainIssue:()V",
+  "position" : 
+  {
+    "line" : 22,
+    "path" : "CallChainGuarded.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/CallChainService;.<init>:()V",
+  "position" : 
+  {
+    "line" : 6,
+    "path" : "CallChainGuarded.java"
+  }
+}
+{
+  "effect_sinks" : 
+  [
+    {
+      "port" : "call-chain",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "CallChainSink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V"
+              ]
+            }
+          ],
+          "origin" : 
+          {
+            "method" : "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V",
+            "position" : 
+            {
+              "line" : 10,
+              "path" : "CallChainGuarded.java"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/CallChainService;.request:(Ljava/lang/String;)V",
+  "position" : 
+  {
+    "line" : 8,
+    "path" : "CallChainGuarded.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Exported;.<init>:()V",
+  "position" : 
+  {
+    "line" : 14,
+    "path" : "CallChainGuarded.java"
+  }
+}
+{
+  "effect_sinks" : 
+  [
+    {
+      "port" : "call-chain",
+      "taint" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "call-chain",
+            "position" : 
+            {
+              "line" : 17,
+              "path" : "CallChainGuarded.java"
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/CallChainService;.request:(Ljava/lang/String;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "call_info" : "CallSite",
+              "distance" : 1,
+              "kind" : "CallChainSink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "effect_sources" : 
+  [
+    {
+      "port" : "call-chain",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Declaration",
+              "kind" : "CallChainOrigin",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Exported;.entry:()V"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/CallChainService;.request:(Ljava/lang/String;)V",
+      "position" : 
+      {
+        "line" : 17,
+        "path" : "CallChainGuarded.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call" : 
+          {
+            "port" : "call-chain",
+            "position" : 
+            {
+              "end" : 33,
+              "line" : 17,
+              "path" : "CallChainGuarded.java",
+              "start" : 27
+            },
+            "resolves_to" : "Lcom/facebook/marianatrench/integrationtests/CallChainService;.request:(Ljava/lang/String;)V"
+          },
+          "kinds" : 
+          [
+            {
+              "call_info" : "CallSite",
+              "distance" : 1,
+              "kind" : "CallChainSink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V"
+              ]
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call" : 
+          {
+            "position" : 
+            {
+              "line" : 16,
+              "path" : "CallChainGuarded.java"
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "call_info" : "Origin",
+              "kind" : "CallChainOrigin",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/Exported;.entry:()V"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Exported;.entry:()V",
+  "model_generators" : 
+  [
+    "model_generators:0"
+  ],
+  "position" : 
+  {
+    "line" : 16,
+    "path" : "CallChainGuarded.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9
+  }
+}
+{
+  "inline_as_getter" : "Argument(0)",
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sanitize:(Ljava/lang/Object;)Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 17
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+  "position" : 
+  {
+    "line" : 14
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 11
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.<init>:()V",
+  "position" : 
+  {
+    "line" : 2,
+    "path" : "CallChainGuarded.java"
+  }
+}
+{
+  "effect_sinks" : 
+  [
+    {
+      "port" : "call-chain",
+      "taint" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Declaration",
+              "kind" : "CallChainSink",
+              "origins" : 
+              [
+                "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/SensitiveApi;.execute:()V",
+  "position" : 
+  {
+    "line" : 3,
+    "path" : "CallChainGuarded.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V",
+  "position" : 
+  {
+    "line" : 14
+  }
+}
+{
+  "method" : "Lcom/facebook/secure/context/IntentLauncher;.launchActivity:(Landroid/content/Intent;Landroid/content/Context;)Z",
+  "position" : 
+  {
+    "line" : 17
+  }
+}
+{
+  "method" : "Lcom/facebook/secure/context/SecureContextHelperV2;.<init>:()V",
+  "position" : 
+  {
+    "line" : 11
+  }
+}
+{
+  "method" : "Lcom/facebook/secure/context/SecureContextHelperV2;.get:()Lcom/facebook/secure/context/SecureContextHelperV2;",
+  "position" : 
+  {
+    "line" : 14
+  }
+}
+{
+  "method" : "Lcom/facebook/secure/context/SecureContextHelperV2;.inAppBrowser:()Lcom/facebook/secure/context/IntentLauncher;",
+  "position" : 
+  {
+    "line" : 22
+  }
+}
+{
+  "method" : "Lcom/facebook/secure/context/SecureContextHelperV2;.internal:()Lcom/facebook/secure/context/IntentLauncher;",
+  "position" : 
+  {
+    "line" : 18
+  }
+}
+{
+  "method" : "Lcom/facebook/user/model/User;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9
+  }
+}
+{
+  "method" : "Lcom/facebook/user/model/User;.getId:()Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 12
+  }
+}
+{
+  "method" : "Lcom/instagram/common/analytics/IgAnalyticsLogger;.<init>:()V",
+  "position" : 
+  {
+    "line" : 11
+  }
+}
+{
+  "method" : "Lcom/instagram/common/analytics/IgAnalyticsLogger;.getInstance:()Lcom/instagram/common/analytics/IgAnalyticsLogger;",
+  "position" : 
+  {
+    "line" : 14
+  }
+}
+{
+  "method" : "Lcom/instagram/common/analytics/IgAnalyticsLogger;.reportEvent:(Lcom/instagram/common/analytics/intf/AnalyticsEvent;)V",
+  "position" : 
+  {
+    "line" : 17
+  }
+}
+{
+  "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9
+  }
+}
+{
+  "inline_as_getter" : "Argument(0)",
+  "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.addExtra:(Ljava/lang/String;Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
+  "position" : 
+  {
+    "line" : 16
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.obtain:(Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;",
+  "position" : 
+  {
+    "line" : 12
+  }
+}
+{
+  "method" : "Lcom/mariana_trench/artificial/ArrayAllocation;.allocateArray:(I)V",
+  "modes" : 
+  [
+    "skip-analysis"
+  ],
+  "position" : {}
+}
+{
+  "method" : "Ljava/lang/Integer;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9
+  }
+}
+{
+  "method" : "Ljava/lang/Integer;.intValue:()I",
+  "position" : 
+  {
+    "line" : 11
+  }
+}
+{
+  "method" : "Ljava/lang/Object;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9
+  }
+}
+{
+  "method" : "Ljava/lang/Object;.equals:(Ljava/lang/Object;)Z",
+  "position" : 
+  {
+    "line" : 16
+  }
+}
+{
+  "method" : "Ljava/lang/Object;.hashCode:()I",
+  "position" : 
+  {
+    "line" : 20
+  }
+}
+{
+  "method" : "Ljava/lang/Object;.toString:()Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 12
+  }
+}
+{
+  "method" : "Ljava/lang/Runnable;.run:()V",
+  "modes" : 
+  [
+    "add-via-obscure-feature",
+    "skip-analysis"
+  ],
+  "position" : {}
+}
+{
+  "method" : "Ljava/lang/String;.<init>:()V",
+  "position" : 
+  {
+    "line" : 9
+  }
+}
+{
+  "method" : "Ljava/lang/String;.charAt:(I)C",
+  "position" : 
+  {
+    "line" : 44
+  }
+}
+{
+  "method" : "Ljava/lang/String;.concat:(Ljava/lang/String;)Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 52
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "input" : "Argument(1)",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 4
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Ljava/lang/String;.contains:(Ljava/lang/String;)Z",
+  "position" : 
+  {
+    "line" : 36
+  }
+}
+{
+  "method" : "Ljava/lang/String;.indexOf:(Ljava/lang/String;)I",
+  "position" : 
+  {
+    "line" : 24
+  }
+}
+{
+  "method" : "Ljava/lang/String;.isEmpty:()Z",
+  "position" : 
+  {
+    "line" : 40
+  }
+}
+{
+  "method" : "Ljava/lang/String;.length:()I",
+  "position" : 
+  {
+    "line" : 32
+  }
+}
+{
+  "method" : "Ljava/lang/String;.startsWith:(Ljava/lang/String;)Z",
+  "position" : 
+  {
+    "line" : 28
+  }
+}
+{
+  "method" : "Ljava/lang/String;.subSequence:(II)Ljava/lang/CharSequence;",
+  "position" : 
+  {
+    "line" : 48
+  }
+}
+{
+  "method" : "Ljava/lang/String;.substring:(I)Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 16
+  }
+}
+{
+  "method" : "Ljava/lang/String;.substring:(II)Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 20
+  }
+}
+{
+  "method" : "Ljava/lang/String;.valueOf:(Ljava/lang/Object;)Ljava/lang/String;",
+  "position" : 
+  {
+    "line" : 12
+  }
+}
+{
+  "method" : "Ljava/lang/Thread;.<init>:(Ljava/lang/Runnable;)V",
+  "position" : 
+  {
+    "line" : 13
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(1)",
+      "output" : 
+      [
+        {
+          "kinds" : 
+          [
+            {
+              "call_info" : "Propagation",
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              {
+                ".target" : 3
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Ljava/lang/Thread;.run:()V",
+  "position" : 
+  {
+    "line" : 19
+  }
+}
+{
+  "method" : "Ljava/lang/Thread;.start:()V",
+  "position" : 
+  {
+    "line" : 24
+  }
+}
+{
+  "method" : "Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+  "modes" : 
+  [
+    "add-via-obscure-feature",
+    "skip-analysis"
+  ],
+  "position" : {}
+}
+{
+  "method" : "Ljava/util/TreeMap;.<init>:()V",
+  "position" : 
+  {
+    "line" : 10
+  }
+}
+{
+  "method" : "Ljava/util/TreeMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+  "position" : 
+  {
+    "line" : 14
+  }
+}
