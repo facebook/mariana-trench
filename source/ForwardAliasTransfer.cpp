@@ -676,7 +676,6 @@ bool has_side_effect_with_heuristics(
         default:
           return true;
       }
-      break;
     case MFLOW_DEBUG:
     case MFLOW_POSITION:
     case MFLOW_FALLTHROUGH:
