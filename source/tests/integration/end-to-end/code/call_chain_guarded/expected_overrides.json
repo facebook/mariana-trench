@@ -1,0 +1,20 @@
+// @generated
+{
+  "Landroid/content/Context;.startActivity:(Landroid/content/Intent;)V" : 
+  [
+    "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
+  ],
+  "Ljava/lang/Object;.toString:()Ljava/lang/String;" : 
+  [
+    "Landroid/location/Location;.toString:()Ljava/lang/String;",
+    "Landroid/net/Uri;.toString:()Ljava/lang/String;"
+  ],
+  "Ljava/lang/Runnable;.run:()V" : 
+  [
+    "Ljava/lang/Thread;.run:()V"
+  ],
+  "Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;" : 
+  [
+    "Ljava/util/TreeMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+  ]
+}
