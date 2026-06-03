@@ -191,7 +191,7 @@ class LocalFlowTransfer {
 
   const Method* method_;
   TempIdGenerator& temp_gen_;
-  const Positions* MT_NULLABLE positions_;
+  [[maybe_unused]] const Positions* MT_NULLABLE positions_;
   const CallGraph* MT_NULLABLE call_graph_;
   uint32_t next_param_index_;
   bool is_static_;
