@@ -24,6 +24,7 @@ from .exit_codes import ClientError, ConfigurationError, ExitCode
 
 try:
     from ..facebook.shim import configuration
+    from ..facebook.shim.jar_extraction import resolve_analysis_jar
     from ..facebook.shim.third_party_utils import start_third_party_analysis
 except Exception:
     # pyre-ignore
@@ -105,7 +106,7 @@ class ExtractJexException(ClientError):
 def _extract_jex_file_if_exists(path: Path, target: str, build_directory: Path) -> Path:
     jex_extract_directory: Path = Path(build_directory) / "jex"
 
-    def run_unzip_command(command: List[str]) -> Path:
+    def run_unzip_command(command: List[str]) -> None:
         output = subprocess.run(command, stderr=subprocess.PIPE)
         if output.returncode != 0:
             stderr = output.stderr.decode()
@@ -122,29 +123,21 @@ def _extract_jex_file_if_exists(path: Path, target: str, build_directory: Path) 
                     f"Unable to extract binary file `{path}` with command `{command_string}`:\n{stderr}"
                 )
 
-        jar_file_path = jex_extract_directory / (
-            target.rsplit(":", maxsplit=1)[1] + ".jar"
-        )
-        if jar_file_path.exists():
-            return jar_file_path
-        else:
-            raise ConfigurationError(
-                message=f"Could not find jar file `{jar_file_path}` in `{jex_extract_directory}`.",
-            )
-
     # If the target is java_binary, then the output is a JEX file
     if path.suffix != ".jex":
         return path
 
     # Try to extract *.jex files with various unzip tools, until one of them succeeds. See D22579374 for why doing this
     try:
-        return run_unzip_command(
+        run_unzip_command(
             ["unsquashfs", "-d", str(jex_extract_directory), "-o", "4096", str(path)]
         )
     except ExtractJexException:
         LOG.warning(f"Running `unsquashfs` on file `{path}` failed.")
         LOG.warning(f"Trying to extract file `{path}` with `unzip`.")
-        return run_unzip_command(["unzip", "-d", str(jex_extract_directory), str(path)])
+        run_unzip_command(["unzip", "-d", str(jex_extract_directory), str(path)])
+
+    return resolve_analysis_jar(jex_extract_directory, target)
 
 
 def _build_target(
