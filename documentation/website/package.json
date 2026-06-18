@@ -65,7 +65,7 @@
     "cross-spawn": "^7.0.6",
     "diff": "^5.2.2",
     "dom-iterator": "^1.0.2",
-    "dompurify": "^3.4.1",
+    "dompurify": "^3.4.11",
     "express": "^4.22.1",
     "fast-uri": "^3.1.1",
     "flatted": "^3.4.2",
