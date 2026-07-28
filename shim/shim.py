@@ -273,6 +273,8 @@ def _build_apk_from_jar(jar_path: Path) -> Path:
         [
             "buck2",
             "run",
+            "-c",
+            "android.build_tools_version=37.0.0",
             # pyre-fixme[16]: Module `shim` has no attribute `configuration`.
             configuration.get_d8_target(),
             "--",
