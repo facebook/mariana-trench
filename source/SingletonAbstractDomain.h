@@ -50,7 +50,7 @@ class SingletonAbstractValue final
     mt_unreachable();
   }
 
-  AbstractValueKind narrow_with(const SingletonAbstractValue& other) {
+  AbstractValueKind narrow_with(const SingletonAbstractValue& /* unused */) {
     mt_unreachable();
   }
 };
