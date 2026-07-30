@@ -35,10 +35,10 @@ void collect_argument_types_from_callees(
     LifecycleMethod::TypeOrderedSet& ordered_types) {
   for (const auto& callee : callees) {
     const auto* type_list = callee.get_argument_types();
-
-    // Already checked in `LifecycleMethod::validate`
-    mt_assert(type_list != nullptr);
-
+    if (type_list == nullptr) {
+      // T282709455: Invalid methods are not yet removed from the callee graph.
+      continue;
+    }
     ordered_types.insert(type_list->begin(), type_list->end());
   }
 }
