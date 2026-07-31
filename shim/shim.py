@@ -25,6 +25,7 @@ from .exit_codes import ClientError, ConfigurationError, ExitCode
 try:
     from ..facebook.shim import configuration
     from ..facebook.shim.jar_extraction import resolve_analysis_jar
+    from ..facebook.shim.superpack import register_superpack_dex_mode
     from ..facebook.shim.third_party_utils import start_third_party_analysis
 except Exception:
     # pyre-ignore
@@ -1144,6 +1145,13 @@ def main() -> None:
         apk_directory = tempfile.mkdtemp(suffix="_apk")
         dex_directory = tempfile.mkdtemp(suffix="_dex")
         pyredex.utils.unzip_apk(arguments.apk_path, apk_directory)
+        # pyre-fixme[16]: Module `shim` has no attribute `configuration`.
+        if configuration.FACEBOOK_SHIM:
+            register_superpack_dex_mode(
+                apk_directory,
+                binary,
+                lambda target: _build_executable_target(target, modifier=None),
+            )
         dex_mode = pyredex.unpacker.detect_secondary_dex_mode(apk_directory)
         dex_mode.unpackage(apk_directory, dex_directory)
         LOG.info(f"Extracted APK into `{apk_directory}` and DEX into `{dex_directory}`")
