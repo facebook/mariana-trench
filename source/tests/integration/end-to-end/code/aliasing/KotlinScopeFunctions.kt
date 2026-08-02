@@ -66,7 +66,7 @@ class KotlinScopeFunctions {
               putExtra("source", source)
               tito(this) as Intent
             }
-            .also { it.putExtra("other", source) }
+            .also { it.putExtra("other", source) },
     )
 
     // Expect issue
