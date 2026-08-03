@@ -106,7 +106,7 @@ Model MethodContext::model_at_callsite(
       5,
       "Initial model for `{}`: {}",
       show(call_target.resolved_base_callee()),
-      model);
+      fmt::streamed(model));
 
   for (const auto* override : call_target.overrides()) {
     auto override_model = registry.get(override).at_callsite(
@@ -121,7 +121,7 @@ Model MethodContext::model_at_callsite(
         5,
         "Joining with model for `{}`: {}",
         show(override),
-        override_model);
+        fmt::streamed(override_model));
     model.join_with(override_model);
   }
 

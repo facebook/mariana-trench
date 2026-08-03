@@ -108,7 +108,9 @@ Taint apply_source_as_transform_to_sink(
       callee,
       position);
 
-  LOG(5, "Materialized source-as-transform sink: {}", transformed_sink_taint);
+  LOG(5,
+      "Materialized source-as-transform sink: {}",
+      fmt::streamed(transformed_sink_taint));
 
   return transformed_sink_taint;
 }
