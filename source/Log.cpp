@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <cstdio>
 #include <cstdlib>
+#include <ctime>
 #include <mutex>
 
 #include <fmt/chrono.h>
@@ -16,6 +17,15 @@
 #include <mariana-trench/Log.h>
 
 namespace {
+
+// fmt::localtime was removed in fmt 12.2.0 (deprecated in favor of
+// std::localtime), but std::localtime isn't thread-safe, so reimplement the
+// thread-safe conversion it used to provide via the POSIX localtime_r.
+std::tm thread_safe_localtime(std::time_t time) {
+  std::tm result{};
+  localtime_r(&time, &result);
+  return result;
+}
 
 struct LoggerImplementation {
  public:
@@ -53,7 +63,7 @@ struct LoggerImplementation {
     std::time_t current_time = std::time(nullptr);
     std::string line = fmt::format(
         "{:%Y-%m-%d %H:%M:%S} {} {}\n",
-        fmt::localtime(current_time),
+        thread_safe_localtime(current_time),
         section,
         message);
 
