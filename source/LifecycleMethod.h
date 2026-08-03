@@ -11,6 +11,7 @@
 
 #include <boost/container/flat_set.hpp>
 #include <fmt/format.h>
+#include <fmt/ranges.h>
 #include <json/json.h>
 
 #include <ConcurrentContainers.h>
