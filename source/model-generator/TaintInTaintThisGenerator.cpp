@@ -15,7 +15,7 @@ const std::vector<std::string> k_allowlist_setter_method_prefixes{
     "<init>",
     "add",
     "update",
-    "push"
+    "push",
     "replace",
     "set",
     "put",
