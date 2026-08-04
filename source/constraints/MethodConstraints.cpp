@@ -53,7 +53,7 @@ MethodPatternConstraint::MethodPatternConstraint(
 
 MethodHashedSet MethodPatternConstraint::may_satisfy(
     const MethodMappings& method_mappings) const {
-  auto string_pattern = as_string_literal(pattern_);
+  auto string_pattern = as_string_literal(pattern_.regular_expression());
   if (!string_pattern) {
     return MethodHashedSet::top();
   }
@@ -62,7 +62,7 @@ MethodHashedSet MethodPatternConstraint::may_satisfy(
 }
 
 bool MethodPatternConstraint::satisfy(const Method* method) const {
-  return re2::RE2::FullMatch(method->get_name(), pattern_);
+  return pattern_.full_match(method->get_name());
 }
 
 bool MethodPatternConstraint::operator==(const MethodConstraint& other) const {
@@ -442,7 +442,7 @@ SignaturePatternConstraint::SignaturePatternConstraint(
 
 MethodHashedSet SignaturePatternConstraint::may_satisfy(
     const MethodMappings& method_mappings) const {
-  auto string_pattern = as_string_literal(pattern_);
+  auto string_pattern = as_string_literal(pattern_.regular_expression());
   if (!string_pattern) {
     return MethodHashedSet::top();
   }
@@ -451,7 +451,7 @@ MethodHashedSet SignaturePatternConstraint::may_satisfy(
 }
 
 bool SignaturePatternConstraint::satisfy(const Method* method) const {
-  return re2::RE2::FullMatch(method->signature(), pattern_);
+  return pattern_.full_match(method->signature());
 }
 
 bool SignaturePatternConstraint::operator==(
@@ -493,7 +493,7 @@ bool MethodHasStringConstraint::satisfy(const Method* method) const {
 
   for (const auto* block : cfg.blocks()) {
     auto show_block = show(block);
-    if (re2::RE2::PartialMatch(show_block, pattern_)) {
+    if (pattern_.partial_match(show_block)) {
       return true;
     }
   }

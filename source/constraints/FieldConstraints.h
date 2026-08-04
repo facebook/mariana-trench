@@ -10,6 +10,7 @@
 #include <re2/re2.h>
 
 #include <mariana-trench/Field.h>
+#include <mariana-trench/RE2.h>
 #include <mariana-trench/constraints/TypeConstraints.h>
 
 namespace marianatrench {
@@ -36,7 +37,7 @@ class FieldNameConstraint final : public FieldConstraint {
   bool operator==(const FieldConstraint& other) const override;
 
  private:
-  re2::RE2 pattern_;
+  MatchPattern pattern_;
 };
 
 class IsStaticFieldConstraint final : public FieldConstraint {
@@ -56,7 +57,7 @@ class SignaturePatternFieldConstraint final : public FieldConstraint {
   bool operator==(const FieldConstraint& other) const override;
 
  private:
-  re2::RE2 pattern_;
+  MatchPattern pattern_;
 };
 
 class HasAnnotationFieldConstraint final : public FieldConstraint {

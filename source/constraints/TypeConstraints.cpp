@@ -26,7 +26,7 @@ TypePatternConstraint::TypePatternConstraint(const std::string& regex_string)
 MethodHashedSet TypePatternConstraint::may_satisfy(
     const MethodMappings& method_mappings,
     MaySatisfyMethodConstraintKind constraint_kind) const {
-  auto string_pattern = as_string_literal(pattern_);
+  auto string_pattern = as_string_literal(pattern_.regular_expression());
   if (!string_pattern) {
     return MethodHashedSet::top();
   }
@@ -42,7 +42,7 @@ MethodHashedSet TypePatternConstraint::may_satisfy(
 }
 
 bool TypePatternConstraint::satisfy(const DexType* type) const {
-  return re2::RE2::FullMatch(type->str(), pattern_);
+  return pattern_.full_match(type->str());
 }
 
 bool TypePatternConstraint::operator==(const TypeConstraint& other) const {

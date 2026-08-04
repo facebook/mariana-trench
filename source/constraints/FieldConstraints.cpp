@@ -31,7 +31,7 @@ FieldNameConstraint::FieldNameConstraint(const std::string& regex_string)
     : pattern_(regex_string) {}
 
 bool FieldNameConstraint::satisfy(const Field* field) const {
-  return re2::RE2::FullMatch(field->get_name(), pattern_);
+  return pattern_.full_match(field->get_name());
 }
 
 bool FieldNameConstraint::operator==(const FieldConstraint& other) const {
@@ -48,7 +48,7 @@ SignaturePatternFieldConstraint::SignaturePatternFieldConstraint(
     : pattern_(regex_string) {}
 
 bool SignaturePatternFieldConstraint::satisfy(const Field* field) const {
-  return re2::RE2::FullMatch(field->show(), pattern_);
+  return pattern_.full_match(field->show());
 }
 
 bool SignaturePatternFieldConstraint::operator==(

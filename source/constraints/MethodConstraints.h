@@ -11,6 +11,7 @@
 
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Context.h>
+#include <mariana-trench/RE2.h>
 #include <mariana-trench/constraints/IntegerConstraint.h>
 #include <mariana-trench/constraints/ParameterConstraints.h>
 #include <mariana-trench/constraints/TypeConstraints.h>
@@ -52,7 +53,7 @@ class MethodPatternConstraint final : public MethodConstraint {
   bool operator==(const MethodConstraint& other) const override;
 
  private:
-  re2::RE2 pattern_;
+  MatchPattern pattern_;
 };
 
 class MethodNameConstraint final : public MethodConstraint {
@@ -236,7 +237,7 @@ class SignaturePatternConstraint final : public MethodConstraint {
   bool operator==(const MethodConstraint& other) const override;
 
  private:
-  re2::RE2 pattern_;
+  MatchPattern pattern_;
 };
 
 class ReturnConstraint final : public MethodConstraint {
@@ -256,7 +257,7 @@ class MethodHasStringConstraint final : public MethodConstraint {
   bool operator==(const MethodConstraint& other) const override;
 
  private:
-  re2::RE2 pattern_;
+  MatchPattern pattern_;
 };
 
 class VisibilityMethodConstraint final : public MethodConstraint {

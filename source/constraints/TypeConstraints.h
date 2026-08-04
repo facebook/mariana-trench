@@ -12,6 +12,7 @@
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Model.h>
+#include <mariana-trench/RE2.h>
 #include <mariana-trench/constraints/IntegerConstraint.h>
 #include <mariana-trench/model-generator/ModelGenerator.h>
 
@@ -50,7 +51,7 @@ class TypePatternConstraint final : public TypeConstraint {
   bool operator==(const TypeConstraint& other) const override;
 
  private:
-  re2::RE2 pattern_;
+  MatchPattern pattern_;
 };
 
 class TypeNameConstraint final : public TypeConstraint {
