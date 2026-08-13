@@ -236,8 +236,6 @@ def _get_analysis_binary(arguments: argparse.Namespace) -> Path:
 
 def _desugar_jar_file(jar_path: Path) -> Path:
     LOG.info(f"Desugaring `{jar_path}`...")
-    # pyre-fixme[16]: Module `shim` has no attribute `configuration`.
-    desugar_tool = _build_target(none_throws(configuration.DESUGAR_BUCK_TARGET))
     desugared_jar_file = jar_path.parent / (jar_path.stem + "-desugared.jar")
 
     with tempfile.NamedTemporaryFile() as temp_file:
@@ -247,9 +245,11 @@ def _desugar_jar_file(jar_path: Path) -> Path:
         temp_file.flush()
         output = subprocess.run(
             [
-                "java",
-                "-jar",
-                desugar_tool,
+                "buck2",
+                "run",
+                # pyre-fixme[16]: Module `shim` has no attribute `configuration`.
+                none_throws(configuration.DESUGAR_BUCK_TARGET),
+                "--",
                 os.fspath(jar_path),
                 os.fspath(desugared_jar_file),
                 os.fspath(temp_file.name),
