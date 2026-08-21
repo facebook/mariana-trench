@@ -574,9 +574,10 @@ def _add_analysis_arguments(parser: argparse.ArgumentParser) -> None:
     analysis_arguments.add_argument(
         "--sequential",
         action="store",
+        type=_str_to_bool,
         nargs="?",
+        const=True,
         default=False,
-        choices=["true", "false"],
         help="Run the analysis sequentially, one a single thread.",
     )
     analysis_arguments.add_argument(
