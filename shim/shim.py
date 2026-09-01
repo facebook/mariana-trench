@@ -21,15 +21,18 @@ from zipfile import BadZipFile
 from pyre_extensions import none_throws, safe_json
 
 from .exit_codes import ClientError, ConfigurationError, ExitCode
+from .system_jar_resolution import jar_path_list
 
 try:
     from ..facebook.shim import configuration
     from ..facebook.shim.jar_extraction import resolve_analysis_jar
     from ..facebook.shim.superpack import register_superpack_dex_mode
+    from ..facebook.shim.system_jar_resolution import expand_system_jar_configuration
     from ..facebook.shim.third_party_utils import start_third_party_analysis
 except Exception:
     # pyre-ignore
     from . import configuration
+    from .system_jar_resolution import expand_system_jar_configuration
 
 import pyredex
 
@@ -68,23 +71,36 @@ def _check_executable(path: Path) -> Path:
     return path
 
 
-def _system_jar_configuration_path(input: str) -> str:
-    if input.endswith(".json"):
-        path = _path_exists(input)
-        with open(path) as file:
-            try:
-                paths = safe_json.load(file, List[str])
-                return ";".join(paths)
-            except safe_json.InvalidJson:
-                raise argparse.ArgumentTypeError(
-                    f"`{path}` must contain a list of strings"
-                )
-    elif Path(input).expanduser().is_dir():
-        raise argparse.ArgumentTypeError(f"Path `{input}` is a directory.")
+def _resolve_system_jar_paths(value: str, repository_root: str) -> str:
+    """
+    Expand the `--system-jar-configuration-path` value into a `;` separated
+    list of jars. Anything other than a list of paths is handed to
+    `expand_system_jar_configuration`.
+    """
+    if not value.endswith(".json"):
+        if Path(value).expanduser().is_dir():
+            raise ConfigurationError(message=f"Path `{value}` is a directory.")
 
-    # Validation deferred to backend if we pass `;` separated list of paths
-    # because they are allowed to not exist.
-    return input
+        # Validation deferred to backend if we pass `;` separated list of paths
+        # because they are allowed to not exist.
+        return value
+
+    try:
+        with open(Path(value).expanduser()) as file:
+            contents = json.load(file)
+    except (json.JSONDecodeError, UnicodeDecodeError) as error:
+        raise ConfigurationError(
+            message=f"`{value}` is not a valid JSON file: {error}"
+        ) from error
+    except OSError as error:
+        raise ConfigurationError(
+            message=f"`{value}` could not be read: {error}"
+        ) from error
+
+    if isinstance(contents, list):
+        return ";".join(jar_path_list(contents, f"`{value}`"))
+
+    return expand_system_jar_configuration(value, contents, repository_root)
 
 
 def _heuristics_json_config_exists(input: str) -> str:
@@ -362,7 +378,7 @@ def _add_configuration_arguments(parser: argparse.ArgumentParser) -> None:
     configuration_arguments = parser.add_argument_group("Configuration arguments")
     configuration_arguments.add_argument(
         "--system-jar-configuration-path",
-        type=_system_jar_configuration_path,
+        type=str,
         help="A JSON configuration file with a list of paths to the system jars "
         + "or a `;` separated list of jars.",
     )
@@ -1064,10 +1080,15 @@ def main() -> None:
                     LOG.warning(" Extra argument is unknown. Skipping...")
 
         if arguments.system_jar_configuration_path is None:
-            arguments.system_jar_configuration_path = _system_jar_configuration_path(
+            arguments.system_jar_configuration_path = os.fspath(
                 # pyre-fixme[16]: Module `shim` has no attribute `configuration`.
-                os.fspath(configuration.get_path("default_system_jar_paths.json"))
+                configuration.get_path("default_system_jar_paths.json")
             )
+
+        arguments.system_jar_configuration_path = _resolve_system_jar_paths(
+            arguments.system_jar_configuration_path,
+            arguments.repository_root_directory,
+        )
 
         if arguments.rules_paths is None:
             # pyre-fixme[16]: Module `shim` has no attribute `configuration`.
