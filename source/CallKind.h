@@ -9,7 +9,6 @@
 
 #include <string>
 
-#include <mariana-trench/Assert.h>
 #include <mariana-trench/IncludeMacros.h>
 
 namespace marianatrench {

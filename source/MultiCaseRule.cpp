@@ -7,10 +7,8 @@
 
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/MultiCaseRule.h>
-#include <mariana-trench/NamedKind.h>
 #include <mariana-trench/Rule.h>
 #include <mariana-trench/RulesCoverage.h>
-#include <mariana-trench/TransformsFactory.h>
 
 namespace marianatrench {
 

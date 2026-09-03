@@ -10,7 +10,6 @@
 
 #include <gtest/gtest.h>
 #include <mariana-trench/CallGraph.h>
-#include <mariana-trench/Context.h>
 #include <mariana-trench/Redex.h>
 #include <mariana-trench/tests/Test.h>
 

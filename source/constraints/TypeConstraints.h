@@ -10,10 +10,7 @@
 #include <re2/re2.h>
 
 #include <mariana-trench/Access.h>
-#include <mariana-trench/Context.h>
-#include <mariana-trench/Model.h>
 #include <mariana-trench/RE2.h>
-#include <mariana-trench/constraints/IntegerConstraint.h>
 #include <mariana-trench/model-generator/ModelGenerator.h>
 
 namespace marianatrench {

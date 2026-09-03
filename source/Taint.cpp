@@ -10,7 +10,6 @@
 #include <unordered_set>
 
 #include <mariana-trench/AccessPathFactory.h>
-#include <mariana-trench/Constants.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Taint.h>
 

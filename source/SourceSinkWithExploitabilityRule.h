@@ -12,7 +12,6 @@
 
 #include <json/json.h>
 
-#include <mariana-trench/Assert.h>
 #include <mariana-trench/Context.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Kind.h>

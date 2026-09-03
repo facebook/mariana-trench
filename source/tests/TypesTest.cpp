@@ -16,7 +16,6 @@
 #include <RedexContext.h>
 #include <TypeUtil.h>
 
-#include <mariana-trench/Dependencies.h>
 #include <mariana-trench/Filesystem.h>
 #include <mariana-trench/Redex.h>
 #include <mariana-trench/tests/Test.h>

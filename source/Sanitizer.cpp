@@ -7,8 +7,6 @@
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/JsonValidation.h>
-#include <mariana-trench/Log.h>
-#include <mariana-trench/NamedKind.h>
 #include <mariana-trench/Sanitizer.h>
 #include <mariana-trench/TransformsFactory.h>
 

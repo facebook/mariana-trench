@@ -8,9 +8,7 @@
 #include <gmock/gmock.h>
 
 #include <json/value.h>
-#include <mariana-trench/ClassProperties.h>
 #include <mariana-trench/Context.h>
-#include <mariana-trench/Fields.h>
 #include <mariana-trench/Model.h>
 #include <mariana-trench/Redex.h>
 #include <mariana-trench/Registry.h>

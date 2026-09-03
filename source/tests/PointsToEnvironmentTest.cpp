@@ -10,7 +10,6 @@
 #include <IRInstruction.h>
 
 #include <mariana-trench/PointsToEnvironment.h>
-#include <mariana-trench/Redex.h>
 #include <mariana-trench/WideningPointsToResolver.h>
 #include <mariana-trench/tests/Test.h>
 

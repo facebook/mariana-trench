@@ -22,7 +22,6 @@
 
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Assert.h>
-#include <mariana-trench/Heuristics.h>
 #include <mariana-trench/IncludeMacros.h>
 
 namespace marianatrench {

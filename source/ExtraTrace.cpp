@@ -10,8 +10,6 @@
 #include <Show.h>
 
 #include <mariana-trench/ExtraTrace.h>
-#include <mariana-trench/LocalTaint.h>
-#include <mariana-trench/Log.h>
 
 namespace marianatrench {
 

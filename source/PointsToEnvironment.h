@@ -9,7 +9,6 @@
 
 #include <sparta/PatriciaTreeMapAbstractPartition.h>
 
-#include <mariana-trench/AliasingProperties.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/MemoryLocation.h>
 #include <mariana-trench/MemoryLocationEnvironment.h>

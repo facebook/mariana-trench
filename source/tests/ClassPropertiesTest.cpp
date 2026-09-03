@@ -14,7 +14,6 @@
 #include <RedexContext.h>
 #include <RedexResources.h>
 
-#include <mariana-trench/Dependencies.h>
 #include <mariana-trench/FeatureMayAlwaysSet.h>
 #include <mariana-trench/Redex.h>
 #include <mariana-trench/tests/Test.h>

@@ -14,7 +14,6 @@
 
 #include <sparta/AbstractDomain.h>
 
-#include <mariana-trench/Assert.h>
 #include <mariana-trench/Feature.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/PatriciaTreeSetAbstractDomain.h>

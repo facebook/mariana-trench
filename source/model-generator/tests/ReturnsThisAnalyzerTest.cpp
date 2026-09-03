@@ -7,9 +7,7 @@
 
 #include <gtest/gtest.h>
 
-#include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Redex.h>
-#include <mariana-trench/model-generator/JsonModelGenerator.h>
 #include <mariana-trench/model-generator/ReturnsThisAnalyzer.h>
 #include <mariana-trench/tests/Test.h>
 

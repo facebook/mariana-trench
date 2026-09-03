@@ -5,7 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <mariana-trench/Log.h>
 #include <mariana-trench/PointsToEnvironment.h>
 #include <mariana-trench/WideningPointsToResolver.h>
 

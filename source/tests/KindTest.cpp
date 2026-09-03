@@ -11,7 +11,6 @@
 #include <mariana-trench/Kind.h>
 #include <mariana-trench/MultiSourceMultiSinkRule.h>
 #include <mariana-trench/NamedKind.h>
-#include <mariana-trench/Redex.h>
 #include <mariana-trench/TransformKind.h>
 #include <mariana-trench/tests/Test.h>
 

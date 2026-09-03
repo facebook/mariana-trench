@@ -12,7 +12,6 @@
 
 #include <Walkers.h>
 
-#include <mariana-trench/Dependencies.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Redex.h>
 #include <mariana-trench/model-generator/ServiceSourceGenerator.h>

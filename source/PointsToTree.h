@@ -11,8 +11,6 @@
 
 #include <mariana-trench/AbstractTreeDomain.h>
 #include <mariana-trench/IncludeMacros.h>
-#include <mariana-trench/MemoryLocation.h>
-#include <mariana-trench/MemoryLocationEnvironment.h>
 #include <mariana-trench/PointsToSet.h>
 
 namespace marianatrench {

@@ -11,7 +11,6 @@
 
 #include <sparta/PatriciaTreeSetAbstractDomain.h>
 
-#include <mariana-trench/Redex.h>
 #include <mariana-trench/tests/Test.h>
 
 namespace marianatrench {

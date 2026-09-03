@@ -9,7 +9,6 @@
 
 #include <mariana-trench/Access.h>
 #include <mariana-trench/CallGraph.h>
-#include <mariana-trench/ForwardAliasEnvironment.h>
 #include <mariana-trench/MemoryLocation.h>
 #include <mariana-trench/MemoryLocationEnvironment.h>
 #include <mariana-trench/Method.h>

@@ -13,7 +13,6 @@
 #include <InstructionAnalyzer.h>
 
 #include <mariana-trench/BackwardTaintEnvironment.h>
-#include <mariana-trench/Log.h>
 #include <mariana-trench/Timer.h>
 
 namespace marianatrench {

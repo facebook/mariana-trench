@@ -7,7 +7,6 @@
 
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
-#include <mariana-trench/Overrides.h>
 #include <mariana-trench/RE2.h>
 #include <mariana-trench/constraints/MethodConstraints.h>
 #include <mariana-trench/constraints/TypeConstraints.h>

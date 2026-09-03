@@ -7,7 +7,6 @@
 
 #include <gtest/gtest.h>
 
-#include <mariana-trench/Fields.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Redex.h>
 #include <mariana-trench/constraints/FieldConstraints.h>

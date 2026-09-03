@@ -16,7 +16,6 @@
 #include <mariana-trench/Kind.h>
 #include <mariana-trench/LocalArgumentKind.h>
 #include <mariana-trench/LocalReturnKind.h>
-#include <mariana-trench/MultiSourceMultiSinkRule.h>
 #include <mariana-trench/NamedKind.h>
 #include <mariana-trench/PartialKind.h>
 #include <mariana-trench/TransformKind.h>

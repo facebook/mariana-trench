@@ -19,7 +19,6 @@
 #include <mariana-trench/Access.h>
 #include <mariana-trench/Context.h>
 #include <mariana-trench/FeatureSet.h>
-#include <mariana-trench/Frame.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Issue.h>
 #include <mariana-trench/IssueSet.h>

@@ -12,7 +12,6 @@
 
 #include <IRInstruction.h>
 
-#include <mariana-trench/Assert.h>
 #include <mariana-trench/Compiler.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/MemoryLocation.h>

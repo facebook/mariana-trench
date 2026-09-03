@@ -7,7 +7,6 @@
 
 #include <mariana-trench/ForwardAliasFixpoint.h>
 #include <mariana-trench/Log.h>
-#include <mariana-trench/TransferCall.h>
 
 namespace marianatrench {
 

@@ -13,7 +13,6 @@
 
 #include <mariana-trench/Compiler.h>
 #include <mariana-trench/Context.h>
-#include <mariana-trench/IncludeMacros.h>
 
 namespace marianatrench {
 

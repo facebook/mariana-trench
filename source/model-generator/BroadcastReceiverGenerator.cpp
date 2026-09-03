@@ -12,7 +12,6 @@
 #include <mariana-trench/Access.h>
 #include <mariana-trench/CallGraph.h>
 #include <mariana-trench/Redex.h>
-#include <mariana-trench/Types.h>
 #include <mariana-trench/model-generator/BroadcastReceiverGenerator.h>
 
 namespace marianatrench {

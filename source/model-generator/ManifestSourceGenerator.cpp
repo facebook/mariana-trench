@@ -14,7 +14,6 @@
 
 #include <mariana-trench/CallGraph.h>
 #include <mariana-trench/Log.h>
-#include <mariana-trench/Options.h>
 #include <mariana-trench/Redex.h>
 #include <mariana-trench/model-generator/ManifestSourceGenerator.h>
 

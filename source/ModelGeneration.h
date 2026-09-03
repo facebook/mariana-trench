@@ -11,7 +11,6 @@
 #include <unordered_map>
 
 #include <mariana-trench/Context.h>
-#include <mariana-trench/Model.h>
 #include <mariana-trench/Registry.h>
 #include <mariana-trench/model-generator/ModelGenerator.h>
 #include <mariana-trench/model-generator/ModelGeneratorName.h>

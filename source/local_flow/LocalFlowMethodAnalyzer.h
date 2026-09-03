@@ -7,10 +7,7 @@
 
 #pragma once
 
-#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Method.h>
-#include <mariana-trench/local_flow/LocalFlowConstraint.h>
-#include <mariana-trench/local_flow/LocalFlowNode.h>
 #include <mariana-trench/local_flow/LocalFlowResult.h>
 
 namespace marianatrench {

@@ -10,7 +10,6 @@
 #include <mariana-trench/KindFactory.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/TransformsFactory.h>
-#include <mariana-trench/constraints/MethodConstraints.h>
 #include <mariana-trench/constraints/ParameterConstraints.h>
 #include <mariana-trench/model-generator/ModelTemplates.h>
 

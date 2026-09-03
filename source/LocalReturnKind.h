@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include <mariana-trench/Context.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/PropagationKind.h>
 

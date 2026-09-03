@@ -14,7 +14,6 @@
 #include <mariana-trench/Methods.h>
 #include <mariana-trench/Redex.h>
 #include <mariana-trench/local_flow/LocalFlowMethodAnalyzer.h>
-#include <mariana-trench/local_flow/LocalFlowTransfer.h>
 #include <mariana-trench/tests/Test.h>
 
 using namespace marianatrench;

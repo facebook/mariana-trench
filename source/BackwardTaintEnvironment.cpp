@@ -7,7 +7,6 @@
 
 #include <Show.h>
 
-#include <mariana-trench/Assert.h>
 #include <mariana-trench/BackwardTaintEnvironment.h>
 #include <mariana-trench/Heuristics.h>
 

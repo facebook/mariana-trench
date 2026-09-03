@@ -8,8 +8,6 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include <mariana-trench/Constants.h>
-#include <mariana-trench/Log.h>
 #include <mariana-trench/Method.h>
 #include <mariana-trench/shim-generator/Shims.h>
 

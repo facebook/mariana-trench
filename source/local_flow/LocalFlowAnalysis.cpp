@@ -19,8 +19,6 @@
 
 #include <mariana-trench/CallGraph.h>
 #include <mariana-trench/Log.h>
-#include <mariana-trench/Methods.h>
-#include <mariana-trench/Positions.h>
 #include <mariana-trench/Timer.h>
 
 namespace marianatrench {

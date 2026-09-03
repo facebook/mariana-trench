@@ -7,7 +7,6 @@
 
 #include <variant>
 
-#include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/shim-generator/Shim.h>
 
 namespace marianatrench {

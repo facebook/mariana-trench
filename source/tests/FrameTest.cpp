@@ -7,7 +7,6 @@
 
 #include <gmock/gmock.h>
 
-#include <mariana-trench/Fields.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/Redex.h>
 #include <mariana-trench/TaggedRootSet.h>

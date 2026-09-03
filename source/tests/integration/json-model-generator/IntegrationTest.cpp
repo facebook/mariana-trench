@@ -19,11 +19,8 @@
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Fields.h>
 #include <mariana-trench/Filesystem.h>
-#include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Log.h>
-#include <mariana-trench/MarianaTrench.h>
 #include <mariana-trench/model-generator/JsonModelGenerator.h>
-#include <mariana-trench/shim-generator/ShimGenerator.h>
 #include <mariana-trench/tests/Test.h>
 
 using namespace marianatrench;

@@ -9,7 +9,6 @@
 #include <gtest/gtest.h>
 
 #include <mariana-trench/Redex.h>
-#include <mariana-trench/model-generator/ModelGenerator.h>
 #include <mariana-trench/tests/Test.h>
 
 using namespace marianatrench;

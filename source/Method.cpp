@@ -14,11 +14,9 @@
 #include <TypeUtil.h>
 
 #include <mariana-trench/Assert.h>
-#include <mariana-trench/Heuristics.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Method.h>
 #include <mariana-trench/Methods.h>
-#include <mariana-trench/Overrides.h>
 #include <mariana-trench/Redex.h>
 
 namespace marianatrench {

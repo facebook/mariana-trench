@@ -18,7 +18,6 @@
 #include <mariana-trench/MemoryLocation.h>
 #include <mariana-trench/MemoryLocationEnvironment.h>
 #include <mariana-trench/PointsToEnvironment.h>
-#include <mariana-trench/PointsToTree.h>
 #include <mariana-trench/SetterAccessPathConstantDomain.h>
 #include <mariana-trench/WideningPointsToResolver.h>
 

@@ -8,7 +8,6 @@
 #pragma once
 
 #include <mariana-trench/Context.h>
-#include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Model.h>
 #include <mariana-trench/constraints/FieldConstraints.h>
 #include <mariana-trench/constraints/MethodConstraints.h>

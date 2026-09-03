@@ -13,8 +13,6 @@
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/Context.h>
 #include <mariana-trench/IncludeMacros.h>
-#include <mariana-trench/Kind.h>
-#include <mariana-trench/SanitizerSetTransform.h>
 #include <mariana-trench/TransformList.h>
 
 namespace marianatrench {

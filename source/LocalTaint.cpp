@@ -8,15 +8,11 @@
 #include <Show.h>
 
 #include <mariana-trench/Assert.h>
-#include <mariana-trench/ExtraTraceSet.h>
-#include <mariana-trench/FeatureFactory.h>
 #include <mariana-trench/Heuristics.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/KindFrames.h>
 #include <mariana-trench/LocalPositionSet.h>
 #include <mariana-trench/LocalTaint.h>
-#include <mariana-trench/Log.h>
-#include <mariana-trench/PathTreeDomain.h>
 
 namespace marianatrench {
 

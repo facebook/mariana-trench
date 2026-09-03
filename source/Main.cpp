@@ -17,15 +17,11 @@
 #include <DebugUtils.h>
 #include <RedexContext.h>
 
-#include <mariana-trench/Debug.h>
 #include <mariana-trench/ExitCode.h>
 #include <mariana-trench/GlobalRedexContext.h>
-#include <mariana-trench/JsonReaderWriter.h>
-#include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/LifecycleMethods.h>
 #include <mariana-trench/MarianaTrench.h>
 #include <mariana-trench/ModelGeneration.h>
-#include <mariana-trench/SanitizersOptions.h>
 #include <mariana-trench/shim-generator/ShimGeneration.h>
 
 int main(int argc, char* argv[]) {

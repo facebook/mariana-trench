@@ -7,8 +7,6 @@
 
 #include <iterator>
 
-#include <mariana-trench/JsonValidation.h>
-#include <mariana-trench/Options.h>
 #include <mariana-trench/constraints/MethodConstraints.h>
 #include <mariana-trench/shim-generator/ShimGenerator.h>
 

@@ -6,7 +6,6 @@
  */
 
 #include <mariana-trench/Assert.h>
-#include <mariana-trench/Rules.h>
 #include <mariana-trench/TransformsFactory.h>
 
 namespace marianatrench {

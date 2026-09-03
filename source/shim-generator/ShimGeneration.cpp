@@ -10,9 +10,7 @@
 #include <boost/algorithm/string/join.hpp>
 
 #include <mariana-trench/EventLogger.h>
-#include <mariana-trench/IntentRoutingAnalyzer.h>
 #include <mariana-trench/JsonReaderWriter.h>
-#include <mariana-trench/Options.h>
 #include <mariana-trench/shim-generator/ShimGeneration.h>
 #include <mariana-trench/shim-generator/ShimGenerator.h>
 #include <mariana-trench/shim-generator/Shims.h>

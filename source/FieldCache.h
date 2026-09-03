@@ -12,7 +12,6 @@
 #include <DexStore.h>
 
 #include <mariana-trench/ClassHierarchies.h>
-#include <mariana-trench/Compiler.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/UniquePointerConcurrentMap.h>
 

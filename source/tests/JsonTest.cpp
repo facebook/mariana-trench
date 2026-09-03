@@ -9,11 +9,9 @@
 
 #include <mariana-trench/Access.h>
 #include <mariana-trench/CanonicalName.h>
-#include <mariana-trench/Constants.h>
 #include <mariana-trench/ExtraTrace.h>
 #include <mariana-trench/Field.h>
 #include <mariana-trench/FieldModel.h>
-#include <mariana-trench/Fields.h>
 #include <mariana-trench/Frame.h>
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Kind.h>

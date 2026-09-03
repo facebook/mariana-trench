@@ -7,7 +7,6 @@
 
 #include <Show.h>
 
-#include <mariana-trench/Assert.h>
 #include <mariana-trench/ForwardTaintEnvironment.h>
 
 namespace marianatrench {

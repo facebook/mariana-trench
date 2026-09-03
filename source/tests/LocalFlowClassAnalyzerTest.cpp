@@ -14,7 +14,6 @@
 #include <mariana-trench/ClassIntervals.h>
 #include <mariana-trench/ControlFlowGraphs.h>
 #include <mariana-trench/Methods.h>
-#include <mariana-trench/Overrides.h>
 #include <mariana-trench/Redex.h>
 #include <mariana-trench/Types.h>
 #include <mariana-trench/local_flow/LocalFlowClassAnalyzer.h>

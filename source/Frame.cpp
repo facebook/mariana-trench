@@ -12,7 +12,6 @@
 #include <mariana-trench/Access.h>
 #include <mariana-trench/CallClassIntervalContext.h>
 #include <mariana-trench/CollapseDepth.h>
-#include <mariana-trench/Constants.h>
 #include <mariana-trench/FeatureFactory.h>
 #include <mariana-trench/FeatureMayAlwaysSet.h>
 #include <mariana-trench/Frame.h>

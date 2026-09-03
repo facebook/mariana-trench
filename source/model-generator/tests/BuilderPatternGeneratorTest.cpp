@@ -9,7 +9,6 @@
 
 #include <mariana-trench/Redex.h>
 #include <mariana-trench/model-generator/BuilderPatternGenerator.h>
-#include <mariana-trench/model-generator/ReturnsThisAnalyzer.h>
 #include <mariana-trench/tests/Test.h>
 
 using namespace marianatrench;

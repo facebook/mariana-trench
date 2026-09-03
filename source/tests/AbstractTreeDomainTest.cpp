@@ -12,9 +12,7 @@
 #include <Show.h>
 
 #include <mariana-trench/AbstractTreeDomain.h>
-#include <mariana-trench/Redex.h>
 #include <mariana-trench/ScalarAbstractDomain.h>
-#include <mariana-trench/TaintTree.h>
 #include <mariana-trench/tests/Test.h>
 
 namespace marianatrench {

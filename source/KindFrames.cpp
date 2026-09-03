@@ -8,10 +8,8 @@
 #include <Show.h>
 
 #include <mariana-trench/Assert.h>
-#include <mariana-trench/FeatureFactory.h>
 #include <mariana-trench/Heuristics.h>
 #include <mariana-trench/KindFrames.h>
-#include <mariana-trench/Log.h>
 #include <mariana-trench/PathTreeDomain.h>
 #include <mariana-trench/TransformOperations.h>
 #include <mariana-trench/UsedKinds.h>

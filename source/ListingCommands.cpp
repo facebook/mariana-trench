@@ -11,18 +11,15 @@
 #include <fmt/format.h>
 
 #include <mariana-trench/JsonReaderWriter.h>
-#include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/LifecycleMethod.h>
 #include <mariana-trench/ListingCommands.h>
 #include <mariana-trench/Log.h>
-#include <mariana-trench/MethodMappings.h>
 #include <mariana-trench/ModelGeneration.h>
 #include <mariana-trench/MultiSourceMultiSinkRule.h>
 #include <mariana-trench/Rule.h>
 #include <mariana-trench/Rules.h>
 #include <mariana-trench/SourceSinkRule.h>
 #include <mariana-trench/SourceSinkWithExploitabilityRule.h>
-#include <mariana-trench/model-generator/JsonModelGenerator.h>
 
 namespace marianatrench {
 

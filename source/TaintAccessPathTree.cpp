@@ -5,7 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <mariana-trench/FeatureFactory.h>
 #include <mariana-trench/TaintAccessPathTree.h>
 #include <mariana-trench/TaintTree.h>
 

@@ -18,11 +18,9 @@
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/CallKind.h>
 #include <mariana-trench/CanonicalName.h>
-#include <mariana-trench/ClassIntervals.h>
 #include <mariana-trench/Compiler.h>
 #include <mariana-trench/Context.h>
 #include <mariana-trench/ExtraTraceSet.h>
-#include <mariana-trench/Feature.h>
 #include <mariana-trench/FeatureMayAlwaysSet.h>
 #include <mariana-trench/FeatureSet.h>
 #include <mariana-trench/Frame.h>

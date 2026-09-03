@@ -9,12 +9,10 @@
 
 #include <Walkers.h>
 
-#include <mariana-trench/EventLogger.h>
 #include <mariana-trench/FilesCoverage.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Positions.h>
 #include <mariana-trench/Registry.h>
-#include <mariana-trench/Statistics.h>
 
 namespace marianatrench {
 

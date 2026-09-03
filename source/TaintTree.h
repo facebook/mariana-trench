@@ -9,7 +9,6 @@
 
 #include <mariana-trench/AbstractTreeDomain.h>
 #include <mariana-trench/AliasingProperties.h>
-#include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Taint.h>
 #include <mariana-trench/TaintTreeConfigurationOverrides.h>
 

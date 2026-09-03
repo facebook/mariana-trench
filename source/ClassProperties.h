@@ -11,7 +11,6 @@
 #include <RedexResources.h>
 
 #include <mariana-trench/Dependencies.h>
-#include <mariana-trench/Feature.h>
 #include <mariana-trench/FeatureMayAlwaysSet.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Method.h>

@@ -17,7 +17,6 @@
 #include <mariana-trench/Context.h>
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/Kind.h>
-#include <mariana-trench/MultiCaseRule.h>
 #include <mariana-trench/MultiSourceMultiSinkRule.h>
 #include <mariana-trench/PartialKind.h>
 #include <mariana-trench/Rule.h>
