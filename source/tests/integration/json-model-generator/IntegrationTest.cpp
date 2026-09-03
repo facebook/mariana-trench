@@ -12,7 +12,6 @@
 
 #include <DexLoader.h>
 #include <DexStore.h>
-#include <IRAssembler.h>
 #include <JarLoader.h>
 #include <RedexContext.h>
 

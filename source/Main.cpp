@@ -15,7 +15,6 @@
 
 #include <AggregateException.h>
 #include <DebugUtils.h>
-#include <RedexContext.h>
 
 #include <mariana-trench/ExitCode.h>
 #include <mariana-trench/GlobalRedexContext.h>

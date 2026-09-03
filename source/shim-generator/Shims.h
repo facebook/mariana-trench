@@ -10,8 +10,6 @@
 #include <functional>
 #include <memory>
 
-#include <ConcurrentContainers.h>
-
 #include <mariana-trench/IncludeMacros.h>
 #include <mariana-trench/IntentRoutingAnalyzer.h>
 #include <mariana-trench/Method.h>

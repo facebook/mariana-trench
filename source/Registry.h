@@ -12,7 +12,6 @@
 
 #include <ConcurrentContainers.h>
 #include <DexClass.h>
-#include <DexStore.h>
 
 #include <mariana-trench/Context.h>
 #include <mariana-trench/FieldModel.h>

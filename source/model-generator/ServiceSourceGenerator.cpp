@@ -10,8 +10,6 @@
 
 #include <boost/algorithm/string.hpp>
 
-#include <Walkers.h>
-
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Redex.h>
 #include <mariana-trench/model-generator/ServiceSourceGenerator.h>

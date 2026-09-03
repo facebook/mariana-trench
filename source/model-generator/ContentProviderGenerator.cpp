@@ -8,8 +8,6 @@
 #include <boost/algorithm/string.hpp>
 #include <re2/re2.h>
 
-#include <Walkers.h>
-
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Redex.h>
 #include <mariana-trench/model-generator/ContentProviderGenerator.h>

@@ -12,9 +12,7 @@
 
 #include <Creators.h>
 #include <DexStore.h>
-#include <IRAssembler.h>
 #include <RedexContext.h>
-#include <TypeUtil.h>
 
 #include <mariana-trench/Filesystem.h>
 #include <mariana-trench/Redex.h>

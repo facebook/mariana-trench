@@ -7,8 +7,6 @@
 
 #include <gmock/gmock.h>
 
-#include <IROpcode.h>
-
 #include <mariana-trench/Position.h>
 #include <mariana-trench/tests/Test.h>
 

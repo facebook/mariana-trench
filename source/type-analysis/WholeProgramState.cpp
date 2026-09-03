@@ -5,7 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <BaseIRAnalyzer.h>
 #include <Resolver.h>
 #include <Show.h>
 #include <Walkers.h>

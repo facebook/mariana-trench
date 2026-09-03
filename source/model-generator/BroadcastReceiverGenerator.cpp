@@ -6,7 +6,6 @@
  */
 
 #include <ConcurrentContainers.h>
-#include <Walkers.h>
 #include <re2/re2.h>
 
 #include <mariana-trench/Access.h>

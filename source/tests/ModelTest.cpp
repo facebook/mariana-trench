@@ -9,8 +9,6 @@
 
 #include <gmock/gmock.h>
 
-#include <Show.h>
-
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/Model.h>
 #include <mariana-trench/Redex.h>

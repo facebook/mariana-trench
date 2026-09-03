@@ -14,7 +14,6 @@
 #include <DexClass.h>
 #include <DexStore.h>
 #include <Show.h>
-#include <TypeUtil.h>
 #include <Walkers.h>
 
 #include <sparta/WorkQueue.h>

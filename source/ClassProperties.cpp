@@ -10,7 +10,6 @@
 
 #include <boost/algorithm/string.hpp>
 
-#include <InstructionAnalyzer.h>
 #include <RedexResources.h>
 #include <Walkers.h>
 #include <re2/re2.h>

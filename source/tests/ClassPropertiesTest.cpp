@@ -9,7 +9,6 @@
 
 #include <gtest/gtest.h>
 
-#include <Creators.h>
 #include <DexStore.h>
 #include <RedexContext.h>
 #include <RedexResources.h>

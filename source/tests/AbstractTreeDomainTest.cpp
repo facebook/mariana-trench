@@ -9,8 +9,6 @@
 
 #include <sparta/PatriciaTreeSetAbstractDomain.h>
 
-#include <Show.h>
-
 #include <mariana-trench/AbstractTreeDomain.h>
 #include <mariana-trench/ScalarAbstractDomain.h>
 #include <mariana-trench/tests/Test.h>

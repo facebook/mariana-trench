@@ -10,8 +10,6 @@
 
 #include <gmock/gmock.h>
 
-#include <Show.h>
-
 #include <mariana-trench/FieldModel.h>
 #include <mariana-trench/tests/Test.h>
 

@@ -9,9 +9,7 @@
 
 #include <gtest/gtest.h>
 
-#include <Creators.h>
 #include <DexStore.h>
-#include <IRAssembler.h>
 #include <RedexContext.h>
 
 #include <mariana-trench/Dependencies.h>

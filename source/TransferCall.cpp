@@ -6,7 +6,6 @@
  */
 
 #include <Show.h>
-#include <TypeUtil.h>
 
 #include <mariana-trench/FeatureFactory.h>
 #include <mariana-trench/Log.h>

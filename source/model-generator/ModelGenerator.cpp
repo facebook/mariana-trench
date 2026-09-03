@@ -12,7 +12,6 @@
 
 #include <RedexResources.h>
 #include <Resolver.h>
-#include <Walkers.h>
 
 #include <mariana-trench/AccessPathFactory.h>
 #include <mariana-trench/Debug.h>
