@@ -9,8 +9,6 @@
 
 #include <gmock/gmock.h>
 
-#include <sparta/PatriciaTreeSetAbstractDomain.h>
-
 #include <mariana-trench/tests/Test.h>
 
 namespace marianatrench {

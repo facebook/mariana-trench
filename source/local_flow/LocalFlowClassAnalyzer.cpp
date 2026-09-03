@@ -16,8 +16,6 @@
 #include <Show.h>
 #include <Walkers.h>
 
-#include <sparta/WorkQueue.h>
-
 #include <fmt/format.h>
 
 #include <mariana-trench/ClassIntervals.h>
