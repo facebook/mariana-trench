@@ -7,9 +7,6 @@
 
 #pragma once
 
-#include <optional>
-#include <ostream>
-
 #include <json/json.h>
 
 #include <sparta/AbstractDomain.h>

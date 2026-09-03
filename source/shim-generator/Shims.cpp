@@ -5,9 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <unordered_map>
-#include <unordered_set>
-
 #include <mariana-trench/Method.h>
 #include <mariana-trench/shim-generator/Shims.h>
 

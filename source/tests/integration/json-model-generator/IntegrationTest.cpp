@@ -5,8 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <mutex>
-
 #include <fmt/format.h>
 #include <gtest/gtest.h>
 

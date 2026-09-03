@@ -5,8 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <algorithm>
-
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/CallKind.h>
 #include <mariana-trench/JsonValidation.h>

@@ -5,7 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <cstdio>
 #include <optional>
 
 #include <gtest/gtest.h>

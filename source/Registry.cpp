@@ -5,9 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <cstdio>
 #include <filesystem>
-#include <fstream>
 
 #include <boost/algorithm/string/predicate.hpp>
 #include <fmt/format.h>

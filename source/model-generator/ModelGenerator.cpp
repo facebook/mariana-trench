@@ -6,7 +6,6 @@
  */
 
 #include <iterator>
-#include <mutex>
 
 #include <fmt/format.h>
 

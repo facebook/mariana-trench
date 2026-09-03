@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include <initializer_list>
 #include <ostream>
 
 #include <json/json.h>

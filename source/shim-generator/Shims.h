@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include <functional>
 #include <memory>
 
 #include <mariana-trench/IncludeMacros.h>

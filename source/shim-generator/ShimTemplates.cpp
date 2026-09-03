@@ -6,7 +6,6 @@
  */
 
 #include <optional>
-#include <stdexcept>
 #include <string>
 
 #include <re2/re2.h>

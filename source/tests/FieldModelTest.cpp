@@ -5,9 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <exception>
-#include <memory>
-
 #include <gmock/gmock.h>
 
 #include <mariana-trench/FieldModel.h>
