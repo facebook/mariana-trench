@@ -15,6 +15,7 @@
 
 #include <AggregateException.h>
 #include <DebugUtils.h>
+#include <RedexException.h>
 
 #include <mariana-trench/ExitCode.h>
 #include <mariana-trench/GlobalRedexContext.h>
@@ -84,6 +85,13 @@ int main(int argc, char* argv[]) {
     return ExitCode::mariana_trench_error(exception);
   } catch (const std::logic_error& exception) {
     return ExitCode::mariana_trench_error(exception);
+  } catch (const RedexException& exception) {
+    // `RedexException` derives from `std::exception` directly, so we need a
+    // separate catch.
+    if (exception.type == RedexError::GENERIC_ASSERTION_ERROR) {
+      return ExitCode::assertion_error(exception);
+    }
+    return ExitCode::redex_error(exception);
   } catch (const std::exception& exception) {
     return ExitCode::error(exception);
   }
