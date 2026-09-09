@@ -6,6 +6,7 @@
  */
 
 #include <Show.h>
+#include <TypeUtil.h>
 #include <Walkers.h>
 
 #include <mariana-trench/Assert.h>

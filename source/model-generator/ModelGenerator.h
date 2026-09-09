@@ -13,6 +13,7 @@
 #include <DexClass.h>
 #include <DexUtil.h>
 #include <RedexResources.h>
+#include <TypeUtil.h>
 #include <Walkers.h>
 
 #include <mariana-trench/Context.h>
