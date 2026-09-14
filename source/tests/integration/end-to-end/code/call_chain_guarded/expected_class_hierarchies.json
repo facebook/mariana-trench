@@ -1,0 +1,23 @@
+// @generated
+{
+  "extends" : 
+  {
+    "Landroid/app/Activity;" : 
+    [
+      "Landroidx/fragment/app/FragmentActivity;"
+    ],
+    "Landroid/content/Context;" : 
+    [
+      "Landroid/app/Activity;",
+      "Landroidx/fragment/app/FragmentActivity;"
+    ],
+    "Ljava/lang/Runnable;" : 
+    [
+      "Ljava/lang/Thread;"
+    ],
+    "Ljava/util/Map;" : 
+    [
+      "Ljava/util/TreeMap;"
+    ]
+  }
+}

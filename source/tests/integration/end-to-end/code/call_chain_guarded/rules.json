@@ -1,0 +1,13 @@
+[
+  {
+    "name": "Call Chain Flow",
+    "code": 1,
+    "description": "",
+    "sources": [
+      "CallChainOrigin"
+    ],
+    "sinks": [
+      "CallChainSink"
+    ]
+  }
+]
