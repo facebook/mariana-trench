@@ -1,0 +1,17 @@
+[
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/ConfigApi;.getFlag:(J)Z",
+    "effect_sinks": [
+      {
+        "port": "call-chain",
+        "kind": "ConfigReadSink",
+        "via_type_of": [
+          "Argument(0)"
+        ],
+        "via_value_of": [
+          "Argument(1)"
+        ]
+      }
+    ]
+  }
+]

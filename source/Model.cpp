@@ -484,6 +484,8 @@ Model Model::at_callsite(
        callee,
        call_position,
        &context,
+       &source_register_types,
+       &source_constant_arguments,
        &narrowed_class_interval_context,
        &caller_class_interval,
        max_call_chain_source_sink_distance](
@@ -492,6 +494,11 @@ Model Model::at_callsite(
           case Root::Kind::CallEffectCallChain:
           case Root::Kind::CallEffectExploitability:
           case Root::Kind::CallEffectIntent: {
+            // `via_type_of` / `via_value_of` ports on a call effect sink refer
+            // to the callee's arguments, so they resolve against the callsite
+            // the same way they do for a regular sink. They only materialize on
+            // declaration frames, which the propagated frame clears, so the
+            // arguments are ignored for the rest of the call chain.
             model.call_effect_sinks_.write(
                 callee_port,
                 call_effect.propagate(
@@ -500,8 +507,8 @@ Model Model::at_callsite(
                     call_position,
                     max_call_chain_source_sink_distance,
                     context,
-                    /* source register types */ {},
-                    /* source constant arguments */ {},
+                    source_register_types,
+                    source_constant_arguments,
                     narrowed_class_interval_context,
                     caller_class_interval,
                     model.add_features_to_arguments_),

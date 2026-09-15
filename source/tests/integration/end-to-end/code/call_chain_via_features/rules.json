@@ -1,0 +1,13 @@
+[
+  {
+    "name": "Config Read Call Chain",
+    "code": 1,
+    "description": "",
+    "sources": [
+      "CallChainOrigin"
+    ],
+    "sinks": [
+      "ConfigReadSink"
+    ]
+  }
+]
