@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <Resolver.h>
 #include <Show.h>
 
 #include <mariana-trench/FeatureFactory.h>
@@ -42,6 +43,81 @@ std::vector<const DexType * MT_NULLABLE> get_source_register_types(
   return register_types;
 }
 
+} // namespace
+
+std::optional<std::string> static_final_field_constant(
+    const IRInstruction* instruction) {
+  // `sget*` is the only field opcode that produces a value from no registers,
+  // so this also rejects `iget*` and the `*put*` family.
+  if (!instruction->has_field() || instruction->srcs_size() != 0) {
+    return std::nullopt;
+  }
+
+  const auto* field =
+      resolve_field(instruction->get_field(), FieldSearch::Static);
+  if (field == nullptr || !is_static(field) || !is_final(field)) {
+    return std::nullopt;
+  }
+
+  // `DexField::set_value` normalizes an absent encoded value to zero-for-type,
+  // so a field assigned in `<clinit>` is indistinguishable from one encoded as
+  // 0. Requiring the declaring class to have no `<clinit>` is what makes the
+  // encoded value trustworthy: the field is `final`, so the verifier only
+  // permits writes from its own class initializer, and there is none.
+  //
+  // This is conservative. A class that initializes some other field in
+  // `<clinit>` also loses its genuinely encoded constants. Distinguishing them
+  // means scanning `<clinit>` for an `sput` per lookup, which is not worth it
+  // until something needs it.
+  const auto* declaring_class = type_class(field->get_class());
+  if (declaring_class == nullptr || declaring_class->get_clinit() != nullptr) {
+    return std::nullopt;
+  }
+
+  const auto* value = field->get_static_value();
+  if (value == nullptr) {
+    return std::nullopt;
+  }
+
+  switch (value->evtype()) {
+    case DEVT_BYTE:
+    case DEVT_SHORT:
+    case DEVT_CHAR:
+    case DEVT_INT:
+    case DEVT_LONG:
+      // Matches `get_constant()`, which renders `IRInstruction::get_literal()`
+      // (an `int64_t`) the same way.
+      return std::to_string(static_cast<std::int64_t>(value->value()));
+    case DEVT_STRING: {
+      const auto* string_value =
+          static_cast<const DexEncodedValueString*>(value)->string();
+      if (string_value == nullptr) {
+        return std::nullopt;
+      }
+      return string_value->str_copy();
+    }
+    // Booleans, floats, and the reference-valued encodings have no
+    // representation that round-trips through a `via_value_of` feature.
+    case DEVT_FLOAT:
+    case DEVT_DOUBLE:
+    case DEVT_METHOD_TYPE:
+    case DEVT_METHOD_HANDLE:
+    case DEVT_TYPE:
+    case DEVT_FIELD:
+    case DEVT_METHOD:
+    case DEVT_ENUM:
+    case DEVT_ARRAY:
+    case DEVT_ANNOTATION:
+    case DEVT_NULL:
+    case DEVT_BOOLEAN:
+      break;
+  }
+
+  return std::nullopt;
+}
+
+namespace {
+
 std::optional<std::string> register_constant_argument(
     const RegisterMemoryLocationsMap& register_memory_locations_map,
     Register register_id) {
@@ -59,7 +135,12 @@ std::optional<std::string> register_constant_argument(
     return std::nullopt;
   }
 
-  return instruction_memory_location->get_constant();
+  if (auto constant = instruction_memory_location->get_constant()) {
+    return constant;
+  }
+
+  return static_final_field_constant(
+      instruction_memory_location->instruction());
 }
 
 CallClassIntervalContext get_type_context(

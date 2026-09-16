@@ -23,6 +23,23 @@ void log_instruction(
     const MethodContext* context,
     const IRInstruction* instruction);
 
+/**
+ * The constant value of a `static final` field read by an `sget*`, or
+ * `std::nullopt`.
+ *
+ * `InstructionMemoryLocation::get_constant()` only answers for instructions
+ * that carry a literal or a string operand, so an argument loaded from a
+ * constant static field resolves to nothing and a `via_value_of` model on it
+ * degrades to `unknown`. Java source rarely produces this shape, because javac
+ * folds reads of compile-time constants into the use site, but generated
+ * bytecode routinely does.
+ *
+ * Only `final` fields are read. A mutable static can be written after
+ * `<clinit>`, so its encoded value is not what the read observes.
+ */
+[[nodiscard]] std::optional<std::string> static_final_field_constant(
+    const IRInstruction* instruction);
+
 struct CalleeModel {
   const DexMethodRef* method_reference;
   const Method* MT_NULLABLE resolved_base_method;
