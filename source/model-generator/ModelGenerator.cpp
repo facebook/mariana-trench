@@ -518,6 +518,24 @@ TaintConfig generator::sink(
     TaggedRootSet via_type_of_ports,
     TaggedRootSet via_value_of_ports,
     OriginSet origins) {
+  return generator::sink(
+      context,
+      context.kind_factory->get(kind),
+      features,
+      callee_port,
+      std::move(via_type_of_ports),
+      std::move(via_value_of_ports),
+      std::move(origins));
+}
+
+TaintConfig generator::sink(
+    Context& context,
+    const Kind* kind,
+    const std::vector<std::string>& features,
+    Root::Kind callee_port,
+    TaggedRootSet via_type_of_ports,
+    TaggedRootSet via_value_of_ports,
+    OriginSet origins) {
   CallKind call_kind = CallKind::declaration();
   FeatureSet user_features;
   for (const auto& feature : features) {
@@ -529,7 +547,7 @@ TaintConfig generator::sink(
       : context.access_path_factory->get(AccessPath(Root(callee_port)));
 
   return TaintConfig(
-      /* kind */ context.kind_factory->get(kind),
+      /* kind */ kind,
       /* callee_port */ port,
       /* callee */ nullptr,
       /* call_kind */ call_kind,

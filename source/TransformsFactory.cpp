@@ -20,6 +20,11 @@ const SourceAsTransform* TransformsFactory::create_source_as_transform(
   return source_as_transform_.create(kind);
 }
 
+const MatchOnceTransform* TransformsFactory::create_match_once_transform()
+    const {
+  return &match_once_;
+}
+
 const SanitizerSetTransform* TransformsFactory::create_sanitizer_set_transform(
     const SanitizerSetTransform::Set& kinds) const {
   return sanitize_transform_set_.create(kinds);

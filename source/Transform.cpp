@@ -9,6 +9,7 @@
 
 #include <mariana-trench/JsonValidation.h>
 #include <mariana-trench/KindFactory.h>
+#include <mariana-trench/MatchOnceTransform.h>
 #include <mariana-trench/NamedTransform.h>
 #include <mariana-trench/SourceAsTransform.h>
 #include <mariana-trench/Transform.h>
@@ -24,7 +25,9 @@ const Transform* Transform::from_json(
 const Transform* Transform::from_trace_string(
     const std::string& transform,
     Context& context) {
-  if (transform.starts_with("SourceAsTransform[")) {
+  if (transform == "MatchOnce") {
+    return MatchOnceTransform::from_trace_string(transform, context);
+  } else if (transform.starts_with("SourceAsTransform[")) {
     return SourceAsTransform::from_trace_string(transform, context);
   } else if (transform.starts_with("Sanitize[")) {
     return SanitizerSetTransform::from_trace_string(transform, context);

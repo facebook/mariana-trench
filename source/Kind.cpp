@@ -12,6 +12,8 @@
 #include <mariana-trench/KindFactory.h>
 #include <mariana-trench/LocalArgumentKind.h>
 #include <mariana-trench/NamedKind.h>
+#include <mariana-trench/TransformList.h>
+#include <mariana-trench/TransformsFactory.h>
 #include <mariana-trench/TriggeredPartialKind.h>
 
 namespace marianatrench {
@@ -87,7 +89,7 @@ const Kind* Kind::from_config_json(
     bool check_unexpected_members) {
   if (check_unexpected_members) {
     JsonValidation::check_unexpected_members(
-        value, {"kind", "partial_label", "subkind"});
+        value, {"kind", "partial_label", "subkind", "transforms"});
   }
 
   const auto leaf_kind = JsonValidation::string(value, /* field */ "kind");
@@ -102,9 +104,22 @@ const Kind* Kind::from_config_json(
   } else if (value.isMember("partial_label")) {
     return context.kind_factory->get_partial(
         leaf_kind, JsonValidation::string(value, /* field */ "partial_label"));
-  } else {
-    return context.kind_factory->get(leaf_kind);
   }
+
+  const auto* base_kind = context.kind_factory->get(leaf_kind);
+  if (!value.isMember("transforms")) {
+    return base_kind;
+  }
+
+  // A declared kind may carry transforms, so that a model can name the same
+  // transformed kind a rule names in its `transforms` field. Applied as local
+  // transforms, matching how `canonicalize_sink_kind_for_add` registers them.
+  return context.kind_factory->transform_kind(
+      base_kind,
+      /* local_transforms */
+      context.transforms_factory->create(
+          TransformList::from_json(value["transforms"], context)),
+      /* global_transforms */ nullptr);
 }
 
 const Kind* Kind::from_trace_string(const std::string& kind, Context& context) {

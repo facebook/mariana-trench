@@ -116,6 +116,7 @@ TaintConfig TaintConfig::from_json(const Json::Value& value, Context& context) {
                          // `TaintConfigTemplate::from_json`
        "via_type_of",
        "via_value_of",
+       "transforms",
        "canonical_names"});
 
   const Kind* kind = Kind::from_config_json(

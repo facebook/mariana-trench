@@ -1,0 +1,41 @@
+[
+  {
+    "name": "Call chain flow reported at the nearest source",
+    "code": 1,
+    "description": "",
+    "sources": [
+      "ChainSource"
+    ],
+    "sinks": [
+      "MatchOnceSink"
+    ],
+    "transforms": [
+      "MatchOnce"
+    ]
+  },
+  {
+    "name": "Call chain flow reported at every caller",
+    "code": 2,
+    "description": "",
+    "sources": [
+      "ChainSource"
+    ],
+    "sinks": [
+      "PlainSink"
+    ]
+  },
+  {
+    "name": "Call chain flow reported at the nearest source, naming the argument",
+    "code": 3,
+    "description": "",
+    "sources": [
+      "ChainSource"
+    ],
+    "sinks": [
+      "MatchOnceValueSink"
+    ],
+    "transforms": [
+      "MatchOnce"
+    ]
+  }
+]

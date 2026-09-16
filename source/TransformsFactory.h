@@ -11,6 +11,7 @@
 
 #include <mariana-trench/Context.h>
 #include <mariana-trench/Kind.h>
+#include <mariana-trench/MatchOnceTransform.h>
 #include <mariana-trench/NamedTransform.h>
 #include <mariana-trench/SanitizerSetTransform.h>
 #include <mariana-trench/SourceAsTransform.h>
@@ -42,6 +43,8 @@ class TransformsFactory final {
   const NamedTransform* create_transform(const std::string& name) const;
 
   const SourceAsTransform* create_source_as_transform(const Kind* kind) const;
+
+  const MatchOnceTransform* create_match_once_transform() const;
 
   const SanitizerSetTransform* create_sanitizer_set_transform(
       const SanitizerSetTransform::Set& kinds) const;
@@ -82,6 +85,7 @@ class TransformsFactory final {
  private:
   UniquePointerFactory<std::string, NamedTransform> transform_;
   UniquePointerFactory<const Kind*, SourceAsTransform> source_as_transform_;
+  MatchOnceTransform match_once_;
   UniquePointerFactory<
       SanitizerSetTransform::Set,
       SanitizerSetTransform,

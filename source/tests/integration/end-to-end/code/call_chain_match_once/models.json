@@ -1,0 +1,59 @@
+[
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/MatchOnceApi;.execute:()V",
+    "effect_sinks": [
+      {
+        "port": "call-chain",
+        "kind": "MatchOnceSink",
+        "transforms": [
+          "MatchOnce"
+        ]
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/PlainApi;.execute:()V",
+    "effect_sinks": [
+      {
+        "port": "call-chain",
+        "kind": "PlainSink"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/MatchOnceValueApi;.execute:(J)V",
+    "effect_sinks": [
+      {
+        "port": "call-chain",
+        "kind": "MatchOnceValueSink",
+        "transforms": [
+          "MatchOnce"
+        ],
+        "via_value_of": [
+          {
+            "port": "Argument(1)",
+            "tag": "specifier"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/CallChainMatchOnce;.middle:()V",
+    "effect_sources": [
+      {
+        "port": "call-chain",
+        "kind": "ChainSource"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/CallChainMatchOnce;.outer:()V",
+    "effect_sources": [
+      {
+        "port": "call-chain",
+        "kind": "ChainSource"
+      }
+    ]
+  }
+]

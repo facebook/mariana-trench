@@ -270,6 +270,19 @@ TaintConfig sink(
     TaggedRootSet via_type_of_ports = {},
     TaggedRootSet via_value_of_ports = {},
     OriginSet origins = {});
+/**
+ * Overload for kinds that are not plain names, e.g. `MatchOnce[...]`. The
+ * string overload always builds a `NamedKind`, so a generator that needs a
+ * wrapped kind must construct it and pass it here.
+ */
+TaintConfig sink(
+    Context& context,
+    const Kind* kind,
+    const std::vector<std::string>& features = {},
+    Root::Kind callee_port = Root::Kind::Leaf,
+    TaggedRootSet via_type_of_ports = {},
+    TaggedRootSet via_value_of_ports = {},
+    OriginSet origins = {});
 TaintConfig partial_sink(
     Context& context,
     const std::string& kind,

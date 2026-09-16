@@ -13,9 +13,11 @@
 #include <mariana-trench/FeatureMayAlwaysSet.h>
 #include <mariana-trench/Heuristics.h>
 #include <mariana-trench/Log.h>
+#include <mariana-trench/MatchOnceTransform.h>
 #include <mariana-trench/OriginFactory.h>
 #include <mariana-trench/PartialKind.h>
 #include <mariana-trench/Positions.h>
+#include <mariana-trench/Rules.h>
 #include <mariana-trench/TransferCall.h>
 #include <mariana-trench/TransformOperations.h>
 #include <mariana-trench/TriggeredPartialKind.h>
@@ -766,19 +768,82 @@ void infer_exploitability_sinks(
       context->heuristics);
 }
 
+/**
+ * True if one of this method's own call-effect sources matches a rule with
+ * `sink_kind`, i.e. the flow is reported here.
+ */
+bool matches_call_chain_rule(
+    MethodContext* context,
+    const TaintTree& sources,
+    const Kind* sink_kind,
+    const Taint& sink_taint) {
+  for (const auto& [_path, source_taint] : sources.elements()) {
+    for (const auto& [source_kind, kind_sources] :
+         source_taint.partition_by_kind()) {
+      auto narrowed_sources = kind_sources;
+      auto narrowed_sinks = sink_taint;
+      narrowed_sources.intersect_intervals_with(narrowed_sinks);
+      narrowed_sinks.intersect_intervals_with(narrowed_sources);
+      if (narrowed_sources.is_bottom() || narrowed_sinks.is_bottom()) {
+        continue;
+      }
+      if (!context->rules.rules(source_kind, sink_kind).empty()) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+/**
+ * The call-chain effect sinks that still need to climb to this method's
+ * callers: everything except the `MatchOnce` kinds whose rule is matched here.
+ *
+ * Both halves of that decision are declared rather than inferred. The caller's
+ * call-effect sources always come from model generators, and the callee's sink
+ * kinds from the callee's model, so no dataflow is involved and the forward
+ * analysis has nothing to contribute. That is what makes this different from
+ * the exploitability path, whose source-as-transform sinks only exist once the
+ * forward analysis has materialized them.
+ */
+Taint surviving_call_chain_sinks(
+    MethodContext* context,
+    const AccessPath& port,
+    const Taint& sinks) {
+  const auto& sources =
+      context->previous_model.call_effect_sources().read(port);
+  if (sources.is_bottom()) {
+    return sinks;
+  }
+
+  auto surviving = Taint::bottom();
+  for (const auto& [sink_kind, sink_taint] : sinks.partition_by_kind()) {
+    if (has_match_once_transform(sink_kind) &&
+        matches_call_chain_rule(context, sources, sink_kind, sink_taint)) {
+      continue;
+    }
+    surviving.join_with(sink_taint);
+  }
+  return surviving;
+}
+
 void apply_call_effects(MethodContext* context, const CalleeModel& callee) {
   const auto& callee_call_effect_sinks = callee.model.call_effect_sinks();
   for (const auto& [port, sinks] : callee_call_effect_sinks.elements()) {
     switch (port.root().kind()) {
       case Root::Kind::CallEffectCallChain: {
+        auto surviving = surviving_call_chain_sinks(context, port, sinks);
+        if (surviving.is_bottom()) {
+          break;
+        }
         LOG_OR_DUMP(
             context,
             4,
             "Add inferred call effect sinks {} for method: {}",
-            sinks,
+            surviving,
             show(context->method()));
         context->new_model.add_inferred_call_effect_sinks(
-            port, sinks, context->heuristics);
+            port, surviving, context->heuristics);
       } break;
 
       case Root::Kind::CallEffectExploitability:
