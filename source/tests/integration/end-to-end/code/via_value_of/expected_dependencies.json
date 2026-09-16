@@ -45,6 +45,82 @@
     "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testSinkStringConstant:()V",
     "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testSinkStringLiteral:()V"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/ShapeBoxedConfigApi;.<init>:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entrySBoxedSpecifier:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/ShapeBoxedConfigApi;.getFlagBoxed:(Lcom/facebook/marianatrench/integrationtests/ShapeSpecifier;)Z" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entrySBoxedSpecifier:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/ShapeConfigApi;.<init>:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryALiteral:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryBLocalVariable:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryCTernary:(Z)V",
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryDStaticFinalFolded:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryEStaticFinalComputed:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryFStaticMutable:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryGMethodReturn:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryIArithmetic:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryJWidenedInt:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryKLoopCarried:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryLInstanceField:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryMBoxedUnboxed:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryNTwoCallSites:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryOArrayLookup:(I)V",
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryPSwitchJoin:(I)V",
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryQSwitchPerCase:(I)Z",
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryTLocalCopy:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryUManyCallSites:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.helperTakesSpecifier:(J)V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/ShapeConfigApi;.getFlag:(J)Z" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryALiteral:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryBLocalVariable:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryCTernary:(Z)V",
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryDStaticFinalFolded:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryEStaticFinalComputed:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryFStaticMutable:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryGMethodReturn:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryIArithmetic:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryJWidenedInt:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryKLoopCarried:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryLInstanceField:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryMBoxedUnboxed:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryNTwoCallSites:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryOArrayLookup:(I)V",
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryPSwitchJoin:(I)V",
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryQSwitchPerCase:(I)Z",
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryTLocalCopy:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryUManyCallSites:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.helperTakesSpecifier:(J)V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/ShapeConfigContext;.getContextFlag:(J)Z" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryRInterfaceDispatch:(Lcom/facebook/marianatrench/integrationtests/ShapeConfigContext;)V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/ShapeConstants;.computeSeed:()J" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/ShapeConstants;.<clinit>:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/ShapeContextA;.getContextFlag:(J)Z" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryRInterfaceDispatch:(Lcom/facebook/marianatrench/integrationtests/ShapeConfigContext;)V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/ShapeContextB;.getContextFlag:(J)Z" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryRInterfaceDispatch:(Lcom/facebook/marianatrench/integrationtests/ShapeConfigContext;)V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/ShapeHolder;.<init>:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryLInstanceField:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/ShapeSpecifier;.<init>:(J)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entrySBoxedSpecifier:()V"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaInt:(I)Ljava/lang/Object;" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testSourceIntConstant:()V",
@@ -96,6 +172,14 @@
   [
     "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.testHops:()V"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.constantReturningMethod:()J" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryGMethodReturn:()V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.helperTakesSpecifier:(J)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryHViaParameterHelper:()V"
+  ],
   "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V" : 
   [
     "Lcom/facebook/secure/context/SecureContextHelperV2;.inAppBrowser:()Lcom/facebook/secure/context/IntentLauncher;",
@@ -139,10 +223,18 @@
     "Lcom/facebook/marianatrench/integrationtests/Constants;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+    "Lcom/facebook/marianatrench/integrationtests/ShapeBoxedConfigApi;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ShapeConfigApi;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ShapeConstants;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ShapeContextA;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ShapeContextB;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ShapeHolder;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ShapeSpecifier;.<init>:(J)V",
     "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaInt:(I)Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaInvalidModel:()Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaString:(Ljava/lang/String;)Ljava/lang/Object;",
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.<init>:()V",
     "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V",
     "Lcom/facebook/secure/context/SecureContextHelperV2;.<init>:()V",
     "Lcom/facebook/user/model/User;.<init>:()V",

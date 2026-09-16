@@ -9,5 +9,16 @@
     "sinks": [
       "Sink"
     ]
+  },
+  {
+    "name": "Config Read Call Chain",
+    "code": 2,
+    "description": "",
+    "sources": [
+      "CallChainOrigin"
+    ],
+    "sinks": [
+      "ConfigReadSink"
+    ]
   }
 ]

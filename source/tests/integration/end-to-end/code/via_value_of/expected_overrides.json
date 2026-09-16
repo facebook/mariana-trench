@@ -4,6 +4,11 @@
   [
     "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/ShapeConfigContext;.getContextFlag:(J)Z" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/ShapeContextA;.getContextFlag:(J)Z",
+    "Lcom/facebook/marianatrench/integrationtests/ShapeContextB;.getContextFlag:(J)Z"
+  ],
   "Ljava/lang/Object;.toString:()Ljava/lang/String;" : 
   [
     "Landroid/location/Location;.toString:()Ljava/lang/String;",

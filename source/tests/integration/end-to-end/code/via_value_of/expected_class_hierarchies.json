@@ -11,6 +11,11 @@
       "Landroid/app/Activity;",
       "Landroidx/fragment/app/FragmentActivity;"
     ],
+    "Lcom/facebook/marianatrench/integrationtests/ShapeConfigContext;" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/ShapeContextA;",
+      "Lcom/facebook/marianatrench/integrationtests/ShapeContextB;"
+    ],
     "Ljava/lang/Runnable;" : 
     [
       "Ljava/lang/Thread;"

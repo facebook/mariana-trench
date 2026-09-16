@@ -92,5 +92,65 @@
         ]
       }
     ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/ShapeConfigApi;.getFlag:(J)Z",
+    "effect_sinks": [
+      {
+        "port": "call-chain",
+        "kind": "ConfigReadSink",
+        "via_value_of": [
+          "Argument(1)"
+        ]
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/ShapeConfigContext;.getContextFlag:(J)Z",
+    "effect_sinks": [
+      {
+        "port": "call-chain",
+        "kind": "ConfigReadSink",
+        "via_value_of": [
+          "Argument(1)"
+        ]
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/ShapeContextA;.getContextFlag:(J)Z",
+    "effect_sinks": [
+      {
+        "port": "call-chain",
+        "kind": "ConfigReadSink",
+        "via_value_of": [
+          "Argument(1)"
+        ]
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/ShapeContextB;.getContextFlag:(J)Z",
+    "effect_sinks": [
+      {
+        "port": "call-chain",
+        "kind": "ConfigReadSink",
+        "via_value_of": [
+          "Argument(1)"
+        ]
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/ShapeBoxedConfigApi;.getFlagBoxed:(Lcom/facebook/marianatrench/integrationtests/ShapeSpecifier;)Z",
+    "effect_sinks": [
+      {
+        "port": "call-chain",
+        "kind": "ConfigReadSink",
+        "via_value_of": [
+          "Argument(1)"
+        ]
+      }
+    ]
   }
 ]
