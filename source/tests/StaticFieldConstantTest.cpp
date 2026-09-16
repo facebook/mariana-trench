@@ -176,4 +176,68 @@ TEST_F(StaticFieldConstantTest, IgnoresInstanceFieldRead) {
   EXPECT_EQ(static_final_field_constant(instruction.get()), std::nullopt);
 }
 
+TEST_F(StaticFieldConstantTest, IdentityForStaticFinalObjectField) {
+  // The FB4A shape: a wrapper object built in `<clinit>` and read back with
+  // `sget-object`. There is no value to read, so the field names it.
+  auto* field = create_static_field(
+      "LIdentityForStaticFinalObjectField;",
+      "specifier",
+      DexType::make_type("Lcom/example/Specifier;"),
+      /* value */ nullptr,
+      static_cast<DexAccessFlags>(ACC_STATIC | ACC_FINAL),
+      /* with_class_initializer */ true);
+
+  auto instruction = sget_of(field, OPCODE_SGET_OBJECT);
+
+  EXPECT_EQ(
+      static_final_field_identity(instruction.get()),
+      std::optional<std::string>(
+          "LIdentityForStaticFinalObjectField;.specifier"));
+}
+
+TEST_F(StaticFieldConstantTest, IdentityIgnoresArrayField) {
+  // Array element reads are index-insensitive in the alias analysis, so
+  // `TABLE[i]` shares a memory location with `TABLE`. Naming the field would
+  // claim the argument is the array when it is one unknown element of it.
+  auto* field = create_static_field(
+      "LIdentityIgnoresArrayField;",
+      "table",
+      DexType::make_type("[J"),
+      /* value */ nullptr);
+
+  auto instruction = sget_of(field, OPCODE_SGET_OBJECT);
+
+  EXPECT_EQ(static_final_field_identity(instruction.get()), std::nullopt);
+}
+
+TEST_F(StaticFieldConstantTest, IdentityIgnoresMutableObjectField) {
+  auto* field = create_static_field(
+      "LIdentityIgnoresMutableObjectField;",
+      "specifier",
+      DexType::make_type("Lcom/example/Specifier;"),
+      /* value */ nullptr,
+      ACC_STATIC);
+
+  auto instruction = sget_of(field, OPCODE_SGET_OBJECT);
+
+  EXPECT_EQ(static_final_field_identity(instruction.get()), std::nullopt);
+}
+
+TEST_F(StaticFieldConstantTest, IdentityDefersToConstantForPrimitives) {
+  // A primitive has a real value, which is strictly more informative than the
+  // field name, so the identity path declines it.
+  auto* field = create_static_field(
+      "LIdentityDefersToConstantForPrimitives;",
+      "specifier",
+      type::_long(),
+      std::make_unique<DexEncodedValuePrimitive>(DEVT_LONG, 17));
+
+  auto instruction = sget_of(field, OPCODE_SGET_WIDE);
+
+  EXPECT_EQ(static_final_field_identity(instruction.get()), std::nullopt);
+  EXPECT_EQ(
+      static_final_field_constant(instruction.get()),
+      std::optional<std::string>("17"));
+}
+
 } // namespace marianatrench

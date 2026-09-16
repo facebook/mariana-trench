@@ -40,6 +40,24 @@ void log_instruction(
 [[nodiscard]] std::optional<std::string> static_final_field_constant(
     const IRInstruction* instruction);
 
+/**
+ * An identity for the object held in a `static final` field read by an
+ * `sget-object`, as `Lcom/example/Holder;.field_name`, or `std::nullopt`.
+ *
+ * A reference has no constant value, so `via_value_of` on an object argument
+ * can only ever say `unknown`. Naming the field it came from is the most
+ * specific true thing available, and for a generated constant-holder class it
+ * is a stable identity: the field is `final`, so it denotes the same object on
+ * every run, and unlike the object's contents the name does not change between
+ * builds.
+ *
+ * Unlike `static_final_field_constant` this needs no `<clinit>` guard. It makes
+ * no claim about the object's contents, only about which field holds it, and
+ * `final` already guarantees that binding is written once.
+ */
+[[nodiscard]] std::optional<std::string> static_final_field_identity(
+    const IRInstruction* instruction);
+
 struct CalleeModel {
   const DexMethodRef* method_reference;
   const Method* MT_NULLABLE resolved_base_method;

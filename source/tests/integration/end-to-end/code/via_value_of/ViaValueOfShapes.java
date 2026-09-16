@@ -48,6 +48,13 @@ class ShapeBoxedConfigApi {
   }
 }
 
+// A holder whose object is built once in `<clinit>` and read back with
+// `sget-object` at every use site, which is the dominant shape for
+// generated constant holders.
+class ShapeSpecifierHolder {
+  static final ShapeSpecifier FIELD = new ShapeSpecifier(1041L);
+}
+
 // An interface with real implementors, so the call site joins the base model
 // with every override model.
 interface ShapeConfigContext {
@@ -201,9 +208,15 @@ public class ViaValueOfShapes {
     context.getContextFlag(1025L);
   }
 
-  // (s) Specifier boxed in an object.
+  // (s) Specifier boxed in an object constructed at the call site.
   static void entrySBoxedSpecifier() {
     new ShapeBoxedConfigApi().getFlagBoxed(new ShapeSpecifier(1026L));
+  }
+
+  // (v) Specifier boxed in an object held in a `static final` field, read with
+  // `sget-object`. The shape generated constant holders produce.
+  static void entryVBoxedSpecifierFromStaticField() {
+    new ShapeBoxedConfigApi().getFlagBoxed(ShapeSpecifierHolder.FIELD);
   }
 
   // (t) Copy through a second local.

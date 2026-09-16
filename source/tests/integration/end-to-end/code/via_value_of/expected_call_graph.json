@@ -280,6 +280,20 @@
       "Ljava/lang/Object;.<init>:()V"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/ShapeSpecifierHolder;.<clinit>:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/ShapeSpecifier;.<init>:(J)V"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/ShapeSpecifierHolder;.<init>:()V" : 
+  {
+    "static" : 
+    [
+      "Ljava/lang/Object;.<init>:()V"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.<init>:()V" : 
   {
     "static" : 
@@ -667,6 +681,17 @@
     "virtual" : 
     [
       "Lcom/facebook/marianatrench/integrationtests/ShapeConfigApi;.getFlag:(J)Z"
+    ]
+  },
+  "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryVBoxedSpecifierFromStaticField:()V" : 
+  {
+    "static" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/ShapeBoxedConfigApi;.<init>:()V"
+    ],
+    "virtual" : 
+    [
+      "Lcom/facebook/marianatrench/integrationtests/ShapeBoxedConfigApi;.getFlagBoxed:(Lcom/facebook/marianatrench/integrationtests/ShapeSpecifier;)Z"
     ]
   },
   "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.helperTakesSpecifier:(J)V" : 

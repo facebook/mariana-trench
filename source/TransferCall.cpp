@@ -5,6 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <fmt/format.h>
+
 #include <Resolver.h>
 #include <Show.h>
 
@@ -116,6 +118,37 @@ std::optional<std::string> static_final_field_constant(
   return std::nullopt;
 }
 
+std::optional<std::string> static_final_field_identity(
+    const IRInstruction* instruction) {
+  if (!instruction->has_field() || instruction->srcs_size() != 0) {
+    return std::nullopt;
+  }
+
+  const auto* field =
+      resolve_field(instruction->get_field(), FieldSearch::Static);
+  if (field == nullptr || !is_static(field) || !is_final(field)) {
+    return std::nullopt;
+  }
+
+  // Primitives and strings have a real value; `static_final_field_constant`
+  // answers for those and is strictly more informative.
+  if (type::is_primitive(field->get_type()) ||
+      field->get_type() == type::java_lang_String()) {
+    return std::nullopt;
+  }
+
+  // Array element reads are index-insensitive in the alias analysis, so
+  // `TABLE[i]` resolves to the same memory location as `TABLE` itself. Naming
+  // the field would claim the argument is the array when it is one element of
+  // it, and which element is exactly what is unknown.
+  if (type::is_array(field->get_type())) {
+    return std::nullopt;
+  }
+
+  return fmt::format(
+      "{}.{}", show(field->get_class()), show(field->get_name()));
+}
+
 namespace {
 
 std::optional<std::string> register_constant_argument(
@@ -139,8 +172,12 @@ std::optional<std::string> register_constant_argument(
     return constant;
   }
 
-  return static_final_field_constant(
-      instruction_memory_location->instruction());
+  const auto* instruction = instruction_memory_location->instruction();
+  if (auto constant = static_final_field_constant(instruction)) {
+    return constant;
+  }
+
+  return static_final_field_identity(instruction);
 }
 
 CallClassIntervalContext get_type_context(

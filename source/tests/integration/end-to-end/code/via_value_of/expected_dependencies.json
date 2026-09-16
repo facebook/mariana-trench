@@ -47,11 +47,13 @@
   ],
   "Lcom/facebook/marianatrench/integrationtests/ShapeBoxedConfigApi;.<init>:()V" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entrySBoxedSpecifier:()V"
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entrySBoxedSpecifier:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryVBoxedSpecifierFromStaticField:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/ShapeBoxedConfigApi;.getFlagBoxed:(Lcom/facebook/marianatrench/integrationtests/ShapeSpecifier;)Z" : 
   [
-    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entrySBoxedSpecifier:()V"
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entrySBoxedSpecifier:()V",
+    "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entryVBoxedSpecifierFromStaticField:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/ShapeConfigApi;.<init>:()V" : 
   [
@@ -119,6 +121,7 @@
   ],
   "Lcom/facebook/marianatrench/integrationtests/ShapeSpecifier;.<init>:(J)V" : 
   [
+    "Lcom/facebook/marianatrench/integrationtests/ShapeSpecifierHolder;.<clinit>:()V",
     "Lcom/facebook/marianatrench/integrationtests/ViaValueOfShapes;.entrySBoxedSpecifier:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaInt:(I)Ljava/lang/Object;" : 
@@ -230,6 +233,7 @@
     "Lcom/facebook/marianatrench/integrationtests/ShapeContextB;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/ShapeHolder;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/ShapeSpecifier;.<init>:(J)V",
+    "Lcom/facebook/marianatrench/integrationtests/ShapeSpecifierHolder;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaInt:(I)Ljava/lang/Object;",
     "Lcom/facebook/marianatrench/integrationtests/ViaValueOf;.getSourceViaInvalidModel:()Ljava/lang/Object;",
