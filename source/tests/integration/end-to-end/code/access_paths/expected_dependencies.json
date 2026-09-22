@@ -33,6 +33,7 @@
   ],
   "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.getDifferentSource:()Ljava/lang/Object;" : 
   [
+    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testNestedStrongWrite:(Ljava/lang/String;)V",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testSinkOnIndexFromValueOf:()V",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testSinkOnIndexFromValueOfWrapper:()V",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testStrongUpdate:()V",
@@ -114,9 +115,26 @@
   [
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.sinkIndexWrapper:(Lcom/facebook/marianatrench/integrationtests/Dictionary;)V"
   ],
+  "Lcom/facebook/marianatrench/integrationtests/NestedDictionary;.<init>:()V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testNestedStrongWrite:(Ljava/lang/String;)V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/NestedDictionary;.getFieldAtIndex:(Ljava/lang/String;)Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testNestedStrongWrite:(Ljava/lang/String;)V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/NestedDictionary;.setFieldAtIndex:(Ljava/lang/String;Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testNestedStrongWrite:(Ljava/lang/String;)V"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/NestedDictionary;.setOtherFieldAtIndex:(Ljava/lang/String;Ljava/lang/Object;)V" : 
+  [
+    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testNestedStrongWrite:(Ljava/lang/String;)V"
+  ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.indexAccessToSink:(Lcom/facebook/marianatrench/integrationtests/Dictionary;)V",
+    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testNestedStrongWrite:(Ljava/lang/String;)V",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testNoIssueStrongUpdateEmptyTaint:()V",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testNoSinkStrongUpdateEmptyTaint:(Ljava/lang/String;)V",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testSimple:()V",
@@ -128,6 +146,7 @@
   ],
   "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;" : 
   [
+    "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testNestedStrongWrite:(Ljava/lang/String;)V",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testNoIssueStrongUpdateEmptyTaint:()V",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testSimple:()V",
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testSinkOnIndexFromValueOf:()V",
@@ -186,6 +205,7 @@
     "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testWrappersToSource:()V",
     "Lcom/facebook/marianatrench/integrationtests/Constants;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Dictionary;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/NestedDictionary;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V",
     "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
     "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V",

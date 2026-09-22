@@ -27,6 +27,71 @@
       "where": [
         {
           "constraint": "signature_pattern",
+          "pattern": "Lcom/facebook/marianatrench/integrationtests/NestedDictionary;\\.setFieldAtIndex:\\(Ljava/lang/String;Ljava/lang/Object;\\)V"
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-collapse-on-propagation",
+          "skip-analysis",
+          "strong-write-on-propagation"
+        ],
+        "propagation": [
+          {
+            "input": "Argument(2)",
+            "output": "Argument(0)[<Argument(1)>].field"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_pattern",
+          "pattern": "Lcom/facebook/marianatrench/integrationtests/NestedDictionary;\\.setOtherFieldAtIndex:\\(Ljava/lang/String;Ljava/lang/Object;\\)V"
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-collapse-on-propagation",
+          "skip-analysis",
+          "strong-write-on-propagation"
+        ],
+        "propagation": [
+          {
+            "input": "Argument(2)",
+            "output": "Argument(0)[<Argument(1)>].other"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_pattern",
+          "pattern": "Lcom/facebook/marianatrench/integrationtests/NestedDictionary;\\.getFieldAtIndex:\\(Ljava/lang/String;\\)Ljava/lang/Object;"
+        }
+      ],
+      "model": {
+        "modes": [
+          "no-collapse-on-propagation",
+          "skip-analysis"
+        ],
+        "propagation": [
+          {
+            "input": "Argument(0)[<Argument(1)>].field",
+            "output": "Return"
+          }
+        ]
+      }
+    },
+    {
+      "find": "methods",
+      "where": [
+        {
+          "constraint": "signature_pattern",
           "pattern": "Lcom/facebook/marianatrench/integrationtests/Dictionary;\\.putExtra:\\(Ljava/lang/String;Ljava/lang/Object;\\).*"
         }
       ],

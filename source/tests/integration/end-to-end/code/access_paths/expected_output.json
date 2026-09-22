@@ -1100,7 +1100,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.sinkIndex:(Lcom/facebook/marianatrench/integrationtests/Dictionary;Ljava/lang/String;)V",
   "model_generators" : 
   [
-    "model_generators:3"
+    "model_generators:6"
   ],
   "modes" : 
   [
@@ -1206,6 +1206,112 @@
       ]
     }
   ]
+}
+{
+  "issues" : 
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+      "position" : 
+      {
+        "line" : 178,
+        "path" : "AccessPaths.java"
+      },
+      "rule" : 1,
+      "sink_index" : "0",
+      "sinks" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(0)",
+            "position" : 
+            {
+              "end" : 39,
+              "line" : 178,
+              "path" : "AccessPaths.java",
+              "start" : 16
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                32,
+                33
+              ],
+              "kind" : "Sink",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.sink:(Ljava/lang/Object;)V",
+                  "port" : "Argument(0)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" : 
+            {
+              "end" : 39,
+              "line" : 176,
+              "path" : "AccessPaths.java",
+              "start" : 34
+            }
+          },
+          "kinds" : 
+          [
+            {
+              "callee_interval" : 
+              [
+                32,
+                33
+              ],
+              "kind" : "Source",
+              "origins" : 
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ],
+          "local_positions" : 
+          [
+            {
+              "end" : 16,
+              "line" : 178,
+              "start" : 4
+            },
+            {
+              "end" : 41,
+              "line" : 176,
+              "start" : 27
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testNestedStrongWrite:(Ljava/lang/String;)V",
+  "position" : 
+  {
+    "line" : 174,
+    "path" : "AccessPaths.java"
+  }
 }
 {
   "method" : "Lcom/facebook/marianatrench/integrationtests/AccessPaths;.testNoIssueStrongUpdateEmptyTaint:()V",
@@ -2954,7 +3060,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/Dictionary;.getIndex:(Ljava/lang/String;)Ljava/lang/Object;",
   "model_generators" : 
   [
-    "model_generators:2"
+    "model_generators:5"
   ],
   "modes" : 
   [
@@ -2997,7 +3103,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/Dictionary;.putExtra:(Ljava/lang/String;Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/Dictionary;",
   "model_generators" : 
   [
-    "model_generators:1"
+    "model_generators:4"
   ],
   "modes" : 
   [
@@ -3086,7 +3192,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/Dictionary;.sinkIndex:(Ljava/lang/String;)V",
   "model_generators" : 
   [
-    "model_generators:3"
+    "model_generators:6"
   ],
   "modes" : 
   [
@@ -3125,6 +3231,145 @@
                   "port" : "Argument(1)"
                 }
               ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/NestedDictionary;.<init>:()V",
+  "position" : 
+  {
+    "line" : 181,
+    "path" : "AccessPaths.java"
+  }
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/NestedDictionary;.getFieldAtIndex:(Ljava/lang/String;)Ljava/lang/Object;",
+  "model_generators" : 
+  [
+    "model_generators:3"
+  ],
+  "modes" : 
+  [
+    "no-collapse-on-propagation",
+    "skip-analysis"
+  ],
+  "position" : 
+  {
+    "line" : 187,
+    "path" : "AccessPaths.java"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(0)[<Argument(1)>].field",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Return"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalReturn",
+              "output_paths" : 
+              {
+                "" : 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/NestedDictionary;.setFieldAtIndex:(Ljava/lang/String;Ljava/lang/Object;)V",
+  "model_generators" : 
+  [
+    "model_generators:1"
+  ],
+  "modes" : 
+  [
+    "no-collapse-on-propagation",
+    "skip-analysis",
+    "strong-write-on-propagation"
+  ],
+  "position" : 
+  {
+    "line" : 182,
+    "path" : "AccessPaths.java"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(2)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              {
+                "[<Argument(1)>].field" : 0
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{
+  "method" : "Lcom/facebook/marianatrench/integrationtests/NestedDictionary;.setOtherFieldAtIndex:(Ljava/lang/String;Ljava/lang/Object;)V",
+  "model_generators" : 
+  [
+    "model_generators:2"
+  ],
+  "modes" : 
+  [
+    "no-collapse-on-propagation",
+    "skip-analysis",
+    "strong-write-on-propagation"
+  ],
+  "position" : 
+  {
+    "line" : 184,
+    "path" : "AccessPaths.java"
+  },
+  "propagation" : 
+  [
+    {
+      "input" : "Argument(2)",
+      "output" : 
+      [
+        {
+          "call_info" : 
+          {
+            "call_kind" : "Propagation",
+            "port" : "Argument(0)"
+          },
+          "kinds" : 
+          [
+            {
+              "kind" : "LocalArgument(0)",
+              "output_paths" : 
+              {
+                "[<Argument(1)>].other" : 0
+              }
             }
           ]
         }

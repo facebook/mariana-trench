@@ -463,6 +463,27 @@ TEST_F(AbstractTreeDomainTest, WriteIndexElementsStrong) {
   EXPECT_EQ(tree.successor(ai).successor(yi).root(), (IntSet{6}));
 }
 
+TEST_F(
+    AbstractTreeDomainTest,
+    WriteIndexElementsNestedStrongMaterializesAnyIndex) {
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+  const auto foo = PathElement::index("foo");
+  const auto ai = PathElement::any_index();
+
+  auto tree = IntSetTree{
+      {Path{ai, x}, IntSet{1}},
+      {Path{ai, y}, IntSet{2}},
+  };
+
+  tree.write(Path{foo, x}, IntSet{3}, UpdateKind::Strong);
+
+  EXPECT_EQ(tree.successor(foo).successor(x).root(), IntSet{3});
+  EXPECT_EQ(tree.successor(foo).successor(y).root(), IntSet{2});
+  EXPECT_EQ(tree.successor(ai).successor(x).root(), IntSet{1});
+  EXPECT_EQ(tree.successor(ai).successor(y).root(), IntSet{2});
+}
+
 TEST_F(AbstractTreeDomainTest, WriteTreeWeak) {
   const auto x = PathElement::field("x");
   const auto y = PathElement::field("y");
@@ -779,6 +800,35 @@ TEST_F(AbstractTreeDomainTest, WriteTreeWithIndexStrong) {
           {Path{ai, yi, xi}, IntSet{11, 12}},
           {Path{ai, ai, xi}, IntSet{13}},
       }));
+}
+
+TEST_F(
+    AbstractTreeDomainTest,
+    WriteTreeWithIndexNestedStrongMaterializesAnyIndex) {
+  const auto x = PathElement::field("x");
+  const auto y = PathElement::field("y");
+  const auto z = PathElement::field("z");
+  const auto foo = PathElement::index("foo");
+  const auto ai = PathElement::any_index();
+
+  auto tree = IntSetTree{
+      {Path{ai, x}, IntSet{1}},
+      {Path{ai, y}, IntSet{2}},
+  };
+
+  tree.write(
+      Path{foo, x},
+      IntSetTree{
+          {Path{}, IntSet{3}},
+          {Path{z}, IntSet{4}},
+      },
+      UpdateKind::Strong);
+
+  EXPECT_EQ(tree.successor(foo).successor(x).root(), IntSet{3});
+  EXPECT_EQ(tree.successor(foo).successor(x).successor(z).root(), IntSet{4});
+  EXPECT_EQ(tree.successor(foo).successor(y).root(), IntSet{2});
+  EXPECT_EQ(tree.successor(ai).successor(x).root(), IntSet{1});
+  EXPECT_EQ(tree.successor(ai).successor(y).root(), IntSet{2});
 }
 
 TEST_F(AbstractTreeDomainTest, LessOrEqual) {

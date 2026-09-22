@@ -834,11 +834,10 @@ class AbstractTreeDomain final
     auto path_head = *begin;
     ++begin;
 
-    if (path_head.is_index() && kind == UpdateKind::Weak) {
-      // Merge in existing [*] for weak write on new index:
-      // If we are weak assigning to a new index and the tree already consists
-      // of a path element [*], we need to merge [*] with the index as the
-      // existing [*] also covered this index.
+    if (path_head.is_index() && (kind == UpdateKind::Weak || begin != end)) {
+      // A weak write to a new concrete index must inherit [*]. A nested strong
+      // write must also preserve the wildcard-covered parts outside the
+      // overwritten subpath. A strong write to the index itself replaces it.
       if (children_.at(path_head).is_bottom()) {
         auto new_subtree = children_.at(PathElement::any_index());
         if (!new_subtree.is_bottom()) {
@@ -921,11 +920,15 @@ class AbstractTreeDomain final
     auto path_head = *begin;
     ++begin;
 
-    // Merge in existing [*] for weak write on new index.
-    if (path_head.is_index() && kind == UpdateKind::Weak) {
+    if (path_head.is_index() && (kind == UpdateKind::Weak || begin != end)) {
+      // A weak write to a new concrete index must inherit [*]. A nested strong
+      // write must also preserve the wildcard-covered parts outside the
+      // overwritten subpath. A strong write to the index itself replaces it.
       if (children_.at(path_head).is_bottom()) {
-        tree.join_with(children_.at(PathElement::any_index()));
-        tree.elements_.difference_with(accumulator);
+        auto new_subtree = children_.at(PathElement::any_index());
+        if (!new_subtree.is_bottom()) {
+          children_.insert_or_assign(path_head, new_subtree);
+        }
       }
     }
 

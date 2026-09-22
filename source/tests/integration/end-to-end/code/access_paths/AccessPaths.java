@@ -170,4 +170,21 @@ public class AccessPaths {
     Origin.sink(d.getIndex("y"));
     Origin.sink(x);
   }
+
+  public static void testNestedStrongWrite(String key) {
+    NestedDictionary d = new NestedDictionary();
+    d.setFieldAtIndex(key, Origin.source());
+    d.setOtherFieldAtIndex("foo", getDifferentSource());
+    Origin.sink(d.getFieldAtIndex("foo")); // expect issue for Source only
+  }
+}
+
+class NestedDictionary {
+  void setFieldAtIndex(String key, Object value) {}
+
+  void setOtherFieldAtIndex(String key, Object value) {}
+
+  Object getFieldAtIndex(String key) {
+    return new Object();
+  }
 }
