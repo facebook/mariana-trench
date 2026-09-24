@@ -10,6 +10,7 @@
 #include <DexAccess.h>
 #include <Resolver.h>
 #include <Show.h>
+#include <TypeUtil.h>
 
 #include <mariana-trench/ClassHierarchies.h>
 #include <mariana-trench/Debug.h>
@@ -28,6 +29,27 @@ inline int get_index_of_type(
   auto it = ordered_types.find(type);
   mt_assert(it != ordered_types.end());
   return (int)std::distance(ordered_types.begin(), it);
+}
+
+bool is_valid_return_type(std::string_view descriptor) {
+  if (!type::is_valid(descriptor)) {
+    return false;
+  }
+  return descriptor == "V" || descriptor.back() != 'V';
+}
+
+bool is_valid_argument_type(std::string_view descriptor) {
+  if (!type::is_valid(descriptor)) {
+    return false;
+  }
+  return descriptor.back() != 'V';
+}
+
+bool is_valid_class_type(std::string_view descriptor) {
+  if (!type::is_valid(descriptor)) {
+    return false;
+  }
+  return descriptor.front() == 'L';
 }
 
 void collect_argument_types_from_callees(
@@ -372,6 +394,20 @@ LifecycleMethodCall LifecycleMethodCall::from_json(const Json::Value& value) {
 void LifecycleMethodCall::validate(
     const DexClass* base_class,
     const ClassHierarchies& class_hierarchies) const {
+  // Missing types can be another consequence of removing the method. Invalid
+  // descriptors, however, can still be distinguished from optimized code.
+  if (!is_valid_return_type(return_type_)) {
+    throw exception_with_backtrace<LifecycleMethodValidationError>(
+        fmt::format("Callee `{}` has a malformed return type.", to_string()));
+  }
+  for (const auto& argument_type : argument_types_) {
+    if (!is_valid_argument_type(argument_type)) {
+      throw exception_with_backtrace<LifecycleMethodValidationError>(
+          fmt::format(
+              "Callee `{}` has malformed argument types.", to_string()));
+    }
+  }
+
   if (!defined_in_derived_class_) {
     if (get_dex_method(base_class) == nullptr) {
       // Callee does not exist within the base class. Likely an invalid config
@@ -383,6 +419,11 @@ void LifecycleMethodCall::validate(
           base_class->str());
     }
     return;
+  }
+
+  if (!is_valid_class_type(*defined_in_derived_class_)) {
+    throw exception_with_backtrace<LifecycleMethodValidationError>(fmt::format(
+        "Derived class type `{}` is malformed.", *defined_in_derived_class_));
   }
 
   const auto* derived_type = DexType::get_type(*defined_in_derived_class_);
@@ -399,9 +440,9 @@ void LifecycleMethodCall::validate(
 
   const auto* derived_class = type_class(derived_type);
   if (!derived_class) {
-    // Either derived type is not a class (e.g. primitive ), or the JAR
-    // containing the class definition is not loaded. This is a warning and not
-    // an error as the type may not be relevant to the current APK.
+    // The JAR containing the class definition may not be loaded. This is a
+    // warning and not an error as the type may not be relevant to the current
+    // APK.
     WARNING(
         1,
         "Could not convert derived class type `{}` into DexClass.",
@@ -418,16 +459,15 @@ void LifecycleMethodCall::validate(
   }
 
   if (get_dex_method(derived_class) == nullptr) {
-    throw exception_with_backtrace<LifecycleMethodValidationError>(fmt::format(
-        "Callee `{}` is not in derived class type `{}`.",
+    // An optimizer can legally remove an optional no-op lifecycle method and
+    // retain its declaring class. Method generation already omits unresolved
+    // callees, so validation must allow the same optimized APK shape.
+    WARNING(
+        1,
+        "Callee `{}` cannot be resolved in derived class type `{}`. It may have been removed by optimization or may not apply to this APK; skipping it.",
         to_string(),
-        derived_class->str()));
-  }
-
-  // Validate that argument types can be resolved
-  if (get_argument_types() == nullptr) {
-    throw exception_with_backtrace<LifecycleMethodValidationError>(
-        fmt::format("Callee `{}` has invalid argument types.", to_string()));
+        derived_class->str());
+    return;
   }
 }
 
@@ -436,7 +476,9 @@ LifecycleMethodCall::get_dex_method(const DexClass* klass) const {
   const auto* return_type =
       DexType::get_type(DexString::make_string(return_type_));
   if (return_type == nullptr) {
-    ERROR(1, "Could not find return type `{}`.", return_type_);
+    if (!is_valid_return_type(return_type_)) {
+      ERROR(1, "Malformed return type `{}`.", return_type_);
+    }
     return nullptr;
   }
 
@@ -458,7 +500,9 @@ const DexTypeList* MT_NULLABLE LifecycleMethodCall::get_argument_types() const {
   for (const auto& argument_type : argument_types_) {
     const auto* type = DexType::get_type(argument_type);
     if (type == nullptr) {
-      ERROR(1, "Could not find argument type `{}`.", argument_type);
+      if (!is_valid_argument_type(argument_type)) {
+        ERROR(1, "Malformed argument type `{}`.", argument_type);
+      }
       return nullptr;
     }
     argument_types.push_back(type);
