@@ -99,6 +99,15 @@ class Transfer final : public InstructionAnalyzerBase<
           location);
 
       current_state->set(instruction->dest(), Domain(location));
+    } else if (opcode::is_move_object(instruction->opcode())) {
+      mt_assert(instruction->srcs_size() == 1);
+
+      auto source_locations = current_state->get(instruction->src(0));
+      LOG(4,
+          "move-object: Setting dest register {} to source location: {}",
+          instruction->dest(),
+          source_locations);
+      current_state->set(instruction->dest(), source_locations);
     } else if (opcode::is_a_return_value(instruction->opcode())) {
       mt_assert(instruction->srcs_size() == 1);
 
