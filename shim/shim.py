@@ -225,7 +225,6 @@ def _get_analysis_binary(arguments: argparse.Namespace) -> Path:
         # Use the user-provided binary.
         return _check_executable(Path(from_arguments))
 
-    # pyre-fixme[16]: Module `shim` has no attribute `configuration`.
     buck_target = configuration.BINARY_BUCK_TARGET
     if buck_target:
         # Build the mariana-trench binary from buck (facebook-only).
@@ -234,7 +233,6 @@ def _get_analysis_binary(arguments: argparse.Namespace) -> Path:
             modifier=arguments.build_modifier,
         )
 
-    # pyre-fixme[16]: Module `shim` has no attribute `configuration`.
     path_command = configuration.BINARY_PATH_COMMAND
     if path_command:
         # Find the mariana-trench binary in the path (open-source).
@@ -255,7 +253,6 @@ def _desugar_jar_file(jar_path: Path) -> Path:
     desugared_jar_file = jar_path.parent / (jar_path.stem + "-desugared.jar")
 
     with tempfile.NamedTemporaryFile() as temp_file:
-        # pyre-fixme[16]: Module `shim` has no attribute `configuration`.
         for skipped_class in configuration.get_skipped_classes():
             temp_file.write(f"{skipped_class}\n".encode())
         temp_file.flush()
@@ -263,7 +260,6 @@ def _desugar_jar_file(jar_path: Path) -> Path:
             [
                 "buck2",
                 "run",
-                # pyre-fixme[16]: Module `shim` has no attribute `configuration`.
                 none_throws(configuration.DESUGAR_BUCK_TARGET),
                 "--",
                 os.fspath(jar_path),
@@ -292,7 +288,6 @@ def _build_apk_from_jar(jar_path: Path) -> Path:
             "run",
             "-c",
             "android.build_tools_version=37.0.0",
-            # pyre-fixme[16]: Module `shim` has no attribute `configuration`.
             configuration.get_d8_target(),
             "--",
             "--output",
@@ -328,7 +323,6 @@ def _add_target_arguments(parser: argparse.ArgumentParser) -> None:
         type=_path_exists,
         help="The APK to analyze.",
     )
-    # pyre-fixme[16]: Module `shim` has no attribute `configuration`.
     if configuration.FACEBOOK_SHIM:
         target_arguments.add_argument(
             "--java-target",
@@ -362,12 +356,10 @@ def _add_binary_arguments(parser: argparse.ArgumentParser) -> None:
     binary_arguments.add_argument(
         "--binary", type=str, help="The Mariana Trench binary."
     )
-    # pyre-fixme[16]: Module `shim` has no attribute `configuration`.
     if configuration.FACEBOOK_SHIM:
         binary_arguments.add_argument(
             "--build-modifier",
             type=str,
-            # pyre-fixme[16]: Module `shim` has no attribute `configuration`.
             default=none_throws(configuration.BINARY_BUCK_BUILD_MODIFIER),
             metavar="MODIFIER",
             help="The Mariana Trench binary buck build mode modifier.",
@@ -490,7 +482,6 @@ def _add_configuration_arguments(parser: argparse.ArgumentParser) -> None:
     configuration_arguments.add_argument(
         "--maximum-source-sink-distance",
         type=int,
-        # pyre-fixme[16]: Module `shim` has no attribute `configuration`.
         default=configuration.DEFAULT_MAXIMUM_SOURCE_SINK_DISTANCE,
         help="Limits the distance of sources and sinks from a trace entry point.",
     )
@@ -950,6 +941,7 @@ def _get_command_options_json(
     options["propagate-across-arguments"] = arguments.propagate_across_arguments
 
     if arguments.allow_via_cast_feature:
+        # pyrefly: ignore [unsupported-operation]
         options["allow-via-cast-feature"] = []
         for feature in arguments.allow_via_cast_feature:
             options["allow-via-cast-feature"].append(feature.strip())
@@ -958,6 +950,7 @@ def _get_command_options_json(
         options["heuristics"] = arguments.heuristics
 
     if arguments.only_rules:
+        # pyrefly: ignore [unsupported-operation]
         options["only-rules"] = []
         for rule_code in arguments.only_rules:
             options["only-rules"].append(rule_code)
@@ -989,11 +982,13 @@ def _get_command_options_json(
         options["commit-hash"] = arguments.commit_hash
 
     if arguments.log_method:
+        # pyrefly: ignore [unsupported-operation]
         options["log-method"] = []
         for method in arguments.log_method:
             options["log-method"].append(method.strip())
 
     if arguments.log_method_types:
+        # pyrefly: ignore [unsupported-operation]
         options["log-method-types"] = []
         for method in arguments.log_method_types:
             options["log-method-types"].append(method.strip())
@@ -1010,9 +1005,13 @@ def _get_command_options_json(
     options["always-export-origins"] = arguments.always_export_origins
 
     if arguments.dump_replay_output:
+        # pyrefly: ignore [unsupported-operation]
         options["dump-class-hierarchies"] = True
+        # pyrefly: ignore [unsupported-operation]
         options["dump-class-intervals"] = True
+        # pyrefly: ignore [unsupported-operation]
         options["dump-overrides"] = True
+        # pyrefly: ignore [unsupported-operation]
         options["always-export-origins"] = True
 
     if arguments.graphql_metadata_path:
@@ -1020,12 +1019,16 @@ def _get_command_options_json(
 
     # Add listing command flags if present
     if getattr(arguments, "list_all_rules", False):
+        # pyrefly: ignore [unsupported-operation]
         options["list-all-rules"] = True
     if getattr(arguments, "list_all_model_generators", False):
+        # pyrefly: ignore [unsupported-operation]
         options["list-all-model-generators"] = True
     if getattr(arguments, "list_all_kinds_in_rules", False):
+        # pyrefly: ignore [unsupported-operation]
         options["list-all-kinds-in-rules"] = True
     if getattr(arguments, "list_all_lifecycles", False):
+        # pyrefly: ignore [unsupported-operation]
         options["list-all-lifecycles"] = True
     return options
 
@@ -1081,7 +1084,6 @@ def main() -> None:
 
         if arguments.system_jar_configuration_path is None:
             arguments.system_jar_configuration_path = os.fspath(
-                # pyre-fixme[16]: Module `shim` has no attribute `configuration`.
                 configuration.get_path("default_system_jar_paths.json")
             )
 
@@ -1095,35 +1097,29 @@ def main() -> None:
             arguments.rules_paths = str(os.fspath(configuration.get_path("rules.json")))
         if arguments.model_generator_configuration_paths is None:
             arguments.model_generator_configuration_paths = _separated_paths_exist(
-                # pyre-fixme[16]: Module `shim` has no attribute `configuration`.
                 os.fspath(configuration.get_path("default_generator_config.json"))
             )
         if arguments.model_generator_search_paths is None:
             arguments.model_generator_search_paths = _separated_paths_exist(
                 ";".join(
                     os.fspath(path)
-                    # pyre-fixme[16]: Module `shim` has no attribute `configuration`.
                     for path in configuration.get_default_generator_search_paths()
                 )
             )
         if arguments.lifecycles_paths is None:
             arguments.lifecycles_paths = _separated_paths_exist(
-                # pyre-fixme[16]: Module `shim` has no attribute `configuration`.
                 os.fspath(configuration.get_path("lifecycles.json"))
             )
         if arguments.shims_paths is None:
             arguments.shims_paths = _separated_paths_exist(
-                # pyre-fixme[16]: Module `shim` has no attribute `configuration`.
                 os.fspath(configuration.get_path("shims.json"))
             )
         if arguments.heuristics is None:
             arguments.heuristics = _heuristics_json_config_exists(
-                # pyre-fixme[16]: Module `shim` has no attribute `configuration`.
                 os.fspath(configuration.get_path("heuristics.json"))
             )
 
         if (
-            # pyre-fixme[16]: Module `shim` has no attribute `configuration`.
             configuration.FACEBOOK_SHIM
             and arguments.java_target is not None
             and arguments.apk_path is not None
@@ -1133,7 +1129,6 @@ def main() -> None:
                 + " or an apk file (--apk-path), but not both."
             )
         if (
-            # pyre-fixme[16]: Module `shim` has no attribute `configuration`.
             configuration.FACEBOOK_SHIM
             and arguments.java_target is None
             and arguments.apk_path is None
@@ -1142,12 +1137,10 @@ def main() -> None:
                 "The analysis target should either be a java target (--java-target)"
                 + " or an apk file (--apk-path)."
             )
-        # pyre-fixme[16]: Module `shim` has no attribute `configuration`.
         if not configuration.FACEBOOK_SHIM and arguments.apk_path is None:
             parser.error("The argument --apk-path is required.")
 
         # Build the vanilla java project.
-        # pyre-fixme[16]: Module `shim` has no attribute `configuration`.
         if configuration.FACEBOOK_SHIM and arguments.java_target:
             if os.path.isfile(arguments.java_target):
                 jar_file = Path(arguments.java_target)
@@ -1167,7 +1160,6 @@ def main() -> None:
         apk_directory = tempfile.mkdtemp(suffix="_apk")
         dex_directory = tempfile.mkdtemp(suffix="_dex")
         pyredex.utils.unzip_apk(arguments.apk_path, apk_directory)
-        # pyre-fixme[16]: Module `shim` has no attribute `configuration`.
         if configuration.FACEBOOK_SHIM:
             register_superpack_dex_mode(
                 apk_directory,
@@ -1178,7 +1170,6 @@ def main() -> None:
         dex_mode.unpackage(apk_directory, dex_directory)
         LOG.info(f"Extracted APK into `{apk_directory}` and DEX into `{dex_directory}`")
 
-        # pyre-fixme[16]: Module `shim` has no attribute `configuration`.
         if configuration.FACEBOOK_SHIM and arguments.analyze_third_party:
             output = start_third_party_analysis(
                 binary, arguments, apk_directory, dex_directory
