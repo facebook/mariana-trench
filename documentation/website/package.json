@@ -22,7 +22,7 @@
     "@mdx-js/react": "^3.1.0",
     "clsx": "^2.1.1",
     "docusaurus-plugin-internaldocs-fb": "1.19.2",
-    "js-yaml": "^4.1.1",
+    "js-yaml": "^4.3.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
@@ -71,7 +71,7 @@
     "flatted": "^3.4.2",
     "follow-redirects": "^1.16.0",
     "http-proxy-middleware": "^2.0.9",
-    "js-yaml": "^4.1.1",
+    "js-yaml": "^4.3.2",
     "lodash": "^4.18.1",
     "lodash-es": "^4.18.0",
     "mermaid": "^11.15.0",
