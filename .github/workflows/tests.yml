@@ -6,7 +6,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - uses: Homebrew/actions/setup-homebrew@master
+      - uses: Homebrew/actions/setup-homebrew@main
 
       - name: Install dependencies
         run: brew install --formula cmake zlib boost googletest jsoncpp re2
@@ -48,7 +48,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - uses: Homebrew/actions/setup-homebrew@master
+      - uses: Homebrew/actions/setup-homebrew@main
 
       - name: Install dependencies
         run: |
