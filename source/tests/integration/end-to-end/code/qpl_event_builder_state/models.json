@@ -1,0 +1,56 @@
+[
+  {
+    "method": "Lcom/facebook/messengerorcacqljava/OrcaParticipantList;.getContactTypeExact:(I)Ljava/lang/Integer;",
+    "generations": [
+      {
+        "kind": "ArmadilloMetadata",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+    "generations": [
+      {
+        "kind": "ArmadilloMetadata",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/Sources;.intSource:()I",
+    "generations": [
+      {
+        "kind": "ArmadilloMetadata",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/Sources;.booleanSource:()Z",
+    "generations": [
+      {
+        "kind": "ArmadilloMetadata",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Ljava/lang/Integer;.intValue:()I",
+    "propagation": [
+      {
+        "input": "Argument(0)",
+        "output": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/ParticipantAdapterUtil;.getContactType:(Ljava/lang/Integer;)Ljava/lang/Object;",
+    "sinks": [
+      {
+        "kind": "QPLogging",
+        "port": "Argument(1)"
+      }
+    ]
+  }
+]

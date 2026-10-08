@@ -1,0 +1,36 @@
+// @generated
+{
+  "extends" : 
+  {
+    "Landroid/app/Activity;" : 
+    [
+      "Landroidx/fragment/app/FragmentActivity;"
+    ],
+    "Landroid/content/Context;" : 
+    [
+      "Landroid/app/Activity;",
+      "Landroidx/fragment/app/FragmentActivity;"
+    ],
+    "Lcom/facebook/quicklog/EventBuilder;" : 
+    [
+      "Lcom/facebook/quicklog/DirectEventBuilder;"
+    ],
+    "Lcom/facebook/staxcqlinterfacejava/StaxParticipantList;" : 
+    [
+      "Lcom/facebook/messengerorcacqljava/OrcaParticipantList;",
+      "Lcom/facebook/xapp/messaging/modularsync/fbn/stax/FbnStaxParticipantList;"
+    ],
+    "Lcom/facebook/telemetry/ueinterface/UnexpectedEventBuilder;" : 
+    [
+      "Lcom/facebook/telemetry/impl/UnexpectedEventBuilderImpl;"
+    ],
+    "Ljava/lang/Runnable;" : 
+    [
+      "Ljava/lang/Thread;"
+    ],
+    "Ljava/util/Map;" : 
+    [
+      "Ljava/util/TreeMap;"
+    ]
+  }
+}

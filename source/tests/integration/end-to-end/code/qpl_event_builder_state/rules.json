@@ -1,0 +1,13 @@
+[
+  {
+    "name": "Armadillo metadata to QPL",
+    "code": 1,
+    "description": "",
+    "sources": [
+      "ArmadilloMetadata"
+    ],
+    "sinks": [
+      "QPLogging"
+    ]
+  }
+]

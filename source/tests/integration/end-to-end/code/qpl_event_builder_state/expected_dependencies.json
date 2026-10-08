@@ -1,0 +1,242 @@
+// @generated
+{
+  "Landroid/app/Activity;.<init>:()V" : 
+  [
+    "Landroidx/fragment/app/FragmentActivity;.<init>:()V"
+  ],
+  "Landroid/content/Context;.<init>:()V" : 
+  [
+    "Landroid/app/Activity;.<init>:()V"
+  ],
+  "Landroid/content/Intent;.<init>:()V" : 
+  [
+    "Landroid/app/Activity;.getIntent:()Landroid/content/Intent;",
+    "Lcom/facebook/base/activity/FragmentBaseActivityUtil;.getDefaultActivityIntent:()Landroid/content/Intent;"
+  ],
+  "Landroid/database/Cursor;.<init>:()V" : 
+  [
+    "Landroid/content/ContentProvider;.query:(Landroid/net/Uri;[Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;)Landroid/database/Cursor;"
+  ],
+  "Landroid/net/Uri;.<init>:()V" : 
+  [
+    "Landroid/content/Intent;.getData:()Landroid/net/Uri;",
+    "Landroid/net/Uri;.parse:(Ljava/lang/String;)Landroid/net/Uri;"
+  ],
+  "Landroid/net/Uri;.<init>:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V" : 
+  [
+    "Landroid/net/Uri$Builder;.build:()Landroid/net/Uri;"
+  ],
+  "Landroid/os/Bundle;.<init>:()V" : 
+  [
+    "Landroid/content/Intent;.getBundleExtra:(Ljava/lang/String;)Landroid/os/Bundle;",
+    "Landroid/content/Intent;.getExtras:()Landroid/os/Bundle;"
+  ],
+  "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/ParticipantAdapterUtil;.keyOnly:()V",
+    "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/ParticipantAdapterUtil;.unrelatedReceiverState:()V"
+  ],
+  "Lcom/facebook/messengerorcacqljava/OrcaParticipantList;.<init>:()V" : 
+  [
+    "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/ParticipantAdapterUtil;.row10:()V"
+  ],
+  "Lcom/facebook/messengerorcacqljava/OrcaParticipantList;.getContactTypeExact:(I)Ljava/lang/Integer;" : 
+  [
+    "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/ParticipantAdapterUtil;.getParticipantInList:(Lcom/facebook/staxcqlinterfacejava/StaxParticipantList;I)Ljava/lang/Object;"
+  ],
+  "Lcom/facebook/quicklog/AnnotationsList;.<init>:()V" : 
+  [
+    "Lcom/facebook/quicklog/QuickEventImpl;.<init>:()V"
+  ],
+  "Lcom/facebook/quicklog/AnnotationsList;.annotate:(Ljava/lang/String;I)I" : 
+  [
+    "Lcom/facebook/quicklog/DirectEventBuilder;.annotate:(Ljava/lang/String;I)Lcom/facebook/quicklog/EventBuilder;"
+  ],
+  "Lcom/facebook/quicklog/AnnotationsList;.annotate:(Ljava/lang/String;Ljava/lang/String;)I" : 
+  [
+    "Lcom/facebook/quicklog/DirectEventBuilder;.annotate:(Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/quicklog/EventBuilder;"
+  ],
+  "Lcom/facebook/quicklog/AnnotationsList;.annotate:(Ljava/lang/String;Z)I" : 
+  [
+    "Lcom/facebook/quicklog/DirectEventBuilder;.annotate:(Ljava/lang/String;Z)Lcom/facebook/quicklog/EventBuilder;"
+  ],
+  "Lcom/facebook/quicklog/DirectEventBuilder;.<init>:()V" : 
+  [
+    "Lcom/facebook/telemetry/impl/UnexpectedEventBuilderImpl;.<init>:()V"
+  ],
+  "Lcom/facebook/quicklog/DirectEventBuilder;.annotate:(Ljava/lang/String;I)Lcom/facebook/quicklog/EventBuilder;" : 
+  [
+    "Lcom/facebook/telemetry/impl/UnexpectedEventBuilderImpl;.annotate:(Ljava/lang/String;I)Lcom/facebook/telemetry/ueinterface/UnexpectedEventBuilder;"
+  ],
+  "Lcom/facebook/quicklog/DirectEventBuilder;.annotate:(Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/quicklog/EventBuilder;" : 
+  [
+    "Lcom/facebook/telemetry/impl/UnexpectedEventBuilderImpl;.annotate:(Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/telemetry/ueinterface/UnexpectedEventBuilder;"
+  ],
+  "Lcom/facebook/quicklog/DirectEventBuilder;.annotate:(Ljava/lang/String;Z)Lcom/facebook/quicklog/EventBuilder;" : 
+  [
+    "Lcom/facebook/telemetry/impl/UnexpectedEventBuilderImpl;.annotate:(Ljava/lang/String;Z)Lcom/facebook/telemetry/ueinterface/UnexpectedEventBuilder;"
+  ],
+  "Lcom/facebook/quicklog/DirectEventBuilder;.report:()V" : 
+  [
+    "Lcom/facebook/telemetry/impl/UnexpectedEventBuilderImpl;.report:()V"
+  ],
+  "Lcom/facebook/quicklog/QuickEventImpl;.<init>:()V" : 
+  [
+    "Lcom/facebook/quicklog/DirectEventBuilder;.<init>:()V"
+  ],
+  "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V" : 
+  [
+    "Lcom/facebook/secure/context/SecureContextHelperV2;.inAppBrowser:()Lcom/facebook/secure/context/IntentLauncher;",
+    "Lcom/facebook/secure/context/SecureContextHelperV2;.internal:()Lcom/facebook/secure/context/IntentLauncher;"
+  ],
+  "Lcom/facebook/secure/context/SecureContextHelperV2;.<init>:()V" : 
+  [
+    "Lcom/facebook/secure/context/SecureContextHelperV2;.get:()Lcom/facebook/secure/context/SecureContextHelperV2;"
+  ],
+  "Lcom/facebook/staxcqlinterfacejava/StaxParticipantList;.getContactTypeExact:(I)Ljava/lang/Integer;" : 
+  [
+    "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/ParticipantAdapterUtil;.getParticipantInList:(Lcom/facebook/staxcqlinterfacejava/StaxParticipantList;I)Ljava/lang/Object;"
+  ],
+  "Lcom/facebook/telemetry/impl/UnexpectedEventBuilderImpl;.<init>:()V" : 
+  [
+    "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/ParticipantAdapterUtil;.booleanPayloadOnly:()V",
+    "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/ParticipantAdapterUtil;.getContactType:(Ljava/lang/Integer;)Ljava/lang/Object;",
+    "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/ParticipantAdapterUtil;.intPayloadOnly:()V",
+    "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/ParticipantAdapterUtil;.keyOnly:()V",
+    "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/ParticipantAdapterUtil;.unrelatedReceiverState:()V"
+  ],
+  "Lcom/facebook/telemetry/impl/UnexpectedEventBuilderImpl;.annotate:(Ljava/lang/String;I)Lcom/facebook/telemetry/ueinterface/UnexpectedEventBuilder;" : 
+  [
+    "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/ParticipantAdapterUtil;.getContactType:(Ljava/lang/Integer;)Ljava/lang/Object;",
+    "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/ParticipantAdapterUtil;.intPayloadOnly:()V",
+    "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/ParticipantAdapterUtil;.keyOnly:()V"
+  ],
+  "Lcom/facebook/telemetry/impl/UnexpectedEventBuilderImpl;.annotate:(Ljava/lang/String;Z)Lcom/facebook/telemetry/ueinterface/UnexpectedEventBuilder;" : 
+  [
+    "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/ParticipantAdapterUtil;.booleanPayloadOnly:()V"
+  ],
+  "Lcom/facebook/telemetry/impl/UnexpectedEventBuilderImpl;.report:()V" : 
+  [
+    "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/ParticipantAdapterUtil;.booleanPayloadOnly:()V",
+    "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/ParticipantAdapterUtil;.getContactType:(Ljava/lang/Integer;)Ljava/lang/Object;",
+    "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/ParticipantAdapterUtil;.intPayloadOnly:()V",
+    "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/ParticipantAdapterUtil;.keyOnly:()V",
+    "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/ParticipantAdapterUtil;.unrelatedReceiverState:()V"
+  ],
+  "Lcom/facebook/telemetry/ueinterface/UnexpectedEventBuilder;.report:()V" : 
+  [
+    "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/ParticipantAdapterUtil;.booleanPayloadOnly:()V",
+    "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/ParticipantAdapterUtil;.getContactType:(Ljava/lang/Integer;)Ljava/lang/Object;",
+    "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/ParticipantAdapterUtil;.intPayloadOnly:()V",
+    "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/ParticipantAdapterUtil;.keyOnly:()V"
+  ],
+  "Lcom/facebook/user/model/User;.<init>:()V" : 
+  [
+    "Lcom/facebook/auth/datastore/LoggedInUserAuthDataStore;.getLoggedInUser:()Lcom/facebook/user/model/User;"
+  ],
+  "Lcom/facebook/xapp/messaging/modularsync/fbn/stax/FbnStaxParticipantList;.<init>:()V" : 
+  [
+    "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/ParticipantAdapterUtil;.constantNullFbn:()V"
+  ],
+  "Lcom/facebook/xapp/messaging/modularsync/fbn/stax/FbnStaxParticipantList;.getContactTypeExact:(I)Ljava/lang/Integer;" : 
+  [
+    "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/ParticipantAdapterUtil;.getParticipantInList:(Lcom/facebook/staxcqlinterfacejava/StaxParticipantList;I)Ljava/lang/Object;"
+  ],
+  "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/ParticipantAdapterUtil;.<init>:()V" : 
+  [
+    "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/ParticipantAdapterUtil;.constantNullFbn:()V",
+    "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/ParticipantAdapterUtil;.row10:()V"
+  ],
+  "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/ParticipantAdapterUtil;.getContactType:(Ljava/lang/Integer;)Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/ParticipantAdapterUtil;.getParticipantInList:(Lcom/facebook/staxcqlinterfacejava/StaxParticipantList;I)Ljava/lang/Object;"
+  ],
+  "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/ParticipantAdapterUtil;.getParticipantInList:(Lcom/facebook/staxcqlinterfacejava/StaxParticipantList;I)Ljava/lang/Object;" : 
+  [
+    "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/ParticipantAdapterUtil;.constantNullFbn:()V",
+    "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/ParticipantAdapterUtil;.row10:()V"
+  ],
+  "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/Sources;.booleanSource:()Z" : 
+  [
+    "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/ParticipantAdapterUtil;.booleanPayloadOnly:()V"
+  ],
+  "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/Sources;.intSource:()I" : 
+  [
+    "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/ParticipantAdapterUtil;.intPayloadOnly:()V"
+  ],
+  "Lcom/instagram/common/analytics/IgAnalyticsLogger;.<init>:()V" : 
+  [
+    "Lcom/instagram/common/analytics/IgAnalyticsLogger;.getInstance:()Lcom/instagram/common/analytics/IgAnalyticsLogger;"
+  ],
+  "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.<init>:()V" : 
+  [
+    "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.obtain:(Ljava/lang/String;)Lcom/instagram/common/analytics/intf/AnalyticsEvent;"
+  ],
+  "Ljava/lang/Integer;.<init>:()V" : 
+  [
+    "Lcom/facebook/messengerorcacqljava/OrcaParticipantList;.getContactTypeExact:(I)Ljava/lang/Integer;"
+  ],
+  "Ljava/lang/Integer;.intValue:()I" : 
+  [
+    "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/ParticipantAdapterUtil;.getContactType:(Ljava/lang/Integer;)Ljava/lang/Object;"
+  ],
+  "Ljava/lang/Object;.<init>:()V" : 
+  [
+    "Landroid/content/ContentProvider;.<init>:()V",
+    "Landroid/content/Context;.<init>:()V",
+    "Landroid/content/Intent;.<init>:()V",
+    "Landroid/content/Intent;.<init>:(Landroid/content/Context;Ljava/lang/Class;)V",
+    "Landroid/content/Intent;.<init>:(Ljava/lang/String;Landroid/net/Uri;)V",
+    "Landroid/database/Cursor;.<init>:()V",
+    "Landroid/location/Location;.<init>:()V",
+    "Landroid/net/Uri$Builder;.<init>:()V",
+    "Landroid/net/Uri;.<init>:()V",
+    "Landroid/net/Uri;.<init>:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V",
+    "Landroid/os/Bundle;.<init>:()V",
+    "Landroid/text/TextUtils;.<init>:()V",
+    "Landroid/util/Log;.<init>:()V",
+    "Landroid/webkit/WebViewClient;.<init>:()V",
+    "Lcom/facebook/auth/datastore/LoggedInUserAuthDataStore;.<init>:()V",
+    "Lcom/facebook/base/activity/FragmentBaseActivityUtil;.<init>:()V",
+    "Lcom/facebook/content/SecureContextHelper;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V",
+    "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+    "Lcom/facebook/messengerorcacqljava/OrcaParticipantList;.<init>:()V",
+    "Lcom/facebook/quicklog/AnnotationsList;.<init>:()V",
+    "Lcom/facebook/quicklog/DirectEventBuilder;.<init>:()V",
+    "Lcom/facebook/quicklog/QuickEventImpl;.<init>:()V",
+    "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V",
+    "Lcom/facebook/secure/context/SecureContextHelperV2;.<init>:()V",
+    "Lcom/facebook/telemetry/impl/UnexpectedEventBuilderImpl;.<init>:()V",
+    "Lcom/facebook/user/model/User;.<init>:()V",
+    "Lcom/facebook/xapp/messaging/modularsync/fbn/stax/FbnStaxParticipantList;.<init>:()V",
+    "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/ParticipantAdapterUtil;.<init>:()V",
+    "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/ParticipantAdapterUtil;.getContactType:(Ljava/lang/Integer;)Ljava/lang/Object;",
+    "Lcom/facebook/xapp/messaging/threadview/loader/mailbox/adapter/util/Sources;.<init>:()V",
+    "Lcom/instagram/common/analytics/IgAnalyticsLogger;.<init>:()V",
+    "Lcom/instagram/common/analytics/intf/AnalyticsEvent;.<init>:()V",
+    "Ljava/lang/Integer;.<init>:()V",
+    "Ljava/lang/String;.<init>:()V",
+    "Ljava/lang/StringBuilder;.<init>:()V",
+    "Ljava/lang/Thread;.<init>:(Ljava/lang/Runnable;)V",
+    "Ljava/text/MessageFormat;.<init>:()V",
+    "Ljava/util/TreeMap;.<init>:()V",
+    "Lkotlin/jvm/internal/Intrinsics;.<init>:()V"
+  ],
+  "Ljava/lang/Runnable;.run:()V" : 
+  [
+    "Ljava/lang/Thread;.run:()V"
+  ],
+  "Ljava/lang/String;.concat:(Ljava/lang/String;)Ljava/lang/String;" : 
+  [
+    "Landroid/net/Uri;.toString:()Ljava/lang/String;"
+  ],
+  "Ljava/lang/String;.isEmpty:()Z" : 
+  [
+    "Ljava/lang/String;.concat:(Ljava/lang/String;)Ljava/lang/String;"
+  ],
+  "Ljava/lang/Thread;.run:()V" : 
+  [
+    "Ljava/lang/Thread;.run:()V"
+  ]
+}

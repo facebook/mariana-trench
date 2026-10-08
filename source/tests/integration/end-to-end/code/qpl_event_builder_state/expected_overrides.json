@@ -1,0 +1,62 @@
+// @generated
+{
+  "Landroid/content/Context;.startActivity:(Landroid/content/Intent;)V" : 
+  [
+    "Landroid/app/Activity;.startActivity:(Landroid/content/Intent;)V"
+  ],
+  "Lcom/facebook/quicklog/EventBuilder;.annotate:(Ljava/lang/String;I)Lcom/facebook/quicklog/EventBuilder;" : 
+  [
+    "Lcom/facebook/quicklog/DirectEventBuilder;.annotate:(Ljava/lang/String;I)Lcom/facebook/quicklog/EventBuilder;"
+  ],
+  "Lcom/facebook/quicklog/EventBuilder;.annotate:(Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/quicklog/EventBuilder;" : 
+  [
+    "Lcom/facebook/quicklog/DirectEventBuilder;.annotate:(Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/quicklog/EventBuilder;"
+  ],
+  "Lcom/facebook/quicklog/EventBuilder;.annotate:(Ljava/lang/String;Z)Lcom/facebook/quicklog/EventBuilder;" : 
+  [
+    "Lcom/facebook/quicklog/DirectEventBuilder;.annotate:(Ljava/lang/String;Z)Lcom/facebook/quicklog/EventBuilder;"
+  ],
+  "Lcom/facebook/quicklog/EventBuilder;.report:()V" : 
+  [
+    "Lcom/facebook/quicklog/DirectEventBuilder;.report:()V"
+  ],
+  "Lcom/facebook/staxcqlinterfacejava/StaxParticipantList;.getContactTypeExact:(I)Ljava/lang/Integer;" : 
+  [
+    "Lcom/facebook/messengerorcacqljava/OrcaParticipantList;.getContactTypeExact:(I)Ljava/lang/Integer;",
+    "Lcom/facebook/xapp/messaging/modularsync/fbn/stax/FbnStaxParticipantList;.getContactTypeExact:(I)Ljava/lang/Integer;"
+  ],
+  "Lcom/facebook/staxcqlinterfacejava/StaxParticipantList;.getCount:()I" : 
+  [
+    "Lcom/facebook/messengerorcacqljava/OrcaParticipantList;.getCount:()I",
+    "Lcom/facebook/xapp/messaging/modularsync/fbn/stax/FbnStaxParticipantList;.getCount:()I"
+  ],
+  "Lcom/facebook/telemetry/ueinterface/UnexpectedEventBuilder;.annotate:(Ljava/lang/String;I)Lcom/facebook/telemetry/ueinterface/UnexpectedEventBuilder;" : 
+  [
+    "Lcom/facebook/telemetry/impl/UnexpectedEventBuilderImpl;.annotate:(Ljava/lang/String;I)Lcom/facebook/telemetry/ueinterface/UnexpectedEventBuilder;"
+  ],
+  "Lcom/facebook/telemetry/ueinterface/UnexpectedEventBuilder;.annotate:(Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/telemetry/ueinterface/UnexpectedEventBuilder;" : 
+  [
+    "Lcom/facebook/telemetry/impl/UnexpectedEventBuilderImpl;.annotate:(Ljava/lang/String;Ljava/lang/String;)Lcom/facebook/telemetry/ueinterface/UnexpectedEventBuilder;"
+  ],
+  "Lcom/facebook/telemetry/ueinterface/UnexpectedEventBuilder;.annotate:(Ljava/lang/String;Z)Lcom/facebook/telemetry/ueinterface/UnexpectedEventBuilder;" : 
+  [
+    "Lcom/facebook/telemetry/impl/UnexpectedEventBuilderImpl;.annotate:(Ljava/lang/String;Z)Lcom/facebook/telemetry/ueinterface/UnexpectedEventBuilder;"
+  ],
+  "Lcom/facebook/telemetry/ueinterface/UnexpectedEventBuilder;.report:()V" : 
+  [
+    "Lcom/facebook/telemetry/impl/UnexpectedEventBuilderImpl;.report:()V"
+  ],
+  "Ljava/lang/Object;.toString:()Ljava/lang/String;" : 
+  [
+    "Landroid/location/Location;.toString:()Ljava/lang/String;",
+    "Landroid/net/Uri;.toString:()Ljava/lang/String;"
+  ],
+  "Ljava/lang/Runnable;.run:()V" : 
+  [
+    "Ljava/lang/Thread;.run:()V"
+  ],
+  "Ljava/util/Map;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;" : 
+  [
+    "Ljava/util/TreeMap;.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+  ]
+}
