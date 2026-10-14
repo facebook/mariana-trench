@@ -8,6 +8,7 @@
 #include <memory>
 #include <vector>
 
+#include <DexClass.h>
 #include <MethodOverrideGraph.h>
 #include <Show.h>
 #include <Walkers.h>
@@ -179,12 +180,23 @@ void Overrides::init_from_stores(
             const DexMethod* dex_method) {
           std::unordered_set<const Method*> overrides;
           const auto* method = method_factory.get(dex_method);
+          const auto* base_type = dex_method->get_class();
+          const auto* base_class = type_class(base_type);
+          const bool is_interface_method =
+              base_class != nullptr && is_interface(base_class);
 
           for (const auto& graph : method_override_graphs) {
             auto overrides_in_scope =
                 method_override_graph::get_overriding_methods(
                     *graph, dex_method, /* include_interfaces */ true);
             for (const auto* override : UnorderedIterable(overrides_in_scope)) {
+              // A class method that implements the interface method on behalf
+              // of a subclass is reached with all of its own overrides, which
+              // do not implement the interface unless their class does.
+              if (is_interface_method &&
+                  !graph->get_node(override).overrides(override, base_type)) {
+                continue;
+              }
               overrides.insert(method_factory.get(override));
             }
           }

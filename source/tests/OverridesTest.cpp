@@ -101,6 +101,55 @@ TEST_F(OverridesTest, Overrides) {
   EXPECT_TRUE(overrides.get(indirect_override).empty());
 }
 
+TEST_F(OverridesTest, InterfaceImplementedBySuperclass) {
+  Scope scope;
+
+  // `LImpl;` implements `LInterface;` with `m` inherited from `LBase;`.
+  // `LOther;` overrides `LBase;.m` but does not implement `LInterface;`.
+  auto* dex_interface_method = marianatrench::redex::create_void_method(
+      scope,
+      "LInterface;",
+      "m",
+      /* parameter_types */ "",
+      /* return_type */ "V",
+      /* super */ nullptr,
+      /* is_static */ false,
+      /* is_private */ false,
+      /* is_native */ false,
+      /* is_abstract */ true);
+  auto* interface_type = dex_interface_method->get_class();
+  type_class(interface_type)
+      ->set_access(ACC_PUBLIC | ACC_INTERFACE | ACC_ABSTRACT);
+  auto* dex_base_method =
+      marianatrench::redex::create_void_method(scope, "LBase;", "m");
+  marianatrench::redex::create_class(
+      scope, "LImpl;", /* super */ dex_base_method->get_class())
+      ->set_interfaces(DexTypeList::make_type_list({interface_type}));
+  auto* dex_other_method = marianatrench::redex::create_void_method(
+      scope,
+      "LOther;",
+      "m",
+      /* parameter_types */ "",
+      /* return_type */ "V",
+      /* super */ dex_base_method->get_class());
+  auto* dex_direct_method =
+      marianatrench::redex::create_void_method(scope, "LDirect;", "m");
+  type_class(dex_direct_method->get_class())
+      ->set_interfaces(DexTypeList::make_type_list({interface_type}));
+
+  auto context = test_overrides(scope);
+  const auto& methods = *context.methods;
+  const auto& overrides = *context.overrides;
+
+  EXPECT_EQ(
+      overrides.get(methods.get(dex_interface_method)),
+      (std::unordered_set<const Method*>{
+          methods.get(dex_base_method), methods.get(dex_direct_method)}));
+  EXPECT_EQ(
+      overrides.get(methods.get(dex_base_method)),
+      (std::unordered_set<const Method*>{methods.get(dex_other_method)}));
+}
+
 TEST_F(OverridesTest, JsonSerializationDeserialization) {
   Scope scope;
 
