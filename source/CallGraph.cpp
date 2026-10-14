@@ -17,6 +17,7 @@
 #include <IRInstruction.h>
 #include <Resolver.h>
 #include <Show.h>
+#include <TypeUtil.h>
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/CallGraph.h>
@@ -996,23 +997,47 @@ CallTarget CallTarget::from_call_instruction(
 }
 
 bool CallTarget::FilterOverrides::operator()(const Method* method) const {
-  return extends == nullptr || extends->count(method->get_class()) > 0;
+  const auto* method_class = method->get_class();
+  if (extends == nullptr || extends->count(method_class) > 0) {
+    return true;
+  }
+  if (local_extends == nullptr) {
+    return false;
+  }
+  const DexString* MT_NULLABLE name = nullptr;
+  for (const auto* type : *local_extends) {
+    if (!type::check_cast(type, /* base_type */ method_class)) {
+      continue;
+    }
+    const auto* klass = type_class(type);
+    if (klass == nullptr) {
+      continue;
+    }
+    if (name == nullptr) {
+      name = DexString::get_string(method->get_name());
+    }
+    if (resolve_virtual(klass, name, method->get_proto()) ==
+        method->dex_method()) {
+      return true;
+    }
+  }
+  return false;
 }
 
 CallTarget::OverridesRange CallTarget::overrides() const {
   mt_assert(resolved());
   mt_assert(is_virtual());
 
-  const auto* extends = receiver_extends_;
+  FilterOverrides filter{/* extends */ receiver_extends_,
+                         /* local_extends */ nullptr};
   if (receiver_local_extends_ && receiver_local_extends_->size() > 0) {
-    extends = receiver_local_extends_;
+    filter = FilterOverrides{/* extends */ receiver_local_extends_,
+                             /* local_extends */ receiver_local_extends_};
   }
 
   return boost::make_iterator_range(
-      boost::make_filter_iterator(
-          FilterOverrides{extends}, overrides_->cbegin()),
-      boost::make_filter_iterator(
-          FilterOverrides{extends}, overrides_->cend()));
+      boost::make_filter_iterator(filter, overrides_->cbegin()),
+      boost::make_filter_iterator(filter, overrides_->cend()));
 }
 
 bool CallTarget::operator==(const CallTarget& other) const {

@@ -53,6 +53,10 @@ class CallTarget final {
     bool operator()(const Method*) const;
 
     const std::unordered_set<const DexType*>* MT_NULLABLE extends;
+    // Receiver types inferred by the global type analysis, if any. A receiver
+    // of one of these types that does not declare the method runs the
+    // implementation it inherits from a superclass, so that override is kept.
+    const std::unordered_set<const DexType*>* MT_NULLABLE local_extends;
   };
 
  public:

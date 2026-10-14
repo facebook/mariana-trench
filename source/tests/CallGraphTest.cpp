@@ -563,6 +563,77 @@ TEST_F(CallGraphTest, VirtualCalleeStats) {
   }
 }
 
+TEST_F(CallGraphTest, LocalExtendsKeepInheritedImplementation) {
+  Scope scope;
+
+  // `LDefault;` inherits `log` from `LAbstract;`. `LDeep;` overrides it.
+  auto* base_dex_method =
+      marianatrench::redex::create_void_method(scope, "LBase;", "log");
+  auto* abstract_dex_method = marianatrench::redex::create_void_method(
+      scope,
+      "LAbstract;",
+      "log",
+      /* parameter_types */ "",
+      /* return_type */ "V",
+      /* super */ base_dex_method->get_class());
+  marianatrench::redex::create_class(
+      scope, "LDefault;", /* super */ abstract_dex_method->get_class());
+  auto* deep_dex_method = marianatrench::redex::create_void_method(
+      scope,
+      "LDeep;",
+      "log",
+      /* parameter_types */ "",
+      /* return_type */ "V",
+      /* super */ abstract_dex_method->get_class());
+  auto* other_dex_method = marianatrench::redex::create_void_method(
+      scope,
+      "LOther;",
+      "log",
+      /* parameter_types */ "",
+      /* return_type */ "V",
+      /* super */ base_dex_method->get_class());
+  marianatrench::redex::create_void_method(
+      scope,
+      "LUnrelated;",
+      "log",
+      /* parameter_types */ "",
+      /* return_type */ "V",
+      /* super */ base_dex_method->get_class());
+
+  DexStore store("stores");
+  store.add_classes(scope);
+  auto context = test::make_context(store);
+
+  auto overrides_for =
+      [&](const std::unordered_set<const DexType*>& local_extends) {
+        auto call_target = CallTarget::virtual_call(
+            /* instruction */ nullptr,
+            context.methods->get(base_dex_method),
+            /* receiver_type */ base_dex_method->get_class(),
+            &local_extends,
+            *context.class_hierarchies,
+            *context.overrides,
+            CallTarget::CallKind::Normal,
+            /* call_index */ 0);
+        auto range = call_target.overrides();
+        return std::unordered_set<const Method*>(range.begin(), range.end());
+      };
+
+  // A `LDefault;` receiver runs the inherited `LAbstract;.log`.
+  EXPECT_EQ(
+      overrides_for(
+          {DexType::get_type("LDefault;"), DexType::get_type("LOther;")}),
+      (std::unordered_set<const Method*>{
+          context.methods->get(abstract_dex_method),
+          context.methods->get(other_dex_method)}));
+
+  // A `LDeep;` receiver runs its own override, not the shadowed one.
+  EXPECT_EQ(
+      overrides_for({DexType::get_type("LDeep;")}),
+      (std::unordered_set<const Method*>{
+          context.methods->get(deep_dex_method)}));
+}
+
 TEST_F(CallGraphTest, ArtificialCalleeStats) {
   Scope scope;
 
