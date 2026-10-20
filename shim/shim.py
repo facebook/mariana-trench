@@ -157,6 +157,51 @@ def _extract_jex_file_if_exists(path: Path, target: str, build_directory: Path) 
     return resolve_analysis_jar(jex_extract_directory, target)
 
 
+def _extract_application_modules(apk_directory: str, dex_directory: str) -> None:
+    """Extract the DEX files of the application modules stored in the APK.
+
+    A module keeps its code in `assets/<module>/`, next to the store's
+    `metadata.txt`. Redex's `Tool::init` loads each directory in
+    `dex_directory` as the store of module `<name>` when the APK directory has
+    `assets/<name>/metadata.txt`, so for every store kept here that file is put
+    back where unpacking removes it.
+
+    A module that cannot be extracted is skipped and logged, so that the rest of
+    the app is still analysed.
+    """
+    for module in pyredex.unpacker.ApplicationModule.detect(apk_directory):
+        name = module.get_name()
+        metadata_path = Path(apk_directory) / "assets" / name / "metadata.txt"
+        if not metadata_path.is_file():
+            # `detect` also returns stores described elsewhere, such as the
+            # secondary dex store (`.id dex`) whose metadata stays in
+            # `assets/secondary-program-dex-jars/`. They are not modules.
+            continue
+        store_directory = Path(dex_directory) / name
+        if store_directory.exists():
+            LOG.error(
+                f"Skipping a second store with the id of application module `{name}`."
+            )
+            continue
+        metadata = metadata_path.read_bytes()
+        store_directory.mkdir()
+        try:
+            module.unpackage(apk_directory, os.fspath(store_directory))
+        except Exception:
+            LOG.exception(
+                f"Skipping application module `{name}`: unable to extract it."
+            )
+            shutil.rmtree(store_directory)
+            continue
+
+        dex_count = len(list(store_directory.glob("*.dex")))
+        if dex_count == 0:
+            shutil.rmtree(store_directory)
+            continue
+        metadata_path.write_bytes(metadata)
+        LOG.info(f"Extracted {dex_count} DEX files of application module `{name}`.")
+
+
 def _build_target(
     target: str, *, mode: Optional[str] = None, modifier: Optional[str] = None
 ) -> Path:
@@ -1168,6 +1213,7 @@ def main() -> None:
             )
         dex_mode = pyredex.unpacker.detect_secondary_dex_mode(apk_directory)
         dex_mode.unpackage(apk_directory, dex_directory)
+        _extract_application_modules(apk_directory, dex_directory)
         LOG.info(f"Extracted APK into `{apk_directory}` and DEX into `{dex_directory}`")
 
         if configuration.FACEBOOK_SHIM and arguments.analyze_third_party:
