@@ -116,7 +116,12 @@ bool ForwardAliasTransfer::analyze_sget(
   mt_assert(instruction->srcs_size() == 0);
   mt_assert(instruction->has_field());
 
-  auto memory_location = context->memory_factory.make_location(instruction);
+  // Issue #91: a static field has no base object, so instead of minting a
+  // fresh per-instruction location (which disconnects the read from the
+  // matching `sput` write), resolve it to a stable field-keyed location so
+  // taint stored by `sput` can be read back here.
+  auto* memory_location =
+      context->memory_factory.make_static_field(instruction->get_field());
   LOG_OR_DUMP(context, 4, "Setting result register to {}", *memory_location);
   environment->assign(k_result_register, memory_location);
 

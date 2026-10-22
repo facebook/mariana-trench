@@ -162,6 +162,21 @@ class InstructionMemoryLocation final : public RootMemoryLocation {
   const IRInstruction* instruction_;
 };
 
+/* Memory location representing a static field (a global). */
+class StaticFieldMemoryLocation final : public RootMemoryLocation {
+ public:
+  explicit StaticFieldMemoryLocation(const DexFieldRef* field);
+
+  std::string str() const override;
+
+  const DexFieldRef* field() const {
+    return field_;
+  }
+
+ private:
+  const DexFieldRef* field_;
+};
+
 /**
  * A memory factory to create unique memory location pointers.
  *
@@ -184,12 +199,21 @@ class MemoryFactory final {
    */
   InstructionMemoryLocation* make_location(const IRInstruction* instruction);
 
+  /* Return a stable memory location representing a static field's storage.
+   * Keyed by the field so that an `sput` write and a later `sget` read of the
+   * same static field resolve to the same location (see issue #91). */
+  StaticFieldMemoryLocation* make_static_field(const DexFieldRef* field);
+
  private:
   std::vector<std::unique_ptr<ParameterMemoryLocation>> parameters_;
   std::unordered_map<
       const IRInstruction*,
       std::unique_ptr<InstructionMemoryLocation>>
       instructions_;
+  std::unordered_map<
+      const DexFieldRef*,
+      std::unique_ptr<StaticFieldMemoryLocation>>
+      static_fields_;
 };
 
 } // namespace marianatrench

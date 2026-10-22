@@ -147,11 +147,14 @@ bool ForwardTaintTransfer::analyze_sget(
         k_result_register,
         show(memory_location),
         field_sources);
+    // Issue #91: use a Weak update so that taint previously stored into this
+    // static field's memory location (by `sput`) is preserved and joined with
+    // any field-source, instead of being overwritten.
     environment->deep_write(
         aliasing.widening_resolver(),
         memory_location,
         TaintTree(field_sources),
-        UpdateKind::Strong);
+        UpdateKind::Weak);
   }
 
   return false;
@@ -1527,10 +1530,29 @@ bool ForwardTaintTransfer::analyze_sput(
     ForwardTaintEnvironment* environment) {
   log_instruction(context, instruction);
 
-  // analyze_sput() only checks for flows to field sinks defined on static
-  // fields. We do not handle taint propagations through writes to static
-  // fields (i.e. globals).
+  // Check for flows into field-sinks defined on static fields.
   check_flows_to_field_sink(context, environment, instruction);
+
+  // Issue #91: propagate taint written into a static field so that a later
+  // read (sget) of the same field sees it. The forward alias analysis resolves
+  // both the sput and the matching sget to the same StaticFieldMemoryLocation
+  // (keyed by the field), so storing the taint there makes it readable again.
+  const auto& aliasing = context->aliasing.get(instruction);
+  auto taint = environment->read(
+      aliasing.register_memory_locations(instruction->src(0)));
+  auto* static_field_memory_location =
+      context->memory_factory.make_static_field(instruction->get_field());
+  LOG_OR_DUMP(
+      context,
+      4,
+      "Tainting static field memory location {} with {} update kind: UpdateKind::Weak",
+      show(static_field_memory_location),
+      taint);
+  environment->deep_write(
+      aliasing.widening_resolver(),
+      static_field_memory_location,
+      taint,
+      UpdateKind::Weak);
 
   return false;
 }
