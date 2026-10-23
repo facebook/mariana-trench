@@ -2,7 +2,7 @@
   {
     "name": "TestSource flows into TestSink",
     "code": 9001,
-    "description": "A TestSource value reaches a TestSink (regression test for issue #91)",
+    "description": "A TestSource value reaches a TestSink",
     "sources": [
       "TestSource"
     ],

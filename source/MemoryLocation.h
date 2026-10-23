@@ -199,9 +199,9 @@ class MemoryFactory final {
    */
   InstructionMemoryLocation* make_location(const IRInstruction* instruction);
 
-  /* Return a stable memory location representing a static field's storage.
-   * Keyed by the field so that an `sput` write and a later `sget` read of the
-   * same static field resolve to the same location (see issue #91). */
+  /* Return this method's stable memory location for a static field's storage.
+   * References resolving to the same field share this location. Unresolved
+   * fields are keyed by their original reference. */
   StaticFieldMemoryLocation* make_static_field(const DexFieldRef* field);
 
  private:

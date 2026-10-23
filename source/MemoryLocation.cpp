@@ -7,6 +7,7 @@
 
 #include <fmt/format.h>
 
+#include <Resolver.h>
 #include <Show.h>
 
 #include <mariana-trench/Assert.h>
@@ -198,6 +199,11 @@ InstructionMemoryLocation* MemoryFactory::make_location(
 StaticFieldMemoryLocation* MemoryFactory::make_static_field(
     const DexFieldRef* field) {
   mt_assert(field != nullptr);
+
+  // Inherited accesses can name different classes for the same static field.
+  if (const auto* resolved_field = resolve_field(field, FieldSearch::Static)) {
+    field = resolved_field;
+  }
 
   auto found = static_fields_.find(field);
   if (found != static_fields_.end()) {

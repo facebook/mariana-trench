@@ -1126,10 +1126,10 @@
             "port" : "Return",
             "position" : 
             {
-              "end" : 22,
+              "end" : 31,
               "line" : 32,
               "path" : "FlowThroughStaticField.java",
-              "start" : 17
+              "start" : 26
             }
           },
           "kinds" : 

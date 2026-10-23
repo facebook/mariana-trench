@@ -7,13 +7,13 @@
 
 package com.facebook.marianatrench.integrationtests;
 
-// Regression test for issue #91: a taint that flows through a *static* field
-// must be detected, just like one that flows through an instance field.
+// Taint stored in a static field must reach its reads, including after a
+// clean write: the field is shared mutable state, so updates retain possible
+// taint conservatively. This fixture does not execute competing threads.
 //
-// `source()` and `sink()` are attached as a source / sink by models.json.
-// The two methods below are structurally identical; the only difference is
-// whether the carrier field is static. Before the fix, only
-// flowThroughInstanceField() reports an issue (the false negative from #91).
+// `source()` and `sink()` are configured in models.json.
+// The instance-field case provides a control for ordinary field propagation.
+// Both flows use the same source and sink models.
 public class FlowThroughStaticField {
 
   static class Holder {
@@ -27,10 +27,10 @@ public class FlowThroughStaticField {
 
   void sink(String data) {}
 
-  // Bug case from issue #91: source -> STATIC field -> sink.
+  // Retain potential taint across a clean write to shared static storage.
   void flowThroughStaticField() {
-    String foo = source();
-    Holder.sStaticField = foo; // sput-object
+    Holder.sStaticField = source();
+    Holder.sStaticField = null;
     sink(Holder.sStaticField); // sget-object
   }
 
