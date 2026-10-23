@@ -116,7 +116,12 @@ bool ForwardAliasTransfer::analyze_sget(
   mt_assert(instruction->srcs_size() == 0);
   mt_assert(instruction->has_field());
 
-  auto memory_location = context->memory_factory.make_location(instruction);
+  // Static fields have no base object. Use a field-keyed location so reads
+  // share the storage tainted by writes to the same field.
+  // This abstraction can also expose later writes through an earlier read's
+  // saved alias, conservatively overapproximating the ordering of accesses.
+  auto* memory_location =
+      context->memory_factory.make_static_field(instruction->get_field());
   LOG_OR_DUMP(context, 4, "Setting result register to {}", *memory_location);
   environment->assign(k_result_register, memory_location);
 

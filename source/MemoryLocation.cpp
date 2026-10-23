@@ -7,6 +7,7 @@
 
 #include <fmt/format.h>
 
+#include <Resolver.h>
 #include <Show.h>
 
 #include <mariana-trench/Assert.h>
@@ -147,6 +148,15 @@ std::optional<std::string> InstructionMemoryLocation::get_constant() const {
   return std::nullopt;
 }
 
+StaticFieldMemoryLocation::StaticFieldMemoryLocation(const DexFieldRef* field)
+    : field_(field) {
+  mt_assert(field != nullptr);
+}
+
+std::string StaticFieldMemoryLocation::str() const {
+  return fmt::format("StaticFieldMemoryLocation(`{}`)", show(field_));
+}
+
 MemoryFactory::MemoryFactory(const Method* method) {
   mt_assert(method != nullptr);
 
@@ -182,6 +192,26 @@ InstructionMemoryLocation* MemoryFactory::make_location(
 
   auto result = instructions_.emplace(
       instruction, std::make_unique<InstructionMemoryLocation>(instruction));
+  mt_assert(result.second);
+  return result.first->second.get();
+}
+
+StaticFieldMemoryLocation* MemoryFactory::make_static_field(
+    const DexFieldRef* field) {
+  mt_assert(field != nullptr);
+
+  // Inherited accesses can name different classes for the same static field.
+  if (const auto* resolved_field = resolve_field(field, FieldSearch::Static)) {
+    field = resolved_field;
+  }
+
+  auto found = static_fields_.find(field);
+  if (found != static_fields_.end()) {
+    return found->second.get();
+  }
+
+  auto result = static_fields_.emplace(
+      field, std::make_unique<StaticFieldMemoryLocation>(field));
   mt_assert(result.second);
   return result.first->second.get();
 }

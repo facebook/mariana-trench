@@ -1,0 +1,20 @@
+[
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/FlowThroughStaticField;.source:()Ljava/lang/String;",
+    "generations": [
+      {
+        "kind": "TestSource",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/FlowThroughStaticField;.sink:(Ljava/lang/String;)V",
+    "sinks": [
+      {
+        "kind": "TestSink",
+        "port": "Argument(1)"
+      }
+    ]
+  }
+]
