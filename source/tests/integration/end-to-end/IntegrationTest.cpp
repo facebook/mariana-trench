@@ -142,6 +142,13 @@ TEST_P(IntegrationTest, CompareFlows) {
     Heuristics::init_from_file(std::filesystem::path(heuristics_file));
   }
 
+  std::vector<std::string> assume_no_side_effects_configuration_paths;
+  auto assume_no_side_effects_file = directory / "assume_no_side_effects.pro";
+  if (std::filesystem::exists(assume_no_side_effects_file)) {
+    assume_no_side_effects_configuration_paths.emplace_back(
+        assume_no_side_effects_file.native());
+  }
+
   // Read the configuration for this test case.
   context.options = std::make_unique<Options>(
       /* models_paths */
@@ -171,7 +178,8 @@ TEST_P(IntegrationTest, CompareFlows) {
       /* enable_cross_component_analysis */ true,
       /* export_origins_mode */ ExportOriginsMode::Always,
       /* analysis_mode */ AnalysisMode::Normal,
-      propagate_across_arguments);
+      propagate_across_arguments,
+      assume_no_side_effects_configuration_paths);
 
   // Load test Java classes
   std::filesystem::path dex_path = test::find_dex_path(directory);

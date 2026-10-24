@@ -5,21 +5,33 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <algorithm>
+#include <optional>
+#include <tuple>
+
 #include <json/json.h>
 
+#include <ConcurrentContainers.h>
+#include <ControlFlow.h>
 #include <Creators.h>
 #include <DexAccess.h>
 #include <DexClass.h>
 #include <DexMemberRefs.h>
 #include <DexUtil.h>
 #include <IRAssembler.h>
+#include <IRCode.h>
+#include <Liveness.h>
+#include <MethodUtil.h>
 #include <ProguardConfiguration.h>
 #include <ProguardMap.h>
 #include <ProguardMatcher.h>
 #include <ProguardParser.h>
 #include <Reachability.h>
+#include <ReachableClasses.h>
 #include <RedexContext.h>
 #include <Resolver.h>
+#include <Show.h>
+#include <Walkers.h>
 
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/JsonReaderWriter.h>
@@ -78,6 +90,129 @@ std::vector<const DexField*> create_fields(
     created_fields.push_back(concrete_field);
   }
   return created_fields;
+}
+
+void mark_methods_without_side_effects(
+    const std::vector<std::string>& configuration_paths,
+    const Scope& scope) {
+  keep_rules::ProguardConfiguration configuration;
+  for (const auto& configuration_path : configuration_paths) {
+    auto stats = keep_rules::proguard_parser::parse_file(
+        configuration_path, &configuration);
+    if (stats.parse_errors > 0) {
+      WARNING(
+          1,
+          "Found {} parse errors in ProGuard configuration `{}`.",
+          stats.parse_errors,
+          configuration_path);
+    }
+  }
+
+  // Keep rules would also change the entry points of the global type analysis.
+  keep_rules::ProguardConfiguration assume_no_side_effects_configuration;
+  assume_no_side_effects_configuration.assumenosideeffects_rules =
+      std::move(configuration.assumenosideeffects_rules);
+
+  ProguardMap empty_map;
+  apply_deobfuscated_names({scope}, empty_map);
+
+  auto recorder = keep_rules::process_proguard_rules(
+      empty_map,
+      scope,
+      g_redex->external_classes(),
+      assume_no_side_effects_configuration,
+      /* keep_all_annotation_classes */ false);
+  LOG(1,
+      "{} of {} `-assumenosideeffects` rules match a method.",
+      recorder.used_assumenosideeffect_rules.size(),
+      assume_no_side_effects_configuration.assumenosideeffects_rules.size());
+}
+
+const DexMethod* MT_NULLABLE callee_without_side_effects(
+    const DexMethod* caller,
+    IRInstruction* instruction) {
+  if (!opcode::is_an_invoke(instruction->opcode())) {
+    return nullptr;
+  }
+  const DexMethod* callee = resolve_method_deprecated(
+      instruction->get_method(), opcode_to_search(instruction), caller);
+  if (callee == nullptr || !::assumenosideeffects(callee) ||
+      method::is_init(callee)) {
+    return nullptr;
+  }
+  return callee;
+}
+
+/* Whether the register written by `move_result` may be read afterwards. */
+bool is_result_used(
+    const LivenessFixpointIterator& liveness,
+    const cfg::InstructionIterator& move_result) {
+  auto* block = move_result.block();
+  auto live_registers = liveness.get_live_out_vars_at(block);
+  if (live_registers.is_bottom()) {
+    // The block cannot reach an exit, so liveness tells us nothing.
+    return true;
+  }
+  for (auto it = block->rbegin(); it != block->rend(); ++it) {
+    if (it->type != MFLOW_OPCODE) {
+      continue;
+    }
+    if (it->insn == move_result->insn) {
+      break;
+    }
+    liveness.analyze_instruction(it->insn, &live_registers);
+  }
+  return live_registers.contains(move_result->insn->dest());
+}
+
+/*
+ * Removes the calls without side effects of one method, and returns their
+ * callees. Removing a call can leave the result of another call unused, so
+ * this repeats until nothing changes, as Redex's local dead code elimination
+ * does.
+ */
+std::vector<const DexMethod*> remove_calls_without_side_effects(
+    const DexMethod* method,
+    cfg::ControlFlowGraph& cfg) {
+  std::vector<const DexMethod*> removed_callees;
+  while (true) {
+    std::optional<LivenessFixpointIterator> liveness;
+    std::vector<IRInstruction*> calls;
+    auto iterable = cfg::InstructionIterable(cfg);
+    for (auto it = iterable.begin(); it != iterable.end(); ++it) {
+      const auto* callee = callee_without_side_effects(method, it->insn);
+      if (callee == nullptr) {
+        continue;
+      }
+      auto move_result = cfg.move_result_of(it);
+      if (!move_result.is_end()) {
+        if (!liveness) {
+          liveness.emplace(cfg);
+          liveness->run(LivenessDomain());
+        }
+        if (is_result_used(*liveness, move_result)) {
+          continue;
+        }
+      }
+      calls.push_back(it->insn);
+      removed_callees.push_back(callee);
+    }
+
+    if (calls.empty()) {
+      break;
+    }
+    for (auto* call : calls) {
+      cfg.remove_insn(cfg.find_insn(call));
+    }
+  }
+
+  if (!removed_callees.empty()) {
+    // Removing the only instruction that may throw in a try block makes its
+    // handlers unreachable.
+    cfg.remove_unreachable_blocks();
+    cfg.calculate_exit_block();
+  }
+  return removed_callees;
 }
 
 } // namespace
@@ -207,6 +342,56 @@ void redex::remove_unreachable(
       after.num_classes,
       after.num_fields,
       after.num_methods);
+}
+
+std::size_t redex::remove_calls_without_side_effects(
+    const Options& options,
+    const DexStoresVector& stores) {
+  const auto& configuration_paths =
+      options.assume_no_side_effects_configuration_paths();
+  if (configuration_paths.empty()) {
+    return 0;
+  }
+
+  Scope scope = build_class_scope(stores);
+  scope.erase(
+      std::remove_if(
+          scope.begin(),
+          scope.end(),
+          [](const DexClass* dex_class) { return dex_class->is_external(); }),
+      scope.end());
+  mark_methods_without_side_effects(configuration_paths, scope);
+
+  ConcurrentMap<const DexMethod*, std::size_t> removed_calls_per_callee;
+  walk::parallel::code(scope, [&](DexMethod* method, IRCode& code) {
+    mt_assert(code.cfg_built());
+    for (const auto* callee :
+         remove_calls_without_side_effects(method, code.cfg())) {
+      removed_calls_per_callee.update(
+          callee, [](const DexMethod*, std::size_t& count, bool /* exists */) {
+            ++count;
+          });
+    }
+  });
+
+  std::vector<std::pair<std::string, std::size_t>> removed_calls;
+  std::size_t total_removed_calls = 0;
+  for (const auto& [callee, count] :
+       UnorderedIterable(removed_calls_per_callee)) {
+    removed_calls.emplace_back(show(callee), count);
+    total_removed_calls += count;
+  }
+  std::sort(
+      removed_calls.begin(),
+      removed_calls.end(),
+      [](const auto& left, const auto& right) {
+        return std::tie(right.second, left.first) <
+            std::tie(left.second, right.first);
+      });
+  for (const auto& [callee, count] : removed_calls) {
+    LOG(2, "Removed {} calls to `{}`.", count, callee);
+  }
+  return total_removed_calls;
 }
 
 DexClass* redex::create_class(

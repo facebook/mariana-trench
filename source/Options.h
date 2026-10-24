@@ -46,7 +46,9 @@ class Options final {
       bool enable_cross_component_analysis = false,
       ExportOriginsMode export_origins_mode = ExportOriginsMode::Always,
       AnalysisMode analysis_mode = AnalysisMode::Normal,
-      bool propagate_across_arguments = false);
+      bool propagate_across_arguments = false,
+      const std::vector<std::string>&
+          assume_no_side_effects_configuration_paths = {});
 
   explicit Options(const Json::Value& json);
 
@@ -66,6 +68,8 @@ class Options final {
   const std::optional<std::string>& third_party_library_package_ids_path()
       const;
   const std::vector<std::string>& proguard_configuration_paths() const;
+  const std::vector<std::string>& assume_no_side_effects_configuration_paths()
+      const;
   const std::optional<std::string>& generated_models_directory() const;
 
   const std::vector<std::string>& generator_configuration_paths() const;
@@ -162,6 +166,7 @@ class Options final {
   std::vector<std::string> shims_paths_;
   std::optional<std::string> third_party_library_package_ids_path_;
   std::vector<std::string> proguard_configuration_paths_;
+  std::vector<std::string> assume_no_side_effects_configuration_paths_;
 
   std::vector<std::string> generator_configuration_paths_;
   std::vector<ModelGeneratorConfiguration> model_generators_configuration_;

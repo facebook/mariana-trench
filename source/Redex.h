@@ -58,6 +58,19 @@ void process_proguard_configurations(
 
 void remove_unreachable(const Options& options, DexStoresVector& stores);
 
+/**
+ * Honours the `-assumenosideeffects` rules of the ProGuard configurations in
+ * `Options::assume_no_side_effects_configuration_paths`, as ProGuard and Redex
+ * do in release builds: a call is removed when it resolves to a matched method
+ * (other than a constructor) and its result is unused. Other rules in these
+ * configurations are ignored.
+ *
+ * Control flow graphs must be built. Returns the number of removed calls.
+ */
+std::size_t remove_calls_without_side_effects(
+    const Options& options,
+    const DexStoresVector& stores);
+
 DexClass* create_class(
     Scope& scope,
     const std::string& class_name,

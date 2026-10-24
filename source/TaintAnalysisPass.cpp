@@ -26,6 +26,7 @@
 #include <mariana-trench/Overrides.h>
 #include <mariana-trench/Positions.h>
 #include <mariana-trench/PostprocessTraces.h>
+#include <mariana-trench/Redex.h>
 #include <mariana-trench/Rules.h>
 #include <mariana-trench/RulesCoverage.h>
 #include <mariana-trench/Scheduler.h>
@@ -52,6 +53,19 @@ MethodMappings initialize_context(Context& context) {
       "Built control flow graphs in {:.2f}s. Memory used, RSS: {:.2f}GB",
       control_flow_graphs_timer.duration_in_seconds(),
       resident_set_size_in_gb());
+
+  if (!context.options->assume_no_side_effects_configuration_paths().empty()) {
+    Timer remove_calls_timer;
+    LOG(1, "Removing calls without side effects...");
+    auto removed_calls = redex::remove_calls_without_side_effects(
+        *context.options, context.stores);
+    context.statistics->log_time(
+        "remove_calls_without_side_effects", remove_calls_timer);
+    LOG(1,
+        "Removed {} calls without side effects in {:.2f}s.",
+        removed_calls,
+        remove_calls_timer.duration_in_seconds());
+  }
 
   Timer types_timer;
   LOG(1, "Inferring types...");

@@ -115,7 +115,8 @@ Options::Options(
     bool enable_cross_component_analysis,
     ExportOriginsMode export_origins_mode,
     AnalysisMode analysis_mode,
-    bool propagate_across_arguments)
+    bool propagate_across_arguments,
+    const std::vector<std::string>& assume_no_side_effects_configuration_paths)
     : models_paths_(models_paths),
       field_models_paths_(field_models_paths),
       literal_models_paths_(literal_models_paths),
@@ -123,6 +124,8 @@ Options::Options(
       lifecycles_paths_(lifecycles_paths),
       shims_paths_(shims_paths),
       proguard_configuration_paths_(proguard_configuration_paths),
+      assume_no_side_effects_configuration_paths_(
+          assume_no_side_effects_configuration_paths),
       model_generators_configuration_(model_generators_configuration),
       model_generator_search_paths_(model_generator_search_paths),
       source_root_directory_(source_root_directory),
@@ -210,6 +213,13 @@ Options::Options(const Json::Value& json) {
   if (json.isMember("proguard-configuration-paths")) {
     proguard_configuration_paths_ = parse_paths_list(
         JsonValidation::string(json, "proguard-configuration-paths"),
+        /* extension */ ".pro");
+  }
+
+  if (json.isMember("assume-no-side-effects-configuration-paths")) {
+    assume_no_side_effects_configuration_paths_ = parse_paths_list(
+        JsonValidation::string(
+            json, "assume-no-side-effects-configuration-paths"),
         /* extension */ ".pro");
   }
 
@@ -429,6 +439,11 @@ Options::third_party_library_package_ids_path() const {
 
 const std::vector<std::string>& Options::proguard_configuration_paths() const {
   return proguard_configuration_paths_;
+}
+
+const std::vector<std::string>&
+Options::assume_no_side_effects_configuration_paths() const {
+  return assume_no_side_effects_configuration_paths_;
 }
 
 const std::optional<std::string>& Options::generated_models_directory() const {

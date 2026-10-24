@@ -1,0 +1,38 @@
+[
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/Origin;.source:()Ljava/lang/Object;",
+    "generations": [
+      {
+        "kind": "Source",
+        "port": "Return"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/DebugLog;.d:(Ljava/lang/String;Ljava/lang/Object;)V",
+    "sinks": [
+      {
+        "kind": "Sink",
+        "port": "Argument(1)"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/DebugLog;.v:(Ljava/lang/String;Ljava/lang/Object;)I",
+    "sinks": [
+      {
+        "kind": "Sink",
+        "port": "Argument(1)"
+      }
+    ]
+  },
+  {
+    "method": "Lcom/facebook/marianatrench/integrationtests/DebugLog;.e:(Ljava/lang/String;Ljava/lang/Object;)V",
+    "sinks": [
+      {
+        "kind": "Sink",
+        "port": "Argument(1)"
+      }
+    ]
+  }
+]
