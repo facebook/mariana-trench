@@ -26,12 +26,16 @@ from .system_jar_resolution import jar_path_list
 try:
     from ..facebook.shim import configuration
     from ..facebook.shim.jar_extraction import resolve_analysis_jar
+    from ..facebook.shim.proguard_configuration import (
+        resolve_proguard_configuration_from_target,
+    )
     from ..facebook.shim.superpack import register_superpack_dex_mode
     from ..facebook.shim.system_jar_resolution import expand_system_jar_configuration
     from ..facebook.shim.third_party_utils import start_third_party_analysis
 except Exception:
     # pyre-ignore
     from . import configuration
+    from .proguard_configuration import resolve_proguard_configuration_from_target
     from .system_jar_resolution import expand_system_jar_configuration
 
 import pyredex
@@ -447,6 +451,23 @@ def _add_configuration_arguments(parser: argparse.ArgumentParser) -> None:
         type=_separated_paths_exist,
         default=None,
         help="A `;`-separated list of ProGuard configurations, which can be used for global inference and to ignore unreachable objects.",
+    )
+    configuration_arguments.add_argument(
+        "--assume-no-side-effects-configuration-paths",
+        type=_separated_paths_exist,
+        default=None,
+        help="A `;`-separated list of ProGuard configurations. As in release builds, calls to methods "
+        + "that their `-assumenosideeffects` rules match are removed when the result is unused. "
+        + "Their other rules are ignored.",
+    )
+    configuration_arguments.add_argument(
+        "--assume-no-side-effects-from-target",
+        type=str,
+        default=None,
+        help='A JSON object, inline or as a file path, of the form `{"resolve_from_target": {...}}` '
+        + "naming the APK's Buck target with its build modes, config options and target platforms. "
+        + "Adds the release ProGuard configuration that Redex reads when building the target to "
+        + "`--assume-no-side-effects-configuration-paths`.",
     )
     configuration_arguments.add_argument(
         "--disable-global-type-analysis",
@@ -955,6 +976,11 @@ def _get_command_options_json(
     if arguments.proguard_configuration_paths:
         options["proguard-configuration-paths"] = arguments.proguard_configuration_paths
 
+    if arguments.assume_no_side_effects_configuration_paths:
+        options["assume-no-side-effects-configuration-paths"] = (
+            arguments.assume_no_side_effects_configuration_paths
+        )
+
     if arguments.lifecycles_paths:
         options["lifecycles-paths"] = arguments.lifecycles_paths
 
@@ -1136,6 +1162,19 @@ def main() -> None:
             arguments.system_jar_configuration_path,
             arguments.repository_root_directory,
         )
+
+        if arguments.assume_no_side_effects_from_target is not None:
+            arguments.assume_no_side_effects_configuration_paths = ";".join(
+                path
+                for path in (
+                    arguments.assume_no_side_effects_configuration_paths,
+                    resolve_proguard_configuration_from_target(
+                        arguments.assume_no_side_effects_from_target,
+                        arguments.repository_root_directory,
+                    ),
+                )
+                if path
+            )
 
         if arguments.rules_paths is None:
             # pyre-fixme[16]: Module `shim` has no attribute `configuration`.
