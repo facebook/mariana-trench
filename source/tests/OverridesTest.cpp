@@ -150,6 +150,61 @@ TEST_F(OverridesTest, InterfaceImplementedBySuperclass) {
       (std::unordered_set<const Method*>{methods.get(dex_other_method)}));
 }
 
+TEST_F(OverridesTest, HasObscureOverrideFor) {
+  Scope scope;
+
+  // `LBase;.m` is overridden by the abstract `LAbstract;.m` and by
+  // `LConcrete;.m`, which implements it.
+  auto* dex_base_method =
+      marianatrench::redex::create_void_method(scope, "LBase;", "m");
+  auto* dex_abstract_method = marianatrench::redex::create_void_method(
+      scope,
+      "LAbstract;",
+      "m",
+      /* parameter_types */ "",
+      /* return_type */ "V",
+      /* super */ dex_base_method->get_class(),
+      /* is_static */ false,
+      /* is_private */ false,
+      /* is_native */ false,
+      /* is_abstract */ true);
+  dex_abstract_method->set_access(
+      dex_abstract_method->get_access() | ACC_ABSTRACT);
+  type_class(dex_abstract_method->get_class())
+      ->set_access(ACC_PUBLIC | ACC_ABSTRACT);
+  marianatrench::redex::create_void_method(
+      scope,
+      "LConcrete;",
+      "m",
+      /* parameter_types */ "",
+      /* return_type */ "V",
+      /* super */ dex_abstract_method->get_class());
+
+  // `LOtherBase;.m` is overridden by a native method.
+  auto* dex_other_base_method =
+      marianatrench::redex::create_void_method(scope, "LOtherBase;", "m");
+  marianatrench::redex::create_void_method(
+      scope,
+      "LNative;",
+      "m",
+      /* parameter_types */ "",
+      /* return_type */ "V",
+      /* super */ dex_other_base_method->get_class(),
+      /* is_static */ false,
+      /* is_private */ false,
+      /* is_native */ true,
+      /* is_abstract */ true);
+
+  auto context = test_overrides(scope);
+  const auto& methods = *context.methods;
+  const auto& overrides = *context.overrides;
+
+  EXPECT_FALSE(
+      overrides.has_obscure_override_for(methods.get(dex_base_method)));
+  EXPECT_TRUE(
+      overrides.has_obscure_override_for(methods.get(dex_other_base_method)));
+}
+
 TEST_F(OverridesTest, JsonSerializationDeserialization) {
   Scope scope;
 

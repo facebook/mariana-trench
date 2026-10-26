@@ -49,6 +49,10 @@ class Overrides final {
 
   const std::unordered_set<const Method*>& empty_method_set() const;
 
+  /**
+   * Return true if an override of the given method has no code and is not
+   * abstract (e.g. a native method).
+   */
   bool has_obscure_override_for(const Method* method) const;
 
   Json::Value to_json() const;

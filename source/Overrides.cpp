@@ -83,7 +83,9 @@ const std::unordered_set<const Method*>& Overrides::empty_method_set() const {
 bool Overrides::has_obscure_override_for(const Method* method) const {
   const auto& overrides = get(method);
   for (const auto* override : overrides) {
-    if (!override->get_code()) {
+    // An abstract override never runs: whatever implements it is in the
+    // override set too.
+    if (!override->get_code() && !override->is_abstract()) {
       return true;
     }
   }
