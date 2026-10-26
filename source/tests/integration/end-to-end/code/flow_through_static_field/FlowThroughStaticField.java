@@ -7,13 +7,13 @@
 
 package com.facebook.marianatrench.integrationtests;
 
-// Taint stored in a static field must reach its reads, including after a
-// clean write: the field is shared mutable state, so updates retain possible
-// taint conservatively. This fixture does not execute competing threads.
+// Taint stored in a static field must reach its reads. A separate case checks
+// retention after a clean write to shared mutable storage. This fixture does
+// not execute competing threads.
 //
 // `source()` and `sink()` are configured in models.json.
 // The instance-field case provides a control for ordinary field propagation.
-// Both flows use the same source and sink models.
+// All flows use the same source and sink models.
 public class FlowThroughStaticField {
 
   static class Holder {
@@ -27,10 +27,9 @@ public class FlowThroughStaticField {
 
   void sink(String data) {}
 
-  // Retain potential taint across a clean write to shared static storage.
+  // Source -> STATIC field -> sink.
   void flowThroughStaticField() {
     Holder.sStaticField = source();
-    Holder.sStaticField = null;
     sink(Holder.sStaticField); // sget-object
   }
 
@@ -40,5 +39,12 @@ public class FlowThroughStaticField {
     Holder holder = new Holder();
     holder.mInstanceField = foo; // iput-object
     sink(holder.mInstanceField); // iget-object
+  }
+
+  // Retain potential taint across a clean write to shared static storage.
+  void flowThroughStaticFieldWithCleanOverwrite() {
+    Holder.sStaticField = source();
+    Holder.sStaticField = null;
+    sink(Holder.sStaticField); // sget-object
   }
 }

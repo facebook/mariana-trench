@@ -975,7 +975,7 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/FlowThroughStaticField;.sink:(Ljava/lang/String;)V",
       "position" : 
       {
-        "line" : 42,
+        "line" : 41,
         "path" : "FlowThroughStaticField.java"
       },
       "rule" : 9001,
@@ -990,7 +990,7 @@
             "position" : 
             {
               "end" : 29,
-              "line" : 42,
+              "line" : 41,
               "path" : "FlowThroughStaticField.java",
               "start" : 9
             }
@@ -1026,7 +1026,7 @@
             "position" : 
             {
               "end" : 22,
-              "line" : 39,
+              "line" : 38,
               "path" : "FlowThroughStaticField.java",
               "start" : 17
             }
@@ -1054,7 +1054,7 @@
           [
             {
               "end" : 46,
-              "line" : 41,
+              "line" : 40,
               "start" : 28
             }
           ]
@@ -1065,7 +1065,7 @@
   "method" : "Lcom/facebook/marianatrench/integrationtests/FlowThroughStaticField;.flowThroughInstanceField:()V",
   "position" : 
   {
-    "line" : 38,
+    "line" : 37,
     "path" : "FlowThroughStaticField.java"
   }
 }
@@ -1076,7 +1076,7 @@
       "callee" : "Lcom/facebook/marianatrench/integrationtests/FlowThroughStaticField;.sink:(Ljava/lang/String;)V",
       "position" : 
       {
-        "line" : 34,
+        "line" : 33,
         "path" : "FlowThroughStaticField.java"
       },
       "rule" : 9001,
@@ -1091,7 +1091,7 @@
             "position" : 
             {
               "end" : 27,
-              "line" : 34,
+              "line" : 33,
               "path" : "FlowThroughStaticField.java",
               "start" : 9
             }
@@ -1159,6 +1159,99 @@
   "position" : 
   {
     "line" : 31,
+    "path" : "FlowThroughStaticField.java"
+  }
+}
+{
+  "issues" :
+  [
+    {
+      "callee" : "Lcom/facebook/marianatrench/integrationtests/FlowThroughStaticField;.sink:(Ljava/lang/String;)V",
+      "position" :
+      {
+        "line" : 48,
+        "path" : "FlowThroughStaticField.java"
+      },
+      "rule" : 9001,
+      "sink_index" : "0",
+      "sinks" :
+      [
+        {
+          "call_info" :
+          {
+            "call_kind" : "Origin",
+            "port" : "Argument(1)",
+            "position" :
+            {
+              "end" : 27,
+              "line" : 48,
+              "path" : "FlowThroughStaticField.java",
+              "start" : 9
+            }
+          },
+          "kinds" :
+          [
+            {
+              "callee_interval" :
+              [
+                34,
+                35
+              ],
+              "kind" : "TestSink",
+              "origins" :
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/FlowThroughStaticField;.sink:(Ljava/lang/String;)V",
+                  "port" : "Argument(1)"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ],
+      "sources" :
+      [
+        {
+          "call_info" :
+          {
+            "call_kind" : "Origin",
+            "port" : "Return",
+            "position" :
+            {
+              "end" : 31,
+              "line" : 46,
+              "path" : "FlowThroughStaticField.java",
+              "start" : 26
+            }
+          },
+          "kinds" :
+          [
+            {
+              "callee_interval" :
+              [
+                34,
+                35
+              ],
+              "kind" : "TestSource",
+              "origins" :
+              [
+                {
+                  "method" : "Lcom/facebook/marianatrench/integrationtests/FlowThroughStaticField;.source:()Ljava/lang/String;",
+                  "port" : "Return"
+                }
+              ],
+              "preserves_type_context" : true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "method" : "Lcom/facebook/marianatrench/integrationtests/FlowThroughStaticField;.flowThroughStaticFieldWithCleanOverwrite:()V",
+  "position" :
+  {
+    "line" : 45,
     "path" : "FlowThroughStaticField.java"
   }
 }

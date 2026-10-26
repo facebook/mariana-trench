@@ -237,6 +237,14 @@
       "Lcom/facebook/marianatrench/integrationtests/FlowThroughStaticField;.source:()Ljava/lang/String;"
     ]
   },
+  "Lcom/facebook/marianatrench/integrationtests/FlowThroughStaticField;.flowThroughStaticFieldWithCleanOverwrite:()V" :
+  {
+    "virtual" :
+    [
+      "Lcom/facebook/marianatrench/integrationtests/FlowThroughStaticField;.sink:(Ljava/lang/String;)V",
+      "Lcom/facebook/marianatrench/integrationtests/FlowThroughStaticField;.source:()Ljava/lang/String;"
+    ]
+  },
   "Lcom/facebook/marianatrench/integrationtests/Origin;.<init>:()V" : 
   {
     "static" : 

@@ -38,12 +38,14 @@
   "Lcom/facebook/marianatrench/integrationtests/FlowThroughStaticField;.sink:(Ljava/lang/String;)V" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/FlowThroughStaticField;.flowThroughInstanceField:()V",
-    "Lcom/facebook/marianatrench/integrationtests/FlowThroughStaticField;.flowThroughStaticField:()V"
+    "Lcom/facebook/marianatrench/integrationtests/FlowThroughStaticField;.flowThroughStaticField:()V",
+    "Lcom/facebook/marianatrench/integrationtests/FlowThroughStaticField;.flowThroughStaticFieldWithCleanOverwrite:()V"
   ],
   "Lcom/facebook/marianatrench/integrationtests/FlowThroughStaticField;.source:()Ljava/lang/String;" : 
   [
     "Lcom/facebook/marianatrench/integrationtests/FlowThroughStaticField;.flowThroughInstanceField:()V",
-    "Lcom/facebook/marianatrench/integrationtests/FlowThroughStaticField;.flowThroughStaticField:()V"
+    "Lcom/facebook/marianatrench/integrationtests/FlowThroughStaticField;.flowThroughStaticField:()V",
+    "Lcom/facebook/marianatrench/integrationtests/FlowThroughStaticField;.flowThroughStaticFieldWithCleanOverwrite:()V"
   ],
   "Lcom/facebook/secure/context/IntentLauncher;.<init>:()V" : 
   [
