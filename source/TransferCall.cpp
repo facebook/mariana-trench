@@ -45,18 +45,9 @@ std::vector<const DexType * MT_NULLABLE> get_source_register_types(
   return register_types;
 }
 
-} // namespace
-
-std::optional<std::string> static_final_field_constant(
-    const IRInstruction* instruction) {
-  // `sget*` is the only field opcode that produces a value from no registers,
-  // so this also rejects `iget*` and the `*put*` family.
-  if (!instruction->has_field() || instruction->srcs_size() != 0) {
-    return std::nullopt;
-  }
-
-  const auto* field =
-      resolve_field(instruction->get_field(), FieldSearch::Static);
+std::optional<std::string> static_final_field_constant_from_field(
+    const DexFieldRef* field_reference) {
+  const auto* field = resolve_field(field_reference, FieldSearch::Static);
   if (field == nullptr || !is_static(field) || !is_final(field)) {
     return std::nullopt;
   }
@@ -118,14 +109,9 @@ std::optional<std::string> static_final_field_constant(
   return std::nullopt;
 }
 
-std::optional<std::string> static_final_field_identity(
-    const IRInstruction* instruction) {
-  if (!instruction->has_field() || instruction->srcs_size() != 0) {
-    return std::nullopt;
-  }
-
-  const auto* field =
-      resolve_field(instruction->get_field(), FieldSearch::Static);
+std::optional<std::string> static_final_field_identity_from_field(
+    const DexFieldRef* field_reference) {
+  const auto* field = resolve_field(field_reference, FieldSearch::Static);
   if (field == nullptr || !is_static(field) || !is_final(field)) {
     return std::nullopt;
   }
@@ -149,6 +135,28 @@ std::optional<std::string> static_final_field_identity(
       "{}.{}", show(field->get_class()), show(field->get_name()));
 }
 
+} // namespace
+
+std::optional<std::string> static_final_field_constant(
+    const IRInstruction* instruction) {
+  // `sget*` is the only field opcode that produces a value from no registers,
+  // so this also rejects `iget*` and the `*put*` family.
+  if (!instruction->has_field() || instruction->srcs_size() != 0) {
+    return std::nullopt;
+  }
+
+  return static_final_field_constant_from_field(instruction->get_field());
+}
+
+std::optional<std::string> static_final_field_identity(
+    const IRInstruction* instruction) {
+  if (!instruction->has_field() || instruction->srcs_size() != 0) {
+    return std::nullopt;
+  }
+
+  return static_final_field_identity_from_field(instruction->get_field());
+}
+
 namespace {
 
 std::optional<std::string> register_constant_argument(
@@ -162,6 +170,15 @@ std::optional<std::string> register_constant_argument(
   }
 
   MemoryLocation* memory_location = *memory_location_singleton;
+  if (const auto* static_field_memory_location =
+          memory_location->as<StaticFieldMemoryLocation>()) {
+    const auto* field = static_field_memory_location->field();
+    if (auto constant = static_final_field_constant_from_field(field)) {
+      return constant;
+    }
+    return static_final_field_identity_from_field(field);
+  }
+
   auto* instruction_memory_location =
       memory_location->as<InstructionMemoryLocation>();
   if (instruction_memory_location == nullptr) {
