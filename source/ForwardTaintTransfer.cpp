@@ -147,11 +147,14 @@ bool ForwardTaintTransfer::analyze_sget(
         k_result_register,
         show(memory_location),
         field_sources);
+    // The alias analysis makes the result alias the static field's storage,
+    // rather than a fresh instruction location. Join field sources into that
+    // storage: a strong update here would erase taint from previous writes.
     environment->deep_write(
         aliasing.widening_resolver(),
         memory_location,
         TaintTree(field_sources),
-        UpdateKind::Strong);
+        UpdateKind::Weak);
   }
 
   return false;
@@ -1527,10 +1530,29 @@ bool ForwardTaintTransfer::analyze_sput(
     ForwardTaintEnvironment* environment) {
   log_instruction(context, instruction);
 
-  // analyze_sput() only checks for flows to field sinks defined on static
-  // fields. We do not handle taint propagations through writes to static
-  // fields (i.e. globals).
+  // Check for flows into field-sinks defined on static fields.
   check_flows_to_field_sink(context, environment, instruction);
+
+  const auto& aliasing = context->aliasing.get(instruction);
+  auto taint = environment->read(
+      aliasing.register_memory_locations(instruction->src(0)));
+  auto* static_field_memory_location =
+      context->memory_factory.make_static_field(instruction->get_field());
+  LOG_OR_DUMP(
+      context,
+      4,
+      "Tainting static field memory location {} with {} update kind: UpdateKind::Weak",
+      show(static_field_memory_location),
+      taint);
+  // Static fields are shared mutable state. Conservatively retain previously
+  // observed taint because concurrent writes cannot be excluded; a strong
+  // update could discard a possible flow. This does not model thread
+  // interleavings.
+  environment->deep_write(
+      aliasing.widening_resolver(),
+      static_field_memory_location,
+      taint,
+      UpdateKind::Weak);
 
   return false;
 }
