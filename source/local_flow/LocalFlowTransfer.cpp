@@ -21,6 +21,15 @@
 namespace marianatrench {
 namespace local_flow {
 
+namespace {
+
+std::string static_field_name(const DexFieldRef* field) {
+  return fmt::format(
+      "{}||{}", show(field->get_class()), field->get_name()->str());
+}
+
+} // namespace
+
 LocalFlowTransfer::LocalFlowTransfer(
     const Method* method,
     TempIdGenerator& temp_gen,
@@ -300,31 +309,21 @@ void LocalFlowTransfer::analyze_sget(
     const IRInstruction* instruction,
     RegisterEnvironment& env) {
   (void)env;
-  auto* field_ref = instruction->get_field();
-
-  std::string global_name = fmt::format(
-      "{}||{}", show(field_ref->get_class()), field_ref->get_name()->str());
-
   // Result is picked up by IOPCODE_MOVE_RESULT_PSEUDO.
-  pending_result_ =
-      LocalFlowValueTree(LocalFlowNode::make_global(std::move(global_name)));
+  pending_result_ = LocalFlowValueTree(
+      LocalFlowNode::make_static_field(
+          static_field_name(instruction->get_field())));
 }
 
 void LocalFlowTransfer::analyze_sput(
     const IRInstruction* instruction,
     RegisterEnvironment& env,
     LocalFlowConstraintSet& constraints) {
-  auto val_reg = instruction->src(0);
-  auto* field_ref = instruction->get_field();
-
-  std::string global_name = fmt::format(
-      "{}||{}", show(field_ref->get_class()), field_ref->get_name()->str());
-
-  const auto& val_tree = get_or_create(env, val_reg);
-  auto global_node = LocalFlowNode::make_global(global_name);
-
-  // Emit constraint: val -> Global(class.field)
-  constraints.add_edge(val_tree.root(), global_node);
+  const auto& val_tree = get_or_create(env, instruction->src(0));
+  constraints.add_edge(
+      val_tree.root(),
+      LocalFlowNode::make_static_field(
+          static_field_name(instruction->get_field())));
 }
 
 void LocalFlowTransfer::analyze_aget(

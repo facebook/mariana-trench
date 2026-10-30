@@ -39,7 +39,15 @@
           {
             "labels" :
             [
-              "Project:<init>:(Ljava/lang/String;)V",
+              "Call:(17,0)",
+              "ContraInject:p0"
+            ],
+            "left" : "C<bad>",
+            "right" : "G{Ljava/lang/IllegalArgumentException;||<init>:(Ljava/lang/String;)V}"
+          },
+          {
+            "labels" :
+            [
               "Return:(17,0)",
               "Project:ctrl",
               "Inject:ctrl"
@@ -61,22 +69,9 @@
             "guard" : "Bwd",
             "labels" :
             [
-              "ContraProject:C<bad>",
-              "Call:(17,0)",
-              "ContraInject:p0",
-              "Inject:<init>:(Ljava/lang/String;)V"
-            ],
-            "left" : "C<bad>",
-            "right" : "G{Ljava/lang/IllegalArgumentException;||<init>:(Ljava/lang/String;)V}"
-          },
-          {
-            "guard" : "Bwd",
-            "labels" :
-            [
               "ContraProject:ctrl",
               "Call:(17,0)",
-              "ContraInject:ctrl",
-              "Inject:<init>:(Ljava/lang/String;)V"
+              "ContraInject:ctrl"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/ThrowFlow;||throwOrReturn:(ZLjava/lang/Object;)Ljava/lang/Object;}",
             "right" : "G{Ljava/lang/IllegalArgumentException;||<init>:(Ljava/lang/String;)V}"
@@ -97,7 +92,6 @@
           {
             "labels" :
             [
-              "Project:<init>:(Ljava/lang/String;)V",
               "Return:(12,0)",
               "Project:ctrl",
               "Inject:ctrl"
@@ -111,8 +105,7 @@
             [
               "ContraProject:ctrl",
               "Call:(12,0)",
-              "ContraInject:ctrl",
-              "Inject:<init>:(Ljava/lang/String;)V"
+              "ContraInject:ctrl"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/ThrowFlow;||throwWithMessage:(Ljava/lang/String;)V}",
             "right" : "G{Ljava/lang/RuntimeException;||<init>:(Ljava/lang/String;)V}"
@@ -123,8 +116,7 @@
             [
               "ContraProject:p0",
               "Call:(12,0)",
-              "ContraInject:p0",
-              "Inject:<init>:(Ljava/lang/String;)V"
+              "ContraInject:p0"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/ThrowFlow;||throwWithMessage:(Ljava/lang/String;)V}",
             "right" : "G{Ljava/lang/RuntimeException;||<init>:(Ljava/lang/String;)V}"

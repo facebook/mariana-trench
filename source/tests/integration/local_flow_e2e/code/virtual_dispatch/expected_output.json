@@ -143,7 +143,6 @@
           {
             "labels" :
             [
-              "Project:<init>:()V",
               "Return:(20,0)",
               "Project:ctrl",
               "Inject:ctrl"
@@ -154,7 +153,6 @@
           {
             "labels" :
             [
-              "Project:<init>:()V",
               "Return:(20,0)",
               "Project:this_out",
               "Inject:this_out"
@@ -168,8 +166,7 @@
             [
               "ContraProject:ctrl",
               "Call:(20,0)",
-              "ContraInject:ctrl",
-              "Inject:<init>:()V"
+              "ContraInject:ctrl"
             ],
             "left" : "M{Lcom/facebook/marianatrench/integrationtests/DerivedDispatch;||<init>:()V}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/VirtualDispatch;||<init>:()V}"
@@ -180,8 +177,7 @@
             [
               "ContraProject:p0",
               "Call:(20,0)",
-              "ContraInject:this",
-              "Inject:<init>:()V"
+              "ContraInject:this"
             ],
             "left" : "M{Lcom/facebook/marianatrench/integrationtests/DerivedDispatch;||<init>:()V}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/VirtualDispatch;||<init>:()V}"

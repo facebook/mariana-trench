@@ -14,10 +14,8 @@
         "flows" :
         [
           {
-            "guard" : "Bwd",
             "labels" :
             [
-              "ContraProject:C<test>",
               "Inject:result"
             ],
             "left" : "C<test>",

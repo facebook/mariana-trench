@@ -16,7 +16,6 @@
           {
             "labels" :
             [
-              "Project:<init>:(Ljava/lang/String;)V",
               "Return:(0,0)",
               "Project:ctrl",
               "Inject:ctrl"
@@ -30,8 +29,7 @@
             [
               "ContraProject:ctrl",
               "Call:(0,0)",
-              "ContraInject:ctrl",
-              "Inject:<init>:(Ljava/lang/String;)V"
+              "ContraInject:ctrl"
             ],
             "left" : "G{LThrow;||test:(Ljava/lang/String;)V}",
             "right" : "G{Ljava/lang/Exception;||<init>:(Ljava/lang/String;)V}"
@@ -42,8 +40,7 @@
             [
               "ContraProject:p0",
               "Call:(0,0)",
-              "ContraInject:p0",
-              "Inject:<init>:(Ljava/lang/String;)V"
+              "ContraInject:p0"
             ],
             "left" : "G{LThrow;||test:(Ljava/lang/String;)V}",
             "right" : "G{Ljava/lang/Exception;||<init>:(Ljava/lang/String;)V}"

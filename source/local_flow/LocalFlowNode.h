@@ -21,8 +21,8 @@ namespace local_flow {
  * Node kinds in the local flow graph.
  *
  * Per-callable roots: Param, Result, This, ThisOut, Ctrl
- * Global/stable nodes (survive temp elimination): Global, Meth, CVar, OVar,
- *   SelfRec, Constant
+ * Global/stable nodes (survive temp elimination): Global, StaticField, Meth,
+ *   CVar, OVar, SelfRec, Constant
  * Local temporaries (eliminated during closure): Temp
  */
 enum class NodeKind {
@@ -34,7 +34,10 @@ enum class NodeKind {
   Ctrl,
 
   // Global/stable nodes
+  // Statically resolved callee.
   Global,
+  // Static field, read by sget and written by sput.
+  StaticField,
   Meth,
   CVar,
   OVar,
@@ -51,7 +54,7 @@ enum class NodeKind {
  * Different node kinds carry different payloads:
  * - Param: parameter index (uint32_t)
  * - Result, This, ThisOut, Ctrl, SelfRec: no payload
- * - Global, Meth, CVar, OVar: qualified name (string)
+ * - Global, StaticField, Meth, CVar, OVar: qualified name (string)
  * - Constant: constant value representation (string)
  * - Temp: unique temporary id (uint64_t)
  */
@@ -64,6 +67,7 @@ class LocalFlowNode {
   static LocalFlowNode make_this_out();
   static LocalFlowNode make_ctrl();
   static LocalFlowNode make_global(std::string name);
+  static LocalFlowNode make_static_field(std::string name);
   static LocalFlowNode make_meth(std::string name);
   static LocalFlowNode make_cvar(std::string name);
   static LocalFlowNode make_ovar(std::string name);
@@ -90,13 +94,6 @@ class LocalFlowNode {
    */
   bool is_global() const;
 
-  /**
-   * Returns true if this is a callee node (Global or Meth) — used to
-   * determine whether to use Project vs ContraProject for source labels
-   * in self-loop serialization.
-   */
-  bool is_callee_node() const;
-
   bool operator==(const LocalFlowNode& other) const;
   bool operator!=(const LocalFlowNode& other) const;
   bool operator<(const LocalFlowNode& other) const;
@@ -112,14 +109,15 @@ class LocalFlowNode {
   static std::string jvm_to_lfe_separator(const std::string& jvm_sig);
 
   /**
-   * Extract vtable field name from a Global/Meth node for LFE self-loop labels.
-   * Returns everything after "||" (including full JVM signature for overload
-   * disambiguation). For non-method nodes, returns to_string().
+   * Extract the member name from a StaticField or Meth node, for the member
+   * labels of serialized flows.
+   * Returns everything after "||" (including the full JVM signature for
+   * overload disambiguation).
    */
   static std::string extract_vtable_name(const LocalFlowNode& node);
 
   /**
-   * Extract class name from a Meth node for dispatch table routing.
+   * Extract the class name from a Meth node for dispatch table routing.
    * Returns everything before "||".
    * E.g., "Lcom/Foo;||bar:(I)V" → "Lcom/Foo;"
    */

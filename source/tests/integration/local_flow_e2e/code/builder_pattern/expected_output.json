@@ -39,7 +39,6 @@
           {
             "labels" :
             [
-              "Project:<init>:()V",
               "Return:(29,0)",
               "Project:ctrl",
               "Inject:ctrl"
@@ -83,7 +82,6 @@
           {
             "labels" :
             [
-              "Project:<init>:()V",
               "Return:(29,0)",
               "Call:(29,1)",
               "Project:this_out",
@@ -112,8 +110,7 @@
             [
               "ContraProject:ctrl",
               "Call:(29,0)",
-              "ContraInject:ctrl",
-              "Inject:<init>:()V"
+              "ContraInject:ctrl"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;||build:(Ljava/lang/Object;Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/BuilderPattern;}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;||<init>:()V}"

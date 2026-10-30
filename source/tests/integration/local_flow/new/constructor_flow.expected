@@ -61,7 +61,6 @@
           {
             "labels" :
             [
-              "Project:<init>:(Ljava/lang/Object;Ljava/lang/Object;)V",
               "Return:(0,0)",
               "Project:ctrl",
               "Inject:ctrl"
@@ -72,7 +71,6 @@
           {
             "labels" :
             [
-              "Project:<init>:(Ljava/lang/Object;Ljava/lang/Object;)V",
               "Return:(0,0)",
               "Project:this_out",
               "Inject:result"
@@ -86,8 +84,7 @@
             [
               "ContraProject:ctrl",
               "Call:(0,0)",
-              "ContraInject:ctrl",
-              "Inject:<init>:(Ljava/lang/Object;Ljava/lang/Object;)V"
+              "ContraInject:ctrl"
             ],
             "left" : "G{LMyClass;||test_new:(Ljava/lang/Object;Ljava/lang/Object;)LMyClass;}",
             "right" : "G{LMyClass;||<init>:(Ljava/lang/Object;Ljava/lang/Object;)V}"
@@ -98,8 +95,7 @@
             [
               "ContraProject:p0",
               "Call:(0,0)",
-              "ContraInject:p0",
-              "Inject:<init>:(Ljava/lang/Object;Ljava/lang/Object;)V"
+              "ContraInject:p0"
             ],
             "left" : "G{LMyClass;||test_new:(Ljava/lang/Object;Ljava/lang/Object;)LMyClass;}",
             "right" : "G{LMyClass;||<init>:(Ljava/lang/Object;Ljava/lang/Object;)V}"
@@ -110,8 +106,7 @@
             [
               "ContraProject:p1",
               "Call:(0,0)",
-              "ContraInject:p1",
-              "Inject:<init>:(Ljava/lang/Object;Ljava/lang/Object;)V"
+              "ContraInject:p1"
             ],
             "left" : "G{LMyClass;||test_new:(Ljava/lang/Object;Ljava/lang/Object;)LMyClass;}",
             "right" : "G{LMyClass;||<init>:(Ljava/lang/Object;Ljava/lang/Object;)V}"

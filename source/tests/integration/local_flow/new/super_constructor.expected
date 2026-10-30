@@ -50,7 +50,6 @@
           {
             "labels" :
             [
-              "Project:<init>:(Ljava/lang/Object;)V",
               "Return:(0,0)",
               "Project:ctrl",
               "Inject:ctrl"
@@ -61,7 +60,6 @@
           {
             "labels" :
             [
-              "Project:<init>:(Ljava/lang/Object;)V",
               "Return:(0,0)",
               "Project:this_out",
               "Inject:this_out"
@@ -75,8 +73,7 @@
             [
               "ContraProject:ctrl",
               "Call:(0,0)",
-              "ContraInject:ctrl",
-              "Inject:<init>:(Ljava/lang/Object;)V"
+              "ContraInject:ctrl"
             ],
             "left" : "M{LChild;||<init>:(Ljava/lang/Object;)V}",
             "right" : "G{LBase;||<init>:(Ljava/lang/Object;)V}"
@@ -87,8 +84,7 @@
             [
               "ContraProject:p0",
               "Call:(0,0)",
-              "ContraInject:this",
-              "Inject:<init>:(Ljava/lang/Object;)V"
+              "ContraInject:this"
             ],
             "left" : "M{LChild;||<init>:(Ljava/lang/Object;)V}",
             "right" : "G{LBase;||<init>:(Ljava/lang/Object;)V}"
@@ -99,8 +95,7 @@
             [
               "ContraProject:p1",
               "Call:(0,0)",
-              "ContraInject:p0",
-              "Inject:<init>:(Ljava/lang/Object;)V"
+              "ContraInject:p0"
             ],
             "left" : "M{LChild;||<init>:(Ljava/lang/Object;)V}",
             "right" : "G{LBase;||<init>:(Ljava/lang/Object;)V}"

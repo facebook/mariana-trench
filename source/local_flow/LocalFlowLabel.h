@@ -109,7 +109,8 @@ using LabelPath = std::vector<Label>;
  * `labels` (call labels skipped) contain an odd number of ContraProject, i.e.
  * when the edge starts by consuming an argument. Consumers pick the edges to
  * follow by this guard, so an edge read from a parameter (the receiver `p0`
- * included) or `ctrl` is Bwd and an edge read from a callee is Fwd.
+ * included) or `ctrl` is Bwd and an edge read from a callee or a constant is
+ * Fwd.
  */
 Guard projection_guard(Guard guard, const LabelPath& labels);
 

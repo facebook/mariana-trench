@@ -16,7 +16,15 @@
           {
             "labels" :
             [
-              "Project:<init>:(I)V",
+              "Call:(0,0)",
+              "ContraInject:p0"
+            ],
+            "left" : "C<0>",
+            "right" : "G{Lkotlin/jvm/internal/Lambda;||<init>:(I)V}"
+          },
+          {
+            "labels" :
+            [
               "Return:(0,0)",
               "Project:ctrl",
               "Inject:ctrl"
@@ -27,7 +35,6 @@
           {
             "labels" :
             [
-              "Project:<init>:(I)V",
               "Return:(0,0)",
               "Project:this_out",
               "Inject:this_out"
@@ -39,33 +46,9 @@
             "guard" : "Bwd",
             "labels" :
             [
-              "ContraProject:p1",
-              "Inject:$captured",
-              "Inject:p0"
-            ],
-            "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion$createCapture$1;||<init>:(Ljava/lang/Object;)V}",
-            "right" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion$createCapture$1;||<init>:(Ljava/lang/Object;)V}"
-          },
-          {
-            "guard" : "Bwd",
-            "labels" :
-            [
-              "ContraProject:C<0>",
-              "Call:(0,0)",
-              "ContraInject:p0",
-              "Inject:<init>:(I)V"
-            ],
-            "left" : "C<0>",
-            "right" : "G{Lkotlin/jvm/internal/Lambda;||<init>:(I)V}"
-          },
-          {
-            "guard" : "Bwd",
-            "labels" :
-            [
               "ContraProject:ctrl",
               "Call:(0,0)",
-              "ContraInject:ctrl",
-              "Inject:<init>:(I)V"
+              "ContraInject:ctrl"
             ],
             "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion$createCapture$1;||<init>:(Ljava/lang/Object;)V}",
             "right" : "G{Lkotlin/jvm/internal/Lambda;||<init>:(I)V}"
@@ -76,11 +59,21 @@
             [
               "ContraProject:p0",
               "Call:(0,0)",
-              "ContraInject:this",
-              "Inject:<init>:(I)V"
+              "ContraInject:this"
             ],
             "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion$createCapture$1;||<init>:(Ljava/lang/Object;)V}",
             "right" : "G{Lkotlin/jvm/internal/Lambda;||<init>:(I)V}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "ContraProject:p1",
+              "Inject:$captured",
+              "Inject:p0"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion$createCapture$1;||<init>:(Ljava/lang/Object;)V}",
+            "right" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion$createCapture$1;||<init>:(Ljava/lang/Object;)V}"
           }
         ],
         "node" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion$createCapture$1;||<init>:(Ljava/lang/Object;)V}"
@@ -155,7 +148,6 @@
           {
             "labels" :
             [
-              "Project:<init>:()V",
               "Return:(0,0)",
               "Project:ctrl",
               "Inject:ctrl"
@@ -166,7 +158,6 @@
           {
             "labels" :
             [
-              "Project:<init>:()V",
               "Return:(0,0)",
               "Project:this_out",
               "Inject:this_out"
@@ -180,8 +171,7 @@
             [
               "ContraProject:ctrl",
               "Call:(0,0)",
-              "ContraInject:ctrl",
-              "Inject:<init>:()V"
+              "ContraInject:ctrl"
             ],
             "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||<init>:(Lkotlin/jvm/internal/DefaultConstructorMarker;)V}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||<init>:()V}"
@@ -192,8 +182,7 @@
             [
               "ContraProject:p0",
               "Call:(0,0)",
-              "ContraInject:this",
-              "Inject:<init>:()V"
+              "ContraInject:this"
             ],
             "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||<init>:(Lkotlin/jvm/internal/DefaultConstructorMarker;)V}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||<init>:()V}"
@@ -411,7 +400,6 @@
           {
             "labels" :
             [
-              "Project:<init>:(Ljava/lang/Object;)V",
               "Return:(27,0)",
               "Project:ctrl",
               "Inject:ctrl"
@@ -422,7 +410,6 @@
           {
             "labels" :
             [
-              "Project:<init>:(Ljava/lang/Object;)V",
               "Return:(27,0)",
               "Project:this_out",
               "Inject:result"
@@ -446,8 +433,7 @@
             [
               "ContraProject:ctrl",
               "Call:(27,0)",
-              "ContraInject:ctrl",
-              "Inject:<init>:(Ljava/lang/Object;)V"
+              "ContraInject:ctrl"
             ],
             "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||createCapture:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion$createCapture$1;||<init>:(Ljava/lang/Object;)V}"
@@ -458,8 +444,7 @@
             [
               "ContraProject:p1",
               "Call:(27,0)",
-              "ContraInject:p0",
-              "Inject:<init>:(Ljava/lang/Object;)V"
+              "ContraInject:p0"
             ],
             "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||createCapture:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion$createCapture$1;||<init>:(Ljava/lang/Object;)V}"
@@ -480,7 +465,15 @@
           {
             "labels" :
             [
-              "Project:<init>:(Lkotlin/jvm/internal/DefaultConstructorMarker;)V",
+              "Call:(0,0)",
+              "ContraInject:p0"
+            ],
+            "left" : "C<0>",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||<init>:(Lkotlin/jvm/internal/DefaultConstructorMarker;)V}"
+          },
+          {
+            "labels" :
+            [
               "Return:(0,0)",
               "Project:ctrl",
               "Inject:ctrl"
@@ -491,7 +484,6 @@
           {
             "labels" :
             [
-              "Project:<init>:(Lkotlin/jvm/internal/DefaultConstructorMarker;)V",
               "Return:(0,0)",
               "Project:this_out",
               "Inject:Companion"
@@ -503,22 +495,9 @@
             "guard" : "Bwd",
             "labels" :
             [
-              "ContraProject:C<0>",
-              "Call:(0,0)",
-              "ContraInject:p0",
-              "Inject:<init>:(Lkotlin/jvm/internal/DefaultConstructorMarker;)V"
-            ],
-            "left" : "C<0>",
-            "right" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||<init>:(Lkotlin/jvm/internal/DefaultConstructorMarker;)V}"
-          },
-          {
-            "guard" : "Bwd",
-            "labels" :
-            [
               "ContraProject:ctrl",
               "Call:(0,0)",
-              "ContraInject:ctrl",
-              "Inject:<init>:(Lkotlin/jvm/internal/DefaultConstructorMarker;)V"
+              "ContraInject:ctrl"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||<clinit>:()V}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||<init>:(Lkotlin/jvm/internal/DefaultConstructorMarker;)V}"

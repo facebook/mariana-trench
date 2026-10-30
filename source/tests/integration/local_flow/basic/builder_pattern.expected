@@ -60,7 +60,6 @@
           {
             "labels" :
             [
-              "Project:<init>:()V",
               "Return:(0,0)",
               "Project:ctrl",
               "Inject:ctrl"
@@ -93,7 +92,6 @@
           {
             "labels" :
             [
-              "Project:<init>:()V",
               "Return:(0,0)",
               "Call:(0,1)",
               "Project:this_out",
@@ -109,8 +107,7 @@
             [
               "ContraProject:ctrl",
               "Call:(0,0)",
-              "ContraInject:ctrl",
-              "Inject:<init>:()V"
+              "ContraInject:ctrl"
             ],
             "left" : "G{LBuilder;||test:(Ljava/lang/String;Ljava/lang/String;)LBuilder;}",
             "right" : "G{LBuilder;||<init>:()V}"

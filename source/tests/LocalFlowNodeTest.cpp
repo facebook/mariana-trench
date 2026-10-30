@@ -54,6 +54,15 @@ TEST_F(LocalFlowNodeTest, GlobalNode) {
   EXPECT_EQ(global.to_string(), "G{Lcom/Foo;.bar}");
 }
 
+TEST_F(LocalFlowNodeTest, StaticFieldNode) {
+  auto field = LocalFlowNode::make_static_field("Lcom/Foo;||bar");
+  EXPECT_EQ(field.kind(), NodeKind::StaticField);
+  EXPECT_TRUE(field.is_global());
+  EXPECT_FALSE(field.is_root());
+  EXPECT_EQ(field.to_string(), "G{Lcom/Foo;||bar}");
+  EXPECT_EQ(LocalFlowNode::extract_vtable_name(field), "bar");
+}
+
 TEST_F(LocalFlowNodeTest, MethNode) {
   auto meth = LocalFlowNode::make_meth("Foo||bar");
   EXPECT_EQ(meth.kind(), NodeKind::Meth);

@@ -40,6 +40,10 @@ LocalFlowNode LocalFlowNode::make_global(std::string name) {
   return LocalFlowNode(NodeKind::Global, NamePayload{std::move(name)});
 }
 
+LocalFlowNode LocalFlowNode::make_static_field(std::string name) {
+  return LocalFlowNode(NodeKind::StaticField, NamePayload{std::move(name)});
+}
+
 LocalFlowNode LocalFlowNode::make_meth(std::string name) {
   return LocalFlowNode(NodeKind::Meth, NamePayload{std::move(name)});
 }
@@ -81,6 +85,7 @@ bool LocalFlowNode::is_root() const {
     case NodeKind::Ctrl:
       return true;
     case NodeKind::Global:
+    case NodeKind::StaticField:
     case NodeKind::Meth:
     case NodeKind::CVar:
     case NodeKind::OVar:
@@ -95,6 +100,7 @@ bool LocalFlowNode::is_root() const {
 bool LocalFlowNode::is_global() const {
   switch (kind_) {
     case NodeKind::Global:
+    case NodeKind::StaticField:
     case NodeKind::Meth:
     case NodeKind::CVar:
     case NodeKind::OVar:
@@ -110,10 +116,6 @@ bool LocalFlowNode::is_global() const {
       return false;
   }
   mt_unreachable();
-}
-
-bool LocalFlowNode::is_callee_node() const {
-  return kind_ == NodeKind::Global || kind_ == NodeKind::Meth;
 }
 
 bool LocalFlowNode::operator==(const LocalFlowNode& other) const {
@@ -168,9 +170,8 @@ std::string LocalFlowNode::jvm_to_lfe_separator(const std::string& jvm_sig) {
 }
 
 std::string LocalFlowNode::extract_vtable_name(const LocalFlowNode& node) {
-  if (node.kind_ != NodeKind::Global && node.kind_ != NodeKind::Meth) {
-    return node.to_string();
-  }
+  mt_assert(
+      node.kind_ == NodeKind::StaticField || node.kind_ == NodeKind::Meth);
   const auto& name = std::get<NamePayload>(node.payload_).name;
   auto sep_pos = name.find("||");
   if (sep_pos == std::string::npos) {
@@ -182,9 +183,7 @@ std::string LocalFlowNode::extract_vtable_name(const LocalFlowNode& node) {
 }
 
 std::string LocalFlowNode::extract_class_name(const LocalFlowNode& node) {
-  if (node.kind_ != NodeKind::Meth && node.kind_ != NodeKind::Global) {
-    return node.to_string();
-  }
+  mt_assert(node.kind_ == NodeKind::Meth);
   const auto& name = std::get<NamePayload>(node.payload_).name;
   auto sep_pos = name.find("||");
   if (sep_pos == std::string::npos) {
@@ -209,7 +208,8 @@ std::string LocalFlowNode::to_string() const {
       return "this_out";
     case NodeKind::Ctrl:
       return "ctrl";
-    case NodeKind::Global: {
+    case NodeKind::Global:
+    case NodeKind::StaticField: {
       const auto& name = std::get<NamePayload>(payload_).name;
       return fmt::format("G{{{}}}", name);
     }

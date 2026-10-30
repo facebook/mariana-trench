@@ -16,7 +16,6 @@
           {
             "labels" :
             [
-              "Project:<init>:()V",
               "Return:(19,0)",
               "Project:ctrl",
               "Inject:ctrl"
@@ -27,7 +26,6 @@
           {
             "labels" :
             [
-              "Project:<init>:()V",
               "Return:(19,0)",
               "Project:this_out",
               "Inject:this_out"
@@ -39,21 +37,9 @@
             "guard" : "Bwd",
             "labels" :
             [
-              "ContraProject:p1",
-              "Inject:stored",
-              "Inject:this_out"
-            ],
-            "left" : "M{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||<init>:(Ljava/lang/Object;)V}",
-            "right" : "M{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||<init>:(Ljava/lang/Object;)V}"
-          },
-          {
-            "guard" : "Bwd",
-            "labels" :
-            [
               "ContraProject:ctrl",
               "Call:(19,0)",
-              "ContraInject:ctrl",
-              "Inject:<init>:()V"
+              "ContraInject:ctrl"
             ],
             "left" : "M{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||<init>:(Ljava/lang/Object;)V}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundaryBase;||<init>:()V}"
@@ -64,11 +50,21 @@
             [
               "ContraProject:p0",
               "Call:(19,0)",
-              "ContraInject:this",
-              "Inject:<init>:()V"
+              "ContraInject:this"
             ],
             "left" : "M{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||<init>:(Ljava/lang/Object;)V}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundaryBase;||<init>:()V}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "ContraProject:p1",
+              "Inject:stored",
+              "Inject:this_out"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||<init>:(Ljava/lang/Object;)V}",
+            "right" : "M{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||<init>:(Ljava/lang/Object;)V}"
           }
         ],
         "node" : "M{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||<init>:(Ljava/lang/Object;)V}"
@@ -86,7 +82,6 @@
           {
             "labels" :
             [
-              "Project:<init>:(Ljava/lang/Object;)V",
               "Return:(63,0)",
               "Project:ctrl",
               "Inject:ctrl"
@@ -97,18 +92,6 @@
           {
             "labels" :
             [
-              "Project:get:()Ljava/lang/Object;",
-              "Return:(63,1)",
-              "Project:ctrl",
-              "Inject:ctrl"
-            ],
-            "left" : "O{Lcom/facebook/marianatrench/integrationtests/CallBoundary;}",
-            "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||constructorArgument:(Ljava/lang/Object;)V}"
-          },
-          {
-            "labels" :
-            [
-              "Project:sink:(Ljava/lang/Object;)V",
               "Return:(63,2)",
               "Project:ctrl",
               "Inject:ctrl"
@@ -119,7 +102,29 @@
           {
             "labels" :
             [
-              "Project:<init>:(Ljava/lang/Object;)V",
+              "Project:get:()Ljava/lang/Object;",
+              "Return:(63,1)",
+              "Project:ctrl",
+              "Inject:ctrl"
+            ],
+            "left" : "O{Lcom/facebook/marianatrench/integrationtests/CallBoundary;}",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||constructorArgument:(Ljava/lang/Object;)V}"
+          },
+          {
+            "labels" :
+            [
+              "Project:get:()Ljava/lang/Object;",
+              "Return:(63,1)",
+              "Call:(63,2)",
+              "Project:result",
+              "ContraInject:p0"
+            ],
+            "left" : "O{Lcom/facebook/marianatrench/integrationtests/CallBoundary;}",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||sink:(Ljava/lang/Object;)V}"
+          },
+          {
+            "labels" :
+            [
               "Return:(63,0)",
               "Call:(63,1)",
               "Project:this_out",
@@ -130,26 +135,34 @@
             "right" : "O{Lcom/facebook/marianatrench/integrationtests/CallBoundary;}"
           },
           {
+            "guard" : "Bwd",
             "labels" :
             [
-              "Project:get:()Ljava/lang/Object;",
-              "Return:(63,1)",
-              "Call:(63,2)",
-              "Project:result",
-              "ContraInject:p0",
-              "Inject:sink:(Ljava/lang/Object;)V"
+              "ContraProject:ctrl",
+              "Call:(63,0)",
+              "ContraInject:ctrl"
             ],
-            "left" : "O{Lcom/facebook/marianatrench/integrationtests/CallBoundary;}",
-            "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||sink:(Ljava/lang/Object;)V}"
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||constructorArgument:(Ljava/lang/Object;)V}",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||<init>:(Ljava/lang/Object;)V}"
           },
           {
             "guard" : "Bwd",
             "labels" :
             [
               "ContraProject:ctrl",
+              "Call:(63,2)",
+              "ContraInject:ctrl"
+            ],
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||constructorArgument:(Ljava/lang/Object;)V}",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||sink:(Ljava/lang/Object;)V}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "ContraProject:p0",
               "Call:(63,0)",
-              "ContraInject:ctrl",
-              "Inject:<init>:(Ljava/lang/Object;)V"
+              "ContraInject:p0"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||constructorArgument:(Ljava/lang/Object;)V}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||<init>:(Ljava/lang/Object;)V}"
@@ -165,30 +178,6 @@
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||constructorArgument:(Ljava/lang/Object;)V}",
             "right" : "O{Lcom/facebook/marianatrench/integrationtests/CallBoundary;}"
-          },
-          {
-            "guard" : "Bwd",
-            "labels" :
-            [
-              "ContraProject:ctrl",
-              "Call:(63,2)",
-              "ContraInject:ctrl",
-              "Inject:sink:(Ljava/lang/Object;)V"
-            ],
-            "left" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||constructorArgument:(Ljava/lang/Object;)V}",
-            "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||sink:(Ljava/lang/Object;)V}"
-          },
-          {
-            "guard" : "Bwd",
-            "labels" :
-            [
-              "ContraProject:p0",
-              "Call:(63,0)",
-              "ContraInject:p0",
-              "Inject:<init>:(Ljava/lang/Object;)V"
-            ],
-            "left" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||constructorArgument:(Ljava/lang/Object;)V}",
-            "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||<init>:(Ljava/lang/Object;)V}"
           }
         ],
         "node" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||constructorArgument:(Ljava/lang/Object;)V}"
@@ -206,7 +195,6 @@
           {
             "labels" :
             [
-              "Project:sink:(Ljava/lang/Object;)V",
               "Return:(83,0)",
               "Project:ctrl",
               "Inject:ctrl"
@@ -220,8 +208,7 @@
             [
               "ContraProject:ctrl",
               "Call:(83,0)",
-              "ContraInject:ctrl",
-              "Inject:sink:(Ljava/lang/Object;)V"
+              "ContraInject:ctrl"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||direct:(Ljava/lang/Object;)V}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||sink:(Ljava/lang/Object;)V}"
@@ -232,8 +219,7 @@
             [
               "ContraProject:p0",
               "Call:(83,0)",
-              "ContraInject:p0",
-              "Inject:sink:(Ljava/lang/Object;)V"
+              "ContraInject:p0"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||direct:(Ljava/lang/Object;)V}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||sink:(Ljava/lang/Object;)V}"
@@ -254,7 +240,6 @@
           {
             "labels" :
             [
-              "Project:echo:(Ljava/lang/Object;)Ljava/lang/Object;",
               "Return+:(16,0)",
               "Project:ctrl",
               "Inject:ctrl"
@@ -265,7 +250,6 @@
           {
             "labels" :
             [
-              "Project:echo:(Ljava/lang/Object;)Ljava/lang/Object;",
               "Return+:(16,0)",
               "Project:result",
               "Inject:result"
@@ -276,7 +260,6 @@
           {
             "labels" :
             [
-              "Project:echo:(Ljava/lang/Object;)Ljava/lang/Object;",
               "Return+:(16,0)",
               "Project:this_out",
               "Inject:this_out"
@@ -290,8 +273,7 @@
             [
               "ContraProject:ctrl",
               "Call+:(16,0)",
-              "ContraInject:ctrl",
-              "Inject:echo:(Ljava/lang/Object;)Ljava/lang/Object;"
+              "ContraInject:ctrl"
             ],
             "left" : "M{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||echo:(Ljava/lang/Object;)Ljava/lang/Object;}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundaryBase;||echo:(Ljava/lang/Object;)Ljava/lang/Object;}"
@@ -302,8 +284,7 @@
             [
               "ContraProject:p0",
               "Call+:(16,0)",
-              "ContraInject:this",
-              "Inject:echo:(Ljava/lang/Object;)Ljava/lang/Object;"
+              "ContraInject:this"
             ],
             "left" : "M{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||echo:(Ljava/lang/Object;)Ljava/lang/Object;}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundaryBase;||echo:(Ljava/lang/Object;)Ljava/lang/Object;}"
@@ -314,8 +295,7 @@
             [
               "ContraProject:p1",
               "Call+:(16,0)",
-              "ContraInject:p0",
-              "Inject:echo:(Ljava/lang/Object;)Ljava/lang/Object;"
+              "ContraInject:p0"
             ],
             "left" : "M{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||echo:(Ljava/lang/Object;)Ljava/lang/Object;}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundaryBase;||echo:(Ljava/lang/Object;)Ljava/lang/Object;}"
@@ -403,18 +383,6 @@
           {
             "labels" :
             [
-              "Project:echo:(Ljava/lang/Object;)Ljava/lang/Object;",
-              "Return:(52,0)",
-              "Project:ctrl",
-              "Inject:ctrl"
-            ],
-            "left" : "O{Lcom/facebook/marianatrench/integrationtests/CallBoundary;}",
-            "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||inheritedCall:(Lcom/facebook/marianatrench/integrationtests/CallBoundary;Ljava/lang/Object;)V}"
-          },
-          {
-            "labels" :
-            [
-              "Project:sink:(Ljava/lang/Object;)V",
               "Return:(52,1)",
               "Project:ctrl",
               "Inject:ctrl"
@@ -427,12 +395,33 @@
             [
               "Project:echo:(Ljava/lang/Object;)Ljava/lang/Object;",
               "Return:(52,0)",
-              "Call:(52,1)",
-              "Project:result",
-              "ContraInject:p0",
-              "Inject:sink:(Ljava/lang/Object;)V"
+              "Project:ctrl",
+              "Inject:ctrl"
             ],
             "left" : "O{Lcom/facebook/marianatrench/integrationtests/CallBoundary;}",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||inheritedCall:(Lcom/facebook/marianatrench/integrationtests/CallBoundary;Ljava/lang/Object;)V}"
+          },
+          {
+            "labels" :
+            [
+              "Project:echo:(Ljava/lang/Object;)Ljava/lang/Object;",
+              "Return:(52,0)",
+              "Call:(52,1)",
+              "Project:result",
+              "ContraInject:p0"
+            ],
+            "left" : "O{Lcom/facebook/marianatrench/integrationtests/CallBoundary;}",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||sink:(Ljava/lang/Object;)V}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "ContraProject:ctrl",
+              "Call:(52,1)",
+              "ContraInject:ctrl"
+            ],
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||inheritedCall:(Lcom/facebook/marianatrench/integrationtests/CallBoundary;Ljava/lang/Object;)V}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||sink:(Ljava/lang/Object;)V}"
           },
           {
@@ -446,18 +435,6 @@
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||inheritedCall:(Lcom/facebook/marianatrench/integrationtests/CallBoundary;Ljava/lang/Object;)V}",
             "right" : "O{Lcom/facebook/marianatrench/integrationtests/CallBoundary;}"
-          },
-          {
-            "guard" : "Bwd",
-            "labels" :
-            [
-              "ContraProject:ctrl",
-              "Call:(52,1)",
-              "ContraInject:ctrl",
-              "Inject:sink:(Ljava/lang/Object;)V"
-            ],
-            "left" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||inheritedCall:(Lcom/facebook/marianatrench/integrationtests/CallBoundary;Ljava/lang/Object;)V}",
-            "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||sink:(Ljava/lang/Object;)V}"
           },
           {
             "guard" : "Bwd",
@@ -499,18 +476,6 @@
           {
             "labels" :
             [
-              "Project:own:(Ljava/lang/Object;)Ljava/lang/Object;",
-              "Return:(47,0)",
-              "Project:ctrl",
-              "Inject:ctrl"
-            ],
-            "left" : "O{Lcom/facebook/marianatrench/integrationtests/CallBoundary;}",
-            "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||instanceArgument:(Lcom/facebook/marianatrench/integrationtests/CallBoundary;Ljava/lang/Object;)V}"
-          },
-          {
-            "labels" :
-            [
-              "Project:sink:(Ljava/lang/Object;)V",
               "Return:(47,1)",
               "Project:ctrl",
               "Inject:ctrl"
@@ -523,12 +488,33 @@
             [
               "Project:own:(Ljava/lang/Object;)Ljava/lang/Object;",
               "Return:(47,0)",
-              "Call:(47,1)",
-              "Project:result",
-              "ContraInject:p0",
-              "Inject:sink:(Ljava/lang/Object;)V"
+              "Project:ctrl",
+              "Inject:ctrl"
             ],
             "left" : "O{Lcom/facebook/marianatrench/integrationtests/CallBoundary;}",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||instanceArgument:(Lcom/facebook/marianatrench/integrationtests/CallBoundary;Ljava/lang/Object;)V}"
+          },
+          {
+            "labels" :
+            [
+              "Project:own:(Ljava/lang/Object;)Ljava/lang/Object;",
+              "Return:(47,0)",
+              "Call:(47,1)",
+              "Project:result",
+              "ContraInject:p0"
+            ],
+            "left" : "O{Lcom/facebook/marianatrench/integrationtests/CallBoundary;}",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||sink:(Ljava/lang/Object;)V}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "ContraProject:ctrl",
+              "Call:(47,1)",
+              "ContraInject:ctrl"
+            ],
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||instanceArgument:(Lcom/facebook/marianatrench/integrationtests/CallBoundary;Ljava/lang/Object;)V}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||sink:(Ljava/lang/Object;)V}"
           },
           {
@@ -542,18 +528,6 @@
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||instanceArgument:(Lcom/facebook/marianatrench/integrationtests/CallBoundary;Ljava/lang/Object;)V}",
             "right" : "O{Lcom/facebook/marianatrench/integrationtests/CallBoundary;}"
-          },
-          {
-            "guard" : "Bwd",
-            "labels" :
-            [
-              "ContraProject:ctrl",
-              "Call:(47,1)",
-              "ContraInject:ctrl",
-              "Inject:sink:(Ljava/lang/Object;)V"
-            ],
-            "left" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||instanceArgument:(Lcom/facebook/marianatrench/integrationtests/CallBoundary;Ljava/lang/Object;)V}",
-            "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||sink:(Ljava/lang/Object;)V}"
           },
           {
             "guard" : "Bwd",
@@ -628,7 +602,6 @@
           {
             "labels" :
             [
-              "Project:hidden:(Ljava/lang/Object;)Ljava/lang/Object;",
               "Return:(73,0)",
               "Project:ctrl",
               "Inject:ctrl"
@@ -639,7 +612,6 @@
           {
             "labels" :
             [
-              "Project:sink:(Ljava/lang/Object;)V",
               "Return:(73,1)",
               "Project:ctrl",
               "Inject:ctrl"
@@ -650,12 +622,10 @@
           {
             "labels" :
             [
-              "Project:hidden:(Ljava/lang/Object;)Ljava/lang/Object;",
               "Return:(73,0)",
               "Call:(73,1)",
               "Project:result",
-              "ContraInject:p0",
-              "Inject:sink:(Ljava/lang/Object;)V"
+              "ContraInject:p0"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||hidden:(Ljava/lang/Object;)Ljava/lang/Object;}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||sink:(Ljava/lang/Object;)V}"
@@ -666,8 +636,7 @@
             [
               "ContraProject:ctrl",
               "Call:(73,0)",
-              "ContraInject:ctrl",
-              "Inject:hidden:(Ljava/lang/Object;)Ljava/lang/Object;"
+              "ContraInject:ctrl"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||privateOnOther:(Lcom/facebook/marianatrench/integrationtests/CallBoundary;Ljava/lang/Object;)V}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||hidden:(Ljava/lang/Object;)Ljava/lang/Object;}"
@@ -678,8 +647,7 @@
             [
               "ContraProject:ctrl",
               "Call:(73,1)",
-              "ContraInject:ctrl",
-              "Inject:sink:(Ljava/lang/Object;)V"
+              "ContraInject:ctrl"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||privateOnOther:(Lcom/facebook/marianatrench/integrationtests/CallBoundary;Ljava/lang/Object;)V}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||sink:(Ljava/lang/Object;)V}"
@@ -690,8 +658,7 @@
             [
               "ContraProject:p0",
               "Call:(73,0)",
-              "ContraInject:this",
-              "Inject:hidden:(Ljava/lang/Object;)Ljava/lang/Object;"
+              "ContraInject:this"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||privateOnOther:(Lcom/facebook/marianatrench/integrationtests/CallBoundary;Ljava/lang/Object;)V}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||hidden:(Ljava/lang/Object;)Ljava/lang/Object;}"
@@ -702,8 +669,7 @@
             [
               "ContraProject:p1",
               "Call:(73,0)",
-              "ContraInject:p0",
-              "Inject:hidden:(Ljava/lang/Object;)Ljava/lang/Object;"
+              "ContraInject:p0"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||privateOnOther:(Lcom/facebook/marianatrench/integrationtests/CallBoundary;Ljava/lang/Object;)V}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||hidden:(Ljava/lang/Object;)Ljava/lang/Object;}"
@@ -758,6 +724,16 @@
           {
             "labels" :
             [
+              "Return:(58,2)",
+              "Project:ctrl",
+              "Inject:ctrl"
+            ],
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||sink:(Ljava/lang/Object;)V}",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||setThenGet:(Lcom/facebook/marianatrench/integrationtests/CallBoundary;Ljava/lang/Object;)V}"
+          },
+          {
+            "labels" :
+            [
               "Project:get:()Ljava/lang/Object;",
               "Return:(58,1)",
               "Project:ctrl",
@@ -780,23 +756,11 @@
           {
             "labels" :
             [
-              "Project:sink:(Ljava/lang/Object;)V",
-              "Return:(58,2)",
-              "Project:ctrl",
-              "Inject:ctrl"
-            ],
-            "left" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||sink:(Ljava/lang/Object;)V}",
-            "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||setThenGet:(Lcom/facebook/marianatrench/integrationtests/CallBoundary;Ljava/lang/Object;)V}"
-          },
-          {
-            "labels" :
-            [
               "Project:get:()Ljava/lang/Object;",
               "Return:(58,1)",
               "Call:(58,2)",
               "Project:result",
-              "ContraInject:p0",
-              "Inject:sink:(Ljava/lang/Object;)V"
+              "ContraInject:p0"
             ],
             "left" : "O{Lcom/facebook/marianatrench/integrationtests/CallBoundary;}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||sink:(Ljava/lang/Object;)V}"
@@ -813,6 +777,17 @@
             ],
             "left" : "O{Lcom/facebook/marianatrench/integrationtests/CallBoundary;}",
             "right" : "O{Lcom/facebook/marianatrench/integrationtests/CallBoundary;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "ContraProject:ctrl",
+              "Call:(58,2)",
+              "ContraInject:ctrl"
+            ],
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||setThenGet:(Lcom/facebook/marianatrench/integrationtests/CallBoundary;Ljava/lang/Object;)V}",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||sink:(Ljava/lang/Object;)V}"
           },
           {
             "guard" : "Bwd",
@@ -837,18 +812,6 @@
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||setThenGet:(Lcom/facebook/marianatrench/integrationtests/CallBoundary;Ljava/lang/Object;)V}",
             "right" : "O{Lcom/facebook/marianatrench/integrationtests/CallBoundary;}"
-          },
-          {
-            "guard" : "Bwd",
-            "labels" :
-            [
-              "ContraProject:ctrl",
-              "Call:(58,2)",
-              "ContraInject:ctrl",
-              "Inject:sink:(Ljava/lang/Object;)V"
-            ],
-            "left" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||setThenGet:(Lcom/facebook/marianatrench/integrationtests/CallBoundary;Ljava/lang/Object;)V}",
-            "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||sink:(Ljava/lang/Object;)V}"
           },
           {
             "guard" : "Bwd",
@@ -901,7 +864,16 @@
           {
             "labels" :
             [
-              "Project:sink:(Ljava/lang/Object;)V",
+              "Return:(78,0)",
+              "Project:ctrl",
+              "Inject:ctrl"
+            ],
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||staticEcho:(Ljava/lang/Object;)Ljava/lang/Object;}",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||staticCall:(Ljava/lang/Object;)V}"
+          },
+          {
+            "labels" :
+            [
               "Return:(78,1)",
               "Project:ctrl",
               "Inject:ctrl"
@@ -912,23 +884,10 @@
           {
             "labels" :
             [
-              "Project:staticEcho:(Ljava/lang/Object;)Ljava/lang/Object;",
-              "Return:(78,0)",
-              "Project:ctrl",
-              "Inject:ctrl"
-            ],
-            "left" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||staticEcho:(Ljava/lang/Object;)Ljava/lang/Object;}",
-            "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||staticCall:(Ljava/lang/Object;)V}"
-          },
-          {
-            "labels" :
-            [
-              "Project:staticEcho:(Ljava/lang/Object;)Ljava/lang/Object;",
               "Return:(78,0)",
               "Call:(78,1)",
               "Project:result",
-              "ContraInject:p0",
-              "Inject:sink:(Ljava/lang/Object;)V"
+              "ContraInject:p0"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||staticEcho:(Ljava/lang/Object;)Ljava/lang/Object;}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||sink:(Ljava/lang/Object;)V}"
@@ -939,8 +898,7 @@
             [
               "ContraProject:ctrl",
               "Call:(78,0)",
-              "ContraInject:ctrl",
-              "Inject:staticEcho:(Ljava/lang/Object;)Ljava/lang/Object;"
+              "ContraInject:ctrl"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||staticCall:(Ljava/lang/Object;)V}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||staticEcho:(Ljava/lang/Object;)Ljava/lang/Object;}"
@@ -951,8 +909,7 @@
             [
               "ContraProject:ctrl",
               "Call:(78,1)",
-              "ContraInject:ctrl",
-              "Inject:sink:(Ljava/lang/Object;)V"
+              "ContraInject:ctrl"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||staticCall:(Ljava/lang/Object;)V}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||sink:(Ljava/lang/Object;)V}"
@@ -963,8 +920,7 @@
             [
               "ContraProject:p0",
               "Call:(78,0)",
-              "ContraInject:p0",
-              "Inject:staticEcho:(Ljava/lang/Object;)Ljava/lang/Object;"
+              "ContraInject:p0"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||staticCall:(Ljava/lang/Object;)V}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||staticEcho:(Ljava/lang/Object;)Ljava/lang/Object;}"
@@ -1008,7 +964,6 @@
           {
             "labels" :
             [
-              "Project:echo:(Ljava/lang/Object;)Ljava/lang/Object;",
               "Return+:(68,0)",
               "Project:ctrl",
               "Inject:ctrl"
@@ -1019,7 +974,6 @@
           {
             "labels" :
             [
-              "Project:echo:(Ljava/lang/Object;)Ljava/lang/Object;",
               "Return+:(68,0)",
               "Project:this_out",
               "Inject:this_out"
@@ -1030,7 +984,6 @@
           {
             "labels" :
             [
-              "Project:sink:(Ljava/lang/Object;)V",
               "Return:(68,1)",
               "Project:ctrl",
               "Inject:ctrl"
@@ -1041,12 +994,10 @@
           {
             "labels" :
             [
-              "Project:echo:(Ljava/lang/Object;)Ljava/lang/Object;",
               "Return+:(68,0)",
               "Call:(68,1)",
               "Project:result",
-              "ContraInject:p0",
-              "Inject:sink:(Ljava/lang/Object;)V"
+              "ContraInject:p0"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundaryBase;||echo:(Ljava/lang/Object;)Ljava/lang/Object;}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||sink:(Ljava/lang/Object;)V}"
@@ -1057,8 +1008,7 @@
             [
               "ContraProject:ctrl",
               "Call+:(68,0)",
-              "ContraInject:ctrl",
-              "Inject:echo:(Ljava/lang/Object;)Ljava/lang/Object;"
+              "ContraInject:ctrl"
             ],
             "left" : "M{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||superCall:(Ljava/lang/Object;)V}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundaryBase;||echo:(Ljava/lang/Object;)Ljava/lang/Object;}"
@@ -1069,8 +1019,7 @@
             [
               "ContraProject:ctrl",
               "Call:(68,1)",
-              "ContraInject:ctrl",
-              "Inject:sink:(Ljava/lang/Object;)V"
+              "ContraInject:ctrl"
             ],
             "left" : "M{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||superCall:(Ljava/lang/Object;)V}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||sink:(Ljava/lang/Object;)V}"
@@ -1081,8 +1030,7 @@
             [
               "ContraProject:p0",
               "Call+:(68,0)",
-              "ContraInject:this",
-              "Inject:echo:(Ljava/lang/Object;)Ljava/lang/Object;"
+              "ContraInject:this"
             ],
             "left" : "M{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||superCall:(Ljava/lang/Object;)V}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundaryBase;||echo:(Ljava/lang/Object;)Ljava/lang/Object;}"
@@ -1093,8 +1041,7 @@
             [
               "ContraProject:p1",
               "Call+:(68,0)",
-              "ContraInject:p0",
-              "Inject:echo:(Ljava/lang/Object;)Ljava/lang/Object;"
+              "ContraInject:p0"
             ],
             "left" : "M{Lcom/facebook/marianatrench/integrationtests/CallBoundary;||superCall:(Ljava/lang/Object;)V}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/CallBoundaryBase;||echo:(Ljava/lang/Object;)Ljava/lang/Object;}"
