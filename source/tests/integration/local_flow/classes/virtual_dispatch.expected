@@ -14,6 +14,7 @@
         "flows" :
         [
           {
+            "guard" : "Bwd",
             "labels" :
             [
               "ContraProject:p0",
@@ -23,6 +24,7 @@
             "right" : "M{LA;||doWork:(Ljava/lang/Object;)Ljava/lang/Object;}"
           },
           {
+            "guard" : "Bwd",
             "labels" :
             [
               "ContraProject:p1",
@@ -44,6 +46,28 @@
       {
         "flows" :
         [
+          {
+            "labels" :
+            [
+              "Project:doWork:(Ljava/lang/Object;)Ljava/lang/Object;",
+              "Return:(0,0)",
+              "Project:ctrl",
+              "Inject:ctrl"
+            ],
+            "left" : "O{LA;}",
+            "right" : "G{LDispatch;||call_virtual:(LA;Ljava/lang/Object;)Ljava/lang/Object;}"
+          },
+          {
+            "labels" :
+            [
+              "Project:doWork:(Ljava/lang/Object;)Ljava/lang/Object;",
+              "Return:(0,0)",
+              "Project:result",
+              "Inject:result"
+            ],
+            "left" : "O{LA;}",
+            "right" : "G{LDispatch;||call_virtual:(LA;Ljava/lang/Object;)Ljava/lang/Object;}"
+          },
           {
             "guard" : "Bwd",
             "labels" :
@@ -79,30 +103,6 @@
             ],
             "left" : "G{LDispatch;||call_virtual:(LA;Ljava/lang/Object;)Ljava/lang/Object;}",
             "right" : "O{LA;}"
-          },
-          {
-            "guard" : "Bwd",
-            "labels" :
-            [
-              "Project:doWork:(Ljava/lang/Object;)Ljava/lang/Object;",
-              "Return:(0,0)",
-              "Project:ctrl",
-              "Inject:ctrl"
-            ],
-            "left" : "O{LA;}",
-            "right" : "G{LDispatch;||call_virtual:(LA;Ljava/lang/Object;)Ljava/lang/Object;}"
-          },
-          {
-            "guard" : "Bwd",
-            "labels" :
-            [
-              "Project:doWork:(Ljava/lang/Object;)Ljava/lang/Object;",
-              "Return:(0,0)",
-              "Project:result",
-              "Inject:result"
-            ],
-            "left" : "O{LA;}",
-            "right" : "G{LDispatch;||call_virtual:(LA;Ljava/lang/Object;)Ljava/lang/Object;}"
           }
         ],
         "node" : "G{LDispatch;||call_virtual:(LA;Ljava/lang/Object;)Ljava/lang/Object;}"

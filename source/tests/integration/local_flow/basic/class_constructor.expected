@@ -14,6 +14,7 @@
         "flows" :
         [
           {
+            "guard" : "Bwd",
             "labels" :
             [
               "ContraProject:p0",
@@ -23,6 +24,7 @@
             "right" : "M{LMyObj;||<init>:(Ljava/lang/Object;Ljava/lang/Object;)V}"
           },
           {
+            "guard" : "Bwd",
             "labels" :
             [
               "ContraProject:p1",
@@ -33,6 +35,7 @@
             "right" : "M{LMyObj;||<init>:(Ljava/lang/Object;Ljava/lang/Object;)V}"
           },
           {
+            "guard" : "Bwd",
             "labels" :
             [
               "ContraProject:p2",

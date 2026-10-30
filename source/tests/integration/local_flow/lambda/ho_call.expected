@@ -14,6 +14,28 @@
         "flows" :
         [
           {
+            "labels" :
+            [
+              "Project:invoke:(Ljava/lang/Object;)Ljava/lang/Object;",
+              "HoReturn:(0,0)",
+              "Project:ctrl",
+              "Inject:ctrl"
+            ],
+            "left" : "O{Lkotlin/jvm/functions/Function1;}",
+            "right" : "G{LLambda;||applyFunction:(Lkotlin/jvm/functions/Function1;Ljava/lang/Object;)Ljava/lang/Object;}"
+          },
+          {
+            "labels" :
+            [
+              "Project:invoke:(Ljava/lang/Object;)Ljava/lang/Object;",
+              "HoReturn:(0,0)",
+              "Project:result",
+              "Inject:result"
+            ],
+            "left" : "O{Lkotlin/jvm/functions/Function1;}",
+            "right" : "G{LLambda;||applyFunction:(Lkotlin/jvm/functions/Function1;Ljava/lang/Object;)Ljava/lang/Object;}"
+          },
+          {
             "guard" : "Bwd",
             "labels" :
             [
@@ -48,30 +70,6 @@
             ],
             "left" : "G{LLambda;||applyFunction:(Lkotlin/jvm/functions/Function1;Ljava/lang/Object;)Ljava/lang/Object;}",
             "right" : "O{Lkotlin/jvm/functions/Function1;}"
-          },
-          {
-            "guard" : "Bwd",
-            "labels" :
-            [
-              "Project:invoke:(Ljava/lang/Object;)Ljava/lang/Object;",
-              "HoReturn:(0,0)",
-              "Project:ctrl",
-              "Inject:ctrl"
-            ],
-            "left" : "O{Lkotlin/jvm/functions/Function1;}",
-            "right" : "G{LLambda;||applyFunction:(Lkotlin/jvm/functions/Function1;Ljava/lang/Object;)Ljava/lang/Object;}"
-          },
-          {
-            "guard" : "Bwd",
-            "labels" :
-            [
-              "Project:invoke:(Ljava/lang/Object;)Ljava/lang/Object;",
-              "HoReturn:(0,0)",
-              "Project:result",
-              "Inject:result"
-            ],
-            "left" : "O{Lkotlin/jvm/functions/Function1;}",
-            "right" : "G{LLambda;||applyFunction:(Lkotlin/jvm/functions/Function1;Ljava/lang/Object;)Ljava/lang/Object;}"
           }
         ],
         "node" : "G{LLambda;||applyFunction:(Lkotlin/jvm/functions/Function1;Ljava/lang/Object;)Ljava/lang/Object;}"

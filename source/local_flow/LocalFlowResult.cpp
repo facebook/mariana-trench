@@ -54,8 +54,7 @@ Json::Value LocalFlowMethodResult::to_json() const {
         LabelKind::Inject,
         LocalFlowNode::extract_vtable_name(constraint.target));
 
-    // Compute guard via contra-parity
-    Guard guard = reverse_guard(constraint.guard, self_loop_labels);
+    Guard guard = projection_guard(constraint.guard, self_loop_labels);
 
     // Serialize the flow.
     // Use actual source/target nodes for left/right (not always callable_node).

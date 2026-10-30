@@ -8,8 +8,6 @@
 #include <mariana-trench/Assert.h>
 #include <mariana-trench/local_flow/LocalFlowLabel.h>
 
-#include <algorithm>
-
 #include <fmt/format.h>
 
 namespace marianatrench {
@@ -217,17 +215,19 @@ Json::Value Label::to_json() const {
   return Json::Value(to_string());
 }
 
-bool is_contra_path(const LabelPath& labels) {
-  auto contra_count =
-      std::count_if(labels.begin(), labels.end(), [](const Label& l) {
-        return l.kind == LabelKind::ContraProject ||
-            l.kind == LabelKind::ContraInject;
-      });
-  return contra_count % 2 == 1;
-}
-
-Guard reverse_guard(Guard guard, const LabelPath& labels) {
-  return is_contra_path(labels) ? guard : flip_guard(guard);
+Guard projection_guard(Guard guard, const LabelPath& labels) {
+  bool contravariant = false;
+  for (const auto& label : labels) {
+    if (label.is_call()) {
+      continue;
+    }
+    if (label.kind == LabelKind::ContraProject) {
+      contravariant = !contravariant;
+    } else if (label.kind != LabelKind::Project) {
+      break;
+    }
+  }
+  return contravariant ? flip_guard(guard) : guard;
 }
 
 bool StructuralLabel::operator==(const StructuralLabel& other) const {

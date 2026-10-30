@@ -37,7 +37,7 @@ std::size_t LocalFlowConstraint::structural_depth() const {
 }
 
 // Debug serialization of raw constraints. The final output format is produced
-// by LocalFlowResult::to_json() which applies reverse_guard() transformation.
+// by LocalFlowResult::to_json().
 Json::Value LocalFlowConstraint::to_json() const {
   auto result = Json::Value(Json::objectValue);
   result["source"] = source.to_json();

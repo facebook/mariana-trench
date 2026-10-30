@@ -14,6 +14,7 @@
         "flows" :
         [
           {
+            "guard" : "Bwd",
             "labels" :
             [
               "ContraProject:p0",
@@ -36,6 +37,7 @@
         "flows" :
         [
           {
+            "guard" : "Bwd",
             "labels" :
             [
               "ContraProject:p1",
@@ -45,6 +47,7 @@
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/Branching;||conditional:(ZLjava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;}"
           },
           {
+            "guard" : "Bwd",
             "labels" :
             [
               "ContraProject:p2",
@@ -67,6 +70,7 @@
         "flows" :
         [
           {
+            "guard" : "Bwd",
             "labels" :
             [
               "ContraProject:p1",
@@ -76,6 +80,7 @@
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/Branching;||ternary:(ZLjava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;}"
           },
           {
+            "guard" : "Bwd",
             "labels" :
             [
               "ContraProject:p2",

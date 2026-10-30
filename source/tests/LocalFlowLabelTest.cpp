@@ -187,59 +187,58 @@ TEST_F(LocalFlowLabelTest, LabelOrdering) {
   EXPECT_TRUE(pa < pb);
 }
 
-// --- Guard / is_contra_path / reverse_guard tests ---
+// --- Guard tests ---
 
 TEST_F(LocalFlowLabelTest, GuardFlip) {
   EXPECT_EQ(flip_guard(Guard::Fwd), Guard::Bwd);
   EXPECT_EQ(flip_guard(Guard::Bwd), Guard::Fwd);
 }
 
-TEST_F(LocalFlowLabelTest, IsContraPath) {
-  // Empty path: not contra
-  EXPECT_FALSE(is_contra_path(LabelPath{}));
-
-  // No contra labels: not contra
-  LabelPath no_contra{
-      Label{LabelKind::Project, "x"},
-      Label{LabelKind::Inject, "y"},
+TEST_F(LocalFlowLabelTest, ProjectionGuard) {
+  // Parameter summary: starts by consuming an argument.
+  LabelPath parameter_to_result{
+      Label{LabelKind::ContraProject, "p1"},
+      Label{LabelKind::Inject, "result"},
   };
-  EXPECT_FALSE(is_contra_path(no_contra));
+  EXPECT_EQ(projection_guard(Guard::Fwd, parameter_to_result), Guard::Bwd);
 
-  // One contra label: is contra (odd count)
-  LabelPath one_contra{
-      Label{LabelKind::ContraProject, "x"},
-      Label{LabelKind::Inject, "y"},
+  // Parameter field read: the field projection does not change the parity.
+  LabelPath parameter_field_to_result{
+      Label{LabelKind::ContraProject, "p0"},
+      Label{LabelKind::Project, "field"},
+      Label{LabelKind::Inject, "result"},
   };
-  EXPECT_TRUE(is_contra_path(one_contra));
+  EXPECT_EQ(
+      projection_guard(Guard::Fwd, parameter_field_to_result), Guard::Bwd);
 
-  // Two contra labels: not contra (even count)
-  LabelPath two_contra{
-      Label{LabelKind::ContraProject, "x"},
-      Label{LabelKind::ContraInject, "y"},
+  // Argument passed to a callee: call labels are skipped.
+  LabelPath parameter_to_callee{
+      Label{LabelKind::ContraProject, "p0"},
+      Label{LabelKind::Call, {}, false, "(10,0)"},
+      Label{LabelKind::ContraInject, "p1"},
   };
-  EXPECT_FALSE(is_contra_path(two_contra));
+  EXPECT_EQ(projection_guard(Guard::Fwd, parameter_to_callee), Guard::Bwd);
 
-  // Call labels don't count as contra
-  LabelPath call_only{
-      Label{LabelKind::Call, {}, true},
-      Label{LabelKind::Return, {}, true},
+  // Callee result flowing back: the call label precedes the projections.
+  LabelPath callee_result_to_result{
+      Label{LabelKind::Return, {}, false, "(10,0)"},
+      Label{LabelKind::Project, "result"},
+      Label{LabelKind::Inject, "result"},
   };
-  EXPECT_FALSE(is_contra_path(call_only));
-}
+  EXPECT_EQ(projection_guard(Guard::Fwd, callee_result_to_result), Guard::Fwd);
 
-TEST_F(LocalFlowLabelTest, ReverseGuard) {
-  // Non-contra path: flip the guard
-  LabelPath non_contra{Label{LabelKind::Project, "x"}};
-  EXPECT_EQ(reverse_guard(Guard::Fwd, non_contra), Guard::Bwd);
-  EXPECT_EQ(reverse_guard(Guard::Bwd, non_contra), Guard::Fwd);
+  // Only the leading projections count.
+  LabelPath injection_then_contra{
+      Label{LabelKind::Project, "result"},
+      Label{LabelKind::Return, {}, false, "(10,0)"},
+      Label{LabelKind::Call, {}, false, "(11,1)"},
+      Label{LabelKind::ContraInject, "p0"},
+      Label{LabelKind::ContraProject, "p0"},
+  };
+  EXPECT_EQ(projection_guard(Guard::Fwd, injection_then_contra), Guard::Fwd);
 
-  // Contra path: preserve the guard
-  LabelPath contra{Label{LabelKind::ContraProject, "x"}};
-  EXPECT_EQ(reverse_guard(Guard::Fwd, contra), Guard::Fwd);
-  EXPECT_EQ(reverse_guard(Guard::Bwd, contra), Guard::Bwd);
-
-  // Empty path: flip (no contra labels)
-  EXPECT_EQ(reverse_guard(Guard::Fwd, LabelPath{}), Guard::Bwd);
+  EXPECT_EQ(projection_guard(Guard::Fwd, LabelPath{}), Guard::Fwd);
+  EXPECT_EQ(projection_guard(Guard::Bwd, parameter_to_result), Guard::Fwd);
 }
 
 } // namespace local_flow

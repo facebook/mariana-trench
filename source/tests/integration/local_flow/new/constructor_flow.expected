@@ -14,6 +14,7 @@
         "flows" :
         [
           {
+            "guard" : "Bwd",
             "labels" :
             [
               "ContraProject:p0",
@@ -23,6 +24,7 @@
             "right" : "M{LMyClass;||<init>:(Ljava/lang/Object;Ljava/lang/Object;)V}"
           },
           {
+            "guard" : "Bwd",
             "labels" :
             [
               "ContraProject:p1",
@@ -33,6 +35,7 @@
             "right" : "M{LMyClass;||<init>:(Ljava/lang/Object;Ljava/lang/Object;)V}"
           },
           {
+            "guard" : "Bwd",
             "labels" :
             [
               "ContraProject:p2",
@@ -55,6 +58,28 @@
       {
         "flows" :
         [
+          {
+            "labels" :
+            [
+              "Project:<init>:(Ljava/lang/Object;Ljava/lang/Object;)V",
+              "Return:(0,0)",
+              "Project:ctrl",
+              "Inject:ctrl"
+            ],
+            "left" : "G{LMyClass;||<init>:(Ljava/lang/Object;Ljava/lang/Object;)V}",
+            "right" : "G{LMyClass;||test_new:(Ljava/lang/Object;Ljava/lang/Object;)LMyClass;}"
+          },
+          {
+            "labels" :
+            [
+              "Project:<init>:(Ljava/lang/Object;Ljava/lang/Object;)V",
+              "Return:(0,0)",
+              "Project:this_out",
+              "Inject:result"
+            ],
+            "left" : "G{LMyClass;||<init>:(Ljava/lang/Object;Ljava/lang/Object;)V}",
+            "right" : "G{LMyClass;||test_new:(Ljava/lang/Object;Ljava/lang/Object;)LMyClass;}"
+          },
           {
             "guard" : "Bwd",
             "labels" :
@@ -90,30 +115,6 @@
             ],
             "left" : "G{LMyClass;||test_new:(Ljava/lang/Object;Ljava/lang/Object;)LMyClass;}",
             "right" : "G{LMyClass;||<init>:(Ljava/lang/Object;Ljava/lang/Object;)V}"
-          },
-          {
-            "guard" : "Bwd",
-            "labels" :
-            [
-              "Project:<init>:(Ljava/lang/Object;Ljava/lang/Object;)V",
-              "Return:(0,0)",
-              "Project:ctrl",
-              "Inject:ctrl"
-            ],
-            "left" : "G{LMyClass;||<init>:(Ljava/lang/Object;Ljava/lang/Object;)V}",
-            "right" : "G{LMyClass;||test_new:(Ljava/lang/Object;Ljava/lang/Object;)LMyClass;}"
-          },
-          {
-            "guard" : "Bwd",
-            "labels" :
-            [
-              "Project:<init>:(Ljava/lang/Object;Ljava/lang/Object;)V",
-              "Return:(0,0)",
-              "Project:this_out",
-              "Inject:result"
-            ],
-            "left" : "G{LMyClass;||<init>:(Ljava/lang/Object;Ljava/lang/Object;)V}",
-            "right" : "G{LMyClass;||test_new:(Ljava/lang/Object;Ljava/lang/Object;)LMyClass;}"
           }
         ],
         "node" : "G{LMyClass;||test_new:(Ljava/lang/Object;Ljava/lang/Object;)LMyClass;}"

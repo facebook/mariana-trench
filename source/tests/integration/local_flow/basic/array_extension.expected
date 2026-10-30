@@ -14,6 +14,7 @@
         "flows" :
         [
           {
+            "guard" : "Bwd",
             "labels" :
             [
               "ContraProject:p0",
@@ -23,6 +24,7 @@
             "right" : "G{LBasic;||array_extension:([Ljava/lang/Object;Ljava/lang/Object;)[Ljava/lang/Object;}"
           },
           {
+            "guard" : "Bwd",
             "labels" :
             [
               "ContraProject:p1",

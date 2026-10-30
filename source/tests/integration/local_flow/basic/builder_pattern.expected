@@ -14,6 +14,7 @@
         "flows" :
         [
           {
+            "guard" : "Bwd",
             "labels" :
             [
               "ContraProject:p0",
@@ -23,6 +24,7 @@
             "right" : "M{LBuilder;||setName:(Ljava/lang/String;)LBuilder;}"
           },
           {
+            "guard" : "Bwd",
             "labels" :
             [
               "ContraProject:p0",
@@ -32,6 +34,7 @@
             "right" : "M{LBuilder;||setName:(Ljava/lang/String;)LBuilder;}"
           },
           {
+            "guard" : "Bwd",
             "labels" :
             [
               "ContraProject:p1",
@@ -54,6 +57,39 @@
       {
         "flows" :
         [
+          {
+            "labels" :
+            [
+              "Project:<init>:()V",
+              "Return:(0,0)",
+              "Project:ctrl",
+              "Inject:ctrl"
+            ],
+            "left" : "G{LBuilder;||<init>:()V}",
+            "right" : "G{LBuilder;||test:(Ljava/lang/String;Ljava/lang/String;)LBuilder;}"
+          },
+          {
+            "labels" :
+            [
+              "Project:setName:(Ljava/lang/String;)LBuilder;",
+              "Return:(0,1)",
+              "Project:ctrl",
+              "Inject:ctrl"
+            ],
+            "left" : "O{LBuilder;}",
+            "right" : "G{LBuilder;||test:(Ljava/lang/String;Ljava/lang/String;)LBuilder;}"
+          },
+          {
+            "labels" :
+            [
+              "Project:setName:(Ljava/lang/String;)LBuilder;",
+              "Return:(0,1)",
+              "Project:result",
+              "Inject:result"
+            ],
+            "left" : "O{LBuilder;}",
+            "right" : "G{LBuilder;||test:(Ljava/lang/String;Ljava/lang/String;)LBuilder;}"
+          },
           {
             "labels" :
             [
@@ -102,42 +138,6 @@
             ],
             "left" : "G{LBuilder;||test:(Ljava/lang/String;Ljava/lang/String;)LBuilder;}",
             "right" : "O{LBuilder;}"
-          },
-          {
-            "guard" : "Bwd",
-            "labels" :
-            [
-              "Project:<init>:()V",
-              "Return:(0,0)",
-              "Project:ctrl",
-              "Inject:ctrl"
-            ],
-            "left" : "G{LBuilder;||<init>:()V}",
-            "right" : "G{LBuilder;||test:(Ljava/lang/String;Ljava/lang/String;)LBuilder;}"
-          },
-          {
-            "guard" : "Bwd",
-            "labels" :
-            [
-              "Project:setName:(Ljava/lang/String;)LBuilder;",
-              "Return:(0,1)",
-              "Project:ctrl",
-              "Inject:ctrl"
-            ],
-            "left" : "O{LBuilder;}",
-            "right" : "G{LBuilder;||test:(Ljava/lang/String;Ljava/lang/String;)LBuilder;}"
-          },
-          {
-            "guard" : "Bwd",
-            "labels" :
-            [
-              "Project:setName:(Ljava/lang/String;)LBuilder;",
-              "Return:(0,1)",
-              "Project:result",
-              "Inject:result"
-            ],
-            "left" : "O{LBuilder;}",
-            "right" : "G{LBuilder;||test:(Ljava/lang/String;Ljava/lang/String;)LBuilder;}"
           }
         ],
         "node" : "G{LBuilder;||test:(Ljava/lang/String;Ljava/lang/String;)LBuilder;}"

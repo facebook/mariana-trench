@@ -14,6 +14,7 @@
         "flows" :
         [
           {
+            "guard" : "Bwd",
             "labels" :
             [
               "ContraProject:p0",
@@ -36,6 +37,7 @@
         "flows" :
         [
           {
+            "guard" : "Bwd",
             "labels" :
             [
               "ContraProject:p0",
@@ -45,6 +47,7 @@
             "right" : "M{LMutate;||setA:(Ljava/lang/Object;)V}"
           },
           {
+            "guard" : "Bwd",
             "labels" :
             [
               "ContraProject:p1",
@@ -67,6 +70,39 @@
       {
         "flows" :
         [
+          {
+            "labels" :
+            [
+              "Project:<init>:()V",
+              "Return:(0,0)",
+              "Project:ctrl",
+              "Inject:ctrl"
+            ],
+            "left" : "G{LMutate;||<init>:()V}",
+            "right" : "G{LMutate;||test:(Ljava/lang/Object;)LMutate;}"
+          },
+          {
+            "labels" :
+            [
+              "Project:setA:(Ljava/lang/Object;)V",
+              "Return:(0,1)",
+              "Project:ctrl",
+              "Inject:ctrl"
+            ],
+            "left" : "O{LMutate;}",
+            "right" : "G{LMutate;||test:(Ljava/lang/Object;)LMutate;}"
+          },
+          {
+            "labels" :
+            [
+              "Project:setA:(Ljava/lang/Object;)V",
+              "Return:(0,1)",
+              "Project:this_out",
+              "Inject:result"
+            ],
+            "left" : "O{LMutate;}",
+            "right" : "G{LMutate;||test:(Ljava/lang/Object;)LMutate;}"
+          },
           {
             "labels" :
             [
@@ -115,42 +151,6 @@
             ],
             "left" : "G{LMutate;||test:(Ljava/lang/Object;)LMutate;}",
             "right" : "O{LMutate;}"
-          },
-          {
-            "guard" : "Bwd",
-            "labels" :
-            [
-              "Project:<init>:()V",
-              "Return:(0,0)",
-              "Project:ctrl",
-              "Inject:ctrl"
-            ],
-            "left" : "G{LMutate;||<init>:()V}",
-            "right" : "G{LMutate;||test:(Ljava/lang/Object;)LMutate;}"
-          },
-          {
-            "guard" : "Bwd",
-            "labels" :
-            [
-              "Project:setA:(Ljava/lang/Object;)V",
-              "Return:(0,1)",
-              "Project:ctrl",
-              "Inject:ctrl"
-            ],
-            "left" : "O{LMutate;}",
-            "right" : "G{LMutate;||test:(Ljava/lang/Object;)LMutate;}"
-          },
-          {
-            "guard" : "Bwd",
-            "labels" :
-            [
-              "Project:setA:(Ljava/lang/Object;)V",
-              "Return:(0,1)",
-              "Project:this_out",
-              "Inject:result"
-            ],
-            "left" : "O{LMutate;}",
-            "right" : "G{LMutate;||test:(Ljava/lang/Object;)LMutate;}"
           }
         ],
         "node" : "G{LMutate;||test:(Ljava/lang/Object;)LMutate;}"

@@ -14,6 +14,17 @@
         "flows" :
         [
           {
+            "labels" :
+            [
+              "Project:<init>:(Ljava/lang/String;)V",
+              "Return:(0,0)",
+              "Project:ctrl",
+              "Inject:ctrl"
+            ],
+            "left" : "G{Ljava/lang/Exception;||<init>:(Ljava/lang/String;)V}",
+            "right" : "G{LThrow;||test:(Ljava/lang/String;)V}"
+          },
+          {
             "guard" : "Bwd",
             "labels" :
             [
@@ -36,18 +47,6 @@
             ],
             "left" : "G{LThrow;||test:(Ljava/lang/String;)V}",
             "right" : "G{Ljava/lang/Exception;||<init>:(Ljava/lang/String;)V}"
-          },
-          {
-            "guard" : "Bwd",
-            "labels" :
-            [
-              "Project:<init>:(Ljava/lang/String;)V",
-              "Return:(0,0)",
-              "Project:ctrl",
-              "Inject:ctrl"
-            ],
-            "left" : "G{Ljava/lang/Exception;||<init>:(Ljava/lang/String;)V}",
-            "right" : "G{LThrow;||test:(Ljava/lang/String;)V}"
           }
         ],
         "node" : "G{LThrow;||test:(Ljava/lang/String;)V}"

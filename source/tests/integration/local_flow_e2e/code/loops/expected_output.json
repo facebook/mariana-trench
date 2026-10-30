@@ -14,6 +14,7 @@
         "flows" :
         [
           {
+            "guard" : "Bwd",
             "labels" :
             [
               "ContraProject:p0",
@@ -36,6 +37,7 @@
         "flows" :
         [
           {
+            "guard" : "Bwd",
             "labels" :
             [
               "ContraProject:C<0>",
@@ -45,6 +47,7 @@
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/Loops;||forEachArray:([Ljava/lang/Object;)Ljava/lang/Object;}"
           },
           {
+            "guard" : "Bwd",
             "labels" :
             [
               "ContraProject:p0",
@@ -68,6 +71,7 @@
         "flows" :
         [
           {
+            "guard" : "Bwd",
             "labels" :
             [
               "ContraProject:p0",
@@ -77,6 +81,7 @@
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/Loops;||linkedListTraversal:(Lcom/facebook/marianatrench/integrationtests/Loops;)Ljava/lang/Object;}"
           },
           {
+            "guard" : "Bwd",
             "labels" :
             [
               "ContraProject:p0",
@@ -87,6 +92,7 @@
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/Loops;||linkedListTraversal:(Lcom/facebook/marianatrench/integrationtests/Loops;)Ljava/lang/Object;}"
           },
           {
+            "guard" : "Bwd",
             "labels" :
             [
               "ContraProject:p0",
@@ -98,6 +104,7 @@
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/Loops;||linkedListTraversal:(Lcom/facebook/marianatrench/integrationtests/Loops;)Ljava/lang/Object;}"
           },
           {
+            "guard" : "Bwd",
             "labels" :
             [
               "ContraProject:p0",
@@ -110,23 +117,10 @@
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/Loops;||linkedListTraversal:(Lcom/facebook/marianatrench/integrationtests/Loops;)Ljava/lang/Object;}"
           },
           {
+            "guard" : "Bwd",
             "labels" :
             [
               "ContraProject:p0",
-              "Project:next",
-              "Project:next",
-              "Project:next",
-              "Project:next",
-              "Inject:result"
-            ],
-            "left" : "G{Lcom/facebook/marianatrench/integrationtests/Loops;||linkedListTraversal:(Lcom/facebook/marianatrench/integrationtests/Loops;)Ljava/lang/Object;}",
-            "right" : "G{Lcom/facebook/marianatrench/integrationtests/Loops;||linkedListTraversal:(Lcom/facebook/marianatrench/integrationtests/Loops;)Ljava/lang/Object;}"
-          },
-          {
-            "labels" :
-            [
-              "ContraProject:p0",
-              "Project:next",
               "Project:next",
               "Project:next",
               "Project:next",
@@ -137,10 +131,10 @@
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/Loops;||linkedListTraversal:(Lcom/facebook/marianatrench/integrationtests/Loops;)Ljava/lang/Object;}"
           },
           {
+            "guard" : "Bwd",
             "labels" :
             [
               "ContraProject:p0",
-              "Project:next",
               "Project:next",
               "Project:next",
               "Project:next",
@@ -152,10 +146,10 @@
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/Loops;||linkedListTraversal:(Lcom/facebook/marianatrench/integrationtests/Loops;)Ljava/lang/Object;}"
           },
           {
+            "guard" : "Bwd",
             "labels" :
             [
               "ContraProject:p0",
-              "Project:next",
               "Project:next",
               "Project:next",
               "Project:next",
@@ -168,10 +162,10 @@
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/Loops;||linkedListTraversal:(Lcom/facebook/marianatrench/integrationtests/Loops;)Ljava/lang/Object;}"
           },
           {
+            "guard" : "Bwd",
             "labels" :
             [
               "ContraProject:p0",
-              "Project:next",
               "Project:next",
               "Project:next",
               "Project:next",
@@ -185,10 +179,10 @@
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/Loops;||linkedListTraversal:(Lcom/facebook/marianatrench/integrationtests/Loops;)Ljava/lang/Object;}"
           },
           {
+            "guard" : "Bwd",
             "labels" :
             [
               "ContraProject:p0",
-              "Project:next",
               "Project:next",
               "Project:next",
               "Project:next",
@@ -203,6 +197,26 @@
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/Loops;||linkedListTraversal:(Lcom/facebook/marianatrench/integrationtests/Loops;)Ljava/lang/Object;}"
           },
           {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "ContraProject:p0",
+              "Project:next",
+              "Project:next",
+              "Project:next",
+              "Project:next",
+              "Project:next",
+              "Project:next",
+              "Project:next",
+              "Project:next",
+              "Project:next",
+              "Inject:result"
+            ],
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/Loops;||linkedListTraversal:(Lcom/facebook/marianatrench/integrationtests/Loops;)Ljava/lang/Object;}",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/Loops;||linkedListTraversal:(Lcom/facebook/marianatrench/integrationtests/Loops;)Ljava/lang/Object;}"
+          },
+          {
+            "guard" : "Bwd",
             "labels" :
             [
               "ContraProject:p0",
@@ -235,6 +249,7 @@
         "flows" :
         [
           {
+            "guard" : "Bwd",
             "labels" :
             [
               "ContraProject:p0",
@@ -244,6 +259,7 @@
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/Loops;||whileLoop:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;}"
           },
           {
+            "guard" : "Bwd",
             "labels" :
             [
               "ContraProject:p1",

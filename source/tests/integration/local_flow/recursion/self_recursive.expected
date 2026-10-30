@@ -14,6 +14,7 @@
         "flows" :
         [
           {
+            "guard" : "Bwd",
             "labels" :
             [
               "ContraProject:C<0>",
@@ -23,6 +24,7 @@
             "right" : "G{LRec;||process:(Ljava/lang/Object;)Ljava/lang/Object;}"
           },
           {
+            "guard" : "Bwd",
             "labels" :
             [
               "ContraProject:SelfRec",
@@ -34,6 +36,7 @@
             "right" : "G{LRec;||process:(Ljava/lang/Object;)Ljava/lang/Object;}"
           },
           {
+            "guard" : "Bwd",
             "labels" :
             [
               "ContraProject:SelfRec",

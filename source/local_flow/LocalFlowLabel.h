@@ -105,17 +105,13 @@ struct Label {
 using LabelPath = std::vector<Label>;
 
 /**
- * Returns true if the label path has an odd number of contra labels
- * (ContraProject/ContraInject), indicating contravariant parity.
- * Used by reverse_guard() to compute guard direction.
+ * Guard of an emitted edge: `guard`, flipped when the leading projections of
+ * `labels` (call labels skipped) contain an odd number of ContraProject, i.e.
+ * when the edge starts by consuming an argument. Consumers pick the edges to
+ * follow by this guard, so an edge read from a parameter (the receiver `p0`
+ * included) or `ctrl` is Bwd and an edge read from a callee is Fwd.
  */
-bool is_contra_path(const LabelPath& labels);
-
-/**
- * Compute the guard for a self-loop from a source edge's guard and
- * the label path's contra-parity.
- */
-Guard reverse_guard(Guard guard, const LabelPath& labels);
+Guard projection_guard(Guard guard, const LabelPath& labels);
 
 /**
  * Structural labels describe field-level data flow structure.
