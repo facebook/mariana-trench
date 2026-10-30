@@ -423,18 +423,14 @@ void LocalFlowTransfer::analyze_invoke(
     is_lambda_init = LambdaDetection::is_kotlin_lambda_class(receiver_type);
   }
 
-  // Emit constraints for each argument
-  uint32_t param_offset = is_static ? 0 : 1;
+  // Emit constraints for each argument. Ports follow the callee's own
+  // parameter numbering (receiver p0, then the explicit arguments), which is
+  // also MT's Argument(i) numbering.
   for (uint32_t i = 0; i < instruction->srcs_size(); i++) {
     auto arg_reg = instruction->src(i);
     const auto& arg_tree = get_or_create(env, arg_reg);
 
-    std::string param_name;
-    if (i == 0 && !is_static) {
-      param_name = "this";
-    } else {
-      param_name = fmt::format("p{}", i - param_offset);
-    }
+    auto param_name = LocalFlowNode::make_param(i).to_string();
 
     // For lambda constructors, non-this args use Capture label
     Label arg_call_label = (is_lambda_init && i > 0)

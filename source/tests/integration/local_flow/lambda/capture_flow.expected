@@ -84,7 +84,7 @@
             [
               "ContraProject:p0",
               "Call:(0,0)",
-              "ContraInject:p0"
+              "ContraInject:p1"
             ],
             "left" : "G{LMyLambda;||create:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;}",
             "right" : "G{LMyLambda;||<init>:(Ljava/lang/Object;)V}"

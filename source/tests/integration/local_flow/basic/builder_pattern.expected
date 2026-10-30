@@ -95,7 +95,7 @@
               "Return:(0,0)",
               "Call:(0,1)",
               "Project:this_out",
-              "ContraInject:this",
+              "ContraInject:p0",
               "Inject:setName:(Ljava/lang/String;)LBuilder;"
             ],
             "left" : "G{LBuilder;||<init>:()V}",
@@ -130,7 +130,7 @@
             [
               "ContraProject:p0",
               "Call:(0,1)",
-              "ContraInject:p0",
+              "ContraInject:p1",
               "Inject:setName:(Ljava/lang/String;)LBuilder;"
             ],
             "left" : "G{LBuilder;||test:(Ljava/lang/String;Ljava/lang/String;)LBuilder;}",

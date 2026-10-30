@@ -86,7 +86,7 @@
             [
               "ContraProject:p0",
               "Call:(0,0)",
-              "ContraInject:this",
+              "ContraInject:p0",
               "Inject:doWork:(Ljava/lang/Object;)Ljava/lang/Object;"
             ],
             "left" : "G{LDispatch;||call_virtual:(LA;Ljava/lang/Object;)Ljava/lang/Object;}",
@@ -98,7 +98,7 @@
             [
               "ContraProject:p1",
               "Call:(0,0)",
-              "ContraInject:p0",
+              "ContraInject:p1",
               "Inject:doWork:(Ljava/lang/Object;)Ljava/lang/Object;"
             ],
             "left" : "G{LDispatch;||call_virtual:(LA;Ljava/lang/Object;)Ljava/lang/Object;}",

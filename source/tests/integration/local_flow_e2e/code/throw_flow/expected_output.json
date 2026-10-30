@@ -40,7 +40,7 @@
             "labels" :
             [
               "Call:(17,0)",
-              "ContraInject:p0"
+              "ContraInject:p1"
             ],
             "left" : "C<bad>",
             "right" : "G{Ljava/lang/IllegalArgumentException;||<init>:(Ljava/lang/String;)V}"
@@ -116,7 +116,7 @@
             [
               "ContraProject:p0",
               "Call:(12,0)",
-              "ContraInject:p0"
+              "ContraInject:p1"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/ThrowFlow;||throwWithMessage:(Ljava/lang/String;)V}",
             "right" : "G{Ljava/lang/RuntimeException;||<init>:(Ljava/lang/String;)V}"

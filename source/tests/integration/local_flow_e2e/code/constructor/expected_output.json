@@ -95,7 +95,7 @@
             [
               "ContraProject:p0",
               "Call:(20,0)",
-              "ContraInject:p0"
+              "ContraInject:p1"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/Constructor;||create:(Ljava/lang/Object;Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/Constructor;}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/Constructor;||<init>:(Ljava/lang/Object;Ljava/lang/Object;)V}"
@@ -106,7 +106,7 @@
             [
               "ContraProject:p1",
               "Call:(20,0)",
-              "ContraInject:p1"
+              "ContraInject:p2"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/Constructor;||create:(Ljava/lang/Object;Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/Constructor;}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/Constructor;||<init>:(Ljava/lang/Object;Ljava/lang/Object;)V}"

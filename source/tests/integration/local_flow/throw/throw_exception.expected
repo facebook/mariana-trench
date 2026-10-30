@@ -40,7 +40,7 @@
             [
               "ContraProject:p0",
               "Call:(0,0)",
-              "ContraInject:p0"
+              "ContraInject:p1"
             ],
             "left" : "G{LThrow;||test:(Ljava/lang/String;)V}",
             "right" : "G{Ljava/lang/Exception;||<init>:(Ljava/lang/String;)V}"

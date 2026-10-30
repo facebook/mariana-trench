@@ -53,7 +53,7 @@
             [
               "ContraProject:p0",
               "HoCall:(0,0)",
-              "ContraInject:this",
+              "ContraInject:p0",
               "Inject:invoke:(Ljava/lang/Object;)Ljava/lang/Object;"
             ],
             "left" : "G{LLambda;||applyFunction:(Lkotlin/jvm/functions/Function1;Ljava/lang/Object;)Ljava/lang/Object;}",
@@ -65,7 +65,7 @@
             [
               "ContraProject:p1",
               "HoCall:(0,0)",
-              "ContraInject:p0",
+              "ContraInject:p1",
               "Inject:invoke:(Ljava/lang/Object;)Ljava/lang/Object;"
             ],
             "left" : "G{LLambda;||applyFunction:(Lkotlin/jvm/functions/Function1;Ljava/lang/Object;)Ljava/lang/Object;}",

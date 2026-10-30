@@ -108,7 +108,7 @@
               "Return:(0,0)",
               "Call:(0,1)",
               "Project:this_out",
-              "ContraInject:this",
+              "ContraInject:p0",
               "Inject:setA:(Ljava/lang/Object;)V"
             ],
             "left" : "G{LMutate;||<init>:()V}",
@@ -143,7 +143,7 @@
             [
               "ContraProject:p0",
               "Call:(0,1)",
-              "ContraInject:p0",
+              "ContraInject:p1",
               "Inject:setA:(Ljava/lang/Object;)V"
             ],
             "left" : "G{LMutate;||test:(Ljava/lang/Object;)LMutate;}",

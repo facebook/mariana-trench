@@ -104,6 +104,21 @@ bool has_meth_node(
 }
 
 // Helper: check if any constraint has a ThisOut target node
+// Helper: check if any constraint has a label with the given kind and value
+bool has_label(
+    const LocalFlowConstraintSet& constraints,
+    LabelKind kind,
+    const std::string& value) {
+  for (const auto& c : constraints.constraints()) {
+    for (const auto& l : c.labels) {
+      if (l.kind == kind && l.value == value) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
 bool has_this_out_target(const LocalFlowConstraintSet& constraints) {
   for (const auto& c : constraints.constraints()) {
     if (c.target.kind() == NodeKind::ThisOut) {
@@ -181,7 +196,7 @@ TEST_F(LocalFlowTransferTest, VirtualCallOnThisUsesCallPlus) {
   Scope scope;
 
   // Virtual call on this: receiver arg generates Call+ constraint
-  // Param(0) -[Inject:this, Call+]-> Meth(callee) survives temp elimination
+  // Param(0) -[Call+, ContraInject:p0]-> Meth(callee) survives temp elimination
   auto dex_methods = marianatrench::redex::create_methods(
       scope,
       "LBase;",
@@ -412,6 +427,11 @@ TEST_F(LocalFlowTransferTest, VirtualCallEmitsThisOut) {
 
   // Non-init invoke on any receiver should now emit this_out flow-back
   EXPECT_TRUE(has_project_this_out(constraints));
+
+  // Arguments are numbered like the callee's parameters: receiver p0.
+  EXPECT_TRUE(has_label(constraints, LabelKind::ContraInject, "p0"));
+  EXPECT_TRUE(has_label(constraints, LabelKind::ContraInject, "p1"));
+  EXPECT_FALSE(has_label(constraints, LabelKind::ContraInject, "this"));
 }
 
 TEST_F(LocalFlowTransferTest, VoidSetterEmitsThisOut) {

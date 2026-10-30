@@ -17,7 +17,7 @@
             "labels" :
             [
               "Call:(0,0)",
-              "ContraInject:p0"
+              "ContraInject:p1"
             ],
             "left" : "C<0>",
             "right" : "G{Lkotlin/jvm/internal/Lambda;||<init>:(I)V}"
@@ -59,7 +59,7 @@
             [
               "ContraProject:p0",
               "Call:(0,0)",
-              "ContraInject:this"
+              "ContraInject:p0"
             ],
             "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion$createCapture$1;||<init>:(Ljava/lang/Object;)V}",
             "right" : "G{Lkotlin/jvm/internal/Lambda;||<init>:(I)V}"
@@ -182,7 +182,7 @@
             [
               "ContraProject:p0",
               "Call:(0,0)",
-              "ContraInject:this"
+              "ContraInject:p0"
             ],
             "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||<init>:(Lkotlin/jvm/internal/DefaultConstructorMarker;)V}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||<init>:()V}"
@@ -250,7 +250,7 @@
             [
               "ContraProject:p1",
               "HoCall:(18,0)",
-              "ContraInject:p0",
+              "ContraInject:p1",
               "Inject:invoke:(Ljava/lang/Object;)Ljava/lang/Object;"
             ],
             "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||applyTransform:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}",
@@ -262,7 +262,7 @@
             [
               "ContraProject:p2",
               "HoCall:(18,0)",
-              "ContraInject:this",
+              "ContraInject:p0",
               "Inject:invoke:(Ljava/lang/Object;)Ljava/lang/Object;"
             ],
             "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||applyTransform:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}",
@@ -354,7 +354,7 @@
             [
               "ContraProject:p1",
               "HoCall:(33,0)",
-              "ContraInject:p0",
+              "ContraInject:p1",
               "Inject:invoke:(Ljava/lang/Object;)Ljava/lang/Object;"
             ],
             "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||compose:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}",
@@ -366,7 +366,7 @@
             [
               "ContraProject:p2",
               "HoCall:(33,0)",
-              "ContraInject:this",
+              "ContraInject:p0",
               "Inject:invoke:(Ljava/lang/Object;)Ljava/lang/Object;"
             ],
             "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||compose:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}",
@@ -378,7 +378,7 @@
             [
               "ContraProject:p3",
               "HoCall:(33,1)",
-              "ContraInject:this",
+              "ContraInject:p0",
               "Inject:invoke:(Ljava/lang/Object;)Ljava/lang/Object;"
             ],
             "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||compose:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}",
@@ -444,7 +444,7 @@
             [
               "ContraProject:p1",
               "Call:(27,0)",
-              "ContraInject:p0"
+              "ContraInject:p1"
             ],
             "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||createCapture:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion$createCapture$1;||<init>:(Ljava/lang/Object;)V}"
@@ -466,7 +466,7 @@
             "labels" :
             [
               "Call:(0,0)",
-              "ContraInject:p0"
+              "ContraInject:p1"
             ],
             "left" : "C<0>",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion;||<init>:(Lkotlin/jvm/internal/DefaultConstructorMarker;)V}"
@@ -543,7 +543,7 @@
             [
               "Project:Companion",
               "Call:(0,0)",
-              "ContraInject:this",
+              "ContraInject:p0",
               "Inject:applyTransform:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||Companion}",
@@ -589,7 +589,7 @@
             [
               "ContraProject:p0",
               "Call:(0,0)",
-              "ContraInject:p0",
+              "ContraInject:p1",
               "Inject:applyTransform:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||applyTransform:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}",
@@ -601,7 +601,7 @@
             [
               "ContraProject:p1",
               "Call:(0,0)",
-              "ContraInject:p1",
+              "ContraInject:p2",
               "Inject:applyTransform:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||applyTransform:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}",
@@ -625,7 +625,7 @@
             [
               "Project:Companion",
               "Call:(0,0)",
-              "ContraInject:this",
+              "ContraInject:p0",
               "Inject:compose:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||Companion}",
@@ -671,7 +671,7 @@
             [
               "ContraProject:p0",
               "Call:(0,0)",
-              "ContraInject:p0",
+              "ContraInject:p1",
               "Inject:compose:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||compose:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}",
@@ -683,7 +683,7 @@
             [
               "ContraProject:p1",
               "Call:(0,0)",
-              "ContraInject:p1",
+              "ContraInject:p2",
               "Inject:compose:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||compose:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}",
@@ -695,7 +695,7 @@
             [
               "ContraProject:p2",
               "Call:(0,0)",
-              "ContraInject:p2",
+              "ContraInject:p3",
               "Inject:compose:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||compose:(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;}",
@@ -719,7 +719,7 @@
             [
               "Project:Companion",
               "Call:(0,0)",
-              "ContraInject:this",
+              "ContraInject:p0",
               "Inject:createCapture:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||Companion}",
@@ -765,7 +765,7 @@
             [
               "ContraProject:p0",
               "Call:(0,0)",
-              "ContraInject:p0",
+              "ContraInject:p1",
               "Inject:createCapture:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/KotlinLambda;||createCapture:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;}",

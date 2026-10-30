@@ -109,7 +109,7 @@
             [
               "ContraProject:p0",
               "Call:(38,0)",
-              "ContraInject:this",
+              "ContraInject:p0",
               "Inject:apply:(Ljava/lang/Object;)Ljava/lang/Object;"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/ConcreteProcessor;||callInterface:(Lcom/facebook/marianatrench/integrationtests/Processor;Ljava/lang/Object;)Ljava/lang/Object;}",
@@ -121,7 +121,7 @@
             [
               "ContraProject:p1",
               "Call:(38,0)",
-              "ContraInject:p0",
+              "ContraInject:p1",
               "Inject:apply:(Ljava/lang/Object;)Ljava/lang/Object;"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/ConcreteProcessor;||callInterface:(Lcom/facebook/marianatrench/integrationtests/Processor;Ljava/lang/Object;)Ljava/lang/Object;}",
@@ -177,7 +177,7 @@
             [
               "ContraProject:p0",
               "Call:(20,0)",
-              "ContraInject:this"
+              "ContraInject:p0"
             ],
             "left" : "M{Lcom/facebook/marianatrench/integrationtests/DerivedDispatch;||<init>:()V}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/VirtualDispatch;||<init>:()V}"
@@ -291,7 +291,7 @@
             [
               "ContraProject:p0",
               "Call:(16,0)",
-              "ContraInject:this",
+              "ContraInject:p0",
               "Inject:process:(Ljava/lang/Object;)Ljava/lang/Object;"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/VirtualDispatch;||callVirtual:(Lcom/facebook/marianatrench/integrationtests/VirtualDispatch;Ljava/lang/Object;)Ljava/lang/Object;}",
@@ -303,7 +303,7 @@
             [
               "ContraProject:p1",
               "Call:(16,0)",
-              "ContraInject:p0",
+              "ContraInject:p1",
               "Inject:process:(Ljava/lang/Object;)Ljava/lang/Object;"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/VirtualDispatch;||callVirtual:(Lcom/facebook/marianatrench/integrationtests/VirtualDispatch;Ljava/lang/Object;)Ljava/lang/Object;}",
