@@ -20,6 +20,8 @@
 #include <mariana-trench/CallGraph.h>
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Timer.h>
+#include <mariana-trench/model-generator/TaintInTaintOutGenerator.h>
+#include <mariana-trench/model-generator/TaintInTaintThisGenerator.h>
 
 namespace marianatrench {
 namespace local_flow {
@@ -103,9 +105,8 @@ void LocalFlowAnalysis::run(
     queue.run_all();
   }
 
-  // Generate TITO stubs for external/framework methods.
-  // These allow LFE to traverse through framework method boundaries
-  // (Android SDK, java.*, kotlin.*) that have no analyzed code.
+  // Generate stubs for external methods without code (Android SDK, java.*,
+  // kotlin.*), so that a search can continue through calls into them.
   std::atomic<std::size_t> stub_count(0);
   auto generate_stub = [&](const Method* method) {
     auto stub_result = external_stub(method);
@@ -158,20 +159,32 @@ std::optional<LocalFlowMethodResult> LocalFlowAnalysis::external_stub(
     return std::nullopt;
   }
 
+  // The flows follow MT's default models for methods without code
+  // (taint-in-taint-out and taint-in-taint-this).
   LocalFlowConstraintSet constraints;
   bool is_static = method->is_static();
 
-  // Instance methods: this (p0) → this_out
+  // Instance methods: receiver (p0) → this_out
   if (!is_static) {
     constraints.add_edge(
         LocalFlowNode::make_param(0), LocalFlowNode::make_this_out());
   }
 
-  // All parameters → result (for non-void methods)
-  if (!method->returns_void()) {
+  // Parameters → result
+  if (!method->returns_void() &&
+      !TaintInTaintOutGenerator::result_excludes_arguments(method)) {
     for (ParameterPosition i = 0; i < method->number_of_parameters(); ++i) {
       constraints.add_edge(
           LocalFlowNode::make_param(i), LocalFlowNode::make_result());
+    }
+  }
+
+  // Arguments → this_out for constructors, setters and builders
+  if (!is_static &&
+      TaintInTaintThisGenerator::stores_arguments_into_receiver(method)) {
+    for (ParameterPosition i = 1; i < method->number_of_parameters(); ++i) {
+      constraints.add_edge(
+          LocalFlowNode::make_param(i), LocalFlowNode::make_this_out());
     }
   }
 

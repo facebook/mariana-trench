@@ -22,6 +22,12 @@ class TaintInTaintOutGenerator : public MethodVisitorModelGenerator {
 
   std::vector<Model> visit_method(const Method* method) const override;
 
+  /**
+   * Name-based part of the taint-in-taint-out rule: the result of `size()`,
+   * `hashCode()` and `getClass()` does not carry the method's arguments.
+   */
+  static bool result_excludes_arguments(const Method* method);
+
  private:
   // Underlying object should be alive for the duration of
   // ModelGeneration::run()

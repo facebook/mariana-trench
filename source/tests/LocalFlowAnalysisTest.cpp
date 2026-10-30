@@ -62,7 +62,35 @@ TEST_F(LocalFlowAnalysisTest, ExternalStubOfNonVoidInstanceMethod) {
   EXPECT_THAT(
       stub_flows(*stub),
       testing::UnorderedElementsAre(
-          "p0 -> result", "p0 -> this_out", "p1 -> result", "p2 -> result"));
+          "p0 -> result",
+          "p0 -> this_out",
+          "p1 -> result",
+          "p1 -> this_out",
+          "p2 -> result",
+          "p2 -> this_out"));
+}
+
+TEST_F(LocalFlowAnalysisTest, ExternalStubOfGetter) {
+  const auto* method = make_external_method(
+      methods_,
+      "Landroid/content/Intent;.getStringExtra:(Ljava/lang/String;)Ljava/lang/String;");
+
+  auto stub = LocalFlowAnalysis::external_stub(method);
+  ASSERT_TRUE(stub.has_value());
+  EXPECT_THAT(
+      stub_flows(*stub),
+      testing::UnorderedElementsAre(
+          "p0 -> result", "p0 -> this_out", "p1 -> result"));
+}
+
+TEST_F(LocalFlowAnalysisTest, ExternalStubOfResultWithoutArguments) {
+  const auto* method =
+      make_external_method(methods_, "Ljava/util/List;.size:()I");
+
+  auto stub = LocalFlowAnalysis::external_stub(method);
+  ASSERT_TRUE(stub.has_value());
+  EXPECT_THAT(
+      stub_flows(*stub), testing::UnorderedElementsAre("p0 -> this_out"));
 }
 
 TEST_F(LocalFlowAnalysisTest, ExternalStubOfVoidInstanceMethod) {
@@ -73,7 +101,9 @@ TEST_F(LocalFlowAnalysisTest, ExternalStubOfVoidInstanceMethod) {
   auto stub = LocalFlowAnalysis::external_stub(method);
   ASSERT_TRUE(stub.has_value());
   EXPECT_THAT(
-      stub_flows(*stub), testing::UnorderedElementsAre("p0 -> this_out"));
+      stub_flows(*stub),
+      testing::UnorderedElementsAre(
+          "p0 -> this_out", "p1 -> this_out", "p2 -> this_out"));
 }
 
 TEST_F(LocalFlowAnalysisTest, ExternalStubOfConstructor) {
@@ -83,7 +113,8 @@ TEST_F(LocalFlowAnalysisTest, ExternalStubOfConstructor) {
   auto stub = LocalFlowAnalysis::external_stub(method);
   ASSERT_TRUE(stub.has_value());
   EXPECT_THAT(
-      stub_flows(*stub), testing::UnorderedElementsAre("p0 -> this_out"));
+      stub_flows(*stub),
+      testing::UnorderedElementsAre("p0 -> this_out", "p1 -> this_out"));
 }
 
 TEST_F(LocalFlowAnalysisTest, ExternalStubOfStaticMethod) {
@@ -96,6 +127,45 @@ TEST_F(LocalFlowAnalysisTest, ExternalStubOfStaticMethod) {
   ASSERT_TRUE(stub.has_value());
   EXPECT_TRUE(stub->is_static);
   EXPECT_THAT(stub_flows(*stub), testing::UnorderedElementsAre("p0 -> result"));
+}
+
+TEST_F(LocalFlowAnalysisTest, ExternalStubOfBuilderMethod) {
+  const auto* method = make_external_method(
+      methods_,
+      "Landroid/app/Notification$Builder;.extend:(Landroid/app/Notification$Extender;)Landroid/app/Notification$Builder;");
+
+  auto stub = LocalFlowAnalysis::external_stub(method);
+  ASSERT_TRUE(stub.has_value());
+  EXPECT_THAT(
+      stub_flows(*stub),
+      testing::UnorderedElementsAre(
+          "p0 -> result", "p0 -> this_out", "p1 -> result", "p1 -> this_out"));
+}
+
+TEST_F(LocalFlowAnalysisTest, ExternalStubOfStaticSetterLikeMethod) {
+  const auto* method = make_external_method(
+      methods_,
+      "Ljava/util/Collections;.addAll:(Ljava/util/Collection;[Ljava/lang/Object;)Z",
+      /* is_static */ true);
+
+  auto stub = LocalFlowAnalysis::external_stub(method);
+  ASSERT_TRUE(stub.has_value());
+  EXPECT_THAT(
+      stub_flows(*stub),
+      testing::UnorderedElementsAre("p0 -> result", "p1 -> result"));
+}
+
+TEST_F(LocalFlowAnalysisTest, ExternalStubOfObjectMethods) {
+  for (const auto* signature :
+       {"Ljava/lang/Object;.hashCode:()I",
+        "Ljava/lang/Object;.getClass:()Ljava/lang/Class;"}) {
+    auto stub = LocalFlowAnalysis::external_stub(
+        make_external_method(methods_, signature));
+    ASSERT_TRUE(stub.has_value()) << signature;
+    EXPECT_THAT(
+        stub_flows(*stub), testing::UnorderedElementsAre("p0 -> this_out"))
+        << signature;
+  }
 }
 
 TEST_F(LocalFlowAnalysisTest, NoExternalStubForMethodWithCode) {

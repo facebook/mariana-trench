@@ -38,10 +38,7 @@ std::vector<Model> TaintInTaintOutGenerator::visit_method(
     }
   }
 
-  const auto method_signature = method->show();
-  if (method_signature.ends_with(".size:()I") ||
-      method_signature.ends_with(".hashCode:()I") ||
-      method_signature.starts_with("Ljava/lang/Object;.getClass:")) {
+  if (result_excludes_arguments(method)) {
     return {};
   }
 
@@ -79,6 +76,13 @@ std::vector<Model> TaintInTaintOutGenerator::visit_method(
   }
 
   return {model};
+}
+
+bool TaintInTaintOutGenerator::result_excludes_arguments(const Method* method) {
+  const auto& method_signature = method->show();
+  return method_signature.ends_with(".size:()I") ||
+      method_signature.ends_with(".hashCode:()I") ||
+      method_signature.starts_with("Ljava/lang/Object;.getClass:");
 }
 
 } // namespace marianatrench

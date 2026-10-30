@@ -44,15 +44,7 @@ std::vector<Model> TaintInTaintThisGenerator::visit_method(
     }
   }
 
-  const auto class_name = generator::get_class_name(method);
-  const auto method_name = generator::get_method_name(method);
-  if (class_name.ends_with("$Builder;") ||
-      std::any_of(
-          k_allowlist_setter_method_prefixes.begin(),
-          k_allowlist_setter_method_prefixes.end(),
-          [method_name](const auto& prefix) {
-            return method_name.starts_with(prefix);
-          })) {
+  if (stores_arguments_into_receiver(method)) {
     auto model = Model(method, context_);
     for (ParameterPosition parameter_position = 1;
          parameter_position < method->number_of_parameters();
@@ -68,6 +60,19 @@ std::vector<Model> TaintInTaintThisGenerator::visit_method(
   }
 
   return {};
+}
+
+bool TaintInTaintThisGenerator::stores_arguments_into_receiver(
+    const Method* method) {
+  const auto class_name = generator::get_class_name(method);
+  const auto method_name = generator::get_method_name(method);
+  return class_name.ends_with("$Builder;") ||
+      std::any_of(
+             k_allowlist_setter_method_prefixes.begin(),
+             k_allowlist_setter_method_prefixes.end(),
+             [method_name](const auto& prefix) {
+               return method_name.starts_with(prefix);
+             });
 }
 
 } // namespace marianatrench

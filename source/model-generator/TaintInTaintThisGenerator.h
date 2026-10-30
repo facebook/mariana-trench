@@ -22,6 +22,14 @@ class TaintInTaintThisGenerator : public MethodVisitorModelGenerator {
 
   std::vector<Model> visit_method(const Method* method) const override;
 
+  /**
+   * Name-based part of the taint-in-taint-this rule: constructors, setter-like
+   * methods (`add`, `put`, `set`, `append`, ...) and methods of `$Builder`
+   * classes store their arguments into their receiver. Callers check that the
+   * method is an instance method without code.
+   */
+  static bool stores_arguments_into_receiver(const Method* method);
+
  private:
   // Underlying object should be alive for the duration of
   // ModelGeneration::run()
