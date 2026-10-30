@@ -48,6 +48,10 @@ LocalFlowNode LocalFlowNode::make_meth(std::string name) {
   return LocalFlowNode(NodeKind::Meth, NamePayload{std::move(name)});
 }
 
+LocalFlowNode LocalFlowNode::make_exact_meth(std::string name) {
+  return LocalFlowNode(NodeKind::ExactMeth, NamePayload{std::move(name)});
+}
+
 LocalFlowNode LocalFlowNode::make_cvar(std::string name) {
   return LocalFlowNode(NodeKind::CVar, NamePayload{std::move(name)});
 }
@@ -87,6 +91,7 @@ bool LocalFlowNode::is_root() const {
     case NodeKind::Global:
     case NodeKind::StaticField:
     case NodeKind::Meth:
+    case NodeKind::ExactMeth:
     case NodeKind::CVar:
     case NodeKind::OVar:
     case NodeKind::SelfRec:
@@ -102,6 +107,7 @@ bool LocalFlowNode::is_global() const {
     case NodeKind::Global:
     case NodeKind::StaticField:
     case NodeKind::Meth:
+    case NodeKind::ExactMeth:
     case NodeKind::CVar:
     case NodeKind::OVar:
     case NodeKind::SelfRec:
@@ -171,7 +177,8 @@ std::string LocalFlowNode::jvm_to_lfe_separator(const std::string& jvm_sig) {
 
 std::string LocalFlowNode::extract_vtable_name(const LocalFlowNode& node) {
   mt_assert(
-      node.kind_ == NodeKind::StaticField || node.kind_ == NodeKind::Meth);
+      node.kind_ == NodeKind::StaticField || node.kind_ == NodeKind::Meth ||
+      node.kind_ == NodeKind::ExactMeth);
   const auto& name = std::get<NamePayload>(node.payload_).name;
   auto sep_pos = name.find("||");
   if (sep_pos == std::string::npos) {
@@ -183,7 +190,7 @@ std::string LocalFlowNode::extract_vtable_name(const LocalFlowNode& node) {
 }
 
 std::string LocalFlowNode::extract_class_name(const LocalFlowNode& node) {
-  mt_assert(node.kind_ == NodeKind::Meth);
+  mt_assert(node.kind_ == NodeKind::Meth || node.kind_ == NodeKind::ExactMeth);
   const auto& name = std::get<NamePayload>(node.payload_).name;
   auto sep_pos = name.find("||");
   if (sep_pos == std::string::npos) {
@@ -216,6 +223,11 @@ std::string LocalFlowNode::to_string() const {
     case NodeKind::Meth: {
       const auto& name = std::get<NamePayload>(payload_).name;
       return fmt::format("M{{{}}}", name);
+    }
+    case NodeKind::ExactMeth: {
+      // Internal spelling; serialized as C{class} plus the member label.
+      const auto& name = std::get<NamePayload>(payload_).name;
+      return fmt::format("X{{{}}}", name);
     }
     case NodeKind::CVar: {
       const auto& name = std::get<NamePayload>(payload_).name;

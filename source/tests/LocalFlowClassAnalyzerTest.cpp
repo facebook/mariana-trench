@@ -208,3 +208,22 @@ TEST_F(LocalFlowClassAnalyzerTest, ClassNoConcreteMethodsIsSkipped) {
   const auto* result = find_class_result(results, "LStaticOnly;");
   EXPECT_EQ(result, nullptr);
 }
+
+TEST_F(LocalFlowClassAnalyzerTest, ConstructorHasDispatchSlot) {
+  Scope scope;
+
+  marianatrench::redex::create_void_method(scope, "LCtorOnly;", "<init>");
+
+  auto context = make_class_analyzer_context(scope);
+  auto results = LocalFlowClassAnalyzer::analyze_classes(context);
+
+  // Constructors are reached through C{class}, so the class keeps a record
+  // with a slot for each constructor.
+  const auto* result = find_class_result(results, "LCtorOnly;");
+  ASSERT_NE(result, nullptr);
+  EXPECT_TRUE(has_dispatch_edge_with_label(
+      *result,
+      "M{LCtorOnly;||<init>:()V}",
+      "C{LCtorOnly;}",
+      "Inject:<init>:()V"));
+}

@@ -214,6 +214,32 @@
         "node" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||selfRecursive:(Ljava/lang/Object;)Ljava/lang/Object;}"
       },
       "path" : "com/facebook/marianatrench/integrationtests/Recursion.java"
+    },
+    {
+      "callable" : "Class{Lcom/facebook/marianatrench/integrationtests/Recursion;}",
+      "callable_line" : 0,
+      "code" : 20001,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "left" : "C{Lcom/facebook/marianatrench/integrationtests/Recursion;}",
+            "right" : "O{Lcom/facebook/marianatrench/integrationtests/Recursion;}"
+          },
+          {
+            "labels" :
+            [
+              "Inject:<init>:()V"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/Recursion;||<init>:()V}",
+            "right" : "C{Lcom/facebook/marianatrench/integrationtests/Recursion;}"
+          }
+        ],
+        "interval" : "[0,1]",
+        "node" : "C{Lcom/facebook/marianatrench/integrationtests/Recursion;}"
+      },
+      "path" : "Recursion.java"
     }
   ]
 }

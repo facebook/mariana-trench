@@ -50,21 +50,23 @@
           {
             "labels" :
             [
+              "Project:<init>:(Ljava/lang/Object;)V",
               "Return:(0,0)",
               "Project:ctrl",
               "Inject:ctrl"
             ],
-            "left" : "G{LBase;||<init>:(Ljava/lang/Object;)V}",
+            "left" : "C{LBase;}",
             "right" : "M{LChild;||<init>:(Ljava/lang/Object;)V}"
           },
           {
             "labels" :
             [
+              "Project:<init>:(Ljava/lang/Object;)V",
               "Return:(0,0)",
               "Project:this_out",
               "Inject:this_out"
             ],
-            "left" : "G{LBase;||<init>:(Ljava/lang/Object;)V}",
+            "left" : "C{LBase;}",
             "right" : "M{LChild;||<init>:(Ljava/lang/Object;)V}"
           },
           {
@@ -73,10 +75,11 @@
             [
               "ContraProject:ctrl",
               "Call:(0,0)",
-              "ContraInject:ctrl"
+              "ContraInject:ctrl",
+              "Inject:<init>:(Ljava/lang/Object;)V"
             ],
             "left" : "M{LChild;||<init>:(Ljava/lang/Object;)V}",
-            "right" : "G{LBase;||<init>:(Ljava/lang/Object;)V}"
+            "right" : "C{LBase;}"
           },
           {
             "guard" : "Bwd",
@@ -84,10 +87,11 @@
             [
               "ContraProject:p0",
               "Call:(0,0)",
-              "ContraInject:p0"
+              "ContraInject:p0",
+              "Inject:<init>:(Ljava/lang/Object;)V"
             ],
             "left" : "M{LChild;||<init>:(Ljava/lang/Object;)V}",
-            "right" : "G{LBase;||<init>:(Ljava/lang/Object;)V}"
+            "right" : "C{LBase;}"
           },
           {
             "guard" : "Bwd",
@@ -95,15 +99,76 @@
             [
               "ContraProject:p1",
               "Call:(0,0)",
-              "ContraInject:p1"
+              "ContraInject:p1",
+              "Inject:<init>:(Ljava/lang/Object;)V"
             ],
             "left" : "M{LChild;||<init>:(Ljava/lang/Object;)V}",
-            "right" : "G{LBase;||<init>:(Ljava/lang/Object;)V}"
+            "right" : "C{LBase;}"
           }
         ],
         "node" : "M{LChild;||<init>:(Ljava/lang/Object;)V}"
       },
       "path" : "Child.java"
+    },
+    {
+      "callable" : "Class{LBase;}",
+      "callable_line" : 0,
+      "code" : 20001,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "left" : "C{LBase;}",
+            "right" : "O{LBase;}"
+          },
+          {
+            "labels" :
+            [
+              "Inject:<init>:(Ljava/lang/Object;)V"
+            ],
+            "left" : "M{LBase;||<init>:(Ljava/lang/Object;)V}",
+            "right" : "C{LBase;}"
+          },
+          {
+            "labels" :
+            [
+              "Inject:Interval:[1,2]"
+            ],
+            "left" : "O{LChild;}",
+            "right" : "O{LBase;}"
+          }
+        ],
+        "interval" : "[0,3]",
+        "node" : "C{LBase;}"
+      },
+      "path" : ""
+    },
+    {
+      "callable" : "Class{LChild;}",
+      "callable_line" : 0,
+      "code" : 20001,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "left" : "C{LChild;}",
+            "right" : "O{LChild;}"
+          },
+          {
+            "labels" :
+            [
+              "Inject:<init>:(Ljava/lang/Object;)V"
+            ],
+            "left" : "M{LChild;||<init>:(Ljava/lang/Object;)V}",
+            "right" : "C{LChild;}"
+          }
+        ],
+        "interval" : "[1,2]",
+        "node" : "C{LChild;}"
+      },
+      "path" : ""
     }
   ]
 }

@@ -61,21 +61,23 @@
           {
             "labels" :
             [
+              "Project:<init>:(Ljava/lang/Object;Ljava/lang/Object;)V",
               "Return:(0,0)",
               "Project:ctrl",
               "Inject:ctrl"
             ],
-            "left" : "G{LMyClass;||<init>:(Ljava/lang/Object;Ljava/lang/Object;)V}",
+            "left" : "C{LMyClass;}",
             "right" : "G{LMyClass;||test_new:(Ljava/lang/Object;Ljava/lang/Object;)LMyClass;}"
           },
           {
             "labels" :
             [
+              "Project:<init>:(Ljava/lang/Object;Ljava/lang/Object;)V",
               "Return:(0,0)",
               "Project:this_out",
               "Inject:result"
             ],
-            "left" : "G{LMyClass;||<init>:(Ljava/lang/Object;Ljava/lang/Object;)V}",
+            "left" : "C{LMyClass;}",
             "right" : "G{LMyClass;||test_new:(Ljava/lang/Object;Ljava/lang/Object;)LMyClass;}"
           },
           {
@@ -84,10 +86,11 @@
             [
               "ContraProject:ctrl",
               "Call:(0,0)",
-              "ContraInject:ctrl"
+              "ContraInject:ctrl",
+              "Inject:<init>:(Ljava/lang/Object;Ljava/lang/Object;)V"
             ],
             "left" : "G{LMyClass;||test_new:(Ljava/lang/Object;Ljava/lang/Object;)LMyClass;}",
-            "right" : "G{LMyClass;||<init>:(Ljava/lang/Object;Ljava/lang/Object;)V}"
+            "right" : "C{LMyClass;}"
           },
           {
             "guard" : "Bwd",
@@ -95,10 +98,11 @@
             [
               "ContraProject:p0",
               "Call:(0,0)",
-              "ContraInject:p1"
+              "ContraInject:p1",
+              "Inject:<init>:(Ljava/lang/Object;Ljava/lang/Object;)V"
             ],
             "left" : "G{LMyClass;||test_new:(Ljava/lang/Object;Ljava/lang/Object;)LMyClass;}",
-            "right" : "G{LMyClass;||<init>:(Ljava/lang/Object;Ljava/lang/Object;)V}"
+            "right" : "C{LMyClass;}"
           },
           {
             "guard" : "Bwd",
@@ -106,15 +110,42 @@
             [
               "ContraProject:p1",
               "Call:(0,0)",
-              "ContraInject:p2"
+              "ContraInject:p2",
+              "Inject:<init>:(Ljava/lang/Object;Ljava/lang/Object;)V"
             ],
             "left" : "G{LMyClass;||test_new:(Ljava/lang/Object;Ljava/lang/Object;)LMyClass;}",
-            "right" : "G{LMyClass;||<init>:(Ljava/lang/Object;Ljava/lang/Object;)V}"
+            "right" : "C{LMyClass;}"
           }
         ],
         "node" : "G{LMyClass;||test_new:(Ljava/lang/Object;Ljava/lang/Object;)LMyClass;}"
       },
       "path" : "MyClass.java"
+    },
+    {
+      "callable" : "Class{LMyClass;}",
+      "callable_line" : 0,
+      "code" : 20001,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "left" : "C{LMyClass;}",
+            "right" : "O{LMyClass;}"
+          },
+          {
+            "labels" :
+            [
+              "Inject:<init>:(Ljava/lang/Object;Ljava/lang/Object;)V"
+            ],
+            "left" : "M{LMyClass;||<init>:(Ljava/lang/Object;Ljava/lang/Object;)V}",
+            "right" : "C{LMyClass;}"
+          }
+        ],
+        "interval" : "[0,1]",
+        "node" : "C{LMyClass;}"
+      },
+      "path" : ""
     }
   ]
 }

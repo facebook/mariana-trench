@@ -60,11 +60,12 @@
           {
             "labels" :
             [
+              "Project:<init>:()V",
               "Return:(0,0)",
               "Project:ctrl",
               "Inject:ctrl"
             ],
-            "left" : "G{LBuilder;||<init>:()V}",
+            "left" : "C{LBuilder;}",
             "right" : "G{LBuilder;||test:(Ljava/lang/String;Ljava/lang/String;)LBuilder;}"
           },
           {
@@ -92,13 +93,14 @@
           {
             "labels" :
             [
+              "Project:<init>:()V",
               "Return:(0,0)",
               "Call:(0,1)",
               "Project:this_out",
               "ContraInject:p0",
               "Inject:setName:(Ljava/lang/String;)LBuilder;"
             ],
-            "left" : "G{LBuilder;||<init>:()V}",
+            "left" : "C{LBuilder;}",
             "right" : "O{LBuilder;}"
           },
           {
@@ -107,10 +109,11 @@
             [
               "ContraProject:ctrl",
               "Call:(0,0)",
-              "ContraInject:ctrl"
+              "ContraInject:ctrl",
+              "Inject:<init>:()V"
             ],
             "left" : "G{LBuilder;||test:(Ljava/lang/String;Ljava/lang/String;)LBuilder;}",
-            "right" : "G{LBuilder;||<init>:()V}"
+            "right" : "C{LBuilder;}"
           },
           {
             "guard" : "Bwd",

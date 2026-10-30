@@ -73,6 +73,32 @@
         "node" : "G{Lcom/facebook/marianatrench/integrationtests/Identity;||twoParams:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;}"
       },
       "path" : "com/facebook/marianatrench/integrationtests/Identity.java"
+    },
+    {
+      "callable" : "Class{Lcom/facebook/marianatrench/integrationtests/Identity;}",
+      "callable_line" : 0,
+      "code" : 20001,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "left" : "C{Lcom/facebook/marianatrench/integrationtests/Identity;}",
+            "right" : "O{Lcom/facebook/marianatrench/integrationtests/Identity;}"
+          },
+          {
+            "labels" :
+            [
+              "Inject:<init>:()V"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/Identity;||<init>:()V}",
+            "right" : "C{Lcom/facebook/marianatrench/integrationtests/Identity;}"
+          }
+        ],
+        "interval" : "[0,1]",
+        "node" : "C{Lcom/facebook/marianatrench/integrationtests/Identity;}"
+      },
+      "path" : "Identity.java"
     }
   ]
 }

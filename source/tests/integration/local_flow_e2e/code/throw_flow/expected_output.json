@@ -40,19 +40,21 @@
             "labels" :
             [
               "Call:(17,0)",
-              "ContraInject:p1"
+              "ContraInject:p1",
+              "Inject:<init>:(Ljava/lang/String;)V"
             ],
             "left" : "C<bad>",
-            "right" : "G{Ljava/lang/IllegalArgumentException;||<init>:(Ljava/lang/String;)V}"
+            "right" : "C{Ljava/lang/IllegalArgumentException;}"
           },
           {
             "labels" :
             [
+              "Project:<init>:(Ljava/lang/String;)V",
               "Return:(17,0)",
               "Project:ctrl",
               "Inject:ctrl"
             ],
-            "left" : "G{Ljava/lang/IllegalArgumentException;||<init>:(Ljava/lang/String;)V}",
+            "left" : "C{Ljava/lang/IllegalArgumentException;}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/ThrowFlow;||throwOrReturn:(ZLjava/lang/Object;)Ljava/lang/Object;}"
           },
           {
@@ -71,10 +73,11 @@
             [
               "ContraProject:ctrl",
               "Call:(17,0)",
-              "ContraInject:ctrl"
+              "ContraInject:ctrl",
+              "Inject:<init>:(Ljava/lang/String;)V"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/ThrowFlow;||throwOrReturn:(ZLjava/lang/Object;)Ljava/lang/Object;}",
-            "right" : "G{Ljava/lang/IllegalArgumentException;||<init>:(Ljava/lang/String;)V}"
+            "right" : "C{Ljava/lang/IllegalArgumentException;}"
           }
         ],
         "node" : "G{Lcom/facebook/marianatrench/integrationtests/ThrowFlow;||throwOrReturn:(ZLjava/lang/Object;)Ljava/lang/Object;}"
@@ -92,11 +95,12 @@
           {
             "labels" :
             [
+              "Project:<init>:(Ljava/lang/String;)V",
               "Return:(12,0)",
               "Project:ctrl",
               "Inject:ctrl"
             ],
-            "left" : "G{Ljava/lang/RuntimeException;||<init>:(Ljava/lang/String;)V}",
+            "left" : "C{Ljava/lang/RuntimeException;}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/ThrowFlow;||throwWithMessage:(Ljava/lang/String;)V}"
           },
           {
@@ -105,10 +109,11 @@
             [
               "ContraProject:ctrl",
               "Call:(12,0)",
-              "ContraInject:ctrl"
+              "ContraInject:ctrl",
+              "Inject:<init>:(Ljava/lang/String;)V"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/ThrowFlow;||throwWithMessage:(Ljava/lang/String;)V}",
-            "right" : "G{Ljava/lang/RuntimeException;||<init>:(Ljava/lang/String;)V}"
+            "right" : "C{Ljava/lang/RuntimeException;}"
           },
           {
             "guard" : "Bwd",
@@ -116,15 +121,42 @@
             [
               "ContraProject:p0",
               "Call:(12,0)",
-              "ContraInject:p1"
+              "ContraInject:p1",
+              "Inject:<init>:(Ljava/lang/String;)V"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/ThrowFlow;||throwWithMessage:(Ljava/lang/String;)V}",
-            "right" : "G{Ljava/lang/RuntimeException;||<init>:(Ljava/lang/String;)V}"
+            "right" : "C{Ljava/lang/RuntimeException;}"
           }
         ],
         "node" : "G{Lcom/facebook/marianatrench/integrationtests/ThrowFlow;||throwWithMessage:(Ljava/lang/String;)V}"
       },
       "path" : "com/facebook/marianatrench/integrationtests/ThrowFlow.java"
+    },
+    {
+      "callable" : "Class{Lcom/facebook/marianatrench/integrationtests/ThrowFlow;}",
+      "callable_line" : 0,
+      "code" : 20001,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "left" : "C{Lcom/facebook/marianatrench/integrationtests/ThrowFlow;}",
+            "right" : "O{Lcom/facebook/marianatrench/integrationtests/ThrowFlow;}"
+          },
+          {
+            "labels" :
+            [
+              "Inject:<init>:()V"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/ThrowFlow;||<init>:()V}",
+            "right" : "C{Lcom/facebook/marianatrench/integrationtests/ThrowFlow;}"
+          }
+        ],
+        "interval" : "[0,1]",
+        "node" : "C{Lcom/facebook/marianatrench/integrationtests/ThrowFlow;}"
+      },
+      "path" : "ThrowFlow.java"
     }
   ]
 }

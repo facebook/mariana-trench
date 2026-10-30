@@ -39,11 +39,12 @@
           {
             "labels" :
             [
+              "Project:<init>:()V",
               "Return:(29,0)",
               "Project:ctrl",
               "Inject:ctrl"
             ],
-            "left" : "G{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;||<init>:()V}",
+            "left" : "C{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;||build:(Ljava/lang/Object;Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/BuilderPattern;}"
           },
           {
@@ -82,13 +83,14 @@
           {
             "labels" :
             [
+              "Project:<init>:()V",
               "Return:(29,0)",
               "Call:(29,1)",
               "Project:this_out",
               "ContraInject:p0",
               "Inject:setName:(Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/BuilderPattern;"
             ],
-            "left" : "G{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;||<init>:()V}",
+            "left" : "C{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;}",
             "right" : "O{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;}"
           },
           {
@@ -110,10 +112,11 @@
             [
               "ContraProject:ctrl",
               "Call:(29,0)",
-              "ContraInject:ctrl"
+              "ContraInject:ctrl",
+              "Inject:<init>:()V"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;||build:(Ljava/lang/Object;Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/BuilderPattern;}",
-            "right" : "G{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;||<init>:()V}"
+            "right" : "C{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;}"
           },
           {
             "guard" : "Bwd",
@@ -301,6 +304,14 @@
           {
             "left" : "C{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;}",
             "right" : "O{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;}"
+          },
+          {
+            "labels" :
+            [
+              "Inject:<init>:()V"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;||<init>:()V}",
+            "right" : "C{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;}"
           },
           {
             "labels" :

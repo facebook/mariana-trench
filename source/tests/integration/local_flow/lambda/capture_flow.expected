@@ -50,21 +50,23 @@
           {
             "labels" :
             [
+              "Project:<init>:(Ljava/lang/Object;)V",
               "Return:(0,0)",
               "Project:ctrl",
               "Inject:ctrl"
             ],
-            "left" : "G{LMyLambda;||<init>:(Ljava/lang/Object;)V}",
+            "left" : "C{LMyLambda;}",
             "right" : "G{LMyLambda;||create:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;}"
           },
           {
             "labels" :
             [
+              "Project:<init>:(Ljava/lang/Object;)V",
               "Return:(0,0)",
               "Project:this_out",
               "Inject:result"
             ],
-            "left" : "G{LMyLambda;||<init>:(Ljava/lang/Object;)V}",
+            "left" : "C{LMyLambda;}",
             "right" : "G{LMyLambda;||create:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;}"
           },
           {
@@ -73,10 +75,11 @@
             [
               "ContraProject:ctrl",
               "Call:(0,0)",
-              "ContraInject:ctrl"
+              "ContraInject:ctrl",
+              "Inject:<init>:(Ljava/lang/Object;)V"
             ],
             "left" : "G{LMyLambda;||create:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;}",
-            "right" : "G{LMyLambda;||<init>:(Ljava/lang/Object;)V}"
+            "right" : "C{LMyLambda;}"
           },
           {
             "guard" : "Bwd",
@@ -84,15 +87,42 @@
             [
               "ContraProject:p0",
               "Call:(0,0)",
-              "ContraInject:p1"
+              "ContraInject:p1",
+              "Inject:<init>:(Ljava/lang/Object;)V"
             ],
             "left" : "G{LMyLambda;||create:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;}",
-            "right" : "G{LMyLambda;||<init>:(Ljava/lang/Object;)V}"
+            "right" : "C{LMyLambda;}"
           }
         ],
         "node" : "G{LMyLambda;||create:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;}"
       },
       "path" : "MyLambda.java"
+    },
+    {
+      "callable" : "Class{LMyLambda;}",
+      "callable_line" : 0,
+      "code" : 20001,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "left" : "C{LMyLambda;}",
+            "right" : "O{LMyLambda;}"
+          },
+          {
+            "labels" :
+            [
+              "Inject:<init>:(Ljava/lang/Object;)V"
+            ],
+            "left" : "M{LMyLambda;||<init>:(Ljava/lang/Object;)V}",
+            "right" : "C{LMyLambda;}"
+          }
+        ],
+        "interval" : "[0,1]",
+        "node" : "C{LMyLambda;}"
+      },
+      "path" : ""
     }
   ]
 }

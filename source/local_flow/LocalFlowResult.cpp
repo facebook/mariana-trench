@@ -25,6 +25,7 @@ std::optional<Label> source_label(const LocalFlowNode& node) {
     case NodeKind::Constant:
       return std::nullopt;
     case NodeKind::Meth:
+    case NodeKind::ExactMeth:
     case NodeKind::StaticField:
       return Label{
           LabelKind::Project, LocalFlowNode::extract_vtable_name(node)};
@@ -48,6 +49,7 @@ std::optional<Label> target_label(const LocalFlowNode& node) {
     case NodeKind::Global:
       return std::nullopt;
     case NodeKind::Meth:
+    case NodeKind::ExactMeth:
     case NodeKind::StaticField:
       return Label{LabelKind::Inject, LocalFlowNode::extract_vtable_name(node)};
     case NodeKind::Param:
@@ -67,8 +69,9 @@ std::optional<Label> target_label(const LocalFlowNode& node) {
 
 // Node that a flow names as its `left` or `right` end. Roots belong to the
 // method itself. A dispatched callee is reached through `O{class}`, which
-// enters the override hierarchy, and the member label selects the method.
-// Every other node is named by its own spelling.
+// enters the override hierarchy, and a callee called without dispatch through
+// `C{class}`, which holds only the class's own methods; the member label
+// selects the method. Every other node is named by its own spelling.
 std::string edge_endpoint(
     const LocalFlowNode& node,
     const std::string& callable_node) {
@@ -81,6 +84,8 @@ std::string edge_endpoint(
       return callable_node;
     case NodeKind::Meth:
       return fmt::format("O{{{}}}", LocalFlowNode::extract_class_name(node));
+    case NodeKind::ExactMeth:
+      return fmt::format("C{{{}}}", LocalFlowNode::extract_class_name(node));
     case NodeKind::Global:
     case NodeKind::StaticField:
     case NodeKind::CVar:

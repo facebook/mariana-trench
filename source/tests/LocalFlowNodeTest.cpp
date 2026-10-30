@@ -70,6 +70,16 @@ TEST_F(LocalFlowNodeTest, MethNode) {
   EXPECT_EQ(meth.to_string(), "M{Foo||bar}");
 }
 
+TEST_F(LocalFlowNodeTest, ExactMethNode) {
+  auto exact = LocalFlowNode::make_exact_meth("Lcom/Foo;||<init>:()V");
+  EXPECT_EQ(exact.kind(), NodeKind::ExactMeth);
+  EXPECT_TRUE(exact.is_global());
+  EXPECT_FALSE(exact.is_root());
+  EXPECT_EQ(exact.to_string(), "X{Lcom/Foo;||<init>:()V}");
+  EXPECT_EQ(LocalFlowNode::extract_class_name(exact), "Lcom/Foo;");
+  EXPECT_EQ(LocalFlowNode::extract_vtable_name(exact), "<init>:()V");
+}
+
 TEST_F(LocalFlowNodeTest, CVarOVarNodes) {
   auto cvar = LocalFlowNode::make_cvar("Foo");
   auto ovar = LocalFlowNode::make_ovar("Foo");

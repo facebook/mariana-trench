@@ -49,6 +49,32 @@
         "node" : "M{LMyObj;||<init>:(Ljava/lang/Object;Ljava/lang/Object;)V}"
       },
       "path" : "MyObj.java"
+    },
+    {
+      "callable" : "Class{LMyObj;}",
+      "callable_line" : 0,
+      "code" : 20001,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "left" : "C{LMyObj;}",
+            "right" : "O{LMyObj;}"
+          },
+          {
+            "labels" :
+            [
+              "Inject:<init>:(Ljava/lang/Object;Ljava/lang/Object;)V"
+            ],
+            "left" : "M{LMyObj;||<init>:(Ljava/lang/Object;Ljava/lang/Object;)V}",
+            "right" : "C{LMyObj;}"
+          }
+        ],
+        "interval" : "[0,1]",
+        "node" : "C{LMyObj;}"
+      },
+      "path" : ""
     }
   ]
 }

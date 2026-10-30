@@ -7,8 +7,6 @@
 
 #include <mariana-trench/local_flow/LocalFlowClassAnalyzer.h>
 
-#include <string_view>
-
 #include <ConcurrentContainers.h>
 #include <DexAccess.h>
 #include <DexClass.h>
@@ -86,7 +84,8 @@ std::vector<LocalFlowClassResult> LocalFlowClassAnalyzer::analyze_classes(
         return;
       }
 
-      // Collect concrete instance methods (virtual + non-static direct)
+      // Collect concrete instance methods (virtual + non-static direct,
+      // including constructors)
       std::vector<const DexMethod*> instance_methods;
       for (const auto* vmethod : klass->get_vmethods()) {
         if (!is_abstract(vmethod)) {
@@ -94,9 +93,7 @@ std::vector<LocalFlowClassResult> LocalFlowClassAnalyzer::analyze_classes(
         }
       }
       for (const auto* dmethod : klass->get_dmethods()) {
-        if (!is_static(dmethod) &&
-            std::string_view(dmethod->get_name()->c_str()) != "<init>" &&
-            std::string_view(dmethod->get_name()->c_str()) != "<clinit>") {
+        if (!is_static(dmethod)) {
           instance_methods.push_back(dmethod);
         }
       }

@@ -167,9 +167,16 @@ class LocalFlowTransfer {
   const LocalFlowValueTree& get_or_create(RegisterEnvironment& env, reg_t reg);
 
   /**
-   * Get the callee node for an invoke instruction.
+   * Callee of an invoke instruction. For a call without dispatch (constructor,
+   * private method or super call), `declaring_type` is the class whose class
+   * record resolves the callee node.
    */
-  LocalFlowNode get_callee_node(const IRInstruction* instruction) const;
+  struct Callee {
+    LocalFlowNode node;
+    const DexType* MT_NULLABLE declaring_type = nullptr;
+  };
+
+  Callee get_callee(const IRInstruction* instruction) const;
 
   /**
    * Check if a register holds the `this` parameter (p0 in instance methods).

@@ -30,6 +30,12 @@ TEST_F(LocalFlowResultTest, SerializesLabelsAndEndpointsByNodeKind) {
           Label{LabelKind::ContraInject, "p1"}},
       LocalFlowNode::make_meth("LB;||m:(Ljava/lang/Object;)V"));
   constraints.add_edge(
+      LocalFlowNode::make_param(0),
+      LabelPath{
+          Label{LabelKind::Call, {}, false, "(3,0)"},
+          Label{LabelKind::ContraInject, "p0"}},
+      LocalFlowNode::make_exact_meth("LC;||<init>:()V"));
+  constraints.add_edge(
       LocalFlowNode::make_static_field("LA;||f"), LocalFlowNode::make_result());
   constraints.add_edge(
       LocalFlowNode::make_param(0), LocalFlowNode::make_static_field("LA;||f"));
@@ -61,6 +67,17 @@ TEST_F(LocalFlowResultTest, SerializesLabelsAndEndpointsByNodeKind) {
         "Call:(2,0)",
         "ContraInject:p1",
         "Inject:m:(Ljava/lang/Object;)V"
+      ]
+    },
+    {
+      "guard": "Bwd",
+      "left": "G{LA;||m:(Ljava/lang/Object;)Ljava/lang/Object;}",
+      "right": "C{LC;}",
+      "labels": [
+        "ContraProject:p0",
+        "Call:(3,0)",
+        "ContraInject:p0",
+        "Inject:<init>:()V"
       ]
     },
     {

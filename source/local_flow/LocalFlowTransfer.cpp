@@ -10,6 +10,7 @@
 #include <DexClass.h>
 #include <DexPosition.h>
 #include <IROpcode.h>
+#include <Resolver.h>
 #include <Show.h>
 
 #include <fmt/format.h>
@@ -26,6 +27,11 @@ namespace {
 std::string static_field_name(const DexFieldRef* field) {
   return fmt::format(
       "{}||{}", show(field->get_class()), field->get_name()->str());
+}
+
+bool is_interface_method(const DexMethodRef* method) {
+  const auto* klass = type_class(method->get_class());
+  return klass != nullptr && is_interface(klass);
 }
 
 } // namespace
@@ -376,10 +382,13 @@ void LocalFlowTransfer::analyze_invoke(
 
   auto opcode = instruction->opcode();
   auto* method_ref = instruction->get_method();
-  auto callee_node = get_callee_node(instruction);
+  auto [callee_node, declaring_type] = get_callee(instruction);
 
   // Collect receiver/callee type for demand-driven class models
   relevant_types_.insert(method_ref->get_class());
+  if (declaring_type != nullptr) {
+    relevant_types_.insert(declaring_type);
+  }
 
   // Format call site for position-annotated labels
   auto call_site = format_call_site(position);
@@ -599,65 +608,68 @@ const LocalFlowValueTree& LocalFlowTransfer::get_or_create(
   return inserted_it->second;
 }
 
-LocalFlowNode LocalFlowTransfer::get_callee_node(
+LocalFlowTransfer::Callee LocalFlowTransfer::get_callee(
     const IRInstruction* instruction) const {
   auto* method_ref = instruction->get_method();
   auto opcode = instruction->opcode();
+  bool dispatches =
+      opcode == OPCODE_INVOKE_VIRTUAL || opcode == OPCODE_INVOKE_INTERFACE;
 
   std::string callee_sig;
+  const DexType* MT_NULLABLE callee_class = nullptr;
 
   // Rich mode: use call graph for precise callee resolution
   if (call_graph_ != nullptr) {
-    auto target = call_graph_->callee(method_, instruction);
-    if (target.resolved()) {
-      auto* callee_method = target.resolved_base_callee();
-      if (callee_method != nullptr) {
-        // Pointer comparison for SelfRec (Method* is unique per method)
-        if (callee_method == method_) {
-          return LocalFlowNode::make_self_rec();
-        }
-        callee_sig = callee_method->show();
+    const auto* callee_method =
+        call_graph_->callee(method_, instruction).resolved_base_callee();
+    if (callee_method != nullptr) {
+      // Pointer comparison for SelfRec (Method* is unique per method)
+      if (callee_method == method_) {
+        return {LocalFlowNode::make_self_rec()};
       }
+      callee_sig = callee_method->signature();
+      callee_class = callee_method->get_class();
     }
   }
 
-  // Lightweight mode: fall back to string-based resolution
+  // Calls without dispatch target the declaring method; the referenced class
+  // may only inherit it (a super call's superclass, a Kotlin facade class).
+  // An interface super call (`I.super.m()`) keeps its reference: the resolver
+  // would look the method up in the caller's superclass instead.
+  bool interface_super_call =
+      opcode == OPCODE_INVOKE_SUPER && is_interface_method(method_ref);
+  if (callee_sig.empty() && !dispatches && !interface_super_call) {
+    const auto* declaring_method = resolve_method_deprecated(
+        method_ref, opcode_to_search(instruction), method_->dex_method());
+    if (declaring_method != nullptr) {
+      callee_sig = show(declaring_method);
+      callee_class = declaring_method->get_class();
+    }
+  }
+
+  // Unresolved: use the reference as written.
   if (callee_sig.empty()) {
     callee_sig = show(method_ref);
+    callee_class = method_ref->get_class();
   }
 
   // String-based self-recursion check (fallback when no call graph)
   if (call_graph_ == nullptr && callee_sig == method_->show()) {
-    return LocalFlowNode::make_self_rec();
+    return {LocalFlowNode::make_self_rec()};
   }
 
   // Convert JVM separator "." to LFE separator "||"
   callee_sig = LocalFlowNode::jvm_to_lfe_separator(callee_sig);
 
   if (opcode == OPCODE_INVOKE_STATIC) {
-    return LocalFlowNode::make_global(callee_sig);
+    return {LocalFlowNode::make_global(std::move(callee_sig))};
   }
-
-  // For direct calls: <init> is Global (statically resolved),
-  // private methods on `this` are Meth (participate in class dispatch)
-  if (opcode == OPCODE_INVOKE_DIRECT) {
-    auto method_name = std::string(method_ref->get_name()->str());
-    if (method_name != "<init>" && instruction->srcs_size() > 0) {
-      auto receiver_reg = instruction->src(0);
-      if (is_this_register(receiver_reg)) {
-        return LocalFlowNode::make_meth(callee_sig);
-      }
-    }
-    return LocalFlowNode::make_global(callee_sig);
+  if (dispatches) {
+    return {LocalFlowNode::make_meth(std::move(callee_sig))};
   }
-
-  // Super calls are monomorphic (statically resolved to superclass method)
-  if (opcode == OPCODE_INVOKE_SUPER) {
-    return LocalFlowNode::make_global(callee_sig);
-  }
-
-  // For virtual/interface calls, use Meth node (participates in dispatch)
-  return LocalFlowNode::make_meth(callee_sig);
+  // Constructors, private methods and super calls are instance methods
+  // called without dispatch.
+  return {LocalFlowNode::make_exact_meth(std::move(callee_sig)), callee_class};
 }
 
 bool LocalFlowTransfer::is_this_register(reg_t reg) const {

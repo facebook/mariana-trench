@@ -93,6 +93,32 @@
         "node" : "G{Lcom/facebook/marianatrench/integrationtests/Branching;||ternary:(ZLjava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;}"
       },
       "path" : "com/facebook/marianatrench/integrationtests/Branching.java"
+    },
+    {
+      "callable" : "Class{Lcom/facebook/marianatrench/integrationtests/Branching;}",
+      "callable_line" : 0,
+      "code" : 20001,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "left" : "C{Lcom/facebook/marianatrench/integrationtests/Branching;}",
+            "right" : "O{Lcom/facebook/marianatrench/integrationtests/Branching;}"
+          },
+          {
+            "labels" :
+            [
+              "Inject:<init>:()V"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/Branching;||<init>:()V}",
+            "right" : "C{Lcom/facebook/marianatrench/integrationtests/Branching;}"
+          }
+        ],
+        "interval" : "[0,1]",
+        "node" : "C{Lcom/facebook/marianatrench/integrationtests/Branching;}"
+      },
+      "path" : "Branching.java"
     }
   ]
 }

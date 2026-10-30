@@ -156,6 +156,14 @@
           {
             "labels" :
             [
+              "Inject:<init>:()V"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/FieldAccess;||<init>:()V}",
+            "right" : "C{Lcom/facebook/marianatrench/integrationtests/FieldAccess;}"
+          },
+          {
+            "labels" :
+            [
               "Inject:getter:()Ljava/lang/Object;"
             ],
             "left" : "M{Lcom/facebook/marianatrench/integrationtests/FieldAccess;||getter:()Ljava/lang/Object;}",

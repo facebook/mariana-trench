@@ -22,7 +22,7 @@ namespace local_flow {
  *
  * Per-callable roots: Param, Result, This, ThisOut, Ctrl
  * Global/stable nodes (survive temp elimination): Global, StaticField, Meth,
- *   CVar, OVar, SelfRec, Constant
+ *   ExactMeth, CVar, OVar, SelfRec, Constant
  * Local temporaries (eliminated during closure): Temp
  */
 enum class NodeKind {
@@ -34,11 +34,15 @@ enum class NodeKind {
   Ctrl,
 
   // Global/stable nodes
-  // Statically resolved callee.
+  // Static method.
   Global,
   // Static field, read by sget and written by sput.
   StaticField,
+  // Instance method called through dispatch.
   Meth,
+  // Instance method called without dispatch: constructor, private method or
+  // super call.
+  ExactMeth,
   CVar,
   OVar,
   SelfRec,
@@ -54,7 +58,7 @@ enum class NodeKind {
  * Different node kinds carry different payloads:
  * - Param: parameter index (uint32_t)
  * - Result, This, ThisOut, Ctrl, SelfRec: no payload
- * - Global, StaticField, Meth, CVar, OVar: qualified name (string)
+ * - Global, StaticField, Meth, ExactMeth, CVar, OVar: qualified name (string)
  * - Constant: constant value representation (string)
  * - Temp: unique temporary id (uint64_t)
  */
@@ -69,6 +73,7 @@ class LocalFlowNode {
   static LocalFlowNode make_global(std::string name);
   static LocalFlowNode make_static_field(std::string name);
   static LocalFlowNode make_meth(std::string name);
+  static LocalFlowNode make_exact_meth(std::string name);
   static LocalFlowNode make_cvar(std::string name);
   static LocalFlowNode make_ovar(std::string name);
   static LocalFlowNode make_self_rec();
@@ -109,15 +114,16 @@ class LocalFlowNode {
   static std::string jvm_to_lfe_separator(const std::string& jvm_sig);
 
   /**
-   * Extract the member name from a StaticField or Meth node, for the member
-   * labels of serialized flows.
+   * Extract the member name from a StaticField, Meth or ExactMeth node, for
+   * the member labels of serialized flows.
    * Returns everything after "||" (including the full JVM signature for
    * overload disambiguation).
    */
   static std::string extract_vtable_name(const LocalFlowNode& node);
 
   /**
-   * Extract the class name from a Meth node for dispatch table routing.
+   * Extract the class name from a Meth or ExactMeth node for dispatch table
+   * routing.
    * Returns everything before "||".
    * E.g., "Lcom/Foo;||bar:(I)V" → "Lcom/Foo;"
    */

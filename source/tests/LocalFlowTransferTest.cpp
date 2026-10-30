@@ -49,6 +49,24 @@ bool has_node_string(
   return false;
 }
 
+// Helper: check if any constraint has a node of the given kind whose string
+// contains `needle`
+bool has_node(
+    const LocalFlowConstraintSet& constraints,
+    NodeKind kind,
+    const std::string& needle) {
+  auto matches = [&](const LocalFlowNode& node) {
+    return node.kind() == kind &&
+        node.to_string().find(needle) != std::string::npos;
+  };
+  for (const auto& c : constraints.constraints()) {
+    if (matches(c.source) || matches(c.target)) {
+      return true;
+    }
+  }
+  return false;
+}
+
 // Helper: check if any constraint has a Call+ label
 bool has_call_plus(const LocalFlowConstraintSet& constraints) {
   for (const auto& c : constraints.constraints()) {
@@ -68,36 +86,6 @@ bool has_call_no_context(const LocalFlowConstraintSet& constraints) {
       if (l.kind == LabelKind::Call && !l.preserves_context) {
         return true;
       }
-    }
-  }
-  return false;
-}
-
-// Helper: check if any constraint references a Global node with given name
-bool has_global_node(
-    const LocalFlowConstraintSet& constraints,
-    const std::string& needle) {
-  for (const auto& c : constraints.constraints()) {
-    if ((c.source.kind() == NodeKind::Global &&
-         c.source.to_string().find(needle) != std::string::npos) ||
-        (c.target.kind() == NodeKind::Global &&
-         c.target.to_string().find(needle) != std::string::npos)) {
-      return true;
-    }
-  }
-  return false;
-}
-
-// Helper: check if any constraint references a Meth node with given name
-bool has_meth_node(
-    const LocalFlowConstraintSet& constraints,
-    const std::string& needle) {
-  for (const auto& c : constraints.constraints()) {
-    if ((c.source.kind() == NodeKind::Meth &&
-         c.source.to_string().find(needle) != std::string::npos) ||
-        (c.target.kind() == NodeKind::Meth &&
-         c.target.to_string().find(needle) != std::string::npos)) {
-      return true;
     }
   }
   return false;
@@ -185,8 +173,8 @@ TEST_F(LocalFlowTransferTest, StaticCallUsesGlobalNode) {
   const auto& constraints = result->constraints;
 
   // Static call uses Global node (not Meth)
-  EXPECT_TRUE(has_global_node(constraints, "staticMethod"));
-  EXPECT_FALSE(has_meth_node(constraints, "staticMethod"));
+  EXPECT_TRUE(has_node(constraints, NodeKind::Global, "staticMethod"));
+  EXPECT_FALSE(has_node(constraints, NodeKind::Meth, "staticMethod"));
   // Static call never preserves context
   EXPECT_TRUE(has_call_no_context(constraints));
   EXPECT_FALSE(has_call_plus(constraints));
@@ -223,7 +211,7 @@ TEST_F(LocalFlowTransferTest, VirtualCallOnThisUsesCallPlus) {
   ASSERT_TRUE(result.has_value());
   const auto& constraints = result->constraints;
 
-  EXPECT_TRUE(has_meth_node(constraints, "virtualMethod"));
+  EXPECT_TRUE(has_node(constraints, NodeKind::Meth, "virtualMethod"));
   EXPECT_TRUE(has_call_plus(constraints));
   // Return+ doesn't survive temp elimination for void methods
   // (callee -> result_temp is a dead-end temp)
@@ -252,12 +240,12 @@ TEST_F(LocalFlowTransferTest, VirtualCallOnNonThisUsesCallNoContext) {
   ASSERT_TRUE(result.has_value());
   const auto& constraints = result->constraints;
 
-  EXPECT_TRUE(has_meth_node(constraints, "virtualMethod"));
+  EXPECT_TRUE(has_node(constraints, NodeKind::Meth, "virtualMethod"));
   EXPECT_TRUE(has_call_no_context(constraints));
   EXPECT_FALSE(has_call_plus(constraints));
 }
 
-TEST_F(LocalFlowTransferTest, SuperCallUsesGlobalNodeAndCallPlus) {
+TEST_F(LocalFlowTransferTest, SuperCallUsesExactMethAndCallPlus) {
   Scope scope;
 
   auto* dex_base =
@@ -281,14 +269,95 @@ TEST_F(LocalFlowTransferTest, SuperCallUsesGlobalNodeAndCallPlus) {
   ASSERT_TRUE(result.has_value());
   const auto& constraints = result->constraints;
 
-  // Super call is monomorphic -> Global node
-  EXPECT_TRUE(has_global_node(constraints, "method"));
-  EXPECT_FALSE(has_meth_node(constraints, "method"));
+  // Super call targets the declaring method without dispatch
+  EXPECT_TRUE(
+      has_node(constraints, NodeKind::ExactMeth, "LSuperBase;||method"));
+  EXPECT_FALSE(has_node(constraints, NodeKind::Global, "method"));
+  EXPECT_FALSE(has_node(constraints, NodeKind::Meth, "method"));
   // Super call preserves context (receiver is this)
   EXPECT_TRUE(has_call_plus(constraints));
 }
 
-TEST_F(LocalFlowTransferTest, ConstructorCallUsesGlobalNoContext) {
+TEST_F(LocalFlowTransferTest, SuperCallResolvesToDeclaringClass) {
+  Scope scope;
+
+  auto* dex_top =
+      marianatrench::redex::create_void_method(scope, "LSuperTop;", "method");
+  auto* dex_middle = marianatrench::redex::create_void_method(
+      scope,
+      "LSuperMiddle;",
+      "other",
+      /* parameter_types */ "",
+      /* return_type */ "V",
+      /* super */ dex_top->get_class());
+
+  auto* dex_method = marianatrench::redex::create_method(
+      scope,
+      "LSuperBottom;",
+      R"#(
+        (method (public) "LSuperBottom;.method:()V"
+         (
+          (load-param-object v0)
+          (invoke-super (v0) "LSuperMiddle;.method:()V")
+          (return-void)
+         )
+        )
+      )#",
+      dex_middle->get_class());
+
+  auto result = analyze_method(scope, dex_method);
+  ASSERT_TRUE(result.has_value());
+  const auto& constraints = result->constraints;
+
+  // LSuperMiddle; only inherits `method`: the call targets LSuperTop;
+  EXPECT_TRUE(has_node(constraints, NodeKind::ExactMeth, "LSuperTop;||method"));
+  EXPECT_FALSE(has_node(constraints, NodeKind::ExactMeth, "LSuperMiddle;"));
+  // C{LSuperTop;} resolves through the class record of LSuperTop;
+  EXPECT_TRUE(result->relevant_types.contains(DexType::get_type("LSuperTop;")));
+}
+
+TEST_F(LocalFlowTransferTest, StaticCallResolvesToDeclaringClass) {
+  Scope scope;
+
+  auto* dex_top = marianatrench::redex::create_void_method(
+      scope,
+      "LStaticTop;",
+      "method",
+      /* parameter_types */ "Ljava/lang/Object;",
+      /* return_type */ "V",
+      /* super */ nullptr,
+      /* is_static */ true);
+  marianatrench::redex::create_void_method(
+      scope,
+      "LStaticBottom;",
+      "other",
+      /* parameter_types */ "",
+      /* return_type */ "V",
+      /* super */ dex_top->get_class());
+
+  auto* dex_method = marianatrench::redex::create_method(
+      scope,
+      "LCaller;",
+      R"#(
+        (method (public static) "LCaller;.call:(Ljava/lang/Object;)V"
+         (
+          (load-param-object v0)
+          (invoke-static (v0) "LStaticBottom;.method:(Ljava/lang/Object;)V")
+          (return-void)
+         )
+        )
+      )#");
+
+  auto result = analyze_method(scope, dex_method);
+  ASSERT_TRUE(result.has_value());
+  const auto& constraints = result->constraints;
+
+  // LStaticBottom; only inherits `method`: the call targets LStaticTop;
+  EXPECT_TRUE(has_node(constraints, NodeKind::Global, "LStaticTop;||method"));
+  EXPECT_FALSE(has_node(constraints, NodeKind::Global, "LStaticBottom;"));
+}
+
+TEST_F(LocalFlowTransferTest, ConstructorCallUsesExactMethNoContext) {
   Scope scope;
 
   marianatrench::redex::create_void_method(scope, "LFoo;", "<init>");
@@ -311,11 +380,14 @@ TEST_F(LocalFlowTransferTest, ConstructorCallUsesGlobalNoContext) {
   ASSERT_TRUE(result.has_value());
   const auto& constraints = result->constraints;
 
+  // Constructor call targets the constructor without dispatch
+  EXPECT_TRUE(has_node(constraints, NodeKind::ExactMeth, "LFoo;||<init>"));
+  EXPECT_FALSE(has_node(constraints, NodeKind::Global, "<init>"));
   // <init> does NOT preserve context
   EXPECT_FALSE(has_call_plus(constraints));
 }
 
-TEST_F(LocalFlowTransferTest, PrivateCallOnThisUsesCallPlusAndMeth) {
+TEST_F(LocalFlowTransferTest, PrivateCallOnThisUsesCallPlusAndExactMeth) {
   Scope scope;
 
   auto dex_methods = marianatrench::redex::create_methods(
@@ -344,9 +416,10 @@ TEST_F(LocalFlowTransferTest, PrivateCallOnThisUsesCallPlusAndMeth) {
   ASSERT_TRUE(result.has_value());
   const auto& constraints = result->constraints;
 
-  // Private method on this uses Meth node (not Global)
-  EXPECT_TRUE(has_meth_node(constraints, "privateHelper"));
-  EXPECT_FALSE(has_global_node(constraints, "privateHelper"));
+  // Private method targets the declaring method without dispatch
+  EXPECT_TRUE(has_node(constraints, NodeKind::ExactMeth, "privateHelper"));
+  EXPECT_FALSE(has_node(constraints, NodeKind::Meth, "privateHelper"));
+  EXPECT_FALSE(has_node(constraints, NodeKind::Global, "privateHelper"));
   // Private method on this preserves context
   EXPECT_TRUE(has_call_plus(constraints));
 }
@@ -489,8 +562,8 @@ TEST_F(LocalFlowTransferTest, SelfRecursiveCallUsesSelfRecNode) {
   // Self-recursive call uses SelfRec node
   EXPECT_TRUE(has_self_rec_node(constraints));
   // Should NOT have Global or Meth for the same method
-  EXPECT_FALSE(has_global_node(constraints, "process"));
-  EXPECT_FALSE(has_meth_node(constraints, "process"));
+  EXPECT_FALSE(has_node(constraints, NodeKind::Global, "process"));
+  EXPECT_FALSE(has_node(constraints, NodeKind::Meth, "process"));
 }
 
 TEST_F(LocalFlowTransferTest, MutualRecursionUsesNormalNode) {
@@ -526,5 +599,5 @@ TEST_F(LocalFlowTransferTest, MutualRecursionUsesNormalNode) {
   // Mutual recursion should NOT use SelfRec
   EXPECT_FALSE(has_self_rec_node(constraints));
   // Should use Global node for static call to a different method
-  EXPECT_TRUE(has_global_node(constraints, "other"));
+  EXPECT_TRUE(has_node(constraints, NodeKind::Global, "other"));
 }
