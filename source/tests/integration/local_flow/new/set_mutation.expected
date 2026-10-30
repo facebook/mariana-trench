@@ -52,7 +52,7 @@
             [
               "ContraProject:p1",
               "Inject:a",
-              "Inject:p0"
+              "Inject:this_out"
             ],
             "left" : "M{LMutate;||setA:(Ljava/lang/Object;)V}",
             "right" : "M{LMutate;||setA:(Ljava/lang/Object;)V}"

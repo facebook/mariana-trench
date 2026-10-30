@@ -27,6 +27,16 @@
             "guard" : "Bwd",
             "labels" :
             [
+              "ContraProject:p2",
+              "Inject:result"
+            ],
+            "left" : "M{LMyObj;||eitherAOrArg:(ILjava/lang/Object;)Ljava/lang/Object;}",
+            "right" : "M{LMyObj;||eitherAOrArg:(ILjava/lang/Object;)Ljava/lang/Object;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
               "ContraProject:p0",
               "Project:a",
               "Inject:result"
@@ -40,7 +50,7 @@
             [
               "ContraProject:p2",
               "Inject:a",
-              "Inject:p0"
+              "Inject:this_out"
             ],
             "left" : "M{LMyObj;||eitherAOrArg:(ILjava/lang/Object;)Ljava/lang/Object;}",
             "right" : "M{LMyObj;||eitherAOrArg:(ILjava/lang/Object;)Ljava/lang/Object;}"

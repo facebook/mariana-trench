@@ -19,6 +19,7 @@
 #include <GraphUtil.h>
 #include <IRCode.h>
 #include <IRList.h>
+#include <IROpcode.h>
 
 #include <mariana-trench/Log.h>
 #include <mariana-trench/Positions.h>
@@ -109,6 +110,11 @@ std::set<reg_t> find_assigned_registers(
       auto* insn = it->insn;
       if (insn->has_dest()) {
         assigned.insert(insn->dest());
+      }
+      // A field store may rebind its object register to a new version of
+      // the object.
+      if (opcode::is_an_iput(insn->opcode())) {
+        assigned.insert(insn->src(1));
       }
       // INVOKE/SGET/IGET results go to the following MOVE_RESULT_PSEUDO
       // which has a dest, so they're covered above.

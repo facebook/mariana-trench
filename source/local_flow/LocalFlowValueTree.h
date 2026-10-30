@@ -44,6 +44,11 @@ class LocalFlowValueTree {
       const;
 
   /**
+   * Returns a copy of this tree with `root` as its root.
+   */
+  LocalFlowValueTree with_root(LocalFlowNode root) const;
+
+  /**
    * Strong update: set a child field to a new subtree.
    * Returns a new tree with the field updated.
    */

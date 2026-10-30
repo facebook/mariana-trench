@@ -29,6 +29,51 @@
       "path" : "com/facebook/marianatrench/integrationtests/FieldAccess.java"
     },
     {
+      "callable" : "Lcom/facebook/marianatrench/integrationtests/FieldAccess;||getAndSet:(Ljava/lang/Object;)Ljava/lang/Object;",
+      "callable_line" : 30,
+      "code" : 20000,
+      "localflow" :
+      {
+        "flows" :
+        [
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "ContraProject:p0",
+              "Inject:this_out"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/FieldAccess;||getAndSet:(Ljava/lang/Object;)Ljava/lang/Object;}",
+            "right" : "M{Lcom/facebook/marianatrench/integrationtests/FieldAccess;||getAndSet:(Ljava/lang/Object;)Ljava/lang/Object;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "ContraProject:p0",
+              "Project:value",
+              "Inject:result"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/FieldAccess;||getAndSet:(Ljava/lang/Object;)Ljava/lang/Object;}",
+            "right" : "M{Lcom/facebook/marianatrench/integrationtests/FieldAccess;||getAndSet:(Ljava/lang/Object;)Ljava/lang/Object;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "ContraProject:p1",
+              "Inject:value",
+              "Inject:this_out"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/FieldAccess;||getAndSet:(Ljava/lang/Object;)Ljava/lang/Object;}",
+            "right" : "M{Lcom/facebook/marianatrench/integrationtests/FieldAccess;||getAndSet:(Ljava/lang/Object;)Ljava/lang/Object;}"
+          }
+        ],
+        "node" : "M{Lcom/facebook/marianatrench/integrationtests/FieldAccess;||getAndSet:(Ljava/lang/Object;)Ljava/lang/Object;}"
+      },
+      "path" : "com/facebook/marianatrench/integrationtests/FieldAccess.java"
+    },
+    {
       "callable" : "Lcom/facebook/marianatrench/integrationtests/FieldAccess;||getStatic:()Ljava/lang/Object;",
       "callable_line" : 22,
       "code" : 20000,
@@ -131,7 +176,7 @@
             [
               "ContraProject:p1",
               "Inject:value",
-              "Inject:p0"
+              "Inject:this_out"
             ],
             "left" : "M{Lcom/facebook/marianatrench/integrationtests/FieldAccess;||setter:(Ljava/lang/Object;)V}",
             "right" : "M{Lcom/facebook/marianatrench/integrationtests/FieldAccess;||setter:(Ljava/lang/Object;)V}"
@@ -159,6 +204,14 @@
               "Inject:<init>:()V"
             ],
             "left" : "M{Lcom/facebook/marianatrench/integrationtests/FieldAccess;||<init>:()V}",
+            "right" : "C{Lcom/facebook/marianatrench/integrationtests/FieldAccess;}"
+          },
+          {
+            "labels" :
+            [
+              "Inject:getAndSet:(Ljava/lang/Object;)Ljava/lang/Object;"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/FieldAccess;||getAndSet:(Ljava/lang/Object;)Ljava/lang/Object;}",
             "right" : "C{Lcom/facebook/marianatrench/integrationtests/FieldAccess;}"
           },
           {

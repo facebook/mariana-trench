@@ -9,7 +9,10 @@
 
 #include <cstdint>
 #include <map>
+#include <set>
+#include <string>
 #include <unordered_set>
+#include <utility>
 
 #include <IRInstruction.h>
 
@@ -93,7 +96,8 @@ class LocalFlowTransfer {
  private:
   void analyze_load_param(
       const IRInstruction* instruction,
-      RegisterEnvironment& env);
+      RegisterEnvironment& env,
+      LocalFlowConstraintSet& constraints);
 
   void analyze_move(const IRInstruction* instruction, RegisterEnvironment& env);
 
@@ -205,6 +209,13 @@ class LocalFlowTransfer {
 
   // Track which register holds each parameter for `this` detection
   std::map<reg_t, uint32_t> param_registers_;
+
+  // Fields projected from object temps, as (object, field). Each emitted an
+  // `object -[Project:field]-> t` edge that a later store into the same object
+  // would compose with, so such a store writes to a new version of the object
+  // (see analyze_iput). Reading back a field stored earlier in the method emits
+  // no projection, so it is not recorded.
+  std::set<std::pair<LocalFlowNode, std::string>> projected_fields_;
 
   // Types encountered during analysis for demand-driven class models
   std::unordered_set<const DexType*> relevant_types_;

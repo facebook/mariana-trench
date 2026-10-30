@@ -29,7 +29,7 @@
             [
               "ContraProject:p1",
               "Inject:a",
-              "Inject:p0"
+              "Inject:this_out"
             ],
             "left" : "M{LMyObj;||<init>:(Ljava/lang/Object;Ljava/lang/Object;)V}",
             "right" : "M{LMyObj;||<init>:(Ljava/lang/Object;Ljava/lang/Object;)V}"
@@ -40,7 +40,7 @@
             [
               "ContraProject:p2",
               "Inject:b",
-              "Inject:p0"
+              "Inject:this_out"
             ],
             "left" : "M{LMyObj;||<init>:(Ljava/lang/Object;Ljava/lang/Object;)V}",
             "right" : "M{LMyObj;||<init>:(Ljava/lang/Object;Ljava/lang/Object;)V}"

@@ -58,7 +58,7 @@ void LocalFlowTransfer::analyze_instruction(
     case IOPCODE_LOAD_PARAM:
     case IOPCODE_LOAD_PARAM_OBJECT:
     case IOPCODE_LOAD_PARAM_WIDE:
-      analyze_load_param(instruction, env);
+      analyze_load_param(instruction, env, constraints);
       break;
 
     case OPCODE_MOVE:
@@ -207,7 +207,8 @@ std::optional<reg_t> LocalFlowTransfer::this_register() const {
 
 void LocalFlowTransfer::analyze_load_param(
     const IRInstruction* instruction,
-    RegisterEnvironment& env) {
+    RegisterEnvironment& env,
+    LocalFlowConstraintSet& constraints) {
   auto reg = instruction->dest();
   auto param_index = next_param_index_++;
 
@@ -215,6 +216,16 @@ void LocalFlowTransfer::analyze_load_param(
   param_registers_[reg] = param_index;
 
   auto param_node = LocalFlowNode::make_param(param_index);
+  if (param_index == 0 && !is_static_) {
+    // The receiver is written by field stores and replaced by the this_out of
+    // instance calls, and its state at exit flows to this_out. Hold it in a
+    // temp so that those writes land on the value that reaches this_out
+    // rather than on the incoming parameter.
+    auto receiver = LocalFlowNode::make_temp(temp_gen_.next());
+    constraints.add_edge(param_node, receiver);
+    env.insert_or_assign(reg, LocalFlowValueTree(std::move(receiver)));
+    return;
+  }
   env.insert_or_assign(reg, LocalFlowValueTree(std::move(param_node)));
 }
 
@@ -274,16 +285,21 @@ void LocalFlowTransfer::analyze_iget(
 
   const auto& obj_tree = get_or_create(env, obj_reg);
 
-  // dst = obj.select(Project:field)
-  auto result_tree = obj_tree.select(field_name, temp_gen_);
+  // Result is picked up by IOPCODE_MOVE_RESULT_PSEUDO. A field stored in this
+  // method is read back directly.
+  auto child = obj_tree.children().find(field_name);
+  if (child != obj_tree.children().end()) {
+    pending_result_ = child->second;
+    return;
+  }
 
   // Emit constraint: obj -[Project:field]-> result
+  auto result_tree = obj_tree.select(field_name, temp_gen_);
   constraints.add_edge(
       obj_tree.root(),
       LabelPath{Label{LabelKind::Project, field_name}},
       result_tree.root());
-
-  // Result is picked up by IOPCODE_MOVE_RESULT_PSEUDO.
+  projected_fields_.emplace(obj_tree.root(), field_name);
   pending_result_ = std::move(result_tree);
 }
 
@@ -296,8 +312,19 @@ void LocalFlowTransfer::analyze_iput(
   auto* field_ref = instruction->get_field();
   std::string field_name(field_ref->get_name()->str());
 
-  const auto& val_tree = get_or_create(env, val_reg);
-  const auto& obj_tree = get_or_create(env, obj_reg);
+  // Copies: the environment is updated below.
+  auto val_tree = get_or_create(env, val_reg);
+  auto obj_tree = get_or_create(env, obj_reg);
+  auto object = obj_tree.root();
+
+  // Temp elimination ignores program order, so a store into an object temp
+  // would also reach the reads of the field made before it. If the field was
+  // already read from this temp, store into a new version of the object.
+  if (object.is_temp() && projected_fields_.contains({object, field_name})) {
+    auto version = LocalFlowNode::make_temp(temp_gen_.next());
+    constraints.add_edge(object, version);
+    obj_tree = obj_tree.with_root(std::move(version));
+  }
 
   // Emit constraint: val -[Inject:field]-> obj
   constraints.add_edge(
@@ -305,9 +332,13 @@ void LocalFlowTransfer::analyze_iput(
       LabelPath{Label{LabelKind::Inject, field_name}},
       obj_tree.root());
 
-  // Update obj tree with the new field value
-  auto updated = obj_tree.update(field_name, val_tree);
-  env.insert_or_assign(obj_reg, std::move(updated));
+  // Every register holding the object sees the new field value.
+  auto updated = obj_tree.update(field_name, std::move(val_tree));
+  for (auto& [reg, tree] : env) {
+    if (tree.root() == object) {
+      tree = updated;
+    }
+  }
 }
 
 void LocalFlowTransfer::analyze_sget(

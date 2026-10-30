@@ -32,6 +32,12 @@ LocalFlowValueTree LocalFlowValueTree::select(
   return LocalFlowValueTree(LocalFlowNode::make_temp(temp_gen.next()));
 }
 
+LocalFlowValueTree LocalFlowValueTree::with_root(LocalFlowNode root) const {
+  LocalFlowValueTree result(std::move(root));
+  result.children_ = children_;
+  return result;
+}
+
 LocalFlowValueTree LocalFlowValueTree::update(
     const std::string& field,
     LocalFlowValueTree child) const {

@@ -26,4 +26,10 @@ public class FieldAccess {
   public static void setStatic(Object v) {
     staticField = v;
   }
+
+  public Object getAndSet(Object v) {
+    Object old = this.value;
+    this.value = v;
+    return old;
+  }
 }

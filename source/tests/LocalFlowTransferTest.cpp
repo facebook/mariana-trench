@@ -107,6 +107,32 @@ bool has_label(
   return false;
 }
 
+// Helper: check if the constraints contain the given flow
+bool has_flow(
+    const LocalFlowConstraintSet& constraints,
+    const LocalFlowNode& source,
+    const LabelPath& labels,
+    const LocalFlowNode& target) {
+  for (const auto& c : constraints.constraints()) {
+    if (c.source == source && c.labels == labels && c.target == target) {
+      return true;
+    }
+  }
+  return false;
+}
+
+// Helper: check if any constraint targets a node of the given kind
+bool has_flow_to_kind(
+    const LocalFlowConstraintSet& constraints,
+    NodeKind kind) {
+  for (const auto& c : constraints.constraints()) {
+    if (c.target.kind() == kind) {
+      return true;
+    }
+  }
+  return false;
+}
+
 bool has_this_out_target(const LocalFlowConstraintSet& constraints) {
   for (const auto& c : constraints.constraints()) {
     if (c.target.kind() == NodeKind::ThisOut) {
@@ -520,6 +546,93 @@ TEST_F(LocalFlowTransferTest, VoidSetterEmitsThisOut) {
 
   // Instance method should have this_out target from the exit state
   EXPECT_TRUE(has_this_out_target(constraints));
+
+  // The store lands on the value that reaches this_out, not on the incoming p0
+  EXPECT_TRUE(has_flow(
+      constraints,
+      LocalFlowNode::make_param(1),
+      LabelPath{Label{LabelKind::Inject, "name"}},
+      LocalFlowNode::make_this_out()));
+  EXPECT_FALSE(has_flow_to_kind(constraints, NodeKind::Param));
+}
+
+TEST_F(LocalFlowTransferTest, StoreAfterReadDoesNotReachTheRead) {
+  Scope scope;
+
+  auto* dex_method = marianatrench::redex::create_method(
+      scope,
+      "LBox;",
+      R"#(
+        (method (public) "LBox;.getAndSet:(Ljava/lang/Object;)Ljava/lang/Object;"
+         (
+          (load-param-object v0)
+          (load-param-object v1)
+          (iget-object v0 "LBox;.value:Ljava/lang/Object;")
+          (move-result-pseudo-object v2)
+          (iput-object v1 v0 "LBox;.value:Ljava/lang/Object;")
+          (return-object v2)
+         )
+        )
+      )#");
+
+  auto result = analyze_method(scope, dex_method);
+  ASSERT_TRUE(result.has_value());
+  const auto& constraints = result->constraints;
+
+  // The old value is returned and the new one is stored
+  EXPECT_TRUE(has_flow(
+      constraints,
+      LocalFlowNode::make_param(0),
+      LabelPath{Label{LabelKind::Project, "value"}},
+      LocalFlowNode::make_result()));
+  EXPECT_TRUE(has_flow(
+      constraints,
+      LocalFlowNode::make_param(1),
+      LabelPath{Label{LabelKind::Inject, "value"}},
+      LocalFlowNode::make_this_out()));
+  EXPECT_FALSE(has_flow(
+      constraints,
+      LocalFlowNode::make_param(1),
+      LabelPath{},
+      LocalFlowNode::make_result()));
+}
+
+TEST_F(LocalFlowTransferTest, ReadOfStoredFieldIgnoresLaterStore) {
+  Scope scope;
+
+  auto* dex_method = marianatrench::redex::create_method(
+      scope,
+      "LBox;",
+      R"#(
+        (method (public) "LBox;.swap:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+         (
+          (load-param-object v0)
+          (load-param-object v1)
+          (load-param-object v2)
+          (iput-object v1 v0 "LBox;.value:Ljava/lang/Object;")
+          (iget-object v0 "LBox;.value:Ljava/lang/Object;")
+          (move-result-pseudo-object v3)
+          (iput-object v2 v0 "LBox;.value:Ljava/lang/Object;")
+          (return-object v3)
+         )
+        )
+      )#");
+
+  auto result = analyze_method(scope, dex_method);
+  ASSERT_TRUE(result.has_value());
+  const auto& constraints = result->constraints;
+
+  // The read returns the first stored value; the second store does not reach it
+  EXPECT_TRUE(has_flow(
+      constraints,
+      LocalFlowNode::make_param(1),
+      LabelPath{},
+      LocalFlowNode::make_result()));
+  EXPECT_FALSE(has_flow(
+      constraints,
+      LocalFlowNode::make_param(2),
+      LabelPath{},
+      LocalFlowNode::make_result()));
 }
 
 TEST_F(LocalFlowTransferTest, SelfRecursiveCallUsesCalleeNode) {

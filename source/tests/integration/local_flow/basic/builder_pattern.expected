@@ -39,7 +39,18 @@
             [
               "ContraProject:p1",
               "Inject:name",
-              "Inject:p0"
+              "Inject:result"
+            ],
+            "left" : "M{LBuilder;||setName:(Ljava/lang/String;)LBuilder;}",
+            "right" : "M{LBuilder;||setName:(Ljava/lang/String;)LBuilder;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "ContraProject:p1",
+              "Inject:name",
+              "Inject:this_out"
             ],
             "left" : "M{LBuilder;||setName:(Ljava/lang/String;)LBuilder;}",
             "right" : "M{LBuilder;||setName:(Ljava/lang/String;)LBuilder;}"

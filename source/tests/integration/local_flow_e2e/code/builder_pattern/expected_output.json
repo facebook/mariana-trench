@@ -239,7 +239,18 @@
             [
               "ContraProject:p1",
               "Inject:name",
-              "Inject:p0"
+              "Inject:result"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;||setName:(Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/BuilderPattern;}",
+            "right" : "M{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;||setName:(Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/BuilderPattern;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "ContraProject:p1",
+              "Inject:name",
+              "Inject:this_out"
             ],
             "left" : "M{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;||setName:(Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/BuilderPattern;}",
             "right" : "M{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;||setName:(Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/BuilderPattern;}"
@@ -283,7 +294,18 @@
             [
               "ContraProject:p1",
               "Inject:value",
-              "Inject:p0"
+              "Inject:result"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;||setValue:(Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/BuilderPattern;}",
+            "right" : "M{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;||setValue:(Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/BuilderPattern;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "ContraProject:p1",
+              "Inject:value",
+              "Inject:this_out"
             ],
             "left" : "M{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;||setValue:(Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/BuilderPattern;}",
             "right" : "M{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;||setValue:(Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/BuilderPattern;}"

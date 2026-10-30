@@ -49,17 +49,6 @@
             "guard" : "Bwd",
             "labels" :
             [
-              "ContraProject:p1",
-              "Inject:$captured",
-              "Inject:p0"
-            ],
-            "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion$createCapture$1;||<init>:(Ljava/lang/Object;)V}",
-            "right" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion$createCapture$1;||<init>:(Ljava/lang/Object;)V}"
-          },
-          {
-            "guard" : "Bwd",
-            "labels" :
-            [
               "ContraProject:ctrl",
               "Call:(0,0)",
               "ContraInject:ctrl",
@@ -74,6 +63,19 @@
             [
               "ContraProject:p0",
               "Call:(0,0)",
+              "ContraInject:p0",
+              "Inject:<init>:(I)V"
+            ],
+            "left" : "M{Lcom/facebook/marianatrench/integrationtests/KotlinLambda$Companion$createCapture$1;||<init>:(Ljava/lang/Object;)V}",
+            "right" : "C{Lkotlin/jvm/internal/Lambda;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "ContraProject:p1",
+              "Call:(0,0)",
+              "Inject:$captured",
               "ContraInject:p0",
               "Inject:<init>:(I)V"
             ],

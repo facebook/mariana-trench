@@ -29,7 +29,7 @@
             [
               "ContraProject:p1",
               "Inject:value",
-              "Inject:p0"
+              "Inject:this_out"
             ],
             "left" : "M{LSetter;||setValue:(Ljava/lang/Object;)V}",
             "right" : "M{LSetter;||setValue:(Ljava/lang/Object;)V}"
