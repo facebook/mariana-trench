@@ -38,15 +38,11 @@ enum class LabelKind {
   Inject,
   ContraProject,
   ContraInject,
-  // Call kinds
+  // Call kinds. Consumers derive the higher-order kinds from these.
   Call,
   Return,
-  HoCall,
-  HoReturn,
-  Capture,
   // Class interval of an override edge, read as a call label.
   Interval,
-  HoCapture,
 };
 
 /**
@@ -81,17 +77,9 @@ struct Label {
   bool is_call() const;
 
   /**
-   * Returns true if this label is a call boundary (Call, HoCall, or Capture).
-   * Used to identify argument labels: an Inject label immediately preceding
-   * a call boundary is an argument label.
-   */
-  bool is_call_boundary() const;
-
-  /**
    * Returns the inverse label:
    *   Project <-> Inject, ContraProject <-> ContraInject
-   *   Call <-> Return, HoCall <-> HoReturn
-   *   Capture -> Capture, HoCapture -> HoCapture
+   *   Call <-> Return, Interval -> Interval
    */
   Label inverse() const;
 

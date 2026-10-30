@@ -45,11 +45,7 @@ bool Label::is_structural() const {
       return true;
     case LabelKind::Call:
     case LabelKind::Return:
-    case LabelKind::HoCall:
-    case LabelKind::HoReturn:
-    case LabelKind::Capture:
     case LabelKind::Interval:
-    case LabelKind::HoCapture:
       return false;
   }
   mt_unreachable();
@@ -59,11 +55,7 @@ bool Label::is_call() const {
   switch (kind) {
     case LabelKind::Call:
     case LabelKind::Return:
-    case LabelKind::HoCall:
-    case LabelKind::HoReturn:
-    case LabelKind::Capture:
     case LabelKind::Interval:
-    case LabelKind::HoCapture:
       return true;
     case LabelKind::Project:
     case LabelKind::Inject:
@@ -72,11 +64,6 @@ bool Label::is_call() const {
       return false;
   }
   mt_unreachable();
-}
-
-bool Label::is_call_boundary() const {
-  return kind == LabelKind::Call || kind == LabelKind::HoCall ||
-      kind == LabelKind::Capture;
 }
 
 Label Label::inverse() const {
@@ -93,14 +80,6 @@ Label Label::inverse() const {
       return Label{LabelKind::Return, {}, preserves_context, call_site};
     case LabelKind::Return:
       return Label{LabelKind::Call, {}, preserves_context, call_site};
-    case LabelKind::HoCall:
-      return Label{LabelKind::HoReturn, {}, preserves_context, call_site};
-    case LabelKind::HoReturn:
-      return Label{LabelKind::HoCall, {}, preserves_context, call_site};
-    case LabelKind::Capture:
-      return *this;
-    case LabelKind::HoCapture:
-      return *this;
     case LabelKind::Interval:
       return *this;
   }
@@ -131,48 +110,14 @@ std::string Label::to_string() const {
           break;
         case LabelKind::Call:
         case LabelKind::Return:
-        case LabelKind::HoCall:
-        case LabelKind::HoReturn:
-        case LabelKind::Capture:
-        case LabelKind::HoCapture:
         case LabelKind::Interval:
           mt_unreachable();
       }
       return fmt::format("{}:{}", kind_str, field_str);
     }
     case LabelKind::Call:
-    case LabelKind::Return:
-    case LabelKind::HoCall:
-    case LabelKind::HoReturn:
-    case LabelKind::Capture:
-    case LabelKind::HoCapture: {
-      const char* kind_str = nullptr;
-      switch (kind) {
-        case LabelKind::Call:
-          kind_str = "Call";
-          break;
-        case LabelKind::Return:
-          kind_str = "Return";
-          break;
-        case LabelKind::HoCall:
-          kind_str = "HoCall";
-          break;
-        case LabelKind::HoReturn:
-          kind_str = "HoReturn";
-          break;
-        case LabelKind::Capture:
-          kind_str = "Capture";
-          break;
-        case LabelKind::HoCapture:
-          kind_str = "HoCapture";
-          break;
-        case LabelKind::Project:
-        case LabelKind::Inject:
-        case LabelKind::ContraProject:
-        case LabelKind::ContraInject:
-        case LabelKind::Interval:
-          mt_unreachable();
-      }
+    case LabelKind::Return: {
+      const char* kind_str = kind == LabelKind::Call ? "Call" : "Return";
       std::string result = kind_str;
       if (preserves_context) {
         result += "+";

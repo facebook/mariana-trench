@@ -74,11 +74,9 @@ TEST_F(LocalFlowLabelTest, LabelInverse) {
   EXPECT_TRUE(ret.preserves_context);
   EXPECT_EQ(ret.call_site, "site");
 
-  EXPECT_EQ(Label(LabelKind::HoCall).inverse().kind, LabelKind::HoReturn);
-
-  // Capture is self-inverse
-  auto capture = Label{LabelKind::Capture};
-  EXPECT_EQ(capture.inverse(), capture);
+  // Interval is self-inverse
+  auto interval = Label{LabelKind::Interval, "[1,5]"};
+  EXPECT_EQ(interval.inverse(), interval);
 }
 
 TEST_F(LocalFlowLabelTest, LabelSerialization) {
@@ -91,9 +89,6 @@ TEST_F(LocalFlowLabelTest, LabelSerialization) {
   EXPECT_EQ(
       Label(LabelKind::Return, {}, false, "F.java:1").to_string(),
       "Return:F.java:1");
-  EXPECT_EQ(Label(LabelKind::HoReturn, {}, true).to_string(), "HoReturn+");
-  EXPECT_EQ(Label(LabelKind::Capture).to_string(), "Capture");
-  EXPECT_EQ(Label(LabelKind::HoCapture).to_string(), "HoCapture");
   EXPECT_EQ(Label(LabelKind::Interval, "[1,5]").to_string(), "Interval:[1,5]");
 }
 

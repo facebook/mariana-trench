@@ -17,7 +17,6 @@
 
 #include <mariana-trench/CallGraph.h>
 #include <mariana-trench/Positions.h>
-#include <mariana-trench/local_flow/LocalFlowLambdaDetection.h>
 
 namespace marianatrench {
 namespace local_flow {
@@ -416,21 +415,9 @@ void LocalFlowTransfer::analyze_invoke(
     preserves_context = true;
   }
 
-  // Check for lambda (higher-order) invocation
-  bool is_lambda_invoke = LambdaDetection::is_lambda_invoke(method_ref);
-
-  LabelKind call_kind = is_lambda_invoke ? LabelKind::HoCall : LabelKind::Call;
-  LabelKind return_kind =
-      is_lambda_invoke ? LabelKind::HoReturn : LabelKind::Return;
-
   bool call_preserves = is_static ? false : preserves_context;
 
-  // Check if this is a lambda constructor (Capture labels for captured args)
-  bool is_lambda_init = false;
-  if (is_init && !is_static && instruction->srcs_size() > 0) {
-    auto receiver_type = std::string(method_ref->get_class()->str());
-    is_lambda_init = LambdaDetection::is_kotlin_lambda_class(receiver_type);
-  }
+  const auto call_label = Label{LabelKind::Call, {}, call_preserves, call_site};
 
   // Emit constraints for each argument. Ports follow the callee's own
   // parameter numbering (receiver p0, then the explicit arguments), which is
@@ -441,26 +428,17 @@ void LocalFlowTransfer::analyze_invoke(
 
     auto param_name = LocalFlowNode::make_param(i).to_string();
 
-    // For lambda constructors, non-this args use Capture label
-    Label arg_call_label = (is_lambda_init && i > 0)
-        ? Label{LabelKind::Capture, {}, false, call_site}
-        : Label{call_kind, {}, call_preserves, call_site};
-
-    // arg -[ContraInject:param_i, Call/Capture]-> callee
-    // ContraInject for arguments flowing INTO a callee. Cross-call edge
-    // composition in temp elimination is enabled by removing the cross-contra
-    // kill in cons_label (ContraInject + Project now stacks instead of
-    // killing).
+    // arg -[ContraInject:param_i, Call]-> callee
     constraints.add_edge(
         arg_tree.root(),
-        LabelPath{Label{LabelKind::ContraInject, param_name}, arg_call_label},
+        LabelPath{Label{LabelKind::ContraInject, param_name}, call_label},
         callee_node);
   }
 
   // Set up pending result
   // callee -[Project:result, Return]-> fresh_result_temp
   auto result_temp = LocalFlowNode::make_temp(temp_gen_.next());
-  auto return_label = Label{return_kind, {}, call_preserves, call_site};
+  auto return_label = Label{LabelKind::Return, {}, call_preserves, call_site};
 
   constraints.add_edge(
       callee_node,
@@ -502,10 +480,9 @@ void LocalFlowTransfer::analyze_invoke(
   // 2. Ctrl -[ContraInject:ctrl, Call]-> callee
   //    Call path: method's control flow reaches this call site.
   //    This enables LFE's `.ctrl fwd` search to find callees.
-  auto ctrl_call_label = Label{call_kind, {}, call_preserves, call_site};
   constraints.add_edge(
       LocalFlowNode::make_ctrl(),
-      LabelPath{Label{LabelKind::ContraInject, "ctrl"}, ctrl_call_label},
+      LabelPath{Label{LabelKind::ContraInject, "ctrl"}, call_label},
       callee_node);
 }
 

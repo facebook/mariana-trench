@@ -30,9 +30,6 @@ namespace {
 // - Cross-contra: top=ContraInject+incoming=Project -> KILL;
 //                 top=Project+incoming=ContraInject -> stack (valid cross-call)
 // - Call(A)/Return(A): cancel if match; KILL if mismatch
-// - HoCall/Call: cancel if match; stack if mismatch (context-insensitive
-// approx)
-// - Capture: commutes past Call, absorbs Return
 std::optional<LabelPath> cons_label(const Label& label, LabelPath stack) {
   if (!stack.empty()) {
     const auto& top = stack.back();
@@ -81,73 +78,6 @@ std::optional<LabelPath> cons_label(const Label& label, LabelPath stack) {
         return stack;
       }
       return std::nullopt; // mismatched call sites: impossible path
-    }
-
-    // HoReturn(A) + HoCall(B): cancel if match, KILL if mismatch
-    if (top.kind == LabelKind::HoReturn && label.kind == LabelKind::HoCall) {
-      if (top.call_site == label.call_site) {
-        stack.pop_back();
-        return stack;
-      }
-      return std::nullopt;
-    }
-
-    // HoReturn(A) + Return(B): cancel if match, KILL if mismatch
-    if (top.kind == LabelKind::HoReturn && label.kind == LabelKind::Return) {
-      if (top.call_site == label.call_site) {
-        stack.pop_back();
-        return stack;
-      }
-      return std::nullopt;
-    }
-
-    // HoCall(A) + Call(B): cancel if match; stack if mismatch
-    // (context-insensitive approximation for higher-order calls)
-    if (top.kind == LabelKind::HoCall && label.kind == LabelKind::Call) {
-      if (top.call_site == label.call_site) {
-        stack.pop_back();
-        return stack;
-      }
-      // mismatch: just stack (don't kill — HoCall nesting is allowed)
-    }
-
-    // Capture commutes past Call: Capture :: rest, Call -> reorder
-    if (top.kind == LabelKind::Capture && label.is_call_boundary()) {
-      stack.pop_back(); // remove Capture
-      stack.push_back(label); // push Call/HoCall
-      stack.push_back(Label{LabelKind::Capture}); // push Capture back on top
-      return stack;
-    }
-
-    // Capture absorbs Return
-    if (top.kind == LabelKind::Capture && label.kind == LabelKind::Return) {
-      // Return is absorbed; Capture remains on stack
-      return stack;
-    }
-
-    // Capture under Call: Capture :: (Call l1 :: ...), Return l2
-    // If Call/Return match, cancel the Call but keep Capture
-    if (top.kind == LabelKind::Call && label.kind == LabelKind::Return &&
-        stack.size() >= 2) {
-      const auto& under_top = stack[stack.size() - 2];
-      if (under_top.kind == LabelKind::Capture &&
-          top.call_site == label.call_site) {
-        stack.pop_back(); // remove Call (matched by Return)
-        // Capture remains
-        return stack;
-      }
-    }
-
-    // HoReturn + HoCapture -> cancel
-    if (top.kind == LabelKind::HoReturn && label.kind == LabelKind::HoCapture) {
-      stack.pop_back();
-      return stack;
-    }
-
-    // HoCapture + Capture -> cancel
-    if (top.kind == LabelKind::HoCapture && label.kind == LabelKind::Capture) {
-      stack.pop_back();
-      return stack;
     }
   }
 

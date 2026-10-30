@@ -17,7 +17,7 @@
             "labels" :
             [
               "Project:invoke:(Ljava/lang/Object;)Ljava/lang/Object;",
-              "HoReturn:(0,0)",
+              "Return:(0,0)",
               "Project:ctrl",
               "Inject:ctrl"
             ],
@@ -28,7 +28,7 @@
             "labels" :
             [
               "Project:invoke:(Ljava/lang/Object;)Ljava/lang/Object;",
-              "HoReturn:(0,0)",
+              "Return:(0,0)",
               "Project:result",
               "Inject:result"
             ],
@@ -40,7 +40,7 @@
             "labels" :
             [
               "ContraProject:ctrl",
-              "HoCall:(0,0)",
+              "Call:(0,0)",
               "ContraInject:ctrl",
               "Inject:invoke:(Ljava/lang/Object;)Ljava/lang/Object;"
             ],
@@ -52,7 +52,7 @@
             "labels" :
             [
               "ContraProject:p0",
-              "HoCall:(0,0)",
+              "Call:(0,0)",
               "ContraInject:p0",
               "Inject:invoke:(Ljava/lang/Object;)Ljava/lang/Object;"
             ],
@@ -64,7 +64,7 @@
             "labels" :
             [
               "ContraProject:p1",
-              "HoCall:(0,0)",
+              "Call:(0,0)",
               "ContraInject:p1",
               "Inject:invoke:(Ljava/lang/Object;)Ljava/lang/Object;"
             ],
