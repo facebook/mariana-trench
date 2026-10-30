@@ -187,5 +187,17 @@ TEST_F(LocalFlowAnalysisTest, NoExternalStubWithoutFlows) {
   EXPECT_FALSE(LocalFlowAnalysis::external_stub(method).has_value());
 }
 
+TEST_F(LocalFlowAnalysisTest, BundleMetadata) {
+  EXPECT_EQ(LocalFlowAnalysis::bundle_metadata("abc"), test::parse_json(R"#({
+        "tool": "mariana_trench",
+        "filename_spec": "local_flow@*.json",
+        "commit": "abc",
+        "local_flow_format_version": 2
+      })#"));
+  EXPECT_EQ(
+      LocalFlowAnalysis::bundle_metadata(std::nullopt)["commit"].asString(),
+      "");
+}
+
 } // namespace local_flow
 } // namespace marianatrench

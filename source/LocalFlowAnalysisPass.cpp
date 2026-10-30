@@ -67,14 +67,10 @@ void LocalFlowAnalysisPass::run(Context& context) {
   registry.to_sharded_json(output_dir);
 
   // Write metadata for SAPP AnalysisOutput discovery
-  auto metadata_path = output_dir / "local_flow-metadata.json";
-  Json::Value metadata;
-  metadata["tool"] = "mariana_trench";
-  metadata["filename_spec"] = "local_flow@*.json";
-  const auto& commit_hash = context.options->commit_hash();
-  metadata["commit"] = commit_hash.has_value() ? commit_hash.value() : "";
-  std::ofstream metadata_file(metadata_path);
-  metadata_file << metadata.toStyledString();
+  std::ofstream metadata_file(output_dir / "local_flow-metadata.json");
+  metadata_file << local_flow::LocalFlowAnalysis::bundle_metadata(
+                       context.options->commit_hash())
+                       .toStyledString();
 
   context.statistics->log_time("local_flow_output", output_timer);
   LOG(1,

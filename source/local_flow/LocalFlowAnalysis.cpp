@@ -201,5 +201,15 @@ std::optional<LocalFlowMethodResult> LocalFlowAnalysis::external_stub(
       is_static};
 }
 
+Json::Value LocalFlowAnalysis::bundle_metadata(
+    const std::optional<std::string>& commit_hash) {
+  auto metadata = Json::Value(Json::objectValue);
+  metadata["tool"] = "mariana_trench";
+  metadata["filename_spec"] = "local_flow@*.json";
+  metadata["commit"] = commit_hash.value_or("");
+  metadata["local_flow_format_version"] = k_local_flow_format_version;
+  return metadata;
+}
+
 } // namespace local_flow
 } // namespace marianatrench

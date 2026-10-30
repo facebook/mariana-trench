@@ -8,12 +8,31 @@
 #pragma once
 
 #include <optional>
+#include <string>
+
+#include <json/json.h>
 
 #include <mariana-trench/Context.h>
 #include <mariana-trench/local_flow/LocalFlowRegistry.h>
 
 namespace marianatrench {
 namespace local_flow {
+
+/**
+ * Version of the local flow output contract, written to the bundle metadata
+ * as `local_flow_format_version`. Bundles without the field are version 1.
+ * Increment it whenever the meaning of emitted ports, labels, guards or node
+ * keys changes.
+ *
+ * Version 2 numbers call arguments like the callee's parameters (receiver p0),
+ * emits producer guards, enters static callees and reads constants without a
+ * member or source label, keys constructor, private and super calls to the
+ * declaring class, labels override edges with an `Interval` call label, uses
+ * plain call labels for function-value invokes and the callee node for
+ * recursive calls, exports writes to the receiver through this_out, and stubs
+ * external methods with MT's default propagation.
+ */
+constexpr int k_local_flow_format_version = 2;
 
 /**
  * Top-level entry point for local flow analysis.
@@ -46,6 +65,13 @@ class LocalFlowAnalysis {
    */
   static std::optional<LocalFlowMethodResult> external_stub(
       const Method* method);
+
+  /**
+   * Contents of `local_flow-metadata.json`, through which consumers discover
+   * the bundle and its format version.
+   */
+  static Json::Value bundle_metadata(
+      const std::optional<std::string>& commit_hash);
 };
 
 } // namespace local_flow
