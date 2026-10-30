@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <optional>
+
 #include <mariana-trench/Context.h>
 #include <mariana-trench/local_flow/LocalFlowRegistry.h>
 
@@ -36,6 +38,14 @@ class LocalFlowAnalysis {
       LocalFlowRegistry& registry,
       std::size_t max_structural_depth = 5,
       bool sequential = false);
+
+  /**
+   * Summary of an external method without code, which lets a search continue
+   * through framework and library calls. Returns std::nullopt for methods with
+   * code, non-external methods, and stubs without any flow.
+   */
+  static std::optional<LocalFlowMethodResult> external_stub(
+      const Method* method);
 };
 
 } // namespace local_flow

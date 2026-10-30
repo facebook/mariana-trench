@@ -108,46 +108,12 @@ void LocalFlowAnalysis::run(
   // (Android SDK, java.*, kotlin.*) that have no analyzed code.
   std::atomic<std::size_t> stub_count(0);
   auto generate_stub = [&](const Method* method) {
-    auto* dex_method = method->dex_method();
-    if (dex_method == nullptr || !dex_method->is_external()) {
+    auto stub_result = external_stub(method);
+    if (!stub_result.has_value()) {
       return;
     }
-    if (dex_method->get_code() != nullptr) {
-      return;
-    }
-
-    LocalFlowConstraintSet constraints;
-    bool is_static = method->is_static();
-    bool returns_void = method->returns_void();
-
-    // Instance methods: this (p0) → this_out
-    if (!is_static) {
-      constraints.add_edge(
-          LocalFlowNode::make_param(0), LocalFlowNode::make_this_out());
-    }
-
-    // All parameters → result (for non-void methods)
-    if (!returns_void) {
-      auto num_params = method->number_of_parameters();
-      for (uint32_t i = 0; i < num_params; ++i) {
-        constraints.add_edge(
-            LocalFlowNode::make_param(i), LocalFlowNode::make_result());
-      }
-    }
-
-    if (constraints.empty()) {
-      return;
-    }
-
-    auto stub_result = LocalFlowMethodResult{
-        LocalFlowNode::jvm_to_lfe_separator(method->signature()),
-        std::move(constraints),
-        {},
-        "",
-        0,
-        is_static};
-    stub_result.method_metadata = extract_metadata(method);
-    registry.set(method, std::move(stub_result));
+    stub_result->method_metadata = extract_metadata(method);
+    registry.set(method, std::move(*stub_result));
     stub_count++;
   };
 
@@ -182,6 +148,44 @@ void LocalFlowAnalysis::run(
       timer.duration_in_seconds(),
       registry.method_results().size(),
       all_relevant_types.size());
+}
+
+std::optional<LocalFlowMethodResult> LocalFlowAnalysis::external_stub(
+    const Method* method) {
+  const auto* dex_method = method->dex_method();
+  if (dex_method == nullptr || !dex_method->is_external() ||
+      dex_method->get_code() != nullptr) {
+    return std::nullopt;
+  }
+
+  LocalFlowConstraintSet constraints;
+  bool is_static = method->is_static();
+
+  // Instance methods: this (p0) → this_out
+  if (!is_static) {
+    constraints.add_edge(
+        LocalFlowNode::make_param(0), LocalFlowNode::make_this_out());
+  }
+
+  // All parameters → result (for non-void methods)
+  if (!method->returns_void()) {
+    for (ParameterPosition i = 0; i < method->number_of_parameters(); ++i) {
+      constraints.add_edge(
+          LocalFlowNode::make_param(i), LocalFlowNode::make_result());
+    }
+  }
+
+  if (constraints.empty()) {
+    return std::nullopt;
+  }
+
+  return LocalFlowMethodResult{
+      LocalFlowNode::jvm_to_lfe_separator(method->signature()),
+      std::move(constraints),
+      /* relevant_types */ {},
+      /* path */ {},
+      /* callable_line */ 0,
+      is_static};
 }
 
 } // namespace local_flow
