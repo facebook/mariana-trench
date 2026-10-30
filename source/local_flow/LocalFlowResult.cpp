@@ -36,7 +36,6 @@ std::optional<Label> source_label(const LocalFlowNode& node) {
     case NodeKind::Ctrl:
     case NodeKind::CVar:
     case NodeKind::OVar:
-    case NodeKind::SelfRec:
     case NodeKind::Temp:
       return Label{LabelKind::ContraProject, node.to_string()};
   }
@@ -59,7 +58,6 @@ std::optional<Label> target_label(const LocalFlowNode& node) {
     case NodeKind::Ctrl:
     case NodeKind::CVar:
     case NodeKind::OVar:
-    case NodeKind::SelfRec:
     case NodeKind::Constant:
     case NodeKind::Temp:
       return Label{LabelKind::Inject, node.to_string()};
@@ -90,7 +88,6 @@ std::string edge_endpoint(
     case NodeKind::StaticField:
     case NodeKind::CVar:
     case NodeKind::OVar:
-    case NodeKind::SelfRec:
     case NodeKind::Constant:
     case NodeKind::Temp:
       return node.to_string();

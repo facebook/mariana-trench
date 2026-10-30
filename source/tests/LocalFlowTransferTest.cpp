@@ -116,17 +116,6 @@ bool has_this_out_target(const LocalFlowConstraintSet& constraints) {
   return false;
 }
 
-// Helper: check if any constraint has a SelfRec node
-bool has_self_rec_node(const LocalFlowConstraintSet& constraints) {
-  for (const auto& c : constraints.constraints()) {
-    if (c.source.kind() == NodeKind::SelfRec ||
-        c.target.kind() == NodeKind::SelfRec) {
-      return true;
-    }
-  }
-  return false;
-}
-
 // Helper: check if any constraint has a Project:this_out label
 bool has_project_this_out(const LocalFlowConstraintSet& constraints) {
   for (const auto& c : constraints.constraints()) {
@@ -533,10 +522,10 @@ TEST_F(LocalFlowTransferTest, VoidSetterEmitsThisOut) {
   EXPECT_TRUE(has_this_out_target(constraints));
 }
 
-TEST_F(LocalFlowTransferTest, SelfRecursiveCallUsesSelfRecNode) {
+TEST_F(LocalFlowTransferTest, SelfRecursiveCallUsesCalleeNode) {
   Scope scope;
 
-  // A method that calls itself recursively should use SelfRec node
+  // A recursive call targets the method's own node like any other call
   auto* dex_method = marianatrench::redex::create_method(
       scope,
       "LRec;",
@@ -559,11 +548,34 @@ TEST_F(LocalFlowTransferTest, SelfRecursiveCallUsesSelfRecNode) {
   ASSERT_TRUE(result.has_value());
   const auto& constraints = result->constraints;
 
-  // Self-recursive call uses SelfRec node
-  EXPECT_TRUE(has_self_rec_node(constraints));
-  // Should NOT have Global or Meth for the same method
-  EXPECT_FALSE(has_node(constraints, NodeKind::Global, "process"));
+  EXPECT_TRUE(has_node(constraints, NodeKind::Global, "LRec;||process"));
   EXPECT_FALSE(has_node(constraints, NodeKind::Meth, "process"));
+}
+
+TEST_F(LocalFlowTransferTest, SameSignatureOnOtherReceiverDispatches) {
+  Scope scope;
+
+  // A call to the method's own signature on another receiver dispatches
+  auto* dex_method = marianatrench::redex::create_method(
+      scope,
+      "LNode;",
+      R"#(
+        (method (public) "LNode;.walk:(LNode;)V"
+         (
+          (load-param-object v0)
+          (load-param-object v1)
+          (invoke-virtual (v1 v1) "LNode;.walk:(LNode;)V")
+          (return-void)
+         )
+        )
+      )#");
+
+  auto result = analyze_method(scope, dex_method);
+  ASSERT_TRUE(result.has_value());
+  const auto& constraints = result->constraints;
+
+  EXPECT_TRUE(has_node(constraints, NodeKind::Meth, "LNode;||walk"));
+  EXPECT_FALSE(has_node(constraints, NodeKind::Global, "walk"));
 }
 
 TEST_F(LocalFlowTransferTest, MutualRecursionUsesNormalNode) {
@@ -596,8 +608,6 @@ TEST_F(LocalFlowTransferTest, MutualRecursionUsesNormalNode) {
   ASSERT_TRUE(result.has_value());
   const auto& constraints = result->constraints;
 
-  // Mutual recursion should NOT use SelfRec
-  EXPECT_FALSE(has_self_rec_node(constraints));
   // Should use Global node for static call to a different method
   EXPECT_TRUE(has_node(constraints, NodeKind::Global, "other"));
 }

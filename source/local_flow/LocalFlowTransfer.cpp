@@ -600,10 +600,6 @@ LocalFlowTransfer::Callee LocalFlowTransfer::get_callee(
     const auto* callee_method =
         call_graph_->callee(method_, instruction).resolved_base_callee();
     if (callee_method != nullptr) {
-      // Pointer comparison for SelfRec (Method* is unique per method)
-      if (callee_method == method_) {
-        return {LocalFlowNode::make_self_rec()};
-      }
       callee_sig = callee_method->signature();
       callee_class = callee_method->get_class();
     }
@@ -628,11 +624,6 @@ LocalFlowTransfer::Callee LocalFlowTransfer::get_callee(
   if (callee_sig.empty()) {
     callee_sig = show(method_ref);
     callee_class = method_ref->get_class();
-  }
-
-  // String-based self-recursion check (fallback when no call graph)
-  if (call_graph_ == nullptr && callee_sig == method_->show()) {
-    return {LocalFlowNode::make_self_rec()};
   }
 
   // Convert JVM separator "." to LFE separator "||"

@@ -22,27 +22,23 @@
             "right" : "G{LRec;||process:(Ljava/lang/Object;)Ljava/lang/Object;}"
           },
           {
-            "guard" : "Bwd",
             "labels" :
             [
-              "ContraProject:SelfRec",
               "Return:(0,0)",
               "Project:ctrl",
               "Inject:ctrl"
             ],
-            "left" : "SelfRec",
+            "left" : "G{LRec;||process:(Ljava/lang/Object;)Ljava/lang/Object;}",
             "right" : "G{LRec;||process:(Ljava/lang/Object;)Ljava/lang/Object;}"
           },
           {
-            "guard" : "Bwd",
             "labels" :
             [
-              "ContraProject:SelfRec",
               "Return:(0,0)",
               "Project:result",
               "Inject:result"
             ],
-            "left" : "SelfRec",
+            "left" : "G{LRec;||process:(Ljava/lang/Object;)Ljava/lang/Object;}",
             "right" : "G{LRec;||process:(Ljava/lang/Object;)Ljava/lang/Object;}"
           },
           {
@@ -51,11 +47,10 @@
             [
               "ContraProject:ctrl",
               "Call:(0,0)",
-              "ContraInject:ctrl",
-              "Inject:SelfRec"
+              "ContraInject:ctrl"
             ],
             "left" : "G{LRec;||process:(Ljava/lang/Object;)Ljava/lang/Object;}",
-            "right" : "SelfRec"
+            "right" : "G{LRec;||process:(Ljava/lang/Object;)Ljava/lang/Object;}"
           },
           {
             "guard" : "Bwd",
@@ -63,11 +58,10 @@
             [
               "ContraProject:p0",
               "Call:(0,0)",
-              "ContraInject:p0",
-              "Inject:SelfRec"
+              "ContraInject:p0"
             ],
             "left" : "G{LRec;||process:(Ljava/lang/Object;)Ljava/lang/Object;}",
-            "right" : "SelfRec"
+            "right" : "G{LRec;||process:(Ljava/lang/Object;)Ljava/lang/Object;}"
           }
         ],
         "node" : "G{LRec;||process:(Ljava/lang/Object;)Ljava/lang/Object;}"

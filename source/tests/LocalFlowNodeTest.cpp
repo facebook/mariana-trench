@@ -110,13 +110,6 @@ TEST_F(LocalFlowNodeTest, TempNode) {
   EXPECT_NE(t0, t1);
 }
 
-TEST_F(LocalFlowNodeTest, SelfRecNode) {
-  auto self_rec = LocalFlowNode::make_self_rec();
-  EXPECT_EQ(self_rec.kind(), NodeKind::SelfRec);
-  EXPECT_TRUE(self_rec.is_global());
-  EXPECT_EQ(self_rec.to_string(), "SelfRec");
-}
-
 TEST_F(LocalFlowNodeTest, Equality) {
   auto a = LocalFlowNode::make_param(0);
   auto b = LocalFlowNode::make_param(0);

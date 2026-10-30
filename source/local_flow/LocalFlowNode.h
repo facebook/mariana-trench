@@ -22,7 +22,7 @@ namespace local_flow {
  *
  * Per-callable roots: Param, Result, This, ThisOut, Ctrl
  * Global/stable nodes (survive temp elimination): Global, StaticField, Meth,
- *   ExactMeth, CVar, OVar, SelfRec, Constant
+ *   ExactMeth, CVar, OVar, Constant
  * Local temporaries (eliminated during closure): Temp
  */
 enum class NodeKind {
@@ -45,7 +45,6 @@ enum class NodeKind {
   ExactMeth,
   CVar,
   OVar,
-  SelfRec,
   Constant,
 
   // Local temporaries
@@ -57,7 +56,7 @@ enum class NodeKind {
  *
  * Different node kinds carry different payloads:
  * - Param: parameter index (uint32_t)
- * - Result, This, ThisOut, Ctrl, SelfRec: no payload
+ * - Result, This, ThisOut, Ctrl: no payload
  * - Global, StaticField, Meth, ExactMeth, CVar, OVar: qualified name (string)
  * - Constant: constant value representation (string)
  * - Temp: unique temporary id (uint64_t)
@@ -76,7 +75,6 @@ class LocalFlowNode {
   static LocalFlowNode make_exact_meth(std::string name);
   static LocalFlowNode make_cvar(std::string name);
   static LocalFlowNode make_ovar(std::string name);
-  static LocalFlowNode make_self_rec();
   static LocalFlowNode make_constant(std::string value);
   static LocalFlowNode make_temp(uint64_t id);
 

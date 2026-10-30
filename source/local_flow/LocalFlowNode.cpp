@@ -60,10 +60,6 @@ LocalFlowNode LocalFlowNode::make_ovar(std::string name) {
   return LocalFlowNode(NodeKind::OVar, NamePayload{std::move(name)});
 }
 
-LocalFlowNode LocalFlowNode::make_self_rec() {
-  return LocalFlowNode(NodeKind::SelfRec, NoPayload{});
-}
-
 LocalFlowNode LocalFlowNode::make_constant(std::string value) {
   return LocalFlowNode(NodeKind::Constant, NamePayload{std::move(value)});
 }
@@ -94,7 +90,6 @@ bool LocalFlowNode::is_root() const {
     case NodeKind::ExactMeth:
     case NodeKind::CVar:
     case NodeKind::OVar:
-    case NodeKind::SelfRec:
     case NodeKind::Constant:
     case NodeKind::Temp:
       return false;
@@ -110,7 +105,6 @@ bool LocalFlowNode::is_global() const {
     case NodeKind::ExactMeth:
     case NodeKind::CVar:
     case NodeKind::OVar:
-    case NodeKind::SelfRec:
     case NodeKind::Constant:
       return true;
     case NodeKind::Param:
@@ -237,8 +231,6 @@ std::string LocalFlowNode::to_string() const {
       const auto& name = std::get<NamePayload>(payload_).name;
       return fmt::format("O{{{}}}", name);
     }
-    case NodeKind::SelfRec:
-      return "SelfRec";
     case NodeKind::Constant: {
       const auto& value = std::get<NamePayload>(payload_).name;
       return fmt::format("C<{}>", value);
