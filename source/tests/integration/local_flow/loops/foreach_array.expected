@@ -26,8 +26,8 @@
             "labels" :
             [
               "ContraProject:p0",
-              "Inject:result",
-              "Project:*"
+              "Project:*",
+              "Inject:result"
             ],
             "left" : "G{LLoop;||forEachArray:([Ljava/lang/Object;)Ljava/lang/Object;}",
             "right" : "G{LLoop;||forEachArray:([Ljava/lang/Object;)Ljava/lang/Object;}"

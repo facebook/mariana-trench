@@ -303,7 +303,7 @@ TEST_P(IntegrationTest, ReturnsExpectedResults) {
     auto method_result = LocalFlowMethodAnalyzer::analyze(
         method, /* max_structural_depth */ 10, positions);
     if (method_result.has_value()) {
-      results.append(test::sorted_json(method_result->to_json()));
+      results.append(test::sorted_local_flow_json(method_result->to_json()));
     }
   }
 
@@ -317,7 +317,7 @@ TEST_P(IntegrationTest, ReturnsExpectedResults) {
       });
   for (const auto& class_result : class_results) {
     if (sexp_class_names.count(class_result.class_name) > 0) {
-      results.append(test::sorted_json(class_result.to_json()));
+      results.append(test::sorted_local_flow_json(class_result.to_json()));
     }
   }
 

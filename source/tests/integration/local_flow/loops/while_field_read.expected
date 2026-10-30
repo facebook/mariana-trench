@@ -17,8 +17,8 @@
             "labels" :
             [
               "ContraProject:p0",
-              "Inject:result",
-              "Project:value"
+              "Project:value",
+              "Inject:result"
             ],
             "left" : "G{LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;}",
             "right" : "G{LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;}"
@@ -27,9 +27,9 @@
             "labels" :
             [
               "ContraProject:p0",
-              "Inject:result",
               "Project:next",
-              "Project:value"
+              "Project:value",
+              "Inject:result"
             ],
             "left" : "G{LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;}",
             "right" : "G{LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;}"
@@ -38,10 +38,10 @@
             "labels" :
             [
               "ContraProject:p0",
-              "Inject:result",
               "Project:next",
               "Project:next",
-              "Project:value"
+              "Project:value",
+              "Inject:result"
             ],
             "left" : "G{LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;}",
             "right" : "G{LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;}"
@@ -50,11 +50,11 @@
             "labels" :
             [
               "ContraProject:p0",
-              "Inject:result",
               "Project:next",
               "Project:next",
               "Project:next",
-              "Project:value"
+              "Project:value",
+              "Inject:result"
             ],
             "left" : "G{LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;}",
             "right" : "G{LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;}"
@@ -63,12 +63,12 @@
             "labels" :
             [
               "ContraProject:p0",
-              "Inject:result",
               "Project:next",
               "Project:next",
               "Project:next",
               "Project:next",
-              "Project:value"
+              "Project:value",
+              "Inject:result"
             ],
             "left" : "G{LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;}",
             "right" : "G{LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;}"
@@ -77,13 +77,13 @@
             "labels" :
             [
               "ContraProject:p0",
-              "Inject:result",
               "Project:next",
               "Project:next",
               "Project:next",
               "Project:next",
               "Project:next",
-              "Project:value"
+              "Project:value",
+              "Inject:result"
             ],
             "left" : "G{LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;}",
             "right" : "G{LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;}"
@@ -92,14 +92,14 @@
             "labels" :
             [
               "ContraProject:p0",
-              "Inject:result",
               "Project:next",
               "Project:next",
               "Project:next",
               "Project:next",
               "Project:next",
               "Project:next",
-              "Project:value"
+              "Project:value",
+              "Inject:result"
             ],
             "left" : "G{LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;}",
             "right" : "G{LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;}"
@@ -108,7 +108,6 @@
             "labels" :
             [
               "ContraProject:p0",
-              "Inject:result",
               "Project:next",
               "Project:next",
               "Project:next",
@@ -116,7 +115,8 @@
               "Project:next",
               "Project:next",
               "Project:next",
-              "Project:value"
+              "Project:value",
+              "Inject:result"
             ],
             "left" : "G{LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;}",
             "right" : "G{LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;}"
@@ -125,7 +125,6 @@
             "labels" :
             [
               "ContraProject:p0",
-              "Inject:result",
               "Project:next",
               "Project:next",
               "Project:next",
@@ -134,7 +133,8 @@
               "Project:next",
               "Project:next",
               "Project:next",
-              "Project:value"
+              "Project:value",
+              "Inject:result"
             ],
             "left" : "G{LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;}",
             "right" : "G{LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;}"
@@ -143,7 +143,6 @@
             "labels" :
             [
               "ContraProject:p0",
-              "Inject:result",
               "Project:next",
               "Project:next",
               "Project:next",
@@ -153,7 +152,8 @@
               "Project:next",
               "Project:next",
               "Project:next",
-              "Project:value"
+              "Project:value",
+              "Inject:result"
             ],
             "left" : "G{LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;}",
             "right" : "G{LLoop;||whileFieldRead:(LNode;)Ljava/lang/Object;}"

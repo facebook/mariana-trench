@@ -39,8 +39,8 @@
             "guard" : "Bwd",
             "labels" :
             [
-              "Inject:result",
-              "Project:staticField"
+              "Project:staticField",
+              "Inject:result"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/FieldAccess;||staticField}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/FieldAccess;||getStatic:()Ljava/lang/Object;}"
@@ -71,8 +71,8 @@
             "labels" :
             [
               "ContraProject:p0",
-              "Inject:result",
-              "Project:value"
+              "Project:value",
+              "Inject:result"
             ],
             "left" : "M{Lcom/facebook/marianatrench/integrationtests/FieldAccess;||getter:()Ljava/lang/Object;}",
             "right" : "M{Lcom/facebook/marianatrench/integrationtests/FieldAccess;||getter:()Ljava/lang/Object;}"
@@ -125,8 +125,8 @@
             "labels" :
             [
               "ContraProject:p1",
-              "Inject:p0",
-              "Inject:value"
+              "Inject:value",
+              "Inject:p0"
             ],
             "left" : "M{Lcom/facebook/marianatrench/integrationtests/FieldAccess;||setter:(Ljava/lang/Object;)V}",
             "right" : "M{Lcom/facebook/marianatrench/integrationtests/FieldAccess;||setter:(Ljava/lang/Object;)V}"

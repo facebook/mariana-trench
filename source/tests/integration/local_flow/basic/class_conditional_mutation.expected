@@ -26,8 +26,8 @@
             "labels" :
             [
               "ContraProject:p0",
-              "Inject:result",
-              "Project:a"
+              "Project:a",
+              "Inject:result"
             ],
             "left" : "M{LMyObj;||eitherAOrArg:(ILjava/lang/Object;)Ljava/lang/Object;}",
             "right" : "M{LMyObj;||eitherAOrArg:(ILjava/lang/Object;)Ljava/lang/Object;}"

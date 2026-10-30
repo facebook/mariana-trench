@@ -48,8 +48,8 @@
             "labels" :
             [
               "ContraProject:p0",
-              "Inject:result",
-              "Project:*"
+              "Project:*",
+              "Inject:result"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/Loops;||forEachArray:([Ljava/lang/Object;)Ljava/lang/Object;}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/Loops;||forEachArray:([Ljava/lang/Object;)Ljava/lang/Object;}"
@@ -80,8 +80,8 @@
             "labels" :
             [
               "ContraProject:p0",
-              "Inject:result",
-              "Project:next"
+              "Project:next",
+              "Inject:result"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/Loops;||linkedListTraversal:(Lcom/facebook/marianatrench/integrationtests/Loops;)Ljava/lang/Object;}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/Loops;||linkedListTraversal:(Lcom/facebook/marianatrench/integrationtests/Loops;)Ljava/lang/Object;}"
@@ -90,9 +90,9 @@
             "labels" :
             [
               "ContraProject:p0",
-              "Inject:result",
               "Project:next",
-              "Project:next"
+              "Project:next",
+              "Inject:result"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/Loops;||linkedListTraversal:(Lcom/facebook/marianatrench/integrationtests/Loops;)Ljava/lang/Object;}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/Loops;||linkedListTraversal:(Lcom/facebook/marianatrench/integrationtests/Loops;)Ljava/lang/Object;}"
@@ -101,10 +101,10 @@
             "labels" :
             [
               "ContraProject:p0",
-              "Inject:result",
               "Project:next",
               "Project:next",
-              "Project:next"
+              "Project:next",
+              "Inject:result"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/Loops;||linkedListTraversal:(Lcom/facebook/marianatrench/integrationtests/Loops;)Ljava/lang/Object;}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/Loops;||linkedListTraversal:(Lcom/facebook/marianatrench/integrationtests/Loops;)Ljava/lang/Object;}"
@@ -113,11 +113,11 @@
             "labels" :
             [
               "ContraProject:p0",
-              "Inject:result",
               "Project:next",
               "Project:next",
               "Project:next",
-              "Project:next"
+              "Project:next",
+              "Inject:result"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/Loops;||linkedListTraversal:(Lcom/facebook/marianatrench/integrationtests/Loops;)Ljava/lang/Object;}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/Loops;||linkedListTraversal:(Lcom/facebook/marianatrench/integrationtests/Loops;)Ljava/lang/Object;}"
@@ -126,12 +126,12 @@
             "labels" :
             [
               "ContraProject:p0",
-              "Inject:result",
               "Project:next",
               "Project:next",
               "Project:next",
               "Project:next",
-              "Project:next"
+              "Project:next",
+              "Inject:result"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/Loops;||linkedListTraversal:(Lcom/facebook/marianatrench/integrationtests/Loops;)Ljava/lang/Object;}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/Loops;||linkedListTraversal:(Lcom/facebook/marianatrench/integrationtests/Loops;)Ljava/lang/Object;}"
@@ -140,13 +140,13 @@
             "labels" :
             [
               "ContraProject:p0",
-              "Inject:result",
               "Project:next",
               "Project:next",
               "Project:next",
               "Project:next",
               "Project:next",
-              "Project:next"
+              "Project:next",
+              "Inject:result"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/Loops;||linkedListTraversal:(Lcom/facebook/marianatrench/integrationtests/Loops;)Ljava/lang/Object;}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/Loops;||linkedListTraversal:(Lcom/facebook/marianatrench/integrationtests/Loops;)Ljava/lang/Object;}"
@@ -155,14 +155,14 @@
             "labels" :
             [
               "ContraProject:p0",
-              "Inject:result",
               "Project:next",
               "Project:next",
               "Project:next",
               "Project:next",
               "Project:next",
               "Project:next",
-              "Project:next"
+              "Project:next",
+              "Inject:result"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/Loops;||linkedListTraversal:(Lcom/facebook/marianatrench/integrationtests/Loops;)Ljava/lang/Object;}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/Loops;||linkedListTraversal:(Lcom/facebook/marianatrench/integrationtests/Loops;)Ljava/lang/Object;}"
@@ -171,7 +171,6 @@
             "labels" :
             [
               "ContraProject:p0",
-              "Inject:result",
               "Project:next",
               "Project:next",
               "Project:next",
@@ -179,7 +178,8 @@
               "Project:next",
               "Project:next",
               "Project:next",
-              "Project:next"
+              "Project:next",
+              "Inject:result"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/Loops;||linkedListTraversal:(Lcom/facebook/marianatrench/integrationtests/Loops;)Ljava/lang/Object;}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/Loops;||linkedListTraversal:(Lcom/facebook/marianatrench/integrationtests/Loops;)Ljava/lang/Object;}"
@@ -188,7 +188,6 @@
             "labels" :
             [
               "ContraProject:p0",
-              "Inject:result",
               "Project:next",
               "Project:next",
               "Project:next",
@@ -197,7 +196,8 @@
               "Project:next",
               "Project:next",
               "Project:next",
-              "Project:next"
+              "Project:next",
+              "Inject:result"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/Loops;||linkedListTraversal:(Lcom/facebook/marianatrench/integrationtests/Loops;)Ljava/lang/Object;}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/Loops;||linkedListTraversal:(Lcom/facebook/marianatrench/integrationtests/Loops;)Ljava/lang/Object;}"
@@ -206,7 +206,6 @@
             "labels" :
             [
               "ContraProject:p0",
-              "Inject:result",
               "Project:next",
               "Project:next",
               "Project:next",
@@ -216,7 +215,8 @@
               "Project:next",
               "Project:next",
               "Project:next",
-              "Project:next"
+              "Project:next",
+              "Inject:result"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/Loops;||linkedListTraversal:(Lcom/facebook/marianatrench/integrationtests/Loops;)Ljava/lang/Object;}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/Loops;||linkedListTraversal:(Lcom/facebook/marianatrench/integrationtests/Loops;)Ljava/lang/Object;}"

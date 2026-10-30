@@ -115,6 +115,13 @@ std::filesystem::path find_repository_root();
 Json::Value parse_json(std::string input);
 Json::Value sorted_json(const Json::Value& value);
 
+/**
+ * Sorts the flows of a local flow record (code 20000 or 20001) without
+ * reordering the labels of a flow: a label path is ordered and consumers read
+ * it as a stack.
+ */
+Json::Value sorted_local_flow_json(const Json::Value& record);
+
 std::filesystem::path find_dex_path(
     const std::filesystem::path& test_directory);
 

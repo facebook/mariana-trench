@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <algorithm>
 #include <optional>
 #include <tuple>
 
@@ -338,6 +339,26 @@ Json::Value sorted_json(const Json::Value& value) {
   }
 
   return value;
+}
+
+Json::Value sorted_local_flow_json(const Json::Value& record) {
+  auto sorted = record;
+  if (!sorted.isMember("localflow") || !sorted["localflow"].isMember("flows")) {
+    return sorted;
+  }
+
+  std::vector<Json::Value> flows;
+  for (const auto& flow : sorted["localflow"]["flows"]) {
+    flows.push_back(flow);
+  }
+  std::ranges::sort(flows);
+
+  auto sorted_flows = Json::Value(Json::arrayValue);
+  for (auto& flow : flows) {
+    sorted_flows.append(std::move(flow));
+  }
+  sorted["localflow"]["flows"] = std::move(sorted_flows);
+  return sorted;
 }
 
 std::filesystem::path find_dex_path(

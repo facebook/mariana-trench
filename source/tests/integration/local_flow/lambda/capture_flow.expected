@@ -49,9 +49,9 @@
             "guard" : "Bwd",
             "labels" :
             [
+              "ContraProject:ctrl",
               "Call:(0,0)",
               "ContraInject:ctrl",
-              "ContraProject:ctrl",
               "Inject:<init>:(Ljava/lang/Object;)V"
             ],
             "left" : "G{LMyLambda;||create:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;}",
@@ -61,9 +61,9 @@
             "guard" : "Bwd",
             "labels" :
             [
+              "ContraProject:p0",
               "Call:(0,0)",
               "ContraInject:p0",
-              "ContraProject:p0",
               "Inject:<init>:(Ljava/lang/Object;)V"
             ],
             "left" : "G{LMyLambda;||create:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;}",
@@ -73,10 +73,10 @@
             "guard" : "Bwd",
             "labels" :
             [
-              "Inject:ctrl",
               "Project:<init>:(Ljava/lang/Object;)V",
+              "Return:(0,0)",
               "Project:ctrl",
-              "Return:(0,0)"
+              "Inject:ctrl"
             ],
             "left" : "G{LMyLambda;||<init>:(Ljava/lang/Object;)V}",
             "right" : "G{LMyLambda;||create:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;}"
@@ -85,10 +85,10 @@
             "guard" : "Bwd",
             "labels" :
             [
-              "Inject:result",
               "Project:<init>:(Ljava/lang/Object;)V",
+              "Return:(0,0)",
               "Project:this_out",
-              "Return:(0,0)"
+              "Inject:result"
             ],
             "left" : "G{LMyLambda;||<init>:(Ljava/lang/Object;)V}",
             "right" : "G{LMyLambda;||create:(Ljava/lang/Object;)Lkotlin/jvm/functions/Function0;}"

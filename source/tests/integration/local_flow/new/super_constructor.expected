@@ -26,8 +26,8 @@
             "labels" :
             [
               "ContraProject:p1",
-              "Inject:p0",
-              "Inject:x"
+              "Inject:x",
+              "Inject:p0"
             ],
             "left" : "M{LBase;||<init>:(Ljava/lang/Object;)V}",
             "right" : "M{LBase;||<init>:(Ljava/lang/Object;)V}"
@@ -49,9 +49,9 @@
             "guard" : "Bwd",
             "labels" :
             [
+              "ContraProject:ctrl",
               "Call:(0,0)",
               "ContraInject:ctrl",
-              "ContraProject:ctrl",
               "Inject:<init>:(Ljava/lang/Object;)V"
             ],
             "left" : "M{LChild;||<init>:(Ljava/lang/Object;)V}",
@@ -61,21 +61,9 @@
             "guard" : "Bwd",
             "labels" :
             [
-              "Call:(0,0)",
-              "ContraInject:p0",
-              "ContraProject:p1",
-              "Inject:<init>:(Ljava/lang/Object;)V"
-            ],
-            "left" : "M{LChild;||<init>:(Ljava/lang/Object;)V}",
-            "right" : "G{LBase;||<init>:(Ljava/lang/Object;)V}"
-          },
-          {
-            "guard" : "Bwd",
-            "labels" :
-            [
+              "ContraProject:p0",
               "Call:(0,0)",
               "ContraInject:this",
-              "ContraProject:p0",
               "Inject:<init>:(Ljava/lang/Object;)V"
             ],
             "left" : "M{LChild;||<init>:(Ljava/lang/Object;)V}",
@@ -85,10 +73,22 @@
             "guard" : "Bwd",
             "labels" :
             [
-              "Inject:ctrl",
+              "ContraProject:p1",
+              "Call:(0,0)",
+              "ContraInject:p0",
+              "Inject:<init>:(Ljava/lang/Object;)V"
+            ],
+            "left" : "M{LChild;||<init>:(Ljava/lang/Object;)V}",
+            "right" : "G{LBase;||<init>:(Ljava/lang/Object;)V}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
               "Project:<init>:(Ljava/lang/Object;)V",
+              "Return:(0,0)",
               "Project:ctrl",
-              "Return:(0,0)"
+              "Inject:ctrl"
             ],
             "left" : "G{LBase;||<init>:(Ljava/lang/Object;)V}",
             "right" : "M{LChild;||<init>:(Ljava/lang/Object;)V}"
@@ -97,10 +97,10 @@
             "guard" : "Bwd",
             "labels" :
             [
-              "Inject:this_out",
               "Project:<init>:(Ljava/lang/Object;)V",
+              "Return:(0,0)",
               "Project:this_out",
-              "Return:(0,0)"
+              "Inject:this_out"
             ],
             "left" : "G{LBase;||<init>:(Ljava/lang/Object;)V}",
             "right" : "M{LChild;||<init>:(Ljava/lang/Object;)V}"

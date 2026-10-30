@@ -17,9 +17,9 @@
             "guard" : "Bwd",
             "labels" :
             [
-              "ContraInject:ctrl",
               "ContraProject:ctrl",
               "HoCall:(0,0)",
+              "ContraInject:ctrl",
               "Inject:invoke:(Ljava/lang/Object;)Ljava/lang/Object;"
             ],
             "left" : "G{LLambda;||applyFunction:(Lkotlin/jvm/functions/Function1;Ljava/lang/Object;)Ljava/lang/Object;}",
@@ -29,21 +29,9 @@
             "guard" : "Bwd",
             "labels" :
             [
-              "ContraInject:p0",
-              "ContraProject:p1",
-              "HoCall:(0,0)",
-              "Inject:invoke:(Ljava/lang/Object;)Ljava/lang/Object;"
-            ],
-            "left" : "G{LLambda;||applyFunction:(Lkotlin/jvm/functions/Function1;Ljava/lang/Object;)Ljava/lang/Object;}",
-            "right" : "O{Lkotlin/jvm/functions/Function1;}"
-          },
-          {
-            "guard" : "Bwd",
-            "labels" :
-            [
-              "ContraInject:this",
               "ContraProject:p0",
               "HoCall:(0,0)",
+              "ContraInject:this",
               "Inject:invoke:(Ljava/lang/Object;)Ljava/lang/Object;"
             ],
             "left" : "G{LLambda;||applyFunction:(Lkotlin/jvm/functions/Function1;Ljava/lang/Object;)Ljava/lang/Object;}",
@@ -53,10 +41,22 @@
             "guard" : "Bwd",
             "labels" :
             [
+              "ContraProject:p1",
+              "HoCall:(0,0)",
+              "ContraInject:p0",
+              "Inject:invoke:(Ljava/lang/Object;)Ljava/lang/Object;"
+            ],
+            "left" : "G{LLambda;||applyFunction:(Lkotlin/jvm/functions/Function1;Ljava/lang/Object;)Ljava/lang/Object;}",
+            "right" : "O{Lkotlin/jvm/functions/Function1;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Project:invoke:(Ljava/lang/Object;)Ljava/lang/Object;",
               "HoReturn:(0,0)",
-              "Inject:ctrl",
               "Project:ctrl",
-              "Project:invoke:(Ljava/lang/Object;)Ljava/lang/Object;"
+              "Inject:ctrl"
             ],
             "left" : "O{Lkotlin/jvm/functions/Function1;}",
             "right" : "G{LLambda;||applyFunction:(Lkotlin/jvm/functions/Function1;Ljava/lang/Object;)Ljava/lang/Object;}"
@@ -65,10 +65,10 @@
             "guard" : "Bwd",
             "labels" :
             [
-              "HoReturn:(0,0)",
-              "Inject:result",
               "Project:invoke:(Ljava/lang/Object;)Ljava/lang/Object;",
-              "Project:result"
+              "HoReturn:(0,0)",
+              "Project:result",
+              "Inject:result"
             ],
             "left" : "O{Lkotlin/jvm/functions/Function1;}",
             "right" : "G{LLambda;||applyFunction:(Lkotlin/jvm/functions/Function1;Ljava/lang/Object;)Ljava/lang/Object;}"

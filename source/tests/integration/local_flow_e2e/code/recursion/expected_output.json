@@ -48,9 +48,9 @@
             "guard" : "Bwd",
             "labels" :
             [
+              "ContraProject:ctrl",
               "Call:(22,0)",
               "ContraInject:ctrl",
-              "ContraProject:ctrl",
               "Inject:mutualB:(Ljava/lang/Object;)Ljava/lang/Object;"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||mutualA:(Ljava/lang/Object;)Ljava/lang/Object;}",
@@ -60,9 +60,9 @@
             "guard" : "Bwd",
             "labels" :
             [
+              "ContraProject:p0",
               "Call:(22,0)",
               "ContraInject:p0",
-              "ContraProject:p0",
               "Inject:mutualB:(Ljava/lang/Object;)Ljava/lang/Object;"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||mutualA:(Ljava/lang/Object;)Ljava/lang/Object;}",
@@ -72,10 +72,10 @@
             "guard" : "Bwd",
             "labels" :
             [
-              "Inject:ctrl",
-              "Project:ctrl",
               "Project:mutualB:(Ljava/lang/Object;)Ljava/lang/Object;",
-              "Return:(22,0)"
+              "Return:(22,0)",
+              "Project:ctrl",
+              "Inject:ctrl"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||mutualB:(Ljava/lang/Object;)Ljava/lang/Object;}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||mutualA:(Ljava/lang/Object;)Ljava/lang/Object;}"
@@ -84,10 +84,10 @@
             "guard" : "Bwd",
             "labels" :
             [
-              "Inject:result",
               "Project:mutualB:(Ljava/lang/Object;)Ljava/lang/Object;",
+              "Return:(22,0)",
               "Project:result",
-              "Return:(22,0)"
+              "Inject:result"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||mutualB:(Ljava/lang/Object;)Ljava/lang/Object;}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||mutualA:(Ljava/lang/Object;)Ljava/lang/Object;}"
@@ -109,9 +109,9 @@
             "guard" : "Bwd",
             "labels" :
             [
+              "ContraProject:ctrl",
               "Call:(26,0)",
               "ContraInject:ctrl",
-              "ContraProject:ctrl",
               "Inject:mutualA:(Ljava/lang/Object;)Ljava/lang/Object;"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||mutualB:(Ljava/lang/Object;)Ljava/lang/Object;}",
@@ -121,9 +121,9 @@
             "guard" : "Bwd",
             "labels" :
             [
+              "ContraProject:p0",
               "Call:(26,0)",
               "ContraInject:p0",
-              "ContraProject:p0",
               "Inject:mutualA:(Ljava/lang/Object;)Ljava/lang/Object;"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||mutualB:(Ljava/lang/Object;)Ljava/lang/Object;}",
@@ -133,10 +133,10 @@
             "guard" : "Bwd",
             "labels" :
             [
-              "Inject:ctrl",
-              "Project:ctrl",
               "Project:mutualA:(Ljava/lang/Object;)Ljava/lang/Object;",
-              "Return:(26,0)"
+              "Return:(26,0)",
+              "Project:ctrl",
+              "Inject:ctrl"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||mutualA:(Ljava/lang/Object;)Ljava/lang/Object;}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||mutualB:(Ljava/lang/Object;)Ljava/lang/Object;}"
@@ -145,10 +145,10 @@
             "guard" : "Bwd",
             "labels" :
             [
-              "Inject:result",
               "Project:mutualA:(Ljava/lang/Object;)Ljava/lang/Object;",
+              "Return:(26,0)",
               "Project:result",
-              "Return:(26,0)"
+              "Inject:result"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||mutualA:(Ljava/lang/Object;)Ljava/lang/Object;}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||mutualB:(Ljava/lang/Object;)Ljava/lang/Object;}"
@@ -179,9 +179,9 @@
             "labels" :
             [
               "ContraProject:SelfRec",
-              "Inject:ctrl",
+              "Return:(15,0)",
               "Project:ctrl",
-              "Return:(15,0)"
+              "Inject:ctrl"
             ],
             "left" : "SelfRec",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||selfRecursive:(Ljava/lang/Object;)Ljava/lang/Object;}"
@@ -190,9 +190,9 @@
             "labels" :
             [
               "ContraProject:SelfRec",
-              "Inject:result",
+              "Return:(15,0)",
               "Project:result",
-              "Return:(15,0)"
+              "Inject:result"
             ],
             "left" : "SelfRec",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||selfRecursive:(Ljava/lang/Object;)Ljava/lang/Object;}"
@@ -201,9 +201,9 @@
             "guard" : "Bwd",
             "labels" :
             [
+              "ContraProject:ctrl",
               "Call:(15,0)",
               "ContraInject:ctrl",
-              "ContraProject:ctrl",
               "Inject:SelfRec"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||selfRecursive:(Ljava/lang/Object;)Ljava/lang/Object;}",
@@ -213,9 +213,9 @@
             "guard" : "Bwd",
             "labels" :
             [
+              "ContraProject:p0",
               "Call:(15,0)",
               "ContraInject:p0",
-              "ContraProject:p0",
               "Inject:SelfRec"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/Recursion;||selfRecursive:(Ljava/lang/Object;)Ljava/lang/Object;}",

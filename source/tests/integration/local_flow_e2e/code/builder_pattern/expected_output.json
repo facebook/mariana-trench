@@ -38,12 +38,12 @@
           {
             "labels" :
             [
-              "Call:(29,1)",
-              "ContraInject:this",
-              "Inject:setName:(Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/BuilderPattern;",
               "Project:<init>:()V",
+              "Return:(29,0)",
+              "Call:(29,1)",
               "Project:this_out",
-              "Return:(29,0)"
+              "ContraInject:this",
+              "Inject:setName:(Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/BuilderPattern;"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;||<init>:()V}",
             "right" : "O{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;}"
@@ -51,12 +51,12 @@
           {
             "labels" :
             [
-              "Call:(29,2)",
-              "ContraInject:this",
-              "Inject:setValue:(Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/BuilderPattern;",
-              "Project:result",
               "Project:setName:(Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/BuilderPattern;",
-              "Return:(29,1)"
+              "Return:(29,1)",
+              "Call:(29,2)",
+              "Project:result",
+              "ContraInject:this",
+              "Inject:setValue:(Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/BuilderPattern;"
             ],
             "left" : "O{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;}",
             "right" : "O{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;}"
@@ -65,9 +65,9 @@
             "guard" : "Bwd",
             "labels" :
             [
+              "ContraProject:ctrl",
               "Call:(29,0)",
               "ContraInject:ctrl",
-              "ContraProject:ctrl",
               "Inject:<init>:()V"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;||build:(Ljava/lang/Object;Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/BuilderPattern;}",
@@ -77,9 +77,9 @@
             "guard" : "Bwd",
             "labels" :
             [
+              "ContraProject:ctrl",
               "Call:(29,1)",
               "ContraInject:ctrl",
-              "ContraProject:ctrl",
               "Inject:setName:(Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/BuilderPattern;"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;||build:(Ljava/lang/Object;Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/BuilderPattern;}",
@@ -89,9 +89,21 @@
             "guard" : "Bwd",
             "labels" :
             [
-              "Call:(29,1)",
-              "ContraInject:p0",
+              "ContraProject:ctrl",
+              "Call:(29,2)",
+              "ContraInject:ctrl",
+              "Inject:setValue:(Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/BuilderPattern;"
+            ],
+            "left" : "G{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;||build:(Ljava/lang/Object;Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/BuilderPattern;}",
+            "right" : "O{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
               "ContraProject:p0",
+              "Call:(29,1)",
+              "ContraInject:p0",
               "Inject:setName:(Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/BuilderPattern;"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;||build:(Ljava/lang/Object;Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/BuilderPattern;}",
@@ -101,21 +113,9 @@
             "guard" : "Bwd",
             "labels" :
             [
-              "Call:(29,2)",
-              "ContraInject:ctrl",
-              "ContraProject:ctrl",
-              "Inject:setValue:(Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/BuilderPattern;"
-            ],
-            "left" : "G{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;||build:(Ljava/lang/Object;Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/BuilderPattern;}",
-            "right" : "O{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;}"
-          },
-          {
-            "guard" : "Bwd",
-            "labels" :
-            [
+              "ContraProject:p1",
               "Call:(29,2)",
               "ContraInject:p0",
-              "ContraProject:p1",
               "Inject:setValue:(Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/BuilderPattern;"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;||build:(Ljava/lang/Object;Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/BuilderPattern;}",
@@ -125,10 +125,10 @@
             "guard" : "Bwd",
             "labels" :
             [
-              "Inject:ctrl",
               "Project:<init>:()V",
+              "Return:(29,0)",
               "Project:ctrl",
-              "Return:(29,0)"
+              "Inject:ctrl"
             ],
             "left" : "G{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;||<init>:()V}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;||build:(Ljava/lang/Object;Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/BuilderPattern;}"
@@ -137,22 +137,10 @@
             "guard" : "Bwd",
             "labels" :
             [
-              "Inject:ctrl",
-              "Project:ctrl",
               "Project:setName:(Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/BuilderPattern;",
-              "Return:(29,1)"
-            ],
-            "left" : "O{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;}",
-            "right" : "G{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;||build:(Ljava/lang/Object;Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/BuilderPattern;}"
-          },
-          {
-            "guard" : "Bwd",
-            "labels" :
-            [
-              "Inject:ctrl",
+              "Return:(29,1)",
               "Project:ctrl",
-              "Project:setValue:(Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/BuilderPattern;",
-              "Return:(29,2)"
+              "Inject:ctrl"
             ],
             "left" : "O{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;||build:(Ljava/lang/Object;Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/BuilderPattern;}"
@@ -161,10 +149,22 @@
             "guard" : "Bwd",
             "labels" :
             [
-              "Inject:result",
-              "Project:result",
               "Project:setValue:(Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/BuilderPattern;",
-              "Return:(29,2)"
+              "Return:(29,2)",
+              "Project:ctrl",
+              "Inject:ctrl"
+            ],
+            "left" : "O{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;}",
+            "right" : "G{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;||build:(Ljava/lang/Object;Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/BuilderPattern;}"
+          },
+          {
+            "guard" : "Bwd",
+            "labels" :
+            [
+              "Project:setValue:(Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/BuilderPattern;",
+              "Return:(29,2)",
+              "Project:result",
+              "Inject:result"
             ],
             "left" : "O{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;}",
             "right" : "G{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;||build:(Ljava/lang/Object;Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/BuilderPattern;}"
@@ -195,8 +195,8 @@
             "labels" :
             [
               "ContraProject:p0",
-              "Inject:result",
-              "Project:name"
+              "Project:name",
+              "Inject:result"
             ],
             "left" : "M{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;||getName:()Ljava/lang/Object;}",
             "right" : "M{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;||getName:()Ljava/lang/Object;}"
@@ -277,8 +277,8 @@
             "labels" :
             [
               "ContraProject:p1",
-              "Inject:p0",
-              "Inject:value"
+              "Inject:value",
+              "Inject:p0"
             ],
             "left" : "M{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;||setValue:(Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/BuilderPattern;}",
             "right" : "M{Lcom/facebook/marianatrench/integrationtests/BuilderPattern;||setValue:(Ljava/lang/Object;)Lcom/facebook/marianatrench/integrationtests/BuilderPattern;}"

@@ -26,8 +26,8 @@
             "labels" :
             [
               "ContraProject:p1",
-              "Inject:p0",
-              "Inject:value"
+              "Inject:value",
+              "Inject:p0"
             ],
             "left" : "M{LSetter;||setValue:(Ljava/lang/Object;)V}",
             "right" : "M{LSetter;||setValue:(Ljava/lang/Object;)V}"

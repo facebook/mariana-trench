@@ -70,12 +70,12 @@
           {
             "labels" :
             [
-              "Call:(0,1)",
-              "ContraInject:this",
-              "Inject:setA:(Ljava/lang/Object;)V",
               "Project:<init>:()V",
+              "Return:(0,0)",
+              "Call:(0,1)",
               "Project:this_out",
-              "Return:(0,0)"
+              "ContraInject:this",
+              "Inject:setA:(Ljava/lang/Object;)V"
             ],
             "left" : "G{LMutate;||<init>:()V}",
             "right" : "O{LMutate;}"
@@ -84,9 +84,9 @@
             "guard" : "Bwd",
             "labels" :
             [
+              "ContraProject:ctrl",
               "Call:(0,0)",
               "ContraInject:ctrl",
-              "ContraProject:ctrl",
               "Inject:<init>:()V"
             ],
             "left" : "G{LMutate;||test:(Ljava/lang/Object;)LMutate;}",
@@ -96,9 +96,9 @@
             "guard" : "Bwd",
             "labels" :
             [
+              "ContraProject:ctrl",
               "Call:(0,1)",
               "ContraInject:ctrl",
-              "ContraProject:ctrl",
               "Inject:setA:(Ljava/lang/Object;)V"
             ],
             "left" : "G{LMutate;||test:(Ljava/lang/Object;)LMutate;}",
@@ -108,9 +108,9 @@
             "guard" : "Bwd",
             "labels" :
             [
+              "ContraProject:p0",
               "Call:(0,1)",
               "ContraInject:p0",
-              "ContraProject:p0",
               "Inject:setA:(Ljava/lang/Object;)V"
             ],
             "left" : "G{LMutate;||test:(Ljava/lang/Object;)LMutate;}",
@@ -120,10 +120,10 @@
             "guard" : "Bwd",
             "labels" :
             [
-              "Inject:ctrl",
               "Project:<init>:()V",
+              "Return:(0,0)",
               "Project:ctrl",
-              "Return:(0,0)"
+              "Inject:ctrl"
             ],
             "left" : "G{LMutate;||<init>:()V}",
             "right" : "G{LMutate;||test:(Ljava/lang/Object;)LMutate;}"
@@ -132,10 +132,10 @@
             "guard" : "Bwd",
             "labels" :
             [
-              "Inject:ctrl",
-              "Project:ctrl",
               "Project:setA:(Ljava/lang/Object;)V",
-              "Return:(0,1)"
+              "Return:(0,1)",
+              "Project:ctrl",
+              "Inject:ctrl"
             ],
             "left" : "O{LMutate;}",
             "right" : "G{LMutate;||test:(Ljava/lang/Object;)LMutate;}"
@@ -144,10 +144,10 @@
             "guard" : "Bwd",
             "labels" :
             [
-              "Inject:result",
               "Project:setA:(Ljava/lang/Object;)V",
+              "Return:(0,1)",
               "Project:this_out",
-              "Return:(0,1)"
+              "Inject:result"
             ],
             "left" : "O{LMutate;}",
             "right" : "G{LMutate;||test:(Ljava/lang/Object;)LMutate;}"

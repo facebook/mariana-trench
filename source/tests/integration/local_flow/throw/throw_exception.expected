@@ -17,9 +17,9 @@
             "guard" : "Bwd",
             "labels" :
             [
+              "ContraProject:ctrl",
               "Call:(0,0)",
               "ContraInject:ctrl",
-              "ContraProject:ctrl",
               "Inject:<init>:(Ljava/lang/String;)V"
             ],
             "left" : "G{LThrow;||test:(Ljava/lang/String;)V}",
@@ -29,9 +29,9 @@
             "guard" : "Bwd",
             "labels" :
             [
+              "ContraProject:p0",
               "Call:(0,0)",
               "ContraInject:p0",
-              "ContraProject:p0",
               "Inject:<init>:(Ljava/lang/String;)V"
             ],
             "left" : "G{LThrow;||test:(Ljava/lang/String;)V}",
@@ -41,10 +41,10 @@
             "guard" : "Bwd",
             "labels" :
             [
-              "Inject:ctrl",
               "Project:<init>:(Ljava/lang/String;)V",
+              "Return:(0,0)",
               "Project:ctrl",
-              "Return:(0,0)"
+              "Inject:ctrl"
             ],
             "left" : "G{Ljava/lang/Exception;||<init>:(Ljava/lang/String;)V}",
             "right" : "G{LThrow;||test:(Ljava/lang/String;)V}"

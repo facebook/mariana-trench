@@ -157,7 +157,7 @@ TEST_P(IntegrationTest, CompareLocalFlows) {
     auto method_result = LocalFlowMethodAnalyzer::analyze(
         method, /* max_structural_depth */ 10, positions);
     if (method_result.has_value()) {
-      results.append(test::sorted_json(method_result->to_json()));
+      results.append(test::sorted_local_flow_json(method_result->to_json()));
     }
   }
 
@@ -174,7 +174,7 @@ TEST_P(IntegrationTest, CompareLocalFlows) {
     if (class_result.class_name.find(
             "Lcom/facebook/marianatrench/integrationtests/") !=
         std::string::npos) {
-      results.append(test::sorted_json(class_result.to_json()));
+      results.append(test::sorted_local_flow_json(class_result.to_json()));
     }
   }
 

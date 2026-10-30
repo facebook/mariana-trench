@@ -17,8 +17,8 @@
             "labels" :
             [
               "ContraProject:p0",
-              "Inject:result",
-              "Project:a"
+              "Project:a",
+              "Inject:result"
             ],
             "left" : "G{LBasic;||field_selection:(Ljava/lang/Object;)Ljava/lang/Object;}",
             "right" : "G{LBasic;||field_selection:(Ljava/lang/Object;)Ljava/lang/Object;}"
