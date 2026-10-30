@@ -430,7 +430,7 @@
           {
             "labels" :
             [
-              "Inject:Interval:[0,1]"
+              "Interval:[0,1]"
             ],
             "left" : "O{Lcom/facebook/marianatrench/integrationtests/ConcreteProcessor;}",
             "right" : "O{Lcom/facebook/marianatrench/integrationtests/Processor;}"
@@ -464,18 +464,18 @@
           {
             "labels" :
             [
-              "Inject:Interval:[3,4]"
-            ],
-            "left" : "O{Lcom/facebook/marianatrench/integrationtests/DerivedDispatch;}",
-            "right" : "O{Lcom/facebook/marianatrench/integrationtests/VirtualDispatch;}"
-          },
-          {
-            "labels" :
-            [
               "Inject:process:(Ljava/lang/Object;)Ljava/lang/Object;"
             ],
             "left" : "M{Lcom/facebook/marianatrench/integrationtests/VirtualDispatch;||process:(Ljava/lang/Object;)Ljava/lang/Object;}",
             "right" : "C{Lcom/facebook/marianatrench/integrationtests/VirtualDispatch;}"
+          },
+          {
+            "labels" :
+            [
+              "Interval:[3,4]"
+            ],
+            "left" : "O{Lcom/facebook/marianatrench/integrationtests/DerivedDispatch;}",
+            "right" : "O{Lcom/facebook/marianatrench/integrationtests/VirtualDispatch;}"
           }
         ],
         "interval" : "[2,5]",

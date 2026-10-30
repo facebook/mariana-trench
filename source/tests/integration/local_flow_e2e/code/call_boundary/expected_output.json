@@ -1229,18 +1229,18 @@
           {
             "labels" :
             [
-              "Inject:Interval:[1,2]"
-            ],
-            "left" : "O{Lcom/facebook/marianatrench/integrationtests/CallBoundary;}",
-            "right" : "O{Lcom/facebook/marianatrench/integrationtests/CallBoundaryBase;}"
-          },
-          {
-            "labels" :
-            [
               "Inject:echo:(Ljava/lang/Object;)Ljava/lang/Object;"
             ],
             "left" : "M{Lcom/facebook/marianatrench/integrationtests/CallBoundaryBase;||echo:(Ljava/lang/Object;)Ljava/lang/Object;}",
             "right" : "C{Lcom/facebook/marianatrench/integrationtests/CallBoundaryBase;}"
+          },
+          {
+            "labels" :
+            [
+              "Interval:[1,2]"
+            ],
+            "left" : "O{Lcom/facebook/marianatrench/integrationtests/CallBoundary;}",
+            "right" : "O{Lcom/facebook/marianatrench/integrationtests/CallBoundaryBase;}"
           }
         ],
         "interval" : "[0,3]",

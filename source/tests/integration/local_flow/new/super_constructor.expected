@@ -133,7 +133,7 @@
           {
             "labels" :
             [
-              "Inject:Interval:[1,2]"
+              "Interval:[1,2]"
             ],
             "left" : "O{LChild;}",
             "right" : "O{LBase;}"

@@ -14,72 +14,7 @@ namespace local_flow {
 
 class LocalFlowLabelTest : public testing::Test {};
 
-TEST_F(LocalFlowLabelTest, StructuralLabelCreation) {
-  auto project = StructuralLabel{StructuralOp::Project, "name"};
-  EXPECT_EQ(project.op, StructuralOp::Project);
-  EXPECT_EQ(project.field, "name");
-}
-
-TEST_F(LocalFlowLabelTest, StructuralLabelEquality) {
-  auto a = StructuralLabel{StructuralOp::Project, "x"};
-  auto b = StructuralLabel{StructuralOp::Project, "x"};
-  auto c = StructuralLabel{StructuralOp::Project, "y"};
-  auto d = StructuralLabel{StructuralOp::Inject, "x"};
-
-  EXPECT_EQ(a, b);
-  EXPECT_NE(a, c);
-  EXPECT_NE(a, d);
-}
-
-TEST_F(LocalFlowLabelTest, StructuralLabelDual) {
-  auto project = StructuralLabel{StructuralOp::Project, "f"};
-  auto dual = project.dual();
-  EXPECT_EQ(dual.op, StructuralOp::ContraProject);
-  EXPECT_EQ(dual.field, "f");
-
-  auto inject = StructuralLabel{StructuralOp::Inject, "g"};
-  auto inject_dual = inject.dual();
-  EXPECT_EQ(inject_dual.op, StructuralOp::ContraInject);
-  EXPECT_EQ(inject_dual.field, "g");
-
-  // Double dual is identity
-  EXPECT_EQ(project.dual().dual(), project);
-  EXPECT_EQ(inject.dual().dual(), inject);
-}
-
-TEST_F(LocalFlowLabelTest, StructuralLabelInverse) {
-  auto project = StructuralLabel{StructuralOp::Project, "f"};
-  auto inv = project.inverse();
-  EXPECT_EQ(inv.op, StructuralOp::Inject);
-  EXPECT_EQ(inv.field, "f");
-
-  auto contra_project = StructuralLabel{StructuralOp::ContraProject, "g"};
-  auto contra_inv = contra_project.inverse();
-  EXPECT_EQ(contra_inv.op, StructuralOp::ContraInject);
-  EXPECT_EQ(contra_inv.field, "g");
-}
-
-TEST_F(LocalFlowLabelTest, StructuralLabelSerialization) {
-  auto project = StructuralLabel{StructuralOp::Project, "name"};
-  EXPECT_EQ(project.to_string(), "Project:name");
-
-  auto inject_wildcard = StructuralLabel{StructuralOp::Inject, ""};
-  EXPECT_EQ(inject_wildcard.to_string(), "Inject:*");
-
-  auto contra_project = StructuralLabel{StructuralOp::ContraProject, "x"};
-  EXPECT_EQ(contra_project.to_string(), "ContraProject:x");
-}
-
-TEST_F(LocalFlowLabelTest, StructuralLabelOrdering) {
-  auto a = StructuralLabel{StructuralOp::Project, "a"};
-  auto b = StructuralLabel{StructuralOp::Project, "b"};
-  auto c = StructuralLabel{StructuralOp::Inject, "a"};
-
-  EXPECT_TRUE(a < b);
-  EXPECT_TRUE(a < c); // Project < Inject in enum order
-}
-
-// --- Unified Label tests ---
+// --- Label tests ---
 
 TEST_F(LocalFlowLabelTest, LabelStructuralCreation) {
   auto project = Label{LabelKind::Project, "name"};
@@ -160,19 +95,6 @@ TEST_F(LocalFlowLabelTest, LabelSerialization) {
   EXPECT_EQ(Label(LabelKind::Capture).to_string(), "Capture");
   EXPECT_EQ(Label(LabelKind::HoCapture).to_string(), "HoCapture");
   EXPECT_EQ(Label(LabelKind::Interval, "[1,5]").to_string(), "Interval:[1,5]");
-}
-
-TEST_F(LocalFlowLabelTest, LabelConversionFromStructural) {
-  auto sl = StructuralLabel{StructuralOp::Project, "field"};
-  auto label = Label{sl};
-  EXPECT_EQ(label.kind, LabelKind::Project);
-  EXPECT_EQ(label.value, "field");
-  EXPECT_TRUE(label.is_structural());
-
-  auto sl2 = StructuralLabel{StructuralOp::ContraInject, "x"};
-  auto label2 = Label{sl2};
-  EXPECT_EQ(label2.kind, LabelKind::ContraInject);
-  EXPECT_EQ(label2.value, "x");
 }
 
 TEST_F(LocalFlowLabelTest, LabelOrdering) {

@@ -44,7 +44,7 @@ enum class LabelKind {
   HoCall,
   HoReturn,
   Capture,
-  // Extended kinds (forward compatibility)
+  // Class interval of an override edge, read as a call label.
   Interval,
   HoCapture,
 };
@@ -72,9 +72,6 @@ struct Label {
         value(std::move(value)),
         preserves_context(preserves_context),
         call_site(std::move(call_site)) {}
-
-  // Conversion from StructuralLabel
-  explicit Label(const struct StructuralLabel& sl);
 
   bool operator==(const Label& other) const;
   bool operator!=(const Label& other) const;
@@ -113,48 +110,6 @@ using LabelPath = std::vector<Label>;
  * Fwd.
  */
 Guard projection_guard(Guard guard, const LabelPath& labels);
-
-/**
- * Structural labels describe field-level data flow structure.
- * Project/Inject for covariant positions, ContraProject/ContraInject for
- * contravariant positions.
- */
-enum class StructuralOp {
-  Project,
-  Inject,
-  ContraProject,
-  ContraInject,
-};
-
-struct StructuralLabel {
-  StructuralOp op;
-  std::string field; // "" for wildcard (*), "__keys__" for keys
-
-  bool operator==(const StructuralLabel& other) const;
-  bool operator!=(const StructuralLabel& other) const;
-  bool operator<(const StructuralLabel& other) const;
-
-  /**
-   * Returns the dual (inverted) label:
-   *   Project <-> ContraProject
-   *   Inject <-> ContraInject
-   */
-  StructuralLabel dual() const;
-
-  /**
-   * Returns the inverse direction label:
-   *   Project <-> Inject (field preserved)
-   *   ContraProject <-> ContraInject (field preserved)
-   */
-  StructuralLabel inverse() const;
-
-  std::string to_string() const;
-  Json::Value to_json() const;
-};
-
-std::string structural_op_to_string(StructuralOp op);
-
-using StructuralLabelPath = std::vector<StructuralLabel>;
 
 } // namespace local_flow
 } // namespace marianatrench

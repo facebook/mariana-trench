@@ -17,6 +17,7 @@
 
 #include <fmt/format.h>
 
+#include <mariana-trench/Assert.h>
 #include <mariana-trench/ClassIntervals.h>
 #include <mariana-trench/Log.h>
 
@@ -26,11 +27,8 @@ namespace local_flow {
 namespace {
 
 std::string format_interval(const ClassIntervals::Interval& interval) {
-  if (interval.is_bottom()) {
-    return "Interval:[]";
-  }
-  return fmt::format(
-      "Interval:[{},{}]", interval.lower_bound(), interval.upper_bound());
+  mt_assert(!interval.is_bottom());
+  return fmt::format("[{},{}]", interval.lower_bound(), interval.upper_bound());
 }
 
 } // namespace
@@ -57,10 +55,7 @@ std::vector<LocalFlowClassResult> LocalFlowClassAnalyzer::analyze_classes(
     if (class_intervals != nullptr) {
       const auto& class_interval = class_intervals->get_interval(class_type);
       if (!class_interval.is_bottom()) {
-        interval_str = fmt::format(
-            "[{},{}]",
-            class_interval.lower_bound(),
-            class_interval.upper_bound());
+        interval_str = format_interval(class_interval);
       }
     }
 
@@ -118,28 +113,29 @@ std::vector<LocalFlowClassResult> LocalFlowClassAnalyzer::analyze_classes(
           self_edges.push_back(
               DispatchEdge{
                   std::move(meth_node),
-                  StructuralLabelPath{
-                      StructuralLabel{StructuralOp::Inject, vtable_name}},
+                  LabelPath{Label{LabelKind::Inject, vtable_name}},
                   cvar_node});
         }
 
-        self_edges.push_back(
-            DispatchEdge{cvar_node, StructuralLabelPath{}, ovar_node});
+        self_edges.push_back(DispatchEdge{cvar_node, LabelPath{}, ovar_node});
       }
 
-      std::string interval_label;
+      // The child's interval travels as a call label on the override edge, so
+      // that it can narrow dispatch. An unknown interval (bottom, or top for a
+      // type outside the computed hierarchy) narrows nothing and is omitted.
+      LabelPath override_labels;
       if (class_intervals != nullptr) {
         const auto& interval = class_intervals->get_interval(class_type);
-        interval_label = format_interval(interval);
-      } else {
-        interval_label = "Interval:[]";
+        if (!interval.is_bottom() && !interval.is_top()) {
+          override_labels.emplace_back(
+              LabelKind::Interval, format_interval(interval));
+        }
       }
 
       auto emit_override_to_parent = [&](const DexType* parent_type) {
         DispatchEdge edge{
             ovar_node,
-            StructuralLabelPath{
-                StructuralLabel{StructuralOp::Inject, interval_label}},
+            override_labels,
             LocalFlowNode::make_ovar(show(parent_type))};
         parent_override_edges.update(
             parent_type,

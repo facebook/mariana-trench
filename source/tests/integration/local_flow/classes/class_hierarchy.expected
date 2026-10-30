@@ -89,18 +89,18 @@
           {
             "labels" :
             [
-              "Inject:Interval:[1,4]"
-            ],
-            "left" : "O{LB;}",
-            "right" : "O{LA;}"
-          },
-          {
-            "labels" :
-            [
               "Inject:method:()V"
             ],
             "left" : "M{LA;||method:()V}",
             "right" : "C{LA;}"
+          },
+          {
+            "labels" :
+            [
+              "Interval:[1,4]"
+            ],
+            "left" : "O{LB;}",
+            "right" : "O{LA;}"
           }
         ],
         "interval" : "[0,5]",
@@ -123,18 +123,18 @@
           {
             "labels" :
             [
-              "Inject:Interval:[2,3]"
-            ],
-            "left" : "O{LC;}",
-            "right" : "O{LB;}"
-          },
-          {
-            "labels" :
-            [
               "Inject:method:()V"
             ],
             "left" : "M{LB;||method:()V}",
             "right" : "C{LB;}"
+          },
+          {
+            "labels" :
+            [
+              "Interval:[2,3]"
+            ],
+            "left" : "O{LC;}",
+            "right" : "O{LB;}"
           }
         ],
         "interval" : "[1,4]",

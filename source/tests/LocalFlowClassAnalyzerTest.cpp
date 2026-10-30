@@ -86,6 +86,20 @@ bool has_dispatch_edge(
   return false;
 }
 
+// Helper: find the dispatch edge with the given source and target
+const DispatchEdge* MT_NULLABLE find_dispatch_edge(
+    const LocalFlowClassResult& result,
+    const std::string& source,
+    const std::string& target) {
+  for (const auto& edge : result.dispatch_edges) {
+    if (edge.source.to_string() == source &&
+        edge.target.to_string() == target) {
+      return &edge;
+    }
+  }
+  return nullptr;
+}
+
 // Helper: check if a dispatch edge exists with given source/target/label
 bool has_dispatch_edge_with_label(
     const LocalFlowClassResult& result,
@@ -159,8 +173,38 @@ TEST_F(LocalFlowClassAnalyzerTest, ClassWithSuperclassHasOVarEdge) {
   // (parent-centric model: override edges stored in the parent's Class entry)
   const auto* base_result = find_class_result(results, "LBase;");
   ASSERT_NE(base_result, nullptr);
-  EXPECT_TRUE(
-      has_dispatch_edge_with_label(*base_result, "O{", "O{", "Interval:"));
+  const auto* override_edge =
+      find_dispatch_edge(*base_result, "O{LDerived;}", "O{LBase;}");
+  ASSERT_NE(override_edge, nullptr);
+  ASSERT_EQ(override_edge->labels.size(), 1);
+  EXPECT_EQ(override_edge->labels[0].kind, LabelKind::Interval);
+  EXPECT_TRUE(override_edge->labels[0].to_string().starts_with("Interval:["));
+}
+
+TEST_F(LocalFlowClassAnalyzerTest, OverrideEdgeWithoutIntervalHasNoLabel) {
+  Scope scope;
+
+  auto* dex_base =
+      marianatrench::redex::create_void_method(scope, "LBase;", "method");
+
+  marianatrench::redex::create_void_method(
+      scope,
+      "LDerived;",
+      "method",
+      /* parameter_types */ "",
+      /* return_type */ "V",
+      /* super */ dex_base->get_class());
+
+  auto context = make_class_analyzer_context(scope);
+  context.class_intervals.reset();
+  auto results = LocalFlowClassAnalyzer::analyze_classes(context);
+
+  const auto* base_result = find_class_result(results, "LBase;");
+  ASSERT_NE(base_result, nullptr);
+  const auto* override_edge =
+      find_dispatch_edge(*base_result, "O{LDerived;}", "O{LBase;}");
+  ASSERT_NE(override_edge, nullptr);
+  EXPECT_TRUE(override_edge->labels.empty());
 }
 
 TEST_F(LocalFlowClassAnalyzerTest, InterfaceClassIsSkipped) {

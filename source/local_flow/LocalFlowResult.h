@@ -81,7 +81,7 @@ struct LocalFlowMethodResult {
  */
 struct DispatchEdge {
   LocalFlowNode source;
-  StructuralLabelPath labels;
+  LabelPath labels;
   LocalFlowNode target;
 
   friend std::ostream& operator<<(std::ostream& out, const DispatchEdge& edge);

@@ -13,27 +13,6 @@
 namespace marianatrench {
 namespace local_flow {
 
-namespace {
-
-LabelKind label_kind_from_structural_op(StructuralOp op) {
-  switch (op) {
-    case StructuralOp::Project:
-      return LabelKind::Project;
-    case StructuralOp::Inject:
-      return LabelKind::Inject;
-    case StructuralOp::ContraProject:
-      return LabelKind::ContraProject;
-    case StructuralOp::ContraInject:
-      return LabelKind::ContraInject;
-  }
-  return LabelKind::Project; // unreachable
-}
-
-} // namespace
-
-Label::Label(const StructuralLabel& sl)
-    : kind(label_kind_from_structural_op(sl.op)), value(sl.field) {}
-
 bool Label::operator==(const Label& other) const {
   return kind == other.kind && value == other.value &&
       preserves_context == other.preserves_context &&
@@ -63,13 +42,13 @@ bool Label::is_structural() const {
     case LabelKind::Inject:
     case LabelKind::ContraProject:
     case LabelKind::ContraInject:
-    case LabelKind::Interval:
       return true;
     case LabelKind::Call:
     case LabelKind::Return:
     case LabelKind::HoCall:
     case LabelKind::HoReturn:
     case LabelKind::Capture:
+    case LabelKind::Interval:
     case LabelKind::HoCapture:
       return false;
   }
@@ -83,13 +62,13 @@ bool Label::is_call() const {
     case LabelKind::HoCall:
     case LabelKind::HoReturn:
     case LabelKind::Capture:
+    case LabelKind::Interval:
     case LabelKind::HoCapture:
       return true;
     case LabelKind::Project:
     case LabelKind::Inject:
     case LabelKind::ContraProject:
     case LabelKind::ContraInject:
-    case LabelKind::Interval:
       return false;
   }
   mt_unreachable();
@@ -228,75 +207,6 @@ Guard projection_guard(Guard guard, const LabelPath& labels) {
     }
   }
   return contravariant ? flip_guard(guard) : guard;
-}
-
-bool StructuralLabel::operator==(const StructuralLabel& other) const {
-  return op == other.op && field == other.field;
-}
-
-bool StructuralLabel::operator!=(const StructuralLabel& other) const {
-  return !(*this == other);
-}
-
-bool StructuralLabel::operator<(const StructuralLabel& other) const {
-  if (op != other.op) {
-    return op < other.op;
-  }
-  return field < other.field;
-}
-
-StructuralLabel StructuralLabel::dual() const {
-  switch (op) {
-    case StructuralOp::Project:
-      return StructuralLabel{StructuralOp::ContraProject, field};
-    case StructuralOp::Inject:
-      return StructuralLabel{StructuralOp::ContraInject, field};
-    case StructuralOp::ContraProject:
-      return StructuralLabel{StructuralOp::Project, field};
-    case StructuralOp::ContraInject:
-      return StructuralLabel{StructuralOp::Inject, field};
-  }
-
-  mt_unreachable();
-}
-
-StructuralLabel StructuralLabel::inverse() const {
-  switch (op) {
-    case StructuralOp::Project:
-      return StructuralLabel{StructuralOp::Inject, field};
-    case StructuralOp::Inject:
-      return StructuralLabel{StructuralOp::Project, field};
-    case StructuralOp::ContraProject:
-      return StructuralLabel{StructuralOp::ContraInject, field};
-    case StructuralOp::ContraInject:
-      return StructuralLabel{StructuralOp::ContraProject, field};
-  }
-
-  mt_unreachable();
-}
-
-std::string structural_op_to_string(StructuralOp op) {
-  switch (op) {
-    case StructuralOp::Project:
-      return "Project";
-    case StructuralOp::Inject:
-      return "Inject";
-    case StructuralOp::ContraProject:
-      return "ContraProject";
-    case StructuralOp::ContraInject:
-      return "ContraInject";
-  }
-
-  mt_unreachable();
-}
-
-std::string StructuralLabel::to_string() const {
-  std::string field_str = field.empty() ? "*" : field;
-  return fmt::format("{}:{}", structural_op_to_string(op), field_str);
-}
-
-Json::Value StructuralLabel::to_json() const {
-  return Json::Value(to_string());
 }
 
 } // namespace local_flow
